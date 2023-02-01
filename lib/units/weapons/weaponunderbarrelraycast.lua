@@ -13,11 +13,19 @@ end
 function WeaponUnderbarrelRaycast:setup_data(setup_data, damage_multiplier, ammo_data)
 	WeaponUnderbarrel.setup_data(self, setup_data, damage_multiplier, ammo_data)
 
+	self._base_stats_modifiers = ammo_data and ammo_data.base_stats_modifiers or {}
 	self._blueprint = {}
 	self._parts = {}
 
 	self:_update_stats_values(false, ammo_data)
 	RaycastWeaponBase.setup(self, setup_data, damage_multiplier)
+end
+
+-- Lines 24-28
+function WeaponUnderbarrelRaycast:modify_base_stats(stats)
+	for stat, value in pairs(self._base_stats_modifiers) do
+		stats[stat] = (stats[stat] or 1) + value
+	end
 end
 
 -- Lines 31-34

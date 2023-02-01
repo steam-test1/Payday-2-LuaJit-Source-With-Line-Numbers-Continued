@@ -4510,18 +4510,21 @@ function BodyElement:interpolate(env, value, body)
 	end
 end
 
--- Lines 4105-4116
+-- Lines 4105-4118
 function BodyElement.load(unit, data)
 	for body_id, cat_data in pairs(data) do
 		for _, sub_data in pairs(cat_data) do
 			local body = unit:body(body_id)
-			local param = sub_data[2]
 
-			if type(param) == "string" then
-				param = Idstring(param)
+			if body then
+				local param = sub_data[2]
+
+				if type(param) == "string" then
+					param = Idstring(param)
+				end
+
+				body[sub_data[1]](body, param)
 			end
-
-			body[sub_data[1]](body, param)
 		end
 	end
 end
@@ -4529,7 +4532,7 @@ end
 ConstraintElement = ConstraintElement or class(BaseElement)
 ConstraintElement.NAME = "constraint"
 
--- Lines 4122-4128
+-- Lines 4124-4130
 function ConstraintElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -4538,7 +4541,7 @@ function ConstraintElement:init(node, unit_element)
 	self._remove = self:get("remove")
 end
 
--- Lines 4130-4159
+-- Lines 4132-4161
 function ConstraintElement:activate_callback(env)
 	local name = self:run_parsed_func(env, self._name)
 	local unit = env.dest_unit
@@ -4570,7 +4573,7 @@ function ConstraintElement:activate_callback(env)
 	end
 end
 
--- Lines 4161-4165
+-- Lines 4163-4167
 function ConstraintElement.load(unit, data)
 	for constraint_name, func_name in pairs(data) do
 		unit[func_name](unit, Idstring(constraint_name))
@@ -4580,14 +4583,14 @@ end
 DebugElement = DebugElement or class(BaseElement)
 DebugElement.NAME = "debug"
 
--- Lines 4171-4175
+-- Lines 4173-4177
 function DebugElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
 	self._text = self:get("text")
 end
 
--- Lines 4177-4180
+-- Lines 4179-4182
 function DebugElement:activate_callback(env)
 	local text = self:run_parsed_func(env, self._text)
 
@@ -4597,14 +4600,14 @@ end
 AlertElement = AlertElement or class(BaseElement)
 AlertElement.NAME = "alert"
 
--- Lines 4187-4190
+-- Lines 4189-4192
 function AlertElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
 	self._range = self:get("range")
 end
 
--- Lines 4192-4202
+-- Lines 4194-4204
 function AlertElement:activate_callback(env)
 	local range = self:run_parsed_func(env, self._range) or 1200
 	local new_alert = {
@@ -4621,7 +4624,7 @@ end
 AttentionElement = AttentionElement or class(BaseElement)
 AttentionElement.NAME = "attention"
 
--- Lines 4208-4215
+-- Lines 4210-4217
 function AttentionElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -4631,7 +4634,7 @@ function AttentionElement:init(node, unit_element)
 	self._obj_name = self:get("object_name")
 end
 
--- Lines 4217-4238
+-- Lines 4219-4240
 function AttentionElement:activate_callback(env)
 	local operation = self:run_parsed_func(env, self._operation)
 	local preset_name = self:run_parsed_func(env, self._preset_name)
@@ -4659,7 +4662,7 @@ end
 DecalMeshElement = DecalMeshElement or class(BaseElement)
 DecalMeshElement.NAME = "decal_mesh"
 
--- Lines 4245-4251
+-- Lines 4247-4253
 function DecalMeshElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -4668,7 +4671,7 @@ function DecalMeshElement:init(node, unit_element)
 	self._material = self:get("material")
 end
 
--- Lines 4253-4288
+-- Lines 4255-4290
 function DecalMeshElement:activate_callback(env)
 	local decal_surface = env.dest_unit:decal_surface()
 
@@ -4707,7 +4710,7 @@ function DecalMeshElement:activate_callback(env)
 	end
 end
 
--- Lines 4290-4300
+-- Lines 4292-4302
 function DecalMeshElement.load(unit, data)
 	local decal_surface = unit:decal_surface()
 
@@ -4725,7 +4728,7 @@ end
 EffectElement = EffectElement or class(BaseElement)
 EffectElement.NAME = "effect"
 
--- Lines 4306-4325
+-- Lines 4308-4327
 function EffectElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -4748,7 +4751,7 @@ function EffectElement:init(node, unit_element)
 	end
 end
 
--- Lines 4327-4398
+-- Lines 4329-4400
 function EffectElement:activate_callback(env)
 	local name = self:run_parsed_func(env, self._name)
 	local position = self:run_parsed_func(env, self._position)
@@ -4825,7 +4828,7 @@ end
 EffectSpawnerElement = EffectSpawnerElement or class(BaseElement)
 EffectSpawnerElement.NAME = "effect_spawner"
 
--- Lines 4404-4415
+-- Lines 4406-4417
 function EffectSpawnerElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -4838,7 +4841,7 @@ function EffectSpawnerElement:init(node, unit_element)
 	end
 end
 
--- Lines 4417-4433
+-- Lines 4419-4435
 function EffectSpawnerElement:activate_callback(env)
 	local name = self:run_parsed_func(env, self._name)
 
@@ -4857,7 +4860,7 @@ function EffectSpawnerElement:activate_callback(env)
 	end
 end
 
--- Lines 4435-4441
+-- Lines 4437-4443
 function EffectSpawnerElement:set_enabled(env, enabled, effect_spawner, name)
 	SequenceManager.set_effect_spawner_enabled(effect_spawner, enabled)
 
@@ -4866,7 +4869,7 @@ function EffectSpawnerElement:set_enabled(env, enabled, effect_spawner, name)
 	end
 end
 
--- Lines 4443-4455
+-- Lines 4445-4457
 function EffectSpawnerElement.load(unit, data)
 	for effect_surface_name, cat_data in pairs(data) do
 		local effect_spawner = unit:effect_spawner(Idstring(effect_surface_name))
@@ -4884,7 +4887,7 @@ end
 EnemyKilledElement = EnemyKilledElement or class(BaseElement)
 EnemyKilledElement.NAME = "enemy_killed"
 
--- Lines 4461-4473
+-- Lines 4463-4475
 function EnemyKilledElement:activate_callback(env)
 	local enemy_data = env.dest_unit:enemy_data()
 
@@ -4902,7 +4905,7 @@ end
 FunctionElement = FunctionElement or class(BaseElement)
 FunctionElement.NAME = "function"
 
--- Lines 4479-4516
+-- Lines 4481-4518
 function FunctionElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -4942,7 +4945,7 @@ function FunctionElement:init(node, unit_element)
 	end
 end
 
--- Lines 4518-4548
+-- Lines 4520-4550
 function FunctionElement:activate_callback(env)
 	local target = self:run_parsed_func(env, self._obj)
 	local extension = self:run_parsed_func(env, self._extension)
@@ -4977,19 +4980,19 @@ function FunctionElement:activate_callback(env)
 	end
 end
 
--- Lines 4550-4552
+-- Lines 4552-4554
 function FunctionElement:function0(env, target, func)
 	func(target)
 end
 
--- Lines 4554-4557
+-- Lines 4556-4559
 function FunctionElement:function1(env, target, func)
 	local param1 = self:run_parsed_func(env, self._param1)
 
 	func(target, param1)
 end
 
--- Lines 4559-4563
+-- Lines 4561-4565
 function FunctionElement:function2(env, target, func)
 	local param1 = self:run_parsed_func(env, self._param1)
 	local param2 = self:run_parsed_func(env, self._param2)
@@ -4997,7 +5000,7 @@ function FunctionElement:function2(env, target, func)
 	func(target, param1, param2)
 end
 
--- Lines 4565-4570
+-- Lines 4567-4572
 function FunctionElement:function3(env, target, func)
 	local param1 = self:run_parsed_func(env, self._param1)
 	local param2 = self:run_parsed_func(env, self._param2)
@@ -5006,7 +5009,7 @@ function FunctionElement:function3(env, target, func)
 	func(target, param1, param2, param3)
 end
 
--- Lines 4572-4578
+-- Lines 4574-4580
 function FunctionElement:function4(env, target, func)
 	local param1 = self:run_parsed_func(env, self._param1)
 	local param2 = self:run_parsed_func(env, self._param2)
@@ -5016,7 +5019,7 @@ function FunctionElement:function4(env, target, func)
 	func(target, param1, param2, param3, param4)
 end
 
--- Lines 4580-4587
+-- Lines 4582-4589
 function FunctionElement:function5(env, target, func)
 	local param1 = self:run_parsed_func(env, self._param1)
 	local param2 = self:run_parsed_func(env, self._param2)
@@ -5030,7 +5033,7 @@ end
 GraphicGroupElement = GraphicGroupElement or class(BaseElement)
 GraphicGroupElement.NAME = "graphic_group"
 
--- Lines 4593-4599
+-- Lines 4595-4601
 function GraphicGroupElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -5039,7 +5042,7 @@ function GraphicGroupElement:init(node, unit_element)
 	self._visibility = self:get("visibility")
 end
 
--- Lines 4601-4621
+-- Lines 4603-4623
 function GraphicGroupElement:activate_callback(env)
 	local name = self:run_parsed_func(env, self._name)
 	local activate = self:run_parsed_func(env, self._activate) ~= false
@@ -5067,7 +5070,7 @@ function GraphicGroupElement:activate_callback(env)
 	end
 end
 
--- Lines 4623-4627
+-- Lines 4625-4629
 function GraphicGroupElement.load(unit, data)
 	for name, sub_data in pairs(data) do
 		unit[sub_data[1]](unit, Idstring(name), sub_data[2])
@@ -5077,7 +5080,7 @@ end
 LightElement = LightElement or class(BaseElement)
 LightElement.NAME = "light"
 
--- Lines 4633-4669
+-- Lines 4635-4671
 function LightElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -5120,7 +5123,7 @@ function LightElement:init(node, unit_element)
 	end
 end
 
--- Lines 4671-4682
+-- Lines 4673-4684
 function LightElement:activate_callback(env)
 	local name = self:run_parsed_func(env, self._name)
 	local light_obj = name and env.dest_unit:get_object(name:id())
@@ -5134,7 +5137,7 @@ function LightElement:activate_callback(env)
 	end
 end
 
--- Lines 4684-4698
+-- Lines 4686-4700
 function LightElement:set_enabled(env, enabled, light_obj, name)
 	light_obj:set_enable(enabled)
 
@@ -5157,7 +5160,7 @@ function LightElement:set_enabled(env, enabled, light_obj, name)
 	end
 end
 
--- Lines 4700-4706
+-- Lines 4702-4708
 function LightElement:set_multiplier(env, multiplier, light_obj, name)
 	light_obj:set_multiplier(multiplier)
 
@@ -5169,7 +5172,7 @@ function LightElement:set_multiplier(env, multiplier, light_obj, name)
 	end
 end
 
--- Lines 4708-4714
+-- Lines 4710-4716
 function LightElement:set_color(env, color, light_obj, name)
 	light_obj:set_color(color)
 
@@ -5181,7 +5184,7 @@ function LightElement:set_color(env, color, light_obj, name)
 	end
 end
 
--- Lines 4716-4722
+-- Lines 4718-4724
 function LightElement:set_far_range(env, far_range, light_obj, name)
 	light_obj:set_far_range(far_range)
 
@@ -5193,7 +5196,7 @@ function LightElement:set_far_range(env, far_range, light_obj, name)
 	end
 end
 
--- Lines 4724-4730
+-- Lines 4726-4732
 function LightElement:set_spot_angle_start(env, spot_angle_start, light_obj, name)
 	light_obj:set_spot_angle_start(spot_angle_start)
 
@@ -5205,7 +5208,7 @@ function LightElement:set_spot_angle_start(env, spot_angle_start, light_obj, nam
 	end
 end
 
--- Lines 4732-4738
+-- Lines 4734-4740
 function LightElement:set_spot_angle_end(env, spot_angle_end, light_obj, name)
 	light_obj:set_spot_angle_end(spot_angle_end)
 
@@ -5217,19 +5220,21 @@ function LightElement:set_spot_angle_end(env, spot_angle_end, light_obj, name)
 	end
 end
 
--- Lines 4740-4745
+-- Lines 4742-4749
 function LightElement.load(unit, data)
 	for obj_name, sub_data in pairs(data) do
 		local obj = unit:get_object(obj_name:id())
 
-		obj[sub_data[1]](obj, sub_data[2])
+		if obj then
+			obj[sub_data[1]](obj, sub_data[2])
+		end
 	end
 end
 
 MaterialConfigElement = MaterialConfigElement or class(BaseElement)
 MaterialConfigElement.NAME = "material_config"
 
--- Lines 4751-4756
+-- Lines 4755-4760
 function MaterialConfigElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -5237,7 +5242,7 @@ function MaterialConfigElement:init(node, unit_element)
 	self._synchronous = self:get("synchronous")
 end
 
--- Lines 4758-4771
+-- Lines 4762-4775
 function MaterialConfigElement:activate_callback(env)
 	local name = self:run_parsed_func(env, self._name)
 	local synchronous = self:run_parsed_func(env, self._synchronous)
@@ -5253,7 +5258,7 @@ function MaterialConfigElement:activate_callback(env)
 	end
 end
 
--- Lines 4773-4775
+-- Lines 4777-4779
 function MaterialConfigElement.load(unit, data)
 	managers.dyn_resource:change_material_config(data.material, unit)
 end
@@ -5277,7 +5282,7 @@ MaterialElement.TIMER_STATE_MAP = MaterialElement.TIMER_STATE_MAP or {
 	pause = 0
 }
 
--- Lines 4783-4806
+-- Lines 4787-4810
 function MaterialElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -5302,7 +5307,7 @@ function MaterialElement:init(node, unit_element)
 	end
 end
 
--- Lines 4808-4830
+-- Lines 4812-4834
 function MaterialElement:activate_callback(env)
 	local name = self:run_parsed_func(env, self._name)
 
@@ -5328,27 +5333,27 @@ function MaterialElement:activate_callback(env)
 	end
 end
 
--- Lines 4832-4834
+-- Lines 4836-4838
 function MaterialElement:set_glossiness(env, glossiness, material)
 	material:set_glossiness(glossiness)
 end
 
--- Lines 4836-4838
+-- Lines 4840-4842
 function MaterialElement:set_render_template(env, render_template, material)
 	material:set_render_template(render_template)
 end
 
--- Lines 4840-4842
+-- Lines 4844-4846
 function MaterialElement:set_time(env, time, material)
 	material:set_time(time)
 end
 
--- Lines 4844-4846
+-- Lines 4848-4850
 function MaterialElement:set_variable(env, value, material, key)
 	material:set_variable(Idstring(key), value)
 end
 
--- Lines 4848-4868
+-- Lines 4852-4872
 function MaterialElement:set_material_state(env, state, material)
 	local args = string.split(state, " ")
 	state = args[1]
@@ -5375,7 +5380,7 @@ end
 MorphExpressionElement = MorphExpressionElement or class(BaseElement)
 MorphExpressionElement.NAME = "morph_expression"
 
--- Lines 4874-4893
+-- Lines 4878-4897
 function MorphExpressionElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -5397,7 +5402,7 @@ function MorphExpressionElement:init(node, unit_element)
 	end
 end
 
--- Lines 4895-4904
+-- Lines 4899-4908
 function MorphExpressionElement:activate_callback(env)
 	local model = self:run_parsed_func(env, self._model)
 
@@ -5413,7 +5418,7 @@ end
 MorphExpressionMovieElement = MorphExpressionMovieElement or class(BaseElement)
 MorphExpressionMovieElement.NAME = "morph_expression_movie"
 
--- Lines 4910-4916
+-- Lines 4914-4920
 function MorphExpressionMovieElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -5422,7 +5427,7 @@ function MorphExpressionMovieElement:init(node, unit_element)
 	self._loop = self:get("loop")
 end
 
--- Lines 4918-4930
+-- Lines 4922-4934
 function MorphExpressionMovieElement:activate_callback(env)
 	local model = self:run_parsed_func(env, self._model)
 	local movie = self:run_parsed_func(env, self._movie)
@@ -5441,7 +5446,7 @@ end
 ObjectElement = ObjectElement or class(BaseElement)
 ObjectElement.NAME = "object"
 
--- Lines 4936-4959
+-- Lines 4940-4963
 function ObjectElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -5468,7 +5473,7 @@ function ObjectElement:init(node, unit_element)
 	self._local_scope = self:get("local_scope")
 end
 
--- Lines 4961-4976
+-- Lines 4965-4980
 function ObjectElement:activate_callback(env)
 	local name = self:run_parsed_func(env, self._name)
 
@@ -5486,12 +5491,12 @@ function ObjectElement:activate_callback(env)
 	end
 end
 
--- Lines 4978-4980
+-- Lines 4982-4984
 function ObjectElement:set_visibility(env, visible, object_list, local_scope)
 	self:set_object(env.dest_unit, object_list, "set_visibility", visible)
 end
 
--- Lines 4982-4992
+-- Lines 4986-4996
 function ObjectElement:set_position(env, position, object_list, local_scope)
 	local func_name = nil
 
@@ -5504,7 +5509,7 @@ function ObjectElement:set_position(env, position, object_list, local_scope)
 	self:set_object(env.dest_unit, object_list, func_name, position)
 end
 
--- Lines 4994-5004
+-- Lines 4998-5008
 function ObjectElement:set_rotation(env, rotation, object_list, local_scope)
 	local func_name = nil
 
@@ -5517,7 +5522,7 @@ function ObjectElement:set_rotation(env, rotation, object_list, local_scope)
 	self:set_object(env.dest_unit, object_list, func_name, rotation)
 end
 
--- Lines 5006-5015
+-- Lines 5010-5019
 function ObjectElement:set_object(dest_unit, object_list, func_name, value)
 	for _, obj in ipairs(object_list) do
 		obj[func_name](obj, value)
@@ -5531,13 +5536,15 @@ function ObjectElement:set_object(dest_unit, object_list, func_name, value)
 	end
 end
 
--- Lines 5017-5028
+-- Lines 5021-5034
 function ObjectElement.load(unit, data)
 	for name, sub_data in pairs(data) do
 		for func_name, values in pairs(sub_data) do
 			local obj = unit:get_object(values[1])
 
-			obj[func_name](obj, values[2])
+			if obj then
+				obj[func_name](obj, values[2])
+			end
 		end
 	end
 end
@@ -5545,7 +5552,7 @@ end
 PhantomElement = PhantomElement or class(BaseElement)
 PhantomElement.NAME = "phantom"
 
--- Lines 5034-5039
+-- Lines 5040-5045
 function PhantomElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -5553,7 +5560,7 @@ function PhantomElement:init(node, unit_element)
 	self._enabled = self:get("enabled")
 end
 
--- Lines 5041-5055
+-- Lines 5047-5061
 function PhantomElement:activate_callback(env)
 	local name = self:run_parsed_func(env, self._name)
 	local phantom = env.dest_unit:phantom(name)
@@ -5571,7 +5578,7 @@ function PhantomElement:activate_callback(env)
 	end
 end
 
--- Lines 5057-5062
+-- Lines 5063-5068
 function PhantomElement.load(unit, data)
 	for name, enabled in pairs(data) do
 		local phantom = unit:phantom(name)
@@ -5583,7 +5590,7 @@ end
 PhysicEffectElement = PhysicEffectElement or class(BaseElement)
 PhysicEffectElement.NAME = "physic_effect"
 
--- Lines 5068-5083
+-- Lines 5074-5089
 function PhysicEffectElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -5601,7 +5608,7 @@ function PhysicEffectElement:init(node, unit_element)
 	end
 end
 
--- Lines 5085-5092
+-- Lines 5091-5098
 function PhysicEffectElement:activate_callback(env)
 	local name = self:run_parsed_func(env, self._name)
 	local target = self:run_parsed_func(env, self._target)
@@ -5613,7 +5620,7 @@ end
 ProjectDecalElement = ProjectDecalElement or class(BaseElement)
 ProjectDecalElement.NAME = "project_decal"
 
--- Lines 5098-5110
+-- Lines 5104-5116
 function ProjectDecalElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -5628,7 +5635,7 @@ function ProjectDecalElement:init(node, unit_element)
 	self._ignore_unit = self:get("ignore_unit")
 end
 
--- Lines 5112-5161
+-- Lines 5118-5167
 function ProjectDecalElement:activate_callback(env)
 	local name = self:run_parsed_func(env, self._name)
 	local position = self:run_parsed_func(env, self._position)
@@ -5688,14 +5695,14 @@ end
 RemoveStartTimeElement = RemoveStartTimeElement or class(BaseElement)
 RemoveStartTimeElement.NAME = "remove_start_time"
 
--- Lines 5167-5171
+-- Lines 5173-5177
 function RemoveStartTimeElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
 	self._id = self:get("id")
 end
 
--- Lines 5173-5179
+-- Lines 5179-5185
 function RemoveStartTimeElement:activate_callback(env)
 	local id = self:run_parsed_func(env, self._id)
 
@@ -5710,7 +5717,7 @@ RunSequenceElement.RUN_SEQUENCE_ATTRIBUTE_MAP = RunSequenceElement.RUN_SEQUENCE_
 }
 RunSequenceElement.NAME = "run_sequence"
 
--- Lines 5186-5197
+-- Lines 5192-5203
 function RunSequenceElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -5724,7 +5731,7 @@ function RunSequenceElement:init(node, unit_element)
 	end
 end
 
--- Lines 5199-5222
+-- Lines 5205-5228
 function RunSequenceElement:activate_callback(env)
 	local sequence_name = self:run_parsed_func(env, self._name)
 
@@ -5755,7 +5762,7 @@ end
 RunSpawnSystemSequenceElement = RunSpawnSystemSequenceElement or class(BaseElement)
 RunSpawnSystemSequenceElement.NAME = "run_spawn_system_sequence"
 
--- Lines 5228-5234
+-- Lines 5234-5240
 function RunSpawnSystemSequenceElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -5764,7 +5771,7 @@ function RunSpawnSystemSequenceElement:init(node, unit_element)
 	self._sequence_name = self:get("sequence")
 end
 
--- Lines 5236-5266
+-- Lines 5242-5272
 function RunSpawnSystemSequenceElement:activate_callback(env)
 	local socket_name = self:run_parsed_func(env, self._socket_name)
 	local unit_name = self:run_parsed_func(env, self._unit_name)
@@ -5800,7 +5807,7 @@ end
 SetDamageElement = SetDamageElement or class(BaseElement)
 SetDamageElement.NAME = "set_damage"
 
--- Lines 5272-5281
+-- Lines 5278-5287
 function SetDamageElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -5812,7 +5819,7 @@ function SetDamageElement:init(node, unit_element)
 	end
 end
 
--- Lines 5283-5295
+-- Lines 5289-5301
 function SetDamageElement:activate_callback(env)
 	if alive(env.dest_body) then
 		if env.dest_body:extension() and env.dest_body:extension().damage then
@@ -5827,7 +5834,7 @@ function SetDamageElement:activate_callback(env)
 	end
 end
 
--- Lines 5297-5300
+-- Lines 5303-5306
 function SetDamageElement:set_damage(env, damage, damage_type)
 	local extension = env.dest_body:extension().damage
 
@@ -5837,12 +5844,12 @@ end
 DisableUnitElement = DisableUnitElement or class(BaseElement)
 DisableUnitElement.NAME = "disable_unit"
 
--- Lines 5305-5307
+-- Lines 5311-5313
 function DisableUnitElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 end
 
--- Lines 5309-5315
+-- Lines 5315-5321
 function DisableUnitElement:activate_callback(env)
 	if alive(env.dest_unit) then
 		env.dest_unit:set_enabled(false)
@@ -5854,7 +5861,7 @@ end
 SetExtensionVarElement = SetExtensionVarElement or class(BaseElement)
 SetExtensionVarElement.NAME = "set_extension_var"
 
--- Lines 5320-5326
+-- Lines 5326-5332
 function SetExtensionVarElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -5863,7 +5870,7 @@ function SetExtensionVarElement:init(node, unit_element)
 	self._value = self:get("value")
 end
 
--- Lines 5328-5345
+-- Lines 5334-5351
 function SetExtensionVarElement:activate_callback(env)
 	local name = self:run_parsed_func(env, self._name)
 	local extension = name and env.dest_unit[name](env.dest_unit)
@@ -5887,7 +5894,7 @@ end
 SetGlobalVariableElement = SetGlobalVariableElement or class(BaseElement)
 SetGlobalVariableElement.NAME = "set_global_variable"
 
--- Lines 5351-5356
+-- Lines 5357-5362
 function SetGlobalVariableElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -5895,7 +5902,7 @@ function SetGlobalVariableElement:init(node, unit_element)
 	self._value = self:get("value")
 end
 
--- Lines 5358-5367
+-- Lines 5364-5373
 function SetGlobalVariableElement:activate_callback(env)
 	local name = self:run_parsed_func(env, self._name)
 
@@ -5908,7 +5915,7 @@ function SetGlobalVariableElement:activate_callback(env)
 	end
 end
 
--- Lines 5369-5372
+-- Lines 5375-5378
 function SetGlobalVariableElement:set_variable(env, name, value)
 	env.g_vars[name] = value
 	self._unit_element._global_vars[name] = value
@@ -5917,7 +5924,7 @@ end
 SetGlobalVariablesElement = SetGlobalVariablesElement or class(BaseElement)
 SetGlobalVariablesElement.NAME = "set_global_variables"
 
--- Lines 5378-5388
+-- Lines 5384-5394
 function SetGlobalVariablesElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -5930,14 +5937,14 @@ function SetGlobalVariablesElement:init(node, unit_element)
 	end
 end
 
--- Lines 5390-5394
+-- Lines 5396-5400
 function SetGlobalVariablesElement:activate_callback(env)
 	for name, value in pairs(self._variables) do
 		self:set_variable(env, name, self:run_parsed_func(env, value))
 	end
 end
 
--- Lines 5396-5399
+-- Lines 5402-5405
 function SetGlobalVariablesElement:set_variable(env, name, value)
 	env.g_vars[name] = value
 	self._unit_element._global_vars[name] = value
@@ -5946,7 +5953,7 @@ end
 SetInflictElement = SetInflictElement or class(BaseElement)
 SetInflictElement.NAME = "set_inflict"
 
--- Lines 5405-5420
+-- Lines 5411-5426
 function SetInflictElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -5964,7 +5971,7 @@ function SetInflictElement:init(node, unit_element)
 	}
 end
 
--- Lines 5422-5446
+-- Lines 5428-5452
 function SetInflictElement:activate_callback(env)
 	local body_name = self:run_parsed_func(env, self._body_name)
 	local body = body_name and env.dest_unit:body(body_name)
@@ -5994,7 +6001,7 @@ end
 SetPhysicEffectElement = SetPhysicEffectElement or class(BaseElement)
 SetPhysicEffectElement.NAME = "set_physic_effect"
 
--- Lines 5452-5473
+-- Lines 5458-5479
 function SetPhysicEffectElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -6019,7 +6026,7 @@ function SetPhysicEffectElement:init(node, unit_element)
 	end
 end
 
--- Lines 5475-5493
+-- Lines 5481-5499
 function SetPhysicEffectElement:activate_callback(env)
 	local id = self:run_parsed_func(env, self._id) or env.vars.last_physic_effect_id
 
@@ -6045,7 +6052,7 @@ end
 SetProximityElement = SetProximityElement or class(BaseElement)
 SetProximityElement.NAME = "set_proximity"
 
--- Lines 5499-5584
+-- Lines 5505-5590
 function SetProximityElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -6148,7 +6155,7 @@ function SetProximityElement:init(node, unit_element)
 	end
 end
 
--- Lines 5586-5597
+-- Lines 5592-5603
 function SetProximityElement:activate_callback(env)
 	local name = self:run_parsed_func(env, self._name)
 	local proximity_map = env.dest_unit:damage():get_proximity_map()
@@ -6164,12 +6171,12 @@ function SetProximityElement:activate_callback(env)
 	end
 end
 
--- Lines 5599-5601
+-- Lines 5605-5607
 function SetProximityElement:set_enabled(env, enabled, name)
 	env.dest_unit:damage():set_proximity_enabled(name, enabled == true)
 end
 
--- Lines 5603-5611
+-- Lines 5609-5617
 function SetProximityElement:set_type(env, proximity_type, name)
 	local slotmask = managers.sequence:get_proximity_mask(proximity_type)
 
@@ -6182,72 +6189,72 @@ function SetProximityElement:set_type(env, proximity_type, name)
 	end
 end
 
--- Lines 5613-5615
+-- Lines 5619-5621
 function SetProximityElement:set_ref_obj_name(env, ref_obj_name, name)
 	damage_ext:set_proximity_ref_obj_name(name, ref_obj_name)
 end
 
--- Lines 5617-5619
+-- Lines 5623-5625
 function SetProximityElement:set_interval(env, interval, name)
 	env.dest_unit:damage():set_proximity_interval(name, math.min(tonumber(interval) or 0, ProximityTypeElement.MIN_INTERVAL))
 end
 
--- Lines 5621-5623
+-- Lines 5627-5629
 function SetProximityElement:set_quick(env, quick, name)
 	env.dest_unit:damage():set_proximity_quick(name, quick ~= false)
 end
 
--- Lines 5625-5627
+-- Lines 5631-5633
 function SetProximityElement:set_is_within(env, is_within, name)
 	env.dest_unit:damage():set_proximity_is_within(name, is_within == true)
 end
 
--- Lines 5629-5631
+-- Lines 5635-5637
 function SetProximityElement:set_within_activations(env, activations, name)
 	env.dest_unit:damage():set_proximity_within_activations(name, tonumber(activations) or 0)
 end
 
--- Lines 5633-5635
+-- Lines 5639-5641
 function SetProximityElement:set_within_max_activations(env, max_activations, name)
 	env.dest_unit:damage():set_proximity_within_max_activations(name, tonumber(max_activations) or -1)
 end
 
--- Lines 5637-5639
+-- Lines 5643-5645
 function SetProximityElement:set_within_delay(env, delay, name)
 	env.dest_unit:damage():set_proximity_within_delay(name, tonumber(delay) or 0)
 end
 
--- Lines 5641-5643
+-- Lines 5647-5649
 function SetProximityElement:set_within_range(env, range, name)
 	env.dest_unit:damage():set_proximity_within_range(name, max(tonumber(range) or 0, 0))
 end
 
--- Lines 5645-5647
+-- Lines 5651-5653
 function SetProximityElement:set_inside_count(env, count, name)
 	env.dest_unit:damage():set_proximity_inside_count(name, tonumber(count) or -1)
 end
 
--- Lines 5649-5651
+-- Lines 5655-5657
 function SetProximityElement:set_outside_activations(env, activations, name)
 	env.dest_unit:damage():set_proximity_outside_activations(name, tonumber(activations) or 0)
 end
 
--- Lines 5653-5655
+-- Lines 5659-5661
 function SetProximityElement:set_outside_max_activations(env, max_activations, name)
 	env.dest_unit:damage():set_proximity_outside_max_activations(name, tonumber(max_activations) or -1)
 end
 
--- Lines 5657-5659
+-- Lines 5663-5665
 function SetProximityElement:set_outside_delay(env, delay, name)
 	env.dest_unit:damage():set_proximity_outside_delay(name, tonumber(delay) or 0)
 end
 
--- Lines 5661-5663
+-- Lines 5667-5669
 function SetProximityElement:set_outside_range(env, range, name)
 	env.dest_unit:damage():set_proximity_outside_range(name, max(tonumber(range) or 0, 0))
 end
 
--- Lines 5665-5667
+-- Lines 5671-5673
 function SetProximityElement:set_outside_count(env, count, name)
 	env.dest_unit:damage():set_proximity_outside_count(name, tonumber(count) or -1)
 end
@@ -6258,7 +6265,7 @@ SetSaveDataElement.SET_SAVE_DATA_ATTRIBUTE_MAP = SetSaveDataElement.SET_SAVE_DAT
 	unique = true
 }
 
--- Lines 5674-5685
+-- Lines 5680-5691
 function SetSaveDataElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -6272,7 +6279,7 @@ function SetSaveDataElement:init(node, unit_element)
 	end
 end
 
--- Lines 5687-5699
+-- Lines 5693-5705
 function SetSaveDataElement:activate_callback(env)
 	local unique = self:run_parsed_func(env, self._unique)
 
@@ -6290,7 +6297,7 @@ end
 SpawnSystemUnitEnabledElement = SpawnSystemUnitEnabledElement or class(BaseElement)
 SpawnSystemUnitEnabledElement.NAME = "set_spawn_system_unit_enabled"
 
--- Lines 5705-5711
+-- Lines 5711-5717
 function SpawnSystemUnitEnabledElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -6299,7 +6306,7 @@ function SpawnSystemUnitEnabledElement:init(node, unit_element)
 	self._enabled = self:get("enabled")
 end
 
--- Lines 5713-5731
+-- Lines 5719-5737
 function SpawnSystemUnitEnabledElement:activate_callback(env)
 	local socket_name = self:run_parsed_func(env, self._socket_name)
 	local unit_name = self:run_parsed_func(env, self._unit_name)
@@ -6323,7 +6330,7 @@ end
 SetVariableElement = SetVariableElement or class(SetGlobalVariableElement)
 SetVariableElement.NAME = "set_variable"
 
--- Lines 5737-5739
+-- Lines 5743-5745
 function SetVariableElement:set_variable(env, name, value)
 	env.vars = env.dest_unit:damage():set_variable(name, value)
 end
@@ -6331,7 +6338,7 @@ end
 SetVariablesElement = SetVariablesElement or class(SetGlobalVariablesElement)
 SetVariablesElement.NAME = "set_variables"
 
--- Lines 5745-5747
+-- Lines 5751-5753
 function SetVariablesElement:set_variable(env, name, value)
 	env.vars = env.dest_unit:damage():set_variable(name, value)
 end
@@ -6339,7 +6346,7 @@ end
 SetWaterElement = SetWaterElement or class(BaseElement)
 SetWaterElement.NAME = "set_water"
 
--- Lines 5753-5763
+-- Lines 5759-5769
 function SetWaterElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -6352,7 +6359,7 @@ function SetWaterElement:init(node, unit_element)
 	self._physic_effect = self:get("physic_effect")
 end
 
--- Lines 5765-5787
+-- Lines 5771-5793
 function SetWaterElement:activate_callback(env)
 	local name = self:run_parsed_func(env, self._name)
 
@@ -6377,7 +6384,7 @@ end
 ShakeCameraElement = ShakeCameraElement or class(BaseElement)
 ShakeCameraElement.NAME = "shake_camera"
 
--- Lines 5793-5800
+-- Lines 5799-5806
 function ShakeCameraElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -6387,7 +6394,7 @@ function ShakeCameraElement:init(node, unit_element)
 	self._offset = self:get("offset")
 end
 
--- Lines 5802-5812
+-- Lines 5808-5818
 function ShakeCameraElement:activate_callback(env)
 	local shaker_name = self:run_parsed_func(env, self._shaker)
 	local amplitude = self:run_parsed_func(env, self._amplitude) or 1
@@ -6403,7 +6410,7 @@ end
 SlotElement = SlotElement or class(BaseElement)
 SlotElement.NAME = "slot"
 
--- Lines 5818-5826
+-- Lines 5824-5832
 function SlotElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -6414,7 +6421,7 @@ function SlotElement:init(node, unit_element)
 	self._frustum_far_clip = self:get("frustum_far_clip")
 end
 
--- Lines 5828-5858
+-- Lines 5834-5864
 function SlotElement:activate_callback(env)
 	if self._frustum_delay then
 		local visible = self:run_parsed_func(env, self._frustum_delay)
@@ -6423,7 +6430,7 @@ function SlotElement:activate_callback(env)
 		local frustum_far_clip = self:run_parsed_func(env, self._frustum_far_clip)
 		local data = {}
 
-		-- Lines 5835-5835
+		-- Lines 5841-5841
 		local function func()
 			return self:check_frustum_delay(frustum_close_radius, frustum_extension, frustum_far_clip, visible, env, data)
 		end
@@ -6452,7 +6459,7 @@ function SlotElement:activate_callback(env)
 	self:activate_element(env)
 end
 
--- Lines 5860-5872
+-- Lines 5866-5878
 function SlotElement:activate_element(env)
 	local slot = tonumber(self:run_parsed_func(env, self._slot))
 
@@ -6467,12 +6474,12 @@ function SlotElement:activate_element(env)
 	end
 end
 
--- Lines 5874-5876
+-- Lines 5880-5882
 function SlotElement.load(unit, data)
 	unit:set_slot(data)
 end
 
--- Lines 5878-5903
+-- Lines 5884-5909
 function SlotElement:check_frustum_delay(frustum_close_radius, frustum_extension, frustum_far_clip, visible, env, data)
 	if not alive(env.dest_unit) then
 		return true
@@ -6501,7 +6508,7 @@ function SlotElement:check_frustum_delay(frustum_close_radius, frustum_extension
 	return false
 end
 
--- Lines 5905-5911
+-- Lines 5911-5917
 function SlotElement:hide_objects(obj)
 	obj:set_visibility(false)
 
@@ -6513,7 +6520,7 @@ end
 WwiseElement = WwiseElement or class(BaseElement)
 WwiseElement.NAME = "sound"
 
--- Lines 5916-5925
+-- Lines 5922-5931
 function WwiseElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -6525,7 +6532,7 @@ function WwiseElement:init(node, unit_element)
 	self._skip_save = self:get("skip_save")
 end
 
--- Lines 5927-5934
+-- Lines 5933-5940
 function WwiseElement:activate_callback(env)
 	local func_name = self:run_parsed_func(env, self._action) or "play"
 	local func = self[func_name]
@@ -6535,7 +6542,7 @@ function WwiseElement:activate_callback(env)
 	end
 end
 
--- Lines 5936-5978
+-- Lines 5942-5984
 function WwiseElement:play(env)
 	local source = self:run_parsed_func(env, self._source)
 	local object = self:run_parsed_func(env, self._object)
@@ -6580,7 +6587,7 @@ function WwiseElement:play(env)
 	end
 end
 
--- Lines 5980-6002
+-- Lines 5986-6008
 function WwiseElement:stop(env)
 	local source = self:run_parsed_func(env, self._source)
 	local event = self:run_parsed_func(env, self._event)
@@ -6607,7 +6614,7 @@ function WwiseElement:stop(env)
 	end
 end
 
--- Lines 6004-6019
+-- Lines 6010-6025
 function WwiseElement:set_switch(env)
 	local switch = self:run_parsed_func(env, self._switch)
 	local sound_source = self:_get_sound_source(env)
@@ -6627,7 +6634,7 @@ function WwiseElement:set_switch(env)
 	end
 end
 
--- Lines 6021-6043
+-- Lines 6027-6049
 function WwiseElement:_get_sound_source(env)
 	local source = self:run_parsed_func(env, self._source)
 	local object = self:run_parsed_func(env, self._object)
@@ -6654,19 +6661,21 @@ function WwiseElement:_get_sound_source(env)
 	return sound_source
 end
 
--- Lines 6045-6056
+-- Lines 6051-6064
 function WwiseElement.load(unit, data)
 	for source, sub_data in pairs(data) do
 		local sound_source = unit:sound_source(source and Idstring(source))
 
-		sound_source[sub_data[1]](sound_source, sub_data[2])
+		if sound_source then
+			sound_source[sub_data[1]](sound_source, sub_data[2])
+		end
 	end
 end
 
 SoundElement = SoundElement or class(BaseElement)
 SoundElement.NAME = "sound"
 
--- Lines 6062-6072
+-- Lines 6070-6080
 function SoundElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -6679,7 +6688,7 @@ function SoundElement:init(node, unit_element)
 	self._t = self:get("t")
 end
 
--- Lines 6074-6081
+-- Lines 6082-6089
 function SoundElement:activate_callback(env)
 	local func_name = self:run_parsed_func(env, self._action) or "play"
 	local func = self[func_name]
@@ -6689,7 +6698,7 @@ function SoundElement:activate_callback(env)
 	end
 end
 
--- Lines 6083-6106
+-- Lines 6091-6114
 function SoundElement:play(env)
 	local cue = self:run_parsed_func(env, self._cue)
 
@@ -6716,7 +6725,7 @@ function SoundElement:play(env)
 	end
 end
 
--- Lines 6108-6116
+-- Lines 6116-6124
 function SoundElement:stop(env)
 	local cue = self:run_parsed_func(env, self._cue)
 
@@ -6743,7 +6752,7 @@ SpawnUnitElement.SPAWN_UNIT_ATTRIBUTE_MAP = SpawnUnitElement.SPAWN_UNIT_ATTRIBUT
 	to_trigger = true
 }
 
--- Lines 6127-6150
+-- Lines 6135-6158
 function SpawnUnitElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -6769,7 +6778,7 @@ function SpawnUnitElement:init(node, unit_element)
 	end
 end
 
--- Lines 6152-6340
+-- Lines 6160-6348
 function SpawnUnitElement:activate_callback(env)
 	local name = self:run_parsed_func(env, self._name)
 	local position = self:run_parsed_func(env, self._position)
@@ -6970,7 +6979,7 @@ function SpawnUnitElement:activate_callback(env)
 	end
 end
 
--- Lines 6342-6352
+-- Lines 6350-6360
 function SpawnUnitElement:get_params(env)
 	local params = CoreTable.clone(env.params)
 
@@ -6986,14 +6995,14 @@ end
 StopPhysicEffectElement = StopPhysicEffectElement or class(BaseElement)
 StopPhysicEffectElement.NAME = "stop_physic_effect"
 
--- Lines 6358-6362
+-- Lines 6366-6370
 function StopPhysicEffectElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
 	self._id = self:get("id")
 end
 
--- Lines 6364-6372
+-- Lines 6372-6380
 function StopPhysicEffectElement:activate_callback(env)
 	local id = self:run_parsed_func(env, self._id)
 
@@ -7007,7 +7016,7 @@ end
 StopEffectElement = StopEffectElement or class(BaseElement)
 StopEffectElement.NAME = "stop_effect"
 
--- Lines 6378-6383
+-- Lines 6386-6391
 function StopEffectElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -7015,7 +7024,7 @@ function StopEffectElement:init(node, unit_element)
 	self._instant = self:get("instant")
 end
 
--- Lines 6385-6413
+-- Lines 6393-6421
 function StopEffectElement:activate_callback(env)
 	local id_list_var = self:run_parsed_func(env, self._id_list_var)
 
@@ -7049,14 +7058,14 @@ end
 TriggerElement = TriggerElement or class(BaseElement)
 TriggerElement.NAME = "trigger"
 
--- Lines 6419-6423
+-- Lines 6427-6431
 function TriggerElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
 	self._name = self:get("name")
 end
 
--- Lines 6425-6449
+-- Lines 6433-6457
 function TriggerElement:activate_callback(env)
 	local name = self:run_parsed_func(env, self._name)
 	local dest_unit_damage_ext = env.dest_unit:damage()

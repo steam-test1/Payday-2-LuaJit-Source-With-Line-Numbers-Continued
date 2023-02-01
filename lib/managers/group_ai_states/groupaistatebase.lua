@@ -3810,7 +3810,7 @@ end
 
 -- Lines 3860-3862
 function GroupAIStateBase:num_alive_players()
-	return #self._player_criminals
+	return table.size(self._player_criminals)
 end
 
 -- Lines 3866-3880
@@ -5701,7 +5701,7 @@ function GroupAIStateBase.analyse_giveaway(trigger_string, giveaway_unit, additi
 	end
 
 	if not giveaway_unit or type(giveaway_unit) ~= "userdata" or not alive(giveaway_unit) then
-		if additional_info[1] == "explosion" then
+		if additional_info and additional_info[1] == "explosion" then
 			return "sys_explosion"
 		end
 

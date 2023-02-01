@@ -1,6 +1,6 @@
 TweakDataVR = TweakDataVR or class()
 
--- Lines 4-6141
+-- Lines 4-6240
 function TweakDataVR:init(tweak_data)
 	self.melee_offsets = {
 		default = {
@@ -733,6 +733,10 @@ function TweakDataVR:init(tweak_data)
 				grip = "weapon_2_grip",
 				position = Vector3(-1.5, 1.8, 0)
 			},
+			contender = {
+				grip = "weapon_2_grip",
+				position = Vector3(-0.5, 1.2, 0)
+			},
 			m134 = {
 				position = Vector3(-8, 29, 0)
 			},
@@ -792,6 +796,9 @@ function TweakDataVR:init(tweak_data)
 				position = Vector3(-0.5, 0.8, 2)
 			},
 			galil = {
+				position = Vector3(-0.5, 0, 1)
+			},
+			hcar = {
 				position = Vector3(-0.5, 0, 1)
 			},
 			vhs = {
@@ -1360,6 +1367,14 @@ function TweakDataVR:init(tweak_data)
 			position = Vector3(0, 3, 2),
 			rotation = Rotation(0, -25, 0)
 		},
+		tkb = {
+			position = Vector3(0, -4, 7),
+			rotation = Rotation(0, -25, 0)
+		},
+		hcar = {
+			position = Vector3(0, 0, 0),
+			rotation = Rotation(0, -20, 0)
+		},
 		shak12 = {
 			position = Vector3(0, 3, 2),
 			rotation = Rotation(0, -25, 0)
@@ -1462,6 +1477,10 @@ function TweakDataVR:init(tweak_data)
 		ms3gl = {
 			position = Vector3(0, 2, -4),
 			rotation = Rotation(20, -15, 1)
+		},
+		contender = {
+			position = Vector3(1.5, 0, 2),
+			rotation = Rotation(-45, 12, -20)
 		},
 		china = {
 			grip = "idle_wpn",
@@ -1918,6 +1937,13 @@ function TweakDataVR:init(tweak_data)
 			groza = {
 				position = Vector3(0, 19, -4)
 			},
+			tkb = {
+				position = Vector3(-5, 27, -2)
+			},
+			hcar = {
+				grip = "idle_wpn",
+				position = Vector3(-2, 32, 2)
+			},
 			contraband = {
 				grip = "idle_wpn",
 				position = Vector3(-1, 30, 0)
@@ -1985,6 +2011,10 @@ function TweakDataVR:init(tweak_data)
 				}
 			},
 			gre_m79 = {
+				grip = "idle_wpn",
+				position = Vector3(-1, 20, -2)
+			},
+			contender = {
 				grip = "idle_wpn",
 				position = Vector3(-1, 20, -2)
 			},
@@ -5376,6 +5406,42 @@ function TweakDataVR:init(tweak_data)
 				}
 			}
 		},
+		tkb = {
+			start = {
+				{
+					time = 0,
+					sound = "wp_tkb_clip_grab_out"
+				},
+				{
+					drop_mag = true,
+					time = 0.05,
+					visible = false,
+					pos = Vector3(0, 5, -20),
+					rot = Rotation(0, 30, 0)
+				}
+			},
+			finish = {
+				{
+					time = 0,
+					sound = "wp_tkb_clip_slide_in",
+					visible = true,
+					pos = Vector3(0, 0, -20)
+				},
+				{
+					time = 0.1,
+					pos = Vector3(0, 0, -4.5)
+				},
+				{
+					time = 0.56,
+					pos = Vector3(0, 0, -4)
+				},
+				{
+					time = 0.6,
+					sound = "wp_tkb_lever_release",
+					pos = Vector3()
+				}
+			}
+		},
 		g36 = {
 			start = {
 				{
@@ -5624,6 +5690,42 @@ function TweakDataVR:init(tweak_data)
 				{
 					time = 0.6,
 					sound = "wp_galil_lever_release",
+					pos = Vector3()
+				}
+			}
+		},
+		hcar = {
+			start = {
+				{
+					time = 0,
+					sound = "wp_hcar_clip_slide_out"
+				},
+				{
+					drop_mag = true,
+					time = 0.05,
+					visible = false,
+					pos = Vector3(0, 5, -20),
+					rot = Rotation(0, 30, 0)
+				}
+			},
+			finish = {
+				{
+					time = 0,
+					sound = "wp_hcar_clip_slide_in",
+					visible = true,
+					pos = Vector3(0, 0, -20)
+				},
+				{
+					time = 0.1,
+					pos = Vector3(0, 0, -4.5)
+				},
+				{
+					time = 0.56,
+					pos = Vector3(0, 0, -4)
+				},
+				{
+					time = 0.6,
+					sound = "wp_hcar_lever_release",
 					pos = Vector3()
 				}
 			}
@@ -9866,6 +9968,62 @@ function TweakDataVR:init(tweak_data)
 				}
 			}
 		},
+		contender = {
+			start = {
+				{
+					time = 0,
+					sound = "wp_contender_lock_open",
+					anims = {
+						{
+							anim_group = "reload",
+							to = 1,
+							from = 0.4
+						}
+					},
+					visible = {
+						visible = false,
+						parts = {
+							magazine = true
+						}
+					}
+				},
+				{
+					time = 0.01,
+					sound = "wp_contender_barrel_open"
+				},
+				{
+					time = 0.12,
+					sound = "wp_contender_shell_out",
+					effect = {
+						object = "a_m",
+						name = "effects/payday2/particles/weapons/shells/shell_556"
+					}
+				}
+			},
+			finish = {
+				{
+					time = 0,
+					sound = "wp_contender_shell_in",
+					visible = {
+						visible = true,
+						parts = {
+							magazine = true
+						}
+					}
+				},
+				{
+					time = 0.99,
+					sound = "wp_contender_barrel_close",
+					pos = Vector3(),
+					anims = {
+						{
+							anim_group = "reload",
+							from = 3
+						}
+					}
+				}
+			}
+		},
 		saw = {
 			start = {
 				{
@@ -10631,7 +10789,7 @@ function TweakDataVR:init(tweak_data)
 	}
 end
 
--- Lines 6147-6258
+-- Lines 6246-6357
 function TweakDataVR:init_specializations(tweak_data)
 	local addon_indices = {
 		"health",
@@ -10846,7 +11004,7 @@ function TweakDataVR:init_specializations(tweak_data)
 	end
 end
 
--- Lines 6262-6322
+-- Lines 6361-6421
 function TweakDataVR:init_skills(tweak_data)
 	self.post_warp = {
 		min = 1,
@@ -10926,7 +11084,7 @@ function TweakDataVR:init_skills(tweak_data)
 	}
 end
 
--- Lines 6325-6337
+-- Lines 6424-6436
 function TweakDataVR:is_locked(category, id, ...)
 	local locked = self.locked[category] and self.locked[category][id]
 
@@ -10947,7 +11105,7 @@ function TweakDataVR:is_locked(category, id, ...)
 	return locked
 end
 
--- Lines 6339-6365
+-- Lines 6438-6464
 function TweakDataVR:get_offset_by_id(id, ...)
 	if id == "magazine" then
 		return self:_get_magazine_offsets_by_id(...)
@@ -10968,14 +11126,14 @@ function TweakDataVR:get_offset_by_id(id, ...)
 	return {}
 end
 
--- Lines 6367-6371
+-- Lines 6466-6470
 local function combine_offset(offset, new)
 	for key, value in pairs(new) do
 		offset[key] = offset[key] or value
 	end
 end
 
--- Lines 6373-6385
+-- Lines 6472-6484
 function TweakDataVR:_get_melee_offset_by_id(id)
 	local offset = {}
 	local tweak = tweak_data.blackmarket.melee_weapons[id]
@@ -10993,7 +11151,7 @@ function TweakDataVR:_get_melee_offset_by_id(id)
 	return offset
 end
 
--- Lines 6387-6395
+-- Lines 6486-6494
 function TweakDataVR:_get_weapon_offset_by_id(id)
 	local offset = {}
 
@@ -11006,7 +11164,7 @@ function TweakDataVR:_get_weapon_offset_by_id(id)
 	return offset
 end
 
--- Lines 6397-6401
+-- Lines 6496-6500
 function TweakDataVR:_get_mask_offsets_by_id(id)
 	local offset = {}
 
@@ -11015,7 +11173,7 @@ function TweakDataVR:_get_mask_offsets_by_id(id)
 	return offset
 end
 
--- Lines 6403-6411
+-- Lines 6502-6510
 function TweakDataVR:_get_throwable_offsets_by_id(id)
 	local offset = {}
 
@@ -11030,7 +11188,7 @@ function TweakDataVR:_get_throwable_offsets_by_id(id)
 	return offset
 end
 
--- Lines 6413-6420
+-- Lines 6512-6519
 function TweakDataVR:_get_magazine_offsets_by_id(id)
 	local offset = {}
 
@@ -11043,7 +11201,7 @@ function TweakDataVR:_get_magazine_offsets_by_id(id)
 	return offset
 end
 
--- Lines 6422-6429
+-- Lines 6521-6528
 function TweakDataVR:_get_bow_offsets_by_id(id)
 	local offset = {}
 

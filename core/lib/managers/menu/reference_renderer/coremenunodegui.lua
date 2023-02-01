@@ -620,7 +620,7 @@ end
 function NodeGui:_set_topic_position()
 end
 
--- Lines 648-657
+-- Lines 648-658
 function NodeGui:_item_panel_height()
 	local height = self.height_padding * 2
 
@@ -631,10 +631,12 @@ function NodeGui:_item_panel_height()
 		end
 	end
 
+	height = height - (table.size(self.row_items) > 0 and self.spacing or 0)
+
 	return height
 end
 
--- Lines 659-722
+-- Lines 660-723
 function NodeGui:_set_item_positions()
 	local total_height = self:_item_panel_height()
 	local current_y = self.height_padding
@@ -701,25 +703,25 @@ function NodeGui:_set_item_positions()
 	end
 end
 
--- Lines 724-730
+-- Lines 725-731
 function NodeGui:resolution_changed()
 	self:_setup_size()
 	self:_set_item_positions()
 	self:highlight_item(self._highlighted_item)
 end
 
--- Lines 732-734
+-- Lines 733-735
 function NodeGui:_setup_item_panel_parent(safe_rect)
 	self._item_panel_parent:set_shape(safe_rect.x, safe_rect.y, safe_rect.width, safe_rect.height)
 end
 
--- Lines 736-739
+-- Lines 737-740
 function NodeGui:_set_width_and_height(safe_rect)
 	self.width = safe_rect.width
 	self.height = safe_rect.height
 end
 
--- Lines 741-757
+-- Lines 742-758
 function NodeGui:_setup_item_panel(safe_rect, res)
 	local item_panel_offset = safe_rect.height * 0.5 - #self.row_items * 0.5 * (self.font_size + self.spacing)
 
@@ -731,12 +733,12 @@ function NodeGui:_setup_item_panel(safe_rect, res)
 	self.item_panel:set_w(safe_rect.width)
 end
 
--- Lines 759-761
+-- Lines 760-762
 function NodeGui:_scaled_size()
 	return managers.gui_data:scaled_size()
 end
 
--- Lines 763-824
+-- Lines 764-825
 function NodeGui:_setup_size()
 	local safe_rect = managers.viewport:get_safe_rect_pixels()
 	local scaled_size = managers.gui_data:scaled_size()
@@ -777,11 +779,11 @@ function NodeGui:_setup_size()
 	end
 end
 
--- Lines 826-827
+-- Lines 827-828
 function NodeGui:_setup_item_size(row_item)
 end
 
--- Lines 829-837
+-- Lines 830-838
 function NodeGui:mouse_pressed(button, x, y)
 	if self.item_panel:inside(x, y) and self._item_panel_parent:inside(x, y) and self:_mid_align() < x then
 		if button == Idstring("mouse wheel down") then

@@ -1,6 +1,6 @@
 InteractionTweakData = InteractionTweakData or class()
 
--- Lines 3-8504
+-- Lines 3-8530
 function InteractionTweakData:init(tweak_data)
 	self.CULLING_DISTANCE = 2000
 	self.INTERACT_DISTANCE = 200
@@ -3545,8 +3545,9 @@ function InteractionTweakData:init(tweak_data)
 	}
 	self.cas_open_door = {
 		text_id = "hud_cas_open_door",
-		start_active = true,
 		interact_distance = 150,
+		timer = 3,
+		start_active = true,
 		can_interact_in_civilian = true
 	}
 	self.cas_close_door = {

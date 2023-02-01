@@ -6,9 +6,5 @@ function GrenadeLauncherContinousReloadBase:init(...)
 	GrenadeLauncherContinousReloadBase.super.init(self, ...)
 
 	self._use_shotgun_reload = true
-end
-
--- Lines 16-18
-function GrenadeLauncherContinousReloadBase:shotgun_shell_data()
-	return nil
+	self._skip_reload_shotgun_shell = true
 end

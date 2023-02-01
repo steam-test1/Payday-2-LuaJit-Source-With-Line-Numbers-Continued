@@ -216,7 +216,7 @@ end
 -- Lines 252-264
 function NewRaycastWeaponBase:setup_underbarrel_data()
 	local underbarrel_part = managers.weapon_factory:get_part_from_weapon_by_type("underbarrel", self._parts)
-	local underbarrel_ammo_data = managers.weapon_factory:get_part_data_type_from_weapon_by_type("underbarrel_ammo", "custom_stats", self._parts)
+	local underbarrel_ammo_data = managers.weapon_factory:get_underbarrel_ammo_data_from_weapon(self._factory_id, self._blueprint)
 
 	if underbarrel_part and alive(underbarrel_part.unit) and underbarrel_part.unit:base() and underbarrel_part.unit:base().setup_data then
 		underbarrel_part.unit:base():setup_data(self._setup, 1, underbarrel_ammo_data)
@@ -1056,6 +1056,10 @@ function NewRaycastWeaponBase:_update_stats_values(disallow_replenish, ammo_data
 		bonus_stats = {}
 	end
 
+	if self.modify_base_stats then
+		self:modify_base_stats(stats)
+	end
+
 	if stats.zoom then
 		stats.zoom = math.min(stats.zoom + managers.player:upgrade_value(primary_category, "zoom_increase", 0), #stats_tweak_data.zoom)
 	end
@@ -1643,7 +1647,7 @@ function NewRaycastWeaponBase:tweak_data_anim_is_playing(anim)
 	return false
 end
 
--- Lines 1765-1798
+-- Lines 1765-1801
 function NewRaycastWeaponBase:_set_parts_enabled(enabled)
 	if self._parts then
 		local anim_groups = nil
@@ -1651,7 +1655,7 @@ function NewRaycastWeaponBase:_set_parts_enabled(enabled)
 
 		for part_id, data in pairs(self._parts) do
 			if alive(data.unit) then
-				if not enabled then
+				if not enabled and (not data.unit:base() or data.unit:base().GADGET_TYPE ~= "second_sight") then
 					anim_groups = data.unit:anim_groups()
 
 					for _, anim in ipairs(anim_groups) do
@@ -1671,12 +1675,16 @@ function NewRaycastWeaponBase:_set_parts_enabled(enabled)
 				if data.unit:digital_gui_upper() then
 					data.unit:digital_gui_upper():set_visible(enabled)
 				end
+
+				if data.unit:digital_gui_thd() then
+					data.unit:digital_gui_thd():set_visible(enabled)
+				end
 			end
 		end
 	end
 end
 
--- Lines 1800-1818
+-- Lines 1803-1821
 function NewRaycastWeaponBase:on_enabled(...)
 	NewRaycastWeaponBase.super.on_enabled(self, ...)
 	self:_set_parts_enabled(true)
@@ -1689,7 +1697,7 @@ function NewRaycastWeaponBase:on_enabled(...)
 	self:_chk_charm_upd_state()
 end
 
--- Lines 1820-1832
+-- Lines 1823-1835
 function NewRaycastWeaponBase:on_disabled(...)
 	if self:enabled() then
 		self._last_gadget_idx = self._gadget_on
@@ -1702,12 +1710,12 @@ function NewRaycastWeaponBase:on_disabled(...)
 	self:_chk_charm_upd_state()
 end
 
--- Lines 1836-1838
+-- Lines 1839-1841
 function NewRaycastWeaponBase:_is_part_visible(part_id)
 	return true
 end
 
--- Lines 1840-1886
+-- Lines 1843-1892
 function NewRaycastWeaponBase:_set_parts_visible(visible)
 	if self._parts then
 		local empty_s = Idstring("")
@@ -1746,6 +1754,10 @@ function NewRaycastWeaponBase:_set_parts_visible(visible)
 				if unit:digital_gui_upper() then
 					unit:digital_gui_upper():set_visible(visible)
 				end
+
+				if unit:digital_gui_thd() then
+					unit:digital_gui_thd():set_visible(visible)
+				end
 			end
 		end
 	end
@@ -1753,18 +1765,18 @@ function NewRaycastWeaponBase:_set_parts_visible(visible)
 	self:_chk_charm_upd_state()
 end
 
--- Lines 1888-1891
+-- Lines 1894-1897
 function NewRaycastWeaponBase:set_visibility_state(state)
 	NewRaycastWeaponBase.super.set_visibility_state(self, state)
 	self:_set_parts_visible(state)
 end
 
--- Lines 1894-1896
+-- Lines 1900-1902
 function NewRaycastWeaponBase:update_visibility_state()
 	self:_set_parts_visible(self._unit:visible())
 end
 
--- Lines 1899-1906
+-- Lines 1905-1912
 function NewRaycastWeaponBase:get_steelsight_swap_progress_trigger()
 	local part = managers.weapon_factory:get_part_from_weapon_by_type("sight_swap", self._parts)
 
@@ -1775,7 +1787,7 @@ function NewRaycastWeaponBase:get_steelsight_swap_progress_trigger()
 	return NewRaycastWeaponBase.super.get_steelsight_swap_progress_trigger(self)
 end
 
--- Lines 1912-1930
+-- Lines 1918-1936
 function NewRaycastWeaponBase:fire_mode()
 	if self:gadget_overrides_weapon_functions() then
 		local firemode = self:gadget_function_override("fire_mode")
@@ -1790,13 +1802,13 @@ function NewRaycastWeaponBase:fire_mode()
 	return table.get_key(FIRE_MODE_IDS, self._fire_mode) or "single"
 end
 
--- Lines 1934-1937
+-- Lines 1940-1943
 function NewRaycastWeaponBase:record_fire_mode()
 	self._recorded_fire_modes = self._recorded_fire_modes or {}
 	self._recorded_fire_modes[self:_weapon_tweak_data_id()] = self._fire_mode
 end
 
--- Lines 1939-1944
+-- Lines 1945-1950
 function NewRaycastWeaponBase:get_recorded_fire_mode(id)
 	if self._recorded_fire_modes and self._recorded_fire_modes[self:_weapon_tweak_data_id()] then
 		return self._recorded_fire_modes[self:_weapon_tweak_data_id()]
@@ -1805,7 +1817,7 @@ function NewRaycastWeaponBase:get_recorded_fire_mode(id)
 	return nil
 end
 
--- Lines 1947-1957
+-- Lines 1953-1963
 function NewRaycastWeaponBase:recoil_wait()
 	local tweak_is_auto = tweak_data.weapon[self._name_id].FIRE_MODE == "auto"
 	local weapon_is_auto = self:fire_mode() == "auto"
@@ -1819,7 +1831,7 @@ function NewRaycastWeaponBase:recoil_wait()
 	return self:weapon_fire_rate() * multiplier
 end
 
--- Lines 1961-1974
+-- Lines 1967-1980
 function NewRaycastWeaponBase:start_shooting()
 	if self._fire_mode == ids_volley then
 		self:_start_charging()
@@ -1836,7 +1848,7 @@ function NewRaycastWeaponBase:start_shooting()
 	end
 end
 
--- Lines 1976-1989
+-- Lines 1982-1995
 function NewRaycastWeaponBase:stop_shooting()
 	NewRaycastWeaponBase.super.stop_shooting(self)
 
@@ -1851,7 +1863,7 @@ function NewRaycastWeaponBase:stop_shooting()
 	end
 end
 
--- Lines 1991-2025
+-- Lines 1997-2031
 function NewRaycastWeaponBase:trigger_held(...)
 	if self._fire_mode == ids_burst then
 		if not self._shooting_count or self._shooting_count == 0 then
@@ -1861,7 +1873,7 @@ function NewRaycastWeaponBase:trigger_held(...)
 		local volley_charge_time = self:charge_max_t()
 		local fired = false
 
-		if self._volley_charge_start_t + volley_charge_time <= managers.player:player_timer():time() then
+		if volley_charge_time == 0 or self._volley_charge_start_t + volley_charge_time <= managers.player:player_timer():time() then
 			fired = self:fire(...)
 
 			if fired then
@@ -1889,7 +1901,7 @@ function NewRaycastWeaponBase:trigger_held(...)
 	return fired
 end
 
--- Lines 2027-2037
+-- Lines 2033-2043
 function NewRaycastWeaponBase:fire(...)
 	local ray_res = NewRaycastWeaponBase.super.fire(self, ...)
 
@@ -1900,48 +1912,59 @@ function NewRaycastWeaponBase:fire(...)
 	return ray_res
 end
 
--- Lines 2039-2041
+-- Lines 2045-2047
 function NewRaycastWeaponBase:shooting_count()
 	return self._shooting_count or 0
 end
 
--- Lines 2045-2048
+-- Lines 2051-2054
 function NewRaycastWeaponBase:can_shoot_through_wall()
 	local fire_mode_data = self._fire_mode_data[self._fire_mode:key()]
 
 	return fire_mode_data and fire_mode_data.can_shoot_through_wall or self._can_shoot_through_wall
 end
 
--- Lines 2050-2053
+-- Lines 2056-2059
 function NewRaycastWeaponBase:can_shoot_through_shield()
 	local fire_mode_data = self._fire_mode_data[self._fire_mode:key()]
 
 	return fire_mode_data and fire_mode_data.can_shoot_through_shield or self._can_shoot_through_shield
 end
 
--- Lines 2055-2058
+-- Lines 2061-2064
 function NewRaycastWeaponBase:can_shoot_through_enemy()
 	local fire_mode_data = self._fire_mode_data[self._fire_mode:key()]
 
 	return fire_mode_data and fire_mode_data.can_shoot_through_enemy or self._can_shoot_through_enemy
 end
 
--- Lines 2060-2062
+-- Lines 2066-2068
 function NewRaycastWeaponBase:change_fire_effect(new_effect)
 	self._muzzle_effect_table.effect = new_effect and Idstring(new_effect) or self._muzzle_effect
 end
 
--- Lines 2064-2066
+-- Lines 2070-2072
 function NewRaycastWeaponBase:change_trail_effect(new_effect)
 	self._trail_effect_table.effect = new_effect and Idstring(new_effect) or self._trail_effect
 end
 
--- Lines 2068-2070
+-- Lines 2074-2076
 function NewRaycastWeaponBase:ammo_usage()
 	return self._fire_mode == ids_volley and self._volley_ammo_usage or 1
 end
 
--- Lines 2072-2102
+-- Lines 2078-2087
+function NewRaycastWeaponBase:_fire_sound()
+	if self._fire_mode == ids_volley and self:weapon_tweak_data().sounds.fire_volley then
+		self:play_tweak_data_sound("fire_volley", "fire")
+
+		return
+	end
+
+	NewRaycastWeaponBase.super._fire_sound(self)
+end
+
+-- Lines 2090-2120
 function NewRaycastWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, shoot_through_data, ammo_usage)
 	if self:gadget_overrides_weapon_functions() then
 		return self:gadget_function_override("_fire_raycast", self, user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul)
@@ -1976,16 +1999,22 @@ function NewRaycastWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_
 	return NewRaycastWeaponBase.super._fire_raycast(self, user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul)
 end
 
--- Lines 2104-2110
+-- Lines 2122-2132
 function NewRaycastWeaponBase:_start_charging()
+	local charge_max_t = self:charge_max_t()
+
+	if charge_max_t == 0 then
+		return
+	end
+
 	self._volley_charging = true
 	self._volley_charge_start_t = managers.player:player_timer():time()
 
 	self:play_tweak_data_sound("charge")
-	self:call_on_digital_gui("start_volley_charge", self:charge_max_t())
+	self:call_on_digital_gui("start_volley_charge", charge_max_t)
 end
 
--- Lines 2112-2117
+-- Lines 2134-2139
 function NewRaycastWeaponBase:stop_volley_charge()
 	if self._volley_charging then
 		self._volley_charging = nil
@@ -1994,7 +2023,7 @@ function NewRaycastWeaponBase:stop_volley_charge()
 	end
 end
 
--- Lines 2119-2124
+-- Lines 2141-2146
 function NewRaycastWeaponBase:interupt_charging()
 	if self._volley_charging then
 		self:stop_volley_charge()
@@ -2002,7 +2031,7 @@ function NewRaycastWeaponBase:interupt_charging()
 	end
 end
 
--- Lines 2126-2132
+-- Lines 2148-2154
 function NewRaycastWeaponBase:charging()
 	if self._fire_mode == ids_volley then
 		return self._volley_charging
@@ -2011,17 +2040,17 @@ function NewRaycastWeaponBase:charging()
 	return false
 end
 
--- Lines 2134-2136
+-- Lines 2156-2158
 function NewRaycastWeaponBase:charge_max_t()
 	return self:weapon_tweak_data().charge_data.max_t or 0
 end
 
--- Lines 2138-2140
+-- Lines 2160-2162
 function NewRaycastWeaponBase:charge_cooldown_t()
 	return self:weapon_tweak_data().charge_data.cooldown_t or 0
 end
 
--- Lines 2142-2161
+-- Lines 2164-2183
 function NewRaycastWeaponBase:update_firemode_gui_ammo()
 	local ammo = self:get_ammo_remaining_in_clip()
 	local ammo_max = self:get_ammo_max_per_clip()
@@ -2044,7 +2073,16 @@ function NewRaycastWeaponBase:update_firemode_gui_ammo()
 	self:call_on_digital_gui("set_ammo", ammo, color)
 end
 
--- Lines 2176-2188
+-- Lines 2187-2195
+function NewRaycastWeaponBase:_get_sound_event(event, alternative_event)
+	if not self:gadget_overrides_weapon_functions() and self._ammo_data and self._ammo_data.sounds and self._ammo_data.sounds[event] then
+		return self._ammo_data.sounds[event]
+	end
+
+	return NewRaycastWeaponBase.super._get_sound_event(self, event, alternative_event)
+end
+
+-- Lines 2198-2210
 function NewRaycastWeaponBase:can_toggle_firemode()
 	if self:gadget_overrides_weapon_functions() then
 		return self:gadget_function_override("can_toggle_firemode")
@@ -2057,7 +2095,7 @@ function NewRaycastWeaponBase:can_toggle_firemode()
 	return tweak_data.weapon[self._name_id].CAN_TOGGLE_FIREMODE
 end
 
--- Lines 2190-2234
+-- Lines 2212-2256
 function NewRaycastWeaponBase:toggle_firemode(skip_post_event)
 	local can_toggle = not self._locked_fire_mode and self:can_toggle_firemode()
 
@@ -2110,26 +2148,26 @@ function NewRaycastWeaponBase:toggle_firemode(skip_post_event)
 	return false
 end
 
--- Lines 2237-2245
+-- Lines 2259-2267
 function NewRaycastWeaponBase:set_ammo_remaining_in_clip(...)
 	NewRaycastWeaponBase.super.set_ammo_remaining_in_clip(self, ...)
 	self:update_firemode_gui_ammo()
 	self:check_bullet_objects()
 end
 
--- Lines 2247-2251
+-- Lines 2269-2273
 function NewRaycastWeaponBase:check_bullet_objects()
 	if self._bullet_objects then
 		self:_update_bullet_objects("get_ammo_remaining_in_clip")
 	end
 end
 
--- Lines 2253-2255
+-- Lines 2275-2277
 function NewRaycastWeaponBase:predict_bullet_objects()
 	self:_update_bullet_objects("get_ammo_total")
 end
 
--- Lines 2257-2269
+-- Lines 2279-2291
 function NewRaycastWeaponBase:_update_bullet_objects(ammo_func)
 	if self._bullet_objects then
 		for i, objects in pairs(self._bullet_objects) do
@@ -2145,7 +2183,7 @@ function NewRaycastWeaponBase:_update_bullet_objects(ammo_func)
 	end
 end
 
--- Lines 2274-2315
+-- Lines 2296-2337
 function NewRaycastWeaponBase:update_ammo_objects()
 	if self._ammo_objects then
 		local ammo_remaining_in_clip = self:get_ammo_remaining_in_clip()
@@ -2191,12 +2229,12 @@ function NewRaycastWeaponBase:update_ammo_objects()
 	end
 end
 
--- Lines 2320-2322
+-- Lines 2342-2344
 function NewRaycastWeaponBase:has_part(part_id)
 	return self._blueprint and table.contains(self._blueprint, part_id)
 end
 
--- Lines 2326-2341
+-- Lines 2348-2363
 function NewRaycastWeaponBase:on_equip(user_unit)
 	NewRaycastWeaponBase.super.on_equip(self, user_unit)
 
@@ -2214,42 +2252,42 @@ function NewRaycastWeaponBase:on_equip(user_unit)
 	end
 end
 
--- Lines 2343-2345
+-- Lines 2365-2367
 function NewRaycastWeaponBase:on_unequip(user_unit)
 	NewRaycastWeaponBase.super.on_unequip(self, user_unit)
 end
 
--- Lines 2347-2349
+-- Lines 2369-2371
 function NewRaycastWeaponBase:has_gadget()
 	return self._gadgets and #self._gadgets > 0
 end
 
--- Lines 2351-2353
+-- Lines 2373-2375
 function NewRaycastWeaponBase:is_gadget_on()
 	return self._gadget_on and self._gadget_on > 0
 end
 
--- Lines 2355-2357
+-- Lines 2377-2379
 function NewRaycastWeaponBase:current_gadget_index()
 	return self._gadget_on
 end
 
--- Lines 2359-2361
+-- Lines 2381-2383
 function NewRaycastWeaponBase:gadget_on()
 	self:set_gadget_on(1, true)
 end
 
--- Lines 2363-2365
+-- Lines 2385-2387
 function NewRaycastWeaponBase:was_gadget_on()
 	return self._last_gadget_idx and self._last_gadget_idx > 0 or false
 end
 
--- Lines 2367-2370
+-- Lines 2389-2392
 function NewRaycastWeaponBase:gadget_off()
 	self:set_gadget_on(0, true, nil)
 end
 
--- Lines 2372-2389
+-- Lines 2394-2411
 function NewRaycastWeaponBase:set_gadget_on(gadget_on, ignore_enable, gadgets, current_state)
 	if not ignore_enable and not self._enabled then
 		return
@@ -2271,14 +2309,14 @@ function NewRaycastWeaponBase:set_gadget_on(gadget_on, ignore_enable, gadgets, c
 	end
 end
 
--- Lines 2392-2395
+-- Lines 2414-2417
 function NewRaycastWeaponBase:set_gadget_on_by_part_id(part_id, gadgets)
 	local gadget_index = table.index_of(gadgets or self._gadgets, part_id)
 
 	self:set_gadget_on(gadget_index, nil, gadgets, nil)
 end
 
--- Lines 2397-2414
+-- Lines 2419-2436
 function NewRaycastWeaponBase:get_active_gadget()
 	if not self._assembly_complete then
 		return nil
@@ -2299,7 +2337,7 @@ function NewRaycastWeaponBase:get_active_gadget()
 	end
 end
 
--- Lines 2416-2437
+-- Lines 2438-2459
 function NewRaycastWeaponBase:set_gadget_color(color)
 	if not self._enabled then
 		return
@@ -2328,7 +2366,7 @@ end
 
 local tmp_pos_vec = Vector3()
 
--- Lines 2442-2455
+-- Lines 2464-2477
 function NewRaycastWeaponBase:set_gadget_position(pos)
 	if not self._enabled then
 		return
@@ -2344,7 +2382,7 @@ function NewRaycastWeaponBase:set_gadget_position(pos)
 	end
 end
 
--- Lines 2457-2466
+-- Lines 2479-2488
 function NewRaycastWeaponBase:set_gadget_rotation(rot)
 	if not self._enabled then
 		return
@@ -2357,7 +2395,7 @@ function NewRaycastWeaponBase:set_gadget_rotation(rot)
 	end
 end
 
--- Lines 2469-2485
+-- Lines 2491-2507
 function NewRaycastWeaponBase:is_gadget_of_type_on(gadget_type)
 	local gadget = nil
 
@@ -2377,7 +2415,7 @@ function NewRaycastWeaponBase:is_gadget_of_type_on(gadget_type)
 	return false
 end
 
--- Lines 2487-2502
+-- Lines 2509-2524
 function NewRaycastWeaponBase:toggle_gadget(current_state)
 	if not self._enabled then
 		return false
@@ -2397,12 +2435,12 @@ function NewRaycastWeaponBase:toggle_gadget(current_state)
 	return false
 end
 
--- Lines 2504-2506
+-- Lines 2526-2528
 function NewRaycastWeaponBase:gadget_update()
 	self:set_gadget_on(false, true)
 end
 
--- Lines 2509-2526
+-- Lines 2531-2548
 function NewRaycastWeaponBase:set_second_sight_on(second_sight_on, ignore_enable, second_sights, current_state)
 	if not ignore_enable and not self._enabled then
 		return
@@ -2424,7 +2462,7 @@ function NewRaycastWeaponBase:set_second_sight_on(second_sight_on, ignore_enable
 	end
 end
 
--- Lines 2528-2543
+-- Lines 2550-2565
 function NewRaycastWeaponBase:toggle_second_sight(current_state)
 	if not self._enabled then
 		return false
@@ -2444,42 +2482,42 @@ function NewRaycastWeaponBase:toggle_second_sight(current_state)
 	return false
 end
 
--- Lines 2545-2547
+-- Lines 2567-2569
 function NewRaycastWeaponBase:has_second_sight()
 	return self._second_sights and #self._second_sights > 0
 end
 
--- Lines 2549-2551
+-- Lines 2571-2573
 function NewRaycastWeaponBase:is_second_sight_on()
 	return self._second_sight_on and self._second_sight_on > 0
 end
 
--- Lines 2553-2555
+-- Lines 2575-2577
 function NewRaycastWeaponBase:current_second_sight_index()
 	return self._second_sight_on
 end
 
--- Lines 2557-2559
+-- Lines 2579-2581
 function NewRaycastWeaponBase:get_active_second_sight()
 	return self._second_sights and self._second_sights[self._second_sight_on]
 end
 
--- Lines 2561-2563
+-- Lines 2583-2585
 function NewRaycastWeaponBase:second_sight_on()
 	self:set_second_sight_on(1, true)
 end
 
--- Lines 2565-2567
+-- Lines 2587-2589
 function NewRaycastWeaponBase:was_second_sight_on()
 	return self._last_second_sight_idx and self._last_second_sight_idx > 0 or false
 end
 
--- Lines 2569-2571
+-- Lines 2591-2593
 function NewRaycastWeaponBase:second_sight_off()
 	self:set_second_sight_on(0, true, nil)
 end
 
--- Lines 2573-2583
+-- Lines 2595-2605
 function NewRaycastWeaponBase:_refresh_second_sight_list()
 	local second_sights = managers.weapon_factory:get_parts_from_weapon_by_type_or_perk("second_sight", self._factory_id, self._blueprint)
 
@@ -2497,7 +2535,7 @@ function NewRaycastWeaponBase:_refresh_second_sight_list()
 	end
 end
 
--- Lines 2587-2600
+-- Lines 2609-2622
 function NewRaycastWeaponBase:is_bipod_usable()
 	local retval = false
 	local bipod_part = managers.weapon_factory:get_parts_from_weapon_by_perk("bipod", self._parts)
@@ -2514,7 +2552,7 @@ function NewRaycastWeaponBase:is_bipod_usable()
 	return retval
 end
 
--- Lines 2602-2616
+-- Lines 2624-2638
 function NewRaycastWeaponBase:gadget_toggle_requires_stance_update()
 	if not self._enabled then
 		return false
@@ -2533,7 +2571,7 @@ function NewRaycastWeaponBase:gadget_toggle_requires_stance_update()
 	return false
 end
 
--- Lines 2620-2660
+-- Lines 2642-2682
 function NewRaycastWeaponBase:check_stats()
 	local base_stats = self:weapon_tweak_data().stats
 
@@ -2575,7 +2613,7 @@ function NewRaycastWeaponBase:check_stats()
 	return stats
 end
 
--- Lines 2664-2672
+-- Lines 2686-2694
 function NewRaycastWeaponBase:_convert_add_to_mul(value)
 	if value > 1 then
 		return 1 / value
@@ -2586,7 +2624,7 @@ function NewRaycastWeaponBase:_convert_add_to_mul(value)
 	end
 end
 
--- Lines 2674-2724
+-- Lines 2696-2746
 function NewRaycastWeaponBase:_get_spread(user_unit)
 	local current_state = user_unit:movement()._current_state
 
@@ -2634,21 +2672,21 @@ function NewRaycastWeaponBase:_get_spread(user_unit)
 	return spread_x, spread_y
 end
 
--- Lines 2726-2729
+-- Lines 2748-2751
 function NewRaycastWeaponBase:_get_spread_from_number(user_unit, current_state, current_spread_value)
 	local spread = self:_get_spread_indices(current_state)
 
 	return math.max(spread * current_spread_value, 0)
 end
 
--- Lines 2731-2734
+-- Lines 2753-2756
 function NewRaycastWeaponBase:_get_spread_from_table(user_unit, current_state, current_spread_value)
 	local spread_idx_x, spread_idx_y = self:_get_spread_indices(current_state)
 
 	return math.max(spread_idx_x * current_spread_value[1], 0), math.max(spread_idx_y * current_spread_value[2], 0)
 end
 
--- Lines 2736-2751
+-- Lines 2758-2773
 function NewRaycastWeaponBase:_get_spread_indices(current_state)
 	local spread_index = self._current_stats_indices and self._current_stats_indices.spread or 1
 	local spread_idx_x, spread_idx_y = nil
@@ -2664,7 +2702,7 @@ function NewRaycastWeaponBase:_get_spread_indices(current_state)
 	return spread_idx_x, spread_idx_y
 end
 
--- Lines 2753-2768
+-- Lines 2775-2790
 function NewRaycastWeaponBase:_get_spread_index(current_state, spread_index)
 	local cond_spread_addend = self:conditional_accuracy_addend(current_state)
 	local spread_multiplier = 1
@@ -2678,7 +2716,7 @@ function NewRaycastWeaponBase:_get_spread_index(current_state, spread_index)
 	return tweak_data.weapon.stats.spread[spread_index]
 end
 
--- Lines 2770-2798
+-- Lines 2792-2820
 function NewRaycastWeaponBase:conditional_accuracy_addend(current_state)
 	local index = 0
 
@@ -2711,7 +2749,7 @@ function NewRaycastWeaponBase:conditional_accuracy_addend(current_state)
 	return index
 end
 
--- Lines 2800-2825
+-- Lines 2822-2847
 function NewRaycastWeaponBase:conditional_accuracy_multiplier(current_state)
 	local mul = 1
 
@@ -2740,12 +2778,12 @@ function NewRaycastWeaponBase:conditional_accuracy_multiplier(current_state)
 	return self:_convert_add_to_mul(mul)
 end
 
--- Lines 2827-2829
+-- Lines 2849-2851
 function NewRaycastWeaponBase:fire_rate_multiplier()
 	return self._fire_rate_multiplier
 end
 
--- Lines 2831-2836
+-- Lines 2853-2858
 function NewRaycastWeaponBase:damage_addend()
 	local user_unit = self._setup and self._setup.user_unit
 	local current_state = alive(user_unit) and user_unit:movement() and user_unit:movement()._current_state
@@ -2753,7 +2791,7 @@ function NewRaycastWeaponBase:damage_addend()
 	return managers.blackmarket:damage_addend(self._name_id, self:weapon_tweak_data().categories, self._silencer, nil, current_state, self._blueprint)
 end
 
--- Lines 2838-2843
+-- Lines 2860-2865
 function NewRaycastWeaponBase:damage_multiplier()
 	local user_unit = self._setup and self._setup.user_unit
 	local current_state = alive(user_unit) and user_unit:movement() and user_unit:movement()._current_state
@@ -2761,27 +2799,27 @@ function NewRaycastWeaponBase:damage_multiplier()
 	return managers.blackmarket:damage_multiplier(self._name_id, self:weapon_tweak_data().categories, self._silencer, nil, current_state, self._blueprint)
 end
 
--- Lines 2845-2847
+-- Lines 2867-2869
 function NewRaycastWeaponBase:melee_damage_multiplier()
 	return managers.player:upgrade_value(self._name_id, "melee_multiplier", 1)
 end
 
--- Lines 2850-2852
+-- Lines 2872-2874
 function NewRaycastWeaponBase:spread_addend(current_state)
 	return managers.blackmarket:accuracy_addend(self._name_id, self:categories(), self._current_stats_indices and self._current_stats_indices.spread, self._silencer, current_state, self:fire_mode(), self._blueprint, current_state._moving, self:is_single_shot())
 end
 
--- Lines 2854-2856
+-- Lines 2876-2878
 function NewRaycastWeaponBase:spread_index_addend(current_state)
 	return managers.blackmarket:accuracy_index_addend(self._name_id, self:categories(), self._silencer, current_state, self:fire_mode(), self._blueprint)
 end
 
--- Lines 2858-2860
+-- Lines 2880-2882
 function NewRaycastWeaponBase:spread_multiplier(current_state)
 	return managers.blackmarket:accuracy_multiplier(self._name_id, self:weapon_tweak_data().categories, self._silencer, current_state, self._spread_moving, self:fire_mode(), self._blueprint, self:is_single_shot())
 end
 
--- Lines 2862-2866
+-- Lines 2884-2888
 function NewRaycastWeaponBase:recoil_addend()
 	local user_unit = self._setup and self._setup.user_unit
 	local current_state = alive(user_unit) and user_unit:movement() and user_unit:movement()._current_state
@@ -2789,7 +2827,7 @@ function NewRaycastWeaponBase:recoil_addend()
 	return managers.blackmarket:recoil_addend(self._name_id, self:weapon_tweak_data().categories, self._current_stats_indices and self._current_stats_indices.recoil, self._silencer, self._blueprint, current_state, self:is_single_shot())
 end
 
--- Lines 2868-2875
+-- Lines 2890-2897
 function NewRaycastWeaponBase:recoil_multiplier()
 	local is_moving = false
 	local user_unit = self._setup and self._setup.user_unit
@@ -2801,7 +2839,7 @@ function NewRaycastWeaponBase:recoil_multiplier()
 	return managers.blackmarket:recoil_multiplier(self._name_id, self:weapon_tweak_data().categories, self._silencer, self._blueprint, is_moving)
 end
 
--- Lines 2877-2896
+-- Lines 2899-2918
 function NewRaycastWeaponBase:enter_steelsight_speed_multiplier()
 	local multiplier = 1
 	local categories = self:weapon_tweak_data().categories
@@ -2825,7 +2863,7 @@ function NewRaycastWeaponBase:enter_steelsight_speed_multiplier()
 	return self:_convert_add_to_mul(multiplier)
 end
 
--- Lines 2898-2956
+-- Lines 2920-2978
 function NewRaycastWeaponBase:reload_speed_multiplier()
 	if self._current_reload_speed_multiplier then
 		return self._current_reload_speed_multiplier
@@ -2870,7 +2908,7 @@ function NewRaycastWeaponBase:reload_speed_multiplier()
 	return multiplier
 end
 
--- Lines 2960-2970
+-- Lines 2982-2992
 function NewRaycastWeaponBase:_debug_bipod()
 	for i, id in ipairs(self._gadgets) do
 		gadget = self._parts[id]
@@ -2885,12 +2923,12 @@ function NewRaycastWeaponBase:_debug_bipod()
 	end
 end
 
--- Lines 2972-2974
+-- Lines 2994-2996
 function RaycastWeaponBase:use_shotgun_reload()
 	return self._use_shotgun_reload
 end
 
--- Lines 2978-3012
+-- Lines 3000-3034
 function NewRaycastWeaponBase:reload_expire_t(is_not_empty)
 	if self._use_shotgun_reload then
 		local ammo_total = self:get_ammo_total()
@@ -2928,7 +2966,7 @@ function NewRaycastWeaponBase:reload_expire_t(is_not_empty)
 	return nil
 end
 
--- Lines 3014-3020
+-- Lines 3036-3042
 function NewRaycastWeaponBase:reload_enter_expire_t(is_not_empty)
 	if self._use_shotgun_reload then
 		local shotgun_reload_tweak = self:_get_shotgun_reload_tweak_data(is_not_empty)
@@ -2939,7 +2977,7 @@ function NewRaycastWeaponBase:reload_enter_expire_t(is_not_empty)
 	return nil
 end
 
--- Lines 3022-3036
+-- Lines 3044-3058
 function NewRaycastWeaponBase:reload_exit_expire_t(is_not_empty)
 	if self._use_shotgun_reload then
 		local shotgun_reload_tweak = self:_get_shotgun_reload_tweak_data(is_not_empty)
@@ -2958,7 +2996,7 @@ function NewRaycastWeaponBase:reload_exit_expire_t(is_not_empty)
 	return nil
 end
 
--- Lines 3038-3044
+-- Lines 3060-3066
 function NewRaycastWeaponBase:reload_shell_expire_t(is_not_empty)
 	if self._use_shotgun_reload then
 		local shotgun_reload_tweak = self:_get_shotgun_reload_tweak_data(is_not_empty)
@@ -2969,7 +3007,7 @@ function NewRaycastWeaponBase:reload_shell_expire_t(is_not_empty)
 	return nil
 end
 
--- Lines 3046-3054
+-- Lines 3068-3076
 function NewRaycastWeaponBase:_first_shell_reload_expire_t(is_not_empty)
 	if self._use_shotgun_reload then
 		local shotgun_reload_tweak = self:_get_shotgun_reload_tweak_data(is_not_empty)
@@ -2981,7 +3019,7 @@ function NewRaycastWeaponBase:_first_shell_reload_expire_t(is_not_empty)
 	return nil
 end
 
--- Lines 3056-3062
+-- Lines 3078-3084
 function NewRaycastWeaponBase:_get_shotgun_reload_tweak_data(is_not_empty)
 	local weapon_tweak = self:weapon_tweak_data()
 
@@ -2992,7 +3030,7 @@ function NewRaycastWeaponBase:_get_shotgun_reload_tweak_data(is_not_empty)
 	return nil
 end
 
--- Lines 3065-3089
+-- Lines 3087-3111
 function NewRaycastWeaponBase:start_reload(...)
 	NewRaycastWeaponBase.super.start_reload(self, ...)
 
@@ -3020,7 +3058,7 @@ function NewRaycastWeaponBase:start_reload(...)
 	end
 end
 
--- Lines 3091-3096
+-- Lines 3113-3118
 function NewRaycastWeaponBase:started_reload_empty()
 	if self._use_shotgun_reload then
 		return self._started_reload_empty
@@ -3029,7 +3067,7 @@ function NewRaycastWeaponBase:started_reload_empty()
 	return nil
 end
 
--- Lines 3099-3134
+-- Lines 3121-3156
 function NewRaycastWeaponBase:update_reloading(t, dt, time_left)
 	if self._use_shotgun_reload and self._next_shell_reloded_t and self._next_shell_reloded_t < t then
 		local speed_multiplier = self:reload_speed_multiplier()
@@ -3064,7 +3102,7 @@ function NewRaycastWeaponBase:update_reloading(t, dt, time_left)
 	end
 end
 
--- Lines 3213-3220
+-- Lines 3235-3242
 function NewRaycastWeaponBase:reload_prefix()
 	if self:gadget_overrides_weapon_functions() then
 		return self:gadget_function_override("reload_prefix")
@@ -3073,7 +3111,7 @@ function NewRaycastWeaponBase:reload_prefix()
 	return ""
 end
 
--- Lines 3223-3228
+-- Lines 3245-3250
 function NewRaycastWeaponBase:reload_interuptable()
 	if self._use_shotgun_reload then
 		return true
@@ -3082,7 +3120,7 @@ function NewRaycastWeaponBase:reload_interuptable()
 	return false
 end
 
--- Lines 3231-3251
+-- Lines 3253-3273
 function NewRaycastWeaponBase:shotgun_shell_data()
 	if self._use_shotgun_reload and not self._skip_reload_shotgun_shell then
 		local reload_shell_data = self:weapon_tweak_data().animations.reload_shell_data
@@ -3109,7 +3147,7 @@ function NewRaycastWeaponBase:shotgun_shell_data()
 	return nil
 end
 
--- Lines 3264-3277
+-- Lines 3286-3299
 function NewRaycastWeaponBase:on_reload_stop()
 	self._bloodthist_value_during_reload = 0
 	self._current_reload_speed_multiplier = nil
@@ -3124,7 +3162,7 @@ function NewRaycastWeaponBase:on_reload_stop()
 	self._reload_objects = {}
 end
 
--- Lines 3279-3291
+-- Lines 3301-3313
 function NewRaycastWeaponBase:on_reload(...)
 	NewRaycastWeaponBase.super.on_reload(self, ...)
 
@@ -3139,7 +3177,7 @@ function NewRaycastWeaponBase:on_reload(...)
 	self._reload_objects = {}
 end
 
--- Lines 3295-3307
+-- Lines 3317-3329
 function NewRaycastWeaponBase:set_timer(timer, ...)
 	NewRaycastWeaponBase.super.set_timer(self, timer)
 
@@ -3155,7 +3193,7 @@ function NewRaycastWeaponBase:set_timer(timer, ...)
 	end
 end
 
--- Lines 3311-3339
+-- Lines 3333-3361
 function NewRaycastWeaponBase:destroy(unit)
 	NewRaycastWeaponBase.super.destroy(self, unit)
 
@@ -3183,7 +3221,7 @@ function NewRaycastWeaponBase:destroy(unit)
 	managers.weapon_factory:disassemble(self._parts)
 end
 
--- Lines 3341-3351
+-- Lines 3363-3373
 function NewRaycastWeaponBase:is_single_shot()
 	if self:gadget_overrides_weapon_functions() then
 		local gadget_shot = self:gadget_function_override("is_single_shot")
@@ -3196,7 +3234,7 @@ function NewRaycastWeaponBase:is_single_shot()
 	return self:fire_mode() == "single"
 end
 
--- Lines 3356-3377
+-- Lines 3378-3399
 function NewRaycastWeaponBase:gadget_overrides_weapon_functions()
 	if self._cached_gadget == nil and self._assembly_complete then
 		local gadgets = managers.weapon_factory:get_parts_from_weapon_by_type_or_perk("underbarrel", self._factory_id, self._blueprint)
@@ -3222,14 +3260,14 @@ function NewRaycastWeaponBase:gadget_overrides_weapon_functions()
 	return self._cached_gadget
 end
 
--- Lines 3379-3382
+-- Lines 3401-3404
 function NewRaycastWeaponBase:reset_cached_gadget()
 	self._cached_gadget = nil
 
 	self:gadget_overrides_weapon_functions()
 end
 
--- Lines 3384-3402
+-- Lines 3406-3424
 function NewRaycastWeaponBase:get_all_override_weapon_gadgets()
 	if self._cached_gadgets == nil and self._assembly_complete then
 		self._cached_gadgets = {}
@@ -3252,7 +3290,7 @@ function NewRaycastWeaponBase:get_all_override_weapon_gadgets()
 	return self._cached_gadgets or {}
 end
 
--- Lines 3404-3409
+-- Lines 3426-3431
 function NewRaycastWeaponBase:gadget_function_override(func, ...)
 	local gadget = self:gadget_overrides_weapon_functions()
 
@@ -3261,7 +3299,7 @@ function NewRaycastWeaponBase:gadget_function_override(func, ...)
 	end
 end
 
--- Lines 3411-3419
+-- Lines 3433-3441
 function NewRaycastWeaponBase:underbarrel_toggle()
 	local underbarrel_part = managers.weapon_factory:get_part_from_weapon_by_type("underbarrel", self._parts)
 
@@ -3274,7 +3312,7 @@ function NewRaycastWeaponBase:underbarrel_toggle()
 	return nil
 end
 
--- Lines 3421-3426
+-- Lines 3443-3448
 function NewRaycastWeaponBase:underbarrel_name_id()
 	local underbarrel_part = managers.weapon_factory:get_part_from_weapon_by_type("underbarrel", self._parts)
 
@@ -3283,7 +3321,7 @@ function NewRaycastWeaponBase:underbarrel_name_id()
 	end
 end
 
--- Lines 3431-3448
+-- Lines 3453-3470
 function NewRaycastWeaponBase:set_magazine_empty(is_empty)
 	NewRaycastWeaponBase.super.set_magazine_empty(self, is_empty)
 

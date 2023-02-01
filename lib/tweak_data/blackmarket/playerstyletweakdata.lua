@@ -1,4 +1,4 @@
--- Lines 1-3930
+-- Lines 1-3975
 function BlackMarketTweakData:_init_player_styles(tweak_data)
 	local characters_female, characters_female_big, characters_male, characters_male_big = self:_get_character_groups()
 	local characters_all = table.list_union(characters_female, characters_male, characters_female_big, characters_male_big)
@@ -4956,7 +4956,7 @@ function BlackMarketTweakData:_init_player_styles(tweak_data)
 	self.player_styles.throwables_bag.characters.ecp_male = throwables_bag_characters_male_fat
 end
 
--- Lines 3932-3954
+-- Lines 3977-3999
 function BlackMarketTweakData:get_player_style_value(player_style, character_name, key)
 	if key == nil then
 		return
@@ -4981,7 +4981,7 @@ function BlackMarketTweakData:get_player_style_value(player_style, character_nam
 	return tweak_value
 end
 
--- Lines 3956-3981
+-- Lines 4001-4026
 function BlackMarketTweakData:get_suit_variation_value(player_style, material_variation, character_name, key)
 	if key == nil then
 		return nil
@@ -5009,7 +5009,7 @@ function BlackMarketTweakData:get_suit_variation_value(player_style, material_va
 	return tweak_value
 end
 
--- Lines 3983-4004
+-- Lines 4028-4049
 function BlackMarketTweakData:have_suit_variations(player_style)
 	local data = self.player_styles[player_style]
 
@@ -5036,7 +5036,7 @@ function BlackMarketTweakData:have_suit_variations(player_style)
 	return true
 end
 
--- Lines 4006-4042
+-- Lines 4051-4087
 function BlackMarketTweakData:get_suit_variations_sorted(player_style)
 	local data = self.player_styles[player_style]
 
@@ -5080,7 +5080,7 @@ function BlackMarketTweakData:get_suit_variations_sorted(player_style)
 	return suit_variations
 end
 
--- Lines 4045-4074
+-- Lines 4090-4119
 function BlackMarketTweakData:get_player_style_units(player_style, key)
 	local units = {}
 	local data = self.player_styles[player_style]
@@ -5111,7 +5111,7 @@ function BlackMarketTweakData:get_player_style_units(player_style, key)
 	return table.list_union(units)
 end
 
--- Lines 4076-4082
+-- Lines 4121-4127
 function BlackMarketTweakData:create_suit_string(player_style, suit_variation)
 	if self:have_suit_variations(player_style) then
 		return player_style .. "_" .. suit_variation
@@ -5120,7 +5120,7 @@ function BlackMarketTweakData:create_suit_string(player_style, suit_variation)
 	return player_style
 end
 
--- Lines 4084-4099
+-- Lines 4129-4144
 function BlackMarketTweakData:create_suit_strings()
 	local suit_strings = {}
 	local suit_variations = nil
@@ -5140,18 +5140,18 @@ function BlackMarketTweakData:create_suit_strings()
 	return suit_strings
 end
 
--- Lines 4101-4150
+-- Lines 4146-4195
 function BlackMarketTweakData:build_player_style_list(tweak_data)
 	local x_td, y_td, x_gv, y_gv, x_sn, y_sn = nil
 
-	-- Lines 4106-4109
+	-- Lines 4151-4154
 	local function map_func(x)
 		x_td = self.player_styles[x]
 
 		return not x_td.unavailable
 	end
 
-	-- Lines 4111-4140
+	-- Lines 4156-4185
 	local function sort_func(x, y)
 		if x == "none" then
 			return true

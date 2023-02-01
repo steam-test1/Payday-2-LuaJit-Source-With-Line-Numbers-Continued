@@ -9,7 +9,7 @@ function KillzoneUnitElement:init(unit)
 	table.insert(self._save_values, "type")
 end
 
--- Lines 11-18
+-- Lines 11-22
 function KillzoneUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

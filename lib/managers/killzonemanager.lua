@@ -1,11 +1,11 @@
 KillzoneManager = KillzoneManager or class()
 
--- Lines 3-5
+-- Lines 264-266
 function KillzoneManager:init()
 	self._units = {}
 end
 
--- Lines 7-48
+-- Lines 268-309
 function KillzoneManager:update(t, dt)
 	for _, data in pairs(self._units) do
 		if alive(data.unit) then
@@ -53,7 +53,7 @@ function KillzoneManager:update(t, dt)
 	end
 end
 
--- Lines 50-56
+-- Lines 311-317
 function KillzoneManager:set_unit(unit, type)
 	if self._units[unit:key()] then
 		self:_remove_unit(unit)
@@ -62,7 +62,7 @@ function KillzoneManager:set_unit(unit, type)
 	end
 end
 
--- Lines 58-64
+-- Lines 319-325
 function KillzoneManager:_kill_unit(unit)
 	if unit:character_damage():need_revive() then
 		return
@@ -73,7 +73,7 @@ function KillzoneManager:_kill_unit(unit)
 	})
 end
 
--- Lines 66-79
+-- Lines 327-340
 function KillzoneManager:_warning_shot(unit)
 	local rot = unit:camera():rotation()
 	rot = Rotation(rot:yaw(), 0, 0)
@@ -91,7 +91,7 @@ function KillzoneManager:_warning_shot(unit)
 	end
 end
 
--- Lines 81-92
+-- Lines 342-353
 function KillzoneManager:_deal_damage(unit)
 	if unit:character_damage():need_revive() then
 		return
@@ -109,7 +109,7 @@ function KillzoneManager:_deal_damage(unit)
 	unit:character_damage():damage_killzone(attack_data)
 end
 
--- Lines 94-97
+-- Lines 355-358
 function KillzoneManager:_deal_gas_damage(unit)
 	local attack_data = {
 		damage = 0.75,
@@ -121,7 +121,7 @@ function KillzoneManager:_deal_gas_damage(unit)
 	unit:character_damage():damage_killzone(attack_data)
 end
 
--- Lines 99-102
+-- Lines 360-363
 function KillzoneManager:_deal_fire_damage(unit)
 	local attack_data = {
 		damage = 0.5,
@@ -133,7 +133,7 @@ function KillzoneManager:_deal_fire_damage(unit)
 	unit:character_damage():damage_killzone(attack_data)
 end
 
--- Lines 104-119
+-- Lines 365-380
 function KillzoneManager:_add_unit(unit, type)
 	if type == "sniper" then
 		local next_shot = math.rand(1)
@@ -170,7 +170,7 @@ function KillzoneManager:_add_unit(unit, type)
 	end
 end
 
--- Lines 121-123
+-- Lines 382-384
 function KillzoneManager:_remove_unit(unit)
 	self._units[unit:key()] = nil
 end

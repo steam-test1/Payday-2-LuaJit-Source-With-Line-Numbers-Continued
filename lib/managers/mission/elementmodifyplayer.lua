@@ -12,7 +12,7 @@ function ElementModifyPlayer:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines 13-25
+-- Lines 41-53
 function ElementModifyPlayer:on_executed(instigator)
 	if not self._values.enabled then
 		return

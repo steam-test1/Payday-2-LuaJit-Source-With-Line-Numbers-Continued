@@ -2,7 +2,7 @@ DLCTweakData = DLCTweakData or class()
 
 require("lib/tweak_data/GeneratedDLCTweakData")
 
--- Lines 10-5118
+-- Lines 10-5129
 function DLCTweakData:init(tweak_data)
 	if managers.dlc:is_installing() then
 		tweak_data.BUNDLED_DLC_PACKAGES = {}
@@ -8470,6 +8470,23 @@ function DLCTweakData:init(tweak_data)
 		{
 			type_items = "weapon_mods",
 			item_entry = "wpn_fps_upg_charm_foam",
+			amount = 1
+		}
+	}
+	self.pxp3_starter_pack = {
+		free = true,
+		content = {}
+	}
+	self.pxp3_starter_pack.content.loot_global_value = "normal"
+	self.pxp3_starter_pack.content.loot_drops = {
+		{
+			type_items = "weapon_mods",
+			item_entry = "wpn_fps_upg_a_grenade_launcher_hornet",
+			amount = 1
+		},
+		{
+			type_items = "weapon_mods",
+			item_entry = "wpn_fps_upg_a_underbarrel_hornet",
 			amount = 1
 		}
 	}

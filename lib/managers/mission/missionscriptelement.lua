@@ -12,7 +12,7 @@ end
 function MissionScriptElement:client_on_executed()
 end
 
--- Lines 14-19
+-- Lines 20-25
 function MissionScriptElement:on_executed(...)
 	if Network:is_client() then
 		return
@@ -21,7 +21,7 @@ function MissionScriptElement:on_executed(...)
 	MissionScriptElement.super.on_executed(self, ...)
 end
 
--- Lines 21-28
+-- Lines 27-34
 function MissionScriptElement:_override_element_type_group(element, expected_id, group_table, variable_name, new_value)
 	for i, data in pairs(group_table) do
 		if (not expected_id or data._id == expected_id) and element._values then
@@ -30,7 +30,7 @@ function MissionScriptElement:_override_element_type_group(element, expected_id,
 	end
 end
 
--- Lines 30-47
+-- Lines 36-53
 function MissionScriptElement:_override_group_element(element_id, element_type, variable_name, new_value)
 	local element = self:get_mission_element(element_id)
 
@@ -47,14 +47,14 @@ function MissionScriptElement:_override_group_element(element_id, element_type, 
 	end
 end
 
--- Lines 49-55
+-- Lines 55-61
 function MissionScriptElement:override_value_on_element_type(element_type, variable_name, new_value)
 	for _, params in ipairs(self._values.on_executed) do
 		self:_override_group_element(params.id, element_type, variable_name, new_value)
 	end
 end
 
--- Lines 57-71
+-- Lines 63-77
 function MissionScriptElement:override_value_on_element(element_ids, variable_name, new_value)
 	if type(element_ids) ~= "table" then
 		element_ids = {
