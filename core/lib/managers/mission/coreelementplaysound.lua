@@ -13,7 +13,7 @@ function ElementPlaySound:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines 14-38
+-- Lines 14-46
 function ElementPlaySound:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -36,9 +36,9 @@ function ElementPlaySound:on_executed(instigator)
 	ElementPlaySound.super.on_executed(self, instigator)
 end
 
--- Lines 40-51
+-- Lines 48-67
 function ElementPlaySound:_play_sound_on_elements()
-	-- Lines 41-45
+	-- Lines 49-61
 	local function f(unit)
 		if unit:id() ~= -1 then
 			unit:sound():say(self._values.sound_event, true, not self._values.append_prefix, true)
@@ -52,7 +52,7 @@ function ElementPlaySound:_play_sound_on_elements()
 	end
 end
 
--- Lines 53-67
+-- Lines 69-83
 function ElementPlaySound:_play_sound()
 	if self._values.sound_event then
 		if self._source then
@@ -72,12 +72,12 @@ function ElementPlaySound:_play_sound()
 	end
 end
 
--- Lines 69-71
+-- Lines 85-87
 function ElementPlaySound:sound_ended(...)
 	self._mission_script:remove_save_state_cb(self._id)
 end
 
--- Lines 73-78
+-- Lines 89-94
 function ElementPlaySound:operation_remove()
 	if self._source then
 		self._source:stop()
@@ -85,16 +85,16 @@ function ElementPlaySound:operation_remove()
 	end
 end
 
--- Lines 80-82
+-- Lines 96-98
 function ElementPlaySound:save(data)
 end
 
--- Lines 84-86
+-- Lines 100-102
 function ElementPlaySound:load(data)
 	self:_play_sound()
 end
 
--- Lines 88-93
+-- Lines 104-109
 function ElementPlaySound:stop_simulation()
 	if self._source then
 		self._source:stop()
@@ -103,7 +103,7 @@ function ElementPlaySound:stop_simulation()
 	ElementPlaySound.super.stop_simulation(self)
 end
 
--- Lines 95-100
+-- Lines 111-116
 function ElementPlaySound:pre_destroy()
 	if self._source then
 		self._source:stop()
@@ -111,7 +111,7 @@ function ElementPlaySound:pre_destroy()
 	end
 end
 
--- Lines 102-109
+-- Lines 118-125
 function ElementPlaySound:destroy()
 	if self._source then
 		self._source:stop()
