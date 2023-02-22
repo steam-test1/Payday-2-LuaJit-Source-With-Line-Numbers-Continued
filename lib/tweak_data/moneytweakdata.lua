@@ -41,7 +41,7 @@ function MoneyTweakData._create_value_table(min, max, table_size, round, curve)
 	return t
 end
 
--- Lines 29-966
+-- Lines 29-967
 function MoneyTweakData:init(tweak_data)
 	local difficulty = Global.game_settings and Global.game_settings.difficulty or "normal"
 	local difficulty_index = tweak_data:difficulty_to_index(difficulty)
@@ -814,4 +814,6 @@ function MoneyTweakData:init(tweak_data)
 	self.bag_values.garden_gnome = 9.99
 	self.bag_values.ranc_weapon = 3000
 	self.bag_values.turret_part = 6000
+	self.bag_values.corp_papers = 2500
+	self.bag_values.corp_prototype = 3000
 end

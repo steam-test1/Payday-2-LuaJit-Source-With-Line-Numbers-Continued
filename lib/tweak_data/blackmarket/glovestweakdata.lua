@@ -77,7 +77,7 @@ function BlackMarketTweakData:build_glove_list(tweak_data)
 	self.glove_list = table.map_keys(self.gloves, sort_func)
 end
 
--- Lines 78-1138
+-- Lines 78-1180
 function BlackMarketTweakData:_init_gloves(tweak_data)
 	local characters_female, characters_female_big, characters_male, characters_male_big = self:_get_character_groups()
 	local characters_all = table.list_union(characters_female, characters_male, characters_female_big, characters_male_big)
@@ -796,5 +796,14 @@ function BlackMarketTweakData:_init_gloves(tweak_data)
 		sort_number = 1,
 		unit = "units/pd2_dlc_h22/characters/glv_tornrags/glv_tornrags",
 		third_material = "units/pd2_dlc_h22/characters/glv_tornrags/glv_tornrags_third"
+	}
+	self.gloves.beigedriver = {
+		name_id = "bm_gloves_beigedriver",
+		desc_id = "bm_gloves_beigedriver_desc",
+		texture_bundle_folder = "cot",
+		global_value = "cot_beigedriver",
+		sort_number = 1,
+		unit = "units/pd2_dlc_cot/characters/glv_beigedriver/glv_beigedriver",
+		third_material = "units/pd2_dlc_cot/characters/glv_beigedriver/glv_beigedriver_third"
 	}
 end

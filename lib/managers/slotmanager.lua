@@ -4,7 +4,7 @@ core:import("CoreClass")
 
 SlotManager = SlotManager or class(CoreSlotManager.SlotManager)
 
--- Lines 8-180
+-- Lines 8-181
 function SlotManager:init()
 	SlotManager.super.init(self)
 
@@ -57,6 +57,7 @@ function SlotManager:init()
 	self._masks.persons = World:make_slot_mask(2, 3, 4, 5, 12, 16, 21, 22, 24, 33)
 	self._masks.persons_no_players = self._masks.persons - self._masks.players
 	self._masks.persons_no_player_husks = self._masks.persons - self._masks.players_only_husks
+	self._masks.corpses = World:make_slot_mask(17)
 	self._masks.crowd = World:make_slot_mask(33, 34)
 	self._masks.melee_equipment = World:make_slot_mask(8, 9)
 	self._masks.body_area_damage = World:make_slot_mask(1, 11)

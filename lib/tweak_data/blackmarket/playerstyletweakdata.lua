@@ -1,4 +1,4 @@
--- Lines 1-3975
+-- Lines 1-4152
 function BlackMarketTweakData:_init_player_styles(tweak_data)
 	local characters_female, characters_female_big, characters_male, characters_male_big = self:_get_character_groups()
 	local characters_all = table.list_union(characters_female, characters_male, characters_female_big, characters_male_big)
@@ -4954,9 +4954,54 @@ function BlackMarketTweakData:_init_player_styles(tweak_data)
 		sequence = "set_ehtan"
 	}
 	self.player_styles.throwables_bag.characters.ecp_male = throwables_bag_characters_male_fat
+	self.player_styles.sleekygent = {
+		name_id = "bm_suit_sleekygent",
+		desc_id = "bm_suit_sleekygent_desc",
+		texture_bundle_folder = "cot",
+		global_value = "cot_sleekygent",
+		material_variations = {}
+	}
+	self.player_styles.sleekygent.material_variations.default = {
+		name_id = "bm_suit_sleekygent_default",
+		global_value = "cot_sleekygent",
+		desc_id = "bm_suit_sleekygent_default_desc"
+	}
+	self.player_styles.sleekygent.body_replacement = body_replacement_standard
+	self.player_styles.sleekygent.third_body_replacement = body_replacement_standard
+	self.player_styles.sleekygent.unit = "units/pd2_dlc_cot/characters/cot_acc_sleekygent/cot_acc_fps_sleekygent_male/cot_acc_fps_sleekygent_male"
+	self.player_styles.sleekygent.characters = {}
+	local sleekygent_characters_male = {
+		third_unit = "units/pd2_dlc_cot/characters/cot_acc_sleekygent/cot_acc_sleekygent_male_average/cot_acc_sleekygent_male_average"
+	}
+
+	set_characters_data("sleekygent", characters_male, sleekygent_characters_male)
+
+	local sleekygent_characters_male_big = {
+		third_unit = "units/pd2_dlc_cot/characters/cot_acc_sleekygent/cot_acc_sleekygent_male_big/cot_acc_sleekygent_male_big"
+	}
+
+	set_characters_data("sleekygent", characters_male_big, sleekygent_characters_male_big)
+
+	local sleekygent_characters_female = {
+		third_unit = "units/pd2_dlc_cot/characters/cot_acc_sleekygent/cot_acc_sleekygent_female_average/cot_acc_sleekygent_female_average"
+	}
+
+	set_characters_data("sleekygent", characters_female, sleekygent_characters_female)
+
+	local sleekygent_characters_female_big = {
+		third_unit = "units/pd2_dlc_cot/characters/cot_acc_sleekygent/cot_acc_sleekygent_female_fat/cot_acc_sleekygent_female_fat"
+	}
+
+	set_characters_data("sleekygent", characters_female_big, sleekygent_characters_female_big)
+
+	local sleekygent_characters_male_fat = {
+		third_unit = "units/pd2_dlc_cot/characters/cot_acc_sleekygent/cot_acc_sleekygent_male_fat/cot_acc_sleekygent_male_fat",
+		sequence = "set_ehtan"
+	}
+	self.player_styles.sleekygent.characters.ecp_male = sleekygent_characters_male_fat
 end
 
--- Lines 3977-3999
+-- Lines 4154-4176
 function BlackMarketTweakData:get_player_style_value(player_style, character_name, key)
 	if key == nil then
 		return
@@ -4981,7 +5026,7 @@ function BlackMarketTweakData:get_player_style_value(player_style, character_nam
 	return tweak_value
 end
 
--- Lines 4001-4026
+-- Lines 4178-4203
 function BlackMarketTweakData:get_suit_variation_value(player_style, material_variation, character_name, key)
 	if key == nil then
 		return nil
@@ -5009,7 +5054,7 @@ function BlackMarketTweakData:get_suit_variation_value(player_style, material_va
 	return tweak_value
 end
 
--- Lines 4028-4049
+-- Lines 4205-4226
 function BlackMarketTweakData:have_suit_variations(player_style)
 	local data = self.player_styles[player_style]
 
@@ -5036,7 +5081,7 @@ function BlackMarketTweakData:have_suit_variations(player_style)
 	return true
 end
 
--- Lines 4051-4087
+-- Lines 4228-4264
 function BlackMarketTweakData:get_suit_variations_sorted(player_style)
 	local data = self.player_styles[player_style]
 
@@ -5080,7 +5125,7 @@ function BlackMarketTweakData:get_suit_variations_sorted(player_style)
 	return suit_variations
 end
 
--- Lines 4090-4119
+-- Lines 4267-4296
 function BlackMarketTweakData:get_player_style_units(player_style, key)
 	local units = {}
 	local data = self.player_styles[player_style]
@@ -5111,7 +5156,7 @@ function BlackMarketTweakData:get_player_style_units(player_style, key)
 	return table.list_union(units)
 end
 
--- Lines 4121-4127
+-- Lines 4298-4304
 function BlackMarketTweakData:create_suit_string(player_style, suit_variation)
 	if self:have_suit_variations(player_style) then
 		return player_style .. "_" .. suit_variation
@@ -5120,7 +5165,7 @@ function BlackMarketTweakData:create_suit_string(player_style, suit_variation)
 	return player_style
 end
 
--- Lines 4129-4144
+-- Lines 4306-4321
 function BlackMarketTweakData:create_suit_strings()
 	local suit_strings = {}
 	local suit_variations = nil
@@ -5140,18 +5185,18 @@ function BlackMarketTweakData:create_suit_strings()
 	return suit_strings
 end
 
--- Lines 4146-4195
+-- Lines 4323-4372
 function BlackMarketTweakData:build_player_style_list(tweak_data)
 	local x_td, y_td, x_gv, y_gv, x_sn, y_sn = nil
 
-	-- Lines 4151-4154
+	-- Lines 4328-4331
 	local function map_func(x)
 		x_td = self.player_styles[x]
 
 		return not x_td.unavailable
 	end
 
-	-- Lines 4156-4185
+	-- Lines 4333-4362
 	local function sort_func(x, y)
 		if x == "none" then
 			return true

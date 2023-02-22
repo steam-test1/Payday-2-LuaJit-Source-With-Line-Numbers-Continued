@@ -79,7 +79,8 @@ function CoroutineManager:_add()
 		local co = coroutine.create(value.func.Function)
 		self._coroutines[value.func.Priority][value.name] = {
 			co = co,
-			arg = value.arg
+			arg = value.arg,
+			force_rem_func = value.func.Function_Force_Remove
 		}
 		self._buffer[key] = nil
 	end
@@ -105,7 +106,7 @@ function CoroutineManager:is_running(name)
 	return false
 end
 
--- Lines 78-90
+-- Lines 78-98
 function CoroutineManager:remove_coroutine(name)
 	if self._buffer[name] then
 		self._buffer[name] = nil
@@ -115,14 +116,20 @@ function CoroutineManager:remove_coroutine(name)
 
 	for i = 1, size do
 		if self._coroutines[i][name] then
+			local co_data = self._coroutines[i][name]
 			self._coroutines[i][name] = nil
+			local rem_func = co_data.force_rem_func
+
+			if rem_func then
+				rem_func(co_data.co)
+			end
 
 			return
 		end
 	end
 end
 
--- Lines 92-94
+-- Lines 100-102
 function CoroutineManager:clear()
 	self:init()
 end

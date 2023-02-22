@@ -138,7 +138,22 @@ function ElementAreaTrigger:remove_callback()
 	end
 end
 
--- Lines 132-145
+-- Lines 116-131
+function ElementAreaTrigger:_chk_local_client_execute(unit, ...)
+	if not self._values.on_executed then
+		return
+	end
+
+	for _, params in ipairs(self._values.on_executed) do
+		local element = self:get_mission_element(params.id)
+
+		if element and element.client_local_on_executed then
+			element:client_local_on_executed(unit, ...)
+		end
+	end
+end
+
+-- Lines 133-146
 function ElementAreaTrigger:on_executed(instigator, ...)
 	if not self._values.enabled then
 		return
@@ -151,7 +166,7 @@ function ElementAreaTrigger:on_executed(instigator, ...)
 	end
 end
 
--- Lines 151-175
+-- Lines 152-176
 function ElementAreaTrigger:instigators()
 	if self._values.unit_ids then
 		local instigators = {}
@@ -184,27 +199,27 @@ function ElementAreaTrigger:instigators()
 	return instigators
 end
 
--- Lines 178-180
+-- Lines 179-181
 function ElementAreaTrigger:project_instigators()
 	return {}
 end
 
--- Lines 183-185
+-- Lines 184-186
 function ElementAreaTrigger:project_amount_all()
 	return nil
 end
 
--- Lines 188-190
+-- Lines 189-191
 function ElementAreaTrigger:project_amount_inside()
 	return #self._inside
 end
 
--- Lines 193-195
+-- Lines 194-196
 function ElementAreaTrigger:is_instigator_valid(unit)
 	return true
 end
 
--- Lines 198-209
+-- Lines 199-210
 function ElementAreaTrigger:debug_draw()
 	if self._values.instigator == "loot" or self._values.instigator == "unique_loot" then
 		for _, shape in ipairs(self._shapes) do
@@ -219,7 +234,7 @@ function ElementAreaTrigger:debug_draw()
 	end
 end
 
--- Lines 211-257
+-- Lines 212-281
 function ElementAreaTrigger:update_area()
 	if not self._values.enabled then
 		return
@@ -227,7 +242,19 @@ function ElementAreaTrigger:update_area()
 
 	if self._values.trigger_on == "on_empty" then
 		if Network:is_server() then
+			local saved_client_players = {}
+
+			for _, instigator in ipairs(self._inside) do
+				if alive(instigator) and instigator:base() and instigator:base().is_husk_player then
+					table.insert(saved_client_players, instigator)
+				end
+			end
+
 			self._inside = {}
+
+			for i, unit in ipairs(saved_client_players) do
+				table.insert(self._inside, unit)
+			end
 
 			for _, unit in ipairs(self:instigators()) do
 				if alive(unit) then
@@ -235,8 +262,19 @@ function ElementAreaTrigger:update_area()
 				end
 			end
 
+			if self._on_empty_find_func_switch then
+				self._instigator_find_func = self._on_empty_find_func_switch
+				self._on_empty_find_func_switch = nil
+			end
+
 			if #self._inside == 0 then
 				self:on_executed()
+			end
+		elseif Network:is_client() then
+			for _, unit in ipairs(self:instigators()) do
+				if alive(unit) then
+					self:_client_check_state(unit)
+				end
 			end
 		end
 	else
@@ -260,16 +298,18 @@ function ElementAreaTrigger:update_area()
 	end
 end
 
--- Lines 259-264
+-- Lines 283-297
 function ElementAreaTrigger:sync_enter_area(unit)
-	table.insert(self._inside, unit)
+	if not table.contains(self._inside, unit) then
+		table.insert(self._inside, unit)
+	end
 
 	if self._values.trigger_on == "on_enter" or self._values.trigger_on == "both" or self._values.trigger_on == "while_inside" then
 		self:_check_amount(unit)
 	end
 end
 
--- Lines 266-271
+-- Lines 299-304
 function ElementAreaTrigger:sync_exit_area(unit)
 	table.delete(self._inside, unit)
 
@@ -278,12 +318,12 @@ function ElementAreaTrigger:sync_exit_area(unit)
 	end
 end
 
--- Lines 273-275
+-- Lines 306-308
 function ElementAreaTrigger:sync_while_in_area(unit)
 	self:_check_amount(unit)
 end
 
--- Lines 277-294
+-- Lines 310-327
 function ElementAreaTrigger:_check_amount(unit)
 	if self._values.trigger_on == "on_enter" then
 		local amount = self._values.amount == "all" and self:project_amount_all()
@@ -301,14 +341,14 @@ function ElementAreaTrigger:_check_amount(unit)
 	end
 end
 
--- Lines 296-360
+-- Lines 329-393
 function ElementAreaTrigger:_should_trigger(unit)
 	if alive(unit) then
 		local rule_ok = self:_check_instigator_rules(unit)
 		local inside = nil
 
 		if unit:movement() then
-			inside = self:_is_inside(unit:movement():m_pos())
+			inside = self:_is_inside(unit:movement().m_newest_pos and unit:movement():m_newest_pos() or unit:movement():m_pos())
 		else
 			local object = nil
 
@@ -361,7 +401,7 @@ function ElementAreaTrigger:_should_trigger(unit)
 	return false
 end
 
--- Lines 363-371
+-- Lines 396-404
 function ElementAreaTrigger:_check_instigator_rules(unit)
 	for _, element in ipairs(self._rules_elements) do
 		if not element:check_rules(self._values.instigator, unit) then
@@ -372,7 +412,7 @@ function ElementAreaTrigger:_check_instigator_rules(unit)
 	return true
 end
 
--- Lines 374-383
+-- Lines 407-416
 function ElementAreaTrigger:_clean_destroyed_units()
 	local i = 1
 
@@ -385,25 +425,38 @@ function ElementAreaTrigger:_clean_destroyed_units()
 	end
 end
 
--- Lines 422-448
+-- Lines 419-452
 function ElementAreaTrigger:_client_check_state(unit)
 	local rule_ok = self:_check_instigator_rules(unit)
-	local inside = self:_is_inside(unit:position())
+	local inside = nil
+
+	if unit:movement() then
+		inside = self:_is_inside(unit:movement():m_pos())
+	else
+		unit:m_position(tmp_vec1)
+
+		inside = self:_is_inside(tmp_vec1)
+	end
 
 	if table.contains(self._inside, unit) then
-		if not inside or not rule_ok then
+		if inside and rule_ok then
+			if self._values.trigger_on == "while_inside" then
+				managers.network:session():send_to_host("to_server_area_event", 3, self._id, unit)
+				self:_chk_local_client_execute(unit, "while_inside")
+			end
+		else
 			table.delete(self._inside, unit)
 			managers.network:session():send_to_host("to_server_area_event", 2, self._id, unit)
-		elseif self._values.trigger_on == "while_inside" then
-			managers.network:session():send_to_host("to_server_area_event", 3, self._id, unit)
+			self:_chk_local_client_execute(unit, "on_exit")
 		end
 	elseif inside and rule_ok then
 		table.insert(self._inside, unit)
 		managers.network:session():send_to_host("to_server_area_event", 1, self._id, unit)
+		self:_chk_local_client_execute(unit, "on_enter")
 	end
 end
 
--- Lines 452-458
+-- Lines 455-461
 function ElementAreaTrigger:operation_set_interval(interval)
 	self._values.interval = interval
 
@@ -414,24 +467,24 @@ function ElementAreaTrigger:operation_set_interval(interval)
 	end
 end
 
--- Lines 460-462
+-- Lines 463-465
 function ElementAreaTrigger:operation_set_use_disabled_shapes(use_disabled_shapes)
 	self._values.use_disabled_shapes = use_disabled_shapes
 end
 
--- Lines 464-466
+-- Lines 467-469
 function ElementAreaTrigger:operation_clear_inside()
 	self._inside = {}
 end
 
--- Lines 469-473
+-- Lines 472-476
 function ElementAreaTrigger:save(data)
 	data.enabled = self._values.enabled
 	data.interval = self._values.interval
 	data.use_disabled_shapes = self._values.use_disabled_shapes
 end
 
--- Lines 475-482
+-- Lines 478-485
 function ElementAreaTrigger:load(data)
 	if not self._on_script_activated_done then
 		self:on_script_activated()
@@ -445,17 +498,17 @@ end
 
 ElementAreaOperator = ElementAreaOperator or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines 488-490
+-- Lines 491-493
 function ElementAreaOperator:init(...)
 	ElementAreaOperator.super.init(self, ...)
 end
 
--- Lines 492-494
+-- Lines 495-497
 function ElementAreaOperator:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines 496-518
+-- Lines 499-521
 function ElementAreaOperator:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -484,7 +537,7 @@ end
 
 ElementAreaReportTrigger = ElementAreaReportTrigger or class(ElementAreaTrigger)
 
--- Lines 524-545
+-- Lines 527-548
 function ElementAreaReportTrigger:update_area()
 	if not self._values.enabled then
 		return
@@ -507,7 +560,7 @@ function ElementAreaReportTrigger:update_area()
 	end
 end
 
--- Lines 547-590
+-- Lines 550-593
 function ElementAreaReportTrigger:_check_state(unit)
 	self:_clean_destroyed_units()
 
@@ -516,7 +569,7 @@ function ElementAreaReportTrigger:_check_state(unit)
 		local inside = nil
 
 		if unit:movement() then
-			inside = self:_is_inside(unit:movement():m_pos())
+			inside = self:_is_inside(unit:movement().m_newest_pos and unit:movement():m_newest_pos() or unit:movement():m_pos())
 		else
 			unit:m_position(tmp_vec1)
 
@@ -551,7 +604,7 @@ function ElementAreaReportTrigger:_check_state(unit)
 	return false
 end
 
--- Lines 592-601
+-- Lines 595-604
 function ElementAreaReportTrigger:_add_inside(unit)
 	table.insert(self._inside, unit)
 
@@ -564,7 +617,7 @@ function ElementAreaReportTrigger:_add_inside(unit)
 	self:_check_on_executed_reached_amount(unit)
 end
 
--- Lines 603-612
+-- Lines 606-615
 function ElementAreaReportTrigger:_check_on_executed_reached_amount(unit)
 	local amount = self._values.amount == "all" and self:project_amount_all()
 	amount = amount or tonumber(self._values.amount)
@@ -574,21 +627,21 @@ function ElementAreaReportTrigger:_check_on_executed_reached_amount(unit)
 	end
 end
 
--- Lines 614-618
+-- Lines 617-621
 function ElementAreaReportTrigger:_while_inside(unit)
 	if self:_has_on_executed_alternative("while_inside") then
 		self:on_executed(unit, "while_inside")
 	end
 end
 
--- Lines 620-624
+-- Lines 623-627
 function ElementAreaReportTrigger:_rule_failed(unit)
 	if self:_has_on_executed_alternative("rule_failed") then
 		self:on_executed(unit, "rule_failed")
 	end
 end
 
--- Lines 626-633
+-- Lines 629-636
 function ElementAreaReportTrigger:_remove_inside(unit)
 	table.delete(self._inside, unit)
 	self:on_executed(unit, "leave")
@@ -600,7 +653,7 @@ function ElementAreaReportTrigger:_remove_inside(unit)
 	self:_check_on_executed_reached_amount(unit)
 end
 
--- Lines 635-642
+-- Lines 638-645
 function ElementAreaReportTrigger:_remove_inside_by_index(index)
 	table.remove(self._inside, index)
 	self:on_executed(nil, "leave")
@@ -612,7 +665,7 @@ function ElementAreaReportTrigger:_remove_inside_by_index(index)
 	self:_check_on_executed_reached_amount(nil)
 end
 
--- Lines 645-658
+-- Lines 648-661
 function ElementAreaReportTrigger:_clean_destroyed_units()
 	local i = 1
 
@@ -631,48 +684,58 @@ function ElementAreaReportTrigger:_clean_destroyed_units()
 	end
 end
 
--- Lines 700-727
+-- Lines 664-700
 function ElementAreaReportTrigger:_client_check_state(unit)
 	local rule_ok = self:_check_instigator_rules(unit)
-	local inside = self:_is_inside(unit:position())
+	local inside = nil
+
+	if unit:movement() then
+		inside = self:_is_inside(unit:movement():m_pos())
+	else
+		unit:m_position(tmp_vec1)
+
+		inside = self:_is_inside(tmp_vec1)
+	end
+
+	if inside and not rule_ok and self:_has_on_executed_alternative("rule_failed") then
+		managers.network:session():send_to_host("to_server_area_event", 4, self._id, unit)
+		self:_chk_local_client_execute(unit, "rule_failed")
+	end
 
 	if table.contains(self._inside, unit) then
-		if not inside or not rule_ok then
+		if inside and rule_ok then
+			if self:_has_on_executed_alternative("while_inside") then
+				managers.network:session():send_to_host("to_server_area_event", 3, self._id, unit)
+				self:_chk_local_client_execute(unit, "while_inside")
+			end
+		else
 			table.delete(self._inside, unit)
 			managers.network:session():send_to_host("to_server_area_event", 2, self._id, unit)
+			self:_chk_local_client_execute(unit, "on_exit")
 		end
 	elseif inside and rule_ok then
 		table.insert(self._inside, unit)
 		managers.network:session():send_to_host("to_server_area_event", 1, self._id, unit)
-	end
-
-	if inside then
-		if rule_ok then
-			if self:_has_on_executed_alternative("while_inside") then
-				managers.network:session():send_to_host("to_server_area_event", 3, self._id, unit)
-			end
-		elseif self:_has_on_executed_alternative("rule_failed") then
-			managers.network:session():send_to_host("to_server_area_event", 4, self._id, unit)
-		end
+		self:_chk_local_client_execute(unit, "on_enter")
 	end
 end
 
--- Lines 731-733
+-- Lines 703-705
 function ElementAreaReportTrigger:sync_enter_area(unit)
 	self:_add_inside(unit)
 end
 
--- Lines 736-738
+-- Lines 708-710
 function ElementAreaReportTrigger:sync_exit_area(unit)
 	self:_remove_inside(unit)
 end
 
--- Lines 741-743
+-- Lines 713-715
 function ElementAreaReportTrigger:sync_while_in_area(unit)
 	self:_while_inside(unit)
 end
 
--- Lines 746-748
+-- Lines 718-720
 function ElementAreaReportTrigger:sync_rule_failed(unit)
 	self:_rule_failed(unit)
 end

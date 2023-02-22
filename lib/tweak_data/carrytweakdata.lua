@@ -1,6 +1,6 @@
 CarryTweakData = CarryTweakData or class()
 
--- Lines 3-1316
+-- Lines 3-1324
 function CarryTweakData:init(tweak_data)
 	self.value_multiplier = tweak_data.money_manager.bag_value_multiplier
 	self.dye = {
@@ -191,7 +191,8 @@ function CarryTweakData:init(tweak_data)
 		type = "heavy",
 		bag_value = "weapons",
 		name_id = "hud_carry_weapons",
-		visual_unit_name = "units/payday2/characters/npc_acc_loot_bag_1/npc_acc_loot_bag_1"
+		visual_unit_name = "units/payday2/characters/npc_acc_loot_bag_1/npc_acc_loot_bag_1",
+		no_area_trigger_detection = true
 	}
 	self.grenades = {
 		type = "explosives",
@@ -210,7 +211,8 @@ function CarryTweakData:init(tweak_data)
 		visual_unit_name = "units/payday2/characters/npc_acc_body_bag_1/npc_acc_body_bag_1",
 		default_value = 1,
 		is_unique_loot = true,
-		skip_exit_secure = true
+		skip_exit_secure = true,
+		no_area_trigger_detection = true
 	}
 	self.special_person = {
 		type = "being",
@@ -219,7 +221,8 @@ function CarryTweakData:init(tweak_data)
 		visual_unit_name = "units/payday2/characters/npc_acc_body_bag_1/npc_acc_body_bag_1",
 		default_value = 1,
 		is_unique_loot = true,
-		skip_exit_secure = true
+		skip_exit_secure = true,
+		no_area_trigger_detection = true
 	}
 	self.circuit = {
 		type = "heavy",
@@ -474,7 +477,8 @@ function CarryTweakData:init(tweak_data)
 		bag_value = "vehicle_falcogini",
 		AI_carry = {
 			SO_category = ""
-		}
+		},
+		no_area_trigger_detection = true
 	}
 	self.warhead = {
 		type = "very_heavy",
@@ -1072,12 +1076,31 @@ function CarryTweakData:init(tweak_data)
 		name_id = "hud_carry_feed",
 		unit = "units/pd2_dlc_pda9/props/pda9_pickup_feed_bag/pda9_pickup_feed_bag",
 		visual_unit_name = "units/pd2_dlc_pda9/props/pda9_pickup_feed_bag/pda9_acc_feed_bag",
-		expire_t = 10
+		expire_t = 10,
+		no_area_trigger_detection = true
 	}
 	self.trai_printing_plates = {
 		type = "medium",
 		name_id = "hud_carry_printing_plates",
 		bag_value = "money",
+		visual_unit_name = "units/payday2/characters/npc_acc_loot_bag_1/npc_acc_loot_bag_1",
+		AI_carry = {
+			SO_category = "enemies"
+		}
+	}
+	self.corp_papers = {
+		type = "light",
+		name_id = "hud_carry_papers",
+		bag_value = "corp_papers",
+		visual_unit_name = "units/payday2/characters/npc_acc_loot_bag_1/npc_acc_loot_bag_1",
+		AI_carry = {
+			SO_category = "enemies"
+		}
+	}
+	self.corp_prototype = {
+		type = "heavy",
+		name_id = "hud_carry_corp_prototype",
+		bag_value = "corp_prototype",
 		visual_unit_name = "units/payday2/characters/npc_acc_loot_bag_1/npc_acc_loot_bag_1",
 		AI_carry = {
 			SO_category = "enemies"
@@ -1090,7 +1113,8 @@ function CarryTweakData:init(tweak_data)
 		visual_unit_name = "units/pd2_dlc_cg22/pickups/cg22_npc_bag/npc_cg22_bag",
 		AI_carry = {
 			SO_category = "enemies"
-		}
+		},
+		no_area_trigger_detection = true
 	}
 	self.cg22_bag_green = {
 		type = "cg22_heavy",
@@ -1099,7 +1123,8 @@ function CarryTweakData:init(tweak_data)
 		visual_unit_name = "units/pd2_dlc_cg22/pickups/cg22_npc_bag/npc_cg22_bag_green",
 		AI_carry = {
 			SO_category = "enemies"
-		}
+		},
+		no_area_trigger_detection = true
 	}
 	self.cg22_bag_yellow = {
 		type = "cg22_light",
@@ -1108,11 +1133,12 @@ function CarryTweakData:init(tweak_data)
 		visual_unit_name = "units/pd2_dlc_cg22/pickups/cg22_npc_bag/npc_cg22_bag_yellow",
 		AI_carry = {
 			SO_category = "enemies"
-		}
+		},
+		no_area_trigger_detection = true
 	}
 end
 
--- Lines 1318-1327
+-- Lines 1326-1335
 function CarryTweakData:get_carry_ids()
 	local t = {}
 
@@ -1127,7 +1153,20 @@ function CarryTweakData:get_carry_ids()
 	return t
 end
 
--- Lines 1330-1338
+-- Lines 1337-1347
+function CarryTweakData:get_carry_ids_lookup_for_area_trigger()
+	local lookup_table = {}
+
+	for id, tweak in pairs(self) do
+		if type(tweak) == "table" and tweak.type and not tweak.no_area_trigger_detection then
+			lookup_table[id] = true
+		end
+	end
+
+	return lookup_table
+end
+
+-- Lines 1350-1358
 function CarryTweakData:get_zipline_offset(carry_id)
 	local unit_name = tweak_data.carry[carry_id].unit or "units/payday2/pickups/gen_pku_lootbag/gen_pku_lootbag"
 

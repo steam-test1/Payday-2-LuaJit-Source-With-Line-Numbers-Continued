@@ -1,4 +1,4 @@
--- Lines 5-19
+-- Lines 5-42
 local function on_ammo_pickup(unit, pickup_chance, increase)
 	local gained_throwable = false
 	local chance = pickup_chance
@@ -11,7 +11,7 @@ local function on_ammo_pickup(unit, pickup_chance, increase)
 
 			managers.player:add_grenade_amount(1, true)
 		else
-			chance = chance * increase
+			chance = chance + increase
 		end
 	end
 
@@ -25,7 +25,7 @@ PlayerAction.FullyLoaded = {
 		local gained_throwable = false
 		local chance = pickup_chance
 
-		-- Lines 29-31
+		-- Lines 55-57
 		local function on_ammo_pickup_message(unit)
 			gained_throwable, chance = on_ammo_pickup(unit, chance, increase)
 		end
@@ -38,5 +38,8 @@ PlayerAction.FullyLoaded = {
 		end
 
 		player_manager:unregister_message(Message.OnAmmoPickup, co)
+	end,
+	Function_Force_Remove = function (co)
+		managers.player:unregister_message(Message.OnAmmoPickup, co)
 	end
 }

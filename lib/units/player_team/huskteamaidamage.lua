@@ -377,12 +377,25 @@ function HuskTeamAIDamage:sync_damage_incapacitated()
 	self:_call_listeners(dmg_info)
 end
 
--- Lines 338-340
+-- Lines 338-352
 function HuskTeamAIDamage:sync_damage_tase()
+	if self._dead or self._fatal then
+		return
+	end
+
 	self:damage_tase()
+
+	local damage_info = {
+		variant = "tase",
+		result = {
+			type = "hurt"
+		}
+	}
+
+	self:_call_listeners(damage_info)
 end
 
--- Lines 344-353
+-- Lines 356-365
 function HuskTeamAIDamage:sync_unit_recovered()
 	if self._tase_effect then
 		World:effect_manager():fade_kill(self._tase_effect)
@@ -396,7 +409,7 @@ function HuskTeamAIDamage:sync_unit_recovered()
 	managers.hud:set_mugshot_normal(self._unit:unit_data().mugshot_id)
 end
 
--- Lines 357-362
+-- Lines 369-374
 function HuskTeamAIDamage:revive(reviving_unit)
 	if self._dead then
 		return
@@ -405,7 +418,7 @@ function HuskTeamAIDamage:revive(reviving_unit)
 	self._unit:network():send_to_host("revive_unit", reviving_unit)
 end
 
--- Lines 364-369
+-- Lines 376-381
 function HuskTeamAIDamage:pause_bleed_out()
 	if self._dead then
 		return
@@ -414,7 +427,7 @@ function HuskTeamAIDamage:pause_bleed_out()
 	self._unit:network():send_to_host("pause_bleed_out")
 end
 
--- Lines 371-379
+-- Lines 383-391
 function HuskTeamAIDamage:unpause_bleed_out()
 	if self._dead then
 		return
@@ -427,7 +440,7 @@ function HuskTeamAIDamage:unpause_bleed_out()
 	self._unit:network():send_to_host("unpause_bleed_out")
 end
 
--- Lines 381-386
+-- Lines 393-398
 function HuskTeamAIDamage:pause_arrested_timer()
 	if self._dead then
 		return
@@ -436,7 +449,7 @@ function HuskTeamAIDamage:pause_arrested_timer()
 	self._unit:network():send_to_host("pause_arrested_timer")
 end
 
--- Lines 388-396
+-- Lines 400-408
 function HuskTeamAIDamage:unpause_arrested_timer()
 	if self._dead then
 		return
@@ -449,7 +462,7 @@ function HuskTeamAIDamage:unpause_arrested_timer()
 	self._unit:network():send_to_host("unpause_arrested_timer")
 end
 
--- Lines 400-406
+-- Lines 412-418
 function HuskTeamAIDamage:_on_bleedout()
 	self._bleed_out = true
 	self._fatal = nil
@@ -459,7 +472,7 @@ function HuskTeamAIDamage:_on_bleedout()
 	managers.hud:set_mugshot_downed(self._unit:unit_data().mugshot_id)
 end
 
--- Lines 410-418
+-- Lines 422-430
 function HuskTeamAIDamage:_on_fatal()
 	self._fatal = true
 
@@ -472,7 +485,7 @@ function HuskTeamAIDamage:_on_fatal()
 	self._bleed_out = nil
 end
 
--- Lines 422-428
+-- Lines 434-440
 function HuskTeamAIDamage:_on_death()
 	self._dead = true
 	self._bleed_out = nil
@@ -482,7 +495,7 @@ function HuskTeamAIDamage:_on_death()
 	self:_unregister_unit()
 end
 
--- Lines 432-446
+-- Lines 444-458
 function HuskTeamAIDamage:load(data)
 	if not data.char_dmg then
 		return

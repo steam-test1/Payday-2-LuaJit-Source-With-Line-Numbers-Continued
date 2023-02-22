@@ -11602,12 +11602,12 @@ function CharacterTweakData:_process_weapon_usage_table(weap_usage_table)
 	end
 end
 
--- Lines 5258-5260
+-- Lines 5317-5319
 function CharacterTweakData:enemy_list()
 	return self._enemy_list
 end
 
--- Lines 5264-5282
+-- Lines 5323-5341
 function CharacterTweakData:_set_easy()
 	self:_multiply_all_hp(1, 1)
 	self:_multiply_all_speeds(2.05, 2.1)
@@ -11625,7 +11625,7 @@ function CharacterTweakData:_set_easy()
 	self.flashbang_multiplier = 1
 end
 
--- Lines 5286-5464
+-- Lines 5345-5523
 function CharacterTweakData:_set_normal()
 	self:_multiply_all_hp(1, 1)
 	self:_multiply_all_speeds(1.05, 1.1)
@@ -12580,7 +12580,7 @@ function CharacterTweakData:_set_normal()
 	self.concussion_multiplier = 1
 end
 
--- Lines 5468-5621
+-- Lines 5527-5680
 function CharacterTweakData:_set_hard()
 	self:_multiply_all_hp(1, 1)
 	self:_multiply_all_speeds(2.05, 2.1)
@@ -13227,7 +13227,7 @@ function CharacterTweakData:_set_hard()
 	}
 end
 
--- Lines 5625-5786
+-- Lines 5684-5845
 function CharacterTweakData:_set_overkill()
 	self:_multiply_all_hp(2, 2)
 	self:_multiply_all_speeds(2.05, 2.1)
@@ -13875,7 +13875,7 @@ function CharacterTweakData:_set_overkill()
 	self.concussion_multiplier = 1
 end
 
--- Lines 5790-5880
+-- Lines 5849-5939
 function CharacterTweakData:_set_overkill_145()
 	if SystemInfo:platform() == Idstring("PS3") then
 		self:_multiply_all_hp(3, 3)
@@ -14071,7 +14071,7 @@ function CharacterTweakData:_set_overkill_145()
 	self.concussion_multiplier = 1
 end
 
--- Lines 5884-6059
+-- Lines 5943-6118
 function CharacterTweakData:_set_easy_wish()
 	if SystemInfo:platform() == Idstring("PS3") then
 		self:_multiply_all_hp(6, 2)
@@ -14646,7 +14646,7 @@ function CharacterTweakData:_set_easy_wish()
 	self.concussion_multiplier = 1
 end
 
--- Lines 6061-6297
+-- Lines 6120-6356
 function CharacterTweakData:_set_overkill_290()
 	if SystemInfo:platform() == Idstring("PS3") then
 		self:_multiply_all_hp(6, 1.5)
@@ -15876,7 +15876,7 @@ function CharacterTweakData:_set_overkill_290()
 	self.concussion_multiplier = 1
 end
 
--- Lines 6299-6540
+-- Lines 6358-6599
 function CharacterTweakData:_set_sm_wish()
 	if SystemInfo:platform() == Idstring("PS3") then
 		self:_multiply_all_hp(6, 1.5)
@@ -17113,7 +17113,7 @@ function CharacterTweakData:_set_sm_wish()
 	self.concussion_multiplier = 1
 end
 
--- Lines 6544-6551
+-- Lines 6603-6610
 function CharacterTweakData:_multiply_weapon_delay(weap_usage_table, mul)
 	for _, weap_id in ipairs(self.weap_ids) do
 		local usage_data = weap_usage_table[weap_id]
@@ -17124,7 +17124,7 @@ function CharacterTweakData:_multiply_weapon_delay(weap_usage_table, mul)
 	end
 end
 
--- Lines 6555-6769
+-- Lines 6614-6828
 function CharacterTweakData:_multiply_all_hp(hp_mul, hs_mul)
 	self.fbi.HEALTH_INIT = self.fbi.HEALTH_INIT * hp_mul
 	self.swat.HEALTH_INIT = self.swat.HEALTH_INIT * hp_mul
@@ -17311,7 +17311,7 @@ function CharacterTweakData:_multiply_all_hp(hp_mul, hs_mul)
 	end
 end
 
--- Lines 6773-6830
+-- Lines 6832-6889
 function CharacterTweakData:_multiply_all_speeds(walk_mul, run_mul)
 	local all_units = {
 		"security",
@@ -17365,7 +17365,7 @@ function CharacterTweakData:_multiply_all_speeds(walk_mul, run_mul)
 	self.fbi_swat.SPEED_RUN = self.fbi_swat.SPEED_RUN * run_mul
 end
 
--- Lines 6833-6844
+-- Lines 6892-6903
 function CharacterTweakData:_set_characters_weapon_preset(preset)
 	local all_units = {
 		"security",
@@ -17385,7 +17385,7 @@ function CharacterTweakData:_set_characters_weapon_preset(preset)
 	end
 end
 
--- Lines 6848-7736
+-- Lines 6907-7795
 function CharacterTweakData:character_map()
 	local char_map = {
 		basic = {
@@ -18160,7 +18160,8 @@ function CharacterTweakData:character_map()
 		usm2 = {
 			path = "units/pd2_dlc_usm2/characters/",
 			list = {
-				"ene_male_marshal_shield_1"
+				"ene_male_marshal_shield_1",
+				"ene_male_marshal_shield_2"
 			}
 		},
 		ranc = {
@@ -18183,6 +18184,13 @@ function CharacterTweakData:character_map()
 			path = "units/pd2_dlc_cg22/characters/",
 			list = {
 				"ene_snowman_boss"
+			}
+		},
+		corp = {
+			path = "units/pd2_dlc_corp/characters/",
+			list = {
+				"civ_female_marketing_lead",
+				"civ_male_researcher_lead"
 			}
 		}
 	}

@@ -9,7 +9,7 @@ function KillzoneUnitElement:init(unit)
 	table.insert(self._save_values, "type")
 end
 
--- Lines 11-22
+-- Lines 11-18
 function KillzoneUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -20,6 +20,7 @@ function KillzoneUnitElement:_build_panel(panel, panel_sizer)
 		"sniper",
 		"gas",
 		"fire",
-		"laser"
+		"laser",
+		"electricity"
 	})
 end

@@ -1,4 +1,4 @@
--- Lines 3-1368
+-- Lines 3-1394
 function DLCTweakData:init_generated()
 	self.a10th_bundle = {
 		free = true,
@@ -299,6 +299,18 @@ function DLCTweakData:init_generated()
 	}
 	self.copr_bundle.content.loot_global_value = "copr"
 	self.copr_bundle.content.loot_drops = {}
+	self.corp_bundle = {
+		dlc = "has_corp",
+		content = {}
+	}
+	self.corp_bundle.content.loot_global_value = "corp"
+	self.corp_bundle.content.loot_drops = {}
+	self.cot_bundle = {
+		dlc = "has_cot",
+		content = {}
+	}
+	self.cot_bundle.content.loot_global_value = "cot"
+	self.cot_bundle.content.loot_drops = {}
 	self.ess_bundle = {
 		dlc = "has_ess",
 		content = {}

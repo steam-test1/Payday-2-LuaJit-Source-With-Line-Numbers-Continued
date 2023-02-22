@@ -105,7 +105,7 @@ end
 
 -- Lines 98-100
 function DialogManager:queue_narrator_dialog(id, params)
-	self:queue_dialog(self._narrator_prefix .. id, params)
+	return self:queue_dialog(self._narrator_prefix .. id, params)
 end
 
 -- Lines 102-105

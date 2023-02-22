@@ -19,7 +19,7 @@ ElementLaserTrigger.COLORS = {
 	}
 }
 
--- Lines 6-58
+-- Lines 6-87
 function ElementLaserTrigger:init(...)
 	ElementLaserTrigger.super.init(self, ...)
 
@@ -43,6 +43,17 @@ function ElementLaserTrigger:init(...)
 	elseif self._values.instigator == "loot" then
 		self._slotmask = World:make_slot_mask(14)
 	end
+
+	if Network:is_client() then
+		self._instigator_find_func = ElementAreaTrigger.instigator_find_functions_client[self._values.instigator]
+	else
+		self._instigator_find_func = ElementAreaTrigger.instigator_find_functions[self._values.instigator]
+		self._check_amount_func = ElementAreaTrigger.check_amount_functions[self._values.instigator]
+	end
+
+	self._instigator_count_all_func = ElementAreaTrigger.instigator_project_all_functions[self._values.instigator]
+	self._instigator_count_inside_func = ElementAreaTrigger.instigator_project_inside_functions[self._values.instigator]
+	self._instigator_valid_func = ElementAreaTrigger.instigator_valid_functions[self._values.instigator]
 
 	if not self._values.skip_dummies then
 		self._dummy_units = {}
@@ -81,7 +92,7 @@ function ElementLaserTrigger:init(...)
 	end
 end
 
--- Lines 60-67
+-- Lines 89-96
 function ElementLaserTrigger:on_script_activated(...)
 	ElementLaserTrigger.super.on_script_activated(self, ...)
 	self._mission_script:add_save_state_cb(self._id)
@@ -91,7 +102,7 @@ function ElementLaserTrigger:on_script_activated(...)
 	end
 end
 
--- Lines 69-77
+-- Lines 98-106
 function ElementLaserTrigger:set_enabled(enabled)
 	ElementLaserTrigger.super.set_enabled(self, enabled)
 
@@ -104,7 +115,7 @@ function ElementLaserTrigger:set_enabled(enabled)
 	end
 end
 
--- Lines 79-86
+-- Lines 108-115
 function ElementLaserTrigger:add_callback()
 	if not self._callback then
 		if not self._values.visual_only then
@@ -115,7 +126,7 @@ function ElementLaserTrigger:add_callback()
 	end
 end
 
--- Lines 88-100
+-- Lines 117-129
 function ElementLaserTrigger:remove_callback()
 	if self._callback then
 		self._mission_script:remove(self._callback)
@@ -132,11 +143,11 @@ function ElementLaserTrigger:remove_callback()
 	end
 end
 
--- Lines 102-104
+-- Lines 131-133
 function ElementLaserTrigger:client_on_executed(...)
 end
 
--- Lines 106-117
+-- Lines 135-146
 function ElementLaserTrigger:on_executed(instigator, alternative)
 	if not self._values.enabled then
 		return
@@ -149,12 +160,12 @@ function ElementLaserTrigger:on_executed(instigator, alternative)
 	end
 end
 
--- Lines 120-122
+-- Lines 149-151
 function ElementLaserTrigger:instigators()
 	return ElementAreaTrigger.project_instigators(self)
 end
 
--- Lines 124-142
+-- Lines 153-171
 function ElementLaserTrigger:_check_delayed_remove(t, dt)
 	if not self._delayed_remove then
 		return false
@@ -179,7 +190,7 @@ function ElementLaserTrigger:_check_delayed_remove(t, dt)
 	return false
 end
 
--- Lines 144-185
+-- Lines 173-214
 function ElementLaserTrigger:update_laser_draw(t, dt)
 	if #self._connections == 0 then
 		return
@@ -226,12 +237,12 @@ function ElementLaserTrigger:update_laser_draw(t, dt)
 	end
 end
 
--- Lines 187-189
+-- Lines 216-218
 function ElementLaserTrigger:project_amount_all()
 	return ElementAreaTrigger.project_amount_all(self)
 end
 
--- Lines 191-211
+-- Lines 220-240
 function ElementLaserTrigger:update_laser()
 	if not self._values.enabled then
 		return
@@ -254,22 +265,22 @@ function ElementLaserTrigger:update_laser()
 	end
 end
 
--- Lines 214-216
+-- Lines 243-245
 function ElementLaserTrigger:sync_enter_area(unit)
 	self:_add_inside(unit)
 end
 
--- Lines 219-221
+-- Lines 248-250
 function ElementLaserTrigger:sync_exit_area(unit)
 	self:_remove_inside(unit)
 end
 
--- Lines 224-226
+-- Lines 253-255
 function ElementLaserTrigger:sync_while_in_area(unit)
 	self:_while_inside(unit)
 end
 
--- Lines 244-306
+-- Lines 273-335
 function ElementLaserTrigger:_check_state(unit)
 	if alive(unit) then
 		local rule_ok = self:_check_instigator_rules(unit)
@@ -330,18 +341,18 @@ function ElementLaserTrigger:_check_state(unit)
 	return false
 end
 
--- Lines 308-311
+-- Lines 337-340
 function ElementLaserTrigger:_add_inside(unit)
 	table.insert(self._inside, unit)
 	self:on_executed(unit, "enter")
 end
 
--- Lines 313-315
+-- Lines 342-344
 function ElementLaserTrigger:_while_inside(unit)
 	self:on_executed(unit, "while_inside")
 end
 
--- Lines 317-323
+-- Lines 346-352
 function ElementLaserTrigger:_remove_inside(unit)
 	table.delete(self._inside, unit)
 	self:on_executed(unit, "leave")
@@ -351,7 +362,7 @@ function ElementLaserTrigger:_remove_inside(unit)
 	end
 end
 
--- Lines 325-331
+-- Lines 354-360
 function ElementLaserTrigger:_remove_inside_by_index(index)
 	table.remove(self._inside, index)
 	self:on_executed(nil, "leave")
@@ -361,7 +372,7 @@ function ElementLaserTrigger:_remove_inside_by_index(index)
 	end
 end
 
--- Lines 334-345
+-- Lines 363-374
 function ElementLaserTrigger:_check_instigator_rules(unit)
 	if not self._rules_elements then
 		return true
@@ -376,7 +387,7 @@ function ElementLaserTrigger:_check_instigator_rules(unit)
 	return true
 end
 
--- Lines 348-357
+-- Lines 377-386
 function ElementLaserTrigger:_clean_destroyed_units()
 	local i = 1
 
@@ -389,7 +400,7 @@ function ElementLaserTrigger:_clean_destroyed_units()
 	end
 end
 
--- Lines 360-393
+-- Lines 389-425
 function ElementLaserTrigger:_client_check_state(unit)
 	local rule_ok = self:_check_instigator_rules(unit)
 	local inside = nil
@@ -411,28 +422,31 @@ function ElementLaserTrigger:_client_check_state(unit)
 		if not inside or not rule_ok then
 			table.delete(self._inside, unit)
 			managers.network:session():send_to_host("to_server_area_event", 2, self._id, unit)
+			ElementAreaTrigger._chk_local_client_execute(self, unit, "on_exit")
 		end
 	elseif inside and rule_ok then
 		table.insert(self._inside, unit)
 		managers.network:session():send_to_host("to_server_area_event", 1, self._id, unit)
+		ElementAreaTrigger._chk_local_client_execute(self, unit, "on_enter")
 	end
 
 	if inside and rule_ok then
 		managers.network:session():send_to_host("to_server_area_event", 3, self._id, unit)
+		ElementAreaTrigger._chk_local_client_execute(self, unit, "while_inside")
 	end
 end
 
--- Lines 395-397
+-- Lines 427-429
 function ElementLaserTrigger:operation_add()
 	self:_set_dummies_visible(true)
 end
 
--- Lines 399-401
+-- Lines 431-433
 function ElementLaserTrigger:operation_remove()
 	self:_set_dummies_visible(false)
 end
 
--- Lines 403-412
+-- Lines 435-444
 function ElementLaserTrigger:_set_dummies_visible(visible)
 	if not self._dummy_units then
 		return
@@ -445,7 +459,7 @@ function ElementLaserTrigger:_set_dummies_visible(visible)
 	end
 end
 
--- Lines 415-421
+-- Lines 447-453
 function ElementLaserTrigger:save(data)
 	data.enabled = self._values.enabled
 	data.cycle_order = self._cycle_order
@@ -454,7 +468,7 @@ function ElementLaserTrigger:save(data)
 	data.dummies_visible = self._dummies_visible
 end
 
--- Lines 423-429
+-- Lines 455-461
 function ElementLaserTrigger:load(data)
 	self:set_enabled(data.enabled)
 

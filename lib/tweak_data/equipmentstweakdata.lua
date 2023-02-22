@@ -1,6 +1,6 @@
 EquipmentsTweakData = EquipmentsTweakData or class()
 
--- Lines 3-1080
+-- Lines 3-1100
 function EquipmentsTweakData:init()
 	self.sentry_id_strings = {
 		Idstring("units/payday2/equipment/gen_equipment_sentry/gen_equipment_sentry"),
@@ -893,8 +893,9 @@ function EquipmentsTweakData:init()
 		text_id = "hud_equipment_acid"
 	}
 	self.specials.ranc_sheriff_star = {
-		sync_possession = true,
+		avoid_tranfer = true,
 		icon = "equipment_sheriff_star",
+		sync_possession = true,
 		text_id = "hud_equipment_sheriff_star"
 	}
 	self.specials.ranc_hammer = {
@@ -913,13 +914,25 @@ function EquipmentsTweakData:init()
 		text_id = "hud_equipment_mould"
 	}
 	self.specials.trai_usb_key = {
-		sync_possession = true,
+		avoid_tranfer = true,
 		icon = "equipment_usb_with_data",
+		sync_possession = true,
 		text_id = "hud_equipment_usb_key"
 	}
 	self.specials.trai_container_key = {
 		sync_possession = true,
 		icon = "equipment_generic_key",
 		text_id = "hud_trai_equipment_key"
+	}
+	self.specials.corp_key_fob = {
+		sync_possession = true,
+		icon = "equipment_businesscard",
+		text_id = "hud_carry_corp_key_fob"
+	}
+	self.specials.corp_achi_blueprint = {
+		avoid_tranfer = true,
+		icon = "equipment_documents",
+		sync_possession = true,
+		text_id = "hud_carry_corp_achi_blueprint"
 	}
 end

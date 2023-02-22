@@ -2,7 +2,7 @@ DLCTweakData = DLCTweakData or class()
 
 require("lib/tweak_data/GeneratedDLCTweakData")
 
--- Lines 10-5129
+-- Lines 10-5153
 function DLCTweakData:init(tweak_data)
 	if managers.dlc:is_installing() then
 		tweak_data.BUNDLED_DLC_PACKAGES = {}
@@ -8837,6 +8837,39 @@ function DLCTweakData:init(tweak_data)
 		{
 			type_items = "masks",
 			item_entry = "devilhorn",
+			amount = 1
+		}
+	}
+	self.cot_smilecigar = {
+		content = {}
+	}
+	self.cot_smilecigar.content.loot_global_value = "cot_smilecigar"
+	self.cot_smilecigar.content.loot_drops = {
+		{
+			type_items = "masks",
+			item_entry = "smilecigar",
+			amount = 1
+		}
+	}
+	self.cot_sleekygent = {
+		content = {}
+	}
+	self.cot_sleekygent.content.loot_global_value = "cot_sleekygent"
+	self.cot_sleekygent.content.loot_drops = {
+		{
+			type_items = "player_styles",
+			item_entry = "sleekygent",
+			amount = 1
+		}
+	}
+	self.cot_beigedriver = {
+		content = {}
+	}
+	self.cot_beigedriver.content.loot_global_value = "cot_beigedriver"
+	self.cot_beigedriver.content.loot_drops = {
+		{
+			type_items = "gloves",
+			item_entry = "beigedriver",
 			amount = 1
 		}
 	}
