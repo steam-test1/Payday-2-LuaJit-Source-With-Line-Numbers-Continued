@@ -1,4 +1,4 @@
--- Lines 3-1394
+-- Lines 3-1430
 function DLCTweakData:init_generated()
 	self.a10th_bundle = {
 		free = true,
@@ -2587,6 +2587,73 @@ function DLCTweakData:init_generated()
 		{
 			type_items = "masks",
 			item_entry = "hatgla_green",
+			amount = 1
+		}
+	}
+	self.txt4_bundle = {
+		dlc = "has_txt4",
+		content = {}
+	}
+	self.txt4_bundle.content.loot_global_value = "txt4"
+	self.txt4_bundle.content.loot_drops = {
+		{
+			type_items = "player_styles",
+			item_entry = "bthekid",
+			amount = 1
+		},
+		{
+			type_items = "player_styles",
+			item_entry = "cassidy",
+			amount = 1
+		},
+		{
+			type_items = "player_styles",
+			item_entry = "jessjames",
+			amount = 1
+		},
+		{
+			type_items = "player_styles",
+			item_entry = "sambass",
+			amount = 1
+		},
+		{
+			type_items = "masks",
+			item_entry = "bthekidmask",
+			amount = 1
+		},
+		{
+			type_items = "masks",
+			item_entry = "cassidymask",
+			amount = 1
+		},
+		{
+			type_items = "masks",
+			item_entry = "jessjamesmask",
+			amount = 1
+		},
+		{
+			type_items = "masks",
+			item_entry = "sambassmask",
+			amount = 1
+		},
+		{
+			type_items = "gloves",
+			item_entry = "txbull",
+			amount = 1
+		},
+		{
+			type_items = "gloves",
+			item_entry = "txrider",
+			amount = 1
+		},
+		{
+			type_items = "gloves",
+			item_entry = "txrivet",
+			amount = 1
+		},
+		{
+			type_items = "gloves",
+			item_entry = "txsuede",
 			amount = 1
 		}
 	}

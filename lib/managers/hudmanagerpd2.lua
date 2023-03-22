@@ -263,8 +263,8 @@ function HUDManager:remove_waiting(peer_id)
 end
 
 -- Lines 277-279
-function HUDManager:set_teammate_weapon_firemode(i, id, firemode)
-	self._teammate_panels[i]:set_weapon_firemode(id, firemode)
+function HUDManager:set_teammate_weapon_firemode(i, ...)
+	self._teammate_panels[i]:set_weapon_firemode(...)
 end
 
 -- Lines 282-305

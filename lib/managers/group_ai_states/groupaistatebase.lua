@@ -6424,7 +6424,7 @@ end
 
 -- Lines 6370-6372
 function GroupAIStateBase:is_enemy_converted_to_criminal(unit)
-	return self._converted_police[unit:key()]
+	return self._converted_police[unit:key()] and true or false
 end
 
 -- Lines 6376-6382
@@ -6601,7 +6601,7 @@ end
 
 -- Lines 6558-6560
 function GroupAIStateBase:is_unit_team_AI(unit)
-	return self._ai_criminals[unit:key()]
+	return self._ai_criminals[unit:key()] and true or false
 end
 
 -- Lines 6564-6572

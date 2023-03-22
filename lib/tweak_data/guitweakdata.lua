@@ -1,6 +1,6 @@
 GuiTweakData = GuiTweakData or class()
 
--- Lines 3-2060
+-- Lines 3-2098
 function GuiTweakData:init(tweak_data)
 	local is_win_32 = SystemInfo:platform() == Idstring("WIN32")
 	local is_nextgen = SystemInfo:platform() == Idstring("PS4") or SystemInfo:platform() == Idstring("XB1")
@@ -5130,9 +5130,14 @@ function GuiTweakData:init(tweak_data)
 	}
 
 	table.insert(self.new_heists, {
-		name_id = "menu_nh_corp_01",
-		texture_path = "guis/dlcs/corp/textures/pd2/new_heists/corp_02",
-		url = "https://pd2.link/HostileTakeoverHeistSLS"
+		name_id = "menu_nh_txt4_01",
+		texture_path = "guis/dlcs/txt4/textures/pd2/new_heists/txt4_01",
+		url = "https://pd2.link/CrudeAwakeningBundleSLS"
+	})
+	table.insert(self.new_heists, {
+		name_id = "menu_nh_txt4_02",
+		texture_path = "guis/dlcs/txt4/textures/pd2/new_heists/txt4_02",
+		url = "https://pd2.link/LawlessTailorPackSLS"
 	})
 	table.insert(self.new_heists, {
 		name_id = "menu_nh_txt3_02",
@@ -5140,14 +5145,19 @@ function GuiTweakData:init(tweak_data)
 		url = "https://pd2.link/HostileTakeoverBundleSLS"
 	})
 	table.insert(self.new_heists, {
-		name_id = "menu_nh_corp",
-		texture_path = "guis/dlcs/corp/textures/pd2/new_heists/corp_01",
-		url = "https://pd2.link/HostileTakeoverDropsSL"
+		name_id = "menu_nh_corp_01",
+		texture_path = "guis/dlcs/corp/textures/pd2/new_heists/corp_02",
+		url = "https://pd2.link/HostileTakeoverHeistSLS"
 	})
 	table.insert(self.new_heists, {
 		name_id = "menu_nh_pxp3",
 		texture_path = "guis/dlcs/pxp3/textures/pd2/new_heists/pxp3",
 		url = "https://pd2.link/McShayWeaponPack3SLS"
+	})
+	table.insert(self.new_heists, {
+		name_id = "menu_nh_corp",
+		texture_path = "guis/dlcs/corp/textures/pd2/new_heists/corp_01",
+		url = "https://pd2.link/HostileTakeoverDropsSL"
 	})
 	table.insert(self.new_heists, {
 		name_id = "menu_nh_txt3_01",
@@ -5618,7 +5628,7 @@ function GuiTweakData:init(tweak_data)
 	})
 end
 
--- Lines 2062-2081
+-- Lines 2100-2119
 function GuiTweakData:_create_location_bounding_boxes()
 	for _, location in ipairs(self.crime_net.locations) do
 		local params = location[1]
@@ -5646,7 +5656,7 @@ function GuiTweakData:_create_location_bounding_boxes()
 	end
 end
 
--- Lines 2083-2151
+-- Lines 2121-2189
 function GuiTweakData:_create_location_spawning_dots()
 	local map_w = 2048
 	local map_h = 1024
@@ -5724,15 +5734,15 @@ function GuiTweakData:_create_location_spawning_dots()
 	self.crime_net.locations = new_locations
 end
 
--- Lines 2153-2155
+-- Lines 2191-2193
 function GuiTweakData:create_narrative_locations(locations)
 end
 
--- Lines 2157-2166
+-- Lines 2195-2204
 function GuiTweakData:print_locations()
 end
 
--- Lines 2168-2202
+-- Lines 2206-2240
 function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	skipnewlines = skipnewlines or false
 	depth = depth or 0
@@ -5771,7 +5781,7 @@ function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	return tmp
 end
 
--- Lines 2204-2329
+-- Lines 2242-2367
 function GuiTweakData:tradable_inventory_sort_func(index)
 	if type(index) == "string" then
 		index = self:tradable_inventory_sort_index(index)
@@ -5894,12 +5904,12 @@ function GuiTweakData:tradable_inventory_sort_func(index)
 	return nil
 end
 
--- Lines 2331-2333
+-- Lines 2369-2371
 function GuiTweakData:tradable_inventory_sort_name(index)
 	return self.tradable_inventory_sort_list[index] or "none"
 end
 
--- Lines 2335-2342
+-- Lines 2373-2380
 function GuiTweakData:tradable_inventory_sort_index(name)
 	for index, n in ipairs(self.tradable_inventory_sort_list) do
 		if n == name then
@@ -5910,7 +5920,7 @@ function GuiTweakData:tradable_inventory_sort_index(name)
 	return 0
 end
 
--- Lines 2344-2364
+-- Lines 2382-2402
 function GuiTweakData:get_locked_sort_number(dlc, ...)
 	local dlc_data = dlc and Global.dlc_manager.all_dlc_data[dlc]
 	local is_dlc_locked = dlc and not managers.dlc:is_dlc_unlocked(dlc) or false

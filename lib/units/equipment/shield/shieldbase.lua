@@ -310,7 +310,7 @@ end
 
 -- Lines 347-369
 function ShieldFlashBase:_do_counter_stun(pos, normal, attacker_unit, range_mul)
-	local range = self._flash_range * (range_mul or 1)
+	local range = self._flash_charge_stun_range * (range_mul or 1)
 	local slot_mask = self._flash_charge_stun_slotmask
 	local effect_params = {
 		camera_shake_max_mul = 4,

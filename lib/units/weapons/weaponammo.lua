@@ -3,7 +3,7 @@ WeaponAmmo = WeaponAmmo or class()
 -- Lines 4-11
 function WeaponAmmo:init(weapon_id, ammo_max_per_clip, ammo_max)
 	self._name_id = weapon_id
-	self._digest_values = SystemInfo:platform() == Idstring("WIN32")
+	self._digest_values = true
 
 	self:set_ammo_max_per_clip(ammo_max_per_clip)
 	self:set_ammo_max(ammo_max)
@@ -76,56 +76,36 @@ function WeaponAmmo:upgrade_blocked(category, upgrade)
 	return table.contains(self:weapon_tweak_data().upgrade_blocks[category], upgrade)
 end
 
--- Lines 76-87
+-- Lines 76-91
 function WeaponAmmo:set_ammo_max_per_clip(ammo_max_per_clip)
-	if self._ammo_max_per_clip then
-		if self._ammo_max_per_clip2 then
-			print("haxor")
-		end
-
-		self._ammo_max_per_clip2 = self:digest_value(ammo_max_per_clip, true)
-		self._ammo_max_per_clip = nil
-	else
-		self._ammo_max_per_clip = self:digest_value(ammo_max_per_clip, true)
-		self._ammo_max_per_clip2 = nil
-	end
+	self._ammo_max_per_clip = ammo_max_per_clip
 end
 
--- Lines 89-91
+-- Lines 93-95
 function WeaponAmmo:get_ammo_max_per_clip()
-	return self._ammo_max_per_clip and self:digest_value(self._ammo_max_per_clip, false) or self:digest_value(self._ammo_max_per_clip2, false)
+	return self._ammo_max_per_clip
 end
 
--- Lines 93-104
+-- Lines 97-112
 function WeaponAmmo:set_ammo_max(ammo_max)
-	if self._ammo_max then
-		if self._ammo_max2 then
-			print("haxor")
-		end
-
-		self._ammo_max2 = self:digest_value(ammo_max, true)
-		self._ammo_max = nil
-	else
-		self._ammo_max = self:digest_value(ammo_max, true)
-		self._ammo_max2 = nil
-	end
+	self._ammo_max = ammo_max
 end
 
--- Lines 106-108
+-- Lines 114-116
 function WeaponAmmo:get_ammo_max()
-	return self._ammo_max and self:digest_value(self._ammo_max, false) or self:digest_value(self._ammo_max2, false)
+	return self._ammo_max
 end
 
--- Lines 110-116
+-- Lines 118-124
 function WeaponAmmo:set_ammo_total(ammo_total)
-	self._ammo_total = self:digest_value(ammo_total, true)
+	self._ammo_total = ammo_total
 
-	if self:get_stored_pickup_ammo() and self:get_ammo_max() <= ammo_total then
+	if self:has_stored_pickup_ammo() and self:get_ammo_max() <= ammo_total then
 		self:remove_pickup_ammo()
 	end
 end
 
--- Lines 119-130
+-- Lines 127-138
 function WeaponAmmo:add_ammo_to_pool(ammo, index)
 	local max_ammo = self:get_ammo_max()
 	local current_ammo = self:get_ammo_total()
@@ -139,12 +119,12 @@ function WeaponAmmo:add_ammo_to_pool(ammo, index)
 	managers.hud:set_ammo_amount(index, self:ammo_info())
 end
 
--- Lines 132-134
+-- Lines 140-142
 function WeaponAmmo:get_ammo_total()
-	return self._ammo_total and self:digest_value(self._ammo_total, false) or self:digest_value(self._ammo_total2, false)
+	return self._ammo_total
 end
 
--- Lines 136-140
+-- Lines 144-148
 function WeaponAmmo:get_ammo_ratio()
 	local ammo_max = self:get_ammo_max()
 	local ammo_total = self:get_ammo_total()
@@ -152,7 +132,7 @@ function WeaponAmmo:get_ammo_ratio()
 	return ammo_total / math.max(ammo_max, 1)
 end
 
--- Lines 143-151
+-- Lines 151-159
 function WeaponAmmo:get_ammo_ratio_excluding_clip()
 	local ammo_in_clip = self:get_ammo_max_per_clip()
 	local max_ammo = self:get_ammo_max() - ammo_in_clip
@@ -165,7 +145,7 @@ function WeaponAmmo:get_ammo_ratio_excluding_clip()
 	return current_ammo / max_ammo
 end
 
--- Lines 153-157
+-- Lines 161-165
 function WeaponAmmo:get_max_ammo_excluding_clip()
 	local ammo_in_clip = self:get_ammo_max_per_clip()
 	local max_ammo = self:get_ammo_max() - ammo_in_clip
@@ -173,7 +153,7 @@ function WeaponAmmo:get_max_ammo_excluding_clip()
 	return max_ammo
 end
 
--- Lines 159-167
+-- Lines 167-175
 function WeaponAmmo:remove_ammo_from_pool(percent)
 	local ammo_in_clip = self:get_ammo_max_per_clip()
 	local current_ammo = self:get_ammo_total() - ammo_in_clip
@@ -186,7 +166,7 @@ function WeaponAmmo:remove_ammo_from_pool(percent)
 	end
 end
 
--- Lines 169-179
+-- Lines 177-187
 function WeaponAmmo:remove_ammo(percent)
 	local total_ammo = self:get_ammo_total()
 	local ammo = math.floor(total_ammo * percent)
@@ -202,37 +182,32 @@ function WeaponAmmo:remove_ammo(percent)
 	return total_ammo - ammo
 end
 
--- Lines 181-192
+-- Lines 189-204
 function WeaponAmmo:set_ammo_remaining_in_clip(ammo_remaining_in_clip)
-	if self._ammo_remaining_in_clip then
-		if self._ammo_remaining_in_clip2 then
-			print("haxor")
-		end
-
-		self._ammo_remaining_in_clip2 = self:digest_value(ammo_remaining_in_clip, true)
-		self._ammo_remaining_in_clip = nil
-	else
-		self._ammo_remaining_in_clip = self:digest_value(ammo_remaining_in_clip, true)
-		self._ammo_remaining_in_clip2 = nil
-	end
+	self._ammo_remaining_in_clip = ammo_remaining_in_clip
 end
 
--- Lines 194-196
+-- Lines 206-208
 function WeaponAmmo:get_ammo_remaining_in_clip()
-	return self._ammo_remaining_in_clip and self:digest_value(self._ammo_remaining_in_clip, false) or self:digest_value(self._ammo_remaining_in_clip2, false)
+	return self._ammo_remaining_in_clip
 end
 
--- Lines 200-202
+-- Lines 212-214
+function WeaponAmmo:has_stored_pickup_ammo()
+	return self._stored_pickup_ammo and true or false
+end
+
+-- Lines 218-220
 function WeaponAmmo:get_stored_pickup_ammo()
 	return self._stored_pickup_ammo and self:digest_value(self._stored_pickup_ammo, false)
 end
 
--- Lines 204-206
+-- Lines 222-224
 function WeaponAmmo:store_pickup_ammo(ammo_to_store)
 	self._stored_pickup_ammo = self:digest_value(ammo_to_store, true)
 end
 
--- Lines 208-210
+-- Lines 226-228
 function WeaponAmmo:remove_pickup_ammo()
 	self._stored_pickup_ammo = nil
 end

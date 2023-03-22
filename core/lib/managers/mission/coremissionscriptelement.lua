@@ -96,7 +96,7 @@ function MissionScriptElement:_check_instigator(instigator)
 end
 
 -- Lines 101-133
-function MissionScriptElement:on_executed(instigator, alternative, skip_execute_on_executed)
+function MissionScriptElement:on_executed(instigator, alternative, skip_execute_on_executed, sync_id_from)
 	if not self._values.enabled then
 		return
 	end
@@ -105,9 +105,9 @@ function MissionScriptElement:on_executed(instigator, alternative, skip_execute_
 
 	if Network:is_server() then
 		if instigator and alive(instigator) and instigator:id() ~= -1 then
-			managers.network:session():send_to_peers_synched("run_mission_element", self._id, instigator, self._last_orientation_index or 0)
+			managers.network:session():send_to_peers_synched("run_mission_element", self._id, instigator, self._last_orientation_index or 0, sync_id_from or 0)
 		else
-			managers.network:session():send_to_peers_synched("run_mission_element_no_instigator", self._id, self._last_orientation_index or 0)
+			managers.network:session():send_to_peers_synched("run_mission_element_no_instigator", self._id, self._last_orientation_index or 0, sync_id_from or 0)
 		end
 	end
 
@@ -190,7 +190,7 @@ function MissionScriptElement:_calc_element_delay(params)
 	return params.delay + math.rand(params.delay_rand)
 end
 
--- Lines 194-214
+-- Lines 194-215
 function MissionScriptElement:execute_on_executed(execute_params)
 	for _, params in ipairs(self._values.on_executed) do
 		if not execute_params.alternative or not params.alternative or execute_params.alternative == params.alternative then
@@ -198,31 +198,32 @@ function MissionScriptElement:execute_on_executed(execute_params)
 
 			if element then
 				local delay = self:_calc_element_delay(params)
+				local sync_id_from = element.client_local_on_executed and self._id or nil
 
 				if delay > 0 then
 					if self:is_debug() or element:is_debug() then
 						self._mission_script:debug_output("  Executing element '" .. element:editor_name() .. "' in " .. delay .. " seconds ...", Color(1, 0.75, 0.75, 0.75))
 					end
 
-					self._mission_script:add(callback(element, element, "on_executed", execute_params.instigator), delay, 1)
+					self._mission_script:add(callback(element, element, "on_executed", execute_params.instigator, nil, nil, sync_id_from), delay, 1)
 				else
 					if self:is_debug() or element:is_debug() then
 						self._mission_script:debug_output("  Executing element '" .. element:editor_name() .. "' ...", Color(1, 0.75, 0.75, 0.75))
 					end
 
-					element:on_executed(execute_params.instigator)
+					element:on_executed(execute_params.instigator, nil, nil, sync_id_from)
 				end
 			end
 		end
 	end
 end
 
--- Lines 216-218
+-- Lines 217-219
 function MissionScriptElement:on_execute_element(element, instigator)
 	element:on_executed(instigator)
 end
 
--- Lines 220-227
+-- Lines 221-228
 function MissionScriptElement:_has_on_executed_alternative(alternative)
 	for _, params in ipairs(self._values.on_executed) do
 		if params.alternative and params.alternative == alternative then
@@ -233,57 +234,57 @@ function MissionScriptElement:_has_on_executed_alternative(alternative)
 	return false
 end
 
--- Lines 230-233
+-- Lines 231-234
 function MissionScriptElement:set_enabled(enabled)
 	self._values.enabled = enabled
 
 	self:on_set_enabled()
 end
 
--- Lines 235-237
+-- Lines 236-238
 function MissionScriptElement:on_set_enabled()
 end
 
--- Lines 240-241
+-- Lines 241-242
 function MissionScriptElement:on_toggle(value)
 end
 
--- Lines 244-246
+-- Lines 245-247
 function MissionScriptElement:set_trigger_times(trigger_times)
 	self._values.trigger_times = trigger_times
 end
 
--- Lines 249-251
+-- Lines 250-252
 function MissionScriptElement:is_debug()
 	return self._values.debug or self._mission_script:is_debug()
 end
 
--- Lines 254-255
+-- Lines 255-256
 function MissionScriptElement:stop_simulation(...)
 end
 
--- Lines 258-262
+-- Lines 259-263
 function MissionScriptElement:operation_add()
 	if Application:editor() then
 		managers.editor:output_error("Element " .. self:editor_name() .. " doesn't have an 'add' operator implemented.")
 	end
 end
 
--- Lines 265-269
+-- Lines 266-270
 function MissionScriptElement:operation_remove()
 	if Application:editor() then
 		managers.editor:output_error("Element " .. self:editor_name() .. " doesn't have a 'remove' operator implemented.")
 	end
 end
 
--- Lines 272-276
+-- Lines 273-277
 function MissionScriptElement:apply_job_value()
 	if Application:editor() then
 		managers.editor:output_error("Element " .. self:editor_name() .. " doesn't have a 'apply_job_value' function implemented.")
 	end
 end
 
--- Lines 279-285
+-- Lines 280-286
 function MissionScriptElement:set_synced_orientation_element_index(orientation_element_index)
 	if orientation_element_index and orientation_element_index > 0 then
 		self._synced_orientation_element_index = orientation_element_index
@@ -292,7 +293,7 @@ function MissionScriptElement:set_synced_orientation_element_index(orientation_e
 	end
 end
 
--- Lines 287-300
+-- Lines 288-301
 function MissionScriptElement:get_orientation_by_index(index)
 	if not index or index == 0 then
 		return self._values.position, self._values.rotation
@@ -308,7 +309,7 @@ function MissionScriptElement:get_orientation_by_index(index)
 	return element:get_orientation_by_index(0)
 end
 
--- Lines 302-345
+-- Lines 303-346
 function MissionScriptElement:get_orientation_index()
 	if self._values.orientation_elements and #self._values.orientation_elements > 0 then
 		if not self._unused_orientation_indices then
@@ -352,7 +353,7 @@ function MissionScriptElement:get_orientation_index()
 	end
 end
 
--- Lines 349-359
+-- Lines 350-360
 function MissionScriptElement:get_orientation(use_last_orientation_index)
 	local index = use_last_orientation_index and self._last_orientation_index
 	index = index or self._synced_orientation_element_index or self:get_orientation_index()
@@ -362,14 +363,14 @@ function MissionScriptElement:get_orientation(use_last_orientation_index)
 	return pos, rot
 end
 
--- Lines 362-363
+-- Lines 363-364
 function MissionScriptElement:debug_draw()
 end
 
--- Lines 366-367
+-- Lines 367-368
 function MissionScriptElement:pre_destroy()
 end
 
--- Lines 370-371
+-- Lines 371-372
 function MissionScriptElement:destroy()
 end

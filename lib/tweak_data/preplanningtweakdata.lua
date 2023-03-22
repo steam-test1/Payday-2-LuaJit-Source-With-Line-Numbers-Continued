@@ -51,7 +51,7 @@ function PrePlanningTweakData:get_type_texture_rect(num)
 	}
 end
 
--- Lines 36-2123
+-- Lines 36-2202
 function PrePlanningTweakData:init(tweak_data)
 	self:_create_locations(tweak_data)
 
@@ -2131,7 +2131,7 @@ function PrePlanningTweakData:init(tweak_data)
 	}
 end
 
--- Lines 2125-3497
+-- Lines 2204-3648
 function PrePlanningTweakData:_create_locations(tweak_data)
 	self.upgrade_locks = {
 		"none",
@@ -4090,7 +4090,7 @@ function PrePlanningTweakData:_create_locations(tweak_data)
 	}
 end
 
--- Lines 3499-3501
+-- Lines 3650-3652
 function PrePlanningTweakData:get_level_data(level_id)
 	return self.locations[level_id] or {}
 end
