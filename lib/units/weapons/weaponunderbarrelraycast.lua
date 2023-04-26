@@ -151,3 +151,101 @@ function WeaponUnderbarrelShotgunRaycast:_build_suppression(weapon, enemies_in_c
 
 	return true
 end
+
+WeaponUnderbarrelFlamethrower = WeaponUnderbarrelFlamethrower or class(WeaponUnderbarrelRaycast)
+
+mixin(WeaponUnderbarrelFlamethrower, NewRaycastWeaponBase)
+mixin(WeaponUnderbarrelFlamethrower, NewFlamethrowerBase)
+
+-- Lines 150-155
+function WeaponUnderbarrelFlamethrower:init(unit)
+	self._blueprint = {}
+	self._parts = {}
+
+	WeaponUnderbarrel.init(self, unit)
+	NewFlamethrowerBase.init(self, unit)
+end
+
+-- Lines 157-159
+function WeaponUnderbarrelFlamethrower:_fire_raycast(weapon_base, user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, shoot_through_data)
+	return NewFlamethrowerBase._fire_raycast(self, user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, shoot_through_data)
+end
+
+-- Lines 161-164
+function WeaponUnderbarrelFlamethrower:_check_alert(weapon, rays, fire_pos, direction, user_unit)
+	NewFlamethrowerBase._check_alert(self, rays, fire_pos, direction, user_unit)
+
+	return true
+end
+
+-- Lines 166-169
+function WeaponUnderbarrelFlamethrower:_build_suppression(weapon, enemies_in_cone, suppr_mul)
+	NewFlamethrowerBase._build_suppression(self, enemies_in_cone, suppr_mul)
+
+	return true
+end
+
+-- Lines 171-173
+function WeaponUnderbarrelFlamethrower:_spawn_muzzle_effect()
+	return false
+end
+
+-- Lines 175-177
+function WeaponUnderbarrelFlamethrower:_spawn_shell_eject_effect()
+	return false
+end
+
+-- Lines 179-181
+function WeaponUnderbarrelFlamethrower:_get_tweak_data_weapon_animation(anim)
+	return WeaponUnderbarrel._get_tweak_data_weapon_animation(self, anim)
+end
+
+-- Lines 183-185
+function WeaponUnderbarrelFlamethrower:reload_prefix()
+	return WeaponUnderbarrel.reload_prefix(self)
+end
+
+-- Lines 187-195
+function WeaponUnderbarrelFlamethrower:_check_state(current_state)
+	WeaponUnderbarrelRaycast._check_state(self, current_state)
+
+	self._enabled = self._on
+
+	if self._enabled then
+		self:on_enabled()
+	else
+		self:on_disabled()
+	end
+end
+
+-- Lines 197-199
+function WeaponUnderbarrelFlamethrower:_get_sound_event(weapon, event, alternative_event)
+	return WeaponUnderbarrel._get_sound_event(self, weapon, event, alternative_event)
+end
+
+-- Lines 201-205
+function WeaponUnderbarrelFlamethrower:start_shooting(weapon)
+	self._next_fire_allowed = math.max(self._next_fire_allowed, self._unit:timer():time())
+	self._shooting = true
+	self._bullets_fired = 0
+end
+
+-- Lines 207-209
+function WeaponUnderbarrelFlamethrower:tweak_data_anim_play(...)
+	Application:error("WeaponUnderbarrelFlamethrower:tweak_data_anim_play", ...)
+end
+
+-- Lines 211-213
+function WeaponUnderbarrelFlamethrower:tweak_data_anim_play_at_end(...)
+	Application:error("WeaponUnderbarrelFlamethrower:tweak_data_anim_play_at_end", ...)
+end
+
+-- Lines 215-217
+function WeaponUnderbarrelFlamethrower:tweak_data_anim_stop(...)
+	Application:error("WeaponUnderbarrelFlamethrower:tweak_data_anim_stop", ...)
+end
+
+-- Lines 219-221
+function WeaponUnderbarrelFlamethrower:tweak_data_anim_is_playing(...)
+	Application:error("WeaponUnderbarrelFlamethrower:tweak_data_anim_is_playing", ...)
+end

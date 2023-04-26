@@ -1,6 +1,6 @@
 EquipmentsTweakData = EquipmentsTweakData or class()
 
--- Lines 3-1110
+-- Lines 3-1111
 function EquipmentsTweakData:init()
 	self.sentry_id_strings = {
 		Idstring("units/payday2/equipment/gen_equipment_sentry/gen_equipment_sentry"),
@@ -934,5 +934,13 @@ function EquipmentsTweakData:init()
 		icon = "equipment_documents",
 		sync_possession = true,
 		text_id = "hud_carry_corp_achi_blueprint"
+	}
+	self.specials.lrm_keycard = {
+		transfer_quantity = 1,
+		sync_possession = true,
+		quantity = 1,
+		text_id = "hud_int_equipment_pickup_lrm_keycard",
+		max_quantity = 2,
+		icon = "equipment_rfid_tag_01"
 	}
 end

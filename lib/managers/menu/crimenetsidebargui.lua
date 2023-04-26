@@ -463,6 +463,17 @@ function CrimeNetSidebarGui:clbk_visible_skirmish()
 	return managers.skirmish:is_unlocked()
 end
 
+-- Lines 443-447
+function CrimeNetSidebarGui:clbk_leakedrecording()
+	managers.menu_component:post_event("menu_enter")
+	managers.menu:open_node("crimenet_leakedrecording")
+end
+
+-- Lines 449-452
+function CrimeNetSidebarGui:clbk_visible_leakedrecording()
+	return true
+end
+
 CrimeNetSidebarSeparator = CrimeNetSidebarSeparator or class()
 
 -- Lines 460-479
@@ -926,6 +937,19 @@ function CrimeNetSidebarMutatorsItem:update(t, dt)
 
 		self._glow_panel:set_alpha(0.3 + _t * target_alpha)
 	end
+end
+
+CrimeNetSidebarLeakedRecordingItem = CrimeNetSidebarLeakedRecordingItem or class(CrimeNetSidebarItem)
+
+-- Lines 889-907
+function CrimeNetSidebarLeakedRecordingItem:init(sidebar, panel, parameters)
+	parameters.glow_color = tweak_data.screen_colors.event_color
+
+	CrimeNetSidebarLeakedRecordingItem.super.init(self, sidebar, panel, parameters)
+end
+
+-- Lines 909-912
+function CrimeNetSidebarLeakedRecordingItem:update(t, dt)
 end
 
 CrimeNetSidebarCrimeSpreeItem = CrimeNetSidebarCrimeSpreeItem or class(CrimeNetSidebarItem)

@@ -7,7 +7,7 @@ function MenuMainState:init(game_state_machine)
 	GameState.init(self, "menu_main", game_state_machine)
 end
 
--- Lines 9-302
+-- Lines 9-338
 function MenuMainState:at_enter(old_state)
 	managers.platform:set_playing(false)
 	managers.platform:set_rich_presence("Idle")
@@ -74,41 +74,57 @@ function MenuMainState:at_enter(old_state)
 		managers.menu:check_vr_dlc()
 	end
 
-	if SystemInfo:platform() == Idstring("WIN32") and not Global.use_telemetry_gamesight_decided then
-		local telemetry_state = true
-		local gamesight_state = true
-
-		-- Lines 86-90
-		local function telemetry_toggle_func(state)
-			managers.user:set_setting("use_telemetry", state, true)
+	if SystemInfo:platform() == Idstring("WIN32") and not Global.use_telemetry_gamesight_eula_decided then
+		-- Lines 84-87
+		local function gamesight_accept_func()
+			managers.user:set_setting("use_gamesight", true, true)
 			_G.MenuCallbackHandler:save_settings()
-
-			telemetry_state = state
 		end
 
-		-- Lines 91-95
-		local function gamesight_toggle_func(state)
-			managers.user:set_setting("use_gamesight", state, true)
+		-- Lines 89-92
+		local function gamesight_deny_func()
+			managers.user:set_setting("use_gamesight", false, true)
 			_G.MenuCallbackHandler:save_settings()
-
-			gamesight_state = state
 		end
 
-		-- Lines 96-101
-		local function accept_func()
-			managers.user:set_setting("use_telemetry", telemetry_state, true)
-			managers.user:set_setting("use_gamesight", gamesight_state, true)
+		-- Lines 94-98
+		local function telemetry_accept_func()
+			managers.user:set_setting("use_telemetry", true, true)
 			_G.MenuCallbackHandler:save_settings()
-			Telemetry:send_on_game_launch()
+			managers.menu:show_accept_gamesight_new({
+				accept_func = gamesight_accept_func,
+				deny_func = gamesight_deny_func
+			})
 		end
 
-		Global.use_telemetry_gamesight_decided = true
+		-- Lines 100-104
+		local function telemetry_deny_func()
+			managers.user:set_setting("use_telemetry", false, true)
+			_G.MenuCallbackHandler:save_settings()
+			managers.menu:show_accept_gamesight_new({
+				accept_func = gamesight_accept_func,
+				deny_func = gamesight_deny_func
+			})
+		end
 
-		managers.savefile:setting_changed()
-		managers.menu:show_accept_gamesight_telemetry({
-			telemetry_func = telemetry_toggle_func,
-			gamesight_func = gamesight_toggle_func,
-			accept_func = accept_func
+		-- Lines 106-109
+		local function eula_accept_func()
+			Global.use_telemetry_gamesight_eula_decided = true
+
+			managers.menu:show_accept_telemetry_new({
+				accept_func = telemetry_accept_func,
+				deny_func = telemetry_deny_func
+			})
+		end
+
+		-- Lines 111-113
+		local function eula_deny_func()
+			_G.setup:quit()
+		end
+
+		managers.menu:show_accept_policy_new({
+			accept_func = eula_accept_func,
+			deny_func = eula_deny_func
 		})
 	end
 
@@ -176,7 +192,7 @@ function MenuMainState:at_enter(old_state)
 		elseif (tweak_data.safehouse.level_limit <= managers.experience:current_level() or managers.experience:current_rank() > 0) and not managers.custom_safehouse:has_entered_safehouse() and Global.mission_manager.safehouse_ask_amount < 2 and not Global.skip_menu_dialogs then
 			Global.mission_manager.safehouse_ask_amount = Global.mission_manager.safehouse_ask_amount + 1
 
-			-- Lines 219-227
+			-- Lines 255-263
 			local function yes_func()
 				Global.mission_manager.safehouse_ask_amount = 2
 
@@ -224,7 +240,7 @@ function MenuMainState:at_enter(old_state)
 	managers.statistics:check_stats()
 end
 
--- Lines 310-323
+-- Lines 346-359
 function MenuMainState:at_exit(new_state)
 	if new_state:name() ~= "freeflight" then
 		managers.menu:close_menu("menu_main")
@@ -237,11 +253,11 @@ function MenuMainState:at_exit(new_state)
 	end
 end
 
--- Lines 325-335
+-- Lines 361-371
 function MenuMainState:update(t, dt)
 end
 
--- Lines 337-342
+-- Lines 373-378
 function MenuMainState:on_server_left()
 	if managers.network:session() and (managers.network:session():has_recieved_ok_to_load_level() or managers.network:session():closing()) then
 		return
@@ -250,7 +266,7 @@ function MenuMainState:on_server_left()
 	self:_create_server_left_dialog()
 end
 
--- Lines 344-358
+-- Lines 380-394
 function MenuMainState:_create_server_left_dialog()
 	local dialog_data = {
 		title = managers.localization:text("dialog_warning_title"),
@@ -269,13 +285,13 @@ function MenuMainState:_create_server_left_dialog()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 360-366
+-- Lines 396-402
 function MenuMainState:on_server_left_ok_pressed()
 	print("[MenuMainState:on_server_left_ok_pressed]")
 	managers.menu:on_leave_lobby()
 end
 
--- Lines 368-371
+-- Lines 404-407
 function MenuMainState:_create_disconnected_dialog()
 	managers.system_menu:close("server_left_dialog")
 	managers.menu:show_mp_disconnected_internet_dialog({
@@ -283,6 +299,6 @@ function MenuMainState:_create_disconnected_dialog()
 	})
 end
 
--- Lines 373-374
+-- Lines 409-410
 function MenuMainState:on_disconnected()
 end

@@ -1,6 +1,6 @@
 MissionDoorTweakData = MissionDoorTweakData or class()
 
--- Lines 3-565
+-- Lines 3-576
 function MissionDoorTweakData:init()
 	self.default = {
 		devices = {}

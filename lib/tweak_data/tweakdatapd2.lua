@@ -758,7 +758,7 @@ function TweakData:_init_pd2()
 	self:_setup_scene_pose_items()
 end
 
--- Lines 430-508
+-- Lines 430-523
 function TweakData:_setup_point_of_no_returns()
 	self.point_of_no_returns = {
 		noreturn = {}
@@ -863,7 +863,7 @@ function TweakData:_setup_point_of_no_returns()
 	end
 end
 
--- Lines 510-513
+-- Lines 525-528
 function TweakData:get_scene_pose_items(scene_pose)
 	local items = self.scene_pose_items[scene_pose] or {
 		"primary",
@@ -876,7 +876,7 @@ function TweakData:get_scene_pose_items(scene_pose)
 	}
 end
 
--- Lines 515-546
+-- Lines 530-561
 function TweakData:get_scene_pose(scene, pose_category, ...)
 	local poses = nil
 	local scene_poses = self.scene_poses[scene]
@@ -906,7 +906,7 @@ function TweakData:get_scene_pose(scene, pose_category, ...)
 	return pose, required_poses
 end
 
--- Lines 548-593
+-- Lines 563-610
 function TweakData:_setup_scene_pose_items()
 	self.scene_pose_items = {
 		husk1 = {},
@@ -953,8 +953,11 @@ function TweakData:_setup_scene_pose_items()
 			"secondary"
 		},
 		husk_rifle4 = {
-			nil,
+			"primary",
 			"secondary"
+		},
+		husk_minigun_2 = {
+			"primary"
 		},
 		cvc_var1 = {},
 		cvc_var2 = {},
@@ -974,7 +977,7 @@ function TweakData:_setup_scene_pose_items()
 	}
 end
 
--- Lines 595-722
+-- Lines 612-743
 function TweakData:_setup_scene_poses()
 	self.scene_poses = {
 		generic = {
@@ -1126,6 +1129,10 @@ function TweakData:_setup_scene_poses()
 		},
 		hcar = {
 			"husk_rifle1",
+			required_pose = true
+		},
+		kacchainsaw = {
+			"husk_minigun_2",
 			required_pose = true
 		}
 	}

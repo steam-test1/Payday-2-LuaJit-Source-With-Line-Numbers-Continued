@@ -24,15 +24,27 @@ for body_name, distance in pairs(impact_body_distance_tmp) do
 end
 
 impact_body_distance_tmp = nil
+local bodies_tmp = {
+	[Idstring("head"):key()] = 1,
+	[Idstring("body_helmet_plate"):key()] = 2,
+	[Idstring("body_helmet_glass"):key()] = 2,
+	[Idstring("body_armor_chest"):key()] = 3,
+	[Idstring("body_armor_stomache"):key()] = 3,
+	[Idstring("body_armor_back"):key()] = 3,
+	[Idstring("body_armor_throat"):key()] = 3,
+	[Idstring("body_armor_neck"):key()] = 3
+}
+TankCopDamage._priority_bodies_ids = bodies_tmp
+bodies_tmp = nil
 
--- Lines 45-48
+-- Lines 58-61
 function TankCopDamage:init(...)
 	TankCopDamage.super.init(self, ...)
 
 	self._is_halloween = self._unit:name() == Idstring("units/payday2/characters/ene_bulldozer_4/ene_bulldozer_4")
 end
 
--- Lines 50-56
+-- Lines 63-69
 function TankCopDamage:damage_bullet(attack_data, ...)
 	if self._is_halloween then
 		attack_data.damage = math.min(attack_data.damage, 235)
@@ -41,7 +53,7 @@ function TankCopDamage:damage_bullet(attack_data, ...)
 	return TankCopDamage.super.damage_bullet(self, attack_data, ...)
 end
 
--- Lines 58-65
+-- Lines 71-78
 function TankCopDamage:seq_clbk_vizor_shatter()
 	if not self._unit:character_damage():dead() then
 		self._unit:sound():say("visor_lost")

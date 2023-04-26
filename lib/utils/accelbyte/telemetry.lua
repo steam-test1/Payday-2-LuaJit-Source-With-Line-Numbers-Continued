@@ -1280,3 +1280,16 @@ function Telemetry:send_on_game_event_tree_interacted(params)
 
 	self:send("cg22_tree_interacted", telemetry_payload)
 end
+
+-- Lines 1190-1199
+function Telemetry:send_on_leakedrecording_played(params)
+	if get_platform_name() ~= "WIN32" or not self._global._logged_in then
+		return
+	end
+
+	local telemetry_payload = {
+		RecordingID = params.recording_id
+	}
+
+	self:send("leakedrecording_played", telemetry_payload)
+end

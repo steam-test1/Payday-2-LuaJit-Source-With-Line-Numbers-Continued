@@ -300,6 +300,16 @@ function MenuCallbackHandler:got_completed_story_mission()
 	return current.completed and not current.rewarded
 end
 
+-- Lines 448-450
+function MenuCallbackHandler:show_leakedrecording()
+	return true
+end
+
+-- Lines 452-454
+function MenuCallbackHandler:show_leakedrecording_glow()
+	return false
+end
+
 -- Lines 458-479
 function MenuCallbackHandler:show_side_job_menu_icon()
 	local all_challenges = {}

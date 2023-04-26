@@ -1075,7 +1075,7 @@ function CoreEnvironmentControllerManager:_handle_screenflash(flashbang_value, h
 	end
 end
 
--- Lines 1327-1344
+-- Lines 1327-1361
 function CoreEnvironmentControllerManager:set_flashbang(flashbang_pos, line_of_sight, travel_dis, linear_dis, duration, no_offset, no_effect)
 	local pos = no_offset and flashbang_pos or flashbang_pos + flashbang_test_offset
 	local flash = self:test_line_of_sight(pos, 200, 1000, 3000)
@@ -1093,26 +1093,41 @@ function CoreEnvironmentControllerManager:set_flashbang(flashbang_pos, line_of_s
 			normal = Vector3(0, 0, 1)
 		})
 	end
-end
 
--- Lines 1347-1358
-function CoreEnvironmentControllerManager:set_concussion_grenade(flashbang_pos, line_of_sight, travel_dis, linear_dis, duration, no_offset, no_effect)
-	local pos = no_offset and flashbang_pos or flashbang_pos + flashbang_test_offset
-	local concussion = self:test_line_of_sight(pos, 200, 1000, 3000)
-	self._concussion_duration = duration
+	local player = managers.player:player_unit()
 
-	if concussion > 0 then
-		self._current_concussion = math.min(self._current_concussion + concussion, 1.5) * self._concussion_duration
+	if player then
+		local flash_value = math.pow(math.min(self._current_flashbang, 1), 16) + math.min(self._current_flashbang_flash, 1)
+
+		if self._screenflash_color_flash_override < flash_value then
+			PlayerStandard.say_line(player:sound(), "g41x_any")
+		end
 	end
 end
 
--- Lines 1361-1365
+-- Lines 1364-1380
+function CoreEnvironmentControllerManager:set_concussion_grenade(flashbang_pos, line_of_sight, travel_dis, linear_dis, duration, no_offset, no_effect)
+	local pos = no_offset and flashbang_pos or flashbang_pos + flashbang_test_offset
+	local concussion = self:test_line_of_sight(pos, 200, 1000, 3000)
+
+	if concussion > 0 then
+		if self._current_concussion < concussion then
+			duration = duration ~= 0 and duration or 1
+			duration = 1 + (1 - duration) * 2
+			self._concussion_duration = duration
+		end
+
+		self._current_concussion = math.min(self._current_concussion + concussion, 1)
+	end
+end
+
+-- Lines 1383-1387
 function CoreEnvironmentControllerManager:set_flashbang_multiplier(multiplier)
 	self._flashbang_multiplier = multiplier ~= 0 and multiplier or 1
 	self._flashbang_multiplier = 1 + (1 - self._flashbang_multiplier) * 2
 end
 
--- Lines 1367-1425
+-- Lines 1389-1447
 function CoreEnvironmentControllerManager:test_line_of_sight(test_pos, min_distance, dot_distance, max_distance)
 	local tmp_vec1 = Vector3()
 	local tmp_vec2 = Vector3()
@@ -1164,23 +1179,23 @@ function CoreEnvironmentControllerManager:test_line_of_sight(test_pos, min_dista
 	return flash
 end
 
--- Lines 1427-1430
+-- Lines 1449-1452
 function CoreEnvironmentControllerManager:set_flashbang_value(flashbang, flash)
 	self._current_flashbang = flashbang
 	self._current_flashbang_flash = flash or flashbang
 end
 
--- Lines 1433-1435
+-- Lines 1455-1457
 function CoreEnvironmentControllerManager:set_concussion_value(concussion)
 	self._current_concussion = concussion
 end
 
--- Lines 1438-1440
+-- Lines 1460-1462
 function CoreEnvironmentControllerManager:set_dof_override(mode)
 	self._dof_override = mode
 end
 
--- Lines 1442-1447
+-- Lines 1464-1469
 function CoreEnvironmentControllerManager:set_dof_override_ranges(near, near_pad, far, far_pad)
 	self._dof_override_near = near
 	self._dof_override_near_pad = near_pad
@@ -1188,7 +1203,7 @@ function CoreEnvironmentControllerManager:set_dof_override_ranges(near, near_pad
 	self._dof_override_far_pad = far_pad
 end
 
--- Lines 1450-1467
+-- Lines 1472-1489
 function CoreEnvironmentControllerManager:set_dof_override_ranges_transition(time, near, near_pad, far, far_pad)
 	self:set_dof_override(true)
 
@@ -1209,7 +1224,7 @@ function CoreEnvironmentControllerManager:set_dof_override_ranges_transition(tim
 	}
 end
 
--- Lines 1469-1473
+-- Lines 1491-1495
 function CoreEnvironmentControllerManager:set_dome_occ_default()
 	local area = 20000
 	local occ_texture = "core/textures/dome_occ_test"
@@ -1217,7 +1232,7 @@ function CoreEnvironmentControllerManager:set_dome_occ_default()
 	self:set_dome_occ_params(Vector3(-(area * 0.5), -(area * 0.5), 0), Vector3(area, area, 1200), occ_texture)
 end
 
--- Lines 1475-1483
+-- Lines 1497-1505
 function CoreEnvironmentControllerManager:set_dome_occ_params(occ_pos, occ_size, occ_texture)
 	self._occ_dirty = true
 	self._occ_pos = occ_pos
@@ -1226,7 +1241,7 @@ function CoreEnvironmentControllerManager:set_dome_occ_params(occ_pos, occ_size,
 	self._occ_texture = occ_texture
 end
 
--- Lines 1485-1509
+-- Lines 1507-1531
 function CoreEnvironmentControllerManager:_refresh_occ_params(vp)
 	local deferred_processor = (vp or self._vp):vp():get_post_processor_effect("World", Idstring("deferred"))
 
@@ -1255,17 +1270,17 @@ function CoreEnvironmentControllerManager:_refresh_occ_params(vp)
 	end
 end
 
--- Lines 1512-1514
+-- Lines 1534-1536
 function CoreEnvironmentControllerManager:set_custom_dof_settings(custom_dof_settings)
 	self._custom_dof_settings = custom_dof_settings
 end
 
--- Lines 1516-1518
+-- Lines 1538-1540
 function CoreEnvironmentControllerManager:set_base_chromatic_amount(base_chromatic_amount)
 	self._base_chromatic_amount = base_chromatic_amount
 end
 
--- Lines 1520-1534
+-- Lines 1542-1556
 function CoreEnvironmentControllerManager:set_chromatic_enabled(enabled)
 	if _G.IS_VR then
 		return
@@ -1282,34 +1297,34 @@ function CoreEnvironmentControllerManager:set_chromatic_enabled(enabled)
 	end
 end
 
--- Lines 1536-1538
+-- Lines 1558-1560
 function CoreEnvironmentControllerManager:base_chromatic_amount()
 	return self._base_chromatic_amount
 end
 
--- Lines 1540-1542
+-- Lines 1562-1564
 function CoreEnvironmentControllerManager:set_base_contrast(base_contrast)
 	self._base_contrast = base_contrast
 end
 
--- Lines 1544-1546
+-- Lines 1566-1568
 function CoreEnvironmentControllerManager:base_contrast()
 	return self._base_contrast
 end
 
 local ids_d_sun = Idstring("d_sun")
 
--- Lines 1549-1633
+-- Lines 1571-1655
 function CoreEnvironmentControllerManager:feed_params()
 end
 
--- Lines 1635-1641
+-- Lines 1657-1663
 function CoreEnvironmentControllerManager:feed_param_underlay(material_name, param_name, param_value)
 	local material = Underlay:material(Idstring(material_name))
 
 	material:set_variable(Idstring(param_name), param_value)
 end
 
--- Lines 1643-1645
+-- Lines 1665-1667
 function CoreEnvironmentControllerManager:set_global_param(param_name, param_value)
 end

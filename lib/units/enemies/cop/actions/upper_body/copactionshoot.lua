@@ -942,7 +942,7 @@ function CopActionShoot:_set_ik_updator(name)
 	self._upd_ik = self[name]
 end
 
--- Lines 962-985
+-- Lines 962-994
 function CopActionShoot:_chk_start_melee(target_vec, target_dis, autotarget, target_pos)
 	local melee_weapon = self._unit:base():melee_weapon()
 	local is_weapon = melee_weapon == "weapon"
@@ -977,7 +977,7 @@ function CopActionShoot:_chk_start_melee(target_vec, target_dis, autotarget, tar
 	return state and true
 end
 
--- Lines 989-1057
+-- Lines 1008-1097
 function CopActionShoot:anim_clbk_melee_strike()
 	if not self._attention then
 		return

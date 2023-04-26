@@ -2,7 +2,7 @@ DLCTweakData = DLCTweakData or class()
 
 require("lib/tweak_data/GeneratedDLCTweakData")
 
--- Lines 10-5153
+-- Lines 10-5170
 function DLCTweakData:init(tweak_data)
 	if managers.dlc:is_installing() then
 		tweak_data.BUNDLED_DLC_PACKAGES = {}
@@ -8487,6 +8487,53 @@ function DLCTweakData:init(tweak_data)
 		{
 			type_items = "weapon_mods",
 			item_entry = "wpn_fps_upg_a_underbarrel_hornet",
+			amount = 1
+		}
+	}
+	self.pxp4_starter_pack = {
+		free = true,
+		content = {}
+	}
+	self.pxp4_starter_pack.content.loot_global_value = "normal"
+	self.pxp4_starter_pack.content.loot_drops = {
+		{
+			type_items = "weapon_skins",
+			item_entry = "color_pxp4_01",
+			amount = 1
+		},
+		{
+			type_items = "weapon_skins",
+			item_entry = "color_pxp4_02",
+			amount = 1
+		},
+		{
+			type_items = "weapon_skins",
+			item_entry = "color_pxp4_03",
+			amount = 1
+		},
+		{
+			type_items = "weapon_skins",
+			item_entry = "color_pxp4_04",
+			amount = 1
+		},
+		{
+			type_items = "weapon_skins",
+			item_entry = "color_pxp4_05",
+			amount = 1
+		},
+		{
+			type_items = "weapon_skins",
+			item_entry = "color_pxp4_06",
+			amount = 1
+		},
+		{
+			type_items = "weapon_skins",
+			item_entry = "color_pxp4_07",
+			amount = 1
+		},
+		{
+			type_items = "weapon_skins",
+			item_entry = "color_pxp4_08",
 			amount = 1
 		}
 	}

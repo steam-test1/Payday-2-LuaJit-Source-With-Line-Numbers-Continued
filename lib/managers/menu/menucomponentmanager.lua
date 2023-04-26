@@ -31,6 +31,7 @@ require("lib/managers/menu/items/CustomSafehouseHeisterInteractionDaily")
 require("lib/managers/menu/pages/CustomSafehouseGuiPageMap")
 require("lib/managers/menu/pages/CustomSafehouseGuiPageDaily")
 require("lib/managers/menu/pages/CustomSafehouseGuiPageTrophies")
+require("lib/managers/menu/LeakedRecordingGui")
 require("lib/managers/menu/MutatorsListGui")
 require("lib/managers/menu/pages/MutatorsCategoryPage")
 require("lib/managers/menu/NewHeistsGui")
@@ -243,6 +244,18 @@ function MenuComponentManager:init()
 		mutators_list = {
 			create = callback(self, self, "create_mutators_list_gui"),
 			close = callback(self, self, "close_mutators_list_gui")
+		},
+		leakedrecording = {
+			create = callback(self, self, "create_leakedrecording_gui"),
+			close = callback(self, self, "close_leakedrecording_gui")
+		},
+		leakedrecording_mission = {
+			create = callback(self, self, "create_leakedrecording_mission_gui"),
+			close = callback(self, self, "close_leakedrecording_mission_gui")
+		},
+		leakedrecording_gadget = {
+			create = callback(self, self, "create_leakedrecording_gadget_gui"),
+			close = callback(self, self, "close_leakedrecording_gadget_gui")
 		},
 		crimenet_crime_spree_contract = {
 			create = callback(self, self, "create_crime_spree_contract_gui"),
@@ -3070,6 +3083,72 @@ function MenuComponentManager:enable_custom_safehouse_input()
 	end
 
 	self._custom_safehouse_gui:set_active_page(self._custom_safehouse_page or 1)
+end
+
+-- Lines 3044-3050
+function MenuComponentManager:create_leakedrecording_gui(node)
+	if not node then
+		return
+	end
+
+	self._leakedrecording_gui = self._leakedrecording_gui or LeakedRecordingGui:new(self._ws, self._fullscreen_ws, node)
+
+	self:register_component("leakedrecording_gui", self._leakedrecording_gui)
+end
+
+-- Lines 3052-3058
+function MenuComponentManager:close_leakedrecording_gui()
+	if self._leakedrecording_gui then
+		self._leakedrecording_gui:close()
+
+		self._leakedrecording_gui = nil
+
+		self:unregister_component("leakedrecording_gui")
+	end
+end
+
+-- Lines 3060-3066
+function MenuComponentManager:create_leakedrecording_mission_gui(node)
+	if not node then
+		return
+	end
+
+	self._leakedrecording_mission_gui = self._leakedrecording_mission_gui or LeakedRecordingMissionGui:new(self._ws, self._fullscreen_ws, node)
+
+	self:register_component("leakedrecording_mission_gui", self._leakedrecording_mission_gui)
+end
+
+-- Lines 3068-3074
+function MenuComponentManager:close_leakedrecording_mission_gui()
+	if self._leakedrecording_mission_gui then
+		self._leakedrecording_mission_gui:close()
+
+		self._leakedrecording_mission_gui = nil
+
+		self:unregister_component("leakedrecording_mission_gui")
+	end
+end
+
+-- Lines 3076-3082
+function MenuComponentManager:create_leakedrecording_gadget_gui(node)
+	if not node then
+		return
+	end
+
+	self._leakedrecording_gadget_gui = self._leakedrecording_gadget_gui or LeakedRecordingGadgetGui:new(self._ws, self._fullscreen_ws, node)
+
+	self:register_component("leakedrecording_gadget_gui", self._leakedrecording_gadget_gui)
+end
+
+-- Lines 3084-3090
+function MenuComponentManager:close_leakedrecording_gadget_gui()
+	if self._leakedrecording_gadget_gui then
+		self._leakedrecording_gadget_gui:close()
+
+		self._leakedrecording_gadget_gui = nil
+
+		self:unregister_component("leakedrecording_gadget_gui")
+	end
 end
 
 -- Lines 3095-3097

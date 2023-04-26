@@ -1,22 +1,54 @@
 ShieldBase = ShieldBase or class(UnitBase)
 
--- Lines 3-5
+-- Lines 3-7
 function ShieldBase:init(unit)
 	ShieldBase.super.init(self, unit, false)
+	self:_setup_priority_bodies()
 end
 
--- Lines 7-9
+-- Lines 9-11
 function ShieldBase:get_use_data()
 	return nil
 end
 
--- Lines 11-12
+-- Lines 13-14
 function ShieldBase:request_use(t)
+end
+
+-- Lines 16-24
+function ShieldBase:_setup_priority_bodies()
+	if self._priority_bodies then
+		self._priority_bodies_ids = {}
+
+		for body_name, priority in pairs(self._priority_bodies) do
+			self._priority_bodies_ids[Idstring(body_name):key()] = priority
+		end
+	end
+end
+
+-- Lines 26-43
+function ShieldBase:chk_body_hit_priority(old_body_hit, new_body_hit)
+	if not self._priority_bodies_ids then
+		return false
+	end
+
+	local old_body_prio = self._priority_bodies_ids[old_body_hit:name():key()]
+	local new_body_prio = self._priority_bodies_ids[new_body_hit:name():key()]
+
+	if not old_body_prio then
+		if new_body_prio then
+			return true
+		end
+	elseif new_body_prio and new_body_prio < old_body_prio then
+		return true
+	end
+
+	return false
 end
 
 SyncedShieldBase = SyncedShieldBase or class(ShieldBase)
 
--- Lines 22-29
+-- Lines 53-60
 function SyncedShieldBase:init(...)
 	SyncedShieldBase.super.init(self, ...)
 
@@ -25,7 +57,7 @@ function SyncedShieldBase:init(...)
 	end
 end
 
--- Lines 31-39
+-- Lines 62-77
 function SyncedShieldBase:save(data)
 	SyncedShieldBase.super.save(self, data)
 
@@ -36,13 +68,25 @@ function SyncedShieldBase:save(data)
 	end
 end
 
--- Lines 41-49
+-- Lines 79-119
 function SyncedShieldBase:load(data)
 	SyncedShieldBase.super.load(self, data)
 
 	if data.SyncedShieldBase and data.SyncedShieldBase.register_dropped_shield then
-		self._unit:set_enabled(true)
-		managers.enemy:register_shield(self._unit)
+		call_on_next_update(function ()
+			if not alive(self._unit) then
+				return
+			end
+
+			local u_dmg = self._unit:damage()
+
+			if u_dmg and u_dmg:has_sequence("enable_body") then
+				u_dmg:run_sequence_simple("enable_body")
+			end
+
+			self._unit:set_enabled(true)
+			managers.enemy:register_shield(self._unit)
+		end)
 	end
 end
 
@@ -52,7 +96,7 @@ ShieldFlashBase._NET_EVENTS = {
 	start_flash = 1
 }
 
--- Lines 59-150
+-- Lines 129-220
 function ShieldFlashBase:init(...)
 	ShieldFlashBase.super.init(self, ...)
 
@@ -131,7 +175,7 @@ function ShieldFlashBase:init(...)
 	end
 end
 
--- Lines 152-154
+-- Lines 222-224
 function ShieldFlashBase:get_use_data()
 	return Network:is_server() and {
 		range = self._flash_charge_range,
@@ -139,7 +183,7 @@ function ShieldFlashBase:get_use_data()
 	} or nil
 end
 
--- Lines 156-167
+-- Lines 226-237
 function ShieldFlashBase:request_use(t)
 	t = t or TimerManager:game():time()
 
@@ -154,36 +198,53 @@ function ShieldFlashBase:request_use(t)
 	return self._flash_charge_cooldown_t
 end
 
--- Lines 169-173
+-- Lines 239-252
+function ShieldFlashBase:chk_body_hit_priority(old_body_hit, new_body_hit)
+	if self._charge_upd_enabled and self._priority_counter_body_ids_key then
+		if old_body_hit:name():key() ~= self._priority_counter_body_ids_key and new_body_hit:name():key() == self._priority_counter_body_ids_key then
+			return true
+		end
+
+		return false
+	end
+
+	return self.super.chk_body_hit_priority(self, old_body_hit, new_body_hit)
+end
+
+-- Lines 254-258
 function ShieldFlashBase:sync_net_event(event_id)
 	if event_id == self._NET_EVENTS.start_flash then
 		self:_start_flash()
 	end
 end
 
--- Lines 175-177
+-- Lines 260-262
 function ShieldFlashBase:is_charging()
 	return self._charge_upd_enabled
 end
 
--- Lines 180-184
+-- Lines 265-269
 function ShieldFlashBase:_start_flash()
 	if self._unit:damage() and self._unit:damage():has_sequence("verify_start_flash") then
 		self._unit:damage():run_sequence_simple("verify_start_flash")
 	end
 end
 
--- Lines 187-191
+-- Lines 272-276
 function ShieldFlashBase:_flash()
 	if self._unit:damage() and self._unit:damage():has_sequence("verify_flash") then
 		self._unit:damage():run_sequence_simple("verify_flash")
 	end
 end
 
--- Lines 194-230
-function ShieldFlashBase:clbk_seq_flash_start(parent_obj)
+-- Lines 279-319
+function ShieldFlashBase:clbk_seq_flash_start(parent_obj, priority_counter_body)
 	if self:is_charging() then
 		return
+	end
+
+	if alive(priority_counter_body) then
+		self._priority_counter_body_ids_key = priority_counter_body:name():key()
 	end
 
 	if parent_obj and parent_obj ~= self._effect_parent_obj then
@@ -221,7 +282,7 @@ function ShieldFlashBase:clbk_seq_flash_start(parent_obj)
 	self._unit:set_extension_update_enabled(Idstring("base"), true)
 end
 
--- Lines 232-287
+-- Lines 321-377
 function ShieldFlashBase:clbk_seq_flash(pos, dir)
 	if self._beep_light_obj then
 		self._beep_light_mul = 0
@@ -233,6 +294,7 @@ function ShieldFlashBase:clbk_seq_flash(pos, dir)
 
 	if self._charge_upd_enabled then
 		self._charge_upd_enabled = nil
+		self._priority_counter_body_ids_key = nil
 
 		self._unit:set_extension_update_enabled(Idstring("base"), false)
 	end
@@ -272,13 +334,14 @@ function ShieldFlashBase:clbk_seq_flash(pos, dir)
 	end
 end
 
--- Lines 295-314
+-- Lines 385-405
 function ShieldFlashBase:clbk_seq_chk_interrupt_flash(parent_obj)
 	if not self._charge_upd_enabled or parent_obj ~= self._effect_parent_obj then
 		return
 	end
 
 	self._charge_upd_enabled = nil
+	self._priority_counter_body_ids_key = nil
 
 	self._unit:set_extension_update_enabled(Idstring("base"), false)
 
@@ -295,7 +358,7 @@ function ShieldFlashBase:clbk_seq_chk_interrupt_flash(parent_obj)
 	end
 end
 
--- Lines 316-345
+-- Lines 407-436
 function ShieldFlashBase:clbk_seq_chk_interrupt_flash_hit(pos, normal, attacker_unit)
 	local was_charging = self._charge_upd_enabled
 
@@ -308,7 +371,7 @@ function ShieldFlashBase:clbk_seq_chk_interrupt_flash_hit(pos, normal, attacker_
 	end
 end
 
--- Lines 347-369
+-- Lines 438-460
 function ShieldFlashBase:_do_counter_stun(pos, normal, attacker_unit, range_mul)
 	local range = self._flash_charge_stun_range * (range_mul or 1)
 	local slot_mask = self._flash_charge_stun_slotmask
@@ -336,7 +399,7 @@ function ShieldFlashBase:_do_counter_stun(pos, normal, attacker_unit, range_mul)
 	end
 end
 
--- Lines 371-377
+-- Lines 462-468
 function ShieldFlashBase:_can_stun_unit(parent_key, unit)
 	if unit:key() == parent_key then
 		return true
@@ -345,7 +408,7 @@ function ShieldFlashBase:_can_stun_unit(parent_key, unit)
 	return self:_can_flash_unit(unit)
 end
 
--- Lines 379-393
+-- Lines 470-484
 function ShieldFlashBase:_can_flash_unit(unit)
 	if unit:brain() and unit:brain().is_hostage and unit:brain():is_hostage() then
 		return false
@@ -360,7 +423,7 @@ function ShieldFlashBase:_can_flash_unit(unit)
 	return true
 end
 
--- Lines 395-455
+-- Lines 486-546
 function ShieldFlashBase:_flash_local_player(detonate_pos, dir, range)
 	local player_unit = managers.player:player_unit()
 
@@ -407,7 +470,7 @@ function ShieldFlashBase:_flash_local_player(detonate_pos, dir, range)
 	end
 end
 
--- Lines 457-491
+-- Lines 548-582
 function ShieldFlashBase:update(unit, t, dt)
 	if not self._charge_upd_enabled then
 		return
@@ -432,7 +495,7 @@ function ShieldFlashBase:update(unit, t, dt)
 	end
 end
 
--- Lines 493-510
+-- Lines 584-601
 function ShieldFlashBase:_beep()
 	if self._beep_effect then
 		World:effect_manager():spawn({
@@ -449,12 +512,12 @@ function ShieldFlashBase:_beep()
 	self._beep_light_mul = self._beep_light_mul_beep
 end
 
--- Lines 512-514
+-- Lines 603-605
 function ShieldFlashBase:_get_next_beep_time(speeds)
 	return self._timer / speeds[1] * speeds[2]
 end
 
--- Lines 516-528
+-- Lines 607-619
 function ShieldFlashBase:_clbk_snd_event_end(event_type)
 	local event = self["_snd_event" .. event_type]
 
@@ -469,27 +532,29 @@ function ShieldFlashBase:_clbk_snd_event_end(event_type)
 	end
 end
 
--- Lines 530-537
+-- Lines 621-629
 function ShieldFlashBase:pre_destroy(...)
 	ShieldFlashBase.super.pre_destroy(self, ...)
 
 	self._charge_upd_enabled = nil
+	self._priority_counter_body_ids_key = nil
 
 	self:destroy_light()
 	self:destroy_sound_source()
 end
 
--- Lines 539-546
+-- Lines 631-639
 function ShieldFlashBase:destroy(...)
 	ShieldFlashBase.super.destroy(self, ...)
 
 	self._charge_upd_enabled = nil
+	self._priority_counter_body_ids_key = nil
 
 	self:destroy_light()
 	self:destroy_sound_source()
 end
 
--- Lines 548-555
+-- Lines 641-648
 function ShieldFlashBase:destroy_light()
 	local light = self._beep_light_obj
 	self._beep_light_obj = nil
@@ -499,7 +564,7 @@ function ShieldFlashBase:destroy_light()
 	end
 end
 
--- Lines 557-575
+-- Lines 650-668
 function ShieldFlashBase:destroy_sound_source()
 	if not self._snd_src_dispose then
 		return

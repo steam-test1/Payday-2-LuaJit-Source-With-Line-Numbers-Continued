@@ -1,6 +1,6 @@
 GuiTweakData = GuiTweakData or class()
 
--- Lines 3-2098
+-- Lines 3-2113
 function GuiTweakData:init(tweak_data)
 	local is_win_32 = SystemInfo:platform() == Idstring("WIN32")
 	local is_nextgen = SystemInfo:platform() == Idstring("PS4") or SystemInfo:platform() == Idstring("XB1")
@@ -1928,6 +1928,17 @@ function GuiTweakData:init(tweak_data)
 			id = "skirmish",
 			icon = "sidebar_skirmish",
 			item_class = "CrimeNetSidebarSkirmishItem"
+		},
+		{
+			item_class = "CrimeNetSidebarSeparator"
+		},
+		{
+			visible_callback = "clbk_visible_leakedrecording",
+			name_id = "menu_cn_leakedrecording",
+			callback = "clbk_leakedrecording",
+			id = "leakedrecording",
+			icon = "sidebar_leakedrecording",
+			item_class = "CrimeNetSidebarLeakedRecordingItem"
 		}
 	}
 	self.crime_net.codex = {
@@ -5125,6 +5136,54 @@ function GuiTweakData:init(tweak_data)
 		"category",
 		"bonus"
 	}
+	self.leakedrecordings = {
+		missions = {
+			{
+				coming_soon = false,
+				briefing_track = "Play_loc_secr_01",
+				heist = "kosugi",
+				poster_icon = "guis/dlcs/lron/textures/pd2/crimenet/badforbusiness",
+				recording_track = "Play_spe_bfb_01",
+				job_value = "LRON",
+				poster_rect = {
+					0,
+					14,
+					256,
+					484
+				}
+			},
+			{
+				coming_soon = true,
+				poster_icon = "guis/dlcs/lrm/textures/pd2/crimenet/coming_soon_cellmates",
+				poster_rect = {
+					0,
+					14,
+					256,
+					484
+				}
+			},
+			{
+				coming_soon = true,
+				poster_icon = "guis/dlcs/lrm/textures/pd2/crimenet/coming_soon_garnets",
+				poster_rect = {
+					0,
+					14,
+					256,
+					484
+				}
+			},
+			{
+				coming_soon = true,
+				poster_icon = "guis/dlcs/lrm/textures/pd2/crimenet/coming_soon_enemies",
+				poster_rect = {
+					0,
+					14,
+					256,
+					484
+				}
+			}
+		}
+	}
 	self.new_heists = {
 		limit = 5
 	}
@@ -5135,6 +5194,11 @@ function GuiTweakData:init(tweak_data)
 		url = "https://pd2.link/CrudeAwakeningBundleSLS"
 	})
 	table.insert(self.new_heists, {
+		name_id = "menu_nh_pxp4",
+		texture_path = "guis/dlcs/pxp4/textures/pd2/new_heists/pxp4",
+		url = "https://pd2.link/McShayWeaponPack4SLS"
+	})
+	table.insert(self.new_heists, {
 		name_id = "menu_nh_txt4_02",
 		texture_path = "guis/dlcs/txt4/textures/pd2/new_heists/txt4_02",
 		url = "https://pd2.link/LawlessTailorPackSLS"
@@ -5143,6 +5207,11 @@ function GuiTweakData:init(tweak_data)
 		name_id = "menu_nh_txt3_02",
 		texture_path = "guis/dlcs/txt3/textures/pd2/new_heists/txt3_02",
 		url = "https://pd2.link/HostileTakeoverBundleSLS"
+	})
+	table.insert(self.new_heists, {
+		name_id = "menu_nh_pxp4_02",
+		texture_path = "guis/dlcs/pxp4/textures/pd2/new_heists/pxp4_02",
+		url = "https://pd2.link/CrudeAwakeningNebulaSL"
 	})
 	table.insert(self.new_heists, {
 		name_id = "menu_nh_corp_01",
@@ -5628,7 +5697,7 @@ function GuiTweakData:init(tweak_data)
 	})
 end
 
--- Lines 2100-2119
+-- Lines 2115-2134
 function GuiTweakData:_create_location_bounding_boxes()
 	for _, location in ipairs(self.crime_net.locations) do
 		local params = location[1]
@@ -5656,7 +5725,7 @@ function GuiTweakData:_create_location_bounding_boxes()
 	end
 end
 
--- Lines 2121-2189
+-- Lines 2136-2204
 function GuiTweakData:_create_location_spawning_dots()
 	local map_w = 2048
 	local map_h = 1024
@@ -5734,15 +5803,15 @@ function GuiTweakData:_create_location_spawning_dots()
 	self.crime_net.locations = new_locations
 end
 
--- Lines 2191-2193
+-- Lines 2206-2208
 function GuiTweakData:create_narrative_locations(locations)
 end
 
--- Lines 2195-2204
+-- Lines 2210-2219
 function GuiTweakData:print_locations()
 end
 
--- Lines 2206-2240
+-- Lines 2221-2255
 function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	skipnewlines = skipnewlines or false
 	depth = depth or 0
@@ -5781,7 +5850,7 @@ function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	return tmp
 end
 
--- Lines 2242-2367
+-- Lines 2257-2382
 function GuiTweakData:tradable_inventory_sort_func(index)
 	if type(index) == "string" then
 		index = self:tradable_inventory_sort_index(index)
@@ -5904,12 +5973,12 @@ function GuiTweakData:tradable_inventory_sort_func(index)
 	return nil
 end
 
--- Lines 2369-2371
+-- Lines 2384-2386
 function GuiTweakData:tradable_inventory_sort_name(index)
 	return self.tradable_inventory_sort_list[index] or "none"
 end
 
--- Lines 2373-2380
+-- Lines 2388-2395
 function GuiTweakData:tradable_inventory_sort_index(name)
 	for index, n in ipairs(self.tradable_inventory_sort_list) do
 		if n == name then
@@ -5920,7 +5989,7 @@ function GuiTweakData:tradable_inventory_sort_index(name)
 	return 0
 end
 
--- Lines 2382-2402
+-- Lines 2397-2417
 function GuiTweakData:get_locked_sort_number(dlc, ...)
 	local dlc_data = dlc and Global.dlc_manager.all_dlc_data[dlc]
 	local is_dlc_locked = dlc and not managers.dlc:is_dlc_unlocked(dlc) or false

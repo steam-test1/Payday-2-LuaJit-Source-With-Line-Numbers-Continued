@@ -156,7 +156,7 @@ function TeamAIMovement:downed()
 	return self._unit:interaction()._active
 end
 
--- Lines 170-202
+-- Lines 170-208
 function TeamAIMovement:set_cool(state)
 	state = state and true or false
 
@@ -192,14 +192,14 @@ function TeamAIMovement:set_cool(state)
 	end
 end
 
--- Lines 206-210
+-- Lines 212-216
 function TeamAIMovement:heat_clbk(state)
 	if self._cool and not state then
 		self:_switch_to_not_cool()
 	end
 end
 
--- Lines 214-240
+-- Lines 220-246
 function TeamAIMovement:_switch_to_not_cool(instant)
 	if not Network:is_server() then
 		if instant then
@@ -234,7 +234,7 @@ function TeamAIMovement:_switch_to_not_cool(instant)
 	end
 end
 
--- Lines 244-263
+-- Lines 250-269
 function TeamAIMovement:_switch_to_not_cool_clbk_func()
 	if self._switch_to_not_cool_clbk_id and self._cool then
 		if self._unit:inventory():is_mask_unit_loaded() then
@@ -262,17 +262,17 @@ function TeamAIMovement:_switch_to_not_cool_clbk_func()
 	end
 end
 
--- Lines 267-269
+-- Lines 273-275
 function TeamAIMovement:zipline_unit()
 	return nil
 end
 
--- Lines 271-273
+-- Lines 277-279
 function TeamAIMovement:current_state_name()
 	return nil
 end
 
--- Lines 277-312
+-- Lines 283-318
 function TeamAIMovement:pre_destroy()
 	if self._heat_listener_clbk then
 		managers.groupai:state():remove_listener(self._heat_listener_clbk)
@@ -317,7 +317,7 @@ function TeamAIMovement:pre_destroy()
 	end
 end
 
--- Lines 316-326
+-- Lines 322-332
 function TeamAIMovement:save(save_data)
 	TeamAIMovement.super.save(self, save_data)
 
@@ -326,7 +326,7 @@ function TeamAIMovement:save(save_data)
 	save_data.movement.has_bag = self:carrying_bag()
 end
 
--- Lines 328-341
+-- Lines 334-347
 function TeamAIMovement:load(load_data)
 	TeamAIMovement.super.load(self, load_data)
 
@@ -339,7 +339,7 @@ function TeamAIMovement:load(load_data)
 	end
 end
 
--- Lines 344-357
+-- Lines 350-363
 function TeamAIMovement:set_should_stay(should_stay)
 	if self._should_stay ~= should_stay then
 		local panel = managers.criminals:character_data_by_unit(self._unit)
@@ -358,7 +358,7 @@ function TeamAIMovement:set_should_stay(should_stay)
 	end
 end
 
--- Lines 361-373
+-- Lines 367-379
 function TeamAIMovement:chk_action_forbidden(action_type)
 	if action_type == "walk" and self._should_stay then
 		if Network:is_server() and self._unit:brain():objective() and (self._unit:brain():objective().type == "revive" or self._unit:brain():objective().forced) then
@@ -371,32 +371,32 @@ function TeamAIMovement:chk_action_forbidden(action_type)
 	return TeamAIMovement.super.chk_action_forbidden(self, action_type)
 end
 
--- Lines 379-381
+-- Lines 385-387
 function TeamAIMovement:carrying_bag()
 	return self._carry_unit and true or false
 end
 
--- Lines 383-385
+-- Lines 389-391
 function TeamAIMovement:set_carrying_bag(unit)
 	self._carry_unit = unit
 end
 
--- Lines 387-389
+-- Lines 393-395
 function TeamAIMovement:carry_id()
 	return self._carry_unit and self._carry_unit:carry_data():carry_id()
 end
 
--- Lines 391-393
+-- Lines 397-399
 function TeamAIMovement:carry_data()
 	return self._carry_unit and self._carry_unit:carry_data()
 end
 
--- Lines 395-397
+-- Lines 401-403
 function TeamAIMovement:carry_tweak()
 	return self:carry_id() and tweak_data.carry.types[tweak_data.carry[self:carry_id()].type]
 end
 
--- Lines 399-414
+-- Lines 405-420
 function TeamAIMovement:throw_bag(target_unit, reason)
 	if not self:carrying_bag() then
 		return
@@ -416,12 +416,12 @@ function TeamAIMovement:throw_bag(target_unit, reason)
 	end
 end
 
--- Lines 417-419
+-- Lines 423-425
 function TeamAIMovement:was_carrying_bag()
 	return self._was_carrying
 end
 
--- Lines 423-432
+-- Lines 429-438
 function TeamAIMovement:sync_throw_bag(carry_unit, target_unit)
 	if alive(target_unit) then
 		local dir = target_unit:position() - self._unit:position()
@@ -434,7 +434,7 @@ function TeamAIMovement:sync_throw_bag(carry_unit, target_unit)
 	end
 end
 
--- Lines 434-488
+-- Lines 440-494
 function TeamAIMovement:update(...)
 	TeamAIMovement.super.update(self, ...)
 

@@ -418,7 +418,7 @@ ElementAreaTrigger.check_amount_functions = check_amount_functions
 ElementAreaTrigger.on_empty_find_func_switch = on_empty_find_func_switch
 instigator_find_functions, instigator_find_functions_client, instigator_project_all_functions, instigator_project_inside_functions, instigator_valid_functions, check_amount_functions, on_empty_find_func_switch = nil
 
--- Lines 643-676
+-- Lines 643-678
 function ElementAreaTrigger:init(...)
 	ElementAreaTrigger.super.init(self, ...)
 
@@ -446,7 +446,7 @@ function ElementAreaTrigger:init(...)
 	self._instigator_valid_func = ElementAreaTrigger.instigator_valid_functions[instigator_type]
 end
 
--- Lines 678-686
+-- Lines 680-688
 function ElementAreaTrigger:project_instigators()
 	local instigators = {}
 
@@ -457,7 +457,7 @@ function ElementAreaTrigger:project_instigators()
 	return instigators
 end
 
--- Lines 688-694
+-- Lines 690-696
 function ElementAreaTrigger:project_amount_all()
 	if self._instigator_count_all_func then
 		return self._instigator_count_all_func()
@@ -466,7 +466,7 @@ function ElementAreaTrigger:project_amount_all()
 	return managers.network:session() and managers.network:session():amount_of_alive_players() or 0
 end
 
--- Lines 696-702
+-- Lines 698-704
 function ElementAreaTrigger:project_amount_inside()
 	if self._instigator_count_inside_func then
 		return self._instigator_count_inside_func(self._inside)
@@ -475,7 +475,7 @@ function ElementAreaTrigger:project_amount_inside()
 	return #self._inside
 end
 
--- Lines 704-710
+-- Lines 706-712
 function ElementAreaTrigger:is_instigator_valid(unit)
 	if self._instigator_valid_func then
 		return self:_instigator_valid_func(unit)
@@ -484,7 +484,7 @@ function ElementAreaTrigger:is_instigator_valid(unit)
 	return true
 end
 
--- Lines 712-718
+-- Lines 714-720
 function ElementAreaTrigger:_check_amount(...)
 	if self._check_amount_func then
 		self:_check_amount_func(...)

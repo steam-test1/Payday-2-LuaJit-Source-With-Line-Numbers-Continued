@@ -110,7 +110,60 @@ function DebugManager:test_tel_gs(...)
 	})
 end
 
--- Lines 103-105
+-- Lines 102-135
+function DebugManager:test_tel_gs_new(...)
+	-- Lines 104-107
+	local function gamesight_accept_func()
+		managers.user:set_setting("use_gamesight", true, true)
+		_G.MenuCallbackHandler:save_settings()
+	end
+
+	-- Lines 109-112
+	local function gamesight_deny_func()
+		managers.user:set_setting("use_gamesight", false, true)
+		_G.MenuCallbackHandler:save_settings()
+	end
+
+	-- Lines 114-118
+	local function telemetry_accept_func()
+		managers.user:set_setting("use_telemetry", true, true)
+		_G.MenuCallbackHandler:save_settings()
+		managers.menu:show_accept_gamesight_new({
+			accept_func = gamesight_accept_func,
+			deny_func = gamesight_deny_func
+		})
+	end
+
+	-- Lines 120-124
+	local function telemetry_deny_func()
+		managers.user:set_setting("use_telemetry", false, true)
+		_G.MenuCallbackHandler:save_settings()
+		managers.menu:show_accept_gamesight_new({
+			accept_func = gamesight_accept_func,
+			deny_func = gamesight_deny_func
+		})
+	end
+
+	-- Lines 126-128
+	local function eula_accept_func()
+		managers.menu:show_accept_telemetry_new({
+			accept_func = telemetry_accept_func,
+			deny_func = telemetry_deny_func
+		})
+	end
+
+	-- Lines 130-132
+	local function eula_deny_func()
+		_G.setup:quit()
+	end
+
+	managers.menu:show_accept_policy_new({
+		accept_func = eula_accept_func,
+		deny_func = eula_deny_func
+	})
+end
+
+-- Lines 138-140
 function DebugManager:look_at_object(pos, distance)
 	_G.setup:freeflight():_set_camera(pos + Vector3(distance, distance, distance), Rotation(120, -30, 0))
 end

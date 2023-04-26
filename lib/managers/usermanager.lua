@@ -834,7 +834,7 @@ function GenericUserManager:save_setting_map(setting_map, callback_func)
 	end
 end
 
--- Lines 881-899
+-- Lines 881-901
 function GenericUserManager:save(data)
 	local state = self:get_setting_map()
 	data.UserManager = state
@@ -843,10 +843,10 @@ function GenericUserManager:save(data)
 		data.debug_post_effects_enabled = Global.debug_post_effects_enabled
 	end
 
-	data.use_telemetry_gamesight_decided = Global.use_telemetry_gamesight_decided
+	data.use_telemetry_gamesight_eula_decided = Global.use_telemetry_gamesight_eula_decided
 end
 
--- Lines 901-933
+-- Lines 903-937
 function GenericUserManager:load(data, cache_version)
 	if cache_version == 0 then
 		self:set_setting_map(data)
@@ -869,12 +869,12 @@ function GenericUserManager:load(data, cache_version)
 		Global.debug_post_effects_enabled = true
 	end
 
-	Global.use_telemetry_gamesight_decided = data.use_telemetry_gamesight_decided
+	Global.use_telemetry_gamesight_eula_decided = data.use_telemetry_gamesight_eula_decided
 
 	self:sanitize_settings()
 end
 
--- Lines 935-956
+-- Lines 939-960
 function GenericUserManager:sanitize_settings()
 	local color_grading = self:get_setting("video_color_grading")
 	local color_grading_valid = false
@@ -902,7 +902,7 @@ Xbox360UserManager.CUSTOM_PROFILE_VARIABLE_CHAR_COUNT = 999
 Xbox360UserManager.CAN_CHANGE_STORAGE_ONLY_ONCE = false
 UserManager.PLATFORM_CLASS_MAP[Idstring("X360"):key()] = Xbox360UserManager
 
--- Lines 970-986
+-- Lines 974-990
 function Xbox360UserManager:init()
 	self._platform_setting_conversion_func_map = {
 		gamer_control_sensitivity = callback(self, self, "convert_gamer_control_sensitivity")
@@ -918,7 +918,7 @@ function Xbox360UserManager:init()
 	self._setting_map_save_counter = 0
 end
 
--- Lines 988-1003
+-- Lines 992-1007
 function Xbox360UserManager:disconnect_callback(reason)
 	print("  Xbox360UserManager:disconnect_callback", reason, XboxLive:signin_state(0))
 
@@ -936,26 +936,26 @@ function Xbox360UserManager:disconnect_callback(reason)
 	end
 end
 
--- Lines 1005-1007
+-- Lines 1009-1011
 function Xbox360UserManager:connect_callback()
 end
 
--- Lines 1009-1011
+-- Lines 1013-1015
 function Xbox360UserManager:on_entered_online_menus()
 	self._in_online_menu = true
 end
 
--- Lines 1013-1015
+-- Lines 1017-1019
 function Xbox360UserManager:on_exit_online_menus()
 	self._in_online_menu = false
 end
 
--- Lines 1017-1019
+-- Lines 1021-1023
 function Xbox360UserManager:is_online_menu()
 	return self._in_online_menu
 end
 
--- Lines 1021-1031
+-- Lines 1025-1035
 function Xbox360UserManager:setup_setting_map()
 	local platform_default_type_map = {
 		invert_camera_y = "gamer_yaxis_inversion",
@@ -967,7 +967,7 @@ function Xbox360UserManager:setup_setting_map()
 	GenericUserManager.setup_setting_map(self)
 end
 
--- Lines 1033-1041
+-- Lines 1037-1045
 function Xbox360UserManager:convert_gamer_control_sensitivity(value)
 	if value == "low" then
 		return 0.5
@@ -978,7 +978,7 @@ function Xbox360UserManager:convert_gamer_control_sensitivity(value)
 	end
 end
 
--- Lines 1043-1060
+-- Lines 1047-1064
 function Xbox360UserManager:get_default_setting(name)
 	if Global.user_manager.platform_setting_map then
 		local platform_default_type = Global.user_manager.platform_default_type_map[name]
@@ -998,7 +998,7 @@ function Xbox360UserManager:get_default_setting(name)
 	return GenericUserManager.get_default_setting(self, name)
 end
 
--- Lines 1062-1068
+-- Lines 1066-1072
 function Xbox360UserManager:active_user_change_state(old_user_data, user_data)
 	Global.user_manager.platform_setting_map = nil
 
@@ -1006,13 +1006,13 @@ function Xbox360UserManager:active_user_change_state(old_user_data, user_data)
 	GenericUserManager.active_user_change_state(self, old_user_data, user_data)
 end
 
--- Lines 1070-1073
+-- Lines 1074-1077
 function Xbox360UserManager:load_platform_setting_map(callback_func)
 	cat_print("user_manager", "[UserManager] Loading platform setting map.")
 	XboxLive:read_profile_settings(self:get_platform_id(nil), callback(self, self, "_load_platform_setting_map_callback", callback_func))
 end
 
--- Lines 1075-1083
+-- Lines 1079-1087
 function Xbox360UserManager:_load_platform_setting_map_callback(callback_func, platform_setting_map)
 	cat_print("user_manager", "[UserManager] Done loading platform setting map. Success: " .. tostring(not not platform_setting_map))
 
@@ -1025,13 +1025,13 @@ function Xbox360UserManager:_load_platform_setting_map_callback(callback_func, p
 	end
 end
 
--- Lines 1085-1088
+-- Lines 1089-1092
 function Xbox360UserManager:save_platform_setting(setting_name, setting_value, callback_func)
 	cat_print("user_manager", "[UserManager] Saving platform setting \"" .. tostring(setting_name) .. "\": " .. tostring(setting_value))
 	XboxLive:write_profile_setting(self:get_platform_id(nil), setting_name, setting_value, callback(self, self, "_save_platform_setting_callback", callback_func))
 end
 
--- Lines 1091-1098
+-- Lines 1095-1102
 function Xbox360UserManager:_save_platform_setting_callback(callback_func, success)
 	cat_print("user_manager", "[UserManager] Done saving platform setting \"" .. tostring("Dont get setting name in callback") .. "\". Success: " .. tostring(success))
 
@@ -1040,7 +1040,7 @@ function Xbox360UserManager:_save_platform_setting_callback(callback_func, succe
 	end
 end
 
--- Lines 1100-1116
+-- Lines 1104-1120
 function Xbox360UserManager:get_setting_map()
 	local platform_setting_map = Global.user_manager.platform_setting_map
 	local setting_map = nil
@@ -1059,7 +1059,7 @@ function Xbox360UserManager:get_setting_map()
 	return setting_map
 end
 
--- Lines 1118-1153
+-- Lines 1122-1157
 function Xbox360UserManager:save_setting_map(callback_func)
 	if self._setting_map_save_counter > 0 then
 		Appliction:error("[UserManager] Tried to set setting map again before it was done with previous set.")
@@ -1103,7 +1103,7 @@ function Xbox360UserManager:save_setting_map(callback_func)
 	until char_count <= current_char
 end
 
--- Lines 1156-1163
+-- Lines 1160-1167
 function Xbox360UserManager:_save_setting_map_callback(callback_func, success)
 	self._setting_map_save_success = self._setting_map_save_success and success
 	self._setting_map_save_counter = self._setting_map_save_counter - 1
@@ -1113,7 +1113,7 @@ function Xbox360UserManager:_save_setting_map_callback(callback_func, success)
 	end
 end
 
--- Lines 1165-1198
+-- Lines 1169-1202
 function Xbox360UserManager:signin_changed_callback(...)
 	for user_index, signed_in in ipairs({
 		...
@@ -1143,18 +1143,18 @@ function Xbox360UserManager:signin_changed_callback(...)
 	end
 end
 
--- Lines 1200-1210
+-- Lines 1204-1214
 function Xbox360UserManager:profile_setting_changed_callback(...)
 end
 
--- Lines 1212-1216
+-- Lines 1216-1220
 function Xbox360UserManager:update_all_users()
 	for user_index = 1, 4 do
 		self:update_user(user_index, false)
 	end
 end
 
--- Lines 1218-1234
+-- Lines 1222-1238
 function Xbox360UserManager:update_user(user_index, ignore_username_change)
 	local platform_id = user_index - 1
 	local signin_state = XboxLive:signin_state(platform_id)
@@ -1173,12 +1173,12 @@ function Xbox360UserManager:update_user(user_index, ignore_username_change)
 	self:set_user(user_index, platform_id, storage_id, username, signin_state, ignore_username_change)
 end
 
--- Lines 1236-1238
+-- Lines 1240-1242
 function Xbox360UserManager:storage_devices_changed_callback()
 	self:update_all_users()
 end
 
--- Lines 1240-1249
+-- Lines 1244-1253
 function Xbox360UserManager:check_privilege(user_index, privilege, callback_func)
 	local platform_id = self:get_platform_id(user_index)
 	local result = XboxLive:check_privilege(platform_id, privilege)
@@ -1190,14 +1190,14 @@ function Xbox360UserManager:check_privilege(user_index, privilege, callback_func
 	return result
 end
 
--- Lines 1251-1254
+-- Lines 1255-1258
 function Xbox360UserManager:get_xuid(user_index)
 	local platform_id = self:get_platform_id(user_index)
 
 	return XboxLive:xuid(platform_id)
 end
 
--- Lines 1256-1260
+-- Lines 1260-1264
 function Xbox360UserManager:invite_accepted_by_inactive_user()
 	managers.platform:set_rich_presence("Idle")
 	self:perform_load_start_menu()
@@ -1207,14 +1207,14 @@ end
 PS3UserManager = PS3UserManager or class(GenericUserManager)
 UserManager.PLATFORM_CLASS_MAP[Idstring("PS3"):key()] = PS3UserManager
 
--- Lines 1265-1269
+-- Lines 1269-1273
 function PS3UserManager:init()
 	self._init_finalize_index = not self:is_global_initialized()
 
 	GenericUserManager.init(self)
 end
 
--- Lines 1271-1278
+-- Lines 1275-1282
 function PS3UserManager:init_finalize()
 	GenericUserManager.init_finalize(self)
 
@@ -1225,7 +1225,7 @@ function PS3UserManager:init_finalize()
 	end
 end
 
--- Lines 1280-1287
+-- Lines 1284-1291
 function PS3UserManager:set_index(user_index)
 	if user_index then
 		self:set_user_soft(user_index, nil, true, nil, true, false)
@@ -1237,7 +1237,7 @@ end
 PS4UserManager = PS4UserManager or class(GenericUserManager)
 UserManager.PLATFORM_CLASS_MAP[Idstring("PS4"):key()] = PS4UserManager
 
--- Lines 1293-1299
+-- Lines 1297-1303
 function PS4UserManager:init()
 	self._init_finalize_index = not self:is_global_initialized()
 
@@ -1245,7 +1245,7 @@ function PS4UserManager:init()
 	managers.platform:add_event_callback("disconnect", callback(self, self, "disconnect_callback"))
 end
 
--- Lines 1301-1311
+-- Lines 1305-1315
 function PS4UserManager:disconnect_callback()
 	if Global.game_settings.single_player then
 		return
@@ -1258,7 +1258,7 @@ function PS4UserManager:disconnect_callback()
 	end
 end
 
--- Lines 1313-1320
+-- Lines 1317-1324
 function PS4UserManager:init_finalize()
 	GenericUserManager.init_finalize(self)
 
@@ -1269,7 +1269,7 @@ function PS4UserManager:init_finalize()
 	end
 end
 
--- Lines 1322-1329
+-- Lines 1326-1333
 function PS4UserManager:set_index(user_index)
 	if user_index then
 		self:set_user_soft(user_index, nil, true, nil, true, false)
@@ -1281,14 +1281,14 @@ end
 WinUserManager = WinUserManager or class(GenericUserManager)
 UserManager.PLATFORM_CLASS_MAP[Idstring("WIN32"):key()] = WinUserManager
 
--- Lines 1335-1339
+-- Lines 1339-1343
 function WinUserManager:init()
 	self._init_finalize_index = not self:is_global_initialized()
 
 	GenericUserManager.init(self)
 end
 
--- Lines 1341-1352
+-- Lines 1345-1356
 function WinUserManager:init_finalize()
 	GenericUserManager.init_finalize(self)
 
@@ -1303,7 +1303,7 @@ function WinUserManager:init_finalize()
 	end
 end
 
--- Lines 1354-1361
+-- Lines 1358-1365
 function WinUserManager:set_index(user_index)
 	if user_index then
 		self:set_user_soft(user_index, nil, true, nil, true, false)
@@ -1322,7 +1322,7 @@ XB1UserManager.CUSTOM_PROFILE_VARIABLE_CHAR_COUNT = 999
 XB1UserManager.CAN_CHANGE_STORAGE_ONLY_ONCE = false
 UserManager.PLATFORM_CLASS_MAP[Idstring("XB1"):key()] = XB1UserManager
 
--- Lines 1375-1394
+-- Lines 1379-1398
 function XB1UserManager:init()
 	self._platform_setting_conversion_func_map = {
 		gamer_control_sensitivity = callback(self, self, "convert_gamer_control_sensitivity")
@@ -1338,7 +1338,7 @@ function XB1UserManager:init()
 	self._setting_map_save_counter = 0
 end
 
--- Lines 1396-1419
+-- Lines 1400-1423
 function XB1UserManager:update(t, dt)
 	XB1UserManager.super.update(self, t, dt)
 
@@ -1363,7 +1363,7 @@ function XB1UserManager:update(t, dt)
 	end
 end
 
--- Lines 1421-1439
+-- Lines 1425-1443
 function XB1UserManager:_check_privilege_callback(is_success)
 	if not self._privilege_check_enabled then
 		return
@@ -1386,7 +1386,7 @@ function XB1UserManager:_check_privilege_callback(is_success)
 	end
 end
 
--- Lines 1441-1463
+-- Lines 1445-1467
 function XB1UserManager:disconnect_callback(reason)
 	print("  XB1UserManager:disconnect_callback", reason)
 
@@ -1412,27 +1412,27 @@ function XB1UserManager:disconnect_callback(reason)
 	end
 end
 
--- Lines 1465-1467
+-- Lines 1469-1471
 function XB1UserManager:connect_callback()
 end
 
--- Lines 1469-1472
+-- Lines 1473-1476
 function XB1UserManager:on_entered_online_menus()
 	self._disconnected = nil
 	self._in_online_menu = true
 end
 
--- Lines 1474-1476
+-- Lines 1478-1480
 function XB1UserManager:on_exit_online_menus()
 	self._in_online_menu = false
 end
 
--- Lines 1478-1480
+-- Lines 1482-1484
 function XB1UserManager:is_online_menu()
 	return self._in_online_menu
 end
 
--- Lines 1482-1490
+-- Lines 1486-1494
 function XB1UserManager:convert_gamer_control_sensitivity(value)
 	if value == "low" then
 		return 0.5
@@ -1443,7 +1443,7 @@ function XB1UserManager:convert_gamer_control_sensitivity(value)
 	end
 end
 
--- Lines 1492-1498
+-- Lines 1496-1502
 function XB1UserManager:active_user_change_state(old_user_data, user_data)
 	Global.user_manager.platform_setting_map = nil
 
@@ -1451,13 +1451,13 @@ function XB1UserManager:active_user_change_state(old_user_data, user_data)
 	GenericUserManager.active_user_change_state(self, old_user_data, user_data)
 end
 
--- Lines 1500-1503
+-- Lines 1504-1507
 function XB1UserManager:load_platform_setting_map(callback_func)
 	cat_print("user_manager", "[UserManager] Loading platform setting map.")
 	XboxLive:read_profile_settings(self:get_platform_id(nil), callback(self, self, "_load_platform_setting_map_callback", callback_func))
 end
 
--- Lines 1505-1513
+-- Lines 1509-1517
 function XB1UserManager:_load_platform_setting_map_callback(callback_func, platform_setting_map)
 	cat_print("user_manager", "[UserManager] Done loading platform setting map. Success: " .. tostring(not not platform_setting_map))
 
@@ -1470,13 +1470,13 @@ function XB1UserManager:_load_platform_setting_map_callback(callback_func, platf
 	end
 end
 
--- Lines 1515-1518
+-- Lines 1519-1522
 function XB1UserManager:save_platform_setting(setting_name, setting_value, callback_func)
 	cat_print("user_manager", "[UserManager] Saving platform setting \"" .. tostring(setting_name) .. "\": " .. tostring(setting_value))
 	XboxLive:write_profile_setting(self:get_platform_id(nil), setting_name, setting_value, callback(self, self, "_save_platform_setting_callback", callback_func))
 end
 
--- Lines 1521-1528
+-- Lines 1525-1532
 function XB1UserManager:_save_platform_setting_callback(callback_func, success)
 	cat_print("user_manager", "[UserManager] Done saving platform setting \"" .. tostring("Dont get setting name in callback") .. "\". Success: " .. tostring(success))
 
@@ -1485,7 +1485,7 @@ function XB1UserManager:_save_platform_setting_callback(callback_func, success)
 	end
 end
 
--- Lines 1531-1566
+-- Lines 1535-1570
 function XB1UserManager:save_setting_map(callback_func)
 	if self._setting_map_save_counter > 0 then
 		Appliction:error("[UserManager] Tried to set setting map again before it was done with previous set.")
@@ -1529,7 +1529,7 @@ function XB1UserManager:save_setting_map(callback_func)
 	until char_count <= current_char
 end
 
--- Lines 1569-1576
+-- Lines 1573-1580
 function XB1UserManager:_save_setting_map_callback(callback_func, success)
 	self._setting_map_save_success = self._setting_map_save_success and success
 	self._setting_map_save_counter = self._setting_map_save_counter - 1
@@ -1539,7 +1539,7 @@ function XB1UserManager:_save_setting_map_callback(callback_func, success)
 	end
 end
 
--- Lines 1578-1608
+-- Lines 1582-1612
 function XB1UserManager:signin_changed_callback(selected_xuid)
 	print("[XB1UserManager:signin_changed_callback] selected_xuid", selected_xuid)
 
@@ -1567,11 +1567,11 @@ function XB1UserManager:signin_changed_callback(selected_xuid)
 	end
 end
 
--- Lines 1610-1620
+-- Lines 1614-1624
 function XB1UserManager:profile_setting_changed_callback(...)
 end
 
--- Lines 1622-1647
+-- Lines 1626-1651
 function XB1UserManager:update_all_users()
 	local old_user_indexes = {}
 
@@ -1604,7 +1604,7 @@ function XB1UserManager:update_all_users()
 	end
 end
 
--- Lines 1649-1670
+-- Lines 1653-1674
 function XB1UserManager:update_user(xuid, ignore_username_change)
 	if type(xuid) == "string" then
 		xuid = Xuid.from_string(xuid)
@@ -1632,30 +1632,30 @@ function XB1UserManager:update_user(xuid, ignore_username_change)
 	self:set_user(user_index, xuid, storage_id, username, signin_state, ignore_username_change)
 end
 
--- Lines 1672-1674
+-- Lines 1676-1678
 function XB1UserManager:storage_devices_changed_callback()
 	self:update_all_users()
 end
 
--- Lines 1676-1679
+-- Lines 1680-1683
 function XB1UserManager:check_privilege(user_index, privilege, callback_func)
 	local platform_id = self:get_platform_id(user_index)
 
 	return XboxLive:check_privilege(platform_id, privilege, callback_func)
 end
 
--- Lines 1681-1684
+-- Lines 1685-1688
 function XB1UserManager:get_xuid(user_index)
 	local platform_id = self:get_platform_id(user_index)
 
 	return platform_id
 end
 
--- Lines 1686-1690
+-- Lines 1690-1694
 function XB1UserManager:invite_accepted_by_inactive_user()
 end
 
--- Lines 1692-1705
+-- Lines 1696-1709
 function XB1UserManager:set_index(user_index)
 	local old_user_index = Global.user_manager.user_index
 
