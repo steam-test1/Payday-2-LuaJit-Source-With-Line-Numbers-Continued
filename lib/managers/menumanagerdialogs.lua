@@ -3269,7 +3269,7 @@ function MenuManager:show_external_items_dialog(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 2518-2592
+-- Lines 2518-2584
 function MenuManager:show_accept_gamesight_telemetry(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_gamesight_telemetry_title"),
@@ -3288,25 +3288,17 @@ function MenuManager:show_accept_gamesight_telemetry(params)
 		privacy_button.text = managers.localization:text("dialog_privacy")
 		privacy_button.no_close = true
 
-		-- Lines 2534-2540
+		-- Lines 2534-2536
 		function privacy_button.callback_func()
-			if MenuCallbackHandler:is_overlay_enabled() then
-				Steam:overlay_activate("url", tweak_data.gui.privacy_webpage)
-			else
-				managers.menu:show_enable_steam_overlay()
-			end
+			managers.network.account:overlay_activate("url", tweak_data.gui.privacy_webpage)
 		end
 
 		license_button.text = managers.localization:text("dialog_license")
 		license_button.no_close = true
 
-		-- Lines 2544-2550
+		-- Lines 2540-2542
 		function license_button.callback_func()
-			if MenuCallbackHandler:is_overlay_enabled() then
-				Steam:overlay_activate("url", tweak_data.gui.license_webpage)
-			else
-				managers.menu:show_enable_steam_overlay()
-			end
+			managers.network.account:overlay_activate("url", tweak_data.gui.license_webpage)
 		end
 	end
 
@@ -3349,7 +3341,7 @@ function MenuManager:show_accept_gamesight_telemetry(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 2594-2647
+-- Lines 2586-2631
 function MenuManager:show_policy_seen(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_gamesight_telemetry_title"),
@@ -3368,25 +3360,17 @@ function MenuManager:show_policy_seen(params)
 		privacy_button.text = managers.localization:text("dialog_privacy")
 		privacy_button.no_close = true
 
-		-- Lines 2610-2616
+		-- Lines 2602-2604
 		function privacy_button.callback_func()
-			if MenuCallbackHandler:is_overlay_enabled() then
-				Steam:overlay_activate("url", tweak_data.gui.privacy_webpage)
-			else
-				managers.menu:show_enable_steam_overlay()
-			end
+			managers.network.account:overlay_activate("url", tweak_data.gui.privacy_webpage)
 		end
 
 		license_button.text = managers.localization:text("dialog_license")
 		license_button.no_close = true
 
-		-- Lines 2620-2626
+		-- Lines 2608-2610
 		function license_button.callback_func()
-			if MenuCallbackHandler:is_overlay_enabled() then
-				Steam:overlay_activate("url", tweak_data.gui.license_webpage)
-			else
-				managers.menu:show_enable_steam_overlay()
-			end
+			managers.network.account:overlay_activate("url", tweak_data.gui.license_webpage)
 		end
 	end
 
@@ -3410,7 +3394,7 @@ function MenuManager:show_policy_seen(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 2652-2698
+-- Lines 2636-2682
 function MenuManager:show_accept_policy_new(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_gamesight_telemetry_title"),
@@ -3423,7 +3407,7 @@ function MenuManager:show_accept_policy_new(params)
 		privacy_button.text = managers.localization:text("dialog_privacy")
 		privacy_button.no_close = true
 
-		-- Lines 2662-2668
+		-- Lines 2646-2652
 		function privacy_button.callback_func()
 			if MenuCallbackHandler:is_overlay_enabled() then
 				Steam:overlay_activate("url", tweak_data.gui.privacy_webpage)
@@ -3435,7 +3419,7 @@ function MenuManager:show_accept_policy_new(params)
 		license_button.text = managers.localization:text("dialog_license")
 		license_button.no_close = true
 
-		-- Lines 2672-2678
+		-- Lines 2656-2662
 		function license_button.callback_func()
 			if MenuCallbackHandler:is_overlay_enabled() then
 				Steam:overlay_activate("url", tweak_data.gui.license_webpage)
@@ -3464,7 +3448,7 @@ function MenuManager:show_accept_policy_new(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 2700-2720
+-- Lines 2684-2704
 function MenuManager:show_accept_telemetry_new(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_telemetry_title_new"),
@@ -3487,7 +3471,7 @@ function MenuManager:show_accept_telemetry_new(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 2722-2742
+-- Lines 2706-2726
 function MenuManager:show_accept_gamesight_new(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_gamesight_title"),
@@ -3510,7 +3494,7 @@ function MenuManager:show_accept_gamesight_new(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 2745-2767
+-- Lines 2729-2751
 function MenuManager:show_accept_telemetry(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_telemetry_title"),
@@ -3541,7 +3525,7 @@ function MenuManager:show_accept_telemetry(params)
 	managers.system_menu:show_document(dialog_data)
 end
 
--- Lines 2770-2778
+-- Lines 2754-2762
 function MenuManager:show_lron_dialog(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_lron_event_title"),
@@ -3552,6 +3536,92 @@ function MenuManager:show_lron_dialog(params)
 	}
 	dialog_data.button_list = {
 		ok_button
+	}
+
+	managers.system_menu:show(dialog_data)
+end
+
+-- Lines 2798-2828
+function MenuManager:show_eos_no_connect_dialog(params)
+	local dialog_data = {
+		title = managers.localization:text("dialog_eos_no_connect_title"),
+		text = managers.localization:text("dialog_eos_no_connect_text"),
+		focus_button = 2
+	}
+	local button_list = {}
+
+	if SystemInfo:distribution() == Idstring("STEAM") then
+		local play_offline_button = {
+			text = managers.localization:text("dialog_eos_play_offline"),
+			callback_func = params.play_offline_func,
+			cancel_button = true
+		}
+
+		table.insert(button_list, play_offline_button)
+	else
+		local quit_button = {
+			text = managers.localization:text("dialog_eos_quit"),
+			callback_func = params.quit_func,
+			cancel_button = true
+		}
+
+		table.insert(button_list, quit_button)
+	end
+
+	local wait_button = {
+		text = managers.localization:text("dialog_eos_wait"),
+		callback_func = params.wait_func
+	}
+
+	table.insert(button_list, wait_button)
+
+	dialog_data.button_list = button_list
+
+	managers.system_menu:show(dialog_data)
+end
+
+-- Lines 2830-2841
+function MenuManager:show_epic_separate_window_opened(params)
+	local dialog_data = {
+		title = managers.localization:text("dialog_epic_separate_window_title"),
+		text = managers.localization:text("dialog_epic_separate_window_text")
+	}
+	local ok_button = {
+		text = managers.localization:text("dialog_ok"),
+		callback_func = params.ok_func
+	}
+	dialog_data.button_list = {
+		ok_button
+	}
+
+	managers.system_menu:show(dialog_data)
+end
+
+-- Lines 2844-2868
+function MenuManager:show_socialhub_action_dialog(params)
+	local dialog_data = {
+		title = managers.localization:text("menu_socialhub_confirmation_dialog_title")
+	}
+	local action_text = params.action == "add" and "socialhub_user_action_add" or params.action == "remove" and "socialhub_user_action_remove" or params.action == "block" and "socialhub_user_action_block" or params.action == "unblock" and "socialhub_user_action_unblock" or params.action == "invite" and "socialhub_user_action_invite" or ""
+	local user = managers.socialhub:get_user(params.user_id)
+	local username = params.name or user and user.name or ""
+	local userid = user and user.id or ""
+	dialog_data.text = managers.localization:text("menu_socialhub_confirmation_dialog_text", {
+		ACTION = managers.localization:text(action_text),
+		USER_NAME = username,
+		USER_ID = userid
+	})
+	local yes_button = {
+		text = managers.localization:text("dialog_yes"),
+		callback_func = params.callback
+	}
+	local no_button = {
+		text = managers.localization:text("dialog_no"),
+		cancel_button = true
+	}
+	dialog_data.button_list = {
+		yes_button,
+		no_button
 	}
 
 	managers.system_menu:show(dialog_data)

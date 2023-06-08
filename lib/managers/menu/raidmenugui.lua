@@ -60,27 +60,27 @@ end
 
 -- Lines 70-72
 function RaidMenuGui:open_raid_trailer()
-	Steam:overlay_activate("url", "https://www.youtube.com/embed/XARRgLUzSiA")
+	managers.network.account:overlay_activate("url", "https://www.youtube.com/embed/XARRgLUzSiA")
 end
 
 -- Lines 74-76
 function RaidMenuGui:open_dev_diary_trailer()
-	Steam:overlay_activate("url", "https://www.youtube.com/embed/cm98FnsSKvY")
+	managers.network.account:overlay_activate("url", "https://www.youtube.com/embed/cm98FnsSKvY")
 end
 
 -- Lines 78-80
 function RaidMenuGui:open_gameplay_trailer()
-	Steam:overlay_activate("url", "https://www.youtube.com/embed/Kl2qT-UJVJ4")
+	managers.network.account:overlay_activate("url", "https://www.youtube.com/embed/Kl2qT-UJVJ4")
 end
 
 -- Lines 82-84
 function RaidMenuGui:open_raid_gang()
-	Steam:overlay_activate("url", "http://www.raidworldwar2.com/#characters")
+	managers.network.account:overlay_activate("url", "http://www.raidworldwar2.com/#characters")
 end
 
 -- Lines 86-88
 function RaidMenuGui:open_raid_feedback()
-	Steam:overlay_activate("url", "https://steamcommunity.com/games/" .. RaidMenuGui.RaidAppId .. "/")
+	managers.network.account:overlay_activate("url", "https://steamcommunity.com/games/" .. RaidMenuGui.RaidAppId .. "/")
 end
 
 -- Lines 90-93
@@ -91,12 +91,12 @@ end
 
 -- Lines 95-97
 function RaidMenuGui:open_raid_special_edition()
-	Steam:overlay_activate("url", "https://store.steampowered.com/app/" .. RaidMenuGui.RaidAppId .. "/")
+	managers.network.account:overlay_activate("url", "https://store.steampowered.com/app/" .. RaidMenuGui.RaidAppId .. "/")
 end
 
 -- Lines 99-101
 function RaidMenuGui:open_raid_twitch()
-	Steam:overlay_activate("url", "https://www.twitch.tv/liongamelion")
+	managers.network.account:overlay_activate("url", "https://www.twitch.tv/liongamelion")
 end
 
 -- Lines 103-106
@@ -107,7 +107,7 @@ end
 
 -- Lines 108-110
 function RaidMenuGui:open_raid_preorder()
-	Steam:overlay_activate("url", "https://store.steampowered.com/app/" .. RaidMenuGui.RaidAppId .. "/")
+	managers.network.account:overlay_activate("url", "https://store.steampowered.com/app/" .. RaidMenuGui.RaidAppId .. "/")
 end
 
 -- Lines 114-116

@@ -3,18 +3,34 @@ ClientNetworkSession.HOST_SANITY_CHECK_INTERVAL = 4
 ClientNetworkSession.HOST_REQUEST_JOIN_INTERVAL = 2
 ClientNetworkSession.JOIN_REQUEST_TIMEOUT = 20
 
--- Lines 7-52
+-- Lines 7-73
 function ClientNetworkSession:request_join_host(host_rpc, result_cb)
 	print("[ClientNetworkSession:request_join_host]", host_rpc, result_cb)
 
 	self._cb_find_game = result_cb
 	local host_name = managers.network.matchmake:game_owner_name()
-	local host_user_id = SystemInfo:platform() == self._ids_WIN32 and host_rpc:ip_at_index(0) or false
-	local id, peer = self:add_peer(host_name, nil, nil, nil, nil, 1, nil, host_user_id, "", "")
+	local host_account_type_str = managers.network.matchmake:game_owner_account_type_str()
+	local host_account_id = managers.network.matchmake:game_owner_account_id()
+	local drop_in_name = host_name
 
-	if SystemInfo:platform() == self._ids_WIN32 then
-		peer:set_steam_rpc(host_rpc)
+	if host_account_type_str == "STEAM" then
+		local temp = host_name
+
+		if SystemInfo:distribution() == Idstring("STEAM") then
+			host_name = managers.network.account:username_by_id(host_account_id)
+		elseif SystemInfo:matchmaking() == Idstring("MM_STEAM") then
+			host_name = managers.network.matchmake:username_by_id(host_account_id)
+		end
+
+		if host_name == "" or host_name == "[unknown]" then
+			host_name = temp
+		end
 	end
+
+	local host_user_id = SystemInfo:platform() == self._ids_WIN32 and host_rpc:ip_at_index(0) or false
+	local id, peer = self:add_peer(host_name, host_rpc, nil, nil, nil, 1, nil, host_user_id, host_account_type_str, host_account_id, "", "")
+
+	peer:set_name_drop_in(drop_in_name)
 
 	local ticket = peer:create_ticket()
 	self._server_peer = peer
@@ -22,7 +38,6 @@ function ClientNetworkSession:request_join_host(host_rpc, result_cb)
 	Network:set_multiplayer(true)
 	Network:set_client(host_rpc)
 
-	local request_rpc = SystemInfo:platform() == self._ids_WIN32 and peer:steam_rpc() or host_rpc
 	local xuid = (SystemInfo:platform() == Idstring("X360") or SystemInfo:platform() == Idstring("XB1")) and managers.network.account:player_id() or ""
 	local lvl = managers.experience:current_level()
 	local rank = managers.experience:current_rank()
@@ -30,9 +45,11 @@ function ClientNetworkSession:request_join_host(host_rpc, result_cb)
 	local gameversion = managers.network.matchmake.GAMEVERSION or -1
 	local join_req_id = self:_get_join_attempt_identifier()
 	self._join_request_params = {
-		host_rpc = request_rpc,
+		host_rpc = host_rpc,
 		params = {
 			self._local_peer:name(),
+			self._local_peer:account_type_str(),
+			self._local_peer:account_id(),
 			managers.blackmarket:get_preferred_character_string(),
 			managers.dlc:dlcs_string(),
 			xuid,
@@ -45,13 +62,13 @@ function ClientNetworkSession:request_join_host(host_rpc, result_cb)
 		}
 	}
 
-	request_rpc:request_join(unpack(self._join_request_params.params))
+	host_rpc:request_join(unpack(self._join_request_params.params))
 
 	self._first_join_request_t = TimerManager:wall():time()
 	self._last_join_request_t = self._first_join_request_t
 end
 
--- Lines 56-193
+-- Lines 77-210
 function ClientNetworkSession:on_join_request_reply(reply, my_peer_id, my_character, level_index, difficulty_index, one_down, state_index, server_character, user_id, mission, job_id_index, job_stage, alternative_job_stage, interupt_job_stage_level_index, xuid, auth_ticket, sender)
 	print("[ClientNetworkSession:on_join_request_reply] ", self._server_peer and self._server_peer:user_id(), user_id, sender:ip_at_index(0), sender:protocol_at_index(0))
 
@@ -73,11 +90,7 @@ function ClientNetworkSession:on_join_request_reply(reply, my_peer_id, my_charac
 
 			return
 		else
-			if sender:protocol_at_index(0) == "STEAM" then
-				self._server_protocol = "STEAM"
-			else
-				self._server_protocol = "TCP_IP"
-			end
+			self._server_protocol = sender:protocol_at_index(0)
 
 			print("self._server_protocol", self._server_protocol)
 			self._server_peer:set_rpc(sender)
@@ -196,12 +209,12 @@ function ClientNetworkSession:on_join_request_reply(reply, my_peer_id, my_charac
 	end
 end
 
--- Lines 196-198
+-- Lines 213-215
 function ClientNetworkSession:_cancel_crime_spree()
 	managers.crime_spree:disable_crime_spree_gamemode()
 end
 
--- Lines 201-208
+-- Lines 218-225
 function ClientNetworkSession:on_join_request_timed_out()
 	self:_cancel_crime_spree()
 
@@ -211,7 +224,7 @@ function ClientNetworkSession:on_join_request_timed_out()
 	cb("TIMED_OUT")
 end
 
--- Lines 211-223
+-- Lines 228-240
 function ClientNetworkSession:on_join_request_cancelled()
 	self:_cancel_crime_spree()
 
@@ -228,14 +241,14 @@ function ClientNetworkSession:on_join_request_cancelled()
 	end
 end
 
--- Lines 227-230
+-- Lines 244-247
 function ClientNetworkSession:discover_hosts()
 	self._discovered_hosts = {}
 
 	Network:broadcast(NetworkManager.DEFAULT_PORT):discover_host()
 end
 
--- Lines 234-253
+-- Lines 251-270
 function ClientNetworkSession:on_host_discovered(new_host, new_host_name, level_name, my_ip, state, difficulty)
 	if self._discovered_hosts then
 		local new_host_data = {
@@ -263,19 +276,19 @@ function ClientNetworkSession:on_host_discovered(new_host, new_host_name, level_
 	end
 end
 
--- Lines 257-262
+-- Lines 274-279
 function ClientNetworkSession:on_server_up_received(host_rpc)
 	if self._discovered_hosts then
 		host_rpc:request_host_discover_reply()
 	end
 end
 
--- Lines 266-268
+-- Lines 283-285
 function ClientNetworkSession:discovered_hosts()
 	return self._discovered_hosts
 end
 
--- Lines 272-278
+-- Lines 289-295
 function ClientNetworkSession:send_to_host(...)
 	if self._server_peer then
 		self._server_peer:send(...)
@@ -284,31 +297,31 @@ function ClientNetworkSession:send_to_host(...)
 	end
 end
 
--- Lines 282-282
+-- Lines 299-299
 function ClientNetworkSession:is_host()
 	return false
 end
 
--- Lines 286-286
+-- Lines 303-303
 function ClientNetworkSession:is_client()
 	return true
 end
 
--- Lines 290-293
+-- Lines 307-310
 function ClientNetworkSession:load_level(...)
 	self:send_to_host("set_loading_state", true, self._load_counter)
 	self:_load_level(...)
 end
 
--- Lines 295-298
+-- Lines 312-315
 function ClientNetworkSession:load_lobby(...)
 	self:send_to_host("set_loading_state", true, self._load_counter)
 	self:_load_lobby(...)
 end
 
--- Lines 302-347
-function ClientNetworkSession:peer_handshake(name, peer_id, peer_user_id, in_lobby, loading, synched, character, mask_set, xuid, xnaddr)
-	print("ClientNetworkSession:peer_handshake", name, peer_id, peer_user_id, in_lobby, loading, synched, character, mask_set, xuid, xnaddr)
+-- Lines 319-383
+function ClientNetworkSession:peer_handshake(name, peer_id, peer_user_id, peer_account_type_str, peer_account_id, in_lobby, loading, synched, character, mask_set, xuid, xnaddr)
+	print("ClientNetworkSession:peer_handshake", name, peer_id, peer_user_id, peer_account_type_str, peer_account_id, in_lobby, loading, synched, character, mask_set, xuid, xnaddr)
 
 	if self._peers[peer_id] then
 		print("ALREADY HAD PEER returns here")
@@ -324,8 +337,8 @@ function ClientNetworkSession:peer_handshake(name, peer_id, peer_user_id, in_lob
 
 	local rpc = nil
 
-	if self._server_protocol == "STEAM" then
-		rpc = Network:handshake(peer_user_id, nil, "STEAM")
+	if self._server_protocol == SystemInfo:matchmaking_protocol() then
+		rpc = Network:handshake(peer_user_id, nil, SystemInfo:matchmaking_protocol())
 
 		Network:add_co_client(rpc)
 	end
@@ -341,12 +354,25 @@ function ClientNetworkSession:peer_handshake(name, peer_id, peer_user_id, in_lob
 		peer_user_id = false
 	end
 
-	if SystemInfo:platform() == Idstring("WIN32") then
-		name = managers.network.account:username_by_id(peer_user_id)
+	local drop_in_name = name
+
+	if peer_account_type_str == "STEAM" then
+		local temp = name
+
+		if SystemInfo:distribution() == Idstring("STEAM") then
+			name = managers.network.account:username_by_id(peer_account_id)
+		elseif SystemInfo:matchmaking() == Idstring("MM_STEAM") then
+			name = managers.network.matchmake:username_by_id(peer_account_id)
+		end
+
+		if name == "" or name == "[unknown]" then
+			name = temp
+		end
 	end
 
-	local id, peer = self:add_peer(name, rpc, in_lobby, loading, synched, peer_id, character, peer_user_id, xuid, nil)
+	local id, peer = self:add_peer(name, rpc, in_lobby, loading, synched, peer_id, character, peer_user_id, peer_account_type_str, peer_account_id, xuid, nil)
 
+	peer:set_name_drop_in(drop_in_name)
 	cat_print("multiplayer_base", "[ClientNetworkSession:peer_handshake]", name, peer_user_id, loading, synched, id, inspect(peer))
 
 	local check_peer = (SystemInfo:platform() == Idstring("X360") or SystemInfo:platform() == Idstring("XB1")) and peer or nil
@@ -358,7 +384,7 @@ function ClientNetworkSession:peer_handshake(name, peer_id, peer_user_id, in_lob
 	end
 end
 
--- Lines 352-358
+-- Lines 388-394
 function ClientNetworkSession:on_PSN_connection_established(name, ip)
 	if SystemInfo:platform() ~= Idstring("PS3") and SystemInfo:platform() ~= Idstring("PS4") then
 		return
@@ -367,7 +393,7 @@ function ClientNetworkSession:on_PSN_connection_established(name, ip)
 	self:chk_send_connection_established(name, nil, false)
 end
 
--- Lines 362-371
+-- Lines 398-407
 function ClientNetworkSession:on_peer_synched(peer_id)
 	local peer = self._peers[peer_id]
 
@@ -382,7 +408,7 @@ function ClientNetworkSession:on_peer_synched(peer_id)
 	self:on_peer_sync_complete(peer, peer_id)
 end
 
--- Lines 376-406
+-- Lines 412-442
 function ClientNetworkSession:ok_to_load_level(load_counter)
 	print("[ClientNetworkSession:ok_to_load_level] load_counter", load_counter, "self._received_ok_to_load_level", self._received_ok_to_load_level)
 
@@ -419,7 +445,7 @@ function ClientNetworkSession:ok_to_load_level(load_counter)
 	self:load_level(level_name, mission, world_setting, nil, level_id)
 end
 
--- Lines 408-440
+-- Lines 444-476
 function ClientNetworkSession:ok_to_load_lobby(load_counter)
 	print("[ClientNetworkSession:ok_to_load_lobby] load_counter", load_counter, "self._received_ok_to_load_lobby", self._received_ok_to_load_lobby, self._local_peer:id())
 
@@ -457,7 +483,7 @@ function ClientNetworkSession:ok_to_load_lobby(load_counter)
 	managers.network:session():load_lobby()
 end
 
--- Lines 444-449
+-- Lines 480-485
 function ClientNetworkSession:on_mutual_connection(other_peer_id)
 	local other_peer = self._peers[other_peer_id]
 
@@ -466,7 +492,7 @@ function ClientNetworkSession:on_mutual_connection(other_peer_id)
 	end
 end
 
--- Lines 453-468
+-- Lines 489-504
 function ClientNetworkSession:on_peer_requested_info(peer_id)
 	local other_peer = self._peers[peer_id]
 
@@ -481,7 +507,7 @@ function ClientNetworkSession:on_peer_requested_info(peer_id)
 	other_peer:send("peer_exchange_info", self._local_peer:id())
 end
 
--- Lines 472-492
+-- Lines 508-528
 function ClientNetworkSession:update()
 	ClientNetworkSession.super.update(self)
 
@@ -506,7 +532,7 @@ function ClientNetworkSession:update()
 	end
 end
 
--- Lines 496-501
+-- Lines 532-537
 function ClientNetworkSession:_soft_remove_peer(peer)
 	ClientNetworkSession.super._soft_remove_peer(self, peer)
 
@@ -515,7 +541,7 @@ function ClientNetworkSession:_soft_remove_peer(peer)
 	end
 end
 
--- Lines 505-531
+-- Lines 541-567
 function ClientNetworkSession:on_peer_save_received(event, event_data)
 	if managers.network:stopping() then
 		return
@@ -550,17 +576,17 @@ function ClientNetworkSession:on_peer_save_received(event, event_data)
 	end
 end
 
--- Lines 535-537
+-- Lines 571-573
 function ClientNetworkSession:is_expecting_sanity_chk_reply()
 	return self._host_sanity_send_t and true
 end
 
--- Lines 541-543
+-- Lines 577-579
 function ClientNetworkSession:load(data)
 	ClientNetworkSession.super.load(self, data)
 end
 
--- Lines 547-553
+-- Lines 583-589
 function ClientNetworkSession:on_load_complete(simulation)
 	ClientNetworkSession.super.on_load_complete(self, simulation)
 
@@ -569,7 +595,7 @@ function ClientNetworkSession:on_load_complete(simulation)
 	end
 end
 
--- Lines 557-563
+-- Lines 593-599
 function ClientNetworkSession:_get_join_attempt_identifier()
 	if not self._join_attempt_identifier then
 		self._join_attempt_identifier = math.random(1, 65536)
@@ -578,7 +604,7 @@ function ClientNetworkSession:_get_join_attempt_identifier()
 	return self._join_attempt_identifier
 end
 
--- Lines 567-587
+-- Lines 603-623
 function ClientNetworkSession:_upd_request_join_resend(wall_time)
 	if self._last_join_request_t then
 		if ClientNetworkSession.JOIN_REQUEST_TIMEOUT < wall_time - self._first_join_request_t and self._server_peer and self._cb_find_game then
@@ -600,7 +626,7 @@ function ClientNetworkSession:_upd_request_join_resend(wall_time)
 	end
 end
 
--- Lines 591-601
+-- Lines 627-637
 function ClientNetworkSession:chk_send_outfit_loading_status()
 	print("[ClientNetworkSession:chk_send_outfit_loading_status]\n", inspect(self._notify_host_when_outfits_loaded), "\n", "self:_get_peer_outfit_versions_str()", self:_get_peer_outfit_versions_str())
 
@@ -614,7 +640,7 @@ function ClientNetworkSession:chk_send_outfit_loading_status()
 	end
 end
 
--- Lines 605-610
+-- Lines 641-646
 function ClientNetworkSession:notify_host_when_outfits_loaded(request_id, outfit_versions_str)
 	print("[ClientNetworkSession:notify_host_when outfits_loaded] request_id", request_id)
 
@@ -626,13 +652,13 @@ function ClientNetworkSession:notify_host_when_outfits_loaded(request_id, outfit
 	self:chk_send_outfit_loading_status()
 end
 
--- Lines 614-618
+-- Lines 650-654
 function ClientNetworkSession:on_peer_outfit_loaded(peer)
 	ClientNetworkSession.super.on_peer_outfit_loaded(self, peer)
 	self:_chk_send_proactive_outfit_loaded()
 end
 
--- Lines 622-632
+-- Lines 658-668
 function ClientNetworkSession:_chk_send_proactive_outfit_loaded()
 	if not self:server_peer() or not self:server_peer():ip_verified() or self:server_peer():id() == 0 or self._local_peer:id() == 0 then
 		return
@@ -646,7 +672,7 @@ function ClientNetworkSession:_chk_send_proactive_outfit_loaded()
 	end
 end
 
--- Lines 637-643
+-- Lines 673-679
 function ClientNetworkSession:on_set_member_ready(peer_id, ready, state_changed, from_network)
 	ClientNetworkSession.super.on_set_member_ready(self, peer_id, ready, state_changed, from_network)
 
@@ -655,13 +681,13 @@ function ClientNetworkSession:on_set_member_ready(peer_id, ready, state_changed,
 	end
 end
 
--- Lines 648-651
+-- Lines 684-687
 function ClientNetworkSession:remove_peer(...)
 	ClientNetworkSession.super.remove_peer(self, ...)
 	self:chk_send_outfit_loading_status()
 end
 
--- Lines 655-659
+-- Lines 691-695
 function ClientNetworkSession:set_peer_loading_state(peer, state, load_counter)
 	peer:set_loading(state)
 	ClientNetworkSession.super.set_peer_loading_state(self, peer, state, load_counter)

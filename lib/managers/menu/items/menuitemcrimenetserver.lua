@@ -10,7 +10,7 @@ function MenuItemCrimeNetServer:init(data_node, parameters)
 	self._type = MenuItemCrimeNetServer.TYPE
 end
 
--- Lines 13-171
+-- Lines 13-164
 function MenuItemCrimeNetServer:setup_gui(node, row_item)
 	local scaled_size = managers.gui_data:scaled_size()
 	local color = Color.white
@@ -38,20 +38,9 @@ function MenuItemCrimeNetServer:setup_gui(node, row_item)
 		mutators = num_mutators and num_mutators > 0
 	end
 
-	local is_friend = false
-
-	if Steam:logged_on() and Steam:friends() then
-		local owner_id = lobby:key_value("owner_id")
-
-		for _, friend in ipairs(Steam:friends()) do
-			if friend:id() == owner_id then
-				is_friend = true
-
-				break
-			end
-		end
-	end
-
+	local owner_id = lobby:key_value("owner_id")
+	local owner_account_id = lobby:key_value("owner_account_id")
+	local is_friend = managers.network.matchmake:is_user_friend(owner_id, owner_account_id)
 	row_item.gui_panel = node.item_panel:panel({
 		w = node.item_panel:w()
 	})
@@ -171,7 +160,7 @@ function MenuItemCrimeNetServer:setup_gui(node, row_item)
 	return true
 end
 
--- Lines 174-178
+-- Lines 167-171
 function MenuItemCrimeNetServer:reload(row_item, node)
 	MenuItemCrimeNetServer.super.reload(self, row_item, node)
 	self:_set_row_item_state(node, row_item)
@@ -179,33 +168,33 @@ function MenuItemCrimeNetServer:reload(row_item, node)
 	return true
 end
 
--- Lines 181-184
+-- Lines 174-177
 function MenuItemCrimeNetServer:highlight_row_item(node, row_item, mouse_over)
 	self:_set_row_item_state(node, row_item)
 
 	return true
 end
 
--- Lines 187-190
+-- Lines 180-183
 function MenuItemCrimeNetServer:fade_row_item(node, row_item, mouse_over)
 	self:_set_row_item_state(node, row_item)
 
 	return true
 end
 
--- Lines 193-197
+-- Lines 186-190
 function MenuItemCrimeNetServer:_set_row_item_state(node, row_item)
 	if row_item.highlighted then
 		-- Nothing
 	end
 end
 
--- Lines 199-201
+-- Lines 192-194
 function MenuItemCrimeNetServer:menu_unselected_visible()
 	return false
 end
 
--- Lines 204-206
+-- Lines 197-199
 function MenuItemCrimeNetServer:on_delete_row_item(row_item, ...)
 	MenuItemCrimeNetServer.super.on_delete_row_item(self, row_item, ...)
 end

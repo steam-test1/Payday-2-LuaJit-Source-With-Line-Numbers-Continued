@@ -7,7 +7,14 @@ local Namespace = Utility:get_current_namespace()
 local PublisherNamespace = Utility:get_current_publisher_namespace()
 local SteamPlatformId = "steam"
 local IamSteamPlatformUrl = string.format("%s/iam/oauth/platforms/%s/token", BaseUrl, SteamPlatformId)
+local EpicPlatformId = "epicgames"
+local IamEpicPlatformUrl = string.format("%s/iam/v3/oauth/platforms/%s/token", BaseUrl, EpicPlatformId)
 local IamServerUrl = string.format("%s/iam/oauth/token", BaseUrl)
+
+if SystemInfo:distribution() == Idstring("EPIC") then
+	IamServerUrl = string.format("%s/iam/v3/oauth/token", BaseUrl)
+end
+
 local LambdaUrl = Utility:get_current_lambda_url()
 local publisher_user_id = nil
 NamespaceRoles = {
@@ -118,143 +125,200 @@ Login = {
 	end
 }
 
--- Lines 153-181
-function Login:LoginWithSteamToken(ticket, callback)
-	print("[AccelByte] Login:LoginWithSteamToken")
+-- Lines 160-187
+function Login:LoginWithEpicToken(ticket, callback)
+	cat_print("accelbyte", "[AccelByte] Login:LoginWithEpicToken")
 
 	local payload_content_type = "application/x-www-form-urlencoded"
 	local payload_body = {}
 	local payload = "platform_token=" .. ticket
-	local payload_size = string.len(payload)
 	local headers = {
 		Authorization = "Basic " .. base64.encode(string.format("%s:%s", ClientId, ClientSecret)),
 		Accept = "application/json"
 	}
 
-	-- Lines 164-179
+	-- Lines 170-185
 	local function login_callback(error_code, status_code, response_body)
-		print("[AccelByte] Callback LoginWithSteamToken : " .. IamSteamPlatformUrl)
-		print("[AccelByte] Error_code : " .. error_code)
-		print("[AccelByte] Status_code : " .. status_code)
-		print("Response Body : " .. response_body)
+		cat_print("accelbyte", "[AccelByte] Callback LoginWithEpicToken : " .. IamEpicPlatformUrl)
+		cat_print("accelbyte", "[AccelByte] Error_code : " .. error_code)
+		cat_print("accelbyte", "[AccelByte] Status_code : " .. status_code)
+		cat_print("accelbyte", "[AccelByte] Response Body : " .. response_body)
 
 		local response_json = json.decode(response_body)
 
 		Login:SerializeJsonString(response_json)
-		print("[AccelByte] Display name : " .. tostring(self.player_session.display_name))
+		cat_print("accelbyte", "[AccelByte] Display name : " .. tostring(self.player_session.display_name))
 
 		if error_code == 1 and status_code == 200 and response_body ~= "" then
-			print("[AccelByte] LoginWithSteamToken Success")
+			cat_print("accelbyte", "[AccelByte] LoginWithEpicToken Success")
 		else
-			print("[AccelByte] LoginWithSteamToken Failed, try to relog on your steam to refresh the token")
+			cat_print("accelbyte", "[AccelByte] LoginWithEpicToken Failed, try to relog on your epic to refresh the token")
 		end
 
 		callback(error_code, status_code, response_body)
 	end
 
-	Steam:http_request_post(IamSteamPlatformUrl, login_callback, payload_content_type, payload, payload_size, headers)
+	HttpRequest:post(IamEpicPlatformUrl, login_callback, payload_content_type, payload, headers)
 end
 
--- Lines 183-204
+-- Lines 189-216
+function Login:LoginWithSteamToken(ticket, callback)
+	cat_print("accelbyte", "[AccelByte] Login:LoginWithSteamToken")
+
+	local payload_content_type = "application/x-www-form-urlencoded"
+	local payload_body = {}
+	local payload = "platform_token=" .. ticket
+	local headers = {
+		Authorization = "Basic " .. base64.encode(string.format("%s:%s", ClientId, ClientSecret)),
+		Accept = "application/json"
+	}
+
+	-- Lines 199-214
+	local function login_callback(error_code, status_code, response_body)
+		cat_print("accelbyte", "[AccelByte] Callback LoginWithSteamToken : " .. IamSteamPlatformUrl)
+		cat_print("accelbyte", "[AccelByte] Error_code : " .. error_code)
+		cat_print("accelbyte", "[AccelByte] Status_code : " .. status_code)
+		cat_print("accelbyte", "Response Body : " .. response_body)
+
+		local response_json = json.decode(response_body)
+
+		Login:SerializeJsonString(response_json)
+		cat_print("accelbyte", "[AccelByte] Display name : " .. tostring(self.player_session.display_name))
+
+		if error_code == 1 and status_code == 200 and response_body ~= "" then
+			cat_print("accelbyte", "[AccelByte] LoginWithSteamToken Success")
+		else
+			cat_print("accelbyte", "[AccelByte] LoginWithSteamToken Failed, try to relog on your steam to refresh the token")
+		end
+
+		callback(error_code, status_code, response_body)
+	end
+
+	HttpRequest:post(IamSteamPlatformUrl, login_callback, payload_content_type, payload, headers)
+end
+
+-- Lines 218-238
 function Login:LoginWithUsernamePassword(username, password)
-	print("[AccelByte] Login:LoginWithUsernamePassword")
+	cat_print("accelbyte", "[AccelByte] Login:LoginWithUsernamePassword")
 
 	local payload_content_type = "application/x-www-form-urlencoded"
 	local payload_body = {}
 	local payload = string.format("grant_type=password&username=%s&password=%s", username, password)
-	local payload_size = string.len(payload)
 	local headers = {
 		Authorization = "Basic " .. base64.encode(string.format("%s:%s", ClientId, ClientSecret)),
 		Accept = "application/json"
 	}
 
-	-- Lines 194-202
+	-- Lines 228-236
 	local function callback(error_code, status_code, response_body)
-		print("[AccelByte] Callback LoginWithUsernamePassword : " .. IamServerUrl)
-		print("[AccelByte] Error_code : " .. error_code)
-		print("[AccelByte] Status_code : " .. status_code)
-		print("Response Body : " .. response_body)
+		cat_print("accelbyte", "[AccelByte] Callback LoginWithUsernamePassword : " .. IamServerUrl)
+		cat_print("accelbyte", "[AccelByte] Error_code : " .. error_code)
+		cat_print("accelbyte", "[AccelByte] Status_code : " .. status_code)
+		cat_print("accelbyte", "Response Body : " .. response_body)
 
 		local response_json = json.decode(response_body)
 
 		Login:SerializeJsonString(response_json)
-		print("[AccelByte] Display name : " .. tostring(self.player_session.display_name))
+		cat_print("accelbyte", "[AccelByte] Display name : " .. tostring(self.player_session.display_name))
 	end
 
-	Steam:http_request_post(IamServerUrl, callback, payload_content_type, payload, payload_size, headers)
+	HttpRequest:post(IamServerUrl, callback, payload_content_type, payload, headers)
 end
 
--- Lines 207-234
+-- Lines 241-270
 function Login:LoginWithClientCredentials(callback)
-	print("[AccelByte] Login:LoginWithClientCredentials")
+	cat_print("accelbyte", "[AccelByte] Login:LoginWithClientCredentials")
 
 	local payload_content_type = "application/x-www-form-urlencoded"
 	local payload_body = {}
 	local payload = string.format("grant_type=client_credentials")
-	local payload_size = string.len(payload)
 	local headers = {
 		Authorization = "Basic " .. base64.encode(string.format("%s:%s", ClientId, ClientSecret)),
 		Accept = "application/json"
 	}
 
-	-- Lines 218-232
-	local function callback(error_code, status_code, response_body)
-		print("[AccelByte] Callback LoginWithClientCredentials : " .. IamServerUrl)
-		print("[AccelByte] Error_code : " .. error_code)
-		print("[AccelByte] Status_code : " .. status_code)
-		print("Response Body : " .. response_body)
+	-- Lines 251-268
+	local function credentials_callback(error_code, status_code, response_body)
+		cat_print("accelbyte", "[AccelByte] Callback LoginWithClientCredentials : " .. IamServerUrl)
+		cat_print("accelbyte", "[AccelByte] Error_code : " .. error_code)
+		cat_print("accelbyte", "[AccelByte] Status_code : " .. status_code)
 
-		local response_json = json.decode(response_body)
+		local response_body_str = response_body or ""
 
-		Login:SerializeJsonString(response_json)
+		cat_print("accelbyte", "Response Body : " .. response_body_str)
+
+		local response_json = response_body and json.decode(response_body_str) or false
+
+		if response_json then
+			Login:SerializeJsonString(response_json)
+		end
 
 		if status_code == 200 then
-			print("[AccelByte] Successfully Created Bearer Token for Client Credentials")
+			cat_print("accelbyte", "[AccelByte] Successfully Created Bearer Token for Client Credentials")
 			callback(true)
 		else
-			print("[AccelByte] Failed to Create Bearer Token for Client Credentials")
+			cat_print("accelbyte", "[AccelByte] Failed to Create Bearer Token for Client Credentials")
 			callback(false)
 		end
 	end
 
-	Steam:http_request_post(IamServerUrl, callback, payload_content_type, payload, payload_size, headers)
+	HttpRequest:post(IamServerUrl, credentials_callback, payload_content_type, payload, headers)
 end
 
--- Lines 238-269
+-- Lines 273-320
 function Login:CheckPlatformIdForExistingAccount(platform_user_id, callback)
-	print("[AccelByte] Login:CheckPlatformIdForExistingAccount")
+	cat_print("accelbyte", "[AccelByte] Login:CheckPlatformIdForExistingAccount")
 
-	local platforms = "steam"
+	local platform_id = nil
+
+	if SystemInfo:distribution() == Idstring("STEAM") then
+		platform_id = SteamPlatformId
+	elseif SystemInfo:distribution() == Idstring("EPIC") then
+		platform_id = EpicPlatformId
+	end
+
+	if not platform_id then
+		callback(false)
+
+		return
+	end
+
+	if not Login.player_session.access_token then
+		callback(false)
+
+		return
+	end
+
 	local publisher_namespace = PublisherNamespace
-	local Url = string.format("%s/namespaces/%s/platformids/%s/platformuserids/%s", LambdaUrl, publisher_namespace, platforms, platform_user_id)
+	local Url = string.format("%s/namespaces/%s/platformids/%s/platformuserids/%s", LambdaUrl, publisher_namespace, platform_id, platform_user_id)
 	local headers = {
 		Authorization = "Bearer " .. Login.player_session.access_token,
 		Accept = "application/json"
 	}
 
-	-- Lines 250-265
-	local function callback(success, response_body)
-		print("[AccelByte] Callback CheckPlatformIdForExistingAccount : " .. Url)
+	-- Lines 301-316
+	local function existing_account_callback(success, response_body)
+		cat_print("accelbyte", "[AccelByte] Callback CheckPlatformIdForExistingAccount : " .. Url)
 
 		if success then
-			print("[AccelByte] CheckPlatformIdForExistingAccount Success ")
-			print("[AccelByte] Platform ID Found, logging in with Steam")
-			print("[AccelByte] Responses Body : " .. response_body)
+			cat_print("accelbyte", "[AccelByte] CheckPlatformIdForExistingAccount Success ")
+			cat_print("accelbyte", "[AccelByte] Platform ID Found, logging in with Steam")
+			cat_print("accelbyte", "[AccelByte] Responses Body : " .. response_body)
 
 			local response_json = json.decode(response_body)
 			publisher_user_id = response_json.userId
 
 			Login:SerializeJsonString(response_json)
 		else
-			print("[AccelByte] CheckPlatformIdForExistingAccount Failed ")
-			print("[AccelByte] Platform ID not found, Please create account on Starbreeze Player Portal")
+			cat_print("accelbyte", "[AccelByte] CheckPlatformIdForExistingAccount Failed ")
+			cat_print("accelbyte", "[AccelByte] Platform ID not found, Please create account on Starbreeze Player Portal")
 		end
 
 		callback(success)
 	end
 
-	print("[AccelByte] Call CheckPlatformIdForExistingAccount Platform User ID : " .. platform_user_id)
-	Steam:http_request(Url, callback, headers)
+	cat_print("accelbyte", "[AccelByte] Call CheckPlatformIdForExistingAccount Platform User ID : " .. platform_user_id)
+	HttpRequest:get(Url, existing_account_callback, headers)
 end
 
 EntitlementClazz = {
@@ -403,7 +467,7 @@ EntitlementPagingSlicedResult = {
 	paging = Paging
 }
 
--- Lines 439-446
+-- Lines 490-497
 function ConvertEntitlementClazzToEnum(value)
 	if value == "APP" then
 		return EntitlementClazz.APP
@@ -420,7 +484,7 @@ function ConvertEntitlementClazzToEnum(value)
 	end
 end
 
--- Lines 448-452
+-- Lines 499-503
 function ConvertEntitlementTypeToEnum(value)
 	if value == "DURABLE" then
 		return EntitlementType.DURABLE
@@ -431,7 +495,7 @@ function ConvertEntitlementTypeToEnum(value)
 	end
 end
 
--- Lines 454-461
+-- Lines 505-512
 function ConvertEntitlementStatusToEnum(value)
 	if value == "ACTIVE" then
 		return EntitlementStatus.ACTIVE
@@ -448,7 +512,7 @@ function ConvertEntitlementStatusToEnum(value)
 	end
 end
 
--- Lines 463-469
+-- Lines 514-520
 function ConvertAppTypeToEnum(value)
 	if value == "GAME" then
 		return AppType.GAME
@@ -463,7 +527,7 @@ function ConvertAppTypeToEnum(value)
 	end
 end
 
--- Lines 471-480
+-- Lines 522-531
 function ConvertSourceToEnum(value)
 	if value == "PURCHASE" then
 		return Source.PURCHASE
@@ -484,7 +548,7 @@ function ConvertSourceToEnum(value)
 	end
 end
 
--- Lines 482-486
+-- Lines 533-537
 function ConvertCurrencyTypeToEnum(value)
 	if value == "REAL" then
 		return CurrencyType.REAL
@@ -495,7 +559,7 @@ function ConvertCurrencyTypeToEnum(value)
 	end
 end
 
--- Lines 488-494
+-- Lines 539-545
 function ConvertCycleToEnum(value)
 	if value == "WEEKLY" then
 		return Cycle.WEEKLY
@@ -510,7 +574,7 @@ function ConvertCycleToEnum(value)
 	end
 end
 
--- Lines 496-504
+-- Lines 547-555
 function ConvertItemTypeToEnum(value)
 	if value == "APP" then
 		return ItemType.APP
@@ -534,13 +598,15 @@ Entitlement = {
 	result = EntitlementPagingSlicedResult
 }
 
--- Lines 517-541
+-- Lines 568-592
 function Entitlement:SetDLCEntitlements()
 	local dlc_entitlements = {}
 	local valid_namespace, valid_clazz, valid_type, valid_itemId, valid_status, valid_entitlement = nil
 
 	for _, entitlement_data in ipairs(Entitlement.result.data) do
-		table.insert(dlc_entitlements, entitlement_data.itemId)
+		if not table.contains(dlc_entitlements, entitlement_data.itemId) then
+			table.insert(dlc_entitlements, entitlement_data.itemId)
+		end
 	end
 
 	if managers.dlc then
@@ -548,9 +614,15 @@ function Entitlement:SetDLCEntitlements()
 	end
 end
 
--- Lines 543-568
+-- Lines 594-624
 function Entitlement:QueryEntitlementAsString(offset, limit, callback)
-	print("[AccelByte] Entitlement:QueryEntitlementAsString")
+	cat_print("accelbyte", "[AccelByte] Entitlement:QueryEntitlementAsString")
+
+	if not Login.player_session.access_token then
+		callback(false)
+
+		return
+	end
 
 	local namespace = Namespace
 	local user_id = Login.player_session.user_id
@@ -559,28 +631,34 @@ function Entitlement:QueryEntitlementAsString(offset, limit, callback)
 		Authorization = "Bearer " .. Login.player_session.access_token
 	}
 
-	-- Lines 554-566
+	-- Lines 610-622
 	local function callback(success, response_body)
 		if success then
-			print("[AccelByte] Callback QueryEntitlementAsString Success: " .. Url)
-			print("Response Body : " .. response_body)
+			cat_print("accelbyte", "[AccelByte] Callback QueryEntitlementAsString Success: " .. Url)
+			cat_print("accelbyte", "Response Body : " .. response_body)
 
 			local response_json = json.decode(response_body)
 
 			Entitlement:SerializeJsonString(response_json)
 		else
-			print("[AccelByte] Callback QueryEntitlementAsString Fail : " .. Url)
+			cat_print("accelbyte", "[AccelByte] Callback QueryEntitlementAsString Fail : " .. Url)
 		end
 
 		callback(success)
 	end
 
-	Steam:http_request(Url, callback, headers)
+	HttpRequest:get(Url, callback, headers)
 end
 
--- Lines 576-615
+-- Lines 632-674
 function Entitlement:UpdateStat(stat_code, stat_value, update_method, callback)
-	print("[AccelByte] Entitlement:UpdateStat")
+	cat_print("accelbyte", "[AccelByte] Entitlement:UpdateStat")
+
+	if not Login.player_session.access_token then
+		callback(false)
+
+		return
+	end
 
 	local payload_content_type = "application/json"
 	local namespace = Namespace
@@ -591,127 +669,136 @@ function Entitlement:UpdateStat(stat_code, stat_value, update_method, callback)
 		value = stat_value
 	}
 	local payload_json = json.encode(payload_body)
-	local payload_size = string.len(payload_json)
 	local headers = {
 		Authorization = "Bearer " .. Login.player_session.access_token
 	}
 
-	-- Lines 597-613
+	-- Lines 656-672
 	local function callback(error_code, status_code, response_body)
 		if status_code == 200 then
-			print("[AccelByte] Callback UpdateStat Success: " .. Url)
-			print("Response Body : " .. response_body)
+			cat_print("accelbyte", "[AccelByte] Callback UpdateStat Success: " .. Url)
+			cat_print("accelbyte", "Response Body : " .. response_body)
 
 			local response_json = json.decode(response_body)
 			local current_value = response_json.currentValue
 
-			print("Stat Code =" .. stat_code .. "  Current value = " .. current_value)
+			cat_print("accelbyte", "[AccelByte] Stat Code =" .. stat_code .. "  Current value = " .. current_value)
 			callback(true)
 		else
-			print("[AccelByte] Callback UpdateStat Fail : " .. Url)
-			print("[AccelByte] Callback UpdateStat ErrorCode : " .. error_code)
+			cat_print("accelbyte", "[AccelByte] Callback UpdateStat Fail : " .. Url)
+			cat_print("accelbyte", "[AccelByte] Callback UpdateStat ErrorCode : " .. error_code)
 			callback(false)
 		end
 	end
 
-	Steam:http_request_put(Url, callback, payload_content_type, payload_json, payload_size, headers)
+	HttpRequest:put(Url, callback, payload_content_type, payload_json, headers)
 end
 
--- Lines 618-718
+-- Lines 677-783
 function Entitlement:CheckAndVerifyUserEntitlement(callback)
 	Entitlement.result.data = {}
-	local steam_id = Steam:userid()
+	local player_id = managers.network.account:player_id()
 
 	Telemetry:send_on_game_launch()
 
-	-- Lines 629-634
+	-- Lines 687-692
 	local function entitlement_callback(success)
 		Entitlement:SetDLCEntitlements()
 	end
 
-	-- Lines 636-650
+	-- Lines 694-708
 	local function login_callback(error_code, status_code, response_body)
-		print("[AccelByte] Callback login_callback ")
+		cat_print("accelbyte", "Callback login_callback ")
 
 		Global.telemetry._has_account_checked = true
 
 		Telemetry:on_login()
 		Telemetry:on_login_screen_passed()
 
-		-- Lines 644-647
+		-- Lines 702-705
 		local function update_stat_callback(error_code, status_code, response_body)
-			print("[AccelByte] Callback update_stat_callback ")
+			cat_print("accelbyte", "Callback update_stat_callback ")
 			Entitlement:QueryEntitlementAsString(0, 100, entitlement_callback)
 		end
 
 		Entitlement:UpdateStat("sync-platformupgrade", 1, "INCREMENT", update_stat_callback)
 	end
 
-	-- Lines 652-694
+	-- Lines 710-759
 	local function check_platform_callback(success)
-		print("[AccelByte] Callback Platform Check")
+		cat_print("accelbyte", "Callback Platform Check")
 
 		if success then
 			Login.has_account = true
 
-			print("[AccelByte] Linked Starbreeze User for this Platform ID is found")
+			cat_print("accelbyte", "[AccelByte] Linked Starbreeze User for this Platform ID is found")
 
-			local ticket = Utility:get_steamticket()
-			local loginusingsteam = true
+			if SystemInfo:distribution() == Idstring("STEAM") then
+				local ticket = Utility:get_steamticket()
 
-			if loginusingsteam then
-				-- Lines 666-674
+				-- Lines 722-730
 				local function login_with_steam_callback(success, reason)
 					if success then
-						print("[AccelByte] Successfully authenticated the Steam Ticket, now logging in with Steam to AB Backend , callback reason " .. reason)
+						cat_print("accelbyte", "[AccelByte] Successfully authenticated the Steam Ticket, now logging in with Steam to AB Backend , callback reason " .. reason)
 						Login:LoginWithSteamToken(ticket, login_callback)
 					else
-						print("[AccelByte] Failed to authenticate Steam Ticket, reason : " .. reason)
+						cat_print("accelbyte", "[AccelByte] Failed to authenticate Steam Ticket, reason : " .. reason)
 					end
 				end
 
-				Steam:bind_steam_ticket_validate_callback(steam_id, login_with_steam_callback, ticket)
+				Steam:bind_steam_ticket_validate_callback(player_id, login_with_steam_callback, ticket)
+
+				return
+			end
+
+			if SystemInfo:distribution() == Idstring("EPIC") then
+				local ticket = EpicEntitlements:get_epic_ticket()
+
+				if string.len(ticket) > 0 then
+					cat_print("accelbyte", "[AccelByte] Successfully authenticated the Epic Ticket, now logging in with Epic to AB Backend")
+					Login:LoginWithEpicToken(ticket, login_callback)
+				else
+					cat_print("accelbyte", "[AccelByte] Failed to retrieve Epic Ticket")
+				end
 			else
 				Login:LoginWithUsernamePassword("username@email.com", "password_sample")
 			end
-
-			return
-		end
-
-		Login.has_account = false
-		Global.telemetry._has_account_checked = true
-
-		Telemetry:on_login()
-		Telemetry:on_login_screen_passed()
-		print("[AccelByte] Linked Starbreeze User for this Platform ID is not found")
-		Entitlement:SetDLCEntitlements()
-	end
-
-	-- Lines 697-709
-	local function get_client_token_callback(success)
-		if success then
-			Login:CheckPlatformIdForExistingAccount(steam_id, check_platform_callback)
 		else
 			Login.has_account = false
 			Global.telemetry._has_account_checked = true
 
 			Telemetry:on_login()
 			Telemetry:on_login_screen_passed()
-			print("[AccelByte] Login:LoginWithClientCredentials failed")
+			cat_print("accelbyte", "[AccelByte] Linked Starbreeze User for this Platform ID is not found")
 			Entitlement:SetDLCEntitlements()
 		end
 	end
 
-	if Login.player_session.platform_user_id == steam_id then
+	-- Lines 762-774
+	local function get_client_token_callback(success)
+		if success then
+			Login:CheckPlatformIdForExistingAccount(player_id, check_platform_callback)
+		else
+			Login.has_account = false
+			Global.telemetry._has_account_checked = true
+
+			Telemetry:on_login()
+			Telemetry:on_login_screen_passed()
+			cat_print("accelbyte", "[AccelByte] Login:LoginWithClientCredentials failed")
+			Entitlement:SetDLCEntitlements()
+		end
+	end
+
+	if Login.player_session.platform_user_id == player_id then
 		Entitlement:QueryEntitlementAsString(0, 100, entitlement_callback)
 	else
 		Login:LoginWithClientCredentials(get_client_token_callback)
 	end
 end
 
--- Lines 720-876
+-- Lines 785-941
 function Entitlement:SerializeJsonString(document)
-	print("[AccelByte] Entitlement:SerializeJsonString")
+	cat_print("accelbyte", "[AccelByte] Entitlement:SerializeJsonString")
 
 	local data = document.data
 

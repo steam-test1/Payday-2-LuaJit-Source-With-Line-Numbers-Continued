@@ -668,42 +668,40 @@ function DocumentBoxGui:button_pressed(index)
 	self._dialog:button_pressed(index)
 end
 
--- Lines 559-563
+-- Lines 559-561
 function DocumentBoxGui:hyperlink_pressed(link)
-	if SystemInfo:platform() == Idstring("WIN32") and SystemInfo:distribution() == Idstring("STEAM") then
-		Steam:overlay_activate("url", link)
-	end
+	managers.network.account:overlay_activate("url", link)
 end
 
--- Lines 565-567
+-- Lines 563-565
 function DocumentBoxGui:scroll_up(value)
 	self._text_panel:perform_scroll(-value)
 end
 
--- Lines 569-571
+-- Lines 567-569
 function DocumentBoxGui:scroll_down(value)
 	self._text_panel:perform_scroll(value)
 end
 
--- Lines 573-575
+-- Lines 571-573
 function DocumentBoxGui:release_scroll_bar()
 	self._text_panel:scroll_item():release_scroll_bar()
 end
 
--- Lines 577-578
+-- Lines 575-576
 function DocumentBoxGui:set_focus_button(button)
 end
 
--- Lines 580-581
+-- Lines 578-579
 function DocumentBoxGui:change_focus_button(dir)
 end
 
--- Lines 583-585
+-- Lines 581-583
 function DocumentBoxGui:get_focus_button()
 	return 1
 end
 
--- Lines 587-596
+-- Lines 585-594
 function DocumentBoxGui:set_fade(fade)
 	self:_set_alpha(fade)
 
@@ -716,18 +714,18 @@ function DocumentBoxGui:set_fade(fade)
 	end
 end
 
--- Lines 598-601
+-- Lines 596-599
 function DocumentBoxGui:_set_alpha(alpha)
 	self._panel:set_alpha(alpha)
 	self._panel:set_visible(alpha ~= 0)
 end
 
--- Lines 603-605
+-- Lines 601-603
 function DocumentBoxGui:visible()
 	return self._visible
 end
 
--- Lines 607-621
+-- Lines 605-619
 function DocumentBoxGui:close()
 	self:remove_self()
 

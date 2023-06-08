@@ -1,23 +1,28 @@
 DLCManager = DLCManager or class()
 DLCManager.PLATFORM_CLASS_MAP = {}
 
--- Lines 6-9
+-- Lines 6-14
 function DLCManager:new(...)
 	local platform = SystemInfo:platform()
+	local platform_key = platform:key()
 
-	return (self.PLATFORM_CLASS_MAP[platform:key()] or GenericDLCManager):new(...)
+	if platform == Idstring("WIN32") then
+		platform_key = SystemInfo:distribution():key()
+	end
+
+	return (self.PLATFORM_CLASS_MAP[platform_key] or GenericDLCManager):new(...)
 end
 
 GenericDLCManager = GenericDLCManager or class()
 
--- Lines 13-18
+-- Lines 18-23
 function GenericDLCManager:init()
 	self._debug_on = Application:production_build()
 
 	self:_set_dlc_save_table()
 end
 
--- Lines 20-24
+-- Lines 25-29
 function GenericDLCManager:_set_dlc_save_table()
 	if not Global.dlc_save then
 		Global.dlc_save = {
@@ -26,7 +31,19 @@ function GenericDLCManager:_set_dlc_save_table()
 	end
 end
 
--- Lines 26-38
+-- Lines 32-34
+function GenericDLCManager:chk_vr_dlc()
+	return nil
+end
+
+-- Lines 38-42
+function GenericDLCManager:check_pdth(clbk)
+	if clbk then
+		clbk(false, false)
+	end
+end
+
+-- Lines 45-57
 function GenericDLCManager:setup()
 	self:_modify_locked_content()
 	self:_create_achievement_locked_content_table()
@@ -35,7 +52,7 @@ function GenericDLCManager:setup()
 	self:_create_infamy_locked_content_table()
 end
 
--- Lines 40-66
+-- Lines 59-85
 function GenericDLCManager:_create_achievement_locked_content_table()
 	self._achievement_locked_content = {}
 	self._achievement_milestone_locked_content = {}
@@ -67,7 +84,7 @@ function GenericDLCManager:_create_achievement_locked_content_table()
 	end
 end
 
--- Lines 69-91
+-- Lines 88-110
 function GenericDLCManager:_create_skirmish_locked_content_table()
 	self._skirmish_locked_content = {}
 
@@ -96,7 +113,7 @@ function GenericDLCManager:_create_skirmish_locked_content_table()
 	end
 end
 
--- Lines 95-103
+-- Lines 114-122
 function GenericDLCManager:_create_crimespree_locked_content_table()
 	self._crimespree_locked_content = {}
 
@@ -108,7 +125,7 @@ function GenericDLCManager:_create_crimespree_locked_content_table()
 	end
 end
 
--- Lines 107-119
+-- Lines 126-138
 function GenericDLCManager:_create_infamy_locked_content_table()
 	self._infamy_locked_content = {}
 
@@ -123,13 +140,13 @@ function GenericDLCManager:_create_infamy_locked_content_table()
 	end
 end
 
--- Lines 124-170
+-- Lines 143-189
 function GenericDLCManager:_modify_locked_content()
 	if SystemInfo:platform() == Idstring("WIN32") then
 		return
 	end
 
-	-- Lines 129-146
+	-- Lines 148-165
 	local function _modify_loot_drop(loot_drop)
 		local entry = tweak_data.blackmarket[loot_drop.type_items] and tweak_data.blackmarket[loot_drop.type_items][loot_drop.item_entry]
 
@@ -181,7 +198,7 @@ function GenericDLCManager:_modify_locked_content()
 	end
 end
 
--- Lines 172-182
+-- Lines 191-201
 function GenericDLCManager:is_content_achievement_locked(category, entry)
 	local achievement_dlc_id = self._achievement_locked_content and self._achievement_locked_content[category] and self._achievement_locked_content[category][entry]
 
@@ -195,7 +212,7 @@ function GenericDLCManager:is_content_achievement_locked(category, entry)
 	return false
 end
 
--- Lines 183-193
+-- Lines 202-212
 function GenericDLCManager:is_content_achievement_milestone_locked(category, entry)
 	local dlc_id = self._achievement_milestone_locked_content and self._achievement_milestone_locked_content[category] and self._achievement_milestone_locked_content[category][entry]
 	local dlc_tweak = tweak_data.dlc[dlc_id]
@@ -208,110 +225,110 @@ function GenericDLCManager:is_content_achievement_milestone_locked(category, ent
 	return false
 end
 
--- Lines 195-197
+-- Lines 214-216
 function GenericDLCManager:achievement_locked_content()
 	return self._achievement_locked_content
 end
 
--- Lines 198-200
+-- Lines 217-219
 function GenericDLCManager:is_mask_achievement_locked(mask_id)
 	return self._achievement_locked_content.masks and self._achievement_locked_content.masks[mask_id]
 end
 
--- Lines 201-203
+-- Lines 220-222
 function GenericDLCManager:is_material_achievement_locked(material_id)
 	return self._achievement_locked_content.materials and self._achievement_locked_content.materials[material_id]
 end
 
--- Lines 204-206
+-- Lines 223-225
 function GenericDLCManager:is_texture_achievement_locked(texture_id)
 	return self._achievement_locked_content.textures and self._achievement_locked_content.textures[texture_id]
 end
 
--- Lines 207-209
+-- Lines 226-228
 function GenericDLCManager:is_weapon_mod_achievement_locked(weapon_mod_id)
 	return self._achievement_locked_content.weapon_mods and self._achievement_locked_content.weapon_mods[weapon_mod_id]
 end
 
--- Lines 210-212
+-- Lines 229-231
 function GenericDLCManager:is_mask_achievement_milestone_locked(mask_id)
 	return self._achievement_milestone_locked_content.masks and self._achievement_milestone_locked_content.masks[mask_id]
 end
 
--- Lines 213-215
+-- Lines 232-234
 function GenericDLCManager:is_weapon_mod_achievement_milestone_locked(weapon_mod_id)
 	return self._achievement_milestone_locked_content.weapon_mods and self._achievement_milestone_locked_content.weapon_mods[weapon_mod_id]
 end
 
--- Lines 217-219
+-- Lines 236-238
 function GenericDLCManager:get_achievement_from_locked_content(category, id)
 	return self._achievement_locked_content[category] and self._achievement_locked_content[category][id] or self._achievement_milestone_locked_content[category] and self._achievement_milestone_locked_content[category][id]
 end
 
--- Lines 222-224
+-- Lines 241-243
 function GenericDLCManager:skirmish_locked_content()
 	return self._skirmish_locked_content
 end
 
--- Lines 225-227
+-- Lines 244-246
 function GenericDLCManager:is_content_skirmish_locked(category, entry)
 	return self._skirmish_locked_content and self._skirmish_locked_content[category] and self._skirmish_locked_content[category][entry] and true or false
 end
 
--- Lines 231-233
+-- Lines 250-252
 function GenericDLCManager:crimespree_locked_content()
 	return self._crimespree_locked_content
 end
 
--- Lines 234-236
+-- Lines 253-255
 function GenericDLCManager:is_content_crimespree_locked(category, entry)
 	return self._crimespree_locked_content and self._crimespree_locked_content[category] and self._crimespree_locked_content[category][entry] and true or false
 end
 
--- Lines 240-242
+-- Lines 259-261
 function GenericDLCManager:infamy_locked_content()
 	return self._infamy_locked_content
 end
 
--- Lines 243-245
+-- Lines 262-264
 function GenericDLCManager:is_content_infamy_locked(category, entry)
 	return self._infamy_locked_content and self._infamy_locked_content[category] and self._infamy_locked_content[category][entry] and true or false
 end
 
--- Lines 248-250
+-- Lines 267-269
 function GenericDLCManager:dlc_locked_content()
 	return self._dlc_locked_content
 end
 
--- Lines 253-255
+-- Lines 272-274
 function GenericDLCManager:weapon_color_achievement_locked_content(weapon_color)
 	return self._achievement_locked_content.weapon_skins and self._achievement_locked_content.weapon_skins[weapon_color]
 end
 
--- Lines 256-258
+-- Lines 275-277
 function GenericDLCManager:weapon_color_achievement_milestone_locked_content(weapon_color)
 	return self._achievement_milestone_locked_content.weapon_skins and self._achievement_milestone_locked_content.weapon_skins[weapon_color]
 end
 
--- Lines 261-263
+-- Lines 280-282
 function GenericDLCManager:on_tweak_data_reloaded()
 	self:setup()
 end
 
--- Lines 265-267
+-- Lines 284-286
 function GenericDLCManager:init_finalize()
 	managers.savefile:add_load_sequence_done_callback_handler(callback(self, self, "_load_done"))
 end
 
--- Lines 269-270
+-- Lines 288-289
 function GenericDLCManager:chk_content_updated()
 end
 
--- Lines 277-317
+-- Lines 296-334
 function GenericDLCManager:give_dlc_and_verify_blackmarket()
 	self:give_dlc_package()
 
-	Global.dlc_manager.verify_entitlements = nil
+	Global.dlc_manager.verify_content_update = nil
 
 	managers.event_jobs:aquire_claimed_upgrades()
 	managers.infamy:give_dlc()
@@ -324,12 +341,12 @@ function GenericDLCManager:give_dlc_and_verify_blackmarket()
 	end
 end
 
--- Lines 319-321
+-- Lines 336-338
 function GenericDLCManager:_load_done(...)
 	self:give_dlc_and_verify_blackmarket()
 end
 
--- Lines 323-391
+-- Lines 340-408
 function GenericDLCManager:give_dlc_package()
 	for package_id, data in pairs(tweak_data.dlc) do
 		if self:is_dlc_unlocked(package_id) then
@@ -394,7 +411,7 @@ function GenericDLCManager:give_dlc_package()
 	end
 end
 
--- Lines 393-490
+-- Lines 410-507
 function GenericDLCManager:give_missing_package()
 	local name_converter = {
 		colors = "color",
@@ -494,7 +511,7 @@ function GenericDLCManager:give_missing_package()
 	end
 end
 
--- Lines 492-518
+-- Lines 509-535
 function GenericDLCManager:list_dlc_package(dlcs)
 	local t = {}
 
@@ -529,19 +546,19 @@ function GenericDLCManager:list_dlc_package(dlcs)
 	return t
 end
 
--- Lines 520-522
+-- Lines 537-539
 function GenericDLCManager:save(data)
 	data.dlc_save = Global.dlc_save
 end
 
--- Lines 524-528
+-- Lines 541-545
 function GenericDLCManager:load(data)
 	if data.dlc_save and data.dlc_save.packages then
 		Global.dlc_save = data.dlc_save
 	end
 end
 
--- Lines 530-534
+-- Lines 547-551
 function GenericDLCManager:on_reset_profile()
 	Global.dlc_save = nil
 
@@ -549,24 +566,24 @@ function GenericDLCManager:on_reset_profile()
 	self:give_dlc_package()
 end
 
--- Lines 536-539
+-- Lines 553-556
 function GenericDLCManager:on_achievement_award_loot()
 	Application:debug("GenericDLCManager:on_achievement_award_loot()")
 	self:give_dlc_package()
 end
 
--- Lines 541-542
+-- Lines 558-559
 function GenericDLCManager:on_signin_complete()
 end
 
--- Lines 544-547
+-- Lines 561-564
 function GenericDLCManager:global_value_to_dlc(global_value)
 	local gv_tweak = tweak_data.lootdrop.global_values[global_value]
 
 	return gv_tweak and gv_tweak.dlc and global_value or nil
 end
 
--- Lines 549-557
+-- Lines 566-574
 function GenericDLCManager:dlc_to_global_value(dlc)
 	local gv_tweak = tweak_data.lootdrop.global_values[dlc]
 
@@ -579,14 +596,14 @@ function GenericDLCManager:dlc_to_global_value(dlc)
 	return dlc_data and dlc_data.content and dlc_data.content.loot_global_value or nil
 end
 
--- Lines 559-562
+-- Lines 576-579
 function GenericDLCManager:is_global_value_unlocked(global_value)
 	local dlc = self:global_value_to_dlc(global_value)
 
 	return not dlc or self:is_dlc_unlocked(dlc)
 end
 
--- Lines 564-571
+-- Lines 581-588
 function GenericDLCManager:is_dlcs_unlocked(list_of_dlcs)
 	for _, dlc in ipairs(list_of_dlcs) do
 		if not self:is_dlc_unlocked(dlc) then
@@ -597,12 +614,16 @@ function GenericDLCManager:is_dlcs_unlocked(list_of_dlcs)
 	return true
 end
 
--- Lines 573-575
+-- Lines 590-592
 function GenericDLCManager:is_dlc_unlocked(dlc)
 	return tweak_data.dlc[dlc] and tweak_data.dlc[dlc].free or self:has_dlc(dlc)
 end
 
--- Lines 577-601
+GenericDLCManager.dlc_data_name_converter = {
+	cce = "career_criminal_edition"
+}
+
+-- Lines 598-620
 function GenericDLCManager:has_dlc(dlc)
 	local dlc_tweak = tweak_data.dlc[dlc]
 
@@ -617,10 +638,7 @@ function GenericDLCManager:has_dlc(dlc)
 		end
 	end
 
-	if dlc == "cce" then
-		dlc = "career_criminal_edition"
-	end
-
+	dlc = self.dlc_data_name_converter[dlc] or dlc
 	local dlc_data = Global.dlc_manager.all_dlc_data[dlc]
 
 	if not dlc_data then
@@ -633,17 +651,17 @@ function GenericDLCManager:has_dlc(dlc)
 	return dlc_data.verified
 end
 
--- Lines 603-605
+-- Lines 622-624
 function GenericDLCManager:has_full_game()
 	return Global.dlc_manager.all_dlc_data.full_game.verified
 end
 
--- Lines 607-609
+-- Lines 626-628
 function GenericDLCManager:is_trial()
 	return not self:has_full_game()
 end
 
--- Lines 611-619
+-- Lines 630-638
 function GenericDLCManager:is_installing()
 	if not DB:is_bundled() or SystemInfo:platform() == Idstring("WIN32") then
 		return false, 1
@@ -655,7 +673,7 @@ function GenericDLCManager:is_installing()
 	return is_installing, install_progress
 end
 
--- Lines 622-627
+-- Lines 641-646
 function GenericDLCManager:dlcs_string()
 	local s = ""
 	s = s .. (self:is_dlc_unlocked("preorder") and "preorder " or "")
@@ -663,12 +681,12 @@ function GenericDLCManager:dlcs_string()
 	return s
 end
 
--- Lines 629-631
+-- Lines 648-650
 function GenericDLCManager:has_corrupt_data()
 	return self._has_corrupt_data
 end
 
--- Lines 635-637
+-- Lines 654-656
 function GenericDLCManager:has_all_dlcs()
 	return self:is_dlcs_unlocked({
 		"armored_transport",
@@ -676,7 +694,7 @@ function GenericDLCManager:has_all_dlcs()
 	})
 end
 
--- Lines 641-643
+-- Lines 660-662
 function GenericDLCManager:has_goty_weapon_bundle_2014()
 	return self:is_dlcs_unlocked({
 		"gage_pack",
@@ -689,7 +707,7 @@ function GenericDLCManager:has_goty_weapon_bundle_2014()
 	})
 end
 
--- Lines 647-649
+-- Lines 666-668
 function GenericDLCManager:has_goty_heist_bundle_2014()
 	return self:is_dlcs_unlocked({
 		"armored_transport",
@@ -699,222 +717,227 @@ function GenericDLCManager:has_goty_heist_bundle_2014()
 	})
 end
 
--- Lines 653-655
+-- Lines 672-674
 function GenericDLCManager:has_pd2_clan()
 	return self:is_dlc_unlocked("pd2_clan")
 end
 
--- Lines 658-660
+-- Lines 676-678
+function GenericDLCManager:has_john_wick_character()
+	return self:is_dlc_unlocked("john_wick_character")
+end
+
+-- Lines 681-683
 function GenericDLCManager:has_raidww2_clan()
 	return self:is_dlc_unlocked("raidww2_clan")
 end
 
--- Lines 663-665
+-- Lines 686-688
 function GenericDLCManager:has_twitch_pack()
 	return self:is_dlc_unlocked("twitch_pack")
 end
 
--- Lines 667-669
+-- Lines 690-692
 function GenericDLCManager:has_turtles()
 	return self:is_dlc_unlocked("turtles")
 end
 
--- Lines 671-673
+-- Lines 694-696
 function GenericDLCManager:has_dragon()
 	return self:is_dlc_unlocked("dragon")
 end
 
--- Lines 676-678
+-- Lines 699-701
 function GenericDLCManager:has_dbd_clan()
 	return self:is_dlc_unlocked("dbd_clan")
 end
 
--- Lines 680-683
+-- Lines 703-706
 function GenericDLCManager:has_dbd_deluxe()
 	return Global.dlc_manager.all_dlc_data.dbd_deluxe and Global.dlc_manager.all_dlc_data.dbd_deluxe.verified or Global.dlc_manager.all_dlc_data.dbd_regular and Global.dlc_manager.all_dlc_data.dbd_regular.verified
 end
 
--- Lines 687-689
+-- Lines 710-712
 function GenericDLCManager:has_solus_clan()
 	return self:is_dlc_unlocked("solus_clan")
 end
 
--- Lines 693-695
+-- Lines 716-718
 function GenericDLCManager:has_tango()
 	return self:is_dlc_unlocked("tango")
 end
 
--- Lines 699-701
+-- Lines 722-724
 function GenericDLCManager:has_chico()
 	return self:is_dlc_unlocked("chico")
 end
 
--- Lines 705-707
+-- Lines 728-730
 function GenericDLCManager:has_friend()
 	return self:is_dlc_unlocked("friend")
 end
 
--- Lines 711-713
+-- Lines 734-736
 function GenericDLCManager:has_sparkle()
 	return self:is_dlc_unlocked("sparkle")
 end
 
--- Lines 717-719
+-- Lines 740-742
 function GenericDLCManager:has_swm()
 	return self:is_dlc_unlocked("swm")
 end
 
--- Lines 723-725
+-- Lines 746-748
 function GenericDLCManager:has_spa()
 	return self:is_dlc_unlocked("spa")
 end
 
--- Lines 729-731
+-- Lines 752-754
 function GenericDLCManager:has_sha()
 	return self:is_dlc_unlocked("sha")
 end
 
--- Lines 735-737
+-- Lines 758-760
 function GenericDLCManager:has_rvd()
 	return self:is_dlc_unlocked("rvd")
 end
 
--- Lines 741-743
+-- Lines 764-766
 function GenericDLCManager:has_grv()
 	return self:is_dlc_unlocked("grv")
 end
 
--- Lines 747-749
+-- Lines 770-772
 function GenericDLCManager:has_amp()
 	return self:is_dlc_unlocked("amp")
 end
 
--- Lines 753-755
+-- Lines 776-778
 function GenericDLCManager:has_mp2()
 	return self:is_dlc_unlocked("mp2")
 end
 
--- Lines 759-761
+-- Lines 782-784
 function GenericDLCManager:has_ant()
 	return Global.dlc_manager.all_dlc_data.ant and Global.dlc_manager.all_dlc_data.ant.verified
 end
 
--- Lines 771-773
+-- Lines 794-796
 function GenericDLCManager:has_pn2()
 	return self:is_dlc_unlocked("pn2")
 end
 
--- Lines 777-779
+-- Lines 800-802
 function GenericDLCManager:has_max()
 	return self:is_dlc_unlocked("max")
 end
 
--- Lines 783-785
+-- Lines 806-808
 function GenericDLCManager:has_dgm()
 	return self:is_dlc_unlocked("dgm")
 end
 
--- Lines 789-791
+-- Lines 812-814
 function GenericDLCManager:has_gcm()
 	return self:is_dlc_unlocked("gcm")
 end
 
--- Lines 795-797
+-- Lines 818-820
 function GenericDLCManager:has_ztm()
 	return self:is_dlc_unlocked("ztm")
 end
 
--- Lines 801-803
+-- Lines 824-826
 function GenericDLCManager:has_joy()
 	return self:is_dlc_unlocked("joy")
 end
 
--- Lines 807-809
+-- Lines 830-832
 function GenericDLCManager:has_fdm()
 	return self:is_dlc_unlocked("fdm")
 end
 
--- Lines 813-815
+-- Lines 836-838
 function GenericDLCManager:has_ecp()
 	return self:is_dlc_unlocked("ecp")
 end
 
--- Lines 819-821
+-- Lines 842-844
 function GenericDLCManager:has_myh()
 	return self:is_dlc_unlocked("myh")
 end
 
--- Lines 825-827
+-- Lines 848-850
 function GenericDLCManager:has_pbm()
 	return self:is_dlc_unlocked("pbm")
 end
 
--- Lines 831-833
+-- Lines 854-856
 function GenericDLCManager:has_fgl()
 	return self:is_dlc_unlocked("fgl")
 end
 
--- Lines 837-839
+-- Lines 860-862
 function GenericDLCManager:has_osa()
 	return self:is_dlc_unlocked("osa")
 end
 
--- Lines 849-851
+-- Lines 872-874
 function GenericDLCManager:has_gwm()
 	return self:is_dlc_unlocked("gwm")
 end
 
--- Lines 855-857
+-- Lines 878-880
 function GenericDLCManager:has_ami()
 	return self:is_dlc_unlocked("ami")
 end
 
--- Lines 867-869
+-- Lines 890-892
 function GenericDLCManager:has_pmp()
 	return self:is_dlc_unlocked("pmp")
 end
 
--- Lines 873-875
+-- Lines 896-898
 function GenericDLCManager:has_ghm()
 	return self:is_dlc_unlocked("ghm")
 end
 
--- Lines 879-885
+-- Lines 902-908
 function GenericDLCManager:has_pda8_wpn_money()
 	return true
 end
 
--- Lines 889-897
+-- Lines 912-920
 function GenericDLCManager:has_victor_mods_pack_1()
 	return managers.event_jobs and (managers.event_jobs:has_already_claimed_reward("cg22_2", 1) or managers.event_jobs:has_already_claimed_reward("cg22_2", 2) or managers.event_jobs:has_already_claimed_reward("cg22_2", 3))
 end
 
--- Lines 899-906
+-- Lines 922-929
 function GenericDLCManager:has_victor_mods_pack_2()
 	return managers.event_jobs and (managers.event_jobs:has_already_claimed_reward("cg22_3", 1) or managers.event_jobs:has_already_claimed_reward("cg22_3", 2))
 end
 
--- Lines 909-911
+-- Lines 932-934
 function GenericDLCManager:has_gage_pack_shotgun()
 	return self:is_dlc_unlocked("gage_pack_shotgun")
 end
 
--- Lines 913-915
+-- Lines 936-938
 function GenericDLCManager:has_bbq()
 	return self:is_dlc_unlocked("bbq")
 end
 
--- Lines 918-920
+-- Lines 941-943
 function GenericDLCManager:has_a10mask()
 	return self:is_dlc_unlocked("a10mask")
 end
 
--- Lines 924-936
+-- Lines 947-959
 function GenericDLCManager:has_mrwi_deck()
 	return managers.event_jobs:has_completed_and_claimed_rewards("cg22_community_4")
 end
 
--- Lines 938-943
+-- Lines 961-966
 function GenericDLCManager:has_mrwi_deck_equipped_mimicing(choice)
 	local has_deck_unlocked = self:has_mrwi_deck()
 	local has_deck_equipped = managers.skilltree:get_specialization_value("current_specialization") == 23
@@ -923,29 +946,29 @@ function GenericDLCManager:has_mrwi_deck_equipped_mimicing(choice)
 	return has_deck_unlocked and has_deck_equipped and has_choice
 end
 
--- Lines 946-948
+-- Lines 969-971
 function GenericDLCManager:has_chico_or_mrwi_deck()
 	return self:has_chico() or self:has_mrwi_deck_equipped_mimicing(17)
 end
 
--- Lines 952-954
+-- Lines 975-977
 function GenericDLCManager:has_ecp_or_mrwi_deck()
 	return self:has_ecp() or self:has_mrwi_deck_equipped_mimicing(20)
 end
 
--- Lines 961-963
+-- Lines 984-986
 function GenericDLCManager:has_goty_all_dlc_bundle_2014()
 	return self:has_goty_weapon_bundle_2014() and self:has_goty_heist_bundle_2014() and self:is_dlcs_unlocked({
 		"character_pack_clover"
 	})
 end
 
--- Lines 994-996
+-- Lines 1017-1019
 function GenericDLCManager:has_soundtrack_or_cce()
 	return self:is_dlc_unlocked("soundtrack") or self:is_dlc_unlocked("cce")
 end
 
--- Lines 1000-1005
+-- Lines 1023-1028
 function GenericDLCManager:has_freed_old_hoxton(data)
 	if SystemInfo:platform() == Idstring("WIN32") then
 		return self:is_dlc_unlocked("pd2_clan") and self:has_achievement(data)
@@ -954,58 +977,56 @@ function GenericDLCManager:has_freed_old_hoxton(data)
 	return true
 end
 
--- Lines 1009-1011
+-- Lines 1032-1034
 function GenericDLCManager:has_armored_transport_and_intel(data)
 	return self:is_dlc_unlocked("armored_transport") and self:has_achievement(data)
 end
 
--- Lines 1015-1017
+-- Lines 1038-1040
 function GenericDLCManager:has_hlm2()
 	return Global.dlc_manager.all_dlc_data.hlm2 and Global.dlc_manager.all_dlc_data.hlm2.verified or self:is_dlc_unlocked("hlm2_aus")
 end
 
--- Lines 1021-1023
+-- Lines 1044-1046
 function GenericDLCManager:has_hlm2_deluxe()
 	return Global.dlc_manager.all_dlc_data.hlm2_deluxe and Global.dlc_manager.all_dlc_data.hlm2_deluxe.verified or self:is_dlc_unlocked("hlm2_aus")
 end
 
--- Lines 1028-1030
+-- Lines 1051-1053
 function GenericDLCManager:has_sawp_dlc_or_achievement(data)
 	return self:is_dlc_unlocked("sawp") or self:has_achievement(data)
 end
 
--- Lines 1036-1038
+-- Lines 1059-1061
 function GenericDLCManager:has_srtr_or_srtr2()
 	return Global.dlc_manager.all_dlc_data.srtr and Global.dlc_manager.all_dlc_data.srtr.verified or Global.dlc_manager.all_dlc_data.srtr2 and Global.dlc_manager.all_dlc_data.srtr2.verified
 end
 
--- Lines 1043-1045
+-- Lines 1066-1068
 function GenericDLCManager:has_parent_dlc(data)
 	return data and data.parent_dlc and self:is_dlc_unlocked(data.parent_dlc)
 end
 
--- Lines 1049-1052
+-- Lines 1072-1075
 function GenericDLCManager:has_achievement(data)
 	local achievement = managers.achievment and data and data.achievement_id and managers.achievment:get_info(data.achievement_id)
 
 	return achievement and achievement.awarded or false
 end
 
--- Lines 1055-1058
+-- Lines 1078-1081
 function GenericDLCManager:has_achievement_milestone(data)
 	local milestone = data and data.milestone_id and managers.achievment:get_milestone(data.milestone_id)
 
 	return milestone.awarded
 end
 
--- Lines 1069-1076
+-- Lines 1092-1094
 function GenericDLCManager:has_stat(data)
-	local sa_handler = Steam:sa_handler()
-
-	return sa_handler:get_stat(data.stat_id) >= (data.stat_value or 1)
+	return true
 end
 
--- Lines 1079-1081
+-- Lines 1097-1099
 function GenericDLCManager:has_dlc_or_soundtrack_or_cce(dlc)
 	return managers.dlc:is_dlc_unlocked(dlc) or managers.dlc:has_soundtrack_or_cce()
 end
@@ -1014,7 +1035,7 @@ PS3DLCManager = PS3DLCManager or class(GenericDLCManager)
 DLCManager.PLATFORM_CLASS_MAP[Idstring("PS3"):key()] = PS3DLCManager
 PS3DLCManager.SERVICE_ID = "EP4040-BLES01902_00"
 
--- Lines 1090-1126
+-- Lines 1108-1144
 function PS3DLCManager:init()
 	PS3DLCManager.super.init(self)
 
@@ -1052,7 +1073,7 @@ function PS3DLCManager:init()
 	end
 end
 
--- Lines 1129-1148
+-- Lines 1147-1166
 function PS3DLCManager:_verify_dlcs()
 	local all_dlc = {}
 
@@ -1078,7 +1099,7 @@ function PS3DLCManager:_verify_dlcs()
 	end
 end
 
--- Lines 1150-1171
+-- Lines 1168-1189
 function PS3DLCManager:_init_NPCommerce()
 	PS3:set_service_id(self.SERVICE_ID)
 
@@ -1107,7 +1128,7 @@ function PS3DLCManager:_init_NPCommerce()
 	return true
 end
 
--- Lines 1173-1188
+-- Lines 1191-1206
 function PS3DLCManager:buy_full_game()
 	print("[PS3DLCManager:buy_full_game]")
 
@@ -1130,7 +1151,7 @@ function PS3DLCManager:buy_full_game()
 	}
 end
 
--- Lines 1190-1205
+-- Lines 1208-1223
 function PS3DLCManager:buy_product(product_name)
 	print("[PS3DLCManager:buy_product]", product_name)
 
@@ -1153,7 +1174,7 @@ function PS3DLCManager:buy_product(product_name)
 	}
 end
 
--- Lines 1207-1261
+-- Lines 1225-1279
 function PS3DLCManager:cb_NPCommerce(result, info)
 	print("[PS3DLCManager:cb_NPCommerce]", result, info)
 
@@ -1233,18 +1254,18 @@ function PS3DLCManager:cb_NPCommerce(result, info)
 	print("/[PS3DLCManager:cb_NPCommerce]")
 end
 
--- Lines 1265-1268
+-- Lines 1283-1286
 function PS3DLCManager:_close_NPCommerce()
 	print("[PS3DLCManager:_close_NPCommerce]")
 	NPCommerce:destroy()
 end
 
--- Lines 1272-1274
+-- Lines 1290-1292
 function PS3DLCManager:cb_confirm_purchase_yes(sku_data)
 	NPCommerce:checkout(sku_data.skuid)
 end
 
--- Lines 1278-1281
+-- Lines 1296-1299
 function PS3DLCManager:cb_confirm_purchase_no()
 	self._activity = nil
 
@@ -1254,7 +1275,7 @@ end
 X360DLCManager = X360DLCManager or class(GenericDLCManager)
 DLCManager.PLATFORM_CLASS_MAP[Idstring("X360"):key()] = X360DLCManager
 
--- Lines 1288-1311
+-- Lines 1306-1329
 function X360DLCManager:init()
 	X360DLCManager.super.init(self)
 
@@ -1277,7 +1298,7 @@ function X360DLCManager:init()
 	end
 end
 
--- Lines 1313-1341
+-- Lines 1331-1359
 function X360DLCManager:_verify_dlcs()
 	local found_dlc = {}
 	local status = XboxLive:check_dlc_availability(0, 100, found_dlc)
@@ -1313,7 +1334,7 @@ function X360DLCManager:_verify_dlcs()
 	end
 end
 
--- Lines 1343-1345
+-- Lines 1361-1363
 function X360DLCManager:on_signin_complete()
 	self:_verify_dlcs()
 end
@@ -1321,7 +1342,7 @@ end
 PS4DLCManager = PS4DLCManager or class(GenericDLCManager)
 DLCManager.PLATFORM_CLASS_MAP[Idstring("PS4"):key()] = PS4DLCManager
 
--- Lines 1353-1624
+-- Lines 1371-1642
 function PS4DLCManager:init()
 	PS4DLCManager.super.init(self)
 
@@ -1558,7 +1579,7 @@ function PS4DLCManager:init()
 	end
 end
 
--- Lines 1627-1659
+-- Lines 1645-1677
 function PS4DLCManager:_verify_dlcs()
 	local unlock_all_test = false
 	local titleVersion = PS3:get_titleVersion()
@@ -1580,7 +1601,7 @@ function PS4DLCManager:_verify_dlcs()
 	end
 end
 
--- Lines 1661-1681
+-- Lines 1679-1699
 function PS4DLCManager:_init_NPCommerce()
 	local result = NPCommerce:init()
 
@@ -1607,7 +1628,7 @@ function PS4DLCManager:_init_NPCommerce()
 	return true
 end
 
--- Lines 1683-1698
+-- Lines 1701-1716
 function PS4DLCManager:buy_full_game()
 	print("[PS4DLCManager:buy_full_game]")
 
@@ -1630,7 +1651,7 @@ function PS4DLCManager:buy_full_game()
 	}
 end
 
--- Lines 1700-1715
+-- Lines 1718-1733
 function PS4DLCManager:buy_product(product_name)
 	print("[PS4DLCManager:buy_product]", product_name)
 
@@ -1653,7 +1674,7 @@ function PS4DLCManager:buy_product(product_name)
 	}
 end
 
--- Lines 1717-1771
+-- Lines 1735-1789
 function PS4DLCManager:cb_NPCommerce(result, info)
 	print("[PS4DLCManager:cb_NPCommerce]", result, info)
 
@@ -1733,18 +1754,18 @@ function PS4DLCManager:cb_NPCommerce(result, info)
 	print("/[PS4DLCManager:cb_NPCommerce]")
 end
 
--- Lines 1775-1778
+-- Lines 1793-1796
 function PS4DLCManager:_close_NPCommerce()
 	print("[PS4DLCManager:_close_NPCommerce]")
 	NPCommerce:destroy()
 end
 
--- Lines 1782-1784
+-- Lines 1800-1802
 function PS4DLCManager:cb_confirm_purchase_yes(sku_data)
 	NPCommerce:checkout(sku_data.skuid)
 end
 
--- Lines 1788-1791
+-- Lines 1806-1809
 function PS4DLCManager:cb_confirm_purchase_no()
 	self._activity = nil
 
@@ -1754,7 +1775,7 @@ end
 XB1DLCManager = XB1DLCManager or class(GenericDLCManager)
 DLCManager.PLATFORM_CLASS_MAP[Idstring("XB1"):key()] = XB1DLCManager
 
--- Lines 1799-2072
+-- Lines 1817-2090
 function XB1DLCManager:init()
 	XB1DLCManager.super.init(self)
 
@@ -1871,7 +1892,7 @@ function XB1DLCManager:init()
 	end
 end
 
--- Lines 2074-2095
+-- Lines 2092-2113
 function XB1DLCManager:_verify_dlcs()
 	local dlc_content_updated = false
 	local old_verified = nil
@@ -1894,7 +1915,7 @@ function XB1DLCManager:_verify_dlcs()
 	return dlc_content_updated
 end
 
--- Lines 2097-2114
+-- Lines 2115-2132
 function XB1DLCManager:chk_content_updated()
 	print("[XB1DLCManager:chk_content_updated]")
 
@@ -1916,7 +1937,7 @@ function XB1DLCManager:chk_content_updated()
 	end
 end
 
--- Lines 2116-2119
+-- Lines 2134-2137
 function XB1DLCManager:on_signin_complete()
 	self:chk_content_updated()
 end
@@ -1924,616 +1945,38 @@ end
 WINDLCManager = WINDLCManager or class(GenericDLCManager)
 DLCManager.PLATFORM_CLASS_MAP[Idstring("WIN32"):key()] = WINDLCManager
 
--- Lines 2128-2979
+-- Lines 2144-2179
 function WINDLCManager:init()
 	WINDLCManager.super.init(self)
 
 	if not Global.dlc_manager then
 		Global.dlc_manager = {
-			all_dlc_data = {
-				full_game = {
-					app_id = "218620",
-					verified = true
-				},
-				preorder = {
-					app_id = "247450",
-					no_install = true
-				},
-				career_criminal_edition = {
-					app_id = "218630",
-					no_install = true
-				},
-				alienware_alpha = {
-					app_id = "328861",
-					no_install = true
-				},
-				alienware_alpha_promo = {
-					app_id = "318720",
-					no_install = true
-				},
-				soundtrack = {
-					app_id = "254260",
-					no_install = true
-				},
-				pdth_soundtrack = {
-					app_id = "207816",
-					no_install = true
-				},
-				armored_transport = {
-					app_id = "264610",
-					no_install = true
-				},
-				gage_pack = {
-					app_id = "267380",
-					no_install = true
-				},
-				gage_pack_lmg = {
-					app_id = "275590",
-					no_install = true
-				},
-				gage_pack_jobs = {
-					app_id = "259381",
-					no_install = true
-				},
-				gage_pack_snp = {
-					app_id = "259380",
-					no_install = true
-				},
-				gage_pack_shotgun = {
-					app_id = "311050",
-					no_install = true
-				},
-				gage_pack_assault = {
-					app_id = "320030",
-					no_install = true
-				},
-				overkill_pack = {
-					app_id = "348090",
-					no_install = true
-				},
-				complete_overkill_pack = {
-					app_id = "348091",
-					no_install = true
-				},
-				akm4_pack = {
-					app_id = "351890",
-					no_install = true
-				},
-				big_bank = {
-					app_id = "306690",
-					no_install = true
-				},
-				hl_miami = {
-					app_id = "323500",
-					no_install = true
-				},
-				hlm_game = {
-					no_install = true,
-					app_id = "219150",
-					external = true
-				},
-				hlm2 = {
-					no_install = true,
-					app_id = "274170",
-					external = true
-				},
-				hlm2_deluxe = {
-					no_install = true,
-					app_id = "355390",
-					external = true
-				},
-				hlm2_aus = {
-					no_install = true,
-					app_id = "338951",
-					external = true
-				},
-				speedrunners = {
-					no_install = true,
-					app_id = "207140",
-					external = true
-				},
-				character_pack_clover = {
-					app_id = "337661",
-					no_install = true
-				},
-				character_pack_dragan = {
-					app_id = "344140",
-					no_install = true
-				},
-				character_pack_sokol = {
-					app_id = "374301",
-					no_install = true
-				},
-				hope_diamond = {
-					app_id = "337660",
-					no_install = true
-				},
-				the_bomb = {
-					app_id = "339480",
-					no_install = true
-				},
-				bbq = {
-					app_id = "358150",
-					no_install = true
-				},
-				west = {
-					app_id = "349830",
-					no_install = true
-				},
-				arena = {
-					app_id = "366660",
-					no_install = true
-				},
-				kenaz = {
-					app_id = "374300",
-					no_install = true
-				},
-				turtles = {
-					app_id = "384021",
-					no_install = true
-				},
-				dragon = {
-					app_id = "384020",
-					no_install = true
-				},
-				berry = {
-					app_id = "422400",
-					no_install = true
-				},
-				xmas_soundtrack = {
-					app_id = "267381",
-					no_install = true
-				},
-				bsides_soundtrack = {
-					app_id = "368870",
-					no_install = true
-				},
-				twitch_pack = {
-					app_id = "306110",
-					no_install = true
-				},
-				humble_pack2 = {
-					app_id = "331040",
-					no_install = true
-				},
-				humble_pack3 = {
-					app_id = "375380",
-					no_install = true
-				},
-				humble_pack4 = {
-					app_id = "375381",
-					no_install = true
-				},
-				e3_s15a = {
-					app_id = "375382",
-					no_install = true
-				},
-				e3_s15b = {
-					app_id = "375383",
-					no_install = true
-				},
-				e3_s15c = {
-					app_id = "375384",
-					no_install = true
-				},
-				e3_s15d = {
-					app_id = "375385",
-					no_install = true
-				},
-				pdcon_2015 = {
-					app_id = "338950",
-					no_install = true
-				},
-				gage_pack_historical = {
-					app_id = "331900",
-					no_install = true
-				},
-				steel = {
-					app_id = "401650",
-					no_install = true
-				},
-				bobblehead = {
-					app_id = "328860",
-					no_install = true
-				},
-				peta = {
-					app_id = "433730",
-					no_install = true
-				},
-				pal = {
-					app_id = "441600",
-					no_install = true
-				},
-				opera = {
-					app_id = "468410",
-					no_install = true
-				},
-				jigg = {
-					app_id = "486610",
-					no_install = true
-				},
-				wild = {
-					app_id = "450660",
-					no_install = true
-				},
-				born = {
-					app_id = "487210",
-					no_install = true
-				},
-				dbd_deluxe = {
-					no_install = true,
-					app_id = "489980",
-					external = true
-				},
-				dbd_regular = {
-					no_install = true,
-					app_id = "381210",
-					external = true
-				},
-				pim = {
-					app_id = "545100",
-					no_install = true
-				},
-				rota = {
-					app_id = "218620",
-					no_install = true
-				},
-				gotti_bundle = {
-					app_id = "218620",
-					no_install = true
-				},
-				nyck_bundle = {
-					app_id = "218620",
-					no_install = true
-				},
-				sparkle = {
-					app_id = "532810",
-					no_install = true
-				},
-				urf_bundle = {
-					app_id = "218620",
-					no_install = true
-				},
-				tango = {
-					app_id = "548420",
-					no_install = true
-				},
-				friend = {
-					app_id = "548421",
-					no_install = true
-				},
-				chico = {
-					app_id = "548422",
-					no_install = true
-				},
-				rvd = {
-					app_id = "218620",
-					no_install = true
-				},
-				pd2_clan = {
-					source_id = "103582791433980119"
-				},
-				dbd_clan = {
-					source_id = "103582791441335905"
-				},
-				solus_clan = {
-					source_id = "103582791438562929"
-				},
-				pdcon_2016 = {
-					app_id = "552490",
-					no_install = true
-				},
-				win_bundle = {
-					app_id = "218620",
-					no_install = true
-				},
-				swm = {
-					app_id = "588130",
-					no_install = true
-				},
-				yor_bundle = {
-					app_id = "218620",
-					no_install = true
-				},
-				sha = {
-					app_id = "218620",
-					no_install = true
-				},
-				spa = {
-					app_id = "591710",
-					no_install = true
-				},
-				grv = {
-					app_id = "612900",
-					no_install = true
-				},
-				amp = {
-					app_id = "218620",
-					no_install = true
-				},
-				mp2 = {
-					app_id = "218620",
-					no_install = true
-				},
-				mom = {
-					app_id = "218620",
-					no_install = true
-				},
-				ant = {
-					no_install = true,
-					app_id = "489570",
-					external = true
-				},
-				pn2 = {
-					app_id = "618940",
-					no_install = true
-				},
-				max = {
-					app_id = "218620",
-					no_install = true
-				},
-				trk = {
-					app_id = "218620",
-					no_install = true
-				},
-				dgm = {
-					app_id = "218620",
-					no_install = true
-				},
-				ztm = {
-					app_id = "735640",
-					no_install = true
-				},
-				joy = {
-					app_id = "218620",
-					no_install = true
-				},
-				raidww2_clan = {
-					source_id = "103582791460014708"
-				},
-				fdm = {
-					app_id = "707620",
-					no_install = true
-				},
-				ecp = {
-					app_id = "758420",
-					no_install = true
-				},
-				cmo = {
-					app_id = "218620",
-					no_install = true
-				},
-				cmt = {
-					app_id = "218620",
-					no_install = true
-				},
-				pbm = {
-					app_id = "735630",
-					no_install = true
-				},
-				dnm = {
-					app_id = "218620",
-					no_install = true
-				},
-				wwh = {
-					app_id = "218620",
-					no_install = true
-				},
-				myh = {
-					app_id = "218620",
-					no_install = true
-				},
-				fgl = {
-					app_id = "218620",
-					no_install = true
-				},
-				osa = {
-					app_id = "218620",
-					no_install = true
-				},
-				ami = {
-					app_id = "218620",
-					no_install = true
-				},
-				gwm = {
-					app_id = "218620",
-					no_install = true
-				},
-				dmg = {
-					app_id = "218620",
-					no_install = true
-				},
-				ggac = {
-					app_id = "218620",
-					no_install = true
-				},
-				pmp = {
-					app_id = "218620",
-					no_install = true
-				},
-				ghm = {
-					app_id = "218620",
-					no_install = true
-				},
-				srtr2 = {
-					no_install = true,
-					app_id = "55230",
-					external = true
-				},
-				a10mask = {
-					app_id = "1788140",
-					no_install = true
-				},
-				mrwi_deck = {
-					app_id = "218620",
-					no_install = true
-				},
-				sbzac_elegantteeth = {
-					no_install = true,
-					entitlement_id = "3b33555360c749249cf37923af3121a4",
-					external = true
-				},
-				sbzac_wpn_fps_upg_charm_skullz = {
-					no_install = true,
-					entitlement_id = "af17b1ef651345d1a8a48ea6ff67fe36",
-					external = true
-				},
-				sbzac_elegantscarf = {
-					no_install = true,
-					entitlement_id = "10e2783cc2244fcfbf40a316ac84bc55",
-					external = true
-				},
-				sbzac_color_sbzac2_01 = {
-					no_install = true,
-					entitlement_id = "29bb159f7efb4a8f98103d0648788a51",
-					external = true
-				},
-				rat_oilbaron = {
-					no_install = true,
-					entitlement_id = "ee24dd9f429f408a879cf417c78f964a",
-					external = true
-				},
-				rat_ranchdiesel = {
-					no_install = true,
-					entitlement_id = "c4d74be8d4cf41d5a5921c11094a5bdf",
-					external = true
-				},
-				rat_mocow = {
-					no_install = true,
-					entitlement_id = "8c7aa8537d474094b0f93e1ccf06852d",
-					external = true
-				},
-				prim_primtime = {
-					no_install = true,
-					entitlement_id = "97480f59f8424e3a89810e270583f468",
-					external = true
-				},
-				prim_darkmat = {
-					no_install = true,
-					entitlement_id = "271cc010fb0c456db16afbd1ceb94641",
-					external = true
-				},
-				prim_newhorizon = {
-					no_install = true,
-					entitlement_id = "d0a07cefd5ff443a8b597370bf766bbe",
-					external = true
-				},
-				a11th_homburg = {
-					no_install = true,
-					entitlement_id = "3bb309cf0f2946ffa9b060afd035eea8",
-					external = true
-				},
-				a11th_homburg_grey = {
-					no_install = true,
-					entitlement_id = "07af0503ae6b4510b503a4e8d4495f70",
-					external = true
-				},
-				a11th_corl = {
-					no_install = true,
-					entitlement_id = "837e358f1849463f93c83f2af546ae60",
-					external = true
-				},
-				a11th_stinger = {
-					no_install = true,
-					entitlement_id = "0160eece867b4b108192e511f84c237d",
-					external = true
-				},
-				trt_railhat = {
-					no_install = true,
-					entitlement_id = "8a639d555e414f6d96c89daf15412252",
-					external = true
-				},
-				trt_railwork = {
-					no_install = true,
-					entitlement_id = "caf6162cf483441493bba569e61ed2c5",
-					external = true
-				},
-				trt_railroad = {
-					no_install = true,
-					entitlement_id = "856324f5178b4cb79670a6fb92cf904c",
-					external = true
-				},
-				h22_deadman = {
-					no_install = true,
-					entitlement_id = "5068bdffe90f41d99bb3364c698747a0",
-					external = true
-				},
-				h22_nightwalker = {
-					no_install = true,
-					entitlement_id = "4ae27196dd404d9e88f8491ceab0331e",
-					external = true
-				},
-				h22_tasslefringe = {
-					no_install = true,
-					entitlement_id = "ad637b9c32754b2f8de6adb6b27402ba",
-					external = true
-				},
-				h22_bloodysnarl = {
-					no_install = true,
-					entitlement_id = "6ba11d02103d40bb881aeaeee3635b47",
-					external = true
-				},
-				h22_ghostly = {
-					no_install = true,
-					entitlement_id = "cff914faa08142c9b6c36ff7d00461b2",
-					external = true
-				},
-				h22_tornrags = {
-					no_install = true,
-					entitlement_id = "3098a3509615457e84ea63d3393163cc",
-					external = true
-				},
-				h22_banshee = {
-					no_install = true,
-					entitlement_id = "52f194a7fe524b9591988f774b003dd6",
-					external = true
-				},
-				h22_darkprince = {
-					no_install = true,
-					entitlement_id = "18a43b128ad2440aa6fbaf2ed22fee5f",
-					external = true
-				},
-				h22_devilclaws = {
-					no_install = true,
-					entitlement_id = "cb43a681f3f447e1b8fec3b6766530f3",
-					external = true
-				},
-				h22_devilhorn = {
-					no_install = true,
-					entitlement_id = "b724258340d642c299e1589926917522",
-					external = true
-				},
-				cot_smilecigar = {
-					no_install = true,
-					entitlement_id = "6d27f3b50a1343a39a6efb48f1440480",
-					external = true
-				},
-				cot_sleekygent = {
-					no_install = true,
-					entitlement_id = "964138fe4a064a1683d7198d525e69c8",
-					external = true
-				},
-				cot_beigedriver = {
-					no_install = true,
-					entitlement_id = "7825a51f35c647a4be462ece610936cc",
-					external = true
-				}
-			},
+			all_dlc_data = {},
 			entitlements = {}
 		}
 
+		self:init_dlc_data()
 		self:init_generated()
-
-		Global.dlc_manager.all_dlc_data.chico_or_mrwi_deck = deep_clone(Global.dlc_manager.all_dlc_data.chico)
-		Global.dlc_manager.all_dlc_data.ecp_or_mrwi_deck = deep_clone(Global.dlc_manager.all_dlc_data.ecp)
-
+		self:init_entitlements()
+		self:_chk_blocked()
 		self:_verify_dlcs()
 	end
 
 	self:_init_promoted_dlc_list()
 end
 
--- Lines 2981-3189
+-- Lines 2181-2189
+function WINDLCManager:_chk_blocked()
+	if self.blocked_dlcs then
+		for blocked_dlc_name, _ in pairs(self.blocked_dlcs) do
+			if Global.dlc_manager.all_dlc_data[blocked_dlc_name] then
+				Global.dlc_manager.all_dlc_data[blocked_dlc_name].blocked = true
+			end
+		end
+	end
+end
+
+-- Lines 2191-2364
 function WINDLCManager:_init_promoted_dlc_list()
 	self._promoted_dlc_list = {
 		"pxp4",
@@ -2614,95 +2057,12 @@ function WINDLCManager:_init_promoted_dlc_list()
 	}
 end
 
--- Lines 3191-3193
+-- Lines 2366-2368
 function WINDLCManager:get_promoted_dlc_list()
 	return self._promoted_dlc_list
 end
 
--- Lines 3196-3219
-function WINDLCManager:set_entitlements(entitlements)
-	print("WINDLCManager:set_entitlements", inspect(entitlements))
-
-	Global.dlc_manager.entitlements = entitlements or {}
-	Global.dlc_manager.received_entitlements = true
-	local entitlement_updated = false
-	local has_entitlement = nil
-
-	for dlc_name, dlc_data in pairs(Global.dlc_manager.all_dlc_data) do
-		if dlc_data.entitlement_id then
-			has_entitlement = self:has_entitlement(dlc_data.entitlement_id)
-			entitlement_updated = entitlement_updated or has_entitlement ~= dlc_data.verified
-			dlc_data.verified = has_entitlement
-		end
-	end
-
-	if entitlement_updated then
-		if (game_state_machine and game_state_machine:current_state_name()) == "menu_main" then
-			self:give_dlc_and_verify_blackmarket()
-		else
-			Global.dlc_manager.verify_entitlements = true
-		end
-	end
-end
-
--- Lines 3221-3223
-function WINDLCManager:has_entitlement(entitlement_id)
-	return table.contains(Global.dlc_manager.entitlements, entitlement_id)
-end
-
--- Lines 3225-3229
-function WINDLCManager:save(data)
-	WINDLCManager.super.save(self, data)
-
-	data.dlc_entitlements = Global.dlc_manager.entitlements
-end
-
--- Lines 3231-3244
-function WINDLCManager:load(data)
-	WINDLCManager.super.load(self, data)
-
-	if data.dlc_entitlements and not Global.dlc_manager.received_entitlements then
-		Global.dlc_manager.entitlements = data.dlc_entitlements
-
-		for dlc_name, dlc_data in pairs(Global.dlc_manager.all_dlc_data) do
-			if dlc_data.entitlement_id then
-				dlc_data.verified = self:has_entitlement(dlc_data.entitlement_id)
-			end
-		end
-	end
-end
-
--- Lines 3246-3252
-function WINDLCManager:init_finalize()
-	WINDLCManager.super.init_finalize(self)
-
-	if Global.dlc_manager.verify_entitlements and (game_state_machine and game_state_machine:last_queued_state_name()) == "menu_main" then
-		self:give_dlc_and_verify_blackmarket()
-	end
-end
-
--- Lines 3255-3277
-function WINDLCManager:_check_dlc_data(dlc_data)
-	if SystemInfo:distribution() == Idstring("STEAM") then
-		if dlc_data.app_id then
-			if dlc_data.no_install then
-				if Steam:is_product_owned(dlc_data.app_id) then
-					return true
-				end
-			elseif Steam:is_product_installed(dlc_data.app_id) then
-				return true
-			end
-		elseif dlc_data.source_id then
-			if Steam:is_user_in_source(Steam:userid(), dlc_data.source_id) then
-				return true
-			end
-		elseif dlc_data.entitlement_id and self:has_entitlement(dlc_data.entitlement_id) then
-			return true
-		end
-	end
-end
-
--- Lines 3279-3294
+-- Lines 2370-2376
 function WINDLCManager:_verify_dlcs()
 	for dlc_name, dlc_data in pairs(Global.dlc_manager.all_dlc_data) do
 		if not dlc_data.verified and self:_check_dlc_data(dlc_data) then
@@ -2711,8 +2071,163 @@ function WINDLCManager:_verify_dlcs()
 	end
 end
 
--- Lines 3297-3337
-function WINDLCManager:check_pdth(clbk)
+-- Lines 2378-2385
+function WINDLCManager:_check_dlc_data(dlc_data)
+	if dlc_data.entitlement_id and self:has_entitlement(dlc_data.entitlement_id) then
+		return true
+	end
+
+	return false
+end
+
+-- Lines 2388-2406
+function WINDLCManager:chk_content_updated()
+	local has_content = nil
+	local content_updated = false
+
+	for dlc_name, dlc_data in pairs(Global.dlc_manager.all_dlc_data) do
+		has_content = self:_check_dlc_data(dlc_data)
+		content_updated = content_updated or has_content ~= dlc_data.verified
+		dlc_data.verified = has_content
+	end
+
+	if content_updated then
+		if (game_state_machine and game_state_machine:current_state_name()) == "menu_main" then
+			self:give_dlc_and_verify_blackmarket()
+		else
+			Global.dlc_manager.verify_content_update = true
+		end
+	end
+end
+
+-- Lines 2409-2418
+function WINDLCManager:set_entitlements(entitlements)
+	print("WINDLCManager:set_entitlements", inspect(entitlements))
+
+	Global.dlc_manager.entitlements = table.list_to_set(entitlements or {})
+	Global.dlc_manager.received_entitlements = true
+
+	self:chk_content_updated()
+end
+
+-- Lines 2420-2422
+function WINDLCManager:has_entitlement(entitlement_id)
+	return Global.dlc_manager.entitlements[entitlement_id]
+end
+
+-- Lines 2424-2428
+function WINDLCManager:save(data)
+	WINDLCManager.super.save(self, data)
+
+	data.dlc_entitlements = Global.dlc_manager.entitlements
+end
+
+-- Lines 2430-2439
+function WINDLCManager:load(data)
+	WINDLCManager.super.load(self, data)
+
+	if data.dlc_entitlements and not Global.dlc_manager.received_entitlements then
+		Global.dlc_manager.entitlements = data.dlc_entitlements
+
+		self:chk_content_updated()
+	end
+end
+
+-- Lines 2441-2447
+function WINDLCManager:init_finalize()
+	WINDLCManager.super.init_finalize(self)
+
+	if Global.dlc_manager.verify_content_update and (game_state_machine and game_state_machine:last_queued_state_name()) == "menu_main" then
+		self:give_dlc_and_verify_blackmarket()
+	end
+end
+
+WinSteamDLCManager = WinSteamDLCManager or class(WINDLCManager)
+DLCManager.PLATFORM_CLASS_MAP[Idstring("STEAM"):key()] = WinSteamDLCManager
+
+-- Lines 2498-2500
+function WinSteamDLCManager:init()
+	WinSteamDLCManager.super.init(self)
+end
+
+-- Lines 2502-2538
+function WinSteamDLCManager:_init_promoted_dlc_list()
+	WinSteamDLCManager.super._init_promoted_dlc_list(self)
+end
+
+-- Lines 2540-2543
+function WinSteamDLCManager:has_stat(data)
+	local sa_handler = Steam:sa_handler()
+
+	return sa_handler:get_stat(data.stat_id) >= (data.stat_value or 1)
+end
+
+-- Lines 2545-2602
+function WinSteamDLCManager:_check_dlc_data(dlc_data)
+	if dlc_data.blocked then
+		return false
+	end
+
+	local had_verification = false
+
+	if dlc_data.app_id then
+		had_verification = true
+
+		if dlc_data.no_install then
+			if Steam:is_product_owned(dlc_data.app_id) then
+				if not dlc_data.verify_all then
+					return true
+				end
+			elseif dlc_data.verify_all then
+				return false
+			end
+		elseif Steam:is_product_installed(dlc_data.app_id) then
+			if not dlc_data.verify_all then
+				return true
+			end
+		elseif dlc_data.verify_all then
+			return false
+		end
+	end
+
+	if dlc_data.source_id then
+		had_verification = true
+
+		if Steam:is_user_in_source(Steam:userid(), dlc_data.source_id) then
+			if not dlc_data.verify_all then
+				return true
+			end
+		elseif dlc_data.verify_all then
+			return false
+		end
+	end
+
+	if dlc_data.entitlement_id then
+		had_verification = true
+
+		if self:has_entitlement(dlc_data.entitlement_id) then
+			if not dlc_data.verify_all then
+				return true
+			end
+		elseif dlc_data.verify_all then
+			return false
+		end
+	end
+
+	if dlc_data.verify_all then
+		return had_verification
+	end
+
+	return false
+end
+
+-- Lines 2604-2610
+function WinSteamDLCManager:_verify_dlcs()
+	WinSteamDLCManager.super._verify_dlcs(self)
+end
+
+-- Lines 2613-2652
+function WinSteamDLCManager:check_pdth(clbk)
 	if not self._check_pdth_request and clbk and Global.dlc_manager.has_pdth ~= nil then
 		clbk(Global.dlc_manager.has_pdth, Global.dlc_manager.pdth_tester)
 
@@ -2729,7 +2244,7 @@ function WINDLCManager:check_pdth(clbk)
 	Global.dlc_manager.has_pdth = has_pdth
 
 	if has_pdth then
-		-- Lines 3313-3332
+		-- Lines 2628-2647
 		local function result_function(success, page)
 			if success then
 				local json_reply_match = "\"([^,:\"]+)\"%s*:%s*\"([^\"]+)\""
@@ -2742,7 +2257,7 @@ function WINDLCManager:check_pdth(clbk)
 					if key == "achieved" and value == "true" then
 						Global.dlc_manager.pdth_tester = true
 					elseif key == "error" then
-						print("[WINDLCManager:check_pdth] Request error ", value)
+						print("[WinSteamDLCManager:check_pdth] Request error ", value)
 					end
 				end
 			end
@@ -2756,16 +2271,16 @@ function WINDLCManager:check_pdth(clbk)
 			self._check_pdth_request = nil
 		end
 
-		print("[WINDLCManager:check_pdth] Send request")
+		print("[WinSteamDLCManager:check_pdth] Send request")
 
 		self._check_pdth_request = true
 
-		Steam:http_request("https://fbi.paydaythegame.com/veterancheck/veterancheck.php?steamid=" .. Steam:userid(), result_function)
+		HttpRequest:get("https://fbi.paydaythegame.com/veterancheck/veterancheck.php?steamid=" .. Steam:userid(), result_function)
 	end
 end
 
--- Lines 3341-3352
-function WINDLCManager:chk_vr_dlc()
+-- Lines 2656-2667
+function WinSteamDLCManager:chk_vr_dlc()
 	local steam_vr = Steam:is_app_installed("250820")
 	local payday2_vr = Steam:is_product_installed("826090")
 
@@ -2782,15 +2297,128 @@ function WINDLCManager:chk_vr_dlc()
 	return nil
 end
 
--- Lines 3355-3362
-function WINDLCManager:chk_content_updated()
-	for dlc_name, dlc_data in pairs(Global.dlc_manager.all_dlc_data) do
-		if not dlc_data.verified and self:_check_dlc_data(dlc_data) then
-			managers.menu:show_dlc_require_restart()
+WinEpicDLCManager = WinEpicDLCManager or class(WINDLCManager)
+DLCManager.PLATFORM_CLASS_MAP[Idstring("EPIC"):key()] = WinEpicDLCManager
+WinEpicDLCManager.blocked_dlcs = table.list_to_set({
+	"preorder",
+	"cce",
+	"career_criminal_edition",
+	"alienware_alpha",
+	"alienware_alpha_promo",
+	"complete_overkill_pack",
+	"bobblehead"
+})
 
-			break
+-- Lines 2698-2701
+function WinEpicDLCManager:init()
+	WinEpicDLCManager.super.init(self)
+	self:check_ownerships()
+end
+
+-- Lines 2703-2729
+function WinEpicDLCManager:check_ownerships()
+	if EpicMM:logged_on() and not Global.dlc_manager.catalog_ownerships then
+		local catalog_item_ids = {}
+
+		-- Lines 2706-2715
+		local function chk_func(chk_id)
+			local epic_id = nil
+
+			for _, item_id in ipairs(catalog_item_ids) do
+				epic_id = type(catalog_item_ids) == "table" and item_id[1] or item_id
+
+				if epic_id == chk_id then
+					return true
+				end
+			end
+
+			return false
+		end
+
+		for dlc, data in pairs(Global.dlc_manager.all_dlc_data) do
+			if data.epic_id and not chk_func(data.epic_id) then
+				table.insert(catalog_item_ids, data.epic_sandbox and {
+					data.epic_id,
+					data.epic_sandbox
+				} or data.epic_id)
+			end
+		end
+
+		Global.dlc_manager.test_catalog_item_ids = catalog_item_ids
+		Global.dlc_manager.ownership_check_called = true
+
+		return EpicEntitlements:check_local_ownership(catalog_item_ids, callback(self, self, "on_ownership_received"))
+	end
+
+	return false
+end
+
+-- Lines 2731-2733
+function WinEpicDLCManager:on_ownership_received(catalog_ownerships)
+	Global.dlc_manager.catalog_ownerships = catalog_ownerships
+end
+
+-- Lines 2735-2737
+function WinEpicDLCManager:has_catalog_ownerships()
+	return not not Global.dlc_manager.catalog_ownerships
+end
+
+-- Lines 2739-2741
+function WinEpicDLCManager:on_signin_complete()
+	self:_verify_dlcs()
+end
+
+-- Lines 2743-2792
+function WinEpicDLCManager:_check_dlc_data(dlc_data)
+	if dlc_data.blocked then
+		return false
+	end
+
+	local had_verification = false
+
+	if dlc_data.epic_id then
+		had_verification = true
+
+		if Global.dlc_manager.catalog_ownerships and Global.dlc_manager.catalog_ownerships[dlc_data.epic_id] then
+			if not dlc_data.verify_all then
+				return true
+			end
+		elseif dlc_data.verify_all then
+			return false
 		end
 	end
+
+	if dlc_data.entitlement_id then
+		had_verification = true
+
+		if self:has_entitlement(dlc_data.entitlement_id) then
+			if not dlc_data.verify_all then
+				return true
+			end
+		elseif dlc_data.verify_all then
+			return false
+		end
+	end
+
+	if dlc_data.verify_all then
+		return had_verification
+	end
+
+	return false
+end
+
+-- Lines 2794-2803
+function WinEpicDLCManager:_verify_dlcs()
+	if not Global.dlc_manager.catalog_ownerships then
+		return
+	end
+
+	WinEpicDLCManager.super._verify_dlcs(self)
+end
+
+if SystemInfo:platform() == Idstring("WIN32") then
+	require("lib/managers/dlc/DLCManagerWin32Data")
+	require("lib/managers/dlc/DLCManagerEntitlementData")
 end
 
 require("lib/managers/dlc/DLCManagerGeneratedData")

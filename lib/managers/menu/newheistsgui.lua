@@ -327,7 +327,7 @@ end
 
 -- Lines 301-303
 function NewHeistsGui:dummy_trigger()
-	Steam:overlay_activate("url", tweak_data.gui.new_heists[self._current_page].url)
+	managers.network.account:open_new_heist_page(tweak_data.gui.new_heists[self._current_page])
 end
 
 -- Lines 305-307
@@ -372,7 +372,7 @@ function NewHeistsGui:move_right()
 	self:_move_pages(1)
 end
 
--- Lines 335-364
+-- Lines 335-366
 function NewHeistsGui:mouse_pressed(button, x, y)
 	if not self._enabled or button ~= Idstring("0") then
 		return
@@ -388,13 +388,15 @@ function NewHeistsGui:mouse_pressed(button, x, y)
 		local heist_data = tweak_data.gui.new_heists[self._current_page]
 		local url = heist_data.url
 
-		if heist_data.append_steam_id and managers.user:get_setting("use_telemetry") then
-			url = url .. heist_data.append_steam_id .. Steam:userid()
+		if SystemInfo:distribution() == Idstring("STEAM") and heist_data.append_steam_id and managers.user:get_setting("use_telemetry") then
+			url = url .. heist_data.append_steam_id .. managers.network.account:player_id()
 		end
 
-		Steam:overlay_activate("url", url)
+		if SystemInfo:distribution() == Idstring("EPIC") and heist_data.append_epic_id and managers.user:get_setting("use_telemetry") then
+			-- Nothing
+		end
 
-		return true
+		return managers.network.account:overlay_activate("url", url)
 	end
 
 	for i, button in ipairs(self._page_buttons) do
@@ -406,7 +408,7 @@ function NewHeistsGui:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines 366-388
+-- Lines 368-390
 function NewHeistsGui:mouse_moved(o, x, y)
 	if not self._enabled then
 		return
@@ -431,7 +433,7 @@ function NewHeistsGui:mouse_moved(o, x, y)
 	end
 end
 
--- Lines 390-393
+-- Lines 392-395
 function NewHeistsGui:set_enabled(enabled)
 	self._enabled = enabled
 

@@ -3,7 +3,7 @@ local max_possible_val = 2147483000
 
 -- Lines 4-41
 function StatisticsAdaptor:run(stats)
-	local handler = Steam:sa_handler()
+	local handler = managers.network.account:get_sa_handler()
 	local adapted = {}
 
 	for key, stat in pairs(stats) do

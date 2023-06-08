@@ -251,7 +251,7 @@ function FeatureManager:blackmarket_rename()
 	return true
 end
 
--- Lines 272-298
+-- Lines 272-310
 function FeatureManager:join_pd2_clan()
 	print("FeatureManager:join_pd2_clan()")
 
@@ -268,20 +268,30 @@ function FeatureManager:join_pd2_clan()
 		text = managers.localization:text("dialog_ok"),
 		cancel_button = true
 	}
-	local joining_pd2_clan_button = {
-		text = managers.localization:text("dialog_join_pd2_clan"),
-		callback_func = function ()
-			if MenuCallbackHandler:is_overlay_enabled() then
-				Steam:overlay_activate("game", "OfficialGameGroup")
-			else
-				managers.menu:show_enable_steam_overlay()
+	local button_list = {}
+
+	if SystemInfo:distribution() == Idstring("STEAM") then
+		local joining_pd2_clan_button = {
+			text = managers.localization:text("dialog_join_pd2_clan"),
+			callback_func = function ()
+				managers.network.account:overlay_activate("game", "OfficialGameGroup")
 			end
+		}
+
+		table.insert(button_list, joining_pd2_clan_button)
+	end
+
+	local joining_nebula_button = {
+		text = managers.localization:text("menu_no_sbz_account"),
+		callback_func = function ()
+			managers.network.account:overlay_activate("url", tweak_data.gui.sbz_account_webpage)
 		end
 	}
-	params.button_list = {
-		joining_pd2_clan_button,
-		ok_button
-	}
+
+	table.insert(button_list, joining_nebula_button)
+	table.insert(button_list, ok_button)
+
+	params.button_list = button_list
 	params.focus_button = 1
 
 	managers.menu:show_video_message_dialog(params)
@@ -289,7 +299,7 @@ function FeatureManager:join_pd2_clan()
 	return true
 end
 
--- Lines 300-304
+-- Lines 312-316
 function FeatureManager:perk_deck()
 	print("FeatureManager:perk_deck()")
 	managers.menu:show_new_message_dialog({
@@ -300,7 +310,7 @@ function FeatureManager:perk_deck()
 	return true
 end
 
--- Lines 306-310
+-- Lines 318-322
 function FeatureManager:freed_old_hoxton()
 	print("FeatureManager:freed_old_hoxton()")
 	managers.menu:show_new_message_dialog({
@@ -311,7 +321,7 @@ function FeatureManager:freed_old_hoxton()
 	return true
 end
 
--- Lines 312-316
+-- Lines 324-328
 function FeatureManager:infamy_2_0()
 	print("FeatureManager:infamy_2_0()")
 	managers.menu:show_new_message_dialog({
@@ -322,7 +332,7 @@ function FeatureManager:infamy_2_0()
 	return true
 end
 
--- Lines 318-342
+-- Lines 330-354
 function FeatureManager:thq_feature()
 	print("FeatureManager:thq_feature()")
 
@@ -330,7 +340,7 @@ function FeatureManager:thq_feature()
 		return
 	end
 
-	-- Lines 324-327
+	-- Lines 336-339
 	local function yes_function()
 		managers.user:set_setting("use_thq_weapon_parts", true)
 		managers.savefile:save_setting(true)
@@ -358,7 +368,7 @@ function FeatureManager:thq_feature()
 	return true
 end
 
--- Lines 344-348
+-- Lines 356-360
 function FeatureManager:crimenet_hacked()
 	print("FeatureManager:crimenet_hacked()")
 	managers.crimenet:set_getting_hacked(42.16)
@@ -366,11 +376,11 @@ function FeatureManager:crimenet_hacked()
 	return true
 end
 
--- Lines 351-371
+-- Lines 363-383
 function FeatureManager:short_heist()
 	print("FeatureManager:short_heist()")
 
-	-- Lines 354-361
+	-- Lines 366-373
 	local function yes_func()
 		if SystemInfo:distribution() == Idstring("STEAM") then
 			managers.statistics:publish_custom_stat_to_steam("info_playing_tutorial_yes")
@@ -380,7 +390,7 @@ function FeatureManager:short_heist()
 		MenuCallbackHandler:play_short_heist()
 	end
 
-	-- Lines 363-367
+	-- Lines 375-379
 	local function no_func()
 		if SystemInfo:distribution() == Idstring("STEAM") then
 			managers.statistics:publish_custom_stat_to_steam("info_playing_tutorial_no")
@@ -395,7 +405,7 @@ function FeatureManager:short_heist()
 	return true
 end
 
--- Lines 373-377
+-- Lines 385-389
 function FeatureManager:short_heists_available()
 	print("FeatureManager:short_heists_available()")
 	managers.menu:show_new_message_dialog({
@@ -406,13 +416,13 @@ function FeatureManager:short_heists_available()
 	return true
 end
 
--- Lines 381-384
+-- Lines 393-396
 function FeatureManager:new_career()
 	print("FeatureManager:new_career()")
 	managers.menu:show_new_player_popup()
 end
 
--- Lines 388-392
+-- Lines 400-404
 function FeatureManager:safehouse_dailies()
 	print("FeatureManager:safehouse_dailies()")
 	managers.menu:show_new_message_dialog({
@@ -423,7 +433,7 @@ function FeatureManager:safehouse_dailies()
 	return true
 end
 
--- Lines 396-400
+-- Lines 408-412
 function FeatureManager:tango_weapon_unlocked()
 	print("FeatureManager:tango_weapon_unlocked()")
 	managers.tango:announce_tango_weapon()
@@ -431,35 +441,35 @@ function FeatureManager:tango_weapon_unlocked()
 	return true
 end
 
--- Lines 404-407
+-- Lines 416-419
 function FeatureManager:movie_theater_unlocked()
 	managers.menu:show_movie_theater_unlocked_dialog()
 
 	return true
 end
 
--- Lines 418-421
+-- Lines 430-433
 function FeatureManager:pda9_event_explanation()
 	managers.menu:show_pda9_event_dialog()
 
 	return true
 end
 
--- Lines 425-428
+-- Lines 437-440
 function FeatureManager:cg22_event_explanation()
 	managers.menu:show_cg22_event_dialog()
 
 	return true
 end
 
--- Lines 432-435
+-- Lines 444-447
 function FeatureManager:lron_event_explanation()
 	managers.menu:show_lron_dialog()
 
 	return true
 end
 
--- Lines 459-476
+-- Lines 471-488
 function FeatureManager:check_external_dlcs()
 	local announce_drops = {}
 	local show_dialog = false

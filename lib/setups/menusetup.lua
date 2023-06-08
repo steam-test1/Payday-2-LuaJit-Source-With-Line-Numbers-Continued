@@ -28,8 +28,11 @@ core:import("SequenceManager")
 
 MenuSetup = MenuSetup or class(Setup)
 MenuSetup.IS_START_MENU = true
+local is_steam = SystemInfo:distribution() == Idstring("STEAM")
+local is_epic = SystemInfo:distribution() == Idstring("EPIC")
+local is_mm_eos = SystemInfo:matchmaking() == Idstring("MM_EPIC")
 
--- Lines 64-119
+-- Lines 68-123
 function MenuSetup:load_packages()
 	Setup.load_packages(self)
 
@@ -80,12 +83,12 @@ function MenuSetup:load_packages()
 			Global._game_base_package_loaded = true
 		end
 	elseif not PackageManager:loaded("packages/game_base_init") then
-		-- Lines 111-113
+		-- Lines 115-117
 		local function _load_wip_func()
 			Global._game_base_package_loaded = true
 		end
 
-		-- Lines 114-116
+		-- Lines 118-120
 		local function load_base_func()
 			PackageManager:load("packages/game_base", _load_wip_func)
 		end
@@ -94,7 +97,7 @@ function MenuSetup:load_packages()
 	end
 end
 
--- Lines 121-143
+-- Lines 125-147
 function MenuSetup:gather_packages_to_unload()
 	Setup.unload_packages(self)
 
@@ -120,7 +123,7 @@ function MenuSetup:gather_packages_to_unload()
 	end
 end
 
--- Lines 145-157
+-- Lines 149-161
 function MenuSetup:unload_packages()
 	Setup.unload_packages(self)
 
@@ -133,7 +136,7 @@ function MenuSetup:unload_packages()
 	end
 end
 
--- Lines 159-288
+-- Lines 163-291
 function MenuSetup:init_game()
 	local gsm = Setup.init_game(self)
 
@@ -169,6 +172,8 @@ function MenuSetup:init_game()
 					end
 				elseif arg == "+connect_lobby" then
 					Global.boot_invite = arg_list[i + 1]
+				elseif is_steam and is_mm_eos and arg == managers.network.account.connect_string then
+					Global.boot_invite = arg_list[i + 1]
 				elseif arg == "-auto_enter_level" then
 					Global.exe_argument_auto_enter_level = true
 					i = i + 1
@@ -191,14 +196,12 @@ function MenuSetup:init_game()
 		else
 			game_state_machine:change_state_by_name("bootup")
 		end
-
-		tweak_data:load_movie_list()
 	end
 
 	return gsm
 end
 
--- Lines 290-302
+-- Lines 293-305
 function MenuSetup:init_managers(managers)
 	Setup.init_managers(self, managers)
 	managers.sequence:preload()
@@ -210,7 +213,7 @@ function MenuSetup:init_managers(managers)
 	managers.network = NetworkManager:new()
 end
 
--- Lines 304-334
+-- Lines 307-337
 function MenuSetup:init_finalize()
 	Setup.init_finalize(self)
 
@@ -244,7 +247,7 @@ function MenuSetup:init_finalize()
 	TestAPIHelper.on_event("exit_to_menu")
 end
 
--- Lines 336-355
+-- Lines 339-358
 function MenuSetup:update_wait_for_savegame_info(t, dt)
 	managers.savefile:update(t, dt)
 	print("Checking fetch_savegame_hdd_space_required")
@@ -262,32 +265,32 @@ function MenuSetup:update_wait_for_savegame_info(t, dt)
 	end
 end
 
--- Lines 357-362
+-- Lines 360-365
 function MenuSetup:update(t, dt)
 	Setup.update(self, t, dt)
 	managers.crimenet:update(t, dt)
 	managers.network:update(t, dt)
 end
 
--- Lines 364-368
+-- Lines 367-371
 function MenuSetup:paused_update(t, dt)
 	Setup.paused_update(self, t, dt)
 	managers.network:update(t, dt)
 end
 
--- Lines 370-398
+-- Lines 373-401
 function MenuSetup:end_update(t, dt)
 	Setup.end_update(self, t, dt)
 	managers.network:end_update()
 end
 
--- Lines 400-404
+-- Lines 403-407
 function MenuSetup:paused_end_update(t, dt)
 	Setup.paused_end_update(self, t, dt)
 	managers.network:end_update()
 end
 
--- Lines 406-409
+-- Lines 409-412
 function MenuSetup:destroy()
 	MenuSetup.super.destroy(self)
 	managers.menu_scene:destroy()

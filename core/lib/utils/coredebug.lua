@@ -157,7 +157,35 @@ function cat_debug_inspect(cat, ...)
 	end
 end
 
--- Lines 159-173
+-- Lines 159-163
+function cat_tag_print(cat, ...)
+	if Global.category_print[cat] then
+		_G.tag_print(cat, ...)
+	end
+end
+
+-- Lines 165-169
+function cat_tag_error(cat, ...)
+	if Global.category_print[cat] then
+		_G.tag_error(cat, ...)
+	end
+end
+
+-- Lines 172-176
+function make_cat_tag_print(cat)
+	return function (...)
+		cat_tag_print(cat, ...)
+	end
+end
+
+-- Lines 179-183
+function make_cat_tag_error(cat)
+	return function (...)
+		cat_tag_error(cat, ...)
+	end
+end
+
+-- Lines 185-199
 function catprint_save()
 	local data = {
 		_meta = "categories"
@@ -180,7 +208,7 @@ function catprint_save()
 	file:close()
 end
 
--- Lines 175-196
+-- Lines 201-222
 function catprint_load()
 	if not Global.original_category_print then
 		Global.original_category_print = {}
@@ -205,21 +233,21 @@ function catprint_load()
 	end
 end
 
--- Lines 200-204
+-- Lines 226-230
 function print_console_result(...)
 	for i = 1, select("#", ...) do
 		cat_print("debug", CoreCode.full_representation(select(i, ...)))
 	end
 end
 
--- Lines 206-228
+-- Lines 232-254
 function compile_and_reload()
-	-- Lines 207-213
+	-- Lines 233-239
 	local function root_path()
 		local path = Application:base_path() .. (CoreApp.arg_value("-assetslocation") or "../../")
 		local f = nil
 
-		-- Lines 211-211
+		-- Lines 237-237
 		function f(s)
 			local str, i = string.gsub(s, "\\[%w_%.%s]+\\%.%.", "")
 
@@ -242,19 +270,19 @@ function compile_and_reload()
 	Application:console_command("reload")
 end
 
--- Lines 237-239
+-- Lines 263-265
 function class_name(class)
 	return core:_lookup(class)
 end
 
--- Lines 241-245
+-- Lines 267-271
 function full_class_name(class)
 	local x, y = class_name(class)
 
 	return y .. "." .. x
 end
 
--- Lines 253-274
+-- Lines 279-300
 function watch(cond_func, exact)
 	debug.sethook(function ()
 		if cond_func() then
@@ -281,11 +309,11 @@ function watch(cond_func, exact)
 	end, "l", 1)
 end
 
--- Lines 296-371
+-- Lines 322-397
 function trace_ref(class_name, init_name, destroy_name)
 	local class_mt = type(class_name) == "string" and getmetatable(assert(rawget(_G, class_name))) or class_name
 
-	-- Lines 299-306
+	-- Lines 325-332
 	local function ref()
 		local t = rawget(_G, "_trace_ref_table")
 
@@ -297,7 +325,7 @@ function trace_ref(class_name, init_name, destroy_name)
 		end
 	end
 
-	-- Lines 308-310
+	-- Lines 334-336
 	local function stack()
 		return string.gsub(debug.traceback(), "%\n", "\n[CoreTraceRef]\t")
 	end
@@ -369,7 +397,7 @@ function trace_ref(class_name, init_name, destroy_name)
 	end
 end
 
--- Lines 373-384
+-- Lines 399-410
 function trace_ref_add_destroy_all(class_name, func_name)
 	local class_mt = type(class_name) == "string" and getmetatable(assert(rawget(_G, class_name))) or class_name
 
@@ -386,15 +414,15 @@ function trace_ref_add_destroy_all(class_name, func_name)
 	end
 end
 
--- Lines 386-396
+-- Lines 412-422
 function debug_pause(...)
 end
 
--- Lines 398-409
+-- Lines 424-435
 function debug_pause_unit(unit, ...)
 end
 
--- Lines 411-420
+-- Lines 437-446
 function get_n_key(t, n)
 	n = n or 1
 
@@ -407,7 +435,7 @@ function get_n_key(t, n)
 	end
 end
 
--- Lines 422-431
+-- Lines 448-457
 function get_n_value(t, n)
 	n = n or 1
 
@@ -420,7 +448,7 @@ function get_n_value(t, n)
 	end
 end
 
--- Lines 433-437
+-- Lines 459-463
 function change_visualization(viz)
 	for _, vp in ipairs(managers.viewport:viewports()) do
 		vp:set_visualization_mode(viz)

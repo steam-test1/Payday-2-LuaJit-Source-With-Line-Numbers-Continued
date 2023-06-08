@@ -21,10 +21,8 @@ function ShotgunBase:init(...)
 	self._do_shotgun_push = true
 end
 
--- Lines 24-42
+-- Lines 24-44
 function ShotgunBase:setup_default()
-	self._damage_near = tweak_data.weapon[self._name_id].damage_near
-	self._damage_far = tweak_data.weapon[self._name_id].damage_far
 	self._rays = tweak_data.weapon[self._name_id].rays or self._ammo_data and self._ammo_data.rays or 6
 
 	if tweak_data.weapon[self._name_id].use_shotgun_reload == nil then
@@ -36,7 +34,7 @@ function ShotgunBase:setup_default()
 	self._hip_fire_rate_inc = managers.player:upgrade_value("shotgun", "hip_rate_of_fire", 0)
 end
 
--- Lines 46-56
+-- Lines 48-58
 function ShotgunBase:_create_use_setups()
 	local use_data = {}
 	local player_setup = {
@@ -52,7 +50,7 @@ function ShotgunBase:_create_use_setups()
 	self._use_data = use_data
 end
 
--- Lines 58-72
+-- Lines 60-74
 function ShotgunBase:fire_rate_multiplier()
 	local fire_rate_mul = self._fire_rate_multiplier
 
@@ -69,14 +67,14 @@ function ShotgunBase:fire_rate_multiplier()
 	return fire_rate_mul
 end
 
--- Lines 74-77
+-- Lines 76-79
 function ShotgunBase:run_and_shoot_allowed()
 	local allowed = ShotgunBase.super.run_and_shoot_allowed(self)
 
 	return allowed or managers.player:has_category_upgrade("shotgun", "hip_run_and_shoot")
 end
 
--- Lines 82-110
+-- Lines 84-112
 function ShotgunBase:_update_stats_values(disallow_replenish, ammo_data)
 	ShotgunBase.super._update_stats_values(self, disallow_replenish, ammo_data)
 	self:setup_default()
@@ -93,7 +91,7 @@ local mvec_ax = Vector3()
 local mvec_ay = Vector3()
 local mvec_spread_direction = Vector3()
 
--- Lines 152-478
+-- Lines 154-481
 function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul)
 	if self:gadget_overrides_weapon_functions() then
 		return self:gadget_function_override("_fire_raycast", self, user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul)
@@ -106,7 +104,7 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 	local all_hits_lookup = {}
 	local alert_rays_lookup = alert_rays and {}
 
-	-- Lines 168-248
+	-- Lines 170-250
 	local function on_hit(ray_hits)
 		for _, hit in ipairs(ray_hits) do
 			local unit_key = hit.unit:key()
@@ -236,7 +234,7 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 		end
 	end
 
-	-- Lines 352-354
+	-- Lines 354-356
 	local function sort_f(a, b)
 		return a.distance < b.distance
 	end
@@ -275,6 +273,11 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 			local hit_result = bullet_class:on_collision(hit, self._unit, user_unit, dmg)
 			hit_result = managers.mutators:modify_value("ShotgunBase:_fire_raycast", hit_result)
 
+			if check_additional_achievements then
+				hit_through_wall = hit_through_wall or hit.unit:in_slot(self.wall_mask)
+				hit_through_shield = hit_through_shield or hit.unit:in_slot(self.shield_mask) and alive(hit.unit:parent())
+			end
+
 			if hit_result then
 				hit.damage_result = hit_result
 				hit_anyone = true
@@ -292,9 +295,6 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 					end
 
 					if check_additional_achievements then
-						hit_through_wall = hit_through_wall or hit.unit:in_slot(self.wall_mask)
-						hit_through_shield = hit_through_shield or hit.unit:in_slot(self.shield_mask) and alive(hit.unit:parent())
-
 						self:_check_kill_achievements(cop_kill_count, unit_type, is_civilian, hit_through_wall, hit_through_shield)
 					end
 				end
@@ -305,6 +305,8 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 	if check_additional_achievements then
 		self:_check_tango_achievements(cop_kill_count)
 	end
+
+	self:_check_one_shot_shotgun_achievements(kill_data)
 
 	if alert_rays then
 		result.rays = #alert_rays > 0 and alert_rays
@@ -319,12 +321,10 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 		end
 	end
 
-	self:_check_one_shot_shotgun_achievements(kill_data)
-
 	return result
 end
 
--- Lines 482-526
+-- Lines 485-529
 function ShotgunBase:_check_one_shot_shotgun_achievements(kill_data)
 	if not tweak_data.achievement or not tweak_data.achievement.shotgun_single_shot_kills then
 		return
@@ -380,7 +380,7 @@ end
 
 SaigaShotgun = SaigaShotgun or class(ShotgunBase)
 
--- Lines 532-535
+-- Lines 535-538
 function SaigaShotgun:init(...)
 	SaigaShotgun.super.init(self, ...)
 
@@ -389,7 +389,7 @@ end
 
 InstantElectricBulletBase = InstantElectricBulletBase or class(InstantBulletBase)
 
--- Lines 545-560
+-- Lines 548-563
 function InstantElectricBulletBase:give_impact_damage(col_ray, weapon_unit, user_unit, damage, armor_piercing)
 	local hit_unit = col_ray.unit
 	local action_data = {

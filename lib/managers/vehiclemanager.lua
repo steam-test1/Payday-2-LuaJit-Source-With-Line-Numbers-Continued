@@ -62,7 +62,7 @@ end
 
 -- Lines 65-72
 function VehicleManager:remove_vehicle(vehicle)
-	table.delete(vehicle)
+	table.delete(self._vehicles, vehicle)
 	managers.hud:_remove_name_label(vehicle:unit_data().name_label_id)
 
 	if Application:editor() then
@@ -202,7 +202,7 @@ function VehicleManager:sync_npc_vehicle_data(vehicle_unit, state_name, target_u
 	v_npc_ext:start()
 end
 
--- Lines 188-262
+-- Lines 188-266
 function VehicleManager:sync_vehicle_data(vehicle_unit, state, occupant_driver, occupant_left, occupant_back_left, occupant_back_right, is_trunk_open)
 	local v_ext = vehicle_unit:vehicle_driving()
 
@@ -277,9 +277,9 @@ function VehicleManager:sync_vehicle_data(vehicle_unit, state, occupant_driver, 
 	Application:debug("[VehicleManager]", inspect(managers.player._global.synced_vehicle_data))
 
 	if state ~= VehicleDrivingExt.STATE_INACTIVE then
-		vehicle_unit:damage():run_sequence_simple("driving")
-		vehicle_unit:vehicle():set_active(true)
-		v_ext:set_state(state, true)
+		if not vehicle_unit:vehicle():is_active() then
+			v_ext:activate_vehicle()
+		end
 
 		if vehicle_unit:damage():has_sequence("local_driving_exit") then
 			vehicle_unit:damage():run_sequence("local_driving_exit")
@@ -304,7 +304,7 @@ function VehicleManager:sync_vehicle_data(vehicle_unit, state, occupant_driver, 
 	end
 end
 
--- Lines 265-273
+-- Lines 269-277
 function VehicleManager:sync_vehicle_loot(vehicle_unit, carry_id1, multiplier1, carry_id2, multiplier2, carry_id3, multiplier3)
 	if not alive(vehicle_unit) then
 		return
@@ -317,7 +317,7 @@ function VehicleManager:sync_vehicle_loot(vehicle_unit, carry_id1, multiplier1, 
 	v_ext:sync_loot(carry_id3, multiplier3)
 end
 
--- Lines 276-307
+-- Lines 280-311
 function VehicleManager:find_active_vehicle_with_player()
 	for i, v in ipairs(self._vehicles) do
 		if v:vehicle_driving()._vehicle:is_active() then
@@ -346,7 +346,7 @@ function VehicleManager:find_active_vehicle_with_player()
 	return nil
 end
 
--- Lines 309-335
+-- Lines 313-339
 function VehicleManager:find_npc_vehicle_target()
 	local target_unit = nil
 
@@ -363,7 +363,7 @@ function VehicleManager:find_npc_vehicle_target()
 	return target_unit
 end
 
--- Lines 337-350
+-- Lines 341-354
 function VehicleManager:update(t, dt)
 	if self._debug and self._draw_enabled then
 		for i, v in ipairs(self._vehicles) do

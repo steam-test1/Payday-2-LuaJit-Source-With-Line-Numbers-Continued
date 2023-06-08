@@ -1129,44 +1129,49 @@ function CustomSafehouseManager:tick_safehouse_spawn()
 end
 
 -- Lines 1086-1088
+function CustomSafehouseManager:_base_time()
+	return managers.network.matchmake:server_time()
+end
+
+-- Lines 1090-1092
 function CustomSafehouseManager:on_exit_crimenet()
 	self._has_spawned_safehouse_contract = false
 end
 
--- Lines 1090-1093
+-- Lines 1094-1097
 function CustomSafehouseManager:_set_safehouse_cooldown()
-	self._global._spawn_cooldown = Steam:server_time()
+	self._global._spawn_cooldown = self._base_time()
 end
 
--- Lines 1095-1103
+-- Lines 1099-1107
 function CustomSafehouseManager:ignore_raid()
 	self:remove_combat_contract()
 	self:spawn_safehouse_contract()
 
-	self._global._spawn_cooldown = Steam:server_time() - (self.SPAWN_COOLDOWN - self.IGNORE_SPAWN_COOLDOWN)
+	self._global._spawn_cooldown = self._base_time() - (self.SPAWN_COOLDOWN - self.IGNORE_SPAWN_COOLDOWN)
 end
 
--- Lines 1105-1111
+-- Lines 1109-1115
 function CustomSafehouseManager:_get_server_time()
 	self._tick = self._tick and self._tick + 1 or 0
 
 	if self._tick % self.SERVER_TICK == 0 then
-		self._server_time_cache = Steam:server_time()
+		self._server_time_cache = self._base_time()
 	end
 
 	return self._server_time_cache or 0
 end
 
--- Lines 1113-1144
+-- Lines 1117-1148
 function CustomSafehouseManager:spawn_safehouse_contract()
 	self._has_spawned_safehouse_contract = true
 end
 
--- Lines 1146-1177
+-- Lines 1150-1181
 function CustomSafehouseManager:spawn_safehouse_combat_contract()
 end
 
--- Lines 1179-1184
+-- Lines 1183-1188
 function CustomSafehouseManager:remove_combat_contract()
 	if managers.menu_component._crimenet_gui then
 		managers.menu_component._crimenet_gui:remove_job("safehouse_combat", true)
@@ -1175,17 +1180,17 @@ function CustomSafehouseManager:remove_combat_contract()
 	end
 end
 
--- Lines 1186-1188
+-- Lines 1190-1192
 function CustomSafehouseManager:has_entered_safehouse()
 	return self._global._has_entered_safehouse
 end
 
--- Lines 1190-1192
+-- Lines 1194-1196
 function CustomSafehouseManager:is_new_player()
 	return self._global._new_player
 end
 
--- Lines 1195-1197
+-- Lines 1199-1201
 function CustomSafehouseManager:uno_achievement_challenge()
 	return self._uno_achievement_challenge
 end

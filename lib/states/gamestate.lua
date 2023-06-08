@@ -30,7 +30,11 @@ function GameState:on_disconnected()
 	game_state_machine:change_state_by_name("disconnected")
 end
 
--- Lines 29-31
+-- Lines 29-30
+function GameState:on_disconnected_from_service()
+end
+
+-- Lines 32-34
 function GameState:on_server_left()
 	game_state_machine:change_state_by_name("server_left")
 end

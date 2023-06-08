@@ -1,6 +1,6 @@
 InteractionTweakData = InteractionTweakData or class()
 
--- Lines 3-8637
+-- Lines 3-8683
 function InteractionTweakData:init(tweak_data)
 	self.CULLING_DISTANCE = 2000
 	self.INTERACT_DISTANCE = 200
@@ -414,12 +414,16 @@ function InteractionTweakData:init(tweak_data)
 		is_lockpicking = true
 	}
 	self.pick_lock_hard_no_skill = {
-		contour = "interactable_icon",
 		icon = "equipment_bank_manager_key",
 		text_id = "hud_int_pick_lock",
-		start_active = true,
-		timer = 20,
 		action_text_id = "hud_action_picking_lock",
+		interact_distance = 100,
+		timer = 20,
+		start_active = true,
+		sound_start = "bar_pick_lock",
+		sound_interupt = "bar_pick_lock_cancel",
+		sound_done = "bar_pick_lock_finished",
+		contour = "interactable_icon",
 		upgrade_timer_multipliers = {
 			{
 				upgrade = "pick_lock_easy_speed_multiplier",
@@ -430,10 +434,6 @@ function InteractionTweakData:init(tweak_data)
 				category = "player"
 			}
 		},
-		interact_distance = 100,
-		sound_start = "bar_pick_lock",
-		sound_interupt = "bar_pick_lock_cancel",
-		sound_done = "bar_pick_lock_finished",
 		is_lockpicking = true
 	}
 	self.pick_lock_deposit_transport = deep_clone(self.pick_lock_hard_no_skill)
@@ -478,6 +478,8 @@ function InteractionTweakData:init(tweak_data)
 	self.hospital_phone = {
 		icon = "interaction_answerphone",
 		text_id = "debug_interact_hospital_phone",
+		interact_distance = 100,
+		timer = 3,
 		start_active = false
 	}
 	self.hospital_security_cable = {
@@ -5411,7 +5413,7 @@ function InteractionTweakData:init(tweak_data)
 	}
 	self.push_button_secret = {
 		text_id = "hud_int_push_button",
-		interact_distance = 90,
+		interact_distance = 110,
 		axis = "z"
 	}
 	self.hold_charge_gun = {
@@ -7031,7 +7033,10 @@ function InteractionTweakData:init(tweak_data)
 		timer = 5,
 		start_active = true,
 		interact_distance = 200,
-		axis = "y"
+		axis = "y",
+		sound_start = "bar_keyboard",
+		sound_interupt = "bar_keyboard_cancel",
+		sound_done = "bar_keyboard_finished"
 	}
 	self.chca_hold_lower_lifeboat = {
 		text_id = "hud_int_lower_lifeboat",

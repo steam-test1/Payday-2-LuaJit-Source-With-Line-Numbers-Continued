@@ -108,9 +108,10 @@ end
 
 MovieTheaterGui = MovieTheaterGui or class(ExtendedPanel)
 
--- Lines 80-99
+-- Lines 80-103
 function MovieTheaterGui:init(ws, fullscreen_ws, node)
 	MovieTheaterGui.super.init(self, ws:panel())
+	tweak_data:load_movie_list()
 
 	self._music_volume = (managers.user:get_setting("music_volume") or 100) / 100
 	self._sfx_volume = (managers.user:get_setting("sfx_volume") or 100) / 100
@@ -129,13 +130,13 @@ function MovieTheaterGui:init(ws, fullscreen_ws, node)
 	end
 end
 
--- Lines 101-105
+-- Lines 105-109
 function MovieTheaterGui:close()
 	self:reset_video()
 	self:remove_self()
 end
 
--- Lines 107-137
+-- Lines 111-141
 function MovieTheaterGui:_create_movie_list()
 	local title_text = self._main_panel:text({
 		layer = 1,
@@ -193,7 +194,7 @@ function MovieTheaterGui:_create_movie_list()
 	end
 end
 
--- Lines 139-147
+-- Lines 143-151
 function MovieTheaterGui:_play_first_movie()
 	if tweak_data.movies and #tweak_data.movies > 0 then
 		local item = tweak_data.movies[1]
@@ -204,7 +205,7 @@ function MovieTheaterGui:_play_first_movie()
 	end
 end
 
--- Lines 149-159
+-- Lines 153-163
 function MovieTheaterGui:update(...)
 	if alive(self._video_gui) and self._video_gui:loop_count() > 0 then
 		self:reset_video()
@@ -215,12 +216,12 @@ function MovieTheaterGui:update(...)
 	end
 end
 
--- Lines 161-163
+-- Lines 165-167
 function MovieTheaterGui:input_focus()
 	return self._multiple and 1
 end
 
--- Lines 165-171
+-- Lines 169-175
 function MovieTheaterGui:move_up()
 	if alive(self._video_gui) then
 		self:reset_video()
@@ -229,7 +230,7 @@ function MovieTheaterGui:move_up()
 	end
 end
 
--- Lines 173-179
+-- Lines 177-183
 function MovieTheaterGui:move_down()
 	if alive(self._video_gui) then
 		self:reset_video()
@@ -238,7 +239,7 @@ function MovieTheaterGui:move_down()
 	end
 end
 
--- Lines 181-189
+-- Lines 185-193
 function MovieTheaterGui:confirm_pressed()
 	if alive(self._video_gui) then
 		self:reset_video()
@@ -247,19 +248,19 @@ function MovieTheaterGui:confirm_pressed()
 	end
 end
 
--- Lines 191-195
+-- Lines 195-199
 function MovieTheaterGui:back_pressed()
 	if alive(self._video_gui) then
 		self:reset_video()
 	end
 end
 
--- Lines 197-199
+-- Lines 201-203
 function MovieTheaterGui:mouse_clicked(o, button, x, y)
 	return MovieTheaterGui.super.mouse_clicked(self, o, button, x, y)
 end
 
--- Lines 201-241
+-- Lines 205-245
 function MovieTheaterGui:play_movie(item, blockingtag)
 	if alive(self._video_gui) then
 		self:reset_video()
@@ -304,7 +305,7 @@ function MovieTheaterGui:play_movie(item, blockingtag)
 	self._node:parameters().block_back = (blockingtag or "block_back") == "block_back"
 end
 
--- Lines 243-257
+-- Lines 247-261
 function MovieTheaterGui:reset_video()
 	if alive(self._video_gui) then
 		self._video_gui:stop()

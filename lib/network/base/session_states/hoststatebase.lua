@@ -9,8 +9,8 @@ function HostStateBase:exit(data, name, enter_params)
 end
 
 -- Lines 14-25
-function HostStateBase:on_join_request_received(data, peer_name, client_preferred_character, dlcs, xuid, peer_level, peer_rank, peer_stinger_index, gameversion, join_attempt_identifier, auth_ticket, sender)
-	print("[HostStateBase:on_join_request_received]", data, peer_name, client_preferred_character, dlcs, xuid, peer_level, peer_rank, peer_stinger_index, gameversion, join_attempt_identifier, sender:ip_at_index(0))
+function HostStateBase:on_join_request_received(data, peer_name, peer_account_type_str, peer_account_id, client_preferred_character, dlcs, xuid, peer_level, peer_rank, peer_stinger_index, gameversion, join_attempt_identifier, auth_ticket, sender)
+	print("[HostStateBase:on_join_request_received]", data, peer_name, peer_account_type_str, peer_account_id, client_preferred_character, dlcs, xuid, peer_level, peer_rank, peer_stinger_index, gameversion, join_attempt_identifier, sender:ip_at_index(0))
 
 	local my_user_id = data.local_peer:user_id() or ""
 
@@ -71,7 +71,7 @@ function HostStateBase:_introduce_new_peer_to_old_peers(data, new_peer, loading,
 		if old_pid ~= new_peer_id then
 			if old_peer:handshakes()[new_peer_id] == nil then
 				print("[HostStateBase:_introduce_new_peer_to_old_peers] introducing", new_peer_id, "to", old_pid)
-				old_peer:send("peer_handshake", peer_name, new_peer_id, new_peer_user_id, new_peer:in_lobby(), loading, false, character, mask_set, xuid, xnaddr)
+				old_peer:send("peer_handshake", peer_name, new_peer_id, new_peer_user_id, new_peer:account_type_str(), new_peer:account_id(), new_peer:in_lobby(), loading, false, character, mask_set, xuid, xnaddr)
 				old_peer:set_handshake_status(new_peer_id, "asked")
 			else
 				print("[HostStateBase:_introduce_new_peer_to_old_peers] peer already had handshake", new_peer_id, "to", old_pid)
@@ -145,18 +145,16 @@ function HostStateBase:_is_kicked(data, peer_name, peer_rpc)
 	end
 end
 
--- Lines 158-165
-function HostStateBase:_is_banned(peer_name, peer_rpc)
-	local ident = SystemInfo:platform() == Idstring("WIN32") and peer_rpc:ip_at_index(0) or peer_name
+-- Lines 158-164
+function HostStateBase:_is_banned(peer_name, account_id)
+	local identifier = SystemInfo:platform() == Idstring("WIN32") and account_id or peer_name
 
-	Application:error("CHECKING USER:", ident)
-
-	if managers.ban_list and managers.ban_list:banned(ident) then
+	if managers.ban_list and managers.ban_list:banned(identifier) then
 		return true
 	end
 end
 
--- Lines 170-181
+-- Lines 169-180
 function HostStateBase:_chk_peer_owns_current_dlc(data, peer_dlcs)
 	local requires_dlc = tweak_data.levels[Global.game_settings.level_id].dlc
 
@@ -173,7 +171,7 @@ function HostStateBase:_chk_peer_owns_current_dlc(data, peer_dlcs)
 	return false
 end
 
--- Lines 185-191
+-- Lines 184-190
 function HostStateBase:on_peer_finished_loading(data, peer)
 	print("[HostStateBase:on_peer_finished_loading]", inspect(peer))
 
@@ -183,12 +181,12 @@ function HostStateBase:on_peer_finished_loading(data, peer)
 	end
 end
 
--- Lines 195-197
+-- Lines 194-196
 function HostStateBase:on_load_level(data)
 	data.wants_to_load_level = true
 end
 
--- Lines 201-203
+-- Lines 200-202
 function HostStateBase:is_joinable(data)
 	return false
 end

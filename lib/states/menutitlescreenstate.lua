@@ -21,8 +21,11 @@ local is_ps4 = SystemInfo:platform() == Idstring("PS4")
 local is_xb1 = SystemInfo:platform() == Idstring("XB1")
 local is_x360 = SystemInfo:platform() == Idstring("X360")
 local is_win32 = SystemInfo:platform() == Idstring("WIN32")
+local is_steam = SystemInfo:distribution() == Idstring("STEAM")
+local is_epic = SystemInfo:distribution() == Idstring("EPIC")
+local is_mm_eos = SystemInfo:matchmaking() == Idstring("MM_EPIC")
 
--- Lines 29-79
+-- Lines 32-83
 function MenuTitlescreenState:setup()
 	local res = RenderSettings.resolution
 	self._workspace = managers.gui_data:create_saferect_workspace()
@@ -59,6 +62,7 @@ function MenuTitlescreenState:setup()
 		w = self._workspace:panel():w(),
 		h = self._workspace:panel():h()
 	})
+	self._text = text
 
 	text:set_bottom(self._workspace:panel():h() / 1.25)
 
@@ -85,7 +89,7 @@ function MenuTitlescreenState:setup()
 	self:reset_attract_video()
 end
 
--- Lines 81-94
+-- Lines 85-98
 function MenuTitlescreenState:_update_pc_xbox_controller_connection(params)
 	local text_string = managers.localization:to_upper_text(params.text_id)
 	local added_text = nil
@@ -101,7 +105,7 @@ function MenuTitlescreenState:_update_pc_xbox_controller_connection(params)
 	params.text_gui:set_text(text_string)
 end
 
--- Lines 96-137
+-- Lines 100-147
 function MenuTitlescreenState:at_enter()
 	if not self._controller_list then
 		self:setup()
@@ -137,25 +141,68 @@ function MenuTitlescreenState:at_enter()
 	self._clbk_game_has_music_control_callback = callback(self, self, "clbk_game_has_music_control")
 
 	managers.platform:add_event_callback("media_player_control", self._clbk_game_has_music_control_callback)
+
+	if is_epic and EpicMM:logged_on() then
+		print("[ABC] Epic logged on before titlescreen, checking ownership")
+		managers.dlc:check_ownerships()
+
+		self._wait_on_dlcs = true
+	end
+
 	self:reset_attract_video()
 end
 
--- Lines 139-141
+-- Lines 149-151
 function MenuTitlescreenState:get_video_volume()
 	return (managers.user:get_setting("sfx_volume") or 100) / 100
 end
 
--- Lines 143-147
+-- Lines 153-157
 function MenuTitlescreenState:clbk_game_has_music_control(status)
 	if alive(self._attract_video_gui) then
 		self._attract_video_gui:set_volume_gain(status and self:get_video_volume() or 0)
 	end
 end
 
--- Lines 150-208
+-- Lines 160-258
 function MenuTitlescreenState:update(t, dt)
 	if self._waiting_for_loaded_savegames then
-		if not managers.savefile:is_in_loading_sequence() and not self._user_has_changed then
+		if is_mm_eos and self._waiting_on_connection == nil and not EpicMM:logged_on() then
+			self._waiting_on_connection = 10
+
+			self._text:set_text(managers.localization:to_upper_text("menu_connect_eos"))
+
+			return
+		end
+
+		if is_mm_eos and self._waiting_on_connection and EpicMM:logged_on() then
+			self._waiting_on_connection = nil
+		end
+
+		if self._waiting_on_connection and self._waiting_on_connection ~= true then
+			self._waiting_on_connection = self._waiting_on_connection - dt
+
+			if self._waiting_on_connection < 0 then
+				self._waiting_on_connection = true
+
+				managers.menu:show_eos_no_connect_dialog({
+					play_offline_func = function ()
+						self._waiting_on_connection = false
+					end,
+					quit_func = function ()
+						_G.setup:quit()
+					end,
+					wait_func = function ()
+						self._waiting_on_connection = nil
+					end
+				})
+
+				return
+			end
+		end
+
+		if not managers.savefile:is_in_loading_sequence() and not self._user_has_changed and not self._waiting_on_connection then
+			self._text:hide()
 			self:_load_savegames_done()
 			Telemetry:on_login()
 			Telemetry:on_login_screen_passed()
@@ -195,13 +242,17 @@ function MenuTitlescreenState:update(t, dt)
 				print("[MenuTitlescreenState:update] showing corrupt_DLC")
 				managers.menu:show_corrupt_dlc()
 			end
+
+			if is_epic and not EpicMM:logged_on() then
+				self._text:set_text(managers.localization:to_upper_text("menu_connect_eos"))
+			end
 		elseif not self:check_attract_video() and self:is_attract_video_delay_done() then
 			self:play_attract_video()
 		end
 	end
 end
 
--- Lines 210-249
+-- Lines 260-299
 function MenuTitlescreenState:get_start_pressed_controller_index()
 	if _G.IS_VR then
 		for index, controller in ipairs(self._controller_list) do
@@ -236,7 +287,7 @@ function MenuTitlescreenState:get_start_pressed_controller_index()
 	return nil
 end
 
--- Lines 251-258
+-- Lines 301-308
 function MenuTitlescreenState:get_first_keyboard_controller_index()
 	for index, controller in ipairs(self._controller_list) do
 		if controller._default_controller_id == "keyboard" then
@@ -247,7 +298,7 @@ function MenuTitlescreenState:get_first_keyboard_controller_index()
 	return nil
 end
 
--- Lines 260-284
+-- Lines 310-334
 function MenuTitlescreenState:check_confirm_pressed()
 	for index, controller in ipairs(self._controller_list) do
 		if controller:get_input_pressed("confirm") then
@@ -277,7 +328,7 @@ function MenuTitlescreenState:check_confirm_pressed()
 	end
 end
 
--- Lines 286-308
+-- Lines 336-357
 function MenuTitlescreenState:check_user_callback(success)
 	managers.dlc:on_signin_complete()
 
@@ -305,7 +356,7 @@ function MenuTitlescreenState:check_user_callback(success)
 	end
 end
 
--- Lines 310-334
+-- Lines 359-383
 function MenuTitlescreenState:check_storage_callback(success)
 	if success then
 		self._waiting_for_loaded_savegames = true
@@ -331,7 +382,7 @@ function MenuTitlescreenState:check_storage_callback(success)
 	end
 end
 
--- Lines 336-340
+-- Lines 385-389
 function MenuTitlescreenState:_load_savegames_done()
 	local sound_source = SoundDevice:create_source("MenuTitleScreen")
 
@@ -339,18 +390,18 @@ function MenuTitlescreenState:_load_savegames_done()
 	self:gsm():change_state_by_name("menu_main")
 end
 
--- Lines 342-345
+-- Lines 391-394
 function MenuTitlescreenState:continue_without_saving_yes_callback()
 	self:gsm():change_state_by_name("menu_main")
 end
 
--- Lines 347-350
+-- Lines 396-399
 function MenuTitlescreenState:continue_without_saving_no_callback()
 	managers.user:set_index(nil)
 	managers.controller:set_default_wrapper_index(nil)
 end
 
--- Lines 352-364
+-- Lines 401-413
 function MenuTitlescreenState:check_attract_video()
 	if alive(self._attract_video_gui) then
 		if self._attract_video_gui:loop_count() > 0 or self:is_any_input_pressed() then
@@ -365,7 +416,7 @@ function MenuTitlescreenState:check_attract_video()
 	return false
 end
 
--- Lines 366-374
+-- Lines 415-423
 function MenuTitlescreenState:is_any_input_pressed()
 	for _, controller in ipairs(self._controller_list) do
 		if controller:get_any_input_pressed() then
@@ -376,7 +427,7 @@ function MenuTitlescreenState:is_any_input_pressed()
 	return false
 end
 
--- Lines 376-384
+-- Lines 425-433
 function MenuTitlescreenState:reset_attract_video()
 	self._attract_video_time = TimerManager:main():time()
 
@@ -388,12 +439,12 @@ function MenuTitlescreenState:reset_attract_video()
 	end
 end
 
--- Lines 386-388
+-- Lines 435-437
 function MenuTitlescreenState:is_attract_video_delay_done()
 	return TimerManager:main():time() > self._attract_video_time + _G.tweak_data.states.title.ATTRACT_VIDEO_DELAY
 end
 
--- Lines 390-412
+-- Lines 439-461
 function MenuTitlescreenState:play_attract_video()
 	self:reset_attract_video()
 
@@ -425,7 +476,7 @@ function MenuTitlescreenState:play_attract_video()
 	self._attract_video_gui:set_volume_gain(managers.music:has_music_control() and self:get_video_volume() or 0)
 end
 
--- Lines 414-446
+-- Lines 463-495
 function MenuTitlescreenState:at_exit()
 	managers.platform:remove_event_callback("media_player_control", self._clbk_game_has_music_control_callback)
 	setup:add_end_frame_callback(function ()
@@ -455,7 +506,7 @@ function MenuTitlescreenState:at_exit()
 	managers.system_menu:init_finalize()
 end
 
--- Lines 448-455
+-- Lines 497-504
 function MenuTitlescreenState:on_user_changed(old_user_data, user_data)
 	print("MenuTitlescreenState:on_user_changed")
 
@@ -464,7 +515,7 @@ function MenuTitlescreenState:on_user_changed(old_user_data, user_data)
 	end
 end
 
--- Lines 457-462
+-- Lines 506-511
 function MenuTitlescreenState:on_storage_changed(old_user_data, user_data)
 	print("MenuTitlescreenState:on_storage_changed")
 

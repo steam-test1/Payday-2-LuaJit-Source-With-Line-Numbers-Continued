@@ -928,7 +928,7 @@ end
 function ContractBoxGui:_create_lower_static_panel(lower_static_panel)
 end
 
--- Lines 829-857
+-- Lines 829-856
 function ContractBoxGui:mouse_pressed(button, x, y)
 	if not self:can_take_input() then
 		return
@@ -944,9 +944,7 @@ function ContractBoxGui:mouse_pressed(button, x, y)
 					local peer = managers.network:session() and managers.network:session():peer(peer_id)
 
 					if peer then
-						Steam:overlay_activate("url", tweak_data.gui.fbi_files_webpage .. "/suspect/" .. peer:user_id() .. "/")
-
-						return
+						return peer:overlay_inspect()
 					end
 				end
 			end
@@ -954,7 +952,7 @@ function ContractBoxGui:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines 859-891
+-- Lines 858-890
 function ContractBoxGui:mouse_moved(x, y)
 	if not self:can_take_input() then
 		return
@@ -988,39 +986,39 @@ function ContractBoxGui:mouse_moved(x, y)
 	return used, pointer
 end
 
--- Lines 893-895
+-- Lines 892-894
 function ContractBoxGui:can_take_input()
 	return true
 end
 
--- Lines 897-898
+-- Lines 896-897
 function ContractBoxGui:moved_scroll_bar()
 end
 
--- Lines 900-901
+-- Lines 899-900
 function ContractBoxGui:mouse_wheel_down()
 end
 
--- Lines 903-904
+-- Lines 902-903
 function ContractBoxGui:mouse_wheel_up()
 end
 
--- Lines 906-908
+-- Lines 905-907
 function ContractBoxGui:check_minimize()
 	return false
 end
 
--- Lines 910-912
+-- Lines 909-911
 function ContractBoxGui:check_grab_scroll_bar()
 	return false
 end
 
--- Lines 914-916
+-- Lines 913-915
 function ContractBoxGui:release_scroll_bar()
 	return false
 end
 
--- Lines 918-935
+-- Lines 917-934
 function ContractBoxGui:set_enabled(enabled)
 	self._enabled = enabled
 
@@ -1041,15 +1039,15 @@ function ContractBoxGui:set_enabled(enabled)
 	end
 end
 
--- Lines 937-940
+-- Lines 936-939
 function ContractBoxGui:set_size(x, y)
 end
 
--- Lines 942-944
+-- Lines 941-943
 function ContractBoxGui:set_visible(visible)
 end
 
--- Lines 946-950
+-- Lines 945-949
 function ContractBoxGui:close()
 	self._ws:panel():remove(self._panel)
 	self._fullscreen_ws:panel():remove(self._fullscreen_panel)

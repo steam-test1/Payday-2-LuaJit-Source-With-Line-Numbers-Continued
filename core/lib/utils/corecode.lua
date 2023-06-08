@@ -221,8 +221,8 @@ function add_prints(class_name, ignore_list)
 	end
 end
 
--- Lines 236-258
-function tag_print(tag, ...)
+-- Lines 236-257
+function tag_string(tag, ...)
 	tag = string.sub(tag, 1, 1) == "[" and tag or "[" .. tag .. "]"
 
 	-- Lines 238-255
@@ -249,17 +249,34 @@ function tag_print(tag, ...)
 		return str:sub(2)
 	end
 
-	print(do_things(tag, ...))
+	return do_things(tag, ...)
 end
 
--- Lines 261-265
+-- Lines 259-261
+function tag_print(tag, ...)
+	print(tag_string(tag, ...))
+end
+
+-- Lines 263-265
+function tag_error(tag, ...)
+	Application:error(tag_string(tag, ...))
+end
+
+-- Lines 268-272
 function make_tag_print(tag)
 	return function (...)
 		tag_print(tag, ...)
 	end
 end
 
--- Lines 269-285
+-- Lines 275-279
+function make_tag_error(tag)
+	return function (...)
+		tag_error(tag, ...)
+	end
+end
+
+-- Lines 283-299
 function full_representation(x, seen)
 	if DB:is_bundled() then
 		return "[N/A in bundle]"
@@ -278,7 +295,7 @@ end
 
 inspect = full_representation
 
--- Lines 288-294
+-- Lines 302-308
 function properties(x)
 	local t = {}
 
@@ -289,11 +306,11 @@ function properties(x)
 	CoreDebug.cat_print("debug", ascii_table(t))
 end
 
--- Lines 297-334
+-- Lines 311-348
 function help(o)
 	local methods = {}
 
-	-- Lines 299-326
+	-- Lines 313-340
 	local function add_methods(t)
 		if type(t) == "table" then
 			for k, v in pairs(t) do
@@ -347,7 +364,7 @@ function help(o)
 	end
 end
 
--- Lines 339-357
+-- Lines 353-371
 function ascii_table(t, raw)
 	local out = ""
 	local klen = 20
@@ -377,7 +394,7 @@ function ascii_table(t, raw)
 	return out
 end
 
--- Lines 362-422
+-- Lines 376-436
 function memory_report(limit)
 	local seen = {}
 	local count = {}
@@ -391,7 +408,7 @@ function memory_report(limit)
 		end
 	end
 
-	-- Lines 373-378
+	-- Lines 387-392
 	local function simple(item)
 		local t = type(item)
 
@@ -406,7 +423,7 @@ function memory_report(limit)
 		return true
 	end
 
-	-- Lines 380-402
+	-- Lines 394-416
 	local function recurse(item, parent, key)
 		local index = type(item) == "userdata" and item:key() or item
 
@@ -480,7 +497,7 @@ end
 
 __profiled = {}
 
--- Lines 437-473
+-- Lines 451-487
 function profile(s)
 	if __profiled[s] then
 		return
@@ -503,7 +520,7 @@ function profile(s)
 
 		t.f = rawget(_G, t.class)[t.name]
 
-		-- Lines 451-451
+		-- Lines 465-465
 		function t.patch(f)
 			_G[t.class][t.name] = f
 		end
@@ -511,7 +528,7 @@ function profile(s)
 		t.name = s
 		t.f = rawget(_G, t.name)
 
-		-- Lines 455-455
+		-- Lines 469-469
 		function t.patch(f)
 			_G[t.name] = f
 		end
@@ -523,14 +540,14 @@ function profile(s)
 		return
 	end
 
-	-- Lines 463-468
+	-- Lines 477-482
 	function t.instrumented(...)
 		local id = Profiler:start(t.s)
-		res = t.f(...)
+		res, res2, res3, res4, res5 = t.f(...)
 
 		Profiler:stop(id)
 
-		return res
+		return res, res2, res3, res4, res5
 	end
 
 	t.patch(t.instrumented)
@@ -540,7 +557,7 @@ function profile(s)
 	Application:console_command("profiler add " .. s)
 end
 
--- Lines 475-482
+-- Lines 489-496
 function unprofile(s)
 	local t = __profiled[s]
 
@@ -553,7 +570,7 @@ function unprofile(s)
 	__profiled[s] = nil
 end
 
--- Lines 484-489
+-- Lines 498-503
 function reprofile()
 	for k, v in pairs(__old_profiled) do
 		profile(k)
@@ -562,7 +579,7 @@ function reprofile()
 	__old_profiled = {}
 end
 
--- Lines 491-503
+-- Lines 505-517
 function safe_get_value(table, ...)
 	local keys = {
 		...

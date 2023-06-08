@@ -332,7 +332,7 @@ end
 
 -- Lines 191-193
 function ProfileBoxGui:_trigger_stats()
-	Steam:overlay_activate("game", "Stats")
+	managers.network.account:overlay_activate("game", "Stats")
 end
 
 -- Lines 195-198
@@ -342,7 +342,7 @@ end
 
 -- Lines 200-202
 function ProfileBoxGui:_trigger_achievements()
-	Steam:overlay_activate("game", "Achievements")
+	managers.network.account:overlay_activate("game", "Achievements")
 end
 
 -- Lines 204-240

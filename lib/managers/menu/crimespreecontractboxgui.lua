@@ -108,7 +108,7 @@ function CrimeSpreeContractBoxGui:update(t, dt)
 	end
 end
 
--- Lines 109-130
+-- Lines 109-129
 function CrimeSpreeContractBoxGui:mouse_pressed(button, x, y)
 	if not self:can_take_input() or not self:_can_update() then
 		return
@@ -120,16 +120,14 @@ function CrimeSpreeContractBoxGui:mouse_pressed(button, x, y)
 				local peer = managers.network:session() and managers.network:session():peer(peer_id)
 
 				if peer then
-					Steam:overlay_activate("url", tweak_data.gui.fbi_files_webpage .. "/suspect/" .. peer:user_id() .. "/")
-
-					return
+					return peer:overlay_inspect()
 				end
 			end
 		end
 	end
 end
 
--- Lines 132-153
+-- Lines 131-152
 function CrimeSpreeContractBoxGui:mouse_moved(x, y)
 	if not self:can_take_input() or not self:_can_update() then
 		return
@@ -152,7 +150,7 @@ function CrimeSpreeContractBoxGui:mouse_moved(x, y)
 	end
 end
 
--- Lines 155-160
+-- Lines 154-159
 function CrimeSpreeContractBoxGui:can_take_input()
 	if managers.menu_component and managers.menu_component:crime_spree_modifiers() then
 		return false
@@ -161,29 +159,29 @@ function CrimeSpreeContractBoxGui:can_take_input()
 	return true
 end
 
--- Lines 162-164
+-- Lines 161-163
 function CrimeSpreeContractBoxGui:check_minimize()
 	return false
 end
 
--- Lines 166-167
+-- Lines 165-166
 function CrimeSpreeContractBoxGui:moved_scroll_bar()
 end
 
--- Lines 169-170
+-- Lines 168-169
 function CrimeSpreeContractBoxGui:mouse_wheel_down()
 end
 
--- Lines 172-173
+-- Lines 171-172
 function CrimeSpreeContractBoxGui:mouse_wheel_up()
 end
 
--- Lines 175-177
+-- Lines 174-176
 function CrimeSpreeContractBoxGui:check_grab_scroll_bar()
 	return false
 end
 
--- Lines 179-181
+-- Lines 178-180
 function CrimeSpreeContractBoxGui:release_scroll_bar()
 	return false
 end

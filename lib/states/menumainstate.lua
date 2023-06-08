@@ -7,10 +7,10 @@ function MenuMainState:init(game_state_machine)
 	GameState.init(self, "menu_main", game_state_machine)
 end
 
--- Lines 9-338
+-- Lines 9-344
 function MenuMainState:at_enter(old_state)
 	managers.platform:set_playing(false)
-	managers.platform:set_rich_presence("Idle")
+	managers.platform:set_rich_presence_state("Idle")
 
 	if old_state:name() ~= "freeflight" or not managers.menu:is_active() then
 		managers.menu_scene:setup_camera()
@@ -74,20 +74,28 @@ function MenuMainState:at_enter(old_state)
 		managers.menu:check_vr_dlc()
 	end
 
+	if SystemInfo:platform() == Idstring("WIN32") then
+		local signed_in = managers.network and managers.network.account and managers.network.account:local_signin_state()
+
+		if not signed_in then
+			self._chk_signed_in_state_t = 4
+		end
+	end
+
 	if SystemInfo:platform() == Idstring("WIN32") and not Global.use_telemetry_gamesight_eula_decided then
-		-- Lines 84-87
+		-- Lines 92-95
 		local function gamesight_accept_func()
 			managers.user:set_setting("use_gamesight", true, true)
 			_G.MenuCallbackHandler:save_settings()
 		end
 
-		-- Lines 89-92
+		-- Lines 97-100
 		local function gamesight_deny_func()
 			managers.user:set_setting("use_gamesight", false, true)
 			_G.MenuCallbackHandler:save_settings()
 		end
 
-		-- Lines 94-98
+		-- Lines 102-106
 		local function telemetry_accept_func()
 			managers.user:set_setting("use_telemetry", true, true)
 			_G.MenuCallbackHandler:save_settings()
@@ -97,7 +105,7 @@ function MenuMainState:at_enter(old_state)
 			})
 		end
 
-		-- Lines 100-104
+		-- Lines 108-112
 		local function telemetry_deny_func()
 			managers.user:set_setting("use_telemetry", false, true)
 			_G.MenuCallbackHandler:save_settings()
@@ -107,7 +115,7 @@ function MenuMainState:at_enter(old_state)
 			})
 		end
 
-		-- Lines 106-109
+		-- Lines 114-117
 		local function eula_accept_func()
 			Global.use_telemetry_gamesight_eula_decided = true
 
@@ -117,7 +125,7 @@ function MenuMainState:at_enter(old_state)
 			})
 		end
 
-		-- Lines 111-113
+		-- Lines 119-121
 		local function eula_deny_func()
 			_G.setup:quit()
 		end
@@ -157,7 +165,7 @@ function MenuMainState:at_enter(old_state)
 
 		Global.psn_boot_invite_checked = true
 	elseif SystemInfo:platform() == Idstring("WIN32") then
-		if SystemInfo:distribution() == Idstring("STEAM") and Global.boot_invite then
+		if Global.boot_invite then
 			has_invite = true
 			local lobby = Global.boot_invite
 			Global.boot_invite = nil
@@ -192,7 +200,7 @@ function MenuMainState:at_enter(old_state)
 		elseif (tweak_data.safehouse.level_limit <= managers.experience:current_level() or managers.experience:current_rank() > 0) and not managers.custom_safehouse:has_entered_safehouse() and Global.mission_manager.safehouse_ask_amount < 2 and not Global.skip_menu_dialogs then
 			Global.mission_manager.safehouse_ask_amount = Global.mission_manager.safehouse_ask_amount + 1
 
-			-- Lines 255-263
+			-- Lines 261-269
 			local function yes_func()
 				Global.mission_manager.safehouse_ask_amount = 2
 
@@ -240,7 +248,7 @@ function MenuMainState:at_enter(old_state)
 	managers.statistics:check_stats()
 end
 
--- Lines 346-359
+-- Lines 352-365
 function MenuMainState:at_exit(new_state)
 	if new_state:name() ~= "freeflight" then
 		managers.menu:close_menu("menu_main")
@@ -253,11 +261,26 @@ function MenuMainState:at_exit(new_state)
 	end
 end
 
--- Lines 361-371
+-- Lines 367-398
 function MenuMainState:update(t, dt)
+	if self._chk_signed_in_state_t then
+		self._chk_signed_in_state_t = self._chk_signed_in_state_t - dt
+
+		if self._chk_signed_in_state_t < 0 then
+			if managers.network and managers.network.account and managers.network.account:local_signin_state() == true then
+				self._chk_signed_in_state_t = nil
+
+				if managers.dlc then
+					managers.dlc:chk_content_updated()
+				end
+			else
+				self._chk_signed_in_state_t = 4
+			end
+		end
+	end
 end
 
--- Lines 373-378
+-- Lines 400-405
 function MenuMainState:on_server_left()
 	if managers.network:session() and (managers.network:session():has_recieved_ok_to_load_level() or managers.network:session():closing()) then
 		return
@@ -266,7 +289,7 @@ function MenuMainState:on_server_left()
 	self:_create_server_left_dialog()
 end
 
--- Lines 380-394
+-- Lines 407-421
 function MenuMainState:_create_server_left_dialog()
 	local dialog_data = {
 		title = managers.localization:text("dialog_warning_title"),
@@ -285,13 +308,13 @@ function MenuMainState:_create_server_left_dialog()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 396-402
+-- Lines 423-429
 function MenuMainState:on_server_left_ok_pressed()
 	print("[MenuMainState:on_server_left_ok_pressed]")
 	managers.menu:on_leave_lobby()
 end
 
--- Lines 404-407
+-- Lines 431-434
 function MenuMainState:_create_disconnected_dialog()
 	managers.system_menu:close("server_left_dialog")
 	managers.menu:show_mp_disconnected_internet_dialog({
@@ -299,6 +322,15 @@ function MenuMainState:_create_disconnected_dialog()
 	})
 end
 
--- Lines 409-410
+-- Lines 436-437
 function MenuMainState:on_disconnected()
+end
+
+-- Lines 439-445
+function MenuMainState:on_disconnected_from_service()
+	self._chk_signed_in_state_t = 4
+
+	if managers.dlc then
+		managers.dlc:chk_content_updated()
+	end
 end

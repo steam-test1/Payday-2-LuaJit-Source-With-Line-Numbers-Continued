@@ -10,7 +10,7 @@ function MenuItemCrimeNetSkirmishServer:init(data_node, parameters)
 	self._type = MenuItemCrimeNetSkirmishServer.TYPE
 end
 
--- Lines 13-154
+-- Lines 13-147
 function MenuItemCrimeNetSkirmishServer:setup_gui(node, row_item)
 	local scaled_size = managers.gui_data:scaled_size()
 	local color = tweak_data.screen_colors.skirmish_color
@@ -32,20 +32,9 @@ function MenuItemCrimeNetSkirmishServer:setup_gui(node, row_item)
 		mutators = num_mutators and num_mutators > 0
 	end
 
-	local is_friend = false
-
-	if Steam:logged_on() and Steam:friends() then
-		local owner_id = lobby:key_value("owner_id")
-
-		for _, friend in ipairs(Steam:friends()) do
-			if friend:id() == owner_id then
-				is_friend = true
-
-				break
-			end
-		end
-	end
-
+	local owner_id = lobby:key_value("owner_id")
+	local owner_account_id = lobby:key_value("owner_account_id")
+	local is_friend = managers.network.matchmake:is_user_friend(owner_id, owner_account_id)
 	local is_weekly = tonumber(lobby:key_value("skirmish")) == SkirmishManager.LOBBY_WEEKLY
 	row_item.gui_panel = node.item_panel:panel({
 		w = node.item_panel:w()
@@ -146,7 +135,7 @@ function MenuItemCrimeNetSkirmishServer:setup_gui(node, row_item)
 	return true
 end
 
--- Lines 157-161
+-- Lines 150-154
 function MenuItemCrimeNetSkirmishServer:reload(row_item, node)
 	MenuItemCrimeNetSkirmishServer.super.reload(self, row_item, node)
 	self:_set_row_item_state(node, row_item)
@@ -154,33 +143,33 @@ function MenuItemCrimeNetSkirmishServer:reload(row_item, node)
 	return true
 end
 
--- Lines 164-167
+-- Lines 157-160
 function MenuItemCrimeNetSkirmishServer:highlight_row_item(node, row_item, mouse_over)
 	self:_set_row_item_state(node, row_item)
 
 	return true
 end
 
--- Lines 170-173
+-- Lines 163-166
 function MenuItemCrimeNetSkirmishServer:fade_row_item(node, row_item, mouse_over)
 	self:_set_row_item_state(node, row_item)
 
 	return true
 end
 
--- Lines 176-180
+-- Lines 169-173
 function MenuItemCrimeNetSkirmishServer:_set_row_item_state(node, row_item)
 	if row_item.highlighted then
 		-- Nothing
 	end
 end
 
--- Lines 182-184
+-- Lines 175-177
 function MenuItemCrimeNetSkirmishServer:menu_unselected_visible()
 	return false
 end
 
--- Lines 187-189
+-- Lines 180-182
 function MenuItemCrimeNetSkirmishServer:on_delete_row_item(row_item, ...)
 	MenuItemCrimeNetSkirmishServer.super.on_delete_row_item(self, row_item, ...)
 end

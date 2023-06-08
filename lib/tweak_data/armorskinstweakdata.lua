@@ -644,7 +644,7 @@ function EconomyTweakData:_init_armor_skins_crime_spree()
 	}
 end
 
--- Lines 695-1306
+-- Lines 695-1312
 function EconomyTweakData:_init_armor_skins_armor_safe()
 	self.armor_skins.ast_armor1 = {
 		name_id = "bm_askn_ast_armor3",
@@ -1051,7 +1051,8 @@ function EconomyTweakData:_init_armor_skins_armor_safe()
 		pattern_pos = {
 			[3] = Vector3(0.244694, 0.397329, 0)
 		},
-		sorting_idx = sorting_groups.camo
+		sorting_idx = sorting_groups.camo,
+		steam_economy = true
 	}
 	self.armor_skins.cvc_city_camo = {
 		name_id = "bm_askn_cvc_city_camo",
@@ -1086,7 +1087,8 @@ function EconomyTweakData:_init_armor_skins_armor_safe()
 		uv_offset_rot = {
 			[3] = Vector3(0.216614, 0.925013, 0)
 		},
-		sorting_idx = sorting_groups.camo
+		sorting_idx = sorting_groups.camo,
+		steam_economy = true
 	}
 	self.armor_skins.cvc_desert_camo = {
 		name_id = "bm_askn_desert_camo",
@@ -1121,7 +1123,8 @@ function EconomyTweakData:_init_armor_skins_armor_safe()
 		uv_scale = {
 			[3] = Vector3(20, 18.5698, 1)
 		},
-		sorting_idx = sorting_groups.camo
+		sorting_idx = sorting_groups.camo,
+		steam_economy = true
 	}
 	self.armor_skins.cvc_avenger = {
 		name_id = "bm_askn_cvc_avenger",
@@ -1156,7 +1159,8 @@ function EconomyTweakData:_init_armor_skins_armor_safe()
 		uv_scale = {
 			[2] = Vector3(1.3592, 2.26502, 1),
 			[3] = Vector3(1, 1, 1)
-		}
+		},
+		steam_economy = true
 	}
 	self.armor_skins.cvc_swat = {
 		name_id = "bm_askn_cvc_swat",
@@ -1179,7 +1183,8 @@ function EconomyTweakData:_init_armor_skins_armor_safe()
 		uv_offset_rot = {
 			[2] = Vector3(0.0168202, 1.28452, 3.13635),
 			[3] = Vector3(0, 0.99987, 0)
-		}
+		},
+		steam_economy = true
 	}
 	self.armor_skins.cvc_bone = {
 		name_id = "bm_askn_cvc_bone",
@@ -1203,6 +1208,7 @@ function EconomyTweakData:_init_armor_skins_armor_safe()
 			[2] = Vector3(0.416408, 1.14143, 3.12136),
 			[3] = Vector3(-0.001, 0.994791, 0)
 		},
-		cubemap_pattern_control = Vector3(0, 0.001, 0)
+		cubemap_pattern_control = Vector3(0, 0.001, 0),
+		steam_economy = true
 	}
 end

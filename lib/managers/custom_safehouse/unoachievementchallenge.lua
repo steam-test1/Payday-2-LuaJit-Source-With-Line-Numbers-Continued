@@ -56,7 +56,7 @@ end
 
 -- Lines 54-56
 function UnoAchievementChallenge:uno_ending_key()
-	return Application:md5_encrypt("9x7XhhdHVse6hmRBTmz2" .. Steam:userid())
+	return Application:md5_encrypt("9x7XhhdHVse6hmRBTmz2" .. managers.network.account:player_id())
 end
 
 -- Lines 58-63

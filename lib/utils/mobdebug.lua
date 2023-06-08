@@ -13,7 +13,7 @@ local mobdebug = {
 	yieldtimeout = 0.02,
 	_DESCRIPTION = "Mobile Remote Debugger for the Lua programming language",
 	_NAME = "mobdebug",
-	_VERSION = "0.706",
+	_VERSION = "0.803",
 	_COPYRIGHT = "Paul Kulchenko",
 	checkcount = 200,
 	connecttimeout = 2,
@@ -35,8 +35,13 @@ local find = string.find
 local genv = _G or _ENV
 local jit = rawget(genv, "jit")
 local MOAICoroutine = rawget(genv, "MOAICoroutine")
-local metagindex = getmetatable(genv) and getmetatable(genv).__index
-local ngx = type(metagindex) == "table" and metagindex.rawget and metagindex:rawget("ngx") or nil
+local ngx = rawget(genv, "ngx")
+
+if not ngx then
+	local metagindex = getmetatable(genv) and getmetatable(genv).__index
+	ngx = type(metagindex) == "table" and metagindex.rawget and metagindex:rawget("ngx") or nil
+end
+
 local corocreate = ngx and coroutine._create or coroutine.create
 local cororesume = ngx and coroutine._resume or coroutine.resume
 local coroyield = ngx and coroutine._yield or coroutine.yield
@@ -44,7 +49,7 @@ local corostatus = ngx and coroutine._status or coroutine.status
 local corowrap = coroutine.wrap
 
 if not setfenv then
-	-- Lines 71-78
+	-- Lines 75-82
 	local function findenv(f)
 		local level = 1
 
@@ -61,12 +66,12 @@ if not setfenv then
 		return nil
 	end
 
-	-- Lines 79-79
+	-- Lines 83-83
 	function getfenv(f)
 		return select(2, findenv(f)) or _G
 	end
 
-	-- Lines 80-83
+	-- Lines 84-87
 	function setfenv(f, t)
 		local level = findenv(f)
 
@@ -119,7 +124,7 @@ local iobase = {
 local basedir = ""
 local deferror = "execution aborted at default debugee"
 
--- Lines 125-129
+-- Lines 129-133
 local function debugee()
 	local a = 1
 
@@ -130,7 +135,7 @@ local function debugee()
 	error(deferror)
 end
 
--- Lines 130-130
+-- Lines 134-134
 local function q(s)
 	return string.gsub(s, "([%(%)%.%%%+%-%*%?%[%^%$%]])", "%%%1")
 end
@@ -152,7 +157,7 @@ local serpent = function ()
 	}
 	local getmetatable = debug and debug.getmetatable or getmetatable
 
-	-- Lines 138-138
+	-- Lines 142-142
 	local function pairs(t)
 		return next, t
 	end
@@ -189,7 +194,9 @@ local serpent = function ()
 	end
 
 	for k, v in pairs(G) do
-		globals[v] = k
+		if type(v) == "function" then
+			globals[v] = k
+		end
 	end
 
 	for _, g in ipairs({
@@ -202,11 +209,13 @@ local serpent = function ()
 		"os"
 	}) do
 		for k, v in pairs(type(G[g]) == "table" and G[g] or {}) do
-			globals[v] = g .. "." .. k
+			if type(v) == "function" then
+				globals[v] = g .. "." .. k
+			end
 		end
 	end
 
-	-- Lines 147-252
+	-- Lines 151-256
 	local function s(t, opts)
 		local name = opts.name
 		local indent = opts.indent
@@ -229,7 +238,7 @@ local serpent = function ()
 		local syms = {}
 		local symn = 0
 
-		-- Lines 155-157
+		-- Lines 159-161
 		local function gensym(val)
 			return "_" .. tostring(tostring(val)):gsub("[^%w]", ""):gsub("(%d%w+)", function (s)
 				if not syms[s] then
@@ -241,22 +250,22 @@ local serpent = function ()
 			end)
 		end
 
-		-- Lines 158-160
+		-- Lines 162-164
 		local function safestr(s)
 			return type(s) == "number" and tostring(huge and snum[tostring(s)] or numformat:format(s)) or type(s) ~= "string" and tostring(s) or ("%q"):format(s):gsub("\n", "n"):gsub("", "\\026")
 		end
 
-		-- Lines 161-161
+		-- Lines 165-165
 		local function comment(s, l)
 			return comm and (l or 0) < comm and " --[[" .. select(2, pcall(tostring, s)) .. "]]" or ""
 		end
 
-		-- Lines 162-163
+		-- Lines 166-167
 		local function globerr(s, l)
 			return globals[s] and globals[s] .. comment(s, l) or not fatal and safestr(select(2, pcall(tostring, s))) or error("Can't serialize " .. tostring(s))
 		end
 
-		-- Lines 164-168
+		-- Lines 168-172
 		local function safename(path, name)
 			local n = name == nil and "" or name
 			local plain = type(n) == "string" and n:match("^[%l%u_][%w_]*$") and not keyword[n]
@@ -272,7 +281,7 @@ local serpent = function ()
 				number = "a"
 			}
 
-			-- Lines 171-171
+			-- Lines 175-175
 			local function padnum(d)
 				return ("%0" .. tostring(maxn) .. "d"):format(tonumber(d))
 			end
@@ -282,7 +291,7 @@ local serpent = function ()
 			end)
 		end
 
-		-- Lines 176-246
+		-- Lines 180-250
 		local function val2str(t, name, indent, insref, path, plainindex, level)
 			local ttype = type(t)
 			local level = level or 0
@@ -421,7 +430,7 @@ local serpent = function ()
 		return not name and body .. warn or "do local " .. body .. sepr .. tail .. "return " .. name .. sepr .. "end"
 	end
 
-	-- Lines 254-265
+	-- Lines 258-269
 	local function deserialize(data, opts)
 		local env = opts and opts.safe == false and G or setmetatable({}, {
 			__index = function (t, k)
@@ -448,7 +457,7 @@ local serpent = function ()
 		return pcall(f)
 	end
 
-	-- Lines 267-267
+	-- Lines 271-271
 	local function merge(a, b)
 		if b then
 			for k, v in pairs(b) do
@@ -493,7 +502,7 @@ mobdebug.dump = serpent.dump
 mobdebug.linemap = nil
 mobdebug.loadstring = loadstring
 
--- Lines 280-289
+-- Lines 284-293
 local function removebasedir(path, basedir)
 	if iscasepreserving then
 		return path:lower():find("^" .. q(basedir:lower())) and path:sub(#basedir + 1) or path
@@ -502,9 +511,9 @@ local function removebasedir(path, basedir)
 	end
 end
 
--- Lines 291-347
+-- Lines 295-349
 local function stack(start)
-	-- Lines 292-324
+	-- Lines 296-327
 	local function vars(f)
 		local func = debug.getinfo(f, "f").func
 		local i = 1
@@ -532,7 +541,7 @@ local function stack(start)
 		while true do
 			local name, value = debug.getlocal(f, -i)
 
-			if not name or name ~= "(*vararg)" then
+			if not name then
 				break
 			end
 
@@ -595,16 +604,12 @@ local function stack(start)
 			},
 			vars(i + 1)
 		})
-
-		if source.what == "main" then
-			break
-		end
 	end
 
 	return stack
 end
 
--- Lines 349-354
+-- Lines 351-356
 local function set_breakpoint(file, line)
 	if file == "-" and lastfile then
 		file = lastfile
@@ -619,7 +624,7 @@ local function set_breakpoint(file, line)
 	breakpoints[line][file] = true
 end
 
--- Lines 356-361
+-- Lines 358-363
 local function remove_breakpoint(file, line)
 	if file == "-" and lastfile then
 		file = lastfile
@@ -634,12 +639,12 @@ local function remove_breakpoint(file, line)
 	end
 end
 
--- Lines 363-366
+-- Lines 365-368
 local function has_breakpoint(file, line)
 	return breakpoints[line] and breakpoints[line][iscasepreserving and string.lower(file) or file]
 end
 
--- Lines 368-409
+-- Lines 370-411
 local function restore_vars(vars)
 	if type(vars) ~= "table" then
 		return
@@ -696,7 +701,7 @@ local function restore_vars(vars)
 	end
 end
 
--- Lines 411-459
+-- Lines 413-460
 local function capture_vars(level, thread)
 	level = (level or 0) + 2
 	local func = (thread and debug.getinfo(thread, level, "f") or debug.getinfo(level, "f") or {}).func
@@ -757,7 +762,7 @@ local function capture_vars(level, thread)
 			name, value = debug.getlocal(level, -i)
 		end
 
-		if not name or name ~= "(*vararg)" then
+		if not name then
 			break
 		end
 
@@ -774,7 +779,7 @@ local function capture_vars(level, thread)
 	return vars
 end
 
--- Lines 461-466
+-- Lines 462-467
 local function stack_depth(start_depth)
 	for i = start_depth, 0, -1 do
 		if debug.getinfo(i, "l") then
@@ -785,7 +790,7 @@ local function stack_depth(start_depth)
 	return start_depth
 end
 
--- Lines 468-478
+-- Lines 469-479
 local function is_safe(stack_level)
 	if stack_level == 3 then
 		return true
@@ -806,7 +811,7 @@ local function is_safe(stack_level)
 	return true
 end
 
--- Lines 480-489
+-- Lines 481-490
 local function in_debugger()
 	local this = debug.getinfo(1, "S").source
 
@@ -825,7 +830,7 @@ local function in_debugger()
 	return false
 end
 
--- Lines 491-500
+-- Lines 492-501
 local function is_pending(peer)
 	if not buf and mobdebug.checkcount <= checkcount then
 		peer:settimeout(0)
@@ -840,7 +845,7 @@ local function is_pending(peer)
 	return buf
 end
 
--- Lines 502-507
+-- Lines 503-508
 local function readnext(peer, num)
 	peer:settimeout(0)
 
@@ -851,7 +856,7 @@ local function readnext(peer, num)
 	return res or partial or "", err
 end
 
--- Lines 509-540
+-- Lines 510-541
 local function handle_breakpoint(peer)
 	if not buf or buf:sub(1, 1) ~= "S" and buf:sub(1, 1) ~= "D" then
 		return
@@ -871,7 +876,7 @@ local function handle_breakpoint(peer)
 		return
 	end
 
-	local res, _, partial = peer:receive()
+	local res, _, partial = peer:receive("*l")
 
 	if not res then
 		if partial then
@@ -894,7 +899,7 @@ local function handle_breakpoint(peer)
 	buf = nil
 end
 
--- Lines 542-556
+-- Lines 543-557
 local function normalize_path(file)
 	local n = nil
 
@@ -909,9 +914,9 @@ local function normalize_path(file)
 	return file:gsub("^(/?)%.%./", "%1")
 end
 
--- Lines 558-720
+-- Lines 559-725
 local function debug_hook(event, line)
-	if jit then
+	if jit and (not ngx or type(ngx) ~= "table" or not ngx.say) then
 		local coro, main = coroutine.running()
 
 		if not coro or main then
@@ -982,10 +987,9 @@ local function debug_hook(event, line)
 
 				if find(file, "^%./") then
 					file = sub(file, 3)
-				else
-					file = gsub(file, "^" .. q(basedir), "")
 				end
 
+				file = gsub(file, "^" .. q(basedir), "")
 				file = gsub(file, "\n", " ")
 			else
 				file = mobdebug.line(file)
@@ -1066,7 +1070,7 @@ local function debug_hook(event, line)
 	end
 end
 
--- Lines 722-738
+-- Lines 727-743
 local function stringify_results(params, status, ...)
 	if not status then
 		return status, ...
@@ -1082,12 +1086,10 @@ local function stringify_results(params, status, ...)
 		params.comment = 1
 	end
 
-	local t = {
-		...
-	}
+	local t = {}
 
-	for i, v in pairs(t) do
-		local ok, res = pcall(mobdebug.line, v, params)
+	for i = 1, select("#", ...) do
+		local ok, res = pcall(mobdebug.line, select(i, ...), params)
 		t[i] = ok and res or ("%q"):format(res):gsub("\n", "n"):gsub("", "\\026")
 	end
 
@@ -1096,12 +1098,12 @@ local function stringify_results(params, status, ...)
 	})
 end
 
--- Lines 740-742
+-- Lines 745-747
 local function isrunning()
 	return coro_debugger and (corostatus(coro_debugger) == "suspended" or corostatus(coro_debugger) == "running")
 end
 
--- Lines 747-762
+-- Lines 752-768
 local function done()
 	if not isrunning() or not server then
 		return
@@ -1121,14 +1123,15 @@ local function done()
 	coro_debugger = nil
 	seen_hook = nil
 	abort = nil
+	basedir = ""
 end
 
--- Lines 764-1032
+-- Lines 770-1038
 local function debugger_loop(sev, svars, sfile, sline)
 	local command = nil
 	local eval_env = svars or {}
 
-	-- Lines 767-767
+	-- Lines 773-773
 	local function emptyWatch()
 		return false
 	end
@@ -1147,7 +1150,7 @@ local function debugger_loop(sev, svars, sfile, sline)
 		end
 
 		while true do
-			line, err = server:receive()
+			line, err = server:receive("*l")
 
 			if not line then
 				if err == "timeout" then
@@ -1456,14 +1459,14 @@ local function debugger_loop(sev, svars, sfile, sline)
 	end
 end
 
--- Lines 1034-1036
+-- Lines 1040-1042
 local function output(stream, data)
 	if server then
 		return server:send("204 Output " .. stream .. " " .. tostring(#data) .. "\n" .. data)
 	end
 end
 
--- Lines 1038-1048
+-- Lines 1044-1054
 local function connect(controller_host, controller_port)
 	local sock, err = socket.tcp()
 
@@ -1490,7 +1493,7 @@ end
 
 local lasthost, lastport = nil
 
--- Lines 1053-1108
+-- Lines 1059-1114
 local function start(controller_host, controller_port)
 	if isrunning() then
 		return
@@ -1506,7 +1509,7 @@ local function start(controller_host, controller_port)
 	if server then
 		stack_level = stack_depth(16)
 
-		-- Lines 1075-1075
+		-- Lines 1081-1081
 		local function f()
 			return function ()
 			end
@@ -1515,7 +1518,7 @@ local function start(controller_host, controller_port)
 		if f() ~= f() then
 			local dtraceback = debug.traceback
 
-			-- Lines 1078-1097
+			-- Lines 1084-1103
 			function debug.traceback(...)
 				if select("#", ...) >= 1 then
 					local thr, err, lvl = ...
@@ -1555,7 +1558,7 @@ local function start(controller_host, controller_port)
 	end
 end
 
--- Lines 1110-1180
+-- Lines 1116-1186
 local function controller(controller_host, controller_port, scratchpad)
 	if isrunning() then
 		return
@@ -1570,7 +1573,7 @@ local function controller(controller_host, controller_port, scratchpad)
 	server, err = mobdebug.connect(controller_host, controller_port)
 
 	if server then
-		-- Lines 1124-1129
+		-- Lines 1130-1135
 		local function report(trace, err)
 			local msg = err .. "\n" .. trace
 
@@ -1634,17 +1637,17 @@ local function controller(controller_host, controller_port, scratchpad)
 	return true
 end
 
--- Lines 1182-1184
+-- Lines 1188-1190
 local function scratchpad(controller_host, controller_port)
 	return controller(controller_host, controller_port, true)
 end
 
--- Lines 1186-1188
+-- Lines 1192-1194
 local function loop(controller_host, controller_port)
 	return controller(controller_host, controller_port, false)
 end
 
--- Lines 1190-1204
+-- Lines 1196-1210
 local function on()
 	if not isrunning() or not server then
 		return
@@ -1669,7 +1672,7 @@ local function on()
 	end
 end
 
--- Lines 1206-1232
+-- Lines 1212-1238
 local function off()
 	if not isrunning() or not server then
 		return
@@ -1714,7 +1717,7 @@ local function off()
 	end
 end
 
--- Lines 1235-1595
+-- Lines 1241-1599
 local function handle(params, client, options)
 	local verbose = not options or options.verbose ~= nil and options.verbose
 	local print = verbose and (type(verbose) == "function" and verbose or print) or function ()
@@ -1724,11 +1727,11 @@ local function handle(params, client, options)
 
 	if command == "run" or command == "step" or command == "out" or command == "over" or command == "exit" then
 		client:send(string.upper(command) .. "\n")
-		client:receive()
+		client:receive("*l")
 
 		while true do
 			local done = true
-			local breakpoint = client:receive()
+			local breakpoint = client:receive("*l")
 
 			if not breakpoint then
 				print("Program finished")
@@ -1800,7 +1803,7 @@ local function handle(params, client, options)
 
 			client:send("SETB " .. file .. " " .. line .. "\n")
 
-			if command == "asetb" or client:receive() == "200 OK" then
+			if command == "asetb" or client:receive("*l") == "200 OK" then
 				set_breakpoint(file, line)
 			else
 				print("Error: breakpoint not inserted")
@@ -1814,7 +1817,7 @@ local function handle(params, client, options)
 		if exp then
 			client:send("SETW " .. exp .. "\n")
 
-			local answer = client:receive()
+			local answer = client:receive("*l")
 			local _, _, watch_idx = string.find(answer, "^200 OK (%d+)%s*$")
 
 			if watch_idx then
@@ -1846,7 +1849,7 @@ local function handle(params, client, options)
 
 			client:send("DELB " .. file .. " " .. line .. "\n")
 
-			if command == "adelb" or client:receive() == "200 OK" then
+			if command == "adelb" or client:receive("*l") == "200 OK" then
 				remove_breakpoint(file, line)
 			else
 				print("Error: breakpoint not removed")
@@ -1860,7 +1863,7 @@ local function handle(params, client, options)
 
 		client:send("DELB " .. file .. " " .. tostring(line) .. "\n")
 
-		if client:receive() == "200 OK" then
+		if client:receive("*l") == "200 OK" then
 			remove_breakpoint(file, line)
 		else
 			print("Error: all breakpoints not removed")
@@ -1871,7 +1874,7 @@ local function handle(params, client, options)
 		if index then
 			client:send("DELW " .. index .. "\n")
 
-			if client:receive() == "200 OK" then
+			if client:receive("*l") == "200 OK" then
 				watches[index] = nil
 			else
 				print("Error: watch expression not removed")
@@ -1883,7 +1886,7 @@ local function handle(params, client, options)
 		for index, exp in pairs(watches) do
 			client:send("DELW " .. index .. "\n")
 
-			if client:receive() == "200 OK" then
+			if client:receive("*l") == "200 OK" then
 				watches[index] = nil
 			else
 				print("Error: watch expression at index " .. index .. " [" .. exp .. "] not removed")
@@ -1894,7 +1897,7 @@ local function handle(params, client, options)
 
 		if exp or command == "reload" then
 			if command == "eval" or command == "exec" then
-				exp = exp:gsub("%-%-%[(=*)%[.-%]%1%]", ""):gsub("%-%-.-\n", " "):gsub("\n", " ")
+				exp = exp:gsub("\n", "\r")
 
 				if command == "eval" then
 					exp = "return " .. exp
@@ -1941,7 +1944,7 @@ local function handle(params, client, options)
 			end
 
 			while true do
-				local params, err = client:receive()
+				local params, err = client:receive("*l")
 
 				if not params then
 					return nil, nil, "Debugger connection " .. (err or "error")
@@ -2036,7 +2039,7 @@ local function handle(params, client, options)
 
 		client:send("STACK" .. (opts and " " .. opts or "") .. "\n")
 
-		local resp = client:receive()
+		local resp = client:receive("*l")
 		local _, _, status, res = string.find(resp, "^(%d+)%s+%w+%s+(.+)%s*$")
 
 		if status == "200" then
@@ -2082,7 +2085,7 @@ local function handle(params, client, options)
 		if stream and mode then
 			client:send("OUTPUT " .. stream .. " " .. mode .. "\n")
 
-			local resp, err = client:receive()
+			local resp, err = client:receive("*l")
 
 			if not resp then
 				print("Unknown error: " .. err)
@@ -2126,7 +2129,7 @@ local function handle(params, client, options)
 
 			client:send("BASEDIR " .. (remdir or dir) .. "\n")
 
-			local resp, err = client:receive()
+			local resp, err = client:receive("*l")
 
 			if not resp then
 				print("Unknown error: " .. err)
@@ -2183,7 +2186,7 @@ local function handle(params, client, options)
 	return file, line
 end
 
--- Lines 1598-1633
+-- Lines 1602-1637
 local function listen(host, port)
 	host = host or "*"
 	port = port or mobdebug.port
@@ -2196,9 +2199,9 @@ local function listen(host, port)
 	local client = server:accept()
 
 	client:send("STEP\n")
-	client:receive()
+	client:receive("*l")
 
-	local breakpoint = client:receive()
+	local breakpoint = client:receive("*l")
 	local _, _, file, line = string.find(breakpoint, "^202 Paused%s+(.-)%s+(%d+)%s*$")
 
 	if file and line then
@@ -2228,7 +2231,7 @@ end
 
 local cocreate = nil
 
--- Lines 1636-1645
+-- Lines 1640-1649
 local function coro()
 	if cocreate then
 		return
@@ -2236,7 +2239,7 @@ local function coro()
 
 	cocreate = cocreate or coroutine.create
 
-	-- Lines 1639-1644
+	-- Lines 1643-1648
 	function coroutine.create(f, ...)
 		return cocreate(function (...)
 			mobdebug.on()
@@ -2248,7 +2251,7 @@ end
 
 local moconew = nil
 
--- Lines 1648-1666
+-- Lines 1652-1670
 local function moai()
 	if moconew then
 		return
@@ -2260,13 +2263,13 @@ local function moai()
 		return
 	end
 
-	-- Lines 1652-1665
+	-- Lines 1656-1669
 	function MOAICoroutine.new(...)
 		local thread = moconew(...)
 		local mt = thread.run and thread or getmetatable(thread)
 		local patched = mt.run
 
-		-- Lines 1658-1663
+		-- Lines 1662-1667
 		function mt:run(f, ...)
 			return patched(self, function (...)
 				mobdebug.on()
@@ -2293,7 +2296,7 @@ mobdebug.moai = moai
 mobdebug.coro = coro
 mobdebug.done = done
 
--- Lines 1682-1682
+-- Lines 1686-1686
 function mobdebug.pause()
 	step_into = true
 end
@@ -2303,7 +2306,7 @@ mobdebug.output = output
 mobdebug.onexit = os and os.exit or done
 mobdebug.onscratch = nil
 
--- Lines 1687-1687
+-- Lines 1691-1691
 function mobdebug.basedir(b)
 	if b then
 		basedir = b

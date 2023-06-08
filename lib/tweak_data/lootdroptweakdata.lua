@@ -2,7 +2,7 @@ LootDropTweakData = LootDropTweakData or class()
 
 require("lib/tweak_data/GeneratedLootDropTweakData")
 
--- Lines 5-2368
+-- Lines 5-2371
 function LootDropTweakData:init(tweak_data)
 	self.PC_STEP = 10
 	self.no_drop = {
@@ -725,6 +725,7 @@ function LootDropTweakData:init(tweak_data)
 		track = true,
 		sort_number = 88,
 		unique_lock_icon = "guis/textures/pd2/blackmarket/money_lock",
+		hide_unavailable = SystemInfo:distribution() == Idstring("EPIC") and true or false,
 		category = "collaboration"
 	}
 	self.global_values.hlm2 = {
@@ -740,6 +741,7 @@ function LootDropTweakData:init(tweak_data)
 		track = true,
 		sort_number = 89,
 		unique_lock_icon = "guis/textures/pd2/blackmarket/money_lock",
+		hide_unavailable = SystemInfo:distribution() == Idstring("EPIC") and true or false,
 		category = "collaboration"
 	}
 	self.global_values.hlm2_deluxe = {
@@ -755,6 +757,7 @@ function LootDropTweakData:init(tweak_data)
 		track = true,
 		sort_number = 90,
 		unique_lock_icon = "guis/textures/pd2/blackmarket/money_lock",
+		hide_unavailable = SystemInfo:distribution() == Idstring("EPIC") and true or false,
 		category = "collaboration"
 	}
 	self.global_values.speedrunners = {
@@ -1896,7 +1899,7 @@ function LootDropTweakData:init(tweak_data)
 	self:_create_global_value_list_map()
 end
 
--- Lines 2370-2375
+-- Lines 2373-2378
 function LootDropTweakData:_create_global_value_list_map()
 	self.global_value_list_map = {}
 

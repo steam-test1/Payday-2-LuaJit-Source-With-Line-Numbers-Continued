@@ -1,6 +1,6 @@
 NarrativeTweakData = NarrativeTweakData or class()
 
--- Lines 3-4713
+-- Lines 3-4715
 function NarrativeTweakData:init(tweak_data)
 	self.STARS = {
 		{
@@ -2402,81 +2402,77 @@ function NarrativeTweakData:init(tweak_data)
 		45000,
 		45000
 	}
-
-	if SystemInfo:distribution() == Idstring("STEAM") then
-		self.stages.roberts = {
-			type = "d",
-			type_id = "heist_type_assault",
-			level_id = "roberts"
-		}
-		self.jobs.roberts = {
-			name_id = "heist_roberts",
-			briefing_id = "heist_roberts_crimenet",
-			package = "packages/job_roberts",
-			contact = "bain",
-			region = "street",
-			jc = 40,
-			chain = {
-				self.stages.roberts
-			},
-			load_screen = "guis/dlcs/pic/textures/loading/job_go_bank",
-			briefing_event = "pln_cs1_cbf_01",
-			debrief_event = nil,
-			crimenet_callouts = {
-				"pln_cs1_cnc_01"
-			},
-			crimenet_videos = {
-				"cn_jewel1",
-				"cn_jewel2",
-				"cn_jewel3"
-			},
-			payout = {
-				55000,
-				110000,
-				275000,
-				550000,
-				700000,
-				700000,
-				700000
-			},
-			experience_mul = {
-				1,
-				1,
-				1,
-				1.2,
-				1.2
-			},
-			contract_cost = {
-				24000,
-				48000,
-				120000,
-				240000,
-				300000,
-				300000,
-				300000
-			},
-			contract_visuals = {}
-		}
-		self.jobs.roberts.contract_visuals.min_mission_xp = {
-			6500,
-			6500,
-			6500,
-			6500,
-			6500,
-			6500,
-			6500
-		}
-		self.jobs.roberts.contract_visuals.max_mission_xp = {
-			22000,
-			22000,
-			22000,
-			22000,
-			22000,
-			22000,
-			22000
-		}
-	end
-
+	self.stages.roberts = {
+		type = "d",
+		type_id = "heist_type_assault",
+		level_id = "roberts"
+	}
+	self.jobs.roberts = {
+		name_id = "heist_roberts",
+		briefing_id = "heist_roberts_crimenet",
+		package = "packages/job_roberts",
+		contact = "bain",
+		region = "street",
+		jc = 40,
+		chain = {
+			self.stages.roberts
+		},
+		load_screen = "guis/dlcs/pic/textures/loading/job_go_bank",
+		briefing_event = "pln_cs1_cbf_01",
+		debrief_event = nil,
+		crimenet_callouts = {
+			"pln_cs1_cnc_01"
+		},
+		crimenet_videos = {
+			"cn_jewel1",
+			"cn_jewel2",
+			"cn_jewel3"
+		},
+		payout = {
+			55000,
+			110000,
+			275000,
+			550000,
+			700000,
+			700000,
+			700000
+		},
+		experience_mul = {
+			1,
+			1,
+			1,
+			1.2,
+			1.2
+		},
+		contract_cost = {
+			24000,
+			48000,
+			120000,
+			240000,
+			300000,
+			300000,
+			300000
+		},
+		contract_visuals = {}
+	}
+	self.jobs.roberts.contract_visuals.min_mission_xp = {
+		6500,
+		6500,
+		6500,
+		6500,
+		6500,
+		6500,
+		6500
+	}
+	self.jobs.roberts.contract_visuals.max_mission_xp = {
+		22000,
+		22000,
+		22000,
+		22000,
+		22000,
+		22000,
+		22000
+	}
 	self.stages.kosugi = {
 		type = "d",
 		type_id = "heist_type_assault",
@@ -7706,10 +7702,7 @@ function NarrativeTweakData:init(tweak_data)
 		gallery = true
 	}
 
-	if SystemInfo:distribution() == Idstring("STEAM") then
-		table.insert(self._jobs_index, "roberts")
-	end
-
+	table.insert(self._jobs_index, "roberts")
 	self:set_job_wrappers()
 
 	local free_dlcs = tweak_data:free_dlc_list()
@@ -7721,7 +7714,7 @@ function NarrativeTweakData:init(tweak_data)
 	end
 end
 
--- Lines 4717-4732
+-- Lines 4719-4734
 function NarrativeTweakData:set_job_wrappers()
 	for _, job_id in ipairs(self._jobs_index) do
 		local job_wrapper = self.jobs[job_id].job_wrapper
@@ -7740,22 +7733,22 @@ function NarrativeTweakData:set_job_wrappers()
 	end
 end
 
--- Lines 4734-4736
+-- Lines 4736-4738
 function NarrativeTweakData:has_job_wrapper(job_id)
 	return self.jobs[job_id] and not not self.jobs[job_id].job_wrapper
 end
 
--- Lines 4738-4740
+-- Lines 4740-4742
 function NarrativeTweakData:is_wrapped_to_job(job_id)
 	return self.jobs[job_id] and not not self.jobs[job_id].wrapped_to_job
 end
 
--- Lines 4744-4746
+-- Lines 4746-4748
 function NarrativeTweakData:get_jobs_index()
 	return self._jobs_index
 end
 
--- Lines 4750-4757
+-- Lines 4752-4759
 function NarrativeTweakData:get_index_from_job_id(job_id)
 	for index, entry_name in ipairs(self._jobs_index) do
 		if entry_name == job_id then
@@ -7766,12 +7759,12 @@ function NarrativeTweakData:get_index_from_job_id(job_id)
 	return 0
 end
 
--- Lines 4761-4763
+-- Lines 4763-4765
 function NarrativeTweakData:get_job_name_from_index(index)
 	return self._jobs_index[index]
 end
 
--- Lines 4767-4783
+-- Lines 4769-4785
 function NarrativeTweakData:job_data(job_id, unique_to_job)
 	if not job_id or not self.jobs[job_id] then
 		return
@@ -7788,7 +7781,7 @@ function NarrativeTweakData:job_data(job_id, unique_to_job)
 	return self.jobs[job_id]
 end
 
--- Lines 4785-4795
+-- Lines 4787-4797
 function NarrativeTweakData:job_chain(job_id)
 	if not job_id or not self.jobs[job_id] then
 		return {}
@@ -7801,7 +7794,7 @@ function NarrativeTweakData:job_chain(job_id)
 	return self.jobs[job_id].chain or {}
 end
 
--- Lines 4799-4850
+-- Lines 4801-4852
 function NarrativeTweakData:create_job_name(job_id, skip_professional)
 	local color_ranges = {}
 	local job_tweak = self:job_data(job_id)
@@ -7858,7 +7851,7 @@ function NarrativeTweakData:create_job_name(job_id, skip_professional)
 	return text_id, color_ranges
 end
 
--- Lines 4854-4866
+-- Lines 4856-4868
 function NarrativeTweakData:test_contract_packages()
 	for i, job_id in ipairs(self._jobs_index) do
 		local package = self.jobs[job_id] and self.jobs[job_id].package
@@ -7875,7 +7868,7 @@ function NarrativeTweakData:test_contract_packages()
 	end
 end
 
--- Lines 4871-4878
+-- Lines 4873-4880
 function NarrativeTweakData:get_jcs_from_stars(stars, infamy)
 	if type(stars) ~= "number" then
 		return {}
@@ -7886,7 +7879,7 @@ function NarrativeTweakData:get_jcs_from_stars(stars, infamy)
 	return (infamy and self.INFAMY_STARS[stars] or self.STARS[stars] or {}).jcs or {}
 end
 
--- Lines 4883-4898
+-- Lines 4885-4900
 function NarrativeTweakData:is_job_locked(job_id)
 	return false
 end

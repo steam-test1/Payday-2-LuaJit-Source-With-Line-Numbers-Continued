@@ -89,34 +89,54 @@ end
 function NetworkVoiceChatDisabled:peer_team(xuid, team, rpc)
 end
 
--- Lines 88-89
+-- Lines 86-87
+function NetworkVoiceChatDisabled:enabled()
+end
+
+-- Lines 89-90
+function NetworkVoiceChatDisabled:set_recording()
+end
+
+-- Lines 92-93
+function NetworkVoiceChatDisabled:on_member_added()
+end
+
+-- Lines 95-96
+function NetworkVoiceChatDisabled:on_member_removed()
+end
+
+-- Lines 98-99
+function NetworkVoiceChatDisabled:is_muted()
+end
+
+-- Lines 103-104
 function NetworkVoiceChatDisabled:_open_close_peers()
 end
 
--- Lines 91-92
+-- Lines 106-107
 function NetworkVoiceChatDisabled:mute_player(mute, peer)
 end
 
--- Lines 94-95
+-- Lines 109-110
 function NetworkVoiceChatDisabled:update()
 end
 
--- Lines 97-98
+-- Lines 112-113
 function NetworkVoiceChatDisabled:_load_globals()
 end
 
--- Lines 99-100
+-- Lines 114-115
 function NetworkVoiceChatDisabled:_save_globals(disable_voice)
 end
 
--- Lines 102-122
+-- Lines 117-137
 function NetworkVoiceChatDisabled:_display_warning()
 	if self._quiet == false and self:_have_displayed_warning() == true then
 		managers.menu:show_err_no_chat_parental_control()
 	end
 end
 
--- Lines 123-131
+-- Lines 138-146
 function NetworkVoiceChatDisabled:_have_displayed_warning()
 	if Global.psn_parental_voice and Global.psn_parental_voice == true then
 		return false
@@ -127,11 +147,11 @@ function NetworkVoiceChatDisabled:_have_displayed_warning()
 	return true
 end
 
--- Lines 134-136
+-- Lines 149-151
 function NetworkVoiceChatDisabled:clear_team()
 end
 
--- Lines 141-145
+-- Lines 156-160
 function NetworkVoiceChatDisabled:psn_session_destroyed()
 	if Global.psn and Global.psn.voice then
 		Global.psn.voice.restart = nil

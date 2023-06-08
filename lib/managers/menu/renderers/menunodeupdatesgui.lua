@@ -60,7 +60,7 @@ function MenuNodeUpdatesGui:init(node, layer, parameters)
 			end
 		end
 
-		Steam:http_request(self._tweak_data.db_url, callback(self, self, "_db_result_recieved"))
+		HttpRequest:get(self._tweak_data.db_url, callback(self, self, "_db_result_recieved"))
 	end
 end
 
@@ -739,7 +739,7 @@ function MenuNodeUpdatesGui:confirm_pressed()
 	end
 end
 
--- Lines 565-601
+-- Lines 565-602
 function MenuNodeUpdatesGui:open(content_update)
 	self._content_highlighted = content_update
 
@@ -748,19 +748,19 @@ function MenuNodeUpdatesGui:open(content_update)
 	local play_sound = true
 
 	if SystemInfo:platform() == Idstring("WIN32") then
-		if not MenuCallbackHandler:is_overlay_enabled() then
-			managers.menu:show_enable_steam_overlay()
-
-			play_sound = false
-		elseif content_update.webpage then
-			Steam:overlay_activate("url", content_update.webpage)
+		if content_update.webpage then
+			play_sound = managers.network.account:overlay_activate("url", content_update.webpage)
 		elseif content_update.store then
-			Steam:overlay_activate("store", content_update.store)
+			if SystemInfo:distribution() == Idstring("STEAM") then
+				play_sound = managers.network.account:overlay_activate("store", content_update.store)
+			elseif SystemInfo:distribution() == Idstring("EPIC") then
+				-- Nothing
+			end
 		elseif content_update.use_db then
 			local webpage = self._db_items and self._db_items[content_update.id] and self._db_items[content_update.id].link
 
 			if webpage then
-				Steam:overlay_activate("url", webpage)
+				play_sound = managers.network.account:overlay_activate("url", webpage)
 			else
 				play_sound = false
 			end
@@ -782,20 +782,18 @@ function MenuNodeUpdatesGui:open(content_update)
 	end
 end
 
--- Lines 603-608
+-- Lines 604-607
 function MenuNodeUpdatesGui:open_url(url)
-	if SystemInfo:platform() == Idstring("WIN32") then
-		Steam:overlay_activate("url", url)
-		managers.menu_component:post_event("menu_enter")
-	end
+	managers.network.account:overlay_activate("url", url)
+	managers.menu_component:post_event("menu_enter")
 end
 
--- Lines 610-612
+-- Lines 609-611
 function MenuNodeUpdatesGui:input_focus()
 	return 1
 end
 
--- Lines 614-653
+-- Lines 613-652
 function MenuNodeUpdatesGui:set_latest_text()
 	if not self._content_highlighted then
 		return
@@ -827,7 +825,7 @@ function MenuNodeUpdatesGui:set_latest_text()
 	desc_text:set_size(latest_desc_panel:w() - self.PADDING * 2, latest_desc_panel:h() - desc_text:top() - self.PADDING)
 end
 
--- Lines 655-688
+-- Lines 654-687
 function MenuNodeUpdatesGui:set_latest_content(content_highlighted, moved, refresh)
 	local result = false
 
@@ -872,7 +870,7 @@ function MenuNodeUpdatesGui:set_latest_content(content_highlighted, moved, refre
 	return result
 end
 
--- Lines 690-745
+-- Lines 689-744
 function MenuNodeUpdatesGui:move_highlight(x, y)
 	local ws = self.ws
 	local panel = ws:panel():child("MenuNodeUpdatesGui")
@@ -906,7 +904,7 @@ function MenuNodeUpdatesGui:move_highlight(x, y)
 	end
 end
 
--- Lines 747-753
+-- Lines 746-752
 function MenuNodeUpdatesGui:previous_page()
 	if self._current_page > 1 then
 		self._node:parameters().current_page = self._current_page - 1
@@ -917,7 +915,7 @@ function MenuNodeUpdatesGui:previous_page()
 	end
 end
 
--- Lines 755-762
+-- Lines 754-761
 function MenuNodeUpdatesGui:next_page()
 	local num_pages = self._num_pages
 
@@ -930,29 +928,29 @@ function MenuNodeUpdatesGui:next_page()
 	end
 end
 
--- Lines 764-767
+-- Lines 763-766
 function MenuNodeUpdatesGui:move_up()
 end
 
--- Lines 769-772
+-- Lines 768-771
 function MenuNodeUpdatesGui:move_down()
 end
 
--- Lines 774-777
+-- Lines 773-776
 function MenuNodeUpdatesGui:move_left()
 	self:move_highlight(-1, 0)
 
 	return true
 end
 
--- Lines 779-782
+-- Lines 778-781
 function MenuNodeUpdatesGui:move_right()
 	self:move_highlight(1, 0)
 
 	return true
 end
 
--- Lines 784-795
+-- Lines 783-794
 function MenuNodeUpdatesGui:unretrieve_textures()
 	if self._requested_textures then
 		for i, data in pairs(self._requested_textures) do
@@ -968,13 +966,13 @@ function MenuNodeUpdatesGui:unretrieve_textures()
 	self._lastest_texture_request = nil
 end
 
--- Lines 797-807
+-- Lines 796-806
 function MenuNodeUpdatesGui:close()
 	self:unretrieve_textures()
 	MenuNodeUpdatesGui.super.close(self)
 end
 
--- Lines 809-811
+-- Lines 808-810
 function MenuNodeUpdatesGui:_setup_panels(node)
 	MenuNodeUpdatesGui.super._setup_panels(self, node)
 end

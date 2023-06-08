@@ -1,4 +1,4 @@
--- Lines 3-1435
+-- Lines 3-1461
 function DLCTweakData:init_generated()
 	self.a10th_bundle = {
 		free = true,

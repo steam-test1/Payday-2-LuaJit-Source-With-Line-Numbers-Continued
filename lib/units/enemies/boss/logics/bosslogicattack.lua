@@ -249,7 +249,7 @@ function BossLogicAttack._upd_enemy_detection(data, is_synchronous)
 	CopLogicBase._report_detections(data.detected_attention_objects)
 end
 
--- Lines 298-443
+-- Lines 298-445
 function BossLogicAttack._upd_combat_movement(data, my_data)
 	if BossLogicAttack.no_movement then
 		return
@@ -270,70 +270,52 @@ function BossLogicAttack._upd_combat_movement(data, my_data)
 
 				BossLogicAttack._chk_request_action_walk_to_chase_pos(data, my_data, speed)
 			elseif not my_data.chase_path_search_id and focus_enemy.nav_tracker then
-				local height_diff = math_abs(data.m_pos.z - focus_enemy.m_pos.z)
+				my_data.chase_pos = nil
+				local chase_pos = focus_enemy.nav_tracker:field_position()
+				local pos_on_wall = CopLogicTravel._get_pos_on_wall(chase_pos, 300, nil, nil)
 
-				if height_diff < 300 then
-					chase = true
-				else
-					local engage = my_data.attitude == "engage"
-
-					if enemy_visible then
-						if focus_enemy.dis > 1000 or engage and focus_enemy.dis > 500 then
-							chase = true
-						end
-					elseif focus_enemy.verified_dis > 1000 or engage and focus_enemy.verified_dis > 500 or not focus_enemy.verified_t or t - focus_enemy.verified_t > 2 then
-						chase = true
-					end
+				if mvec3_not_equal(chase_pos, pos_on_wall) then
+					my_data.chase_pos = pos_on_wall
 				end
 
-				if chase then
-					my_data.chase_pos = nil
-					local chase_pos = focus_enemy.nav_tracker:field_position()
-					local pos_on_wall = CopLogicTravel._get_pos_on_wall(chase_pos, 300, nil, nil)
+				if my_data.chase_pos then
+					local my_pos = data.unit:movement():nav_tracker():field_position()
+					local unobstructed_line = nil
 
-					if mvec3_not_equal(chase_pos, pos_on_wall) then
-						my_data.chase_pos = pos_on_wall
+					if math_abs(my_pos.z - my_data.chase_pos.z) < 40 then
+						local ray_params = {
+							allow_entry = false,
+							pos_from = my_pos,
+							pos_to = my_data.chase_pos
+						}
+
+						if not managers.navigation:raycast(ray_params) then
+							unobstructed_line = true
+						end
 					end
 
-					if my_data.chase_pos then
-						local my_pos = data.unit:movement():nav_tracker():field_position()
-						local unobstructed_line = nil
+					if unobstructed_line then
+						my_data.chase_path = {
+							mvec3_cpy(my_pos),
+							my_data.chase_pos
+						}
+						local enemy_dis = enemy_visible and focus_enemy.dis or focus_enemy.verified_dis
+						local run_dist = enemy_visible and 800 or 400
+						local speed = enemy_dis < run_dist and "walk" or "run"
 
-						if math_abs(my_pos.z - my_data.chase_pos.z) < 40 then
-							local ray_params = {
-								allow_entry = false,
-								pos_from = my_pos,
-								pos_to = my_data.chase_pos
-							}
-
-							if not managers.navigation:raycast(ray_params) then
-								unobstructed_line = true
-							end
-						end
-
-						if unobstructed_line then
-							my_data.chase_path = {
-								mvec3_cpy(my_pos),
-								my_data.chase_pos
-							}
-							local enemy_dis = enemy_visible and focus_enemy.dis or focus_enemy.verified_dis
-							local run_dist = enemy_visible and 800 or 400
-							local speed = enemy_dis < run_dist and "walk" or "run"
-
-							BossLogicAttack._chk_request_action_walk_to_chase_pos(data, my_data, speed)
-						else
-							my_data.chase_path_search_id = tostring(data.unit:key()) .. "chase"
-							my_data.pathing_to_chase_pos = true
-
-							data.brain:add_pos_rsrv("path", {
-								radius = 60,
-								position = mvec3_cpy(my_data.chase_pos)
-							})
-							data.brain:search_for_path(my_data.chase_path_search_id, my_data.chase_pos)
-						end
+						BossLogicAttack._chk_request_action_walk_to_chase_pos(data, my_data, speed)
 					else
-						my_data.chase_path_failed_t = t
+						my_data.chase_path_search_id = tostring(data.unit:key()) .. "chase"
+						my_data.pathing_to_chase_pos = true
+
+						data.brain:add_pos_rsrv("path", {
+							radius = 60,
+							position = mvec3_cpy(my_data.chase_pos)
+						})
+						data.brain:search_for_path(my_data.chase_path_search_id, my_data.chase_pos)
 					end
+				else
+					my_data.chase_path_failed_t = t
 				end
 			end
 		end
@@ -389,7 +371,7 @@ function BossLogicAttack._upd_combat_movement(data, my_data)
 	end
 end
 
--- Lines 447-676
+-- Lines 449-688
 function BossLogicAttack._get_priority_attention(data, attention_objects, reaction_func)
 	reaction_func = reaction_func or CopLogicIdle._chk_reaction_to_attention_object
 	local best_target, best_target_priority_slot, best_target_priority, best_target_reaction = nil
@@ -594,7 +576,7 @@ function BossLogicAttack._get_priority_attention(data, attention_objects, reacti
 	return best_target, best_target_priority_slot, best_target_reaction
 end
 
--- Lines 680-892
+-- Lines 692-904
 function BossLogicAttack._upd_aim(data, my_data)
 	local shoot, aim, expected_pos = nil
 	local focus = data.attention_obj
@@ -797,7 +779,7 @@ function BossLogicAttack._upd_aim(data, my_data)
 	CopLogicAttack.aim_allow_fire(shoot, aim, data, my_data)
 end
 
--- Lines 896-988
+-- Lines 908-1000
 function BossLogicAttack._chk_use_throwable(data, my_data, focus)
 	local throwable = data.char_tweak.throwable
 
@@ -885,7 +867,7 @@ function BossLogicAttack._chk_use_throwable(data, my_data, focus)
 	ProjectileBase.throw_projectile_npc(throwable, throw_from, throw_dir, data.unit)
 end
 
--- Lines 992-1003
+-- Lines 1004-1015
 function BossLogicAttack.queued_update(data)
 	local my_data = data.internal_data
 	data.t = TimerManager:game():time()
@@ -899,7 +881,7 @@ function BossLogicAttack.queued_update(data)
 	BossLogicAttack.queue_update(data, data.internal_data)
 end
 
--- Lines 1007-1025
+-- Lines 1019-1037
 function BossLogicAttack._process_pathing_results(data, my_data)
 	if data.pathing_results then
 		local pathing_results = data.pathing_results
@@ -921,7 +903,7 @@ function BossLogicAttack._process_pathing_results(data, my_data)
 	end
 end
 
--- Lines 1029-1049
+-- Lines 1041-1061
 function BossLogicAttack._cancel_chase_attempt(data, my_data)
 	my_data.chase_path = nil
 
@@ -952,7 +934,7 @@ function BossLogicAttack._cancel_chase_attempt(data, my_data)
 	end
 end
 
--- Lines 1054-1091
+-- Lines 1066-1103
 function BossLogicAttack.action_complete_clbk(data, action)
 	local action_type = action:type()
 	local my_data = data.internal_data
@@ -992,22 +974,22 @@ function BossLogicAttack.action_complete_clbk(data, action)
 	end
 end
 
--- Lines 1093-1095
+-- Lines 1105-1107
 function BossLogicAttack.chk_should_turn(data, my_data)
 	return not my_data.turning and not my_data.has_old_action and not my_data.advancing and not data.unit:movement():chk_action_forbidden("walk")
 end
 
--- Lines 1097-1099
+-- Lines 1109-1111
 function BossLogicAttack.action_taken(data, my_data)
 	return my_data.turning or my_data.has_old_action or my_data.advancing or data.unit:movement():chk_action_forbidden("walk")
 end
 
--- Lines 1103-1105
+-- Lines 1115-1117
 function BossLogicAttack.queue_update(data, my_data)
 	CopLogicBase.queue_task(my_data, my_data.update_queue_id, BossLogicAttack.queued_update, data, data.t + 0.2, true)
 end
 
--- Lines 1109-1137
+-- Lines 1121-1149
 function BossLogicAttack._chk_request_action_walk_to_chase_pos(data, my_data, speed)
 	if data.unit:movement():chk_action_forbidden("walk") then
 		return
@@ -1039,7 +1021,7 @@ function BossLogicAttack._chk_request_action_walk_to_chase_pos(data, my_data, sp
 	end
 end
 
--- Lines 1139-1171
+-- Lines 1151-1183
 function BossLogicAttack._chk_start_action_move_out_of_the_way(data, my_data)
 	local reservation = {
 		radius = 30,
@@ -1074,7 +1056,7 @@ function BossLogicAttack._chk_start_action_move_out_of_the_way(data, my_data)
 	end
 end
 
--- Lines 1175-1191
+-- Lines 1187-1203
 function BossLogicAttack.is_advancing(data)
 	if data.pos_rsrv.move_dest then
 		return data.pos_rsrv.move_dest.position
@@ -1093,14 +1075,14 @@ function BossLogicAttack.is_advancing(data)
 	end
 end
 
--- Lines 1195-1199
+-- Lines 1207-1211
 function BossLogicAttack._get_all_paths(data)
 	return {
 		chase_path = data.internal_data.chase_path
 	}
 end
 
--- Lines 1203-1205
+-- Lines 1215-1217
 function BossLogicAttack._set_verified_paths(data, verified_paths)
 	data.internal_data.chase_path = verified_paths.chase_path
 end

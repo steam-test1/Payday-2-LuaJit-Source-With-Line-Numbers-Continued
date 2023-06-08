@@ -2,7 +2,7 @@ require("lib/tweak_data/TextureCorrectionTweakData")
 
 HudIconsTweakData = HudIconsTweakData or class()
 
--- Lines 7-3414
+-- Lines 7-3437
 function HudIconsTweakData:init()
 	self.mouse_left_click = {
 		texture = "guis/textures/pd2/mouse_buttons",
@@ -11452,6 +11452,15 @@ function HudIconsTweakData:init()
 			64
 		}
 	}
+	self.sidebar_lobby_search = {
+		texture = "guis/dlcs/shub/textures/search_icon",
+		texture_rect = {
+			0,
+			0,
+			128,
+			128
+		}
+	}
 	self.C_Locke_H_AlsDeal_AllDiffs_D0 = {
 		texture = "guis/dlcs/wwh/textures/pd2/wwh_achievements_atlas",
 		texture_rect = {
@@ -14755,7 +14764,7 @@ function HudIconsTweakData:init()
 			85
 		}
 	}
-	self.C_Keegan_H_HostileTakeover_AllDiffs_D0 = {
+	self.C_Blaine_H_HostileTakeover_AllDiffs_D0 = {
 		texture = "guis/dlcs/trk/atlases/achievement_atlas_corp",
 		texture_rect = {
 			2,
@@ -14764,7 +14773,7 @@ function HudIconsTweakData:init()
 			85
 		}
 	}
-	self.C_Keegan_H_HostileTakeover_AllDiffs_D1 = {
+	self.C_Blaine_H_HostileTakeover_AllDiffs_D1 = {
 		texture = "guis/dlcs/trk/atlases/achievement_atlas_corp",
 		texture_rect = {
 			2,
@@ -14773,7 +14782,7 @@ function HudIconsTweakData:init()
 			85
 		}
 	}
-	self.C_Keegan_H_HostileTakeover_AllDiffs_D2 = {
+	self.C_Blaine_H_HostileTakeover_AllDiffs_D2 = {
 		texture = "guis/dlcs/trk/atlases/achievement_atlas_corp",
 		texture_rect = {
 			89,
@@ -14782,7 +14791,7 @@ function HudIconsTweakData:init()
 			85
 		}
 	}
-	self.C_Keegan_H_HostileTakeover_AllDiffs_D3 = {
+	self.C_Blaine_H_HostileTakeover_AllDiffs_D3 = {
 		texture = "guis/dlcs/trk/atlases/achievement_atlas_corp",
 		texture_rect = {
 			2,
@@ -14791,7 +14800,7 @@ function HudIconsTweakData:init()
 			85
 		}
 	}
-	self.C_Keegan_H_HostileTakeover_AllDiffs_D4 = {
+	self.C_Blaine_H_HostileTakeover_AllDiffs_D4 = {
 		texture = "guis/dlcs/trk/atlases/achievement_atlas_corp",
 		texture_rect = {
 			89,
@@ -14800,7 +14809,7 @@ function HudIconsTweakData:init()
 			85
 		}
 	}
-	self.C_Keegan_H_HostileTakeover_AllDiffs_D5 = {
+	self.C_Blaine_H_HostileTakeover_AllDiffs_D5 = {
 		texture = "guis/dlcs/trk/atlases/achievement_atlas_corp",
 		texture_rect = {
 			176,
@@ -14809,7 +14818,7 @@ function HudIconsTweakData:init()
 			85
 		}
 	}
-	self.C_Keegan_H_HostileTakeover_AllDiffs_D6 = {
+	self.C_Blaine_H_HostileTakeover_AllDiffs_D6 = {
 		texture = "guis/dlcs/trk/atlases/achievement_atlas_corp",
 		texture_rect = {
 			2,
@@ -14818,7 +14827,7 @@ function HudIconsTweakData:init()
 			85
 		}
 	}
-	self.C_Keegan_H_HostileTakeover_AllDiffs_OD_D6 = {
+	self.C_Blaine_H_HostileTakeover_AllDiffs_OD_D6 = {
 		texture = "guis/dlcs/trk/atlases/achievement_atlas_corp",
 		texture_rect = {
 			263,
@@ -14827,7 +14836,7 @@ function HudIconsTweakData:init()
 			85
 		}
 	}
-	self.C_Keegan_H_HostileTakeover_JustPassing = {
+	self.C_Blaine_H_HostileTakeover_JustPassing = {
 		texture = "guis/dlcs/trk/atlases/achievement_atlas_corp",
 		texture_rect = {
 			89,
@@ -14836,7 +14845,7 @@ function HudIconsTweakData:init()
 			85
 		}
 	}
-	self.C_Keegan_H_HostileTakeover_PAYDAYKART = {
+	self.C_Blaine_H_HostileTakeover_PAYDAYKART = {
 		texture = "guis/dlcs/trk/atlases/achievement_atlas_corp",
 		texture_rect = {
 			2,
@@ -14845,7 +14854,7 @@ function HudIconsTweakData:init()
 			85
 		}
 	}
-	self.C_Keegan_H_HostileTakeover_System = {
+	self.C_Blaine_H_HostileTakeover_System = {
 		texture = "guis/dlcs/trk/atlases/achievement_atlas_corp",
 		texture_rect = {
 			89,
@@ -14854,7 +14863,7 @@ function HudIconsTweakData:init()
 			85
 		}
 	}
-	self.C_Keegan_H_HostileTakeover_TexasTreasuresThree = {
+	self.C_Blaine_H_HostileTakeover_TexasTreasuresThree = {
 		texture = "guis/dlcs/trk/atlases/achievement_atlas_corp",
 		texture_rect = {
 			176,
@@ -15329,7 +15338,7 @@ end
 
 local atlas_data = nil
 
--- Lines 3417-3420
+-- Lines 3440-3443
 function HudIconsTweakData:create_grid_atlas(image_name, tex_w, tex_h, grid_w, grid_h)
 	atlas_data = atlas_data or {}
 	atlas_data[image_name] = {
@@ -15342,7 +15351,7 @@ function HudIconsTweakData:create_grid_atlas(image_name, tex_w, tex_h, grid_w, g
 	}
 end
 
--- Lines 3422-3438
+-- Lines 3445-3461
 function HudIconsTweakData:create_next_icon(image_name)
 	local data = atlas_data[image_name]
 
@@ -15368,7 +15377,7 @@ function HudIconsTweakData:create_next_icon(image_name)
 	return rtn
 end
 
--- Lines 3440-3445
+-- Lines 3463-3468
 function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	local icon_data = self[icon_id]
 	local icon = icon_data and icon_data.texture or icon_id
@@ -15382,7 +15391,7 @@ function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	return icon, texture_rect
 end
 
--- Lines 3447-3453
+-- Lines 3470-3476
 function HudIconsTweakData:get_icon_or(icon_id, ...)
 	local icon_data = self[icon_id]
 
@@ -15393,7 +15402,7 @@ function HudIconsTweakData:get_icon_or(icon_id, ...)
 	return icon_data.texture, icon_data.texture_rect
 end
 
--- Lines 3455-3461
+-- Lines 3478-3484
 function HudIconsTweakData:get_texture(texture_path)
 	local icon_data = self[texture_path]
 
