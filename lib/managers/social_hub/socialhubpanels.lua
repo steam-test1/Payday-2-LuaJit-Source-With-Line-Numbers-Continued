@@ -244,9 +244,11 @@ function SocialHubLobbyItem:init(parent, data)
 
 	self._content_panel = self._panel:panel({
 		x = 5,
+		layer = 100,
 		w = parent:w() - 10
 	})
 	self._select_panel = self._panel:panel({
+		layer = 100,
 		visible = false
 	})
 	self._unselected_alpha = 0.9
@@ -255,7 +257,7 @@ function SocialHubLobbyItem:init(parent, data)
 	self:set_item_selected(2)
 end
 
--- Lines 214-316
+-- Lines 214-323
 function SocialHubLobbyItem:setup_panel()
 	BoxGuiObject:new(self._select_panel, {
 		layer = 100,
@@ -268,12 +270,14 @@ function SocialHubLobbyItem:setup_panel()
 	})
 
 	local left_panel = self._content_panel:panel({
+		layer = 100,
 		w = self._content_panel:w() / 2
 	})
 	local left_x_placer = 20
 	local top_y_placer = left_panel:h() / 4
 	local bottom_y_placer = left_panel:h() / 4 * 3
 	local heist_mode_icon = left_panel:bitmap({
+		layer = 100,
 		visible = false,
 		color = Color.white,
 		texture = "guis/textures/pd2/cn_playstyle_stealth" or "guis/textures/pd2/cn_playstyle_loud"
@@ -284,6 +288,7 @@ function SocialHubLobbyItem:setup_panel()
 
 	local lobby_marker = left_panel:bitmap({
 		texture = "guis/textures/pd2/crimenet_marker_join",
+		layer = 100,
 		color = Color.white,
 		texture_rect = {
 			0,
@@ -300,6 +305,7 @@ function SocialHubLobbyItem:setup_panel()
 		local peer_icon = left_panel:bitmap({
 			texture = "guis/textures/pd2/crimenet_marker_peerflag",
 			visible = true,
+			layer = 100,
 			color = Color.white,
 			x = lobby_marker:x() + 3 + (i - 1) * 6,
 			y = lobby_marker:y() + 8
@@ -309,9 +315,10 @@ function SocialHubLobbyItem:setup_panel()
 	left_x_placer = lobby_marker:right() + 5
 	self.data.LEVEL = tonumber(self.data.LEVEL)
 	local heist_name = left_panel:text({
+		layer = 100,
 		font = tweak_data.menu.pd2_medium_font,
 		font_size = tweak_data.menu.pd2_medium_font_size,
-		text = self.data.LEVEL and tweak_data.levels:get_localized_level_name_from_level_id(tweak_data.levels:get_level_name_from_index(self.data.LEVEL)) or "UNKNOWN",
+		text = self.data.LEVEL and managers.localization:text(tweak_data.narrative:job_data(tweak_data.narrative:get_job_name_from_index(self.data.LEVEL)).name_id) or "UNKNOWN",
 		x = left_x_placer
 	})
 
@@ -319,6 +326,7 @@ function SocialHubLobbyItem:setup_panel()
 	heist_name:set_center_y(bottom_y_placer)
 
 	local player_name = left_panel:text({
+		layer = 100,
 		font = tweak_data.menu.pd2_medium_font,
 		font_size = tweak_data.menu.pd2_medium_font_size,
 		text = self.data.OWNER_NAME or "",
@@ -334,7 +342,8 @@ function SocialHubLobbyItem:setup_panel()
 		local index = left_panel
 		local skull_icon = left_panel.bitmap
 		local item = {
-			texture = "guis/textures/pd2/cn_miniskull"
+			texture = "guis/textures/pd2/cn_miniskull",
+			layer = 100
 		}
 
 		if true or not Color.black then
@@ -355,6 +364,7 @@ function SocialHubLobbyItem:setup_panel()
 	self._lobby_setting_text = right_panel:text({
 		text = "FRIENDS ONLY",
 		visible = false,
+		layer = 100,
 		font = tweak_data.menu.pd2_medium_font,
 		font_size = tweak_data.menu.pd2_medium_font_size
 	})
@@ -370,7 +380,9 @@ function SocialHubLobbyItem:setup_panel()
 	local right_placer_x = self._buttons_panel:right()
 
 	for index, item in ipairs(self.data.buttons or {}) do
-		local button = self._buttons_panel:panel({})
+		local button = self._buttons_panel:panel({
+			layer = 100
+		})
 
 		button:rect({
 			name = "bg",
@@ -401,13 +413,13 @@ function SocialHubLobbyItem:setup_panel()
 	end
 end
 
--- Lines 318-324
+-- Lines 325-331
 function SocialHubLobbyItem:_selected_changed(state)
 	SocialHubLobbyItem.super._selected_changed(self, state)
 	self:set_item_selected(1)
 end
 
--- Lines 326-341
+-- Lines 333-348
 function SocialHubLobbyItem:set_item_selected(selected_index)
 	if self._selected_index == selected_index then
 		return
@@ -426,7 +438,7 @@ function SocialHubLobbyItem:set_item_selected(selected_index)
 	end
 end
 
--- Lines 343-350
+-- Lines 350-357
 function SocialHubLobbyItem:mouse_moved(button, x, y)
 	for index, item in ipairs(self._buttons) do
 		if alive(item) and item:inside(x, y) then
@@ -437,7 +449,7 @@ function SocialHubLobbyItem:mouse_moved(button, x, y)
 	end
 end
 
--- Lines 352-358
+-- Lines 359-365
 function SocialHubLobbyItem:mouse_pressed(button, x, y)
 	for index, item in ipairs(self._buttons) do
 		if alive(item) and item:inside(x, y) then
@@ -446,24 +458,24 @@ function SocialHubLobbyItem:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines 360-362
+-- Lines 367-369
 function SocialHubLobbyItem:move_left()
 	self:move_button_selection(1)
 end
 
--- Lines 364-366
+-- Lines 371-373
 function SocialHubLobbyItem:move_right()
 	self:move_button_selection(-1)
 end
 
--- Lines 368-372
+-- Lines 375-379
 function SocialHubLobbyItem:confirm_pressed()
 	if #self._buttons > 0 then
 		self.data.buttons[self._selected_index].press_callback(self.data.LOBBYID)
 	end
 end
 
--- Lines 374-380
+-- Lines 381-387
 function SocialHubLobbyItem:move_button_selection(move)
 	if #self._buttons > 0 then
 		local new_index = self._selected_index + move
@@ -475,7 +487,7 @@ end
 
 SocialHubUserCategoryHeader = SocialHubUserCategoryHeader or class(ListItem)
 
--- Lines 385-405
+-- Lines 392-412
 function SocialHubUserCategoryHeader:init(parent, data)
 	SocialHubUserCategoryHeader.super.init(self, parent, {
 		input = false,
@@ -515,34 +527,34 @@ function SocialHubUserCategoryHeader:init(parent, data)
 	icon:set_right(self._content_panel:right() - 5)
 end
 
--- Lines 407-411
+-- Lines 414-418
 function SocialHubUserCategoryHeader:_selected_changed(state)
 	SocialHubUserCategoryHeader.super._selected_changed(self, state)
 	self._bg:set_alpha(state and 0.4 or 0.1)
 end
 
--- Lines 413-417
+-- Lines 420-424
 function SocialHubUserCategoryHeader:mouse_moved(button, x, y)
 	if self._content_panel:inside(x, y) then
 		return true, "link"
 	end
 end
 
--- Lines 419-423
+-- Lines 426-430
 function SocialHubUserCategoryHeader:mouse_pressed(button, x, y)
 	if self._content_panel:inside(x, y) then
 		self.data.press_callback()
 	end
 end
 
--- Lines 425-427
+-- Lines 432-434
 function SocialHubUserCategoryHeader:confirm_pressed()
 	self.data.press_callback()
 end
 
 SocialHubUserSeparator = SocialHubUserSeparator or class(ListItem)
 
--- Lines 432-437
+-- Lines 439-444
 function SocialHubUserSeparator:init(parent, data)
 	SocialHubUserSeparator.super.init(self, parent, {
 		h = 2,
@@ -558,19 +570,19 @@ function SocialHubUserSeparator:init(parent, data)
 	})
 end
 
--- Lines 439-441
+-- Lines 446-448
 function SocialHubUserSeparator:skip_selection()
 	return true
 end
 
--- Lines 443-445
+-- Lines 450-452
 function SocialHubUserSeparator:get_status_prio()
 	return 2.5
 end
 
 SocialHubTextHeader = SocialHubTextHeader or class(ListItem)
 
--- Lines 450-461
+-- Lines 457-468
 function SocialHubTextHeader:init(parent, data)
 	SocialHubTextHeader.super.init(self, parent, {
 		input = false,
@@ -592,14 +604,14 @@ function SocialHubTextHeader:init(parent, data)
 	text:set_center_x(self._content_panel:center_x())
 end
 
--- Lines 463-465
+-- Lines 470-472
 function SocialHubTextHeader:skip_selection()
 	return true
 end
 
 SocialHubUserSearchBox = SocialHubUserSearchBox or class(ListItem)
 
--- Lines 470-495
+-- Lines 477-502
 function SocialHubUserSearchBox:init(parent_panel, data)
 	self._searchbox = SearchBoxGuiObject:new(parent_panel, data.ws)
 
@@ -608,7 +620,7 @@ function SocialHubUserSearchBox:init(parent_panel, data)
 	self._searchbox.panel:set_center_x(parent_panel:center_x())
 end
 
--- Lines 497-499
+-- Lines 504-506
 function SocialHubUserSearchBox:search_box()
 	return self._searchbox
 end
