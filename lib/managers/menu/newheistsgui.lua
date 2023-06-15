@@ -372,7 +372,7 @@ function NewHeistsGui:move_right()
 	self:_move_pages(1)
 end
 
--- Lines 335-366
+-- Lines 335-375
 function NewHeistsGui:mouse_pressed(button, x, y)
 	if not self._enabled or button ~= Idstring("0") then
 		return
@@ -386,7 +386,13 @@ function NewHeistsGui:mouse_pressed(button, x, y)
 
 	if self._internal_image_panel:inside(x, y) and self._contents[self._current_page]:inside(x, y) then
 		local heist_data = tweak_data.gui.new_heists[self._current_page]
-		local url = heist_data.url
+		local url = ""
+
+		if SystemInfo:distribution() == Idstring("STEAM") then
+			url = heist_data.url or ""
+		elseif SystemInfo:distribution() == Idstring("EPIC") then
+			url = heist_data.epic_url or ""
+		end
 
 		if SystemInfo:distribution() == Idstring("STEAM") and heist_data.append_steam_id and managers.user:get_setting("use_telemetry") then
 			url = url .. heist_data.append_steam_id .. managers.network.account:player_id()
@@ -408,7 +414,7 @@ function NewHeistsGui:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines 368-390
+-- Lines 377-399
 function NewHeistsGui:mouse_moved(o, x, y)
 	if not self._enabled then
 		return
@@ -433,7 +439,7 @@ function NewHeistsGui:mouse_moved(o, x, y)
 	end
 end
 
--- Lines 392-395
+-- Lines 401-404
 function NewHeistsGui:set_enabled(enabled)
 	self._enabled = enabled
 

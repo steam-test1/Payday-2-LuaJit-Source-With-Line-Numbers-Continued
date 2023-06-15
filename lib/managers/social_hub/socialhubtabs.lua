@@ -108,7 +108,7 @@ function SocialHubFriendTab:init(parent_panel)
 	self:setup_panel(parent_panel)
 end
 
--- Lines 84-159
+-- Lines 84-176
 function SocialHubFriendTab:setup_panel(parent_panel)
 	self.open_friend_categories = {}
 	local friends = managers.socialhub:get_platform_friends()
@@ -191,11 +191,30 @@ function SocialHubFriendTab:setup_panel(parent_panel)
 				return false
 			end
 		end
+
+		if lhs.get_name and rhs.get_name then
+			local lhs_name = utf8.to_lower(lhs:get_name())
+			local rhs_name = utf8.to_lower(rhs:get_name())
+
+			for i = 1, math.min(string.len(lhs_name), string.len(rhs_name)) do
+				if string.byte(string.sub(lhs_name, i, i)) < string.byte(string.sub(rhs_name, i, i)) then
+					return true
+				elseif string.byte(string.sub(rhs_name, i, i)) < string.byte(string.sub(lhs_name, i, i)) then
+					return false
+				end
+			end
+
+			if string.len(lhs_name) < string.len(rhs_name) then
+				return true
+			elseif string.len(rhs_name) < string.len(lhs_name) then
+				return false
+			end
+		end
 	end)
 	self.scroll:select_index(1)
 end
 
--- Lines 161-167
+-- Lines 178-184
 function SocialHubFriendTab:reset_tab()
 	for index, item in ipairs(self.scroll:all_items()) do
 		item:remove_self()
@@ -205,7 +224,7 @@ function SocialHubFriendTab:reset_tab()
 	self:setup_panel()
 end
 
--- Lines 169-178
+-- Lines 186-195
 function SocialHubFriendTab:on_user_filter_pressed(filter_category)
 	self.open_friend_categories[filter_category] = not self.open_friend_categories[filter_category]
 
@@ -218,7 +237,7 @@ function SocialHubFriendTab:on_user_filter_pressed(filter_category)
 	end, nil, true)
 end
 
--- Lines 180-188
+-- Lines 197-205
 function SocialHubFriendTab:get_online_friends_amount(friend_list)
 	local amount = 0
 
@@ -231,42 +250,42 @@ function SocialHubFriendTab:get_online_friends_amount(friend_list)
 	return amount
 end
 
--- Lines 190-192
+-- Lines 207-209
 function SocialHubFriendTab:mouse_moved(button, x, y)
 	return self.scroll:mouse_moved(button, x, y)
 end
 
--- Lines 194-196
+-- Lines 211-213
 function SocialHubFriendTab:mouse_pressed(button, x, y)
 	self.scroll:mouse_pressed(button, x, y)
 end
 
--- Lines 198-200
+-- Lines 215-217
 function SocialHubFriendTab:mouse_released(o, button, x, y)
 	return self.scroll:mouse_released(o, button, x, y)
 end
 
--- Lines 202-204
+-- Lines 219-221
 function SocialHubFriendTab:mouse_wheel_up(x, y)
 	return self.scroll:mouse_wheel_up(x, y)
 end
 
--- Lines 206-208
+-- Lines 223-225
 function SocialHubFriendTab:mouse_wheel_down(x, y)
 	return self.scroll:mouse_wheel_down(x, y)
 end
 
--- Lines 210-212
+-- Lines 227-229
 function SocialHubFriendTab:move_up()
 	self.scroll:move_up()
 end
 
--- Lines 214-216
+-- Lines 231-233
 function SocialHubFriendTab:move_down()
 	self.scroll:move_down()
 end
 
--- Lines 218-223
+-- Lines 235-240
 function SocialHubFriendTab:move_left()
 	local item = self.scroll:selected_item()
 
@@ -275,7 +294,7 @@ function SocialHubFriendTab:move_left()
 	end
 end
 
--- Lines 225-230
+-- Lines 242-247
 function SocialHubFriendTab:move_right()
 	local item = self.scroll:selected_item()
 
@@ -284,7 +303,7 @@ function SocialHubFriendTab:move_right()
 	end
 end
 
--- Lines 232-237
+-- Lines 249-254
 function SocialHubFriendTab:confirm_pressed()
 	local item = self.scroll:selected_item()
 
@@ -295,7 +314,7 @@ end
 
 SocialHubInviteTab = SocialHubInviteTab or class(SocialHubTab)
 
--- Lines 242-264
+-- Lines 259-281
 function SocialHubInviteTab:init(parent_panel, ws)
 	SocialHubInviteTab.super.init(parent_panel)
 
@@ -342,7 +361,7 @@ function SocialHubInviteTab:init(parent_panel, ws)
 	self:setup_panel(parent_panel)
 end
 
--- Lines 266-285
+-- Lines 283-302
 function SocialHubInviteTab:setup_panel(parent_panel)
 	local header_text = SocialHubTextHeader:new(self._scroll_panel, {
 		text = managers.localization:text("socialhub_invites_header_invite")
@@ -376,7 +395,7 @@ function SocialHubInviteTab:setup_panel(parent_panel)
 	self.scroll:select_index(1)
 end
 
--- Lines 287-299
+-- Lines 304-316
 function SocialHubInviteTab:reset_tab()
 	for index, item in ipairs(self.scroll:all_items()) do
 		item:remove_self()
@@ -392,7 +411,7 @@ function SocialHubInviteTab:reset_tab()
 	self:setup_panel()
 end
 
--- Lines 301-307
+-- Lines 318-324
 function SocialHubInviteTab:searchbox_disconnect_callback(first, second, third)
 	if string.len(first) == 32 then
 		EpicMM:query_users({
@@ -402,7 +421,7 @@ function SocialHubInviteTab:searchbox_disconnect_callback(first, second, third)
 	end
 end
 
--- Lines 309-328
+-- Lines 326-345
 function SocialHubInviteTab:on_search_users_fetched(first, second, third)
 	if not first or not second or second and table.size(second) <= 0 or not self:invite_tab_valid() then
 		return
@@ -431,7 +450,7 @@ function SocialHubInviteTab:on_search_users_fetched(first, second, third)
 	end
 end
 
--- Lines 330-351
+-- Lines 347-368
 function SocialHubInviteTab:on_search_lobby_fetched(lobby_id, host_user_id, lobby_parameters)
 	if not lobby_id or not host_user_id or not self:invite_tab_valid() then
 		return
@@ -463,7 +482,7 @@ function SocialHubInviteTab:on_search_lobby_fetched(lobby_id, host_user_id, lobb
 	self.scroll:place_items_in_order(nil, true, true)
 end
 
--- Lines 353-362
+-- Lines 370-379
 function SocialHubInviteTab:on_user_lobby_pressed(first, second, third)
 	SocialHubInviteTab.super.on_user_lobby_pressed(self, first, second, third)
 
@@ -476,7 +495,7 @@ function SocialHubInviteTab:on_user_lobby_pressed(first, second, third)
 	end
 end
 
--- Lines 364-384
+-- Lines 381-401
 function SocialHubInviteTab:mouse_moved(button, x, y)
 	if not alive(self.scroll) or not alive(self._searchbox.panel) then
 		return
@@ -501,7 +520,7 @@ function SocialHubInviteTab:mouse_moved(button, x, y)
 	end
 end
 
--- Lines 386-401
+-- Lines 403-418
 function SocialHubInviteTab:mouse_pressed(button, x, y)
 	if not alive(self.scroll) or not alive(self._searchbox.panel) then
 		return
@@ -520,17 +539,17 @@ function SocialHubInviteTab:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines 403-405
+-- Lines 420-422
 function SocialHubInviteTab:move_up()
 	self.scroll:move_up()
 end
 
--- Lines 407-409
+-- Lines 424-426
 function SocialHubInviteTab:move_down()
 	self.scroll:move_down()
 end
 
--- Lines 411-416
+-- Lines 428-433
 function SocialHubInviteTab:move_left()
 	local item = self.scroll:selected_item()
 
@@ -539,7 +558,7 @@ function SocialHubInviteTab:move_left()
 	end
 end
 
--- Lines 418-423
+-- Lines 435-440
 function SocialHubInviteTab:move_right()
 	local item = self.scroll:selected_item()
 
@@ -548,7 +567,7 @@ function SocialHubInviteTab:move_right()
 	end
 end
 
--- Lines 425-435
+-- Lines 442-452
 function SocialHubInviteTab:confirm_pressed()
 	if self._searchbox:input_focus() then
 		self._searchbox:disconnect_search_input()
@@ -563,8 +582,12 @@ function SocialHubInviteTab:confirm_pressed()
 	end
 end
 
--- Lines 437-443
+-- Lines 454-464
 function SocialHubInviteTab:special_btn_pressed(button)
+	if not managers.menu:is_pc_controller() then
+		return
+	end
+
 	if button == Idstring("menu_respec_tree") then
 		self._searchbox:clear_text()
 		self._searchbox:enter_text(nil, Application:get_clipboard())
@@ -572,14 +595,14 @@ function SocialHubInviteTab:special_btn_pressed(button)
 	end
 end
 
--- Lines 445-447
+-- Lines 466-468
 function SocialHubInviteTab:invite_tab_valid()
 	return alive(self._scroll_panel)
 end
 
 SocialHubBlockedTab = SocialHubBlockedTab or class(SocialHubTab)
 
--- Lines 486-491
+-- Lines 507-512
 function SocialHubBlockedTab:init(parent_panel)
 	SocialHubBlockedTab.super.init(parent_panel)
 
@@ -594,7 +617,7 @@ function SocialHubBlockedTab:init(parent_panel)
 	self:setup_panel()
 end
 
--- Lines 493-502
+-- Lines 514-523
 function SocialHubBlockedTab:setup_panel()
 	for index, item in ipairs(managers.socialhub:get_blocked_users()) do
 		if managers.socialhub:user_exists(item) then
@@ -612,7 +635,7 @@ function SocialHubBlockedTab:setup_panel()
 	self.scroll:select_index(1)
 end
 
--- Lines 504-511
+-- Lines 525-532
 function SocialHubBlockedTab:reset_tab()
 	for index, item in ipairs(self.scroll:all_items()) do
 		item:remove_self()
@@ -622,27 +645,27 @@ function SocialHubBlockedTab:reset_tab()
 	self:setup_panel()
 end
 
--- Lines 513-515
+-- Lines 534-536
 function SocialHubBlockedTab:mouse_moved(button, x, y)
 	return self.scroll:mouse_moved(button, x, y)
 end
 
--- Lines 517-519
+-- Lines 538-540
 function SocialHubBlockedTab:mouse_pressed(button, x, y)
 	self.scroll:mouse_pressed(button, x, y)
 end
 
--- Lines 521-523
+-- Lines 542-544
 function SocialHubBlockedTab:move_up()
 	self.scroll:move_up()
 end
 
--- Lines 525-527
+-- Lines 546-548
 function SocialHubBlockedTab:move_down()
 	self.scroll:move_down()
 end
 
--- Lines 529-534
+-- Lines 550-555
 function SocialHubBlockedTab:move_left()
 	local item = self.scroll:selected_item()
 
@@ -651,7 +674,7 @@ function SocialHubBlockedTab:move_left()
 	end
 end
 
--- Lines 536-541
+-- Lines 557-562
 function SocialHubBlockedTab:move_right()
 	local item = self.scroll:selected_item()
 
@@ -660,7 +683,7 @@ function SocialHubBlockedTab:move_right()
 	end
 end
 
--- Lines 543-548
+-- Lines 564-569
 function SocialHubBlockedTab:confirm_pressed()
 	local item = self.scroll:selected_item()
 

@@ -10,7 +10,7 @@ local small_font_size = tweak_data.menu.pd2_small_font_size
 local tiny_font_size = tweak_data.menu.pd2_tiny_font_size
 LobbyCodeMenuComponent = LobbyCodeMenuComponent or class()
 
--- Lines 16-25
+-- Lines 16-33
 function LobbyCodeMenuComponent:init(ws, fullscreen_ws, node)
 	self._ws = ws
 	self._panel = self._ws:panel():panel({
@@ -19,21 +19,31 @@ function LobbyCodeMenuComponent:init(ws, fullscreen_ws, node)
 		h = 100,
 		y = 80
 	})
+	Global.lobby_code = Global.lobby_code or {}
 
 	if managers.network.matchmake.lobby_handler then
 		self._id_code = managers.network.matchmake.lobby_handler:id()
 
 		self:create_hub_panel()
-		self:set_code_hidden(not managers.user:get_setting("toggle_socialhub_hide_code"))
+
+		local initial_state = nil
+
+		if Global.lobby_code.state ~= nil then
+			initial_state = Global.lobby_code.state
+		else
+			initial_state = not managers.user:get_setting("toggle_socialhub_hide_code")
+		end
+
+		self:set_code_hidden(initial_state)
 	end
 end
 
--- Lines 27-29
+-- Lines 35-37
 function LobbyCodeMenuComponent:close()
 	self._ws:panel():remove(self._panel)
 end
 
--- Lines 33-120
+-- Lines 41-128
 function LobbyCodeMenuComponent:create_hub_panel()
 	local panel_w = 0
 	local panel_h = 0
@@ -165,7 +175,7 @@ function LobbyCodeMenuComponent:create_hub_panel()
 	self._panel:set_size(panel_w, panel_h)
 end
 
--- Lines 122-129
+-- Lines 130-137
 function LobbyCodeMenuComponent:update(t, dt)
 	if self._copied_alpha_timer and self._copied_alpha_timer > 0 then
 		self._copied_alpha_timer = math.max(0, self._copied_alpha_timer - dt)
@@ -176,22 +186,24 @@ function LobbyCodeMenuComponent:update(t, dt)
 	end
 end
 
--- Lines 131-135
+-- Lines 139-143
 function LobbyCodeMenuComponent:set_header(header_string)
 	if self._lobby_id_text then
 		self._lobby_id_text:set_text(header_string)
 	end
 end
 
--- Lines 137-141
+-- Lines 145-149
 function LobbyCodeMenuComponent:set_code(code_string)
 	if self._id_text then
 		self._id_text:set_text(code_string)
 	end
 end
 
--- Lines 143-156
+-- Lines 151-166
 function LobbyCodeMenuComponent:set_code_hidden(hidden_state)
+	Global.lobby_code.state = hidden_state
+
 	self._code_hider:set_visible(hidden_state)
 	self._id_text:set_visible(not hidden_state)
 	self._code_hidden_text:set_visible(hidden_state)
@@ -207,7 +219,7 @@ function LobbyCodeMenuComponent:set_code_hidden(hidden_state)
 	self._lower_panel:set_w(self._hide_code_text:right())
 end
 
--- Lines 158-163
+-- Lines 168-173
 function LobbyCodeMenuComponent:copy_code()
 	if managers.network.matchmake.lobby_handler then
 		self._copied_alpha_timer = 2
@@ -216,7 +228,7 @@ function LobbyCodeMenuComponent:copy_code()
 	end
 end
 
--- Lines 165-179
+-- Lines 175-189
 function LobbyCodeMenuComponent:mouse_moved(x, y)
 	if alive(self._button_panel) and self._button_panel:inside(x, y) then
 		return true, "link"
@@ -235,7 +247,7 @@ function LobbyCodeMenuComponent:mouse_moved(x, y)
 	return false
 end
 
--- Lines 181-192
+-- Lines 191-202
 function LobbyCodeMenuComponent:mouse_pressed(button, x, y)
 	if alive(self._button_panel) and self._button_panel:inside(x, y) then
 		self:copy_code()
@@ -252,8 +264,12 @@ function LobbyCodeMenuComponent:mouse_pressed(button, x, y)
 	return false
 end
 
--- Lines 194-200
+-- Lines 204-214
 function LobbyCodeMenuComponent:special_btn_pressed(button)
+	if managers.menu:is_pc_controller() then
+		return
+	end
+
 	if button == Idstring("menu_unlocked_achievement") then
 		self:copy_code()
 	elseif self._code_hider and button == Idstring("menu_preview_item") then
@@ -261,7 +277,7 @@ function LobbyCodeMenuComponent:special_btn_pressed(button)
 	end
 end
 
--- Lines 202-204
+-- Lines 216-218
 function LobbyCodeMenuComponent:panel()
 	return self._panel
 end

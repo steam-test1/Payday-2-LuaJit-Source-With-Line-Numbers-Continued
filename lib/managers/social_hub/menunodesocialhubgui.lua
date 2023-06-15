@@ -310,7 +310,7 @@ end
 
 -- Lines 261-274
 function SocialHubGui:mouse_wheel_up(x, y)
-	if self._tab_panel:inside(x, y) then
+	if self._tab_panel and self._tab_panel:inside(x, y) then
 		self._active_panel = (self._active_panel - 1 - 1) % #self._categories_runtime + 1
 
 		self:on_tab_item_pressed(self._active_panel)
@@ -329,7 +329,7 @@ end
 
 -- Lines 276-289
 function SocialHubGui:mouse_wheel_down(x, y)
-	if self._tab_panel:inside(x, y) then
+	if self._tab_panel and self._tab_panel:inside(x, y) then
 		self._active_panel = (self._active_panel + 1 - 1) % #self._categories_runtime + 1
 
 		self:on_tab_item_pressed(self._active_panel)

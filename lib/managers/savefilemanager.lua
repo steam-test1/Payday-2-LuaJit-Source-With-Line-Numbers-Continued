@@ -1497,7 +1497,7 @@ function SavefileManager:clbk_result_load(task_data, result_data)
 	end
 end
 
--- Lines 1515-1549
+-- Lines 1515-1554
 function SavefileManager:clbk_result_load_backup(task_data, result_data)
 	cat_print("savefile_manager", "[SavefileManager:clbk_result_load_backup]")
 
@@ -1516,6 +1516,11 @@ function SavefileManager:clbk_result_load_backup(task_data, result_data)
 
 				if status == "OK" then
 					local cache = slot_data.data
+
+					if not cache then
+						return
+					end
+
 					local version = cache.version or 0
 					local version_name = cache.version_name
 
@@ -1538,7 +1543,7 @@ function SavefileManager:clbk_result_load_backup(task_data, result_data)
 	end
 end
 
--- Lines 1553-1559
+-- Lines 1558-1564
 function SavefileManager:clbk_result_remove(task_data, result_data)
 	cat_print("savefile_manager", "[SavefileManager:clbk_result_remove]", inspect(task_data), inspect(result_data))
 
@@ -1547,7 +1552,7 @@ function SavefileManager:clbk_result_remove(task_data, result_data)
 	end
 end
 
--- Lines 1563-1600
+-- Lines 1568-1605
 function SavefileManager:clbk_result_iterate_savegame_slots(task_data, result_data)
 	cat_print("savefile_manager", "[SavefileManager:clbk_result_iterate_savegame_slots]", inspect(task_data), inspect(result_data))
 
@@ -1590,7 +1595,7 @@ function SavefileManager:clbk_result_iterate_savegame_slots(task_data, result_da
 	end
 end
 
--- Lines 1604-1620
+-- Lines 1609-1625
 function SavefileManager:clbk_result_save(task_data, result_data)
 	cat_print("savefile_manager", "[SavefileManager:clbk_result_save]")
 
@@ -1611,7 +1616,7 @@ function SavefileManager:clbk_result_save(task_data, result_data)
 	end
 end
 
--- Lines 1623-1635
+-- Lines 1628-1640
 function SavefileManager:clbk_result_save_platform_setting(task_data, success)
 	cat_print("savefile_manager", "[SavefileManager:clbk_result_save_platform_setting]", inspect(task_data), success)
 
@@ -1627,7 +1632,7 @@ function SavefileManager:clbk_result_save_platform_setting(task_data, success)
 	end
 end
 
--- Lines 1639-1654
+-- Lines 1644-1659
 function SavefileManager:clbk_result_space_required(task_data, result_data)
 	cat_print("savefile_manager", "[SavefileManager:clbk_result_space_required] table.size(result_data)", table.size(result_data))
 
@@ -1646,18 +1651,18 @@ end
 
 SavefileInfo = SavefileInfo or class()
 
--- Lines 1662-1665
+-- Lines 1667-1670
 function SavefileInfo:init(slot, text)
 	self._slot = slot
 	self._text = text
 end
 
--- Lines 1667-1669
+-- Lines 1672-1674
 function SavefileInfo:slot()
 	return self._slot
 end
 
--- Lines 1671-1673
+-- Lines 1676-1678
 function SavefileInfo:text()
 	return self._text
 end

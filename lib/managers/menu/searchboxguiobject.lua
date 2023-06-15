@@ -207,7 +207,7 @@ function SearchBoxGuiObject:disconnect_search_input()
 	end
 end
 
--- Lines 188-277
+-- Lines 188-279
 function SearchBoxGuiObject:search_key_press(o, k)
 	if self._skip_first then
 		self._skip_first = false
@@ -247,7 +247,7 @@ function SearchBoxGuiObject:search_key_press(o, k)
 		end
 
 		text:replace_text("")
-	elseif k == Idstring("insert") then
+	elseif k == Idstring("insert") or self._key_ctrl_pressed == true and k == Idstring("v") then
 		local clipboard = Application:get_clipboard() or ""
 
 		text:replace_text(clipboard)
@@ -285,26 +285,34 @@ function SearchBoxGuiObject:search_key_press(o, k)
 		if type(self._enter_callback) ~= "number" then
 			self._enter_callback()
 		end
-	elseif k == Idstring("esc") and type(self._esc_callback) ~= "number" then
-		if not _G.IS_VR then
-			text:set_text("")
-			text:set_selection(0, 0)
-		end
+	elseif k == Idstring("esc") then
+		if type(self._esc_callback) ~= "number" then
+			if not _G.IS_VR then
+				text:set_text("")
+				text:set_selection(0, 0)
+			end
 
-		self._esc_callback()
+			self._esc_callback()
+		end
+	elseif k == Idstring("left ctrl") or k == Idstring("right ctrl") then
+		self._key_ctrl_pressed = true
 	end
 
 	self:update_caret()
 end
 
--- Lines 279-284
+-- Lines 281-289
 function SearchBoxGuiObject:search_key_release(o, k)
 	if self._key_pressed == k then
 		self._key_pressed = false
 	end
+
+	if k == Idstring("left ctrl") or k == Idstring("right ctrl") then
+		self._key_ctrl_pressed = false
+	end
 end
 
--- Lines 286-340
+-- Lines 291-345
 function SearchBoxGuiObject:update_key_down(o, k)
 	wait(0.6)
 
@@ -366,15 +374,19 @@ function SearchBoxGuiObject:update_key_down(o, k)
 	end
 end
 
--- Lines 342-346
+-- Lines 347-351
 function SearchBoxGuiObject:clear_text()
 	if self.text then
 		self.text:set_text("")
 	end
 end
 
--- Lines 348-380
+-- Lines 353-388
 function SearchBoxGuiObject:enter_text(o, s)
+	if s and string.byte(s) < 32 then
+		return
+	end
+
 	if self._skip_first then
 		self._skip_first = false
 
@@ -405,12 +417,12 @@ function SearchBoxGuiObject:enter_text(o, s)
 	self:build_and_apply_filter()
 end
 
--- Lines 382-384
+-- Lines 390-392
 function SearchBoxGuiObject:enter_key_callback()
 	self:build_and_apply_filter()
 end
 
--- Lines 386-391
+-- Lines 394-399
 function SearchBoxGuiObject:esc_key_callback()
 	call_on_next_update(function ()
 		self:build_and_apply_filter()
@@ -418,7 +430,7 @@ function SearchBoxGuiObject:esc_key_callback()
 	end)
 end
 
--- Lines 393-400
+-- Lines 401-408
 function SearchBoxGuiObject.blink(o)
 	while true do
 		o:set_color(Color(0, 1, 1, 1))
@@ -428,7 +440,7 @@ function SearchBoxGuiObject.blink(o)
 	end
 end
 
--- Lines 402-416
+-- Lines 410-424
 function SearchBoxGuiObject:set_blinking(b)
 	local caret = self.caret
 
@@ -449,7 +461,7 @@ function SearchBoxGuiObject:set_blinking(b)
 	end
 end
 
--- Lines 418-444
+-- Lines 426-452
 function SearchBoxGuiObject:update_caret()
 	local text = self.text
 	local caret = self.caret

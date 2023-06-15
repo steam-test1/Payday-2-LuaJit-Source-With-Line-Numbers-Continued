@@ -3620,7 +3620,7 @@ end
 -- Lines 3268-3272
 function AccessBankInvadersInteractionExt:interact(player)
 	AccessBankInvadersInteractionExt.super.super.interact(self, player)
-	managers.network.account:overlay_activate("url", "https://www.paydaythegame.com/legacy-static/bankinvaders2/")
+	managers.network.account:overlay_activate("url", "https://www.paydaythegame.com/static/payday2/bankinvaders2/")
 
 	return true
 end
