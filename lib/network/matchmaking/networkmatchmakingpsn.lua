@@ -1097,7 +1097,11 @@ function NetworkMatchMakingPSN:start_search_lobbys(friends_only)
 	end
 end
 
--- Lines 1037-1070
+-- Lines 1037-1038
+function NetworkMatchMakingPSN:lobby_search_reset()
+end
+
+-- Lines 1040-1073
 function NetworkMatchMakingPSN:search_lobby(settings)
 	local numbers = settings and settings.numbers or {
 		1,
@@ -1156,19 +1160,19 @@ function NetworkMatchMakingPSN:search_lobby(settings)
 	PSN:search_session(table_description, filter, PSN:get_world_list()[1].world_id, self._search_lobbys_index, self.MAX_SEARCH_RESULTS, true)
 end
 
--- Lines 1072-1074
+-- Lines 1075-1077
 function NetworkMatchMakingPSN:_search_lobby_failed()
 	self:search_lobby_done()
 end
 
--- Lines 1076-1079
+-- Lines 1079-1082
 function NetworkMatchMakingPSN:search_lobby_done()
 	self._searching_lobbys = nil
 
 	managers.system_menu:close("find_server")
 end
 
--- Lines 1081-1087
+-- Lines 1084-1090
 function NetworkMatchMakingPSN:set_num_players(num)
 	self._num_players = num
 
@@ -1177,7 +1181,7 @@ function NetworkMatchMakingPSN:set_num_players(num)
 	end
 end
 
--- Lines 1089-1114
+-- Lines 1092-1117
 function NetworkMatchMakingPSN:_set_attributes(settings)
 	if not self._room_id then
 		return
@@ -1197,7 +1201,7 @@ function NetworkMatchMakingPSN:_set_attributes(settings)
 	PSN:set_session_attributes(self._room_id, attributes)
 end
 
--- Lines 1116-1142
+-- Lines 1119-1145
 function NetworkMatchMakingPSN:set_server_attributes(settings)
 	if not self._room_id then
 		return
@@ -1223,7 +1227,7 @@ function NetworkMatchMakingPSN:set_server_attributes(settings)
 	})
 end
 
--- Lines 1144-1157
+-- Lines 1147-1160
 function NetworkMatchMakingPSN:set_server_state(state)
 	if not self._room_id then
 		return
@@ -1240,14 +1244,14 @@ function NetworkMatchMakingPSN:set_server_state(state)
 	})
 end
 
--- Lines 1159-1161
+-- Lines 1162-1164
 function NetworkMatchMakingPSN:server_state_name()
 	return tweak_data:index_to_server_state(self._attributes_numbers[4])
 end
 
--- Lines 1163-1174
+-- Lines 1166-1177
 function NetworkMatchMakingPSN:test_search()
-	-- Lines 1164-1172
+	-- Lines 1167-1175
 	local function f(info)
 		print(inspect(info))
 		print(inspect(info.room_list[1]))
@@ -1261,7 +1265,7 @@ function NetworkMatchMakingPSN:test_search()
 	PSN:set_matchmaking_callback("session_search", f)
 end
 
--- Lines 1176-1182
+-- Lines 1179-1185
 function NetworkMatchMakingPSN:test_search_session()
 	local search_params = {
 		numbers = {
@@ -1275,7 +1279,7 @@ function NetworkMatchMakingPSN:test_search_session()
 	PSN:search_session(search_params, {}, PSN:get_world_list()[1].world_id)
 end
 
--- Lines 1184-1206
+-- Lines 1187-1209
 function NetworkMatchMakingPSN:_custom_message_cb(message)
 	print("_custom_message_cb")
 	print(inspect(message.custom_table))
@@ -1301,7 +1305,7 @@ function NetworkMatchMakingPSN:_custom_message_cb(message)
 	end
 end
 
--- Lines 1208-1217
+-- Lines 1211-1220
 function NetworkMatchMakingPSN:_invitation_received_cb(message, ...)
 	print("_invitation_received_cb")
 	print(inspect(message.custom_table))
@@ -1310,7 +1314,7 @@ function NetworkMatchMakingPSN:_invitation_received_cb(message, ...)
 	print("...", inspect(...))
 end
 
--- Lines 1219-1285
+-- Lines 1222-1288
 function NetworkMatchMakingPSN:_invitation_received_result_cb(message)
 	print("_invitation_received_result_cb")
 	print(inspect(message.custom_table))
@@ -1382,7 +1386,7 @@ function NetworkMatchMakingPSN:_invitation_received_result_cb(message)
 	end)
 end
 
--- Lines 1287-1331
+-- Lines 1290-1334
 function NetworkMatchMakingPSN:join_boot_invite()
 	print("[NetworkMatchMakingPSN:join_boot_invite]", inspect(Global.boot_invite))
 
@@ -1440,7 +1444,7 @@ function NetworkMatchMakingPSN:join_boot_invite()
 	self:_join_invite_accepted(message.room_id)
 end
 
--- Lines 1333-1374
+-- Lines 1336-1377
 function NetworkMatchMakingPSN:is_server_ok(friends_only, room, attributes_numbers, skip_permission_check)
 	print("[NetworkMatchMakingPSN:is_server_ok]")
 
@@ -1483,18 +1487,18 @@ function NetworkMatchMakingPSN:is_server_ok(friends_only, room, attributes_numbe
 	return false, 2
 end
 
--- Lines 1376-1378
+-- Lines 1379-1381
 function NetworkMatchMakingPSN:check_server_attributes_failed()
 	self:check_server_attributes_done()
 end
 
--- Lines 1380-1383
+-- Lines 1383-1386
 function NetworkMatchMakingPSN:check_server_attributes_done()
 	self._checking_server_attributes = nil
 	self._check_room_id = nil
 end
 
--- Lines 1385-1444
+-- Lines 1388-1447
 function NetworkMatchMakingPSN:join_server_with_check(room_id, skip_permission_check)
 	print("NetworkMatchMakingPSN:join_server_with_check")
 
@@ -1507,7 +1511,7 @@ function NetworkMatchMakingPSN:join_server_with_check(room_id, skip_permission_c
 	self._check_room_id = room_id
 	self._checking_server_attributes = true
 
-	-- Lines 1396-1432
+	-- Lines 1399-1435
 	local function f(results)
 		local room_id = self._check_room_id
 
@@ -1575,7 +1579,7 @@ function NetworkMatchMakingPSN:join_server_with_check(room_id, skip_permission_c
 	}, wanted_attributes)
 end
 
--- Lines 1446-1466
+-- Lines 1449-1469
 function NetworkMatchMakingPSN:update_session_attributes(rooms, cb_func)
 	if self._joining_lobby then
 		cb_func(nil)
@@ -1614,7 +1618,7 @@ function NetworkMatchMakingPSN:update_session_attributes(rooms, cb_func)
 	PSN:get_session_attributes(rooms, wanted_attributes)
 end
 
--- Lines 1468-1503
+-- Lines 1471-1506
 function NetworkMatchMakingPSN:_update_session_attributes_result(results)
 	local info_list = {}
 	local info = {
@@ -1652,7 +1656,7 @@ function NetworkMatchMakingPSN:_update_session_attributes_result(results)
 	end
 end
 
--- Lines 1505-1510
+-- Lines 1508-1513
 function NetworkMatchMakingPSN:join_server(room_id)
 	local room = {
 		room_id = room_id
@@ -1661,7 +1665,7 @@ function NetworkMatchMakingPSN:join_server(room_id)
 	self:_join_server(room)
 end
 
--- Lines 1512-1537
+-- Lines 1515-1540
 function NetworkMatchMakingPSN:_join_server(room)
 	self._connection_info = {}
 	self._joining_lobby = true
@@ -1686,29 +1690,29 @@ function NetworkMatchMakingPSN:_join_server(room)
 	self:_start_time_out_check()
 end
 
--- Lines 1539-1541
+-- Lines 1542-1544
 function NetworkMatchMakingPSN:_joining_lobby_done_failed()
 	self:_joining_lobby_done()
 end
 
--- Lines 1543-1546
+-- Lines 1546-1549
 function NetworkMatchMakingPSN:_joining_lobby_done()
 	managers.system_menu:close("join_server")
 
 	self._joining_lobby = nil
 end
 
--- Lines 1548-1551
+-- Lines 1551-1554
 function NetworkMatchMakingPSN:on_peer_added(peer)
 	print("NetworkMatchMakingPSN:on_peer_added")
 end
 
--- Lines 1553-1555
+-- Lines 1556-1558
 function NetworkMatchMakingPSN:on_peer_removed(peer)
 	managers.network.voice_chat:close_channel_to(peer)
 end
 
--- Lines 1557-1705
+-- Lines 1560-1708
 function NetworkMatchMakingPSN:cb_connection_established(info)
 	if self._is_server_var then
 		return
@@ -1766,7 +1770,7 @@ function NetworkMatchMakingPSN:cb_connection_established(info)
 			end
 		})
 
-		-- Lines 1603-1688
+		-- Lines 1606-1691
 		local function f(res, level_index, difficulty_index, state_index)
 			managers.system_menu:close("waiting_for_server_response")
 
@@ -1866,12 +1870,12 @@ function NetworkMatchMakingPSN:cb_connection_established(info)
 	end
 end
 
--- Lines 1707-1709
+-- Lines 1710-1712
 function NetworkMatchMakingPSN:get_connection_info(npid_name)
 	return self._connection_info[npid_name]
 end
 
--- Lines 1712-1719
+-- Lines 1715-1722
 function NetworkMatchMakingPSN:_in_list(id)
 	for k, v in pairs(self._players) do
 		if tostring(v.pnid) == tostring(id) then
@@ -1882,7 +1886,7 @@ function NetworkMatchMakingPSN:_in_list(id)
 	return false
 end
 
--- Lines 1721-1731
+-- Lines 1724-1734
 function NetworkMatchMakingPSN:_translate_settings(settings, value)
 	if value == "game_mode" then
 		local game_mode_in_settings = settings.game_mode
@@ -1895,7 +1899,7 @@ function NetworkMatchMakingPSN:_translate_settings(settings, value)
 	end
 end
 
--- Lines 1733-1804
+-- Lines 1736-1807
 function NetworkMatchMakingPSN:_error_cb(info)
 	if info then
 		print(" [NetworkMatchMakingPSN:_error_cb]")
@@ -1948,7 +1952,7 @@ function NetworkMatchMakingPSN:_error_cb(info)
 	end
 end
 
--- Lines 1807-1863
+-- Lines 1810-1866
 function NetworkMatchMakingPSN:_error_message_solver(info)
 	if info.error == "8002232c" then
 		return
@@ -1994,7 +1998,7 @@ function NetworkMatchMakingPSN:_error_message_solver(info)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1865-1899
+-- Lines 1868-1902
 function NetworkMatchMakingPSN:send_join_invite(friend)
 	print("NetworkMatchMakingPSN:send_join_invite")
 
@@ -2023,7 +2027,7 @@ function NetworkMatchMakingPSN:send_join_invite(friend)
 	})
 end
 
--- Lines 1901-1918
+-- Lines 1904-1921
 function NetworkMatchMakingPSN:_recived_join_invite(message)
 	print("NetworkMatchMakingPSN:_recived_join_invite")
 
@@ -2055,7 +2059,7 @@ function NetworkMatchMakingPSN:_recived_join_invite(message)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 1923-1937
+-- Lines 1926-1940
 function NetworkMatchMakingPSN:_join_invite_accepted(room_id)
 	print("_join_invite_accepted", room_id)
 
@@ -2074,7 +2078,7 @@ function NetworkMatchMakingPSN:_join_invite_accepted(room_id)
 	self:join_server_with_check(room_id, true)
 end
 
--- Lines 1939-1948
+-- Lines 1942-1951
 function NetworkMatchMakingPSN:_set_room_hidden(set)
 	if set == self._hidden or not self._room_id then
 		return
@@ -2086,11 +2090,11 @@ function NetworkMatchMakingPSN:_set_room_hidden(set)
 	self._hidden = set
 end
 
--- Lines 1950-1952
+-- Lines 1953-1955
 function NetworkMatchMakingPSN:_server_timed_out(rpc)
 end
 
--- Lines 1954-1961
+-- Lines 1957-1964
 function NetworkMatchMakingPSN:_client_timed_out(rpc)
 	for k, v in pairs(self._players) do
 		if v.rpc:ip_at_index(0) == rpc:ip_at_index(0) then
@@ -2099,14 +2103,14 @@ function NetworkMatchMakingPSN:_client_timed_out(rpc)
 	end
 end
 
--- Lines 1963-1967
+-- Lines 1966-1970
 function NetworkMatchMakingPSN:set_server_joinable(state)
 	self._server_joinable = state
 
 	self:_set_room_hidden(not state)
 end
 
--- Lines 1969-1971
+-- Lines 1972-1974
 function NetworkMatchMakingPSN:is_server_joinable()
 	return self._server_joinable
 end

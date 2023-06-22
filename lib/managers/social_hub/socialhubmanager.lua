@@ -2,7 +2,7 @@ SocialHubManager = SocialHubManager or class()
 SocialHubManager.save_version = 1
 SocialHubManager._invite_cache = {}
 
--- Lines 6-33
+-- Lines 6-35
 function SocialHubManager:init()
 	if not Global.socialhub then
 		Global.socialhub = {}
@@ -20,12 +20,14 @@ function SocialHubManager:init()
 	self._platform_users = {}
 	self._invited_users = {}
 
+	self:cleanup_blocked_list()
+
 	if SystemInfo:matchmaking() == Idstring("MM_EPIC") and EpicSocialHub then
 		EpicSocialHub:subscribe_to_lobby_invites(callback(self, self, "on_invite_recieved"), callback(self, self, "on_invite_accepted"))
 	end
 end
 
--- Lines 39-48
+-- Lines 41-50
 function SocialHubManager:save(cache)
 	local save_data = {
 		version = self.save_version,
@@ -36,7 +38,7 @@ function SocialHubManager:save(cache)
 	cache.socialhub = save_data
 end
 
--- Lines 50-69
+-- Lines 52-72
 function SocialHubManager:load(cache, version)
 	local state = cache.socialhub or {}
 
@@ -51,9 +53,10 @@ function SocialHubManager:load(cache, version)
 
 	SocialHubFriends:sync_friends(self._global.friend_users)
 	SocialHubFriends:sync_blocked(self._global.blocked_users)
+	self:cleanup_blocked_list()
 end
 
--- Lines 71-78
+-- Lines 74-81
 function SocialHubManager:update(t, dt)
 	for index, item in ipairs(self._invited_users) do
 		item.time = item.time - dt
@@ -64,7 +67,7 @@ function SocialHubManager:update(t, dt)
 	end
 end
 
--- Lines 82-101
+-- Lines 85-106
 function SocialHubManager:fetch_steam_friends(callback)
 	self._platform_users = {}
 
@@ -80,17 +83,19 @@ function SocialHubManager:fetch_steam_friends(callback)
 		table.insert(self._platform_users, item:id())
 	end
 
+	self:cleanup_blocked_list()
+
 	if callback then
 		callback()
 	end
 end
 
--- Lines 103-105
+-- Lines 108-110
 function SocialHubManager:fetch_epic_friends(gui_callback)
 	EpicSocialHub:get_epic_friends(callback(self, self, "epic_friends_id_callback", gui_callback))
 end
 
--- Lines 107-114
+-- Lines 112-119
 function SocialHubManager:epic_friends_id_callback(gui_callback, success, users)
 	print("epic_friends_id_callback", inspect(success), inspect(users))
 
@@ -101,7 +106,7 @@ function SocialHubManager:epic_friends_id_callback(gui_callback, success, users)
 	end
 end
 
--- Lines 116-135
+-- Lines 121-142
 function SocialHubManager:epic_friends_data_callback(gui_callback, success, users)
 	print("epic_friends_data_callback", inspect(success), inspect(users))
 
@@ -119,12 +124,14 @@ function SocialHubManager:epic_friends_data_callback(gui_callback, success, user
 		end
 	end
 
+	self:cleanup_blocked_list()
+
 	if gui_callback then
 		gui_callback()
 	end
 end
 
--- Lines 137-149
+-- Lines 144-156
 function SocialHubManager:fetch_users(caller_callback)
 	if EpicMM then
 		self._callback = caller_callback
@@ -136,7 +143,7 @@ function SocialHubManager:fetch_users(caller_callback)
 	end
 end
 
--- Lines 151-165
+-- Lines 158-172
 function SocialHubManager:on_users_fetched(s, accounts)
 	if s then
 		for index, item in pairs(accounts) do
@@ -154,7 +161,7 @@ function SocialHubManager:on_users_fetched(s, accounts)
 	end
 end
 
--- Lines 167-177
+-- Lines 174-184
 function SocialHubManager:on_invite_accepted(invite_id, accepted)
 	if accepted then
 		local lobby_id = self._invite_cache[invite_id]
@@ -169,7 +176,7 @@ function SocialHubManager:on_invite_accepted(invite_id, accepted)
 	end
 end
 
--- Lines 179-194
+-- Lines 186-201
 function SocialHubManager:on_invite_recieved(invite_id, lobby_id, user_id, display_name, platform)
 	if self:is_user_blocked(user_id) or managers.user:get_setting("socialhub_invite") == "off" or managers.user:get_setting("socialhub_invite") == "friends" and not self:is_user_friend(user_id) then
 		return
@@ -182,7 +189,7 @@ function SocialHubManager:on_invite_recieved(invite_id, lobby_id, user_id, displ
 	EpicSocialHub:get_lobby_info(lobby_id, callback(self, self, "on_search_lobby_fetched"))
 end
 
--- Lines 196-205
+-- Lines 203-212
 function SocialHubManager:on_search_lobby_fetched(first, second, third)
 	if not first or not second then
 		return
@@ -194,13 +201,13 @@ function SocialHubManager:on_search_lobby_fetched(first, second, third)
 	managers.menu_component:social_hub_gui_reset_tab_by_name("invite")
 end
 
--- Lines 209-212
+-- Lines 216-219
 function SocialHubManager:add_user_friend(id)
 	table.insert(self._global.friend_users, id)
 	SocialHubFriends:add_friend(id)
 end
 
--- Lines 214-220
+-- Lines 221-227
 function SocialHubManager:remove_user_friend(id)
 	local friend_index = table.index_of(self._global.friend_users, id)
 
@@ -211,7 +218,7 @@ function SocialHubManager:remove_user_friend(id)
 	SocialHubFriends:remove_friend(id)
 end
 
--- Lines 222-228
+-- Lines 229-235
 function SocialHubManager:remove_user_blocked(id)
 	local blocked_index = table.index_of(self._global.blocked_users, id)
 
@@ -222,47 +229,47 @@ function SocialHubManager:remove_user_blocked(id)
 	SocialHubFriends:remove_blocked(id)
 end
 
--- Lines 230-233
+-- Lines 237-240
 function SocialHubManager:add_user_blocked(id)
 	table.insert(self._global.blocked_users, id)
 	SocialHubFriends:add_blocked(id)
 end
 
--- Lines 235-237
+-- Lines 242-244
 function SocialHubManager:can_friend_user(id)
 	return true
 end
 
--- Lines 239-241
+-- Lines 246-248
 function SocialHubManager:can_remove_friend_user(id)
 	return false
 end
 
--- Lines 243-245
+-- Lines 250-252
 function SocialHubManager:can_block_user(id)
 	return true
 end
 
--- Lines 247-249
+-- Lines 254-256
 function SocialHubManager:can_invite_user(id)
 	return false
 end
 
--- Lines 251-254
+-- Lines 258-261
 function SocialHubManager:user_exists(id)
 	id = tostring(id)
 
 	return self._global.cached_users[id] and true or false
 end
 
--- Lines 256-259
+-- Lines 263-266
 function SocialHubManager:get_user(id)
 	id = tostring(id)
 
 	return self._global.cached_users[id]
 end
 
--- Lines 261-268
+-- Lines 268-275
 function SocialHubManager:is_user_platform_friend(id)
 	if SystemInfo:distribution() == Idstring("STEAM") then
 		local user = self:get_user(id)
@@ -275,17 +282,17 @@ function SocialHubManager:is_user_platform_friend(id)
 	return table.contains(self._platform_users, id)
 end
 
--- Lines 270-272
+-- Lines 277-279
 function SocialHubManager:is_user_friend(id)
 	return table.contains(self._global.friend_users, id)
 end
 
--- Lines 274-276
+-- Lines 281-283
 function SocialHubManager:is_user_blocked(id)
 	return table.contains(self._global.blocked_users, id) or SocialHubFriends:is_blocked(id)
 end
 
--- Lines 278-289
+-- Lines 285-299
 function SocialHubManager:add_cached_user(id, data)
 	id = tostring(id)
 	self._global.cached_users[id] = {
@@ -293,33 +300,41 @@ function SocialHubManager:add_cached_user(id, data)
 		id = id,
 		account_id = data.account_id,
 		platform = data.account_type,
-		lobby = data.lobby,
 		rich_presence = data.rich_presence,
 		state = data.state
 	}
 end
 
--- Lines 291-293
+-- Lines 301-303
 function SocialHubManager:get_platform_friends()
 	return self._platform_users
 end
 
--- Lines 295-297
+-- Lines 305-307
 function SocialHubManager:get_number_of_platform_friends()
 	return #self._platform_users
 end
 
--- Lines 299-301
+-- Lines 309-311
 function SocialHubManager:get_cross_friends()
 	return self._global.friend_users
 end
 
--- Lines 303-305
+-- Lines 313-315
 function SocialHubManager:get_number_of_cross_friends()
 	return #self._global.friend_users
 end
 
--- Lines 307-338
+-- Lines 317-323
+function SocialHubManager:cleanup_blocked_list(user_id)
+	for index, blocked_id in ipairs(self._global.blocked_users) do
+		if self:is_user_friend(blocked_id) or self:is_user_platform_friend(blocked_id) then
+			self:remove_user_blocked(blocked_id)
+		end
+	end
+end
+
+-- Lines 325-356
 function SocialHubManager:get_actions_for_user(callback_object, callback_function, user_id)
 	if not self:user_exists(user_id) or user_id == managers.network.matchmake:userid() then
 		return false
@@ -377,22 +392,22 @@ function SocialHubManager:get_actions_for_user(callback_object, callback_functio
 	return actions
 end
 
--- Lines 362-364
+-- Lines 380-382
 function SocialHubManager:get_blocked_users()
 	return self._global.blocked_users
 end
 
--- Lines 366-368
+-- Lines 384-386
 function SocialHubManager:remove_pending_lobby(lobby_id)
 	self._global.pending_lobbies[lobby_id] = nil
 end
 
--- Lines 370-372
+-- Lines 388-390
 function SocialHubManager:get_pending_lobbies()
 	return self._global.pending_lobbies
 end
 
--- Lines 374-394
+-- Lines 392-412
 function SocialHubManager:invite_user_to_lobby(user_id)
 	if not managers.network.matchmake.lobby_handler then
 		return
@@ -423,7 +438,7 @@ function SocialHubManager:invite_user_to_lobby(user_id)
 	end
 end
 
--- Lines 396-403
+-- Lines 414-421
 function SocialHubManager:is_user_invited(user_id)
 	for index, item in ipairs(self._invited_users) do
 		if item.user_id == user_id then

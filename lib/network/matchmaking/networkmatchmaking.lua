@@ -344,7 +344,11 @@ function NetworkMatchMaking:set_difficulty_filter(filter)
 	self._difficulty_filter = filter
 end
 
--- Lines 323-417
+-- Lines 323-324
+function NetworkMatchMaking:lobby_search_reset()
+end
+
+-- Lines 326-420
 function NetworkMatchMaking:search_lobby(friends_only)
 	self._search_friends_only = friends_only
 
@@ -352,7 +356,7 @@ function NetworkMatchMaking:search_lobby(friends_only)
 		return
 	end
 
-	-- Lines 330-332
+	-- Lines 333-335
 	local function is_key_valid(key)
 		return key ~= "value_missing" and key ~= "value_pending"
 	end
@@ -360,7 +364,7 @@ function NetworkMatchMaking:search_lobby(friends_only)
 	if friends_only then
 		self:get_friends_lobbies()
 	else
-		-- Lines 337-381
+		-- Lines 340-384
 		local function refresh_lobby()
 			if not self.browser then
 				return
@@ -450,29 +454,29 @@ function NetworkMatchMaking:search_lobby(friends_only)
 	end
 end
 
--- Lines 419-422
+-- Lines 422-425
 function NetworkMatchMaking:search_lobby_done()
 	managers.system_menu:close("find_server")
 
 	self.browser = nil
 end
 
--- Lines 425-427
+-- Lines 428-430
 function NetworkMatchMaking:game_owner_name()
 	return managers.network.matchmake.lobby_handler:get_lobby_data("owner_name")
 end
 
--- Lines 428-430
+-- Lines 431-433
 function NetworkMatchMaking:game_owner_account_type_str()
 	return ""
 end
 
--- Lines 432-434
+-- Lines 435-437
 function NetworkMatchMaking:game_owner_account_id()
 	return managers.network.matchmake.lobby_handler:get_lobby_data("owner_id")
 end
 
--- Lines 445-476
+-- Lines 448-479
 function NetworkMatchMaking:is_server_ok(friends_only, room, attributes_numbers, is_invite)
 	local permission = tweak_data:index_to_permission(attributes_numbers[3])
 	local level_index, job_index = self:_split_attribute_number(attributes_numbers[1], 1000)
@@ -508,12 +512,12 @@ function NetworkMatchMaking:is_server_ok(friends_only, room, attributes_numbers,
 	return true
 end
 
--- Lines 478-480
+-- Lines 481-483
 function NetworkMatchMaking:join_server_with_check(room_id, is_invite)
 	managers.menu:show_joining_lobby_dialog()
 end
 
--- Lines 482-500
+-- Lines 485-503
 function NetworkMatchMaking._on_member_left(id, status)
 	if not managers.network:session() then
 		return
@@ -538,7 +542,7 @@ function NetworkMatchMaking._on_member_left(id, status)
 	managers.network:session():on_peer_left_lobby(peer)
 end
 
--- Lines 502-514
+-- Lines 505-517
 function NetworkMatchMaking._on_memberstatus_change(memberstatus)
 	print("[NetworkMatchMaking._on_memberstatus_change]", memberstatus)
 
@@ -549,30 +553,30 @@ function NetworkMatchMaking._on_memberstatus_change(memberstatus)
 	end
 end
 
--- Lines 516-518
+-- Lines 519-521
 function NetworkMatchMaking._on_data_update(...)
 end
 
--- Lines 520-523
+-- Lines 523-526
 function NetworkMatchMaking._on_chat_message(user, message)
 	print("[NetworkMatchMaking._on_chat_message]", user, message)
 	NetworkMatchMaking._handle_chat_message(user, message)
 end
 
--- Lines 524-529
+-- Lines 527-532
 function NetworkMatchMaking._handle_chat_message(user, message)
 	local s = "" .. message
 
 	managers.chat:receive_message_by_name(ChatManager.GLOBAL, user:name(), s)
 end
 
--- Lines 531-662
+-- Lines 534-687
 function NetworkMatchMaking:join_server(room_id, skip_showing_dialog)
 	if not skip_showing_dialog then
 		managers.menu:show_joining_lobby_dialog()
 	end
 
-	-- Lines 546-661
+	-- Lines 549-686
 	local function f(result, handler)
 		print("[NetworkMatchMaking:join_server:f]", result, handler)
 		managers.system_menu:close("join_server")
@@ -603,7 +607,7 @@ function NetworkMatchMaking:join_server(room_id, skip_showing_dialog)
 				end
 			})
 
-			-- Lines 572-654
+			-- Lines 575-679
 			local function joined_game(res, level_index, difficulty_index, state_index)
 				managers.system_menu:close("waiting_for_server_response")
 				print("[NetworkMatchMaking:join_server:joined_game]", res, level_index, difficulty_index, state_index)
@@ -668,6 +672,26 @@ function NetworkMatchMaking:join_server(room_id, skip_showing_dialog)
 					Global.on_remove_peer_message = res == "AUTH_HOST_FAILED" and "dialog_authentication_host_fail" or "dialog_authentication_fail"
 
 					managers.menu:show_peer_kicked_dialog()
+				elseif res == "SHUB_BLOCKED" then
+					managers.network.matchmake:leave_game()
+					managers.network.voice_chat:destroy_voice()
+					managers.network:queue_stop_network()
+					managers.menu:show_shub_blocked_dialog()
+				elseif res == "SHUB_NOT_FRIEND" then
+					managers.network.matchmake:leave_game()
+					managers.network.voice_chat:destroy_voice()
+					managers.network:queue_stop_network()
+					managers.menu:show_shub_not_friend_dialog()
+				elseif res == "HOST_LOADING" then
+					managers.network.matchmake:leave_game()
+					managers.network.voice_chat:destroy_voice()
+					managers.network:queue_stop_network()
+					managers.menu:show_host_loading_dialog()
+				elseif res == "ALREADY_JOINED" then
+					managers.network.matchmake:leave_game()
+					managers.network.voice_chat:destroy_voice()
+					managers.network:queue_stop_network()
+					managers.menu:show_already_joined_dialog()
 				else
 					Application:error("[NetworkMatchMaking:join_server] FAILED TO START MULTIPLAYER!", res)
 				end
@@ -681,16 +705,16 @@ function NetworkMatchMaking:join_server(room_id, skip_showing_dialog)
 	end
 end
 
--- Lines 665-666
+-- Lines 690-691
 function NetworkMatchMaking:send_join_invite(friend)
 end
 
--- Lines 669-671
+-- Lines 694-696
 function NetworkMatchMaking:set_server_attributes(settings)
 	self:set_attributes(settings)
 end
 
--- Lines 673-711
+-- Lines 698-736
 function NetworkMatchMaking:create_lobby(settings)
 	self._num_players = nil
 	local dialog_data = {
@@ -702,7 +726,7 @@ function NetworkMatchMaking:create_lobby(settings)
 
 	managers.system_menu:show(dialog_data)
 
-	-- Lines 686-708
+	-- Lines 711-733
 	local function f(result, handler)
 		print("Create lobby callback!!", result, handler)
 
@@ -739,7 +763,7 @@ function NetworkMatchMaking:create_lobby(settings)
 	return true
 end
 
--- Lines 713-721
+-- Lines 738-746
 function NetworkMatchMaking:set_num_players(num)
 	print("NetworkMatchMaking:set_num_players", num)
 
@@ -752,7 +776,7 @@ function NetworkMatchMaking:set_num_players(num)
 	end
 end
 
--- Lines 735-748
+-- Lines 760-773
 function NetworkMatchMaking:set_server_state(state)
 	if self._lobby_attributes then
 		local state_id = tweak_data:server_state_to_index(state)
@@ -768,7 +792,7 @@ function NetworkMatchMaking:set_server_state(state)
 	end
 end
 
--- Lines 750-757
+-- Lines 775-782
 function NetworkMatchMaking:set_server_joinable(state)
 	print("[NetworkMatchMaking:set_server_joinable]", state)
 
@@ -779,17 +803,17 @@ function NetworkMatchMaking:set_server_joinable(state)
 	end
 end
 
--- Lines 759-761
+-- Lines 784-786
 function NetworkMatchMaking:is_server_joinable()
 	return self._server_joinable
 end
 
--- Lines 763-765
+-- Lines 788-790
 function NetworkMatchMaking:server_state_name()
 	return tweak_data:index_to_server_state(self._lobby_attributes.state)
 end
 
--- Lines 778-819
+-- Lines 803-844
 function NetworkMatchMaking:set_attributes(settings)
 	if not self.lobby_handler then
 		return
@@ -831,7 +855,7 @@ function NetworkMatchMaking:set_attributes(settings)
 	self.lobby_handler:set_lobby_type(permissions[settings.numbers[3]])
 end
 
--- Lines 821-833
+-- Lines 846-858
 function NetworkMatchMaking:_lobby_to_numbers(lobby)
 	return {
 		tonumber(lobby:key_value("level")) + 1000 * tonumber(lobby:key_value("job_id")),
@@ -847,7 +871,7 @@ function NetworkMatchMaking:_lobby_to_numbers(lobby)
 	}
 end
 
--- Lines 835-845
+-- Lines 860-870
 function NetworkMatchMaking:from_host_lobby_re_opened(status)
 	print("[NetworkMatchMaking::from_host_lobby_re_opened]", self._try_re_enter_lobby, status)
 
@@ -862,7 +886,7 @@ function NetworkMatchMaking:from_host_lobby_re_opened(status)
 	end
 end
 
--- Lines 847-852
+-- Lines 872-877
 function NetworkMatchMaking:get_lobby_type()
 	if not self.lobby_handler then
 		return "unknown"
@@ -871,7 +895,7 @@ function NetworkMatchMaking:get_lobby_type()
 	return self.lobby_handler:lobby_type()
 end
 
--- Lines 854-857
+-- Lines 879-882
 function NetworkMatchMaking:server_time()
 	return 0
 end

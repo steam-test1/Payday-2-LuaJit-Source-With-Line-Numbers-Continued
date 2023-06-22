@@ -1,6 +1,6 @@
 GuiTweakData = GuiTweakData or class()
 
--- Lines 3-2138
+-- Lines 3-2139
 function GuiTweakData:init(tweak_data)
 	local is_win_32 = SystemInfo:platform() == Idstring("WIN32")
 	local is_nextgen = SystemInfo:platform() == Idstring("PS4") or SystemInfo:platform() == Idstring("XB1")
@@ -720,7 +720,7 @@ function GuiTweakData:init(tweak_data)
 		active_job_time = 25,
 		new_job_min_time = 1.5,
 		new_job_max_time = 3.5,
-		refresh_servers_time = SystemInfo:platform() == Idstring("PS4") and 10 or SystemInfo:matchmaking() == Idstring("MM_EPIC") and 10 or 5,
+		refresh_servers_time = SystemInfo:platform() == Idstring("PS4") and 10 or 5,
 		total_active_jobs = 40,
 		max_active_server_jobs = 100
 	}
@@ -5222,6 +5222,7 @@ function GuiTweakData:init(tweak_data)
 	table.insert(self.new_heists, {
 		name_id = "menu_nh_pxp4_02",
 		texture_path = "guis/dlcs/pxp4/textures/pd2/new_heists/pxp4_02",
+		epic_url = "https://pd2.link/CrudeAwakeningNebulaSL",
 		url = "https://pd2.link/CrudeAwakeningNebulaSL"
 	})
 	table.insert(self.new_heists, {
@@ -5708,7 +5709,7 @@ function GuiTweakData:init(tweak_data)
 	})
 end
 
--- Lines 2140-2159
+-- Lines 2141-2160
 function GuiTweakData:_create_location_bounding_boxes()
 	for _, location in ipairs(self.crime_net.locations) do
 		local params = location[1]
@@ -5736,7 +5737,7 @@ function GuiTweakData:_create_location_bounding_boxes()
 	end
 end
 
--- Lines 2161-2229
+-- Lines 2162-2230
 function GuiTweakData:_create_location_spawning_dots()
 	local map_w = 2048
 	local map_h = 1024
@@ -5814,15 +5815,15 @@ function GuiTweakData:_create_location_spawning_dots()
 	self.crime_net.locations = new_locations
 end
 
--- Lines 2231-2233
+-- Lines 2232-2234
 function GuiTweakData:create_narrative_locations(locations)
 end
 
--- Lines 2235-2244
+-- Lines 2236-2245
 function GuiTweakData:print_locations()
 end
 
--- Lines 2246-2280
+-- Lines 2247-2281
 function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	skipnewlines = skipnewlines or false
 	depth = depth or 0
@@ -5861,7 +5862,7 @@ function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	return tmp
 end
 
--- Lines 2282-2407
+-- Lines 2283-2408
 function GuiTweakData:tradable_inventory_sort_func(index)
 	if type(index) == "string" then
 		index = self:tradable_inventory_sort_index(index)
@@ -5984,12 +5985,12 @@ function GuiTweakData:tradable_inventory_sort_func(index)
 	return nil
 end
 
--- Lines 2409-2411
+-- Lines 2410-2412
 function GuiTweakData:tradable_inventory_sort_name(index)
 	return self.tradable_inventory_sort_list[index] or "none"
 end
 
--- Lines 2413-2420
+-- Lines 2414-2421
 function GuiTweakData:tradable_inventory_sort_index(name)
 	for index, n in ipairs(self.tradable_inventory_sort_list) do
 		if n == name then
@@ -6000,7 +6001,7 @@ function GuiTweakData:tradable_inventory_sort_index(name)
 	return 0
 end
 
--- Lines 2422-2442
+-- Lines 2423-2443
 function GuiTweakData:get_locked_sort_number(dlc, ...)
 	local dlc_data = dlc and Global.dlc_manager.all_dlc_data[dlc]
 	local is_dlc_locked = dlc and not managers.dlc:is_dlc_unlocked(dlc) or false
