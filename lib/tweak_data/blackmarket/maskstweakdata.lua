@@ -2,7 +2,7 @@ local is_nextgen_console = SystemInfo:platform() == Idstring("PS4") or SystemInf
 local allow_halloween_lootdrop = is_nextgen_console
 allow_halloween_lootdrop = true
 
--- Lines 10-10415
+-- Lines 10-10490
 function BlackMarketTweakData:_init_masks(tweak_data)
 	self.masks = {
 		character_locked = {}
@@ -9596,6 +9596,39 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 				Rotation(-0, -0, -0)
 			}
 		}
+	}
+	self.masks.gabhelm = {
+		unit = "units/pd2_dlc_deep/characters/msk_gabhelm/msk_gabhelm",
+		name_id = "bm_msk_gabhelm",
+		pcs = {},
+		value = 0,
+		type = "helmet",
+		sort_number = 0,
+		preview_oobb_object = "g_mask",
+		dlc = "deep",
+		texture_bundle_folder = "deep"
+	}
+	self.masks.bossflagmask = {
+		unit = "units/pd2_dlc_deep/characters/msk_bossflagmask/msk_bossflagmask",
+		name_id = "bm_msk_bossflagmask",
+		pcs = {},
+		value = 0,
+		type = "cowboyhat",
+		sort_number = 0,
+		preview_oobb_object = "g_mask",
+		dlc = "deep",
+		texture_bundle_folder = "deep"
+	}
+	self.masks.roclown = {
+		unit = "units/pd2_dlc_dot/masks/msk_roclown/msk_roclown",
+		name_id = "bm_msk_roclown",
+		pcs = {},
+		value = 0,
+		type = "helmet",
+		sort_number = 0,
+		preview_oobb_object = "g_mask",
+		dlc = "dot_roclown_msk",
+		texture_bundle_folder = "dot"
 	}
 	local free_dlcs = tweak_data:free_dlc_list()
 

@@ -29,6 +29,7 @@ function FeatureManager:_setup()
 	self._default.announcements.movie_theater_unlocked = 1
 	self._default.announcements.cg22_event_explanation = 1
 	self._default.announcements.lron_event_explanation = 1
+	self._default.announcements.lrtw_event_explanation = 1
 	self._default.external_notifications = {
 		dialog_texas_heat_drop_name = {
 			"rat_oilbaron",
@@ -119,6 +120,7 @@ function FeatureManager:reset()
 	Global.feature_manager.announcements.new_career = 1
 	Global.feature_manager.announcements.cg22_event_explanation = 1
 	Global.feature_manager.announcements.lron_event_explanation = 1
+	Global.feature_manager.announcements.lrtw_event_explanation = 1
 	Global.feature_manager.announced = {}
 	Global.feature_manager.external_notifications = {}
 	self._global = Global.feature_manager
@@ -465,6 +467,13 @@ end
 -- Lines 444-447
 function FeatureManager:lron_event_explanation()
 	managers.menu:show_lron_dialog()
+
+	return true
+end
+
+-- Lines 450-453
+function FeatureManager:lrtw_event_explanation()
+	managers.menu:show_lrtw_dialog()
 
 	return true
 end

@@ -381,9 +381,11 @@ function SearchBoxGuiObject:clear_text()
 	end
 end
 
--- Lines 353-388
+-- Lines 353-390
 function SearchBoxGuiObject:enter_text(o, s)
-	if s and string.byte(s) < 32 then
+	local byte = s and string.byte(s)
+
+	if byte and byte < 32 then
 		return
 	end
 
@@ -417,12 +419,12 @@ function SearchBoxGuiObject:enter_text(o, s)
 	self:build_and_apply_filter()
 end
 
--- Lines 390-392
+-- Lines 392-394
 function SearchBoxGuiObject:enter_key_callback()
 	self:build_and_apply_filter()
 end
 
--- Lines 394-399
+-- Lines 396-401
 function SearchBoxGuiObject:esc_key_callback()
 	call_on_next_update(function ()
 		self:build_and_apply_filter()
@@ -430,7 +432,7 @@ function SearchBoxGuiObject:esc_key_callback()
 	end)
 end
 
--- Lines 401-408
+-- Lines 403-410
 function SearchBoxGuiObject.blink(o)
 	while true do
 		o:set_color(Color(0, 1, 1, 1))
@@ -440,7 +442,7 @@ function SearchBoxGuiObject.blink(o)
 	end
 end
 
--- Lines 410-424
+-- Lines 412-426
 function SearchBoxGuiObject:set_blinking(b)
 	local caret = self.caret
 
@@ -461,7 +463,7 @@ function SearchBoxGuiObject:set_blinking(b)
 	end
 end
 
--- Lines 426-452
+-- Lines 428-454
 function SearchBoxGuiObject:update_caret()
 	local text = self.text
 	local caret = self.caret

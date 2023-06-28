@@ -228,6 +228,7 @@ function StatisticsTweakData:statistics_table()
 		"triad_boss",
 		"triad_boss_no_armor",
 		"snowman_boss",
+		"deep_boss",
 		"marshal_marksman",
 		"marshal_shield",
 		"marshal_shield_break"

@@ -563,7 +563,7 @@ function CopDamage:force_hurt(attack_data)
 	self:_call_listeners(attack_data)
 end
 
--- Lines 643-935
+-- Lines 643-939
 function CopDamage:damage_bullet(attack_data)
 	if self._dead or self._invulnerable then
 		return
@@ -639,12 +639,15 @@ function CopDamage:damage_bullet(attack_data)
 
 	damage = damage * (self._marked_dmg_mul or 1)
 
-	if self._marked_dmg_mul and self._marked_dmg_dist_mul then
-		local dst = mvector3.distance(attack_data.origin, self._unit:position())
+	if self._marked_dmg_dist_mul then
 		local spott_dst = tweak_data.upgrades.values.player.marked_inc_dmg_distance[self._marked_dmg_dist_mul]
 
-		if spott_dst[1] < dst then
-			damage = damage * spott_dst[2]
+		if spott_dst then
+			local dst = mvector3.distance(attack_data.origin, self._unit:position())
+
+			if spott_dst[1] < dst then
+				damage = damage * spott_dst[2]
+			end
 		end
 	end
 
@@ -864,7 +867,7 @@ function CopDamage:damage_bullet(attack_data)
 	return result
 end
 
--- Lines 938-946
+-- Lines 942-950
 function CopDamage:client_check_damage_achievements(weapon_unit, attacker_unit, damage, distance, head_shot)
 	if attacker_unit ~= managers.player:player_unit() then
 		return
@@ -883,7 +886,7 @@ function CopDamage:client_check_damage_achievements(weapon_unit, attacker_unit, 
 	self:_check_damage_achievements(attack_data, head_shot)
 end
 
--- Lines 948-1180
+-- Lines 952-1184
 function CopDamage:_check_damage_achievements(attack_data, head)
 	local attack_weapon = attack_data.weapon_unit
 	local is_weapon_valid = alive(attack_weapon) and attack_weapon:base()
@@ -1076,22 +1079,22 @@ function CopDamage:_check_damage_achievements(attack_data, head)
 	end
 end
 
--- Lines 1182-1184
+-- Lines 1186-1188
 function CopDamage.is_civilian(type)
 	return CopDamage.civilian_types[type] or false
 end
 
--- Lines 1186-1188
+-- Lines 1190-1192
 function CopDamage.is_gangster(type)
 	return CopDamage.gangster_types[type] or false
 end
 
--- Lines 1190-1192
+-- Lines 1194-1196
 function CopDamage.is_cop(type)
 	return not CopDamage.is_civilian(type) and not CopDamage.is_gangster(type)
 end
 
--- Lines 1194-1198
+-- Lines 1198-1202
 function CopDamage:_show_death_hint(type)
 	if CopDamage.is_civilian(type) and not self._unit:base().enemy then
 		-- Nothing
@@ -1119,7 +1122,7 @@ CopDamage.death_comments_priority = {
 	"medic"
 }
 
--- Lines 1235-1280
+-- Lines 1239-1284
 function CopDamage:_comment_death(attacker, killed_unit, special_comment)
 	local is_local_player = attacker:base() and attacker:base().is_local_player
 
@@ -1165,7 +1168,7 @@ function CopDamage:_comment_death(attacker, killed_unit, special_comment)
 	end
 end
 
--- Lines 1285-1423
+-- Lines 1289-1427
 function CopDamage:update(unit, t, dt)
 	local aoe_data = self._aoe_data
 
@@ -1263,7 +1266,7 @@ function CopDamage:update(unit, t, dt)
 	end
 end
 
--- Lines 1425-1446
+-- Lines 1429-1450
 function CopDamage:update_aoe_preparing(unit, t, dt)
 	local aoe_data = self._aoe_data
 
@@ -1280,7 +1283,7 @@ function CopDamage:update_aoe_preparing(unit, t, dt)
 	self:spawn_aoe()
 end
 
--- Lines 1448-1460
+-- Lines 1452-1464
 function CopDamage:start_aoe_preparing(aoe_data, t)
 	if aoe_data.preparing then
 		local unit = self._unit
@@ -1296,7 +1299,7 @@ function CopDamage:start_aoe_preparing(aoe_data, t)
 	aoe_data.activate_t = t + aoe_data.activate_delay
 end
 
--- Lines 1462-1486
+-- Lines 1466-1490
 function CopDamage:sync_start_aoe_preparing(sync_t)
 	local aoe_data = self._aoe_data
 
@@ -1320,7 +1323,7 @@ function CopDamage:sync_start_aoe_preparing(sync_t)
 	end
 end
 
--- Lines 1488-1505
+-- Lines 1492-1509
 function CopDamage:spawn_aoe()
 	local env_tweak_data = tweak_data.env_effect
 	local tweak_name = self._aoe_data.env_tweak_name
@@ -1331,11 +1334,11 @@ function CopDamage:spawn_aoe()
 	EnvironmentFire.spawn(unit:position() + normal * 160, unit:rotation(), params, normal, unit, 0, 1)
 
 	if self._aoe_data.play_voiceline then
-		self._unit:sound():say("aoe")
+		self._unit:sound():say(self._unit:sound().aoe_str or "aoe")
 	end
 end
 
--- Lines 1507-1589
+-- Lines 1511-1593
 function CopDamage:chk_has_aoe_damage()
 	self:chk_disable_aoe_damage()
 
@@ -1407,7 +1410,7 @@ function CopDamage:chk_has_aoe_damage()
 	aoe_data.play_voiceline = aoe_tweak_data.play_voiceline
 end
 
--- Lines 1591-1599
+-- Lines 1595-1603
 function CopDamage:chk_disable_aoe_damage()
 	if not self._aoe_data then
 		return
@@ -1418,7 +1421,7 @@ function CopDamage:chk_disable_aoe_damage()
 	self._unit:set_extension_update_enabled(Idstring("character_damage"), false)
 end
 
--- Lines 1601-1671
+-- Lines 1605-1675
 function CopDamage:chk_has_health_sequences()
 	local sequence_array = self._health_sequences_array
 
@@ -1475,7 +1478,7 @@ function CopDamage:chk_has_health_sequences()
 	end
 end
 
--- Lines 1673-1716
+-- Lines 1677-1720
 function CopDamage:chk_health_sequences()
 	local health_sequences = not self._health_sequences_played_all and self._health_sequences
 
@@ -1520,7 +1523,7 @@ function CopDamage:chk_health_sequences()
 	end
 end
 
--- Lines 1718-1734
+-- Lines 1722-1738
 function CopDamage:run_health_sequence(sequence_name, cur_step, cur_health_ratio)
 	local played_sequences = self._played_sequences
 
@@ -1537,7 +1540,7 @@ function CopDamage:run_health_sequence(sequence_name, cur_step, cur_health_ratio
 	end
 end
 
--- Lines 1736-1883
+-- Lines 1740-1887
 function CopDamage:_chk_unique_death_requirements(damage_info, died)
 	local requirements = self._unique_death_req
 
@@ -1685,7 +1688,7 @@ function CopDamage:_chk_unique_death_requirements(damage_info, died)
 	self._unique_death_req = nil
 end
 
--- Lines 1885-1903
+-- Lines 1889-1907
 function CopDamage:chk_has_invul_to_slotmask()
 	self._invul_to_slotmask = nil
 	local inv_slotmask = self._char_tweak.invulnerable_to_slotmask
@@ -1697,7 +1700,7 @@ function CopDamage:chk_has_invul_to_slotmask()
 	self._invul_to_slotmask = managers.slot:make_slot_mask(inv_slotmask)
 end
 
--- Lines 1906-1930
+-- Lines 1910-1934
 function CopDamage:chk_immune_to_attacker(attacker)
 	local inv_slotmask = self._invul_to_slotmask
 
@@ -1721,7 +1724,7 @@ function CopDamage:chk_immune_to_attacker(attacker)
 	end
 end
 
--- Lines 1932-1965
+-- Lines 1936-1969
 function CopDamage:chk_has_player_health_scaling(char_tweak)
 	local mul = char_tweak.player_health_scaling_mul
 
@@ -1748,7 +1751,7 @@ function CopDamage:chk_has_player_health_scaling(char_tweak)
 	self._HEALTH_INIT = self._HEALTH_INIT * mul
 end
 
--- Lines 1969-2178
+-- Lines 1973-2182
 function CopDamage:damage_fire(attack_data)
 	if self._dead or self._invulnerable then
 		return
@@ -1947,7 +1950,7 @@ function CopDamage:damage_fire(attack_data)
 	end
 end
 
--- Lines 2180-2272
+-- Lines 2184-2276
 function CopDamage:damage_dot(attack_data)
 	if self._dead or self._invulnerable then
 		return
@@ -2054,7 +2057,7 @@ function CopDamage:damage_dot(attack_data)
 	return result
 end
 
--- Lines 2274-2422
+-- Lines 2278-2426
 function CopDamage:damage_explosion(attack_data)
 	if self._dead or self._invulnerable then
 		return
@@ -2213,7 +2216,7 @@ function CopDamage:damage_explosion(attack_data)
 	return result
 end
 
--- Lines 2424-2531
+-- Lines 2428-2535
 function CopDamage:damage_simple(attack_data)
 	if self._dead or self._invulnerable then
 		return
@@ -2334,7 +2337,7 @@ function CopDamage:damage_simple(attack_data)
 	return result
 end
 
--- Lines 2534-2557
+-- Lines 2538-2561
 function CopDamage:stun_hit(attack_data)
 	if self._dead or self._invulnerable then
 		return
@@ -2362,7 +2365,7 @@ function CopDamage:stun_hit(attack_data)
 	self:_create_stun_exit_clbk()
 end
 
--- Lines 2560-2574
+-- Lines 2564-2578
 function CopDamage:_create_stun_exit_clbk()
 	if not self._stun_exit_clbk_id then
 		self._stun_exit_clbk_id = "CopDamageStunPenalty" .. tostring(self._unit:key())
@@ -2373,7 +2376,7 @@ function CopDamage:_create_stun_exit_clbk()
 	end
 end
 
--- Lines 2577-2587
+-- Lines 2581-2591
 function CopDamage:_on_stun_hit_exit()
 	self._listener_holder:remove(self._stun_exit_clbk_id)
 
@@ -2382,7 +2385,7 @@ function CopDamage:_on_stun_hit_exit()
 	self:_apply_stun_accuracy_penalty()
 end
 
--- Lines 2589-2613
+-- Lines 2593-2617
 function CopDamage:_apply_stun_accuracy_penalty(acc_reset_t)
 	acc_reset_t = acc_reset_t or TimerManager:game():time() + self._ON_STUN_ACCURACY_DECREASE_TIME
 
@@ -2399,7 +2402,7 @@ function CopDamage:_apply_stun_accuracy_penalty(acc_reset_t)
 	end
 end
 
--- Lines 2616-2628
+-- Lines 2620-2632
 function CopDamage:_restore_stun_accuracy_clbk()
 	self._stun_acc_clbk_id = nil
 	local mul = self._accuracy_multiplier_restore
@@ -2408,7 +2411,7 @@ function CopDamage:_restore_stun_accuracy_clbk()
 	self:set_accuracy_multiplier(mul)
 end
 
--- Lines 2633-2657
+-- Lines 2637-2661
 function CopDamage:roll_critical_hit(attack_data, damage)
 	if not self:can_be_critical(attack_data) then
 		return false, damage
@@ -2436,7 +2439,7 @@ function CopDamage:roll_critical_hit(attack_data, damage)
 	return critical_hit, damage
 end
 
--- Lines 2660-2708
+-- Lines 2664-2712
 function CopDamage:can_be_critical(attack_data)
 	local LOG_CATEGORY = "[GameSystem_CriticalHit] "
 	local weapon_unit_base = nil
@@ -2497,7 +2500,7 @@ function CopDamage:can_be_critical(attack_data)
 	return false
 end
 
--- Lines 2713-2847
+-- Lines 2717-2851
 function CopDamage:damage_tase(attack_data)
 	if self._dead or self._invulnerable then
 		if self._invulnerable then
@@ -2640,7 +2643,7 @@ function CopDamage:damage_tase(attack_data)
 	return result
 end
 
--- Lines 2850-2855
+-- Lines 2854-2859
 function CopDamage:on_tase_ended()
 	if self._tase_effect then
 		World:effect_manager():fade_kill(self._tase_effect)
@@ -2649,7 +2652,7 @@ function CopDamage:on_tase_ended()
 	end
 end
 
--- Lines 2860-2883
+-- Lines 2864-2887
 function CopDamage:_dismember_condition(attack_data)
 	local dismember_victim = false
 	local target_is_spook = false
@@ -2673,7 +2676,7 @@ function CopDamage:_dismember_condition(attack_data)
 	return dismember_victim
 end
 
--- Lines 2885-3061
+-- Lines 2889-3065
 function CopDamage:damage_melee(attack_data)
 	if self._dead or self._invulnerable then
 		return
@@ -2843,7 +2846,7 @@ function CopDamage:damage_melee(attack_data)
 	return result
 end
 
--- Lines 3065-3198
+-- Lines 3069-3202
 function CopDamage:_check_melee_achievements(attack_data)
 	if tweak_data.blackmarket.melee_weapons[attack_data.name_id] then
 		local is_civlian = CopDamage.is_civilian(self._unit:base()._tweak_table)
@@ -2928,7 +2931,7 @@ function CopDamage:_check_melee_achievements(attack_data)
 	end
 end
 
--- Lines 3202-3242
+-- Lines 3206-3246
 function CopDamage:damage_mission(attack_data)
 	if self._dead or (self._invulnerable or self._immortal) and not attack_data.forced then
 		return
@@ -2966,14 +2969,14 @@ function CopDamage:damage_mission(attack_data)
 	return result
 end
 
--- Lines 3246-3248
+-- Lines 3250-3252
 function CopDamage:get_ranged_attack_autotarget_data_fast()
 	return {
 		object = self._autotarget_data.fast
 	}
 end
 
--- Lines 3252-3303
+-- Lines 3256-3307
 function CopDamage:get_ranged_attack_autotarget_data(shoot_from_pos, aim_vec)
 	local autotarget_data = nil
 	autotarget_data = {
@@ -3025,7 +3028,7 @@ function CopDamage:get_ranged_attack_autotarget_data(shoot_from_pos, aim_vec)
 	return autotarget_data
 end
 
--- Lines 3307-3360
+-- Lines 3311-3364
 function CopDamage:get_impact_segment(position)
 	local closest_dist_sq, closest_bone = nil
 
@@ -3079,7 +3082,7 @@ function CopDamage:get_impact_segment(position)
 	return parent_bone, child_bone
 end
 
--- Lines 3365-3412
+-- Lines 3369-3416
 function CopDamage:hide_head_gear()
 	if not self._head_gear_object then
 		return
@@ -3117,7 +3120,7 @@ function CopDamage:hide_head_gear()
 	end
 end
 
--- Lines 3414-3467
+-- Lines 3418-3471
 function CopDamage:_spawn_head_gadget(params)
 	if not self._head_gear or self._head_gear_spawned then
 		return
@@ -3158,12 +3161,12 @@ function CopDamage:_spawn_head_gadget(params)
 	self._head_gear_spawned = true
 end
 
--- Lines 3471-3473
+-- Lines 3475-3477
 function CopDamage:dead()
 	return self._dead
 end
 
--- Lines 3477-3483
+-- Lines 3481-3487
 function CopDamage:_remove_debug_gui()
 	if alive(self._gui) and alive(self._ws) then
 		self._gui:destroy_workspace(self._ws)
@@ -3173,7 +3176,7 @@ function CopDamage:_remove_debug_gui()
 	end
 end
 
--- Lines 3488-3496
+-- Lines 3492-3500
 function CopDamage:_check_friend_4(attack_data)
 	if tweak_data:difficulty_to_index(Global.game_settings.difficulty) >= 5 then
 		local weapon_unit = attack_data.weapon_unit or attack_data.attacker_unit
@@ -3185,7 +3188,7 @@ function CopDamage:_check_friend_4(attack_data)
 	end
 end
 
--- Lines 3500-3510
+-- Lines 3504-3514
 function CopDamage:_check_ranc_9(attack_data)
 	if attack_data.players_in_vehicle then
 		for _, player_id in ipairs(attack_data.players_in_vehicle) do
@@ -3197,7 +3200,7 @@ function CopDamage:_check_ranc_9(attack_data)
 	end
 end
 
--- Lines 3513-3585
+-- Lines 3517-3589
 function CopDamage:die(attack_data)
 	if self._immortal then
 		debug_pause("Immortal character died!")
@@ -3262,7 +3265,7 @@ function CopDamage:die(attack_data)
 	end
 end
 
--- Lines 3589-3617
+-- Lines 3593-3621
 function CopDamage:set_mover_collision_state(state)
 	local change_state = nil
 
@@ -3291,14 +3294,14 @@ function CopDamage:set_mover_collision_state(state)
 	end
 end
 
--- Lines 3621-3624
+-- Lines 3625-3628
 function CopDamage:anim_clbk_mover_collision_state(unit, state)
 	state = state == "true" and true or false
 
 	self:set_mover_collision_state(state)
 end
 
--- Lines 3628-3653
+-- Lines 3632-3657
 function CopDamage:drop_pickup(extra)
 	if self._pickup then
 		local tracker = self._unit:movement():nav_tracker()
@@ -3334,7 +3337,7 @@ function CopDamage:drop_pickup(extra)
 	end
 end
 
--- Lines 3657-3744
+-- Lines 3661-3748
 function CopDamage:sync_damage_bullet(attacker_unit, damage_percent, i_body, hit_offset_height, variant, death)
 	if self._dead then
 		return
@@ -3433,14 +3436,14 @@ function CopDamage:sync_damage_bullet(attacker_unit, damage_percent, i_body, hit
 	end
 end
 
--- Lines 3746-3750
+-- Lines 3750-3754
 function CopDamage:chk_killshot(attacker_unit, variant, headshot, weapon_id)
 	if attacker_unit and attacker_unit == managers.player:player_unit() then
 		managers.player:on_killshot(self._unit, variant, headshot, weapon_id)
 	end
 end
 
--- Lines 3754-3848
+-- Lines 3758-3852
 function CopDamage:sync_damage_explosion(attacker_unit, damage_percent, i_attack_variant, death, direction, weapon_unit)
 	if self._dead then
 		return
@@ -3567,7 +3570,7 @@ function CopDamage:sync_damage_explosion(attacker_unit, damage_percent, i_attack
 	self:_on_damage_received(attack_data)
 end
 
--- Lines 3853-3894
+-- Lines 3857-3898
 function CopDamage:sync_damage_stun(attacker_unit, damage_percent, i_attack_variant, death, direction)
 	if self._dead then
 		return
@@ -3613,7 +3616,7 @@ function CopDamage:sync_damage_stun(attacker_unit, damage_percent, i_attack_vari
 	self:_create_stun_exit_clbk()
 end
 
--- Lines 3897-4011
+-- Lines 3901-4015
 function CopDamage:sync_damage_fire(attacker_unit, damage_percent, start_dot_dance_antimation, death, direction, weapon_type, weapon_id, healed)
 	if self._dead then
 		return
@@ -3757,7 +3760,7 @@ function CopDamage:sync_damage_fire(attacker_unit, damage_percent, start_dot_dan
 	self:_on_damage_received(attack_data)
 end
 
--- Lines 4015-4061
+-- Lines 4019-4065
 function CopDamage:sync_damage_dot(attacker_unit, damage_percent, death, variant, hurt_animation, weapon_id)
 	if self._dead then
 		return
@@ -3814,7 +3817,7 @@ function CopDamage:sync_damage_dot(attacker_unit, damage_percent, death, variant
 	self:_on_damage_received(attack_data)
 end
 
--- Lines 4065-4128
+-- Lines 4069-4132
 function CopDamage:sync_damage_simple(attacker_unit, damage_percent, i_attack_variant, i_result, death)
 	if self._dead then
 		return
@@ -3891,7 +3894,7 @@ function CopDamage:sync_damage_simple(attacker_unit, damage_percent, i_attack_va
 	self:_on_damage_received(attack_data)
 end
 
--- Lines 4132-4163
+-- Lines 4136-4167
 function CopDamage:_sync_dismember(attacker_unit)
 	local dismember_victim = false
 
@@ -3913,7 +3916,7 @@ function CopDamage:_sync_dismember(attacker_unit)
 	return dismember_victim
 end
 
--- Lines 4166-4235
+-- Lines 4170-4239
 function CopDamage:sync_damage_melee(attacker_unit, damage_percent, damage_effect_percent, i_body, hit_offset_height, variant, death)
 	local attack_data = {
 		variant = "melee",
@@ -3989,7 +3992,7 @@ function CopDamage:sync_damage_melee(attacker_unit, damage_percent, damage_effec
 	self:_on_damage_received(attack_data)
 end
 
--- Lines 4238-4299
+-- Lines 4242-4303
 function CopDamage:sync_damage_tase(attacker_unit, damage_percent, variant, death)
 	if self._dead then
 		return
@@ -4077,7 +4080,7 @@ end
 
 CopDamage.BODY_INDEX_MAX = 23
 
--- Lines 4304-4310
+-- Lines 4308-4314
 function CopDamage:_send_bullet_attack_result(attack_data, attacker, damage_percent, body_index, hit_offset_height, variant)
 	if CopDamage.BODY_INDEX_MAX < body_index then
 		Application:error(string.format("Attempted to send a bullet attack body index higher than %i, clamping! (was %i)", CopDamage.BODY_INDEX_MAX, body_index))
@@ -4088,17 +4091,17 @@ function CopDamage:_send_bullet_attack_result(attack_data, attacker, damage_perc
 	self._unit:network():send("damage_bullet", attacker, damage_percent, body_index, hit_offset_height, variant, self._dead and true or false)
 end
 
--- Lines 4312-4315
+-- Lines 4316-4319
 function CopDamage:_send_explosion_attack_result(attack_data, attacker, damage_percent, i_attack_variant, direction)
 	self._unit:network():send("damage_explosion_fire", attacker, damage_percent, i_attack_variant, self._dead and true or false, direction, attack_data.weapon_unit)
 end
 
--- Lines 4318-4320
+-- Lines 4322-4324
 function CopDamage:_send_stun_attack_result(attacker, damage_percent, i_attack_variant, direction)
 	self._unit:network():send("damage_explosion_stun", attacker, damage_percent, i_attack_variant, self._dead and true or false, direction)
 end
 
--- Lines 4323-4351
+-- Lines 4327-4355
 function CopDamage:_send_fire_attack_result(attack_data, attacker, damage_percent, is_fire_dot_damage, direction, healed)
 	local weapon_type, weapon_unit = nil
 
@@ -4123,17 +4126,17 @@ function CopDamage:_send_fire_attack_result(attack_data, attacker, damage_percen
 	self._unit:network():send("damage_fire", attacker, damage_percent, start_dot_dance_antimation, self._dead and true or false, direction, weapon_type, weapon_unit, healed)
 end
 
--- Lines 4353-4356
+-- Lines 4357-4360
 function CopDamage:_send_dot_attack_result(attack_data, attacker, damage_percent, variant, direction)
 	self._unit:network():send("damage_dot", attacker, damage_percent, self._dead and true or false, variant, attack_data.hurt_animation, attack_data.weapon_id)
 end
 
--- Lines 4358-4360
+-- Lines 4362-4364
 function CopDamage:_send_tase_attack_result(attack_data, damage_percent, variant)
 	self._unit:network():send("damage_tase", attack_data.attacker_unit, damage_percent, variant, self._dead and true or false)
 end
 
--- Lines 4362-4375
+-- Lines 4366-4379
 function CopDamage:_send_melee_attack_result(attack_data, damage_percent, damage_effect_percent, hit_offset_height, variant, body_index)
 	body_index = math.clamp(body_index, 0, 128)
 	damage_percent = math.clamp(damage_percent, 0, 512)
@@ -4142,39 +4145,39 @@ function CopDamage:_send_melee_attack_result(attack_data, damage_percent, damage
 	self._unit:network():send("damage_melee", attack_data.attacker_unit, damage_percent, damage_effect_percent, body_index, hit_offset_height, variant, self._dead and true or false)
 end
 
--- Lines 4377-4379
+-- Lines 4381-4383
 function CopDamage:_send_simple_attack_result(attacker, damage_percent, i_attack_variant, i_result)
 	self._unit:network():send("damage_simple", attacker, damage_percent, i_attack_variant, i_result, self._dead and true or false)
 end
 
--- Lines 4383-4384
+-- Lines 4387-4388
 function CopDamage:_send_sync_bullet_attack_result(attack_data, hit_offset_height)
 end
 
--- Lines 4386-4387
+-- Lines 4390-4391
 function CopDamage:_send_sync_explosion_attack_result(attack_data)
 end
 
--- Lines 4389-4390
+-- Lines 4393-4394
 function CopDamage:_send_sync_tase_attack_result(attack_data)
 end
 
--- Lines 4392-4393
+-- Lines 4396-4397
 function CopDamage:_send_sync_melee_attack_result(attack_data, hit_offset_height)
 end
 
--- Lines 4395-4396
+-- Lines 4399-4400
 function CopDamage:_send_sync_fire_attack_result(attack_data)
 end
 
--- Lines 4400-4404
+-- Lines 4404-4408
 function CopDamage:sync_death(damage)
 	if self._dead then
 		return
 	end
 end
 
--- Lines 4408-4453
+-- Lines 4412-4457
 function CopDamage:_on_damage_received(damage_info)
 	self:chk_health_sequences()
 	self:build_suppression("max", nil)
@@ -4221,55 +4224,55 @@ function CopDamage:_on_damage_received(damage_info)
 	self:_update_debug_ws(damage_info)
 end
 
--- Lines 4455-4462
+-- Lines 4459-4466
 function CopDamage:_on_death(variant)
 	managers.player:chk_store_armor_health_kill_counter(self._unit, variant)
 	managers.player:chk_wild_kill_counter(self._unit, variant)
 end
 
--- Lines 4466-4468
+-- Lines 4470-4472
 function CopDamage:_call_listeners(damage_info)
 	self._listener_holder:call(damage_info.result.type, self._unit, damage_info)
 end
 
--- Lines 4472-4475
+-- Lines 4476-4479
 function CopDamage:add_listener(key, events, clbk)
 	events = events or self._all_event_types
 
 	self._listener_holder:add(key, events, clbk)
 end
 
--- Lines 4477-4479
+-- Lines 4481-4483
 function CopDamage:call_listener(key, ...)
 	self._listener_holder:call(key, ...)
 end
 
--- Lines 4483-4485
+-- Lines 4487-4489
 function CopDamage:remove_listener(key)
 	self._listener_holder:remove(key)
 end
 
--- Lines 4489-4491
+-- Lines 4493-4495
 function CopDamage:set_pickup(pickup)
 	self._pickup = pickup
 end
 
--- Lines 4495-4497
+-- Lines 4499-4501
 function CopDamage:pickup()
 	return self._pickup
 end
 
--- Lines 4503-4505
+-- Lines 4507-4509
 function CopDamage:health()
 	return self._health
 end
 
--- Lines 4508-4510
+-- Lines 4512-4514
 function CopDamage:health_ratio()
 	return self._health_ratio
 end
 
--- Lines 4513-4521
+-- Lines 4517-4525
 function CopDamage:convert_to_criminal(health_multiplier)
 	self:set_mover_collision_state(false)
 
@@ -4280,8 +4283,10 @@ function CopDamage:convert_to_criminal(health_multiplier)
 	self._unit:set_slot(16)
 end
 
--- Lines 4525-4535
+-- Lines 4529-4553
 function CopDamage:set_invulnerable(state)
+	local old_state = self._invulnerable and true or false
+
 	if state then
 		self._invulnerable = (self._invulnerable or 0) + 1
 	elseif self._invulnerable then
@@ -4291,14 +4296,24 @@ function CopDamage:set_invulnerable(state)
 			self._invulnerable = self._invulnerable - 1
 		end
 	end
+
+	local new_state = self._invulnerable and true or false
+
+	if old_state ~= new_state and self._invul_impact_override then
+		if new_state then
+			managers.game_play_central:add_impact_override(self._unit, self._invul_impact_override)
+		else
+			managers.game_play_central:remove_impact_override(self._unit)
+		end
+	end
 end
 
--- Lines 4537-4539
+-- Lines 4555-4557
 function CopDamage:set_immortal(immortal)
 	self._immortal = immortal
 end
 
--- Lines 4541-4558
+-- Lines 4559-4576
 function CopDamage:set_invulnerable_tmp(duration)
 	if type(duration) ~= "number" then
 		Application:error("[CopDamage:set_invulnerable_tmp] Duration passed is not a number, it is a '" .. type(duration) .. "'.")
@@ -4319,14 +4334,14 @@ function CopDamage:set_invulnerable_tmp(duration)
 	end
 end
 
--- Lines 4560-4564
+-- Lines 4578-4582
 function CopDamage:_clbk_temp_invulnerability_off()
 	self._tmp_invulnerable_clbk_key = nil
 
 	self:set_invulnerable(false)
 end
 
--- Lines 4568-4652
+-- Lines 4586-4670
 function CopDamage:build_suppression(amount, panic_chance)
 	if self._dead or not self._char_tweak.suppression then
 		return
@@ -4418,7 +4433,7 @@ function CopDamage:build_suppression(amount, panic_chance)
 	end
 end
 
--- Lines 4655-4671
+-- Lines 4673-4689
 function CopDamage:clbk_suppression_decay()
 	local sup_data = self._suppression_data
 	self._suppression_data = nil
@@ -4438,33 +4453,28 @@ function CopDamage:clbk_suppression_decay()
 	self._suppression_hardness_t = TimerManager:game():time() + 30
 end
 
--- Lines 4675-4677
+-- Lines 4693-4695
 function CopDamage:last_suppression_t()
 	return self._suppression_data and self._suppression_data.last_build_t
 end
 
--- Lines 4681-4683
+-- Lines 4699-4701
 function CopDamage:focus_delay_mul()
 	return 1
 end
 
--- Lines 4687-4689
+-- Lines 4705-4707
 function CopDamage:shoot_pos_mid(m_pos)
 	self._spine2_obj:m_position(m_pos)
 end
 
--- Lines 4693-4701
-function CopDamage:on_marked_state(state, bonus_distance_damage)
-	if state then
-		self._marked_dmg_mul = self._marked_dmg_mul or tweak_data.upgrades.values.player.marked_enemy_damage_mul
-		self._marked_dmg_dist_mul = bonus_distance_damage
-	else
-		self._marked_dmg_mul = nil
-		self._marked_dmg_dist_mul = nil
-	end
+-- Lines 4711-4714
+function CopDamage:on_marked_state(bonus_damage, bonus_distance_damage)
+	self._marked_dmg_mul = bonus_damage and (self._marked_dmg_mul or tweak_data.upgrades.values.player.marked_enemy_damage_mul) or nil
+	self._marked_dmg_dist_mul = bonus_distance_damage or nil
 end
 
--- Lines 4705-4714
+-- Lines 4718-4727
 function CopDamage:_get_attack_variant_index(variant)
 	local attack_variants = CopDamage._ATTACK_VARIANTS
 
@@ -4479,7 +4489,7 @@ function CopDamage:_get_attack_variant_index(variant)
 	return 1
 end
 
--- Lines 4718-4730
+-- Lines 4731-4743
 function CopDamage:_create_debug_ws()
 	self._gui = World:newgui()
 	local obj = self._unit:get_object(Idstring("Head"))
@@ -4528,7 +4538,7 @@ function CopDamage:_create_debug_ws()
 	self:_update_debug_ws()
 end
 
--- Lines 4732-4786
+-- Lines 4745-4799
 function CopDamage:_update_debug_ws(damage_info)
 	if alive(self._ws) then
 		local str = string.format("HP: %.2f", self._health)
@@ -4545,7 +4555,7 @@ function CopDamage:_update_debug_ws(damage_info)
 
 		self._ws:panel():child("variant"):set_color(vc)
 
-		-- Lines 4745-4760
+		-- Lines 4758-4773
 		local function func(o)
 			local mt = 0.25
 			local t = mt
@@ -4582,7 +4592,7 @@ function CopDamage:_update_debug_ws(damage_info)
 				color = Color.white
 			})
 
-			-- Lines 4766-4779
+			-- Lines 4779-4792
 			local function func2(o, dir)
 				local mt = 8
 				local t = mt
@@ -4607,7 +4617,7 @@ function CopDamage:_update_debug_ws(damage_info)
 	end
 end
 
--- Lines 4790-4880
+-- Lines 4803-4893
 function CopDamage:save(data)
 	local my_save_data = {}
 	local cur_health = self._health
@@ -4698,7 +4708,7 @@ function CopDamage:save(data)
 	end
 end
 
--- Lines 4884-4966
+-- Lines 4897-4979
 function CopDamage:load(data)
 	if not data.char_dmg then
 		return
@@ -4795,31 +4805,31 @@ function CopDamage:load(data)
 	end
 end
 
--- Lines 4970-4973
+-- Lines 4983-4986
 function CopDamage:_apply_damage_to_health(damage)
 	self._health = self._health - damage
 	self._health_ratio = self._health / self._HEALTH_INIT
 end
 
--- Lines 4977-4980
+-- Lines 4990-4993
 function CopDamage:host_set_final_lower_health_percentage_limit()
 	self:_set_lower_health_percentage_limit(self._char_tweak.FINAL_LOWER_HEALTH_PERCENTAGE_LIMIT)
 	managers.network:session():send_to_peers_synched("sync_unit_event_id_16", self._unit, "character_damage", CopDamage.EVENT_IDS.FINAL_LOWER_HEALTH_PERCENTAGE_LIMIT)
 end
 
--- Lines 4982-4986
+-- Lines 4995-4999
 function CopDamage:sync_net_event(event_id)
 	if event_id == CopDamage.EVENT_IDS.FINAL_LOWER_HEALTH_PERCENTAGE_LIMIT then
 		self:_set_lower_health_percentage_limit(self._char_tweak.FINAL_LOWER_HEALTH_PERCENTAGE_LIMIT)
 	end
 end
 
--- Lines 4988-4990
+-- Lines 5001-5003
 function CopDamage:_set_lower_health_percentage_limit(lower_health_percentage_limit)
 	self._lower_health_percentage_limit = lower_health_percentage_limit
 end
 
--- Lines 4994-5008
+-- Lines 5007-5021
 function CopDamage:_apply_min_health_limit(damage, damage_percent)
 	local lower_health_percentage_limit = self._lower_health_percentage_limit
 
@@ -4837,12 +4847,12 @@ function CopDamage:_apply_min_health_limit(damage, damage_percent)
 	return damage, damage_percent
 end
 
--- Lines 5010-5012
+-- Lines 5023-5025
 function CopDamage:melee_hit_sfx()
 	return "hit_body"
 end
 
--- Lines 5016-5040
+-- Lines 5029-5053
 function CopDamage:_apply_damage_reduction(damage)
 	local damage_reduction = self._unit:movement():team().damage_reduction or 0
 
@@ -4857,7 +4867,7 @@ function CopDamage:_apply_damage_reduction(damage)
 	return damage
 end
 
--- Lines 5044-5058
+-- Lines 5057-5075
 function CopDamage:destroy(...)
 	self:_remove_debug_gui()
 
@@ -4872,9 +4882,13 @@ function CopDamage:destroy(...)
 
 		self._stun_acc_clbk_id = nil
 	end
+
+	if self._invul_impact_override then
+		managers.game_play_central:remove_impact_override(self._unit)
+	end
 end
 
--- Lines 5062-5064
+-- Lines 5079-5081
 function CopDamage:can_kill()
 	return not self._char_tweak.permanently_invulnerable and not self.immortal or not self._invulnerable
 end

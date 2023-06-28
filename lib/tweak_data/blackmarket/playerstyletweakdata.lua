@@ -1,4 +1,4 @@
--- Lines 1-4242
+-- Lines 1-4293
 function BlackMarketTweakData:_init_player_styles(tweak_data)
 	local characters_female, characters_female_big, characters_male, characters_male_big = self:_get_character_groups()
 	local characters_all = table.list_union(characters_female, characters_male, characters_female_big, characters_male_big)
@@ -5179,9 +5179,99 @@ function BlackMarketTweakData:_init_player_styles(tweak_data)
 		sequence = "set_ehtan"
 	}
 	self.player_styles.sambass.characters.ecp_male = sambass_characters_male_fat
+	self.player_styles.bossflag = {
+		name_id = "bm_suit_bossflag",
+		desc_id = "bm_suit_bossflag_desc",
+		texture_bundle_folder = "deep",
+		global_value = "deep",
+		material_variations = {}
+	}
+	self.player_styles.bossflag.material_variations.default = {
+		name_id = "bm_suit_bossflag",
+		global_value = "deep",
+		desc_id = "bm_suit_bossflag_desc"
+	}
+	self.player_styles.bossflag.body_replacement = body_replacement_standard
+	self.player_styles.bossflag.third_body_replacement = body_replacement_standard
+	self.player_styles.bossflag.unit = "units/pd2_dlc_deep/characters/deep_acc_bossflag/deep_acc_fps_bossflag_male/deep_acc_fps_bossflag_male"
+	self.player_styles.bossflag.characters = {}
+	local bossflag_characters_male = {
+		third_unit = "units/pd2_dlc_deep/characters/deep_acc_bossflag/deep_acc_bossflag_male_average/deep_acc_bossflag_male_average"
+	}
+
+	set_characters_data("bossflag", characters_male, bossflag_characters_male)
+
+	local bossflag_characters_male_big = {
+		third_unit = "units/pd2_dlc_deep/characters/deep_acc_bossflag/deep_acc_bossflag_male_big/deep_acc_bossflag_male_big"
+	}
+
+	set_characters_data("bossflag", characters_male_big, bossflag_characters_male_big)
+
+	local bossflag_characters_female = {
+		third_unit = "units/pd2_dlc_deep/characters/deep_acc_bossflag/deep_acc_bossflag_female_average/deep_acc_bossflag_female_average"
+	}
+
+	set_characters_data("bossflag", characters_female, bossflag_characters_female)
+
+	local bossflag_characters_female_big = {
+		third_unit = "units/pd2_dlc_deep/characters/deep_acc_bossflag/deep_acc_bossflag_female_fat/deep_acc_bossflag_female_fat"
+	}
+
+	set_characters_data("bossflag", characters_female_big, bossflag_characters_female_big)
+
+	local bossflag_characters_male_fat = {
+		third_unit = "units/pd2_dlc_deep/characters/deep_acc_bossflag/deep_acc_bossflag_male_fat/deep_acc_bossflag_male_fat",
+		sequence = "set_ehtan"
+	}
+	self.player_styles.bossflag.characters.ecp_male = bossflag_characters_male_fat
+	self.player_styles.roclown = {
+		name_id = "bm_suit_roclown",
+		desc_id = "bm_suit_roclown_desc",
+		texture_bundle_folder = "dot",
+		global_value = "dot_roclown_suit",
+		material_variations = {}
+	}
+	self.player_styles.roclown.material_variations.default = {
+		name_id = "bm_suit_roclown",
+		global_value = "dot_roclown_suit",
+		desc_id = "bm_suit_roclown_desc"
+	}
+	self.player_styles.roclown.body_replacement = body_replacement_standard
+	self.player_styles.roclown.third_body_replacement = body_replacement_standard
+	self.player_styles.roclown.unit = "units/pd2_dlc_dot/characters/dot_acc_rodeoclownsuit/dot_acc_fps_rodeoclownsuit_male/dot_acc_fps_rodeoclownsuit_male"
+	self.player_styles.roclown.characters = {}
+	local roclown_characters_male = {
+		third_unit = "units/pd2_dlc_dot/characters/dot_acc_rodeoclownsuit/dot_acc_rodeoclownsuit_male_average/dot_acc_rodeoclownsuit_male_average"
+	}
+
+	set_characters_data("roclown", characters_male, roclown_characters_male)
+
+	local roclown_characters_male_big = {
+		third_unit = "units/pd2_dlc_dot/characters/dot_acc_rodeoclownsuit/dot_acc_rodeoclownsuit_male_big/dot_acc_rodeoclownsuit_male_big"
+	}
+
+	set_characters_data("roclown", characters_male_big, roclown_characters_male_big)
+
+	local roclown_characters_female = {
+		third_unit = "units/pd2_dlc_dot/characters/dot_acc_rodeoclownsuit/dot_acc_rodeoclownsuit_female_average/dot_acc_rodeoclownsuit_female_average"
+	}
+
+	set_characters_data("roclown", characters_female, roclown_characters_female)
+
+	local roclown_characters_female_big = {
+		third_unit = "units/pd2_dlc_dot/characters/dot_acc_rodeoclownsuit/dot_acc_rodeoclownsuit_female_fat/dot_acc_rodeoclownsuit_female_fat"
+	}
+
+	set_characters_data("roclown", characters_female_big, roclown_characters_female_big)
+
+	local roclown_characters_male_fat = {
+		third_unit = "units/pd2_dlc_dot/characters/dot_acc_rodeoclownsuit/dot_acc_rodeoclownsuit_male_fat/dot_acc_rodeoclownsuit_male_fat",
+		sequence = "set_ehtan"
+	}
+	self.player_styles.roclown.characters.ecp_male = roclown_characters_male_fat
 end
 
--- Lines 4244-4266
+-- Lines 4295-4317
 function BlackMarketTweakData:get_player_style_value(player_style, character_name, key)
 	if key == nil then
 		return
@@ -5206,7 +5296,7 @@ function BlackMarketTweakData:get_player_style_value(player_style, character_nam
 	return tweak_value
 end
 
--- Lines 4268-4293
+-- Lines 4319-4344
 function BlackMarketTweakData:get_suit_variation_value(player_style, material_variation, character_name, key)
 	if key == nil then
 		return nil
@@ -5234,7 +5324,7 @@ function BlackMarketTweakData:get_suit_variation_value(player_style, material_va
 	return tweak_value
 end
 
--- Lines 4295-4316
+-- Lines 4346-4367
 function BlackMarketTweakData:have_suit_variations(player_style)
 	local data = self.player_styles[player_style]
 
@@ -5261,7 +5351,7 @@ function BlackMarketTweakData:have_suit_variations(player_style)
 	return true
 end
 
--- Lines 4318-4354
+-- Lines 4369-4405
 function BlackMarketTweakData:get_suit_variations_sorted(player_style)
 	local data = self.player_styles[player_style]
 
@@ -5305,7 +5395,7 @@ function BlackMarketTweakData:get_suit_variations_sorted(player_style)
 	return suit_variations
 end
 
--- Lines 4357-4386
+-- Lines 4408-4437
 function BlackMarketTweakData:get_player_style_units(player_style, key)
 	local units = {}
 	local data = self.player_styles[player_style]
@@ -5336,7 +5426,7 @@ function BlackMarketTweakData:get_player_style_units(player_style, key)
 	return table.list_union(units)
 end
 
--- Lines 4388-4394
+-- Lines 4439-4445
 function BlackMarketTweakData:create_suit_string(player_style, suit_variation)
 	if self:have_suit_variations(player_style) then
 		return player_style .. "_" .. suit_variation
@@ -5345,7 +5435,7 @@ function BlackMarketTweakData:create_suit_string(player_style, suit_variation)
 	return player_style
 end
 
--- Lines 4396-4411
+-- Lines 4447-4462
 function BlackMarketTweakData:create_suit_strings()
 	local suit_strings = {}
 	local suit_variations = nil
@@ -5365,18 +5455,18 @@ function BlackMarketTweakData:create_suit_strings()
 	return suit_strings
 end
 
--- Lines 4413-4462
+-- Lines 4464-4513
 function BlackMarketTweakData:build_player_style_list(tweak_data)
 	local x_td, y_td, x_gv, y_gv, x_sn, y_sn = nil
 
-	-- Lines 4418-4421
+	-- Lines 4469-4472
 	local function map_func(x)
 		x_td = self.player_styles[x]
 
 		return not x_td.unavailable
 	end
 
-	-- Lines 4423-4452
+	-- Lines 4474-4503
 	local function sort_func(x, y)
 		if x == "none" then
 			return true

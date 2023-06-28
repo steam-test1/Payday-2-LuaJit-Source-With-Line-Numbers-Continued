@@ -543,7 +543,7 @@ function profile(s)
 	-- Lines 477-482
 	function t.instrumented(...)
 		local id = Profiler:start(t.s)
-		res, res2, res3, res4, res5 = t.f(...)
+		local res, res2, res3, res4, res5 = t.f(...)
 
 		Profiler:stop(id)
 

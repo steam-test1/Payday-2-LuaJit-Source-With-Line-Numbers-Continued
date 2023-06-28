@@ -942,7 +942,7 @@ function CopActionShoot:_set_ik_updator(name)
 	self._upd_ik = self[name]
 end
 
--- Lines 962-994
+-- Lines 962-986
 function CopActionShoot:_chk_start_melee(target_vec, target_dis, autotarget, target_pos)
 	local melee_weapon = self._unit:base():melee_weapon()
 	local is_weapon = melee_weapon == "weapon"
@@ -963,13 +963,13 @@ function CopActionShoot:_chk_start_melee(target_vec, target_dis, autotarget, tar
 			self._common_data.machine:set_parameter(state, param, 1)
 		end
 
-		if is_weapon then
-			local anim_speed = self._w_usage_tweak.melee_speed
+		local anim_speed = self._w_usage_tweak.melee_speed
 
-			self._common_data.machine:set_speed(state, anim_speed)
-		end
+		self._common_data.machine:set_speed(state, anim_speed or 1)
 
 		self._melee_timeout_t = TimerManager:game():time() + (self._w_usage_tweak.melee_retry_delay and math.lerp(self._w_usage_tweak.melee_retry_delay[1], self._w_usage_tweak.melee_retry_delay[2], self:_pseudorandom()) or 1)
+
+		self._common_data.ext_network:send("action_melee_attack", self._body_part)
 	else
 		debug_pause_unit(self._common_data.unit, "[CopActionShoot:_chk_start_melee] redirect failed in state", self._common_data.machine:segment_state(Idstring("base")), self._common_data.unit)
 	end
@@ -977,7 +977,16 @@ function CopActionShoot:_chk_start_melee(target_vec, target_dis, autotarget, tar
 	return state and true
 end
 
--- Lines 1008-1097
+-- Lines 988-994
+function CopActionShoot:sync_start_melee()
+	if self._ext_anim.melee then
+		return
+	end
+
+	self:_chk_start_melee()
+end
+
+-- Lines 998-1090
 function CopActionShoot:anim_clbk_melee_strike()
 	if not self._attention then
 		return
@@ -1009,7 +1018,8 @@ function CopActionShoot:anim_clbk_melee_strike()
 	local push_vel = target_vec:with_z(0.1):normalized() * 600
 	local melee_weapon = self._unit:base():melee_weapon()
 	local is_weapon = melee_weapon == "weapon"
-	local damage = is_weapon and self._w_usage_tweak.melee_dmg or tweak_data.weapon.npc_melee[melee_weapon].damage
+	local melee_tweak = not is_weapon and tweak_data.weapon.npc_melee[melee_weapon]
+	local damage = is_weapon and self._w_usage_tweak.melee_dmg or melee_tweak and melee_tweak.damage or 1
 	local dmg_mul = is_weapon and 1 or self._common_data.char_tweak.melee_weapon_dmg_multiplier or 1
 	dmg_mul = dmg_mul * (1 + self._unit:base():get_total_buff("base_damage"))
 	damage = damage * dmg_mul
@@ -1027,7 +1037,31 @@ function CopActionShoot:anim_clbk_melee_strike()
 	}
 	local defense_data = self._attention.unit:character_damage():damage_melee(action_data)
 
-	if defense_data == "countered" then
+	if melee_tweak and melee_tweak.tase_data then
+		if self._attention.unit:character_damage().on_non_lethal_electrocution then
+			if not self._attention.unit:character_damage().can_be_tased or self._attention.unit:character_damage():can_be_tased() then
+				self._attention.unit:character_damage():on_non_lethal_electrocution(melee_tweak.tase_data.electrocution_time_mul)
+			end
+		elseif self._attention.unit:character_damage().damage_tase then
+			local action_data = {
+				variant = melee_tweak.tase_data.tase_strength or "light",
+				damage = 0,
+				attacker_unit = self._unit,
+				col_ray = {
+					position = shoot_from_pos + fwd * 50,
+					ray = mvector3.copy(target_vec)
+				}
+			}
+
+			self._attention.unit:character_damage():damage_tase(action_data)
+		end
+	end
+
+	if defense_data ~= "countered" then
+		if melee_tweak and melee_tweak.additional_impact_sound then
+			self._unit:sound():play(melee_tweak.additional_impact_sound)
+		end
+	else
 		self._common_data.melee_countered_t = TimerManager:game():time()
 		local action_data = {
 			damage_effect = 1,
@@ -1043,7 +1077,5 @@ function CopActionShoot:anim_clbk_melee_strike()
 		}
 
 		self._unit:character_damage():damage_melee(action_data)
-
-		return
 	end
 end

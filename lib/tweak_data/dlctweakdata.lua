@@ -2,7 +2,7 @@ DLCTweakData = DLCTweakData or class()
 
 require("lib/tweak_data/GeneratedDLCTweakData")
 
--- Lines 10-5170
+-- Lines 10-5213
 function DLCTweakData:init(tweak_data)
 	if managers.dlc:is_installing() then
 		tweak_data.BUNDLED_DLC_PACKAGES = {}
@@ -8641,6 +8641,34 @@ function DLCTweakData:init(tweak_data)
 			item_entry = "kungfumaster"
 		}
 	}
+	self.ach_deep_10 = {
+		content = {},
+		dlc = "has_achievement",
+		achievement_id = "deep_10"
+	}
+	self.ach_deep_10.content.loot_global_value = "deep"
+	self.ach_deep_10.content.loot_drops = {
+		{
+			type_items = "player_styles",
+			item_entry = "bossflag"
+		},
+		{
+			type_items = "masks",
+			item_entry = "bossflagmask"
+		}
+	}
+	self.ach_deep_12 = {
+		content = {},
+		dlc = "has_achievement",
+		achievement_id = "deep_12"
+	}
+	self.ach_deep_12.content.loot_global_value = "deep"
+	self.ach_deep_12.content.loot_drops = {
+		{
+			type_items = "masks",
+			item_entry = "gabhelm"
+		}
+	}
 	self.rat_oilbaron = {
 		content = {}
 	}
@@ -8917,6 +8945,39 @@ function DLCTweakData:init(tweak_data)
 		{
 			type_items = "gloves",
 			item_entry = "beigedriver",
+			amount = 1
+		}
+	}
+	self.dot_roclown_suit = {
+		content = {}
+	}
+	self.dot_roclown_suit.content.loot_global_value = "dot_roclown_suit"
+	self.dot_roclown_suit.content.loot_drops = {
+		{
+			type_items = "player_styles",
+			item_entry = "roclown",
+			amount = 1
+		}
+	}
+	self.dot_roclogrip_glv = {
+		content = {}
+	}
+	self.dot_roclogrip_glv.content.loot_global_value = "dot_roclogrip_glv"
+	self.dot_roclogrip_glv.content.loot_drops = {
+		{
+			type_items = "gloves",
+			item_entry = "roclogrip",
+			amount = 1
+		}
+	}
+	self.dot_roclown_msk = {
+		content = {}
+	}
+	self.dot_roclown_msk.content.loot_global_value = "dot_roclown_msk"
+	self.dot_roclown_msk.content.loot_drops = {
+		{
+			type_items = "masks",
+			item_entry = "roclown",
 			amount = 1
 		}
 	}

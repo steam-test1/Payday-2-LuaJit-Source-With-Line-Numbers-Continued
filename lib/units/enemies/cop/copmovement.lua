@@ -276,6 +276,8 @@ action_variants.mute_security_undominatable = security_variant
 action_variants.tank_medic = clone(action_variants.tank)
 action_variants.tank_medic.heal = action_variants.medic.heal
 action_variants.tank_mini = action_variants.tank
+action_variants.deep_boss = clone(security_variant)
+action_variants.deep_boss.walk = TankCopActionWalk
 action_variants.heavy_swat_sniper = action_variants.heavy_swat
 action_variants.marshal_marksman = action_variants.swat
 action_variants.marshal_shield = clone(action_variants.shield)
@@ -514,18 +516,38 @@ function CopMovement:add_weapons()
 	end
 end
 
--- Lines 639-650
+-- Lines 607-637
 function CopMovement:_post_init()
+	local old_cool_state = self._cool
+
 	self:set_character_anim_variables()
 
+	local cur_cool_state = self._cool
+
+	if old_cool_state ~= cur_cool_state then
+		return
+	end
+
+	local weapons_hot = managers.groupai:state():enemy_weapons_hot()
+
+	if weapons_hot then
+		if not self._tweak_data.allowed_stances or self._tweak_data.allowed_stances.hos then
+			self:_change_stance(2)
+		elseif self._tweak_data.allowed_stances.cbt then
+			self:_change_stance(3)
+		end
+	end
+
 	if Network:is_server() then
-		if not managers.groupai:state():whisper_mode() then
+		if weapons_hot then
+			self:set_cool(false, nil, true)
+		elseif not managers.groupai:state():whisper_mode() then
 			self:set_cool(false)
 		else
-			self:set_cool(true)
+			self._unit:brain():on_cool_state_changed(self._cool)
 		end
-
-		self._unit:brain():on_cool_state_changed(self._cool)
+	elseif Network:is_client() and weapons_hot then
+		self:set_cool(false)
 	end
 end
 
@@ -540,8 +562,6 @@ function CopMovement:set_character_anim_variables()
 	end
 
 	if self._tweak_data.allowed_stances and not self._tweak_data.allowed_stances.ntl then
-		self:set_cool(false)
-
 		if self._tweak_data.allowed_stances.hos then
 			self:_change_stance(2)
 		else
@@ -1198,12 +1218,6 @@ function CopMovement:sync_stance(i_stance, instant, execute_queued)
 	end
 
 	self:_change_stance(i_stance, instant)
-
-	if i_stance == 1 then
-		self:set_cool(true)
-	else
-		self:set_cool(false)
-	end
 end
 
 -- Lines 1392-1394
@@ -1245,7 +1259,7 @@ function CopMovement:_chk_play_equip_weapon()
 end
 
 -- Lines 1428-1497
-function CopMovement:set_cool(state, giveaway)
+function CopMovement:set_cool(state, giveaway, prevent_sync)
 	state = state and true or false
 
 	if not state and not managers.groupai:state():enemy_weapons_hot() then
@@ -1254,6 +1268,10 @@ function CopMovement:set_cool(state, giveaway)
 
 	if state == self._cool then
 		return
+	end
+
+	if Network:is_server() and not prevent_sync then
+		self._ext_network:send("set_cool_state", state)
 	end
 
 	local old_state = self._cool
@@ -1279,6 +1297,22 @@ function CopMovement:set_cool(state, giveaway)
 
 		if Network:is_server() and not managers.groupai:state():all_criminals()[self._unit:key()] then
 			managers.groupai:state():on_criminal_suspicion_progress(nil, self._unit, true)
+		end
+	elseif state and not old_state then
+		self._not_cool_t = nil
+
+		if Network:is_server() then
+			if self._stance.name ~= "ntl" then
+				if not self._tweak_data.allowed_stances or self._tweak_data.allowed_stances.ntl then
+					self:set_stance("ntl", nil, nil)
+				elseif self._stance.name ~= "hos" and self._tweak_data.allowed_stances.hos then
+					self:set_stance("hos", nil, nil)
+				end
+			end
+
+			if not managers.groupai:state():all_criminals()[self._unit:key()] then
+				managers.groupai:state():on_criminal_suspicion_progress(nil, self._unit, nil)
+			end
 		end
 	end
 
@@ -2285,6 +2319,8 @@ function CopMovement:save(save_data)
 		my_save_data.stance_wnd = true
 	end
 
+	my_save_data.cool_state = self._cool and true or false
+
 	for _, action in ipairs(self._active_actions) do
 		if action and action.save then
 			local action_save_data = {}
@@ -2395,12 +2431,10 @@ function CopMovement:load(load_data)
 
 	if my_load_data.stance_code then
 		self:_change_stance(my_load_data.stance_code)
+	end
 
-		if my_load_data.stance_code == 1 then
-			self:set_cool(true)
-		else
-			self:set_cool(false)
-		end
+	if my_load_data.cool_state then
+		self:set_cool(my_load_data.cool_state)
 	end
 
 	if my_load_data.stance_wnd then
@@ -2473,13 +2507,6 @@ function CopMovement:_chk_start_queued_action()
 				if queued_actions[2] and not self:chk_action_forbidden(queued_actions[2]) or (not self._active_actions[1] or self._active_actions[1]:type() == "idle") and (not self._active_actions[2] or self._active_actions[2]:type() == "idle") then
 					table.remove(queued_actions, 1)
 					self:_change_stance(action_desc.code, action_desc.instant)
-
-					if action_desc.code == 1 then
-						self:set_cool(true)
-					else
-						self:set_cool(false)
-					end
-
 					self:_chk_start_queued_action()
 				end
 
@@ -2877,6 +2904,15 @@ function CopMovement:sync_action_hurt_end()
 	end
 
 	debug_pause("[CopMovement:sync_action_hurt_end] no queued or ongoing hurt action", self._unit, inspect(self._queued_actions), inspect(self._active_actions))
+end
+
+-- Lines 3106-3119
+function CopMovement:sync_action_melee_attack(body_part)
+	local action = self._active_actions[body_part]
+
+	if action and action.sync_start_melee then
+		action:sync_start_melee()
+	end
 end
 
 -- Lines 3124-3130

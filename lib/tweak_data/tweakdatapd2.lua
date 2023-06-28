@@ -861,6 +861,27 @@ function TweakData:_setup_point_of_no_returns()
 	else
 		self.point_of_no_returns.reposition_locomotive.text_id = "hud_assault_pnr_reposition_locomotive_in"
 	end
+
+	self.point_of_no_returns.oil_rig_will_explode = {
+		text_id = "hud_assault_pnr_oil_rig_will_explode",
+		texture = "guis/textures/pd2/hud_icon_noreturnbox",
+		texture_rect = {
+			0,
+			0,
+			32,
+			32
+		},
+		color = Color(1, 1, 0, 0),
+		timer_flash_color = Color(1, 1, 0.8, 0.2),
+		attention_color = Color(1, 1, 1, 1),
+		scale_box = true
+	}
+
+	if _G.IS_VR then
+		self.point_of_no_returns.oil_rig_will_explode.text_id = "hud_assault_pnr_oil_rig_will_explode"
+	else
+		self.point_of_no_returns.oil_rig_will_explode.text_id = "hud_assault_pnr_oil_rig_will_explode_in"
+	end
 end
 
 -- Lines 525-528
@@ -977,7 +998,7 @@ function TweakData:_setup_scene_pose_items()
 	}
 end
 
--- Lines 612-743
+-- Lines 612-746
 function TweakData:_setup_scene_poses()
 	self.scene_poses = {
 		generic = {

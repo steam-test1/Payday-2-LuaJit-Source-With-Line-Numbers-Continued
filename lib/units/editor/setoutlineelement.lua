@@ -3,7 +3,7 @@ SetOutlineElement.LINK_ELEMENTS = {
 	"elements"
 }
 
--- Lines 4-16
+-- Lines 4-17
 function SetOutlineElement:init(unit)
 	SetOutlineElement.super.init(self, unit)
 
@@ -14,11 +14,12 @@ function SetOutlineElement:init(unit)
 
 	table.insert(self._save_values, "elements")
 	table.insert(self._save_values, "set_outline")
+	table.insert(self._save_values, "outline_type")
 	table.insert(self._save_values, "use_instigator")
 	table.insert(self._save_values, "clear_previous")
 end
 
--- Lines 20-36
+-- Lines 21-42
 function SetOutlineElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -39,20 +40,24 @@ function SetOutlineElement:_build_panel(panel, panel_sizer)
 		ctrlr = set_outline
 	})
 	panel_sizer:add(set_outline, 0, 0, "EXPAND")
+
+	local contour_types = table.map_keys(ContourExt._types)
+
+	self:_build_value_combobox(panel, panel_sizer, "outline_type", contour_types)
 	self:_build_value_checkbox(panel, panel_sizer, "use_instigator", "Sets outline on the instigator")
 	self:_build_value_checkbox(panel, panel_sizer, "clear_previous", "Clears any previously set outlines (fixes issue with escorts)")
 end
 
--- Lines 40-42
+-- Lines 46-48
 function SetOutlineElement:draw_links(t, dt, selected_unit, all_units)
 	MissionElement.draw_links(self, t, dt, selected_unit, all_units)
 end
 
--- Lines 44-45
+-- Lines 50-51
 function SetOutlineElement:update_editing()
 end
 
--- Lines 48-56
+-- Lines 54-62
 function SetOutlineElement:update_selected(t, dt, selected_unit, all_units)
 	for _, id in ipairs(self._hed.elements) do
 		local unit = all_units[id]
@@ -70,7 +75,7 @@ function SetOutlineElement:update_selected(t, dt, selected_unit, all_units)
 	end
 end
 
--- Lines 58-70
+-- Lines 64-76
 function SetOutlineElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -88,7 +93,7 @@ function SetOutlineElement:add_element()
 	end
 end
 
--- Lines 73-75
+-- Lines 79-81
 function SetOutlineElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end

@@ -77,7 +77,7 @@ function BlackMarketTweakData:build_glove_list(tweak_data)
 	self.glove_list = table.map_keys(self.gloves, sort_func)
 end
 
--- Lines 78-1205
+-- Lines 78-1208
 function BlackMarketTweakData:_init_gloves(tweak_data)
 	local characters_female, characters_female_big, characters_male, characters_male_big = self:_get_character_groups()
 	local characters_all = table.list_union(characters_female, characters_male, characters_female_big, characters_male_big)
@@ -163,9 +163,11 @@ function BlackMarketTweakData:_init_gloves(tweak_data)
 		leatherfluff = "heist_default",
 		sleekygent = "beigedriver",
 		lowinttech = "heist_default",
+		bossflag = "heist_default",
 		boss = "heist_default",
 		rusbear = "heist_default",
 		texvest = "heist_default",
+		roclown = "roclogrip",
 		thug = "heist_default",
 		bikervest = "heist_default",
 		clown_2 = "heist_default",
@@ -845,5 +847,14 @@ function BlackMarketTweakData:_init_gloves(tweak_data)
 		sort_number = 1,
 		unit = "units/pd2_dlc_txt4/characters/glv_txsuede/glv_txsuede",
 		third_material = "units/pd2_dlc_txt4/characters/glv_txsuede/glv_txsuede_third"
+	}
+	self.gloves.roclogrip = {
+		name_id = "bm_gloves_roclogrip",
+		desc_id = "bm_gloves_roclogrip_desc",
+		texture_bundle_folder = "dot",
+		global_value = "dot_roclogrip_glv",
+		sort_number = 1,
+		unit = "units/pd2_dlc_dot/characters/glv_roclogrip/glv_roclogrip",
+		third_material = "units/pd2_dlc_dot/characters/glv_roclogrip/glv_roclogrip_third"
 	}
 end

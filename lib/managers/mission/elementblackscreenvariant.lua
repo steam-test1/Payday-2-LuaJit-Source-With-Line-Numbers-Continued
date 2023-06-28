@@ -43,3 +43,25 @@ function ElementEndscreenVariant:on_executed(instigator)
 	managers.groupai:state():set_endscreen_variant(tonumber(self._values.variant))
 	ElementEndscreenVariant.super.on_executed(self, instigator)
 end
+
+ElementFailureVariant = ElementFailureVariant or class(CoreMissionScriptElement.MissionScriptElement)
+
+-- Lines 52-54
+function ElementFailureVariant:init(...)
+	ElementFailureVariant.super.init(self, ...)
+end
+
+-- Lines 56-58
+function ElementFailureVariant:client_on_executed(...)
+	self:on_executed(...)
+end
+
+-- Lines 60-67
+function ElementFailureVariant:on_executed(instigator)
+	if not self._values.enabled then
+		return
+	end
+
+	managers.groupai:state():set_failure_variant(tonumber(self._values.variant))
+	ElementFailureVariant.super.on_executed(self, instigator)
+end

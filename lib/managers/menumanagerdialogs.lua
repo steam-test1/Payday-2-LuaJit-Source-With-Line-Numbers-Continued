@@ -3541,6 +3541,22 @@ function MenuManager:show_lron_dialog(params)
 	managers.system_menu:show(dialog_data)
 end
 
+-- Lines 2765-2773
+function MenuManager:show_lrtw_dialog(params)
+	local dialog_data = {
+		title = managers.localization:text("dialog_lrtw_event_title"),
+		text = managers.localization:text("dialog_lrtw_event_text")
+	}
+	local ok_button = {
+		text = managers.localization:text("dialog_ok")
+	}
+	dialog_data.button_list = {
+		ok_button
+	}
+
+	managers.system_menu:show(dialog_data)
+end
+
 -- Lines 2798-2828
 function MenuManager:show_eos_no_connect_dialog(params)
 	local dialog_data = {

@@ -45,7 +45,7 @@ function PlayerFatal:enter(state_data, enter_data)
 
 	self._reequip_weapon = enter_data and enter_data.equip_weapon
 
-	managers.network:session():send_to_peers_synched("sync_contour_state", self._unit, -1, table.index_of(ContourExt.indexed_types, "teammate_downed"), true, 1)
+	managers.network:session():send_to_peers_synched("sync_contour_add", self._unit, -1, table.index_of(ContourExt.indexed_types, "teammate_downed"), 1)
 end
 
 -- Lines 54-66
@@ -98,7 +98,7 @@ function PlayerFatal:exit(state_data, new_state_name)
 		exit_data.wants_crouch = true
 	end
 
-	managers.network:session():send_to_peers_synched("sync_contour_state", self._unit, -1, table.index_of(ContourExt.indexed_types, "teammate_downed"), false, 1)
+	managers.network:session():send_to_peers_synched("sync_contour_remove", self._unit, -1, table.index_of(ContourExt.indexed_types, "teammate_downed"))
 
 	return exit_data
 end

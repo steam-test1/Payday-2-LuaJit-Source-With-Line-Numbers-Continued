@@ -52,8 +52,8 @@ function VehicleManager:remove_listener(key)
 end
 
 -- Lines 57-63
-function VehicleManager:add_vehicle(vehicle)
-	table.insert(self._vehicles, vehicle)
+function VehicleManager:add_vehicle(vehicle_unit)
+	table.insert(self._vehicles, vehicle_unit)
 
 	if Application:editor() then
 		self._listener_holder:call("on_add")
@@ -61,9 +61,9 @@ function VehicleManager:add_vehicle(vehicle)
 end
 
 -- Lines 65-72
-function VehicleManager:remove_vehicle(vehicle)
-	table.delete(self._vehicles, vehicle)
-	managers.hud:_remove_name_label(vehicle:unit_data().name_label_id)
+function VehicleManager:remove_vehicle(vehicle_unit)
+	table.delete(self._vehicles, vehicle_unit)
+	managers.hud:_remove_name_label(vehicle_unit:unit_data().name_label_id)
 
 	if Application:editor() then
 		self._listener_holder:call("on_remove")
@@ -123,7 +123,7 @@ function VehicleManager:remove_player_from_all_vehicles(player)
 	end
 end
 
--- Lines 118-177
+-- Lines 118-178
 function VehicleManager:update_vehicles_data_to_peer(peer)
 	if peer:ip_verified() then
 		for i, v in ipairs(self._vehicles) do
@@ -133,6 +133,7 @@ function VehicleManager:update_vehicles_data_to_peer(peer)
 			Application:debug("[VehicleManager] Syncing vehicle data for: ", v_ext._unit:id(), v_ext._current_state_name)
 
 			local driver, passenger_front, passenger_back_left, passenger_back_right = nil
+			local manual_exit_disabled = v_ext._manual_exit_disabled
 
 			if v_ext._seats.driver and alive(v_ext._seats.driver.occupant) then
 				driver = v_ext._seats.driver.occupant
@@ -156,7 +157,7 @@ function VehicleManager:update_vehicles_data_to_peer(peer)
 				is_trunk_open = v_ext._trunk_open
 			end
 
-			peer:send_queued_sync("sync_vehicle_data", v_ext._unit, v_ext._current_state_name, driver, passenger_front, passenger_back_left, passenger_back_right, is_trunk_open)
+			peer:send_queued_sync("sync_vehicle_data", v_ext._unit, v_ext._current_state_name, driver, passenger_front, passenger_back_left, passenger_back_right, is_trunk_open, manual_exit_disabled)
 
 			if v_npc_ext then
 				peer:send_queued_sync("sync_npc_vehicle_data", v_npc_ext._unit, v_npc_ext._current_state_name, v_npc_ext._target_unit)
@@ -193,7 +194,7 @@ function VehicleManager:update_vehicles_data_to_peer(peer)
 	end
 end
 
--- Lines 180-185
+-- Lines 181-186
 function VehicleManager:sync_npc_vehicle_data(vehicle_unit, state_name, target_unit)
 	local v_npc_ext = vehicle_unit:npc_vehicle_driving()
 
@@ -202,9 +203,10 @@ function VehicleManager:sync_npc_vehicle_data(vehicle_unit, state_name, target_u
 	v_npc_ext:start()
 end
 
--- Lines 188-266
-function VehicleManager:sync_vehicle_data(vehicle_unit, state, occupant_driver, occupant_left, occupant_back_left, occupant_back_right, is_trunk_open)
+-- Lines 189-269
+function VehicleManager:sync_vehicle_data(vehicle_unit, state, occupant_driver, occupant_left, occupant_back_left, occupant_back_right, is_trunk_open, manual_exit_disabled)
 	local v_ext = vehicle_unit:vehicle_driving()
+	v_ext._manual_exit_disabled = manual_exit_disabled
 
 	if v_ext._seats.driver then
 		v_ext._seats.driver.occupant = occupant_driver
@@ -304,7 +306,7 @@ function VehicleManager:sync_vehicle_data(vehicle_unit, state, occupant_driver, 
 	end
 end
 
--- Lines 269-277
+-- Lines 272-280
 function VehicleManager:sync_vehicle_loot(vehicle_unit, carry_id1, multiplier1, carry_id2, multiplier2, carry_id3, multiplier3)
 	if not alive(vehicle_unit) then
 		return
@@ -317,7 +319,7 @@ function VehicleManager:sync_vehicle_loot(vehicle_unit, carry_id1, multiplier1, 
 	v_ext:sync_loot(carry_id3, multiplier3)
 end
 
--- Lines 280-311
+-- Lines 283-314
 function VehicleManager:find_active_vehicle_with_player()
 	for i, v in ipairs(self._vehicles) do
 		if v:vehicle_driving()._vehicle:is_active() then
@@ -346,7 +348,7 @@ function VehicleManager:find_active_vehicle_with_player()
 	return nil
 end
 
--- Lines 313-339
+-- Lines 316-342
 function VehicleManager:find_npc_vehicle_target()
 	local target_unit = nil
 
@@ -363,7 +365,7 @@ function VehicleManager:find_npc_vehicle_target()
 	return target_unit
 end
 
--- Lines 341-354
+-- Lines 344-357
 function VehicleManager:update(t, dt)
 	if self._debug and self._draw_enabled then
 		for i, v in ipairs(self._vehicles) do

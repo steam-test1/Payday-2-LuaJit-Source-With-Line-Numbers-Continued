@@ -605,7 +605,7 @@ function MusicManager:jukebox_ghost_track(name)
 	end
 end
 
--- Lines 579-864
+-- Lines 579-867
 function MusicManager:jukebox_default_tracks()
 	local default_options = {
 		heist_friend = "all",
@@ -681,8 +681,8 @@ function MusicManager:jukebox_default_tracks()
 		heist_haunted = "track_22",
 		heist_mad = "track_44",
 		heist_corp = "track_79",
+		heist_deep = "track_80",
 		heist_dark = "music_dark",
-		heist_tag = "music_tag",
 		heist_fish = "music_fish",
 		heist_branchbank = "track_03",
 		heist_hvh = "track_56",
@@ -692,6 +692,7 @@ function MusicManager:jukebox_default_tracks()
 		heist_brb = "track_59",
 		heist_arm_cro = "all",
 		heist_chca = "track_74",
+		heist_tag = "music_tag",
 		heist_pbr = "all",
 		heist_big = "all",
 		heist_peta2 = "all",
@@ -778,7 +779,7 @@ function MusicManager:jukebox_default_tracks()
 	return default_options
 end
 
--- Lines 866-951
+-- Lines 869-954
 function MusicManager:jukebox_music_tracks()
 	local tracks = {}
 	local tracks_locked = {}
@@ -817,7 +818,7 @@ function MusicManager:jukebox_music_tracks()
 	return tracks, tracks_locked
 end
 
--- Lines 953-1009
+-- Lines 956-1012
 function MusicManager:jukebox_menu_tracks()
 	local tracks = {}
 	local tracks_locked = {}
@@ -845,7 +846,7 @@ function MusicManager:jukebox_menu_tracks()
 	return tracks, tracks_locked
 end
 
--- Lines 1012-1027
+-- Lines 1015-1030
 function MusicManager:jukebox_ghost_tracks()
 	local tracks = {}
 	local tracks_locked = {}
@@ -863,7 +864,7 @@ function MusicManager:jukebox_ghost_tracks()
 	return tracks, tracks_locked
 end
 
--- Lines 1030-1032
+-- Lines 1033-1035
 function MusicManager:music_tracks()
 	return tweak_data.music.soundbank_list
 end

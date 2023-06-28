@@ -739,7 +739,7 @@ function NetworkMatchMakingEPIC._on_member_left(epic_id, status)
 		return
 	end
 
-	local peer = epic
+	local peer = managers.network:session():peer_by_user_id(epic_id)
 
 	if not peer then
 		return
@@ -1190,5 +1190,5 @@ end
 
 -- Lines 1305-1308
 function NetworkMatchMakingEPIC:server_time()
-	return EpicMM:server_time()
+	return os.time()
 end

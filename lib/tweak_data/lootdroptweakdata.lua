@@ -2,7 +2,7 @@ LootDropTweakData = LootDropTweakData or class()
 
 require("lib/tweak_data/GeneratedLootDropTweakData")
 
--- Lines 5-2371
+-- Lines 5-2377
 function LootDropTweakData:init(tweak_data)
 	self.PC_STEP = 10
 	self.no_drop = {
@@ -1893,13 +1893,16 @@ function LootDropTweakData:init(tweak_data)
 	self.global_values.cot_smilecigar = self.global_values.cot
 	self.global_values.cot_sleekygent = self.global_values.cot
 	self.global_values.cot_beigedriver = self.global_values.cot
+	self.global_values.dot_roclown_suit = self.global_values.dot
+	self.global_values.dot_roclogrip_glv = self.global_values.dot
+	self.global_values.dot_roclown_msk = self.global_values.dot
 	self.global_values.chico_or_mrwi_deck = self.global_values.chico
 	self.global_values.ecp_or_mrwi_deck = self.global_values.ecp
 
 	self:_create_global_value_list_map()
 end
 
--- Lines 2373-2378
+-- Lines 2379-2384
 function LootDropTweakData:_create_global_value_list_map()
 	self.global_value_list_map = {}
 

@@ -57,12 +57,21 @@ function ElementDialogue:init(...)
 	ElementDialogue.super.init(self, ...)
 end
 
--- Lines 37-39
+-- Lines 37-42
+function ElementDialogue:on_script_activated()
+	if Network:is_server() then
+		self._mission_script:add_save_state_cb(self._id)
+	end
+
+	ElementDialogue.super.on_script_activated(self)
+end
+
+-- Lines 44-46
 function ElementDialogue:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines 41-72
+-- Lines 48-79
 function ElementDialogue:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -105,12 +114,12 @@ function ElementDialogue:on_executed(instigator)
 	ElementDialogue.super.on_executed(self, instigator, nil, self._values.execute_on_executed_when_done)
 end
 
--- Lines 74-76
+-- Lines 81-83
 function ElementDialogue:_done_callback(instigator, reason)
 	ElementDialogue.super._trigger_execute_on_executed(self, instigator)
 end
 
--- Lines 78-100
+-- Lines 85-107
 function ElementDialogue:_can_play()
 	if managers.user:get_setting("mute_heist_vo") and not self._values.can_not_be_muted then
 		local dialog_str = string.lower(self._values.dialogue)
@@ -127,4 +136,15 @@ function ElementDialogue:_can_play()
 	else
 		return true
 	end
+end
+
+-- Lines 109-113
+function ElementDialogue:save(data)
+	data.save_me = true
+	data.enabled = self._values.enabled
+end
+
+-- Lines 115-124
+function ElementDialogue:load(data)
+	self:set_enabled(data.enabled)
 end

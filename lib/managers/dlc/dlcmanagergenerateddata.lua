@@ -73,6 +73,16 @@ function GenericDLCManager:has_cot()
 	return self:is_dlc_unlocked("cot")
 end
 
+-- Lines 99-101
+function GenericDLCManager:has_deep()
+	return self:is_dlc_unlocked("deep")
+end
+
+-- Lines 109-111
+function GenericDLCManager:has_dot()
+	return self:is_dlc_unlocked("dot")
+end
+
 -- Lines 114-116
 function GenericDLCManager:has_ess()
 	return self:is_dlc_unlocked("ess")
@@ -518,7 +528,7 @@ function GenericDLCManager:has_xmn()
 	return self:is_dlc_unlocked("xmn")
 end
 
--- Lines 604-1359
+-- Lines 604-1360
 function WINDLCManager:init_generated()
 	Global.dlc_manager.all_dlc_data.a10th = {
 		app_id = "218620",
@@ -595,6 +605,17 @@ function WINDLCManager:init_generated()
 		webpage = "https://pd2.link/HostileTakeoverHeistYBS"
 	}
 	Global.dlc_manager.all_dlc_data.cot = {
+		app_id = "218620",
+		epic_id = "c9e33efd38a7409e8aeee22f7a6f2e06",
+		no_install = true
+	}
+	Global.dlc_manager.all_dlc_data.deep = {
+		app_id = "2353512",
+		epic_id = "f46f3eb2ddef40f28e8d0875eef443b3",
+		no_install = true,
+		webpage = "https://pd2.link/CrudeAwakeningHeistYBS"
+	}
+	Global.dlc_manager.all_dlc_data.dot = {
 		app_id = "218620",
 		epic_id = "c9e33efd38a7409e8aeee22f7a6f2e06",
 		no_install = true

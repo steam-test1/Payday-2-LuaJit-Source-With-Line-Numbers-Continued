@@ -1976,9 +1976,10 @@ function WINDLCManager:_chk_blocked()
 	end
 end
 
--- Lines 2191-2364
+-- Lines 2191-2367
 function WINDLCManager:_init_promoted_dlc_list()
 	self._promoted_dlc_list = {
+		"deep",
 		"pxp4",
 		"txt4",
 		"corp",
@@ -2057,12 +2058,12 @@ function WINDLCManager:_init_promoted_dlc_list()
 	}
 end
 
--- Lines 2366-2368
+-- Lines 2369-2371
 function WINDLCManager:get_promoted_dlc_list()
 	return self._promoted_dlc_list
 end
 
--- Lines 2370-2376
+-- Lines 2373-2379
 function WINDLCManager:_verify_dlcs()
 	for dlc_name, dlc_data in pairs(Global.dlc_manager.all_dlc_data) do
 		if not dlc_data.verified and self:_check_dlc_data(dlc_data) then
@@ -2071,7 +2072,7 @@ function WINDLCManager:_verify_dlcs()
 	end
 end
 
--- Lines 2378-2385
+-- Lines 2381-2388
 function WINDLCManager:_check_dlc_data(dlc_data)
 	if dlc_data.entitlement_id and self:has_entitlement(dlc_data.entitlement_id) then
 		return true
@@ -2080,7 +2081,7 @@ function WINDLCManager:_check_dlc_data(dlc_data)
 	return false
 end
 
--- Lines 2388-2406
+-- Lines 2391-2409
 function WINDLCManager:chk_content_updated()
 	local has_content = nil
 	local content_updated = false
@@ -2100,7 +2101,7 @@ function WINDLCManager:chk_content_updated()
 	end
 end
 
--- Lines 2409-2418
+-- Lines 2412-2421
 function WINDLCManager:set_entitlements(entitlements)
 	print("WINDLCManager:set_entitlements", inspect(entitlements))
 
@@ -2110,19 +2111,19 @@ function WINDLCManager:set_entitlements(entitlements)
 	self:chk_content_updated()
 end
 
--- Lines 2420-2422
+-- Lines 2423-2425
 function WINDLCManager:has_entitlement(entitlement_id)
 	return Global.dlc_manager.entitlements[entitlement_id]
 end
 
--- Lines 2424-2428
+-- Lines 2427-2431
 function WINDLCManager:save(data)
 	WINDLCManager.super.save(self, data)
 
 	data.dlc_entitlements = Global.dlc_manager.entitlements
 end
 
--- Lines 2430-2439
+-- Lines 2433-2442
 function WINDLCManager:load(data)
 	WINDLCManager.super.load(self, data)
 
@@ -2133,7 +2134,7 @@ function WINDLCManager:load(data)
 	end
 end
 
--- Lines 2441-2447
+-- Lines 2444-2450
 function WINDLCManager:init_finalize()
 	WINDLCManager.super.init_finalize(self)
 
@@ -2145,24 +2146,24 @@ end
 WinSteamDLCManager = WinSteamDLCManager or class(WINDLCManager)
 DLCManager.PLATFORM_CLASS_MAP[Idstring("STEAM"):key()] = WinSteamDLCManager
 
--- Lines 2498-2500
+-- Lines 2501-2503
 function WinSteamDLCManager:init()
 	WinSteamDLCManager.super.init(self)
 end
 
--- Lines 2502-2538
+-- Lines 2505-2541
 function WinSteamDLCManager:_init_promoted_dlc_list()
 	WinSteamDLCManager.super._init_promoted_dlc_list(self)
 end
 
--- Lines 2540-2543
+-- Lines 2543-2546
 function WinSteamDLCManager:has_stat(data)
 	local sa_handler = Steam:sa_handler()
 
 	return sa_handler:get_stat(data.stat_id) >= (data.stat_value or 1)
 end
 
--- Lines 2545-2602
+-- Lines 2548-2605
 function WinSteamDLCManager:_check_dlc_data(dlc_data)
 	if dlc_data.blocked then
 		return false
@@ -2221,12 +2222,12 @@ function WinSteamDLCManager:_check_dlc_data(dlc_data)
 	return false
 end
 
--- Lines 2604-2610
+-- Lines 2607-2613
 function WinSteamDLCManager:_verify_dlcs()
 	WinSteamDLCManager.super._verify_dlcs(self)
 end
 
--- Lines 2613-2652
+-- Lines 2616-2655
 function WinSteamDLCManager:check_pdth(clbk)
 	if not self._check_pdth_request and clbk and Global.dlc_manager.has_pdth ~= nil then
 		clbk(Global.dlc_manager.has_pdth, Global.dlc_manager.pdth_tester)
@@ -2244,7 +2245,7 @@ function WinSteamDLCManager:check_pdth(clbk)
 	Global.dlc_manager.has_pdth = has_pdth
 
 	if has_pdth then
-		-- Lines 2628-2647
+		-- Lines 2631-2650
 		local function result_function(success, page)
 			if success then
 				local json_reply_match = "\"([^,:\"]+)\"%s*:%s*\"([^\"]+)\""
@@ -2279,7 +2280,7 @@ function WinSteamDLCManager:check_pdth(clbk)
 	end
 end
 
--- Lines 2656-2667
+-- Lines 2659-2670
 function WinSteamDLCManager:chk_vr_dlc()
 	local steam_vr = Steam:is_app_installed("250820")
 	local payday2_vr = Steam:is_product_installed("826090")
@@ -2309,18 +2310,18 @@ WinEpicDLCManager.blocked_dlcs = table.list_to_set({
 	"bobblehead"
 })
 
--- Lines 2698-2701
+-- Lines 2701-2704
 function WinEpicDLCManager:init()
 	WinEpicDLCManager.super.init(self)
 	self:check_ownerships()
 end
 
--- Lines 2703-2729
+-- Lines 2706-2732
 function WinEpicDLCManager:check_ownerships()
 	if EpicMM:logged_on() and not Global.dlc_manager.catalog_ownerships then
 		local catalog_item_ids = {}
 
-		-- Lines 2706-2715
+		-- Lines 2709-2718
 		local function chk_func(chk_id)
 			local epic_id = nil
 
@@ -2353,22 +2354,22 @@ function WinEpicDLCManager:check_ownerships()
 	return false
 end
 
--- Lines 2731-2733
+-- Lines 2734-2736
 function WinEpicDLCManager:on_ownership_received(catalog_ownerships)
 	Global.dlc_manager.catalog_ownerships = catalog_ownerships
 end
 
--- Lines 2735-2737
+-- Lines 2738-2740
 function WinEpicDLCManager:has_catalog_ownerships()
 	return not not Global.dlc_manager.catalog_ownerships
 end
 
--- Lines 2739-2741
+-- Lines 2742-2744
 function WinEpicDLCManager:on_signin_complete()
 	self:_verify_dlcs()
 end
 
--- Lines 2743-2792
+-- Lines 2746-2795
 function WinEpicDLCManager:_check_dlc_data(dlc_data)
 	if dlc_data.blocked then
 		return false
@@ -2407,7 +2408,7 @@ function WinEpicDLCManager:_check_dlc_data(dlc_data)
 	return false
 end
 
--- Lines 2794-2803
+-- Lines 2797-2806
 function WinEpicDLCManager:_verify_dlcs()
 	if not Global.dlc_manager.catalog_ownerships then
 		return

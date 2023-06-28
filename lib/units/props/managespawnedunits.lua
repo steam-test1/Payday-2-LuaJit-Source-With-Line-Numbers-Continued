@@ -8,7 +8,7 @@ function ManageSpawnedUnits:init(unit)
 	unit:set_extension_update_enabled(Idstring("spawn_manager"), false)
 end
 
--- Lines 39-82
+-- Lines 39-88
 function ManageSpawnedUnits:spawn_unit(unit_id, align_obj_name, unit)
 	local align_obj = self._unit:get_object(Idstring(align_obj_name))
 	local spawn_unit = nil
@@ -34,8 +34,14 @@ function ManageSpawnedUnits:spawn_unit(unit_id, align_obj_name, unit)
 	local spawned_contour_ext = spawn_unit:contour()
 
 	if contour_ext and spawned_contour_ext then
+		if spawned_contour_ext.init_contour then
+			Application:error("[ManageSpawnedUnits:spawn_unit] Spawned child unit shouldn't have a init contour defined in unit file.", spawn_unit)
+		end
+
+		spawned_contour_ext:set_is_child(true)
+
 		for _, contour in ipairs(contour_ext:contour_list()) do
-			spawned_contour_ext:add(contour.type, nil, nil, contour.color, true)
+			spawned_contour_ext:add(contour.type, false, nil, contour.color)
 		end
 	end
 
@@ -50,12 +56,12 @@ function ManageSpawnedUnits:spawn_unit(unit_id, align_obj_name, unit)
 	end
 end
 
--- Lines 84-86
+-- Lines 90-92
 function ManageSpawnedUnits:spawned_units()
 	return self._spawned_units
 end
 
--- Lines 105-145
+-- Lines 111-151
 function ManageSpawnedUnits:spawn_and_link_unit(joint_table, unit_id, unit)
 	if self._spawned_units[unit_id] then
 		return
@@ -111,12 +117,12 @@ function ManageSpawnedUnits:spawn_and_link_unit(joint_table, unit_id, unit)
 	end
 end
 
--- Lines 147-149
+-- Lines 153-155
 function ManageSpawnedUnits:linked_units()
 	return self._sync_spawn_and_link
 end
 
--- Lines 162-179
+-- Lines 168-185
 function ManageSpawnedUnits:spawn_run_sequence(unit_id, sequence_name)
 	local entry = self._spawned_units[unit_id]
 
@@ -137,7 +143,7 @@ function ManageSpawnedUnits:spawn_run_sequence(unit_id, sequence_name)
 	self:_spawn_run_sequence(unit_id, sequence_name)
 end
 
--- Lines 201-250
+-- Lines 207-256
 function ManageSpawnedUnits:local_push_child_unit(unit_id, mass, pow, vec3_a, vec3_b)
 	if not unit_id then
 		Application:error("param1", "nil:\n", self._spawned_units[unit_id].unit:name())
@@ -199,7 +205,7 @@ function ManageSpawnedUnits:local_push_child_unit(unit_id, mass, pow, vec3_a, ve
 	end
 end
 
--- Lines 260-269
+-- Lines 266-275
 function ManageSpawnedUnits:remove_unit(unit_id)
 	local entry = self._spawned_units[unit_id]
 
@@ -211,7 +217,7 @@ function ManageSpawnedUnits:remove_unit(unit_id)
 	self._spawned_units[unit_id] = nil
 end
 
--- Lines 277-285
+-- Lines 283-291
 function ManageSpawnedUnits:destroy(unit)
 	for i, entry in pairs(self._spawned_units) do
 		if alive(entry.unit) then
@@ -222,7 +228,7 @@ function ManageSpawnedUnits:destroy(unit)
 	self._spawned_units = {}
 end
 
--- Lines 289-303
+-- Lines 295-309
 function ManageSpawnedUnits:save(data)
 	if not alive(self._unit) or self._unit:id() == -1 or self.local_only then
 		data.managed_spawned_units = nil
@@ -241,7 +247,7 @@ function ManageSpawnedUnits:save(data)
 	end
 end
 
--- Lines 307-324
+-- Lines 313-330
 function ManageSpawnedUnits:load(data)
 	if not data.managed_spawned_units then
 		return
@@ -261,7 +267,7 @@ function ManageSpawnedUnits:load(data)
 	end
 end
 
--- Lines 328-351
+-- Lines 334-357
 function ManageSpawnedUnits:_spawn_run_sequence(unit_id, sequence_name)
 	local entry = self._spawned_units[unit_id]
 
@@ -293,7 +299,7 @@ end
 local empty_vec = Vector3()
 local empty_rot = Rotation()
 
--- Lines 357-375
+-- Lines 363-381
 function ManageSpawnedUnits:_link_joints(unit_id, joint_table)
 	local ids, parent_object, child_object = nil
 	local parent_unit = self._unit
@@ -314,7 +320,7 @@ function ManageSpawnedUnits:_link_joints(unit_id, joint_table)
 	parent_unit:set_moving()
 end
 
--- Lines 378-387
+-- Lines 384-393
 function ManageSpawnedUnits:get_unit(unit_id)
 	local entry = self._spawned_units[unit_id]
 

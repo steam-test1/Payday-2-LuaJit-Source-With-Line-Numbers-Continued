@@ -301,7 +301,7 @@ function LeakedRecordingGui:set_focused_poster(new_focus)
 	end
 end
 
--- Lines 262-290
+-- Lines 262-292
 function LeakedRecordingGui:mouse_moved(button, x, y)
 	local back_button = self._panel:child("back_button")
 
@@ -312,6 +312,8 @@ function LeakedRecordingGui:mouse_moved(button, x, y)
 			back_button:set_color(MOUSEOVER_COLOR)
 			managers.menu_component:post_event("highlight")
 		end
+
+		return true, "link"
 	elseif self._back_highlight then
 		self._back_highlight = false
 
@@ -332,6 +334,8 @@ function LeakedRecordingGui:mouse_moved(button, x, y)
 
 	if poster_hover then
 		self:set_focused_poster(poster_hover)
+
+		return true, "link"
 	else
 		self:set_focused_poster(nil)
 	end
@@ -339,7 +343,7 @@ end
 
 LeakedRecordingMissionGuiInitiator = LeakedRecordingMissionGuiInitiator or class()
 
--- Lines 298-303
+-- Lines 300-305
 function LeakedRecordingMissionGuiInitiator:modify_node(original_node, data)
 	local node = deep_clone(original_node)
 	node:parameters().menu_component_data = data
@@ -349,7 +353,7 @@ end
 
 LeakedRecordingMissionGui = LeakedRecordingMissionGui or class(MenuGuiComponentGeneric)
 
--- Lines 307-328
+-- Lines 309-330
 function LeakedRecordingMissionGui:init(ws, fullscreen_ws, node)
 	self._ws = ws
 	self._fullscreen_ws = fullscreen_ws
@@ -372,7 +376,7 @@ function LeakedRecordingMissionGui:init(ws, fullscreen_ws, node)
 	self:show_mission_box()
 end
 
--- Lines 330-335
+-- Lines 332-337
 function LeakedRecordingMissionGui:close()
 	self._ws:panel():remove(self._panel)
 	self._fullscreen_ws:panel():remove(self._fullscreen_panel)
@@ -380,7 +384,7 @@ function LeakedRecordingMissionGui:close()
 	managers.menu_component:enable_crimenet()
 end
 
--- Lines 339-344
+-- Lines 341-346
 function LeakedRecordingMissionGui:show_mission_box()
 	if not self._mission_panel then
 		self:create_mission_box()
@@ -389,7 +393,7 @@ function LeakedRecordingMissionGui:show_mission_box()
 	self._mission_panel:show()
 end
 
--- Lines 346-462
+-- Lines 348-480
 function LeakedRecordingMissionGui:create_mission_box()
 	self._mission_panel = LeakedRecordingGui.create_window_panel(self._panel, {
 		w = 700,
@@ -511,6 +515,7 @@ function LeakedRecordingMissionGui:create_mission_box()
 	placer_y = placer_y + objective_text:h()
 	local start_button = self._mission_panel:panel({
 		name = "start_button",
+		w = 400,
 		x = right_x,
 		y = placer_y,
 		h = S_FONT_SIZE
@@ -518,6 +523,7 @@ function LeakedRecordingMissionGui:create_mission_box()
 	self.start_text = start_button:text({
 		name = "start_text",
 		text_id = "menu_sm_start_level",
+		valign = "grow",
 		font = S_FONT,
 		font_size = S_FONT_SIZE,
 		color = BUTTON_COLOR
@@ -525,8 +531,27 @@ function LeakedRecordingMissionGui:create_mission_box()
 
 	self.start_text:set_visible(managers.menu:is_pc_controller())
 
+	local job_data = tweak_data.narrative:job_data(self._mission.heist)
+	local job_dlc = job_data.dlc
+
 	if self._cleared then
 		self.start_text:set_text(managers.localization:text("menu_lr_gadget_play"))
+	elseif job_dlc and not managers.dlc:is_dlc_unlocked(job_dlc) and not Global.game_settings.single_player then
+		local dlc_locked_text = managers.localization:text("menu_sm_dlc_locked")
+		local dlc_locked_help = managers.localization:text("menu_sm_dlc_locked_help_text")
+
+		self.start_text:set_text(dlc_locked_text .. "\n\n" .. dlc_locked_help)
+		self.start_text:set_color(tweak_data.screen_colors.important_1)
+		self.start_text:set_selection(utf8.len(dlc_locked_text), utf8.len(self.start_text:text()))
+		self.start_text:set_selection_color(tweak_data.screen_colors.important_2)
+		self.start_text:set_wrap(true)
+		self.start_text:set_word_wrap(true)
+
+		local _, _, _, h = self.start_text:text_rect()
+
+		start_button:set_h(h)
+
+		self._dlc_locked = true
 	end
 
 	self._cog_is_rotating = false
@@ -597,7 +622,7 @@ function LeakedRecordingMissionGui:create_mission_box()
 	end
 end
 
--- Lines 464-476
+-- Lines 482-494
 function LeakedRecordingMissionGui:update_legend(legends)
 	self._buttons_info_panel:clear()
 
@@ -619,12 +644,12 @@ function LeakedRecordingMissionGui:update_legend(legends)
 	end
 end
 
--- Lines 478-480
+-- Lines 496-498
 function LeakedRecordingMissionGui:get_state()
 	return true
 end
 
--- Lines 482-494
+-- Lines 500-512
 function LeakedRecordingMissionGui:start_mission()
 	local job_data = tweak_data.narrative:job_data(self._mission.heist)
 	local data = {
@@ -641,7 +666,7 @@ function LeakedRecordingMissionGui:start_mission()
 	})
 end
 
--- Lines 496-511
+-- Lines 514-529
 function LeakedRecordingMissionGui:play_recording()
 	Telemetry:send_on_leakedrecording_played({
 		recording_id = self._mission.job_value
@@ -667,7 +692,7 @@ function LeakedRecordingMissionGui:play_recording()
 	end
 end
 
--- Lines 513-525
+-- Lines 531-543
 function LeakedRecordingMissionGui:stop_recording()
 	self._sound_source:stop()
 
@@ -688,7 +713,7 @@ function LeakedRecordingMissionGui:stop_recording()
 	end
 end
 
--- Lines 529-536
+-- Lines 547-554
 function LeakedRecordingMissionGui:update(t, dt)
 	if self._cog_is_rotating then
 		self._cog_rotation = self._cog_rotation - dt * 40
@@ -699,7 +724,7 @@ function LeakedRecordingMissionGui:update(t, dt)
 	end
 end
 
--- Lines 538-555
+-- Lines 556-573
 function LeakedRecordingMissionGui:mouse_pressed(button, x, y)
 	local start_button = self._mission_panel:child("start_button")
 
@@ -710,13 +735,13 @@ function LeakedRecordingMissionGui:mouse_pressed(button, x, y)
 			else
 				self:play_recording()
 			end
-		else
+		elseif not self._dlc_locked then
 			self:start_mission()
 		end
 	end
 end
 
--- Lines 557-584
+-- Lines 575-607
 function LeakedRecordingMissionGui:mouse_moved(button, x, y)
 	local back_button = self._panel:child("back_button")
 
@@ -727,18 +752,24 @@ function LeakedRecordingMissionGui:mouse_moved(button, x, y)
 			back_button:set_color(MOUSEOVER_COLOR)
 			managers.menu_component:post_event("highlight")
 		end
+
+		return true, "link"
 	elseif self._back_highlight then
 		self._back_highlight = false
 
 		back_button:set_color(BUTTON_COLOR)
 	end
 
-	local start_button = self._mission_panel:child("start_button")
+	if not self._dlc_locked then
+		local start_button = self._mission_panel:child("start_button")
 
-	if start_button:inside(x, y) then
-		start_button:child("start_text"):set_color(MOUSEOVER_COLOR)
-	else
-		start_button:child("start_text"):set_color(BUTTON_COLOR)
+		if start_button:inside(x, y) then
+			start_button:child("start_text"):set_color(MOUSEOVER_COLOR)
+
+			return true, "link"
+		else
+			start_button:child("start_text"):set_color(BUTTON_COLOR)
+		end
 	end
 
 	local reward_button = self._mission_panel:child("reward_button")
@@ -746,13 +777,15 @@ function LeakedRecordingMissionGui:mouse_moved(button, x, y)
 	if reward_button then
 		if reward_button:inside(x, y) then
 			reward_button:child("reward_text"):set_color(MOUSEOVER_COLOR)
+
+			return true, "link"
 		else
 			reward_button:child("reward_text"):set_color(BUTTON_COLOR)
 		end
 	end
 end
 
--- Lines 586-596
+-- Lines 609-619
 function LeakedRecordingMissionGui:confirm_pressed()
 	if self._cleared then
 		if self._cog_is_rotating then
@@ -760,12 +793,12 @@ function LeakedRecordingMissionGui:confirm_pressed()
 		else
 			self:play_recording()
 		end
-	else
+	elseif not self._dlc_locked then
 		self:start_mission()
 	end
 end
 
--- Lines 598-604
+-- Lines 621-627
 function LeakedRecordingMissionGui:sound_callback(instance, event_type, gadget_gui)
 	if event_type == "end_of_event" then
 		gadget_gui._cog_is_rotating = false

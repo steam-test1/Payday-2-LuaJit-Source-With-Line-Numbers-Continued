@@ -1,4 +1,4 @@
--- Lines 1-279
+-- Lines 1-301
 function WINDLCManager:init_entitlements()
 	Global.dlc_manager.all_dlc_data.pd2_clan.entitlement_id = "b00bcc69f3d84d4784974030e5ccb512"
 	Global.dlc_manager.all_dlc_data.pd2_clan.external = true
@@ -182,4 +182,21 @@ function WINDLCManager:init_entitlements()
 		entitlement_id = "7825a51f35c647a4be462ece610936cc",
 		external = true
 	}
+	Global.dlc_manager.all_dlc_data.dot_roclown_suit = {
+		no_install = true,
+		entitlement_id = "aab61c21e7084f6e803623aea9cec8b8",
+		external = true
+	}
+	Global.dlc_manager.all_dlc_data.dot_roclogrip_glv = {
+		no_install = true,
+		entitlement_id = "cdb007a464e24102be83567475ea486e",
+		external = true
+	}
+	Global.dlc_manager.all_dlc_data.dot_roclown_msk = {
+		no_install = true,
+		entitlement_id = "49f52f37c68942bab04f41173609e3df",
+		external = true
+	}
+	Global.dlc_manager.all_dlc_data.ztm.entitlement_id = "6dfa406f236f4bdd9ae9cd2b989b190c"
+	Global.dlc_manager.all_dlc_data.ztm.external = true
 end
