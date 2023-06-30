@@ -435,15 +435,13 @@ function ContourExt:is_flashing()
 	return false
 end
 
--- Lines 502-520
+-- Lines 502-518
 function ContourExt:remove(type, sync, is_element)
 	if not self._contour_list then
 		return
 	end
 
-	local contour_list = clone(self._contour_list)
-
-	for i, setup in ipairs(contour_list) do
+	for i, setup in ipairs(self._contour_list) do
 		if setup.type == type then
 			self:_remove(i, sync, is_element)
 
@@ -454,7 +452,7 @@ function ContourExt:remove(type, sync, is_element)
 	self:apply_to_linked("remove", type, false, false)
 end
 
--- Lines 522-536
+-- Lines 520-534
 function ContourExt:remove_by_id(id, ...)
 	if not self._contour_list then
 		return
@@ -469,7 +467,7 @@ function ContourExt:remove_by_id(id, ...)
 	end
 end
 
--- Lines 538-548
+-- Lines 536-546
 function ContourExt:has_id(id)
 	if self._contour_list then
 		for i, setup in ipairs(self._contour_list) do
@@ -482,13 +480,19 @@ function ContourExt:has_id(id)
 	return false
 end
 
--- Lines 564-567
-function ContourExt:_clear()
+-- Lines 563-572
+function ContourExt:clear_all()
+	if self._contour_list then
+		while self._contour_list and next(self._contour_list) do
+			self:remove(self._contour_list[#self._contour_list].type, false, false)
+		end
+	end
+
 	self._contour_list = nil
 	self._materials = nil
 end
 
--- Lines 569-670
+-- Lines 574-678
 function ContourExt:_remove(index, sync, is_element)
 	local setup = self._contour_list and self._contour_list[index]
 
@@ -530,8 +534,10 @@ function ContourExt:_remove(index, sync, is_element)
 		end
 
 		if not was_swap then
-			for _, material in ipairs(self._materials) do
-				material:set_variable(idstr_contour_opacity, 0)
+			for _, material in ipairs(self._materials or self._unit:get_objects_by_type(idstr_material)) do
+				if alive(material) then
+					material:set_variable(idstr_contour_opacity, 0)
+				end
 			end
 		end
 	end
@@ -541,7 +547,8 @@ function ContourExt:_remove(index, sync, is_element)
 	table.remove(self._contour_list, index)
 
 	if #self._contour_list == 0 then
-		self:_clear()
+		self._contour_list = nil
+		self._materials = nil
 	elseif index == 1 then
 		self:_apply_top_preset()
 	end
@@ -579,7 +586,7 @@ function ContourExt:_remove(index, sync, is_element)
 	end
 end
 
--- Lines 672-755
+-- Lines 680-763
 function ContourExt:update(unit, t, dt)
 	local index = 1
 	local setup, cam_pos, is_current = nil
@@ -661,7 +668,7 @@ function ContourExt:update(unit, t, dt)
 	end
 end
 
--- Lines 757-788
+-- Lines 765-796
 function ContourExt:_upd_opacity(opacity, is_retry, no_child_upd)
 	if opacity == self._last_opacity then
 		return
@@ -689,7 +696,7 @@ function ContourExt:_upd_opacity(opacity, is_retry, no_child_upd)
 	end
 end
 
--- Lines 790-822
+-- Lines 798-830
 function ContourExt:_upd_color(is_retry, no_child_upd)
 	local setup = self._contour_list and self._contour_list[1]
 
@@ -724,7 +731,7 @@ function ContourExt:_upd_color(is_retry, no_child_upd)
 	end
 end
 
--- Lines 824-856
+-- Lines 832-864
 function ContourExt:_apply_top_preset()
 	local setup = self._contour_list[1]
 	self._last_opacity = nil
@@ -756,7 +763,7 @@ function ContourExt:_apply_top_preset()
 	end
 end
 
--- Lines 858-888
+-- Lines 866-896
 function ContourExt:material_applied(material_was_swapped)
 	if not self._contour_list then
 		return
@@ -789,7 +796,7 @@ function ContourExt:material_applied(material_was_swapped)
 	end
 end
 
--- Lines 890-907
+-- Lines 898-915
 function ContourExt:_chk_update_state()
 	local needs_update = false
 
@@ -810,7 +817,7 @@ function ContourExt:_chk_update_state()
 	end
 end
 
--- Lines 909-936
+-- Lines 917-944
 function ContourExt:_chk_damage_bonuses()
 	local char_dmg_ext = self._unit:character_damage()
 
@@ -838,7 +845,7 @@ function ContourExt:_chk_damage_bonuses()
 	char_dmg_ext:on_marked_state(dmg_bonus, dmg_bonus_dist_idx)
 end
 
--- Lines 939-966
+-- Lines 947-974
 function ContourExt:_chk_mission_marked_events(added_setup)
 	local element = self._unit:unit_data() and self._unit:unit_data().mission_element
 
@@ -868,7 +875,7 @@ function ContourExt:_chk_mission_marked_events(added_setup)
 	end
 end
 
--- Lines 969-981
+-- Lines 977-989
 function ContourExt:update_materials()
 	if self._contour_list then
 		self._materials = nil
@@ -882,7 +889,7 @@ function ContourExt:update_materials()
 	end
 end
 
--- Lines 983-1003
+-- Lines 991-1011
 function ContourExt:save(data)
 	local my_save_data = {}
 
@@ -908,7 +915,7 @@ function ContourExt:save(data)
 	end
 end
 
--- Lines 1005-1019
+-- Lines 1013-1027
 function ContourExt:load(load_data)
 	local my_load_data = load_data.ContourExt
 

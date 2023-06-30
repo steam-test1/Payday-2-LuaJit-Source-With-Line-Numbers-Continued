@@ -3081,12 +3081,12 @@ function UnitNetworkHandler:sync_relock_assets(string_table, sender)
 end
 
 -- Lines 2976-2982
-function UnitNetworkHandler:sync_heist_time(time, sender)
+function UnitNetworkHandler:sync_heist_time(time, id, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) or not self._verify_sender(sender) then
 		return
 	end
 
-	managers.game_play_central:sync_heist_time(time)
+	managers.game_play_central:sync_heist_time(time, id)
 end
 
 -- Lines 2986-2992

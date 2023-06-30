@@ -1523,15 +1523,9 @@ function BaseNetworkSession:spawn_players(is_drop_in)
 	managers.groupai:state():fill_criminal_team_with_AI(is_drop_in)
 end
 
--- Lines 1527-1541
+-- Lines 1527-1535
 function BaseNetworkSession:_get_next_spawn_point_id()
 	local id = self._spawn_point_beanbag[self._next_i_spawn_point]
-
-	if not managers.network:spawn_point(id) and managers.network:has_spawn_points() then
-		self:_create_spawn_point_beanbag()
-
-		return self:_get_next_spawn_point_id()
-	end
 
 	if self._next_i_spawn_point == #self._spawn_point_beanbag then
 		self._next_i_spawn_point = 1
@@ -1542,7 +1536,7 @@ function BaseNetworkSession:_get_next_spawn_point_id()
 	return id
 end
 
--- Lines 1543-1558
+-- Lines 1537-1552
 function BaseNetworkSession:_create_spawn_point_beanbag()
 	local spawn_points = managers.network._spawn_points
 	local spawn_point_ids = {}
@@ -1566,14 +1560,14 @@ function BaseNetworkSession:_create_spawn_point_beanbag()
 	self._next_i_spawn_point = 1
 end
 
--- Lines 1562-1565
+-- Lines 1556-1559
 function BaseNetworkSession:get_next_spawn_point()
 	local id = self:_get_next_spawn_point_id()
 
 	return managers.network:spawn_point(id)
 end
 
--- Lines 1569-1590
+-- Lines 1563-1584
 function BaseNetworkSession:on_peer_sync_complete(peer, peer_id)
 	if not self._local_peer then
 		return
@@ -1597,7 +1591,7 @@ function BaseNetworkSession:on_peer_sync_complete(peer, peer_id)
 	managers.network:dispatch_event("session_peer_sync_complete", peer)
 end
 
--- Lines 1594-1610
+-- Lines 1588-1604
 function BaseNetworkSession:on_streaming_progress_received(peer, progress)
 	if not peer:synched() then
 		return
@@ -1618,7 +1612,7 @@ function BaseNetworkSession:on_streaming_progress_received(peer, progress)
 	end
 end
 
--- Lines 1614-1629
+-- Lines 1608-1623
 function BaseNetworkSession:on_dropin_progress_received(dropin_peer_id, progress_percentage)
 	local peer = self:peer(dropin_peer_id)
 
@@ -1639,7 +1633,7 @@ function BaseNetworkSession:on_dropin_progress_received(dropin_peer_id, progress
 	end
 end
 
--- Lines 1634-1646
+-- Lines 1628-1640
 function BaseNetworkSession:on_set_member_ready(peer_id, ready, state_changed, from_network)
 	print("[BaseNetworkSession:on_set_member_ready]", peer_id, ready, state_changed)
 
@@ -1655,7 +1649,7 @@ function BaseNetworkSession:on_set_member_ready(peer_id, ready, state_changed, f
 	end
 end
 
--- Lines 1651-1676
+-- Lines 1645-1670
 function BaseNetworkSession:check_start_game_intro(skip_streamer_check)
 	if not self:chk_all_handshakes_complete() then
 		return
@@ -1684,7 +1678,7 @@ function BaseNetworkSession:check_start_game_intro(skip_streamer_check)
 	end
 end
 
--- Lines 1680-1693
+-- Lines 1674-1687
 function BaseNetworkSession:_update_peer_ready_gui(peer)
 	if not peer:synched() or not peer:is_streaming_complete() then
 		return
@@ -1701,7 +1695,7 @@ function BaseNetworkSession:_update_peer_ready_gui(peer)
 	end
 end
 
--- Lines 1697-1746
+-- Lines 1691-1740
 function BaseNetworkSession:on_drop_in_pause_request_received(peer_id, nickname, state)
 	print("[BaseNetworkSession:on_drop_in_pause_request_received]", peer_id, nickname, state)
 
@@ -1754,7 +1748,7 @@ function BaseNetworkSession:on_drop_in_pause_request_received(peer_id, nickname,
 	end
 end
 
--- Lines 1759-1851
+-- Lines 1753-1845
 function BaseNetworkSession:on_statistics_recieved(peer_id, peer_kills, peer_specials_kills, peer_head_shots, accuracy, downs)
 	local peer = self:peer(peer_id)
 

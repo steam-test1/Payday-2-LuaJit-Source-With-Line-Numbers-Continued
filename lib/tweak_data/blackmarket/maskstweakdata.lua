@@ -2,7 +2,7 @@ local is_nextgen_console = SystemInfo:platform() == Idstring("PS4") or SystemInf
 local allow_halloween_lootdrop = is_nextgen_console
 allow_halloween_lootdrop = true
 
--- Lines 10-10490
+-- Lines 10-10492
 function BlackMarketTweakData:_init_masks(tweak_data)
 	self.masks = {
 		character_locked = {}
@@ -9605,8 +9605,9 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 		type = "helmet",
 		sort_number = 0,
 		preview_oobb_object = "g_mask",
-		dlc = "deep",
-		texture_bundle_folder = "deep"
+		texture_bundle_folder = "deep",
+		dlc = "dlc_achievement",
+		global_value = "deep"
 	}
 	self.masks.bossflagmask = {
 		unit = "units/pd2_dlc_deep/characters/msk_bossflagmask/msk_bossflagmask",
@@ -9616,8 +9617,9 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 		type = "cowboyhat",
 		sort_number = 0,
 		preview_oobb_object = "g_mask",
-		dlc = "deep",
-		texture_bundle_folder = "deep"
+		texture_bundle_folder = "deep",
+		dlc = "dlc_achievement",
+		global_value = "deep"
 	}
 	self.masks.roclown = {
 		unit = "units/pd2_dlc_dot/masks/msk_roclown/msk_roclown",

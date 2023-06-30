@@ -16,13 +16,23 @@ function ElementVehicleBoarding:get_vehicle()
 	end
 end
 
--- Lines 17-37
-function ElementVehicleBoarding:get_teleport_element_by_peer_id(peer_id)
-	local point_id = self._values.teleport_points[peer_id]
+-- Lines 17-46
+function ElementVehicleBoarding:get_teleport_element_by_seat(seat)
+	local point_index = nil
+
+	for seat_index, seat_name in ipairs(self._values.seats_order) do
+		if seat == seat_name then
+			point_index = seat_index
+
+			break
+		end
+	end
+
+	local point_id = self._values.teleport_points and self._values.teleport_points[point_index]
 
 	if not point_id then
 		if self._values.teleport_points and next(self._values.teleport_points) then
-			Application:error("[ElementVehicleBoarding:get_teleport_element_by_peer_id] No teleport point found for peer " .. tostring(peer_id) .. " in element '" .. tostring(self._editor_name) .. "'. Printing teleport_points table: ", inspect(self._values.teleport_points))
+			Application:error("[ElementVehicleBoarding:get_teleport_element_by_seat_index] No teleport point found for seat " .. tostring(seat) .. " in element '" .. tostring(self._editor_name) .. "'. Printing teleport_points table: ", inspect(self._values.teleport_points))
 		end
 
 		return
@@ -30,8 +40,8 @@ function ElementVehicleBoarding:get_teleport_element_by_peer_id(peer_id)
 
 	local teleport_element = self:get_mission_element(point_id)
 
-	if not point_id then
-		Application:error("[ElementVehicleBoarding:get_teleport_element_by_peer_id] No teleport element found with ID " .. tostring(point_id) .. " in element '" .. tostring(self._editor_name) .. "'.")
+	if not teleport_element then
+		Application:error("[ElementVehicleBoarding:get_teleport_element_by_seat_index] No teleport element found with ID " .. tostring(point_id) .. " in element '" .. tostring(self._editor_name) .. "'.")
 
 		return
 	end
@@ -39,12 +49,12 @@ function ElementVehicleBoarding:get_teleport_element_by_peer_id(peer_id)
 	return teleport_element
 end
 
--- Lines 39-41
+-- Lines 48-50
 function ElementVehicleBoarding:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines 43-57
+-- Lines 52-66
 function ElementVehicleBoarding:on_executed(...)
 	if not self._values.enabled then
 		return
@@ -61,7 +71,7 @@ function ElementVehicleBoarding:on_executed(...)
 	ElementVehicleBoarding.super.on_executed(self, ...)
 end
 
--- Lines 59-179
+-- Lines 68-188
 function ElementVehicleBoarding:operation_embark()
 	if not Network:is_server() then
 		return
@@ -97,7 +107,7 @@ function ElementVehicleBoarding:operation_embark()
 		return a.driving and not b.driving
 	end)
 
-	-- Lines 106-108
+	-- Lines 115-117
 	local function player_cmp(a, b)
 		return a.peer_id < b.peer_id
 	end
@@ -162,7 +172,7 @@ function ElementVehicleBoarding:operation_embark()
 	end
 end
 
--- Lines 181-216
+-- Lines 190-226
 function ElementVehicleBoarding:operation_disembark()
 	local player = managers.player:player_unit()
 	local movement_ext = player and player:movement()
@@ -172,11 +182,13 @@ function ElementVehicleBoarding:operation_disembark()
 	end
 
 	local should_leave = false
+	local seat = nil
 
 	if not self._values.vehicle then
 		should_leave = true
 	else
 		local cur_vehicle_data = managers.player:get_vehicle()
+		seat = cur_vehicle_data and cur_vehicle_data.seat
 
 		if cur_vehicle_data and cur_vehicle_data.vehicle_unit == self:get_vehicle() then
 			should_leave = true
@@ -190,8 +202,7 @@ function ElementVehicleBoarding:operation_disembark()
 	end
 
 	local exit_data = nil
-	local local_peer_id = managers.network:session() and managers.network:session():local_peer():id()
-	local teleport_point_element = local_peer_id and self:get_teleport_element_by_peer_id(local_peer_id)
+	local teleport_point_element = seat and self:get_teleport_element_by_seat(seat)
 
 	if teleport_point_element then
 		exit_data = teleport_point_element:values()
@@ -200,12 +211,12 @@ function ElementVehicleBoarding:operation_disembark()
 	movement_ext:current_state():cb_leave(exit_data)
 end
 
--- Lines 218-220
+-- Lines 228-230
 function ElementVehicleBoarding:save(data)
 	data.enabled = self._values.enabled
 end
 
--- Lines 222-224
+-- Lines 232-234
 function ElementVehicleBoarding:load(data)
 	self:set_enabled(data.enabled)
 end

@@ -32,33 +32,33 @@ function IngameParachuting:at_enter()
 	managers.hud:show(PlayerBase.PLAYER_INFO_HUD_FULLSCREEN)
 end
 
--- Lines 32-44
+-- Lines 32-43
 function IngameParachuting:at_exit()
 	local player = managers.player:player_unit()
-
-	if player then
-		player:base():set_enabled(false)
-	end
 
 	managers.hud:hide(PlayerBase.PLAYER_INFO_HUD)
 	managers.hud:hide(PlayerBase.PLAYER_INFO_HUD_FULLSCREEN)
 
-	local unit = safe_spawn_unit(Idstring("units/pd2_dlc_jerry/props/jry_equipment_parachute/jry_equipment_parachute_ragdoll"), player:position(), player:rotation())
+	if player then
+		player:base():set_enabled(false)
 
-	unit:damage():run_sequence_simple("make_dynamic")
+		local unit = safe_spawn_unit(Idstring("units/pd2_dlc_jerry/props/jry_equipment_parachute/jry_equipment_parachute_ragdoll"), player:position(), player:rotation())
+
+		unit:damage():run_sequence_simple("make_dynamic")
+	end
 end
 
--- Lines 46-48
+-- Lines 45-47
 function IngameParachuting:on_server_left()
 	IngameCleanState.on_server_left(self)
 end
 
--- Lines 50-52
+-- Lines 49-51
 function IngameParachuting:on_kicked()
 	IngameCleanState.on_kicked(self)
 end
 
--- Lines 54-56
+-- Lines 53-55
 function IngameParachuting:on_disconnected()
 	IngameCleanState.on_disconnected(self)
 end

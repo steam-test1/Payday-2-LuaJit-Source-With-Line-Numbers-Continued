@@ -205,30 +205,43 @@ function ManageSpawnedUnits:local_push_child_unit(unit_id, mass, pow, vec3_a, ve
 	end
 end
 
--- Lines 266-275
+-- Lines 266-281
 function ManageSpawnedUnits:remove_unit(unit_id)
 	local entry = self._spawned_units[unit_id]
 
-	if (Network:is_server() or self.allow_client_spawn) and entry and alive(entry.unit) then
-		entry.unit:set_slot(0)
+	if entry and alive(entry.unit) then
+		entry.unit:unlink()
 		entry.unit:set_visible(false)
+		entry.unit:set_enabled(false)
+
+		if Network:is_server() or self.allow_client_spawn then
+			entry.unit:set_slot(0)
+		end
 	end
 
 	self._spawned_units[unit_id] = nil
 end
 
--- Lines 283-291
+-- Lines 289-306
 function ManageSpawnedUnits:destroy(unit)
+	local allowed_to_delete = Network:is_server() or self.allow_client_spawn
+
 	for i, entry in pairs(self._spawned_units) do
 		if alive(entry.unit) then
-			entry.unit:set_slot(0)
+			entry.unit:unlink()
+			entry.unit:set_visible(false)
+			entry.unit:set_enabled(false)
+
+			if allowed_to_delete then
+				entry.unit:set_slot(0)
+			end
 		end
 	end
 
 	self._spawned_units = {}
 end
 
--- Lines 295-309
+-- Lines 310-324
 function ManageSpawnedUnits:save(data)
 	if not alive(self._unit) or self._unit:id() == -1 or self.local_only then
 		data.managed_spawned_units = nil
@@ -247,7 +260,7 @@ function ManageSpawnedUnits:save(data)
 	end
 end
 
--- Lines 313-330
+-- Lines 328-345
 function ManageSpawnedUnits:load(data)
 	if not data.managed_spawned_units then
 		return
@@ -267,7 +280,7 @@ function ManageSpawnedUnits:load(data)
 	end
 end
 
--- Lines 334-357
+-- Lines 349-372
 function ManageSpawnedUnits:_spawn_run_sequence(unit_id, sequence_name)
 	local entry = self._spawned_units[unit_id]
 
@@ -299,7 +312,7 @@ end
 local empty_vec = Vector3()
 local empty_rot = Rotation()
 
--- Lines 363-381
+-- Lines 378-396
 function ManageSpawnedUnits:_link_joints(unit_id, joint_table)
 	local ids, parent_object, child_object = nil
 	local parent_unit = self._unit
@@ -320,7 +333,7 @@ function ManageSpawnedUnits:_link_joints(unit_id, joint_table)
 	parent_unit:set_moving()
 end
 
--- Lines 384-393
+-- Lines 399-408
 function ManageSpawnedUnits:get_unit(unit_id)
 	local entry = self._spawned_units[unit_id]
 

@@ -4708,7 +4708,7 @@ function CopDamage:save(data)
 	end
 end
 
--- Lines 4897-4979
+-- Lines 4897-4991
 function CopDamage:load(data)
 	if not data.char_dmg then
 		return
@@ -4724,7 +4724,17 @@ function CopDamage:load(data)
 	end
 
 	if data.char_dmg.invulnerable then
+		local old_state = self._invulnerable and true or false
 		self._invulnerable = data.char_dmg.invulnerable
+		local new_state = self._invulnerable and true or false
+
+		if old_state ~= new_state and self._invul_impact_override then
+			if new_state then
+				managers.game_play_central:add_impact_override(self._unit, self._invul_impact_override)
+			else
+				managers.game_play_central:remove_impact_override(self._unit)
+			end
+		end
 	end
 
 	if data.char_dmg.tmp_invulnerable_t then
@@ -4805,31 +4815,31 @@ function CopDamage:load(data)
 	end
 end
 
--- Lines 4983-4986
+-- Lines 4995-4998
 function CopDamage:_apply_damage_to_health(damage)
 	self._health = self._health - damage
 	self._health_ratio = self._health / self._HEALTH_INIT
 end
 
--- Lines 4990-4993
+-- Lines 5002-5005
 function CopDamage:host_set_final_lower_health_percentage_limit()
 	self:_set_lower_health_percentage_limit(self._char_tweak.FINAL_LOWER_HEALTH_PERCENTAGE_LIMIT)
 	managers.network:session():send_to_peers_synched("sync_unit_event_id_16", self._unit, "character_damage", CopDamage.EVENT_IDS.FINAL_LOWER_HEALTH_PERCENTAGE_LIMIT)
 end
 
--- Lines 4995-4999
+-- Lines 5007-5011
 function CopDamage:sync_net_event(event_id)
 	if event_id == CopDamage.EVENT_IDS.FINAL_LOWER_HEALTH_PERCENTAGE_LIMIT then
 		self:_set_lower_health_percentage_limit(self._char_tweak.FINAL_LOWER_HEALTH_PERCENTAGE_LIMIT)
 	end
 end
 
--- Lines 5001-5003
+-- Lines 5013-5015
 function CopDamage:_set_lower_health_percentage_limit(lower_health_percentage_limit)
 	self._lower_health_percentage_limit = lower_health_percentage_limit
 end
 
--- Lines 5007-5021
+-- Lines 5019-5033
 function CopDamage:_apply_min_health_limit(damage, damage_percent)
 	local lower_health_percentage_limit = self._lower_health_percentage_limit
 
@@ -4847,12 +4857,12 @@ function CopDamage:_apply_min_health_limit(damage, damage_percent)
 	return damage, damage_percent
 end
 
--- Lines 5023-5025
+-- Lines 5035-5037
 function CopDamage:melee_hit_sfx()
 	return "hit_body"
 end
 
--- Lines 5029-5053
+-- Lines 5041-5065
 function CopDamage:_apply_damage_reduction(damage)
 	local damage_reduction = self._unit:movement():team().damage_reduction or 0
 
@@ -4867,7 +4877,7 @@ function CopDamage:_apply_damage_reduction(damage)
 	return damage
 end
 
--- Lines 5057-5075
+-- Lines 5069-5087
 function CopDamage:destroy(...)
 	self:_remove_debug_gui()
 
@@ -4888,7 +4898,7 @@ function CopDamage:destroy(...)
 	end
 end
 
--- Lines 5079-5081
+-- Lines 5091-5093
 function CopDamage:can_kill()
 	return not self._char_tweak.permanently_invulnerable and not self.immortal or not self._invulnerable
 end
