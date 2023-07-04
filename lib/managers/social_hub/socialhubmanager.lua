@@ -270,8 +270,8 @@ function SocialHubManager:get_user(id)
 end
 
 -- Lines 268-275
-function SocialHubManager:is_user_platform_friend(id)
-	if SystemInfo:distribution() == Idstring("STEAM") then
+function SocialHubManager:is_user_platform_friend(id, check_account)
+	if check_account and SystemInfo:distribution() == Idstring("STEAM") then
 		local user = self:get_user(id)
 
 		if user then
@@ -343,7 +343,7 @@ function SocialHubManager:get_actions_for_user(callback_object, callback_functio
 	local user_data = self:get_user(user_id)
 	local is_blocked = self:is_user_blocked(user_id)
 	local is_friend = self:is_user_friend(user_id)
-	local is_platform_friend = self:is_user_platform_friend(user_id)
+	local is_platform_friend = self:is_user_platform_friend(user_id, true)
 	local actions = {}
 
 	if managers.network.matchmake.lobby_handler and not is_blocked then
@@ -402,12 +402,19 @@ function SocialHubManager:remove_pending_lobby(lobby_id)
 	self._global.pending_lobbies[lobby_id] = nil
 end
 
--- Lines 388-390
+-- Lines 388-392
+function SocialHubManager:update_pending_lobby(lobby_id, lobby_parameters)
+	if self._global.pending_lobbies[lobby_id] then
+		self._global.pending_lobbies[lobby_id] = lobby_parameters
+	end
+end
+
+-- Lines 394-396
 function SocialHubManager:get_pending_lobbies()
 	return self._global.pending_lobbies
 end
 
--- Lines 392-412
+-- Lines 398-418
 function SocialHubManager:invite_user_to_lobby(user_id)
 	if not managers.network.matchmake.lobby_handler then
 		return
@@ -438,7 +445,7 @@ function SocialHubManager:invite_user_to_lobby(user_id)
 	end
 end
 
--- Lines 414-421
+-- Lines 420-427
 function SocialHubManager:is_user_invited(user_id)
 	for index, item in ipairs(self._invited_users) do
 		if item.user_id == user_id then

@@ -262,7 +262,7 @@ function SocialHubLobbyItem:init(parent, data)
 	self:set_item_selected(2)
 end
 
--- Lines 218-329
+-- Lines 218-438
 function SocialHubLobbyItem:setup_panel()
 	BoxGuiObject:new(self._select_panel, {
 		layer = 100,
@@ -281,11 +281,48 @@ function SocialHubLobbyItem:setup_panel()
 	local left_x_placer = 20
 	local top_y_placer = left_panel:h() / 4
 	local bottom_y_placer = left_panel:h() / 4 * 3
-	local heist_mode_icon = left_panel:bitmap({
-		layer = 100,
+	local color = Color.white
+	local friend_color = tweak_data.screen_colors.friend_color
+	local regular_color = tweak_data.screen_colors.regular_color
+	local pro_color = tweak_data.screen_colors.pro_color
+	local crime_spree_level = self.data.CRIME_SPREE and tonumber(self.data.CRIME_SPREE) or 0
+	local lobby_state = tonumber(self.data.STATE)
+	local is_friend = managers.socialhub:is_user_friend(self.data.OWNER_ID) or managers.socialhub:is_user_platform_friend(self.data.OWNER_ID, true)
+	local is_crime_spree = crime_spree_level >= 0
+	local is_skirmish = tonumber(self.data.SKIRMISH) > 0
+	local is_mutator = tonumber(self.data.MUTATORS) > 0
+	local lobby_color = color
+
+	if is_crime_spree then
+		lobby_color = tweak_data.screen_colors.crime_spree_risk
+	elseif is_skirmish then
+		lobby_color = tweak_data.screen_colors.skirmish_color
+	elseif is_mutator then
+		-- Lines 249-251
+		local function func(key)
+			return self.data[utf8.to_upper(key)]
+		end
+
+		local mutators_data = managers.mutators:_get_mutators_data(func)
+		local category = mutators_data and managers.mutators:get_mutator_from_id(next(mutators_data)):main_category() or "mutator"
+		lobby_color = managers.mutators:get_category_color(category)
+	end
+
+	local name_color = is_friend and friend_color or regular_color
+	local blend_mode = "normal"
+	local heist_mode_icon = left_panel.bitmap
+	slot21 = "guis/textures/pd2/cn_playstyle_stealth"
+
+	if "guis/textures/pd2/cn_playstyle_stealth" then
+		slot21 = "guis/textures/pd2/cn_playstyle_loud"
+	end
+
+	local heist_mode_icon = slot18(left_panel, {
 		visible = false,
-		color = Color.white,
-		texture = "guis/textures/pd2/cn_playstyle_stealth" or "guis/textures/pd2/cn_playstyle_loud"
+		layer = 100,
+		color = lobby_color,
+		texture = "guis/textures/pd2/cn_playstyle_loud",
+		blend_mode = blend_mode
 	})
 
 	heist_mode_icon:set_center_x(left_x_placer)
@@ -294,7 +331,7 @@ function SocialHubLobbyItem:setup_panel()
 	local lobby_marker = left_panel:bitmap({
 		texture = "guis/textures/pd2/crimenet_marker_join",
 		layer = 100,
-		color = Color.white,
+		color = lobby_color,
 		texture_rect = {
 			0,
 			0,
@@ -311,57 +348,136 @@ function SocialHubLobbyItem:setup_panel()
 			texture = "guis/textures/pd2/crimenet_marker_peerflag",
 			visible = true,
 			layer = 100,
-			color = Color.white,
+			color = lobby_color,
 			x = lobby_marker:x() + 3 + (i - 1) * 6,
-			y = lobby_marker:y() + 8
+			y = lobby_marker:y() + 8,
+			blend_mode = blend_mode
 		})
 	end
 
 	left_x_placer = lobby_marker:right() + 5
 	self.data.JOB_ID = tonumber(self.data.JOB_ID)
-	local job_name = tweak_data.narrative:get_job_name_from_index(self.data.JOB_ID)
-	local job_data = tweak_data.narrative:job_data(job_name)
-	local heist_name = left_panel:text({
-		layer = 100,
-		font = tweak_data.menu.pd2_medium_font,
-		font_size = tweak_data.menu.pd2_medium_font_size,
-		text = self.data.JOB_ID and job_data and managers.localization:text(job_data.name_id) or "UNKNOWN",
-		x = left_x_placer
-	})
+	local job_name = self.data.JOB_ID and tweak_data.narrative:get_job_name_from_index(self.data.JOB_ID)
+	local job_data = job_name and tweak_data.narrative:job_data(job_name)
+	local heist_text = false
 
-	ExtendedPanel.make_fine_text(heist_name)
-	heist_name:set_center_y(bottom_y_placer)
+	if job_data then
+		heist_text = managers.localization:text(job_data.name_id)
+	end
+
+	local lobby_text = false
+
+	if lobby_state then
+		lobby_text = managers.localization:to_upper_text("menu_lobby_server_state_" .. tweak_data:index_to_server_state(lobby_state))
+	end
+
+	if is_crime_spree then
+		if tweak_data:server_state_to_index("in_lobby") < lobby_state then
+			local mission_data = managers.crime_spree:get_mission(self.data.CRIME_SPREE_MISSION)
+
+			if mission_data then
+				local tweak = tweak_data.levels[mission_data.level.level_id]
+				heist_text = managers.localization:text(tweak and tweak.name_id or "No level")
+			else
+				heist_text = false
+			end
+		end
+	elseif is_skirmish and lobby_state == tweak_data:server_state_to_index("in_game") then
+		lobby_text = managers.localization:to_upper_text("menu_skirmish_wave_number", {
+			wave = tonumber(self.data.SKIRMISH_WAVE)
+		})
+	end
+
+	if job_name and managers.job:is_job_ghostable(job_name) then
+		-- Nothing
+	end
 
 	local player_name = left_panel:text({
 		layer = 100,
+		color = name_color,
 		font = tweak_data.menu.pd2_medium_font,
 		font_size = tweak_data.menu.pd2_medium_font_size,
 		text = self.data.OWNER_NAME or "",
-		x = left_x_placer
+		x = left_x_placer,
+		blend_mode = blend_mode
 	})
 
 	ExtendedPanel.make_fine_text(player_name)
 	player_name:set_center_y(top_y_placer)
 
-	left_x_placer = heist_name:right() + 5
+	left_x_placer = lobby_marker:right() + 5
 
-	for i = 1, self.data.DIFFICULTY and self.data.DIFFICULTY - 2 or 0 do
-		local index = left_panel
-		local skull_icon = left_panel.bitmap
-		local item = {
-			texture = "guis/textures/pd2/cn_miniskull",
-			layer = 100
-		}
+	if heist_text then
+		local heist_name = left_panel:text({
+			layer = 100,
+			color = lobby_color,
+			font = tweak_data.menu.pd2_medium_font,
+			font_size = tweak_data.menu.pd2_medium_font_size,
+			text = utf8.to_upper(heist_text),
+			x = left_x_placer,
+			blend_mode = blend_mode
+		})
 
-		if true or not Color.black then
-			slot18 = tweak_data.screen_colors.risk
+		ExtendedPanel.make_fine_text(heist_name)
+		heist_name:set_center_y(bottom_y_placer)
+
+		left_x_placer = heist_name:right() + 8
+	end
+
+	if lobby_text then
+		local lobby_name = left_panel:text({
+			layer = 100,
+			color = lobby_color,
+			font = tweak_data.menu.pd2_medium_font,
+			font_size = tweak_data.menu.pd2_medium_font_size,
+			text = utf8.to_upper(lobby_text or ""),
+			x = left_x_placer,
+			blend_mode = blend_mode
+		})
+
+		ExtendedPanel.make_fine_text(lobby_name)
+		lobby_name:set_center_y(bottom_y_placer)
+
+		left_x_placer = lobby_name:right() + 8
+	end
+
+	if is_crime_spree then
+		local crime_spree_text = left_panel:text({
+			name = "spree_level",
+			layer = 100,
+			text = managers.localization:to_upper_text("menu_cs_level", {
+				level = managers.experience:cash_string(crime_spree_level, "")
+			}),
+			x = left_x_placer + 3,
+			font = tweak_data.menu.pd2_small_font,
+			font_size = tweak_data.menu.pd2_small_font_size,
+			color = tweak_data.screen_colors.crime_spree_risk,
+			blend_mode = blend_mode
+		})
+
+		ExtendedPanel.make_fine_text(crime_spree_text)
+		crime_spree_text:set_center_y(bottom_y_placer)
+	elseif is_skirmish then
+		-- Nothing
+	elseif self.data.JOB_ID and self.data.JOB_ID > 0 then
+		local start_difficulty = 1
+		local num_difficulties = Global.SKIP_OVERKILL_290 and 5 or 6
+		local difficulty_stars = self.data.DIFFICULTY and self.data.DIFFICULTY - 2 or 0
+
+		for i = start_difficulty, num_difficulties do
+			local skull_icon = left_panel:bitmap({
+				texture = "guis/textures/pd2/cn_miniskull",
+				layer = 100,
+				color = difficulty_stars < i and Color.black or tweak_data.screen_colors.risk,
+				x = left_x_placer + 3,
+				alpha = difficulty_stars < i and 0.5 or 1,
+				blend_mode = difficulty_stars < i and "normal" or "add"
+			})
+
+			skull_icon:set_center_y(bottom_y_placer)
+
+			left_x_placer = left_x_placer + 11
 		end
-
-		item.color = slot18
-		item.x = left_x_placer + 3 + (i - 1) * 11
-		local skull_icon = slot15(index, item)
-
-		skull_icon:set_center_y(bottom_y_placer)
 	end
 
 	local right_panel = self._content_panel:panel({
@@ -373,7 +489,8 @@ function SocialHubLobbyItem:setup_panel()
 		visible = false,
 		layer = 100,
 		font = tweak_data.menu.pd2_medium_font,
-		font_size = tweak_data.menu.pd2_medium_font_size
+		font_size = tweak_data.menu.pd2_medium_font_size,
+		blend_mode = blend_mode
 	})
 
 	ExtendedPanel.make_fine_text(self._lobby_setting_text)
@@ -420,13 +537,13 @@ function SocialHubLobbyItem:setup_panel()
 	end
 end
 
--- Lines 331-337
+-- Lines 440-446
 function SocialHubLobbyItem:_selected_changed(state)
 	SocialHubLobbyItem.super._selected_changed(self, state)
 	self:set_item_selected(1)
 end
 
--- Lines 339-354
+-- Lines 448-463
 function SocialHubLobbyItem:set_item_selected(selected_index)
 	if self._selected_index == selected_index then
 		return
@@ -445,7 +562,7 @@ function SocialHubLobbyItem:set_item_selected(selected_index)
 	end
 end
 
--- Lines 356-363
+-- Lines 465-472
 function SocialHubLobbyItem:mouse_moved(button, x, y)
 	for index, item in ipairs(self._buttons) do
 		if alive(item) and item:inside(x, y) then
@@ -456,7 +573,7 @@ function SocialHubLobbyItem:mouse_moved(button, x, y)
 	end
 end
 
--- Lines 365-371
+-- Lines 474-480
 function SocialHubLobbyItem:mouse_pressed(button, x, y)
 	for index, item in ipairs(self._buttons) do
 		if alive(item) and item:inside(x, y) then
@@ -465,24 +582,24 @@ function SocialHubLobbyItem:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines 373-375
+-- Lines 482-484
 function SocialHubLobbyItem:move_left()
 	self:move_button_selection(1)
 end
 
--- Lines 377-379
+-- Lines 486-488
 function SocialHubLobbyItem:move_right()
 	self:move_button_selection(-1)
 end
 
--- Lines 381-385
+-- Lines 490-494
 function SocialHubLobbyItem:confirm_pressed()
 	if #self._buttons > 0 then
 		self.data.buttons[self._selected_index].press_callback(self.data.LOBBYID)
 	end
 end
 
--- Lines 387-393
+-- Lines 496-502
 function SocialHubLobbyItem:move_button_selection(move)
 	if #self._buttons > 0 then
 		local new_index = self._selected_index + move
@@ -494,7 +611,7 @@ end
 
 SocialHubUserCategoryHeader = SocialHubUserCategoryHeader or class(ListItem)
 
--- Lines 398-418
+-- Lines 507-527
 function SocialHubUserCategoryHeader:init(parent, data)
 	SocialHubUserCategoryHeader.super.init(self, parent, {
 		input = false,
@@ -534,34 +651,34 @@ function SocialHubUserCategoryHeader:init(parent, data)
 	icon:set_right(self._content_panel:right() - 5)
 end
 
--- Lines 420-424
+-- Lines 529-533
 function SocialHubUserCategoryHeader:_selected_changed(state)
 	SocialHubUserCategoryHeader.super._selected_changed(self, state)
 	self._bg:set_alpha(state and 0.4 or 0.1)
 end
 
--- Lines 426-430
+-- Lines 535-539
 function SocialHubUserCategoryHeader:mouse_moved(button, x, y)
 	if self._content_panel:inside(x, y) then
 		return true, "link"
 	end
 end
 
--- Lines 432-436
+-- Lines 541-545
 function SocialHubUserCategoryHeader:mouse_pressed(button, x, y)
 	if self._content_panel:inside(x, y) then
 		self.data.press_callback()
 	end
 end
 
--- Lines 438-440
+-- Lines 547-549
 function SocialHubUserCategoryHeader:confirm_pressed()
 	self.data.press_callback()
 end
 
 SocialHubUserSeparator = SocialHubUserSeparator or class(ListItem)
 
--- Lines 445-450
+-- Lines 554-559
 function SocialHubUserSeparator:init(parent, data)
 	SocialHubUserSeparator.super.init(self, parent, {
 		h = 2,
@@ -577,19 +694,19 @@ function SocialHubUserSeparator:init(parent, data)
 	})
 end
 
--- Lines 452-454
+-- Lines 561-563
 function SocialHubUserSeparator:skip_selection()
 	return true
 end
 
--- Lines 456-458
+-- Lines 565-567
 function SocialHubUserSeparator:get_status_prio()
 	return 2.5
 end
 
 SocialHubTextHeader = SocialHubTextHeader or class(ListItem)
 
--- Lines 463-474
+-- Lines 572-583
 function SocialHubTextHeader:init(parent, data)
 	SocialHubTextHeader.super.init(self, parent, {
 		input = false,
@@ -611,14 +728,14 @@ function SocialHubTextHeader:init(parent, data)
 	text:set_center_x(self._content_panel:center_x())
 end
 
--- Lines 476-478
+-- Lines 585-587
 function SocialHubTextHeader:skip_selection()
 	return true
 end
 
 SocialHubUserSearchBox = SocialHubUserSearchBox or class(ListItem)
 
--- Lines 483-508
+-- Lines 592-617
 function SocialHubUserSearchBox:init(parent_panel, data)
 	self._searchbox = SearchBoxGuiObject:new(parent_panel, data.ws)
 
@@ -627,7 +744,7 @@ function SocialHubUserSearchBox:init(parent_panel, data)
 	self._searchbox.panel:set_center_x(parent_panel:center_x())
 end
 
--- Lines 510-512
+-- Lines 619-621
 function SocialHubUserSearchBox:search_box()
 	return self._searchbox
 end

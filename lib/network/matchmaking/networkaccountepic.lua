@@ -1,6 +1,13 @@
 require("lib/network/matchmaking/NetworkAccount")
 
 NetworkAccountEPIC = NetworkAccountEPIC or class(NetworkAccount)
+NetworkAccountEPIC.static_lifetime_stat = {
+	pda_stat_b = 1,
+	pda_stat_a = 1,
+	gsu = 4,
+	pda_stat_d = 1,
+	pda_stat_c = 1
+}
 NetworkAccountEPIC.lb_diffs = {
 	hard = "Hard",
 	overkill = "Very Hard",
@@ -23,7 +30,7 @@ NetworkAccountEPIC.lb_levels = {
 	heat_street = "Heat Street"
 }
 
--- Lines 30-53
+-- Lines 41-64
 function NetworkAccountEPIC:init()
 	NetworkAccount.init(self)
 
@@ -36,41 +43,41 @@ function NetworkAccountEPIC:init()
 	self:inventory_load()
 end
 
--- Lines 55-58
+-- Lines 66-69
 function NetworkAccountEPIC:_load_done(...)
 	print("NetworkAccountEPIC:_load_done()", ...)
 	self:_set_presences()
 end
 
--- Lines 60-62
+-- Lines 71-73
 function NetworkAccountEPIC:update()
 	self:_chk_inventory_outfit_refresh()
 end
 
--- Lines 64-75
+-- Lines 75-86
 function NetworkAccountEPIC:_set_presences()
 	if MenuCallbackHandler:is_modded_client() then
 		-- Nothing
 	end
 end
 
--- Lines 77-79
+-- Lines 88-90
 function NetworkAccountEPIC:set_presences_peer_id(peer_id)
 end
 
--- Lines 82-87
+-- Lines 93-98
 function NetworkAccountEPIC:get_win_ratio(difficulty, level)
 	local win_ratio = 0
 
 	return win_ratio
 end
 
--- Lines 89-91
+-- Lines 100-102
 function NetworkAccount:is_overlay_enabled()
 	return EpicOverlayHandler:overlay_enabled()
 end
 
--- Lines 93-107
+-- Lines 104-118
 function NetworkAccountEPIC:overlay_activate(...)
 	if self._overlay_opened then
 		return
@@ -86,7 +93,7 @@ function NetworkAccountEPIC:overlay_activate(...)
 	end
 end
 
--- Lines 109-119
+-- Lines 120-130
 function NetworkAccountEPIC:_on_close_overlay()
 	if not self._overlay_opened then
 		return
@@ -99,7 +106,7 @@ function NetworkAccountEPIC:_on_close_overlay()
 	Entitlement:CheckAndVerifyUserEntitlement()
 end
 
--- Lines 121-127
+-- Lines 132-138
 function NetworkAccountEPIC:_on_gamepad_text_submitted(submitted, submitted_text)
 	print("[NetworkAccountEPIC:_on_gamepad_text_submitted]", "submitted", submitted, "submitted_text", submitted_text)
 
@@ -110,12 +117,12 @@ function NetworkAccountEPIC:_on_gamepad_text_submitted(submitted, submitted_text
 	self._gamepad_text_listeners = {}
 end
 
--- Lines 129-131
+-- Lines 140-142
 function NetworkAccountEPIC:show_gamepad_text_input(id, callback, params)
 	return false
 end
 
--- Lines 133-138
+-- Lines 144-149
 function NetworkAccountEPIC:add_gamepad_text_listener(id, clbk)
 	if self._gamepad_text_listeners[id] then
 		debug_pause("[NetworkAccountEPIC:add_gamepad_text_listener] ID already added!", id, "Old Clbk", self._gamepad_text_listeners[id], "New Clbk", clbk)
@@ -124,7 +131,7 @@ function NetworkAccountEPIC:add_gamepad_text_listener(id, clbk)
 	self._gamepad_text_listeners[id] = clbk
 end
 
--- Lines 140-145
+-- Lines 151-156
 function NetworkAccountEPIC:remove_gamepad_text_listener(id)
 	if not self._gamepad_text_listeners[id] then
 		debug_pause("[NetworkAccountEPIC:remove_gamepad_text_listener] ID do not exist!", id)
@@ -133,47 +140,57 @@ function NetworkAccountEPIC:remove_gamepad_text_listener(id)
 	self._gamepad_text_listeners[id] = nil
 end
 
--- Lines 147-149
+-- Lines 158-160
 function NetworkAccountEPIC:achievements_fetched()
 	self._achievements_fetched = true
 end
 
--- Lines 151-153
+-- Lines 162-164
 function NetworkAccountEPIC:challenges_loaded()
 	self._challenges_loaded = true
 end
 
--- Lines 155-157
+-- Lines 166-168
 function NetworkAccountEPIC:experience_loaded()
 	self._experience_loaded = true
 end
 
--- Lines 159-161
+-- Lines 170-172
 function NetworkAccountEPIC._on_leaderboard_stored(status)
 	print("[NetworkAccountEPIC:_on_leaderboard_stored] Leaderboard stored, ", status, ".")
 end
 
--- Lines 163-165
+-- Lines 174-176
 function NetworkAccountEPIC._on_leaderboard_mapped()
 	print("[NetworkAccountEPIC:_on_leaderboard_stored] Leaderboard mapped.")
 end
 
--- Lines 167-169
+-- Lines 178-180
 function NetworkAccountEPIC._on_stats_stored(status)
 	print("[NetworkAccountEPIC:_on_stats_stored] Statistics stored, ", status, ". Publishing leaderboard score to Epic!")
 end
 
--- Lines 171-173
+-- Lines 182-184
 function NetworkAccountEPIC:get_stat(key)
 	return EpicAchievementHandler:get_stat(key)
 end
 
--- Lines 175-177
-function NetworkAccountEPIC:get_lifetime_stat(key)
-	return 0
+-- Lines 186-188
+function NetworkAccountEPIC:has_stat(key)
+	return true
 end
 
--- Lines 179-205
+-- Lines 190-192
+function NetworkAccountEPIC:set_stat(key, value)
+	EpicAchievementHandler:set_stat(key, value)
+end
+
+-- Lines 194-196
+function NetworkAccountEPIC:get_lifetime_stat(key)
+	return NetworkAccountEPIC.static_lifetime_stat[key] or 0
+end
+
+-- Lines 198-224
 function NetworkAccountEPIC:get_global_stat(key, days)
 	local value = 0
 	local global_stat = nil
@@ -200,7 +217,7 @@ function NetworkAccountEPIC:get_global_stat(key, days)
 	return value
 end
 
--- Lines 207-301
+-- Lines 226-320
 function NetworkAccountEPIC:publish_statistics(stats, force_store)
 	if managers.dlc:is_trial() then
 		return
@@ -268,7 +285,7 @@ function NetworkAccountEPIC:publish_statistics(stats, force_store)
 	end
 end
 
--- Lines 303-311
+-- Lines 322-330
 function NetworkAccountEPIC._on_disconnected(lobby_id, friend_id)
 	cat_tag_print("NetworkAccountEPIC", "on_disconnected", lobby_id, friend_id)
 
@@ -279,12 +296,12 @@ function NetworkAccountEPIC._on_disconnected(lobby_id, friend_id)
 	end
 end
 
--- Lines 313-315
+-- Lines 332-334
 function NetworkAccountEPIC._on_ipc_fail(lobby_id, friend_id)
 	cat_tag_print("NetworkAccountEPIC", "on_ipc_fail", lobby_id, friend_id)
 end
 
--- Lines 318-343
+-- Lines 337-362
 function NetworkAccountEPIC._on_join_request(lobby_id, friend_id)
 	cat_tag_print("NetworkAccountEPIC", "on_join_request", lobby_id, friend_id)
 
@@ -319,18 +336,18 @@ function NetworkAccountEPIC._on_join_request(lobby_id, friend_id)
 	end
 end
 
--- Lines 345-348
+-- Lines 364-367
 function NetworkAccountEPIC._on_server_request(ip, pw)
 	cat_tag_print("NetworkAccountEPIC", "on_server_request", ip, pw)
 	print("[NetworkAccountEPIC._on_server_request]")
 end
 
--- Lines 350-352
+-- Lines 369-371
 function NetworkAccountEPIC._on_connect_fail(ip, pw)
 	cat_tag_print("NetworkAccountEPIC", "on_connect_fail", ip, pw)
 end
 
--- Lines 354-360
+-- Lines 373-379
 function NetworkAccountEPIC:signin_state()
 	if self:local_signin_state() == true then
 		return "signed in"
@@ -339,45 +356,45 @@ function NetworkAccountEPIC:signin_state()
 	return "not signed in"
 end
 
--- Lines 362-364
+-- Lines 381-383
 function NetworkAccountEPIC:local_signin_state()
 	return EpicMM:logged_on()
 end
 
--- Lines 366-368
+-- Lines 385-387
 function NetworkAccountEPIC:username_id()
 	return EpicMM:username()
 end
 
--- Lines 370-372
+-- Lines 389-391
 function NetworkAccountEPIC:username_by_id(id)
 	return EpicMM:username(id)
 end
 
--- Lines 374-376
+-- Lines 393-395
 function NetworkAccountEPIC:player_id()
 	return EpicEntitlements:get_account_id()
 end
 
--- Lines 378-380
+-- Lines 397-399
 function NetworkAccountEPIC:is_connected()
 	return true
 end
 
--- Lines 382-384
+-- Lines 401-403
 function NetworkAccountEPIC:lan_connection()
 	return true
 end
 
--- Lines 386-388
+-- Lines 405-407
 function NetworkAccountEPIC:set_playing(state)
 end
 
--- Lines 390-392
+-- Lines 409-411
 function NetworkAccountEPIC:set_played_with(id)
 end
 
--- Lines 394-396
+-- Lines 413-415
 function NetworkAccountEPIC:get_friend_user(user_id)
 	return {
 		invite = function (self, lobby_id)
@@ -386,12 +403,12 @@ function NetworkAccountEPIC:get_friend_user(user_id)
 	}
 end
 
--- Lines 398-400
+-- Lines 417-419
 function NetworkAccountEPIC:is_player_friend(player_id)
 	return NetworkAccountEPIC.super.is_player_friend(self, player_id)
 end
 
--- Lines 402-413
+-- Lines 421-432
 function NetworkAccountEPIC:_load_globals()
 	if Global.epic and Global.epic.account then
 		self._outfit_signature = Global.epic.account.outfit_signature and Global.epic.account.outfit_signature:get_data()
@@ -404,7 +421,7 @@ function NetworkAccountEPIC:_load_globals()
 	end
 end
 
--- Lines 415-420
+-- Lines 434-439
 function NetworkAccountEPIC:_save_globals()
 	Global.epic = Global.epic or {}
 	Global.epic.account = {
@@ -412,12 +429,12 @@ function NetworkAccountEPIC:_save_globals()
 	}
 end
 
--- Lines 422-428
+-- Lines 441-447
 function NetworkAccountEPIC:is_ready_to_close()
 	return not self._inventory_is_loading and not self._inventory_outfit_refresh_requested and not self._inventory_outfit_refresh_in_progress
 end
 
--- Lines 430-447
+-- Lines 449-466
 function NetworkAccountEPIC:open_dlc_store_page(dlc_data, context)
 	if dlc_data then
 		if context == "buy_dlc" and dlc_data.epic_webpage then
@@ -434,7 +451,7 @@ function NetworkAccountEPIC:open_dlc_store_page(dlc_data, context)
 	return false
 end
 
--- Lines 449-454
+-- Lines 468-473
 function NetworkAccountEPIC:open_new_heist_page(new_heist_data)
 	if new_heist_data then
 		return false
@@ -443,41 +460,41 @@ function NetworkAccountEPIC:open_new_heist_page(new_heist_data)
 	return false
 end
 
--- Lines 457-458
+-- Lines 476-477
 function NetworkAccountEPIC:inventory_load()
 end
 
--- Lines 460-462
+-- Lines 479-481
 function NetworkAccountEPIC:inventory_is_loading()
 	return false
 end
 
--- Lines 464-466
+-- Lines 483-485
 function NetworkAccountEPIC:inventory_reward(reward_callback, item)
 	return false
 end
 
--- Lines 468-469
+-- Lines 487-488
 function NetworkAccount:inventory_reward_unlock(safe, safe_instance_id, drill_instance_id, reward_unlock_callback)
 end
 
--- Lines 471-472
+-- Lines 490-491
 function NetworkAccount:inventory_reward_open(safe, safe_instance_id, reward_unlock_callback)
 end
 
--- Lines 474-475
+-- Lines 493-494
 function NetworkAccountEPIC:inventory_reward_dlc(def_id, reward_promo_callback)
 end
 
--- Lines 477-478
+-- Lines 496-497
 function NetworkAccountEPIC:inventory_outfit_refresh()
 end
 
--- Lines 480-481
+-- Lines 499-500
 function NetworkAccountEPIC:_inventory_outfit_refresh()
 end
 
--- Lines 483-495
+-- Lines 502-514
 function NetworkAccountEPIC:_chk_inventory_outfit_refresh()
 	if not self._inventory_outfit_refresh_requested then
 		return
@@ -492,73 +509,48 @@ function NetworkAccountEPIC:_chk_inventory_outfit_refresh()
 	self:_inventory_outfit_refresh()
 end
 
--- Lines 497-499
+-- Lines 516-518
 function NetworkAccountEPIC:inventory_outfit_verify(user_id, outfit_data, outfit_callback)
 	return outfit_callback and outfit_callback(nil, false, {})
 end
 
--- Lines 501-504
+-- Lines 520-523
 function NetworkAccountEPIC:inventory_outfit_signature()
 	return "foobar"
 end
 
--- Lines 506-507
+-- Lines 525-526
 function NetworkAccountEPIC:_on_item_converted(error, items_new, items_removed)
 end
 
--- Lines 509-510
+-- Lines 528-529
 function NetworkAccountEPIC:inventory_repair_list(list)
 end
 
--- Lines 512-513
+-- Lines 531-532
 function NetworkAccountEPIC:_clbk_inventory_load(error, list)
 end
 
--- Lines 515-516
+-- Lines 534-535
 function NetworkAccountEPIC:_clbk_tradable_outfit_data(error, outfit_signature)
 end
 
--- Lines 519-520
+-- Lines 538-539
 function NetworkAccountEPIC:_on_drill_converted(data, error, items_new, items_removed)
 end
 
--- Lines 522-523
+-- Lines 541-542
 function NetworkAccountEPIC:convert_drills_to_safes(list)
 end
 
--- Lines 529-531
-function NetworkAccountEPIC:set_stat(key, value)
-	EpicAchievementHandler:set_stat(key, value)
-end
-
--- Lines 533-535
-function NetworkAccountEPIC:get_stat(key)
-	return EpicAchievementHandler:get_stat(key)
-end
-
--- Lines 537-539
-function NetworkAccountEPIC:has_stat(key)
-	return true
-end
-
--- Lines 541-544
+-- Lines 548-551
 function NetworkAccountEPIC:achievement_unlock_time(key)
 	local res = tonumber(EpicAchievementHandler:achievement_unlock_time(key))
 
 	return res ~= -1 and res or nil
 end
 
--- Lines 546-548
-function NetworkAccountEPIC:get_lifetime_stat(key)
-	return 0
-end
-
--- Lines 550-552
-function NetworkAccountEPIC:get_global_stat(key, days)
-	return 0
-end
-
--- Lines 554-648
+-- Lines 553-647
 function NetworkAccountEPIC:publish_statistics(stats, force_store)
 	if managers.dlc:is_trial() then
 		return
