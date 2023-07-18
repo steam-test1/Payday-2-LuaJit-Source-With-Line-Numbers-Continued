@@ -1,13 +1,13 @@
 EventJobsTweakData = EventJobsTweakData or class()
 
--- Lines 4-88
+-- Lines 4-105
 function EventJobsTweakData:init(tweak_data)
 	self.challenges = {}
-	self.current_event = ""
 
 	self:_init_pda8_challenges(tweak_data)
 	self:_init_pda9_challenges(tweak_data)
 	self:_init_cg22_challenges(tweak_data)
+	self:_init_community_challenges(tweak_data)
 
 	self.event_info = {
 		pda8 = {
@@ -19,8 +19,12 @@ function EventJobsTweakData:init(tweak_data)
 				"pda_stat_d"
 			}
 		},
-		pda9 = {},
-		cg22 = {}
+		pda9 = {
+			stage_offset = 1
+		},
+		cg22 = {
+			stage_offset = 1
+		}
 	}
 	self.collective_stats = {
 		pda8_collective = {
@@ -64,7 +68,7 @@ function EventJobsTweakData:init(tweak_data)
 	self.pda_base = 0
 end
 
--- Lines 90-183
+-- Lines 107-200
 function EventJobsTweakData:_init_pda8_challenges(tweak_data)
 	table.insert(self.challenges, {
 		reward_id = "menu_pda8_2_reward",
@@ -187,7 +191,7 @@ function EventJobsTweakData:_init_pda8_challenges(tweak_data)
 	})
 end
 
--- Lines 186-516
+-- Lines 203-533
 function EventJobsTweakData:_init_pda9_challenges(tweak_data)
 	table.insert(self.challenges, {
 		reward_id = "menu_pda9_1_reward",
@@ -503,7 +507,7 @@ function EventJobsTweakData:_init_pda9_challenges(tweak_data)
 	})
 end
 
--- Lines 520-817
+-- Lines 537-834
 function EventJobsTweakData:_init_cg22_challenges(tweak_data)
 	table.insert(self.challenges, {
 		reward_id = "menu_cg22_1_reward",
@@ -875,7 +879,27 @@ function EventJobsTweakData:_init_cg22_challenges(tweak_data)
 	})
 end
 
--- Lines 820-844
+-- Lines 906-935
+function EventJobsTweakData:_init_community_challenges(tweak_data)
+	self.community_challenges = {
+		pda9 = {
+			url = "https://www.paydaythegame.com/ovk-media/redux/ninth-2yrgbaw/ninthstage.json",
+			event_data = {
+				pigs = "pigs",
+				stage = "unlockstage"
+			}
+		},
+		cg22 = {
+			url = "https://www.paydaythegame.com/ovk-media/redux/hl22-u3yhfbfaud/holiday22stage.json",
+			event_data = {
+				bags = "bags",
+				stage = "unlockstage"
+			}
+		}
+	}
+end
+
+-- Lines 938-962
 function EventJobsTweakData:_collective(collective_id, max_progress, data)
 	data.collective_id = collective_id
 	local save_values = {
@@ -908,7 +932,7 @@ function EventJobsTweakData:_collective(collective_id, max_progress, data)
 	return obj
 end
 
--- Lines 847-882
+-- Lines 965-1000
 function EventJobsTweakData:_choice(challenge_choices, max_progress, data)
 	local save_values = {
 		"choice_id",
@@ -955,7 +979,7 @@ function EventJobsTweakData:_choice(challenge_choices, max_progress, data)
 	return obj
 end
 
--- Lines 912-937
+-- Lines 1030-1055
 function EventJobsTweakData:_stage(stage_id, max_progress, data)
 	data.stage_id = stage_id
 	local save_values = {

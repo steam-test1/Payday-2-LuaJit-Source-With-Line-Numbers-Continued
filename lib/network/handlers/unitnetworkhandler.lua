@@ -4872,7 +4872,7 @@ function UnitNetworkHandler:request_shield_unit_link(parent_unit, sender_rpc)
 	end
 end
 
--- Lines 4838-4852
+-- Lines 4838-4860
 function UnitNetworkHandler:sync_feed_piggybank(bag_unit, reached_next_level, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -4884,14 +4884,18 @@ function UnitNetworkHandler:sync_feed_piggybank(bag_unit, reached_next_level, se
 		return
 	end
 
-	local mutator = managers.mutators:get_mutator(MutatorPiggyBank)
+	local mutator = nil
+
+	if managers.mutators:is_mutator_active(MutatorPiggyBank) then
+		mutator = managers.mutators:get_mutator(MutatorPiggyBank)
+	end
 
 	if mutator then
 		mutator:sync_feed_piggybank(bag_unit, reached_next_level)
 	end
 end
 
--- Lines 4854-4868
+-- Lines 4862-4883
 function UnitNetworkHandler:sync_piggybank_dialog(sync_index, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -4903,14 +4907,18 @@ function UnitNetworkHandler:sync_piggybank_dialog(sync_index, sender)
 		return
 	end
 
-	local mutator = managers.mutators:get_mutator(MutatorPiggyBank)
+	local mutator = nil
+
+	if managers.mutators:is_mutator_active(MutatorPiggyBank) then
+		mutator = managers.mutators:get_mutator(MutatorPiggyBank)
+	end
 
 	if mutator then
 		mutator:sync_piggybank_dialog(sync_index)
 	end
 end
 
--- Lines 4870-4884
+-- Lines 4885-4906
 function UnitNetworkHandler:sync_explode_piggybank(sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -4922,14 +4930,18 @@ function UnitNetworkHandler:sync_explode_piggybank(sender)
 		return
 	end
 
-	local mutator = managers.mutators:get_mutator(MutatorPiggyBank)
+	local mutator = nil
+
+	if managers.mutators:is_mutator_active(MutatorPiggyBank) then
+		mutator = managers.mutators:get_mutator(MutatorPiggyBank)
+	end
 
 	if mutator then
 		mutator:sync_explode_piggybank()
 	end
 end
 
--- Lines 4886-4899
+-- Lines 4908-4921
 function UnitNetworkHandler:carry_interact_start(bag_unit, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -4946,7 +4958,7 @@ function UnitNetworkHandler:carry_interact_start(bag_unit, sender)
 	end
 end
 
--- Lines 4901-4914
+-- Lines 4923-4936
 function UnitNetworkHandler:carry_interact_interupt(bag_unit, sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return
@@ -4963,7 +4975,7 @@ function UnitNetworkHandler:carry_interact_interupt(bag_unit, sender)
 	end
 end
 
--- Lines 4919-4929
+-- Lines 4941-4951
 function UnitNetworkHandler:_quick_verification(sender)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
 		return false
@@ -4978,7 +4990,7 @@ function UnitNetworkHandler:_quick_verification(sender)
 	return true
 end
 
--- Lines 4931-4940
+-- Lines 4953-4962
 function UnitNetworkHandler:sync_tree_interacted(blue_buff, green_buff, yellow_buff, sender)
 	if not self:_quick_verification(sender) then
 		return
@@ -4991,7 +5003,7 @@ function UnitNetworkHandler:sync_tree_interacted(blue_buff, green_buff, yellow_b
 	end
 end
 
--- Lines 4942-4951
+-- Lines 4964-4973
 function UnitNetworkHandler:sync_spawn_present(tree_unit, sequence, carry_id, sender)
 	if not self:_quick_verification(sender) then
 		return
@@ -5004,7 +5016,7 @@ function UnitNetworkHandler:sync_spawn_present(tree_unit, sequence, carry_id, se
 	end
 end
 
--- Lines 4953-4962
+-- Lines 4975-4984
 function UnitNetworkHandler:sync_present_sledded(sled_unit, bag_carry_int, last_carried_player, sender)
 	if not self:_quick_verification(sender) then
 		return
@@ -5017,7 +5029,7 @@ function UnitNetworkHandler:sync_present_sledded(sled_unit, bag_carry_int, last_
 	end
 end
 
--- Lines 4964-4973
+-- Lines 4986-4995
 function UnitNetworkHandler:sync_present_shredded(shredder_unit, bag_carry_int, next_buff_index, last_carried_player, sender)
 	if not self:_quick_verification(sender) then
 		return
@@ -5030,20 +5042,24 @@ function UnitNetworkHandler:sync_present_shredded(shredder_unit, bag_carry_int, 
 	end
 end
 
--- Lines 4975-4984
+-- Lines 4997-5013
 function UnitNetworkHandler:sync_gain_buff(buff_string, sender)
 	if not self:_quick_verification(sender) then
 		return
 	end
 
-	local mutator = managers.mutators:get_mutator(MutatorCG22)
+	local mutator = nil
+
+	if managers.mutators:is_mutator_active(MutatorCG22) then
+		mutator = managers.mutators:get_mutator(MutatorCG22)
+	end
 
 	if mutator then
-		mutator:activate_buff(buff_string)
+		mutator:activate_buff(buff_string, false)
 	end
 end
 
--- Lines 4986-4995
+-- Lines 5015-5024
 function UnitNetworkHandler:sync_santa_anim(unit, anim_id, sender)
 	if not self:_quick_verification(sender) then
 		return
@@ -5056,7 +5072,7 @@ function UnitNetworkHandler:sync_santa_anim(unit, anim_id, sender)
 	end
 end
 
--- Lines 4997-5006
+-- Lines 5026-5035
 function UnitNetworkHandler:sync_on_snowman_spawned(sender)
 	if not self:_quick_verification(sender) then
 		return
@@ -5069,7 +5085,7 @@ function UnitNetworkHandler:sync_on_snowman_spawned(sender)
 	end
 end
 
--- Lines 5008-5017
+-- Lines 5037-5046
 function UnitNetworkHandler:sync_cg22_dialog(dialog_id, sender)
 	if not self:_quick_verification(sender) then
 		return
@@ -5082,7 +5098,7 @@ function UnitNetworkHandler:sync_cg22_dialog(dialog_id, sender)
 	end
 end
 
--- Lines 5019-5028
+-- Lines 5048-5057
 function UnitNetworkHandler:sync_cg22_spawned_units(tree_unit, sled_unit, shredder_unit, santa_unit, sender)
 	if not self:_quick_verification(sender) then
 		return

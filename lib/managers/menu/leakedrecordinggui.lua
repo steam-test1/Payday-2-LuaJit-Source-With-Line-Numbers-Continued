@@ -393,7 +393,7 @@ function LeakedRecordingMissionGui:show_mission_box()
 	self._mission_panel:show()
 end
 
--- Lines 348-480
+-- Lines 348-502
 function LeakedRecordingMissionGui:create_mission_box()
 	self._mission_panel = LeakedRecordingGui.create_window_panel(self._panel, {
 		w = 700,
@@ -547,13 +547,14 @@ function LeakedRecordingMissionGui:create_mission_box()
 		self.start_text:set_wrap(true)
 		self.start_text:set_word_wrap(true)
 
-		local _, _, _, h = self.start_text:text_rect()
-
-		start_button:set_h(h)
-
 		self._dlc_locked = true
 	end
 
+	local _, _, w, h = self.start_text:text_rect()
+
+	start_button:set_size(w, h)
+
+	placer_y = placer_y + start_button:h()
 	self._cog_is_rotating = false
 	self._cog_rotation = 0
 	self._cogwheels = {}
@@ -620,9 +621,32 @@ function LeakedRecordingMissionGui:create_mission_box()
 		self._buttons_info_panel:set_x(self._panel:w() - self._buttons_info_panel:w())
 		self:update_legend(legends)
 	end
+
+	local briefing_button = self._mission_panel:panel({
+		visible = false,
+		name = "briefing_button",
+		w = 100,
+		x = right_x,
+		y = placer_y,
+		h = S_FONT_SIZE
+	})
+	local briefing_text = briefing_button:text({
+		name = "briefing_text",
+		valign = "grow",
+		text = managers.localization:text("menu_lr_transcript_header"),
+		font = S_FONT,
+		font_size = S_FONT_SIZE,
+		color = BUTTON_COLOR
+	})
+
+	ExtendedPanel.make_fine_text(briefing_text)
+
+	local _, _, w, h = briefing_text:text_rect()
+
+	briefing_button:set_size(w, h)
 end
 
--- Lines 482-494
+-- Lines 504-516
 function LeakedRecordingMissionGui:update_legend(legends)
 	self._buttons_info_panel:clear()
 
@@ -644,12 +668,12 @@ function LeakedRecordingMissionGui:update_legend(legends)
 	end
 end
 
--- Lines 496-498
+-- Lines 518-520
 function LeakedRecordingMissionGui:get_state()
 	return true
 end
 
--- Lines 500-512
+-- Lines 522-534
 function LeakedRecordingMissionGui:start_mission()
 	local job_data = tweak_data.narrative:job_data(self._mission.heist)
 	local data = {
@@ -666,16 +690,22 @@ function LeakedRecordingMissionGui:start_mission()
 	})
 end
 
--- Lines 514-529
+-- Lines 536-558
 function LeakedRecordingMissionGui:play_recording()
 	Telemetry:send_on_leakedrecording_played({
 		recording_id = self._mission.job_value
 	})
+	managers.mission:set_saved_job_value(self._mission.job_value .. "_played", true)
 	self._sound_source:stop()
 	self._sound_source:post_event(self._mission.recording_track, self.sound_callback, self, "end_of_event")
 
 	self._cog_is_rotating = true
 	self._cog_rotation = 0
+	local briefing_button = self._mission_panel:child("briefing_button")
+
+	if briefing_button then
+		briefing_button:set_visible(true)
+	end
 
 	if not managers.menu:is_pc_controller() then
 		local legends = {}
@@ -686,17 +716,25 @@ function LeakedRecordingMissionGui:play_recording()
 		table.insert(legends, {
 			loc_id = "menu_lr_legend_stop_playback"
 		})
+		table.insert(legends, {
+			loc_id = "menu_lr_legend_open_transcript"
+		})
 		self:update_legend(legends)
 	else
 		self.start_text:set_text(managers.localization:text("menu_lr_gadget_stop"))
 	end
 end
 
--- Lines 531-543
+-- Lines 560-577
 function LeakedRecordingMissionGui:stop_recording()
 	self._sound_source:stop()
 
 	self._cog_is_rotating = false
+	local briefing_button = self._mission_panel:child("briefing_button")
+
+	if briefing_button then
+		briefing_button:set_visible(false)
+	end
 
 	if not managers.menu:is_pc_controller() then
 		local legends = {}
@@ -713,7 +751,24 @@ function LeakedRecordingMissionGui:stop_recording()
 	end
 end
 
--- Lines 547-554
+-- Lines 579-591
+function LeakedRecordingMissionGui:open_transcript()
+	local dialog_data = {
+		title = managers.localization:text("menu_lr_transcript_header") .. ": " .. managers.localization:text("menu_lr_mission_title_" .. self._mission_id),
+		text = managers.localization:text("menu_lr_transcript_" .. self._mission_id)
+	}
+	local ok_button = {
+		text = managers.localization:text("dialog_ok"),
+		cancel_button = true
+	}
+	dialog_data.button_list = {
+		ok_button
+	}
+
+	managers.system_menu:show(dialog_data)
+end
+
+-- Lines 595-602
 function LeakedRecordingMissionGui:update(t, dt)
 	if self._cog_is_rotating then
 		self._cog_rotation = self._cog_rotation - dt * 40
@@ -724,7 +779,14 @@ function LeakedRecordingMissionGui:update(t, dt)
 	end
 end
 
--- Lines 556-573
+-- Lines 604-608
+function LeakedRecordingMissionGui:special_btn_pressed(button)
+	if button == Idstring("menu_respec_tree") then
+		self:open_transcript()
+	end
+end
+
+-- Lines 611-629
 function LeakedRecordingMissionGui:mouse_pressed(button, x, y)
 	local start_button = self._mission_panel:child("start_button")
 
@@ -739,9 +801,15 @@ function LeakedRecordingMissionGui:mouse_pressed(button, x, y)
 			self:start_mission()
 		end
 	end
+
+	local briefing_button = self._mission_panel:child("briefing_button")
+
+	if briefing_button and briefing_button:visible() and briefing_button:inside(x, y) and button == Idstring("0") then
+		self:open_transcript()
+	end
 end
 
--- Lines 575-607
+-- Lines 631-663
 function LeakedRecordingMissionGui:mouse_moved(button, x, y)
 	local back_button = self._panel:child("back_button")
 
@@ -772,20 +840,20 @@ function LeakedRecordingMissionGui:mouse_moved(button, x, y)
 		end
 	end
 
-	local reward_button = self._mission_panel:child("reward_button")
+	local briefing_button = self._mission_panel:child("briefing_button")
 
-	if reward_button then
-		if reward_button:inside(x, y) then
-			reward_button:child("reward_text"):set_color(MOUSEOVER_COLOR)
+	if briefing_button and briefing_button:visible() then
+		if briefing_button:inside(x, y) then
+			briefing_button:child("briefing_text"):set_color(MOUSEOVER_COLOR)
 
 			return true, "link"
 		else
-			reward_button:child("reward_text"):set_color(BUTTON_COLOR)
+			briefing_button:child("briefing_text"):set_color(BUTTON_COLOR)
 		end
 	end
 end
 
--- Lines 609-619
+-- Lines 665-675
 function LeakedRecordingMissionGui:confirm_pressed()
 	if self._cleared then
 		if self._cog_is_rotating then
@@ -798,7 +866,7 @@ function LeakedRecordingMissionGui:confirm_pressed()
 	end
 end
 
--- Lines 621-627
+-- Lines 677-683
 function LeakedRecordingMissionGui:sound_callback(instance, event_type, gadget_gui)
 	if event_type == "end_of_event" then
 		gadget_gui._cog_is_rotating = false

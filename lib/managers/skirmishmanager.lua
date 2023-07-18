@@ -526,7 +526,7 @@ function SkirmishManager:add_random_special_reward(lootpool)
 	return reward
 end
 
--- Lines 492-518
+-- Lines 524-550
 function SkirmishManager:get_amount_rewards()
 	local wave_progress = self:get_wave_progress()
 	local num_rewards = 1
@@ -554,7 +554,7 @@ function SkirmishManager:get_amount_rewards()
 	return num_rewards
 end
 
--- Lines 520-558
+-- Lines 552-590
 function SkirmishManager:make_lootdrops(got_inventory_reward)
 	local wave_progress = self:get_wave_progress()
 	self._generated_lootdrops = {}
@@ -592,12 +592,12 @@ function SkirmishManager:make_lootdrops(got_inventory_reward)
 	self._lootdrops_coroutine = managers.lootdrop:new_make_mass_drop(amount_lootdrops, item_pc, self._generated_lootdrops)
 end
 
--- Lines 561-563
+-- Lines 593-595
 function SkirmishManager:get_generated_lootdrops()
 	return self._loot_drops or {}
 end
 
--- Lines 565-592
+-- Lines 597-624
 function SkirmishManager:has_finished_generating_additional_rewards()
 	if self._lootdrops_coroutine then
 		local status = coroutine.status(self._lootdrops_coroutine)

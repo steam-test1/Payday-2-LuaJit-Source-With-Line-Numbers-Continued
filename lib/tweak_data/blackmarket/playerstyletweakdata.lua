@@ -1,4 +1,4 @@
--- Lines 1-4293
+-- Lines 1-4321
 function BlackMarketTweakData:_init_player_styles(tweak_data)
 	local characters_female, characters_female_big, characters_male, characters_male_big = self:_get_character_groups()
 	local characters_all = table.list_union(characters_female, characters_male, characters_female_big, characters_male_big)
@@ -610,12 +610,20 @@ function BlackMarketTweakData:_init_player_styles(tweak_data)
 		body_replacement = body_replacement_standard,
 		third_body_replacement = body_replacement_standard,
 		unit = "units/pd2_dlc_dah/characters/dah_acc_fps_stealth_suit/dah_acc_fps_stealth_suit",
-		characters = {}
+		material_variations = {}
+	}
+	self.player_styles.sneak_suit.material_variations.default = {
+		name_id = "bm_suit_sneak_suit",
+		desc_id = "bm_suit_sneak_suit_desc"
+	}
+	self.player_styles.sneak_suit.body_replacement = body_replacement_standard
+	self.player_styles.sneak_suit.third_body_replacement = body_replacement_standard
+	self.player_styles.sneak_suit.characters = {}
+	local sneak_suit_characters_male = {
+		third_unit = "units/pd2_dlc_dah/characters/dah_acc_stealth_suit/dah_acc_stealth_suit"
 	}
 
-	set_characters_data("sneak_suit", characters_male, {
-		third_unit = "units/pd2_dlc_dah/characters/dah_acc_stealth_suit/dah_acc_stealth_suit"
-	})
+	set_characters_data("sneak_suit", characters_male, sneak_suit_characters_male)
 	set_characters_data("sneak_suit", characters_male_big, {
 		third_unit = "units/pd2_dlc_dah/characters/dah_acc_stealth_suit_male_big/dah_acc_stealth_suit_male_big"
 	})
@@ -5273,7 +5281,7 @@ function BlackMarketTweakData:_init_player_styles(tweak_data)
 	self.player_styles.roclown.characters.ecp_male = roclown_characters_male_fat
 end
 
--- Lines 4295-4317
+-- Lines 4323-4345
 function BlackMarketTweakData:get_player_style_value(player_style, character_name, key)
 	if key == nil then
 		return
@@ -5298,7 +5306,7 @@ function BlackMarketTweakData:get_player_style_value(player_style, character_nam
 	return tweak_value
 end
 
--- Lines 4319-4344
+-- Lines 4347-4372
 function BlackMarketTweakData:get_suit_variation_value(player_style, material_variation, character_name, key)
 	if key == nil then
 		return nil
@@ -5326,7 +5334,7 @@ function BlackMarketTweakData:get_suit_variation_value(player_style, material_va
 	return tweak_value
 end
 
--- Lines 4346-4367
+-- Lines 4374-4395
 function BlackMarketTweakData:have_suit_variations(player_style)
 	local data = self.player_styles[player_style]
 
@@ -5353,7 +5361,7 @@ function BlackMarketTweakData:have_suit_variations(player_style)
 	return true
 end
 
--- Lines 4369-4405
+-- Lines 4397-4433
 function BlackMarketTweakData:get_suit_variations_sorted(player_style)
 	local data = self.player_styles[player_style]
 
@@ -5397,7 +5405,7 @@ function BlackMarketTweakData:get_suit_variations_sorted(player_style)
 	return suit_variations
 end
 
--- Lines 4408-4437
+-- Lines 4436-4465
 function BlackMarketTweakData:get_player_style_units(player_style, key)
 	local units = {}
 	local data = self.player_styles[player_style]
@@ -5428,7 +5436,7 @@ function BlackMarketTweakData:get_player_style_units(player_style, key)
 	return table.list_union(units)
 end
 
--- Lines 4439-4445
+-- Lines 4467-4473
 function BlackMarketTweakData:create_suit_string(player_style, suit_variation)
 	if self:have_suit_variations(player_style) then
 		return player_style .. "_" .. suit_variation
@@ -5437,7 +5445,7 @@ function BlackMarketTweakData:create_suit_string(player_style, suit_variation)
 	return player_style
 end
 
--- Lines 4447-4462
+-- Lines 4475-4490
 function BlackMarketTweakData:create_suit_strings()
 	local suit_strings = {}
 	local suit_variations = nil
@@ -5457,18 +5465,18 @@ function BlackMarketTweakData:create_suit_strings()
 	return suit_strings
 end
 
--- Lines 4464-4513
+-- Lines 4492-4541
 function BlackMarketTweakData:build_player_style_list(tweak_data)
 	local x_td, y_td, x_gv, y_gv, x_sn, y_sn = nil
 
-	-- Lines 4469-4472
+	-- Lines 4497-4500
 	local function map_func(x)
 		x_td = self.player_styles[x]
 
 		return not x_td.unavailable
 	end
 
-	-- Lines 4474-4503
+	-- Lines 4502-4531
 	local function sort_func(x, y)
 		if x == "none" then
 			return true

@@ -927,7 +927,7 @@ function TweakData:get_scene_pose(scene, pose_category, ...)
 	return pose, required_poses
 end
 
--- Lines 563-610
+-- Lines 563-613
 function TweakData:_setup_scene_pose_items()
 	self.scene_pose_items = {
 		husk1 = {},
@@ -998,7 +998,7 @@ function TweakData:_setup_scene_pose_items()
 	}
 end
 
--- Lines 612-746
+-- Lines 615-749
 function TweakData:_setup_scene_poses()
 	self.scene_poses = {
 		generic = {

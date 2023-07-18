@@ -528,7 +528,7 @@ function GenericDLCManager:has_xmn()
 	return self:is_dlc_unlocked("xmn")
 end
 
--- Lines 604-1360
+-- Lines 609-1371
 function WINDLCManager:init_generated()
 	Global.dlc_manager.all_dlc_data.a10th = {
 		app_id = "218620",

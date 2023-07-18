@@ -1,14 +1,15 @@
 MutatorTweakData = MutatorTweakData or class()
 
--- Lines 3-13
+-- Lines 3-16
 function MutatorTweakData:init(tweak_data)
 	self:init_piggybank(tweak_data)
 	self:init_cg22(tweak_data)
 end
 
--- Lines 59-153
+-- Lines 62-154
 function MutatorTweakData:init_piggybank(tweak_data)
 	self.piggybank = {
+		buff_font_size = 18,
 		drop_count = 10,
 		normal_kill_points = 1,
 		special_kill_points = 2,
@@ -273,7 +274,7 @@ function MutatorTweakData:init_piggybank(tweak_data)
 	}
 end
 
--- Lines 157-348
+-- Lines 267-458
 function MutatorTweakData:init_cg22(tweak_data)
 	self.cg22 = {
 		initial_tree_shake_timer = 60,
@@ -738,7 +739,7 @@ function MutatorTweakData:init_cg22(tweak_data)
 	}
 end
 
--- Lines 350-356
+-- Lines 460-466
 function MutatorTweakData:get_cg22_tree_coordinates()
 	local coordinates = self.piggybank.level_coordinates
 
@@ -749,12 +750,12 @@ function MutatorTweakData:get_cg22_tree_coordinates()
 	return coordinates
 end
 
--- Lines 358-360
+-- Lines 468-470
 function MutatorTweakData:get_cg22_sled_coordinates()
 	return self.cg22.sled_level_coordinates
 end
 
--- Lines 362-364
+-- Lines 472-474
 function MutatorTweakData:get_cg22_shredder_offsets()
 	return self.cg22.shredder_level_offsets
 end

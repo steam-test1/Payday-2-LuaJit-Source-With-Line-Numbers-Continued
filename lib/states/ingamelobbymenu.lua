@@ -5,7 +5,7 @@ IngameLobbyMenuState = IngameLobbyMenuState or class(GameState)
 IngameLobbyMenuState.GUI_LOOTSCREEN = Idstring("guis/lootscreen/lootscreen_fullscreen")
 IngameLobbyMenuState.GUI_LOOTSCREEN_SKIRMISH = Idstring("guis/dlcs/shl/lootscreen/lootscreen_fullscreen")
 
--- Lines 11-25
+-- Lines 11-28
 function IngameLobbyMenuState:init(game_state_machine)
 	GameState.init(self, "ingame_lobby_menu", game_state_machine)
 
@@ -19,7 +19,7 @@ function IngameLobbyMenuState:init(game_state_machine)
 	self._continue_cb = callback(self, self, "_continue")
 end
 
--- Lines 27-36
+-- Lines 30-39
 function IngameLobbyMenuState:setup_controller()
 	if not self._controller then
 		self._controller = managers.controller:create_controller("ingame_lobby_menu", managers.controller:get_default_wrapper_index(), false)
@@ -32,7 +32,7 @@ function IngameLobbyMenuState:setup_controller()
 	end
 end
 
--- Lines 38-50
+-- Lines 41-53
 function IngameLobbyMenuState:_clear_controller()
 	if not self._controller then
 		return
@@ -48,12 +48,12 @@ function IngameLobbyMenuState:_clear_controller()
 	self._controller = nil
 end
 
--- Lines 52-54
+-- Lines 55-57
 function IngameLobbyMenuState:_continue()
 	self:continue()
 end
 
--- Lines 56-74
+-- Lines 59-77
 function IngameLobbyMenuState:continue()
 	if self:_continue_blocked() then
 		return
@@ -72,7 +72,7 @@ function IngameLobbyMenuState:continue()
 	end
 end
 
--- Lines 76-98
+-- Lines 79-101
 function IngameLobbyMenuState:_continue_blocked()
 	local in_focus = managers.menu:active_menu() == self._loot_menu
 
@@ -99,14 +99,14 @@ function IngameLobbyMenuState:_continue_blocked()
 	return false
 end
 
--- Lines 100-104
+-- Lines 103-107
 function IngameLobbyMenuState:set_controller_enabled(enabled)
 	if self._controller then
 		-- Nothing
 	end
 end
 
--- Lines 106-144
+-- Lines 109-185
 function IngameLobbyMenuState:update(t, dt)
 	if self._is_generating_skirmish_lootdrop and managers.skirmish:has_finished_generating_additional_rewards() then
 		self._is_generating_skirmish_lootdrop = nil
@@ -141,7 +141,7 @@ function IngameLobbyMenuState:update(t, dt)
 	end
 end
 
--- Lines 147-208
+-- Lines 188-249
 function IngameLobbyMenuState:at_enter()
 	managers.music:stop()
 	managers.platform:set_presence("Mission_end")
@@ -191,7 +191,7 @@ function IngameLobbyMenuState:at_enter()
 	end
 end
 
--- Lines 211-222
+-- Lines 252-263
 function IngameLobbyMenuState:load_loothud_skirmish(should_show)
 	if not self._setup then
 		self._setup = true
@@ -206,7 +206,7 @@ function IngameLobbyMenuState:load_loothud_skirmish(should_show)
 	end
 end
 
--- Lines 225-243
+-- Lines 266-288
 function IngameLobbyMenuState:load_loothud(should_show)
 	local gui_lootscreen = self.GUI_LOOTSCREEN
 
@@ -227,7 +227,7 @@ function IngameLobbyMenuState:load_loothud(should_show)
 	end
 end
 
--- Lines 245-250
+-- Lines 290-295
 function IngameLobbyMenuState:open_lootscreen()
 	managers.menu:open_menu("loot_menu")
 
@@ -237,7 +237,7 @@ function IngameLobbyMenuState:open_lootscreen()
 	managers.menu_component:pre_set_game_chat_leftbottom(0, 0)
 end
 
--- Lines 252-281
+-- Lines 312-354
 function IngameLobbyMenuState:make_lootdrop()
 	if managers.skirmish:is_skirmish() then
 		local amount_cards = managers.skirmish:get_amount_rewards()
@@ -267,14 +267,14 @@ function IngameLobbyMenuState:make_lootdrop()
 	self:_set_lootdrop()
 end
 
--- Lines 283-287
+-- Lines 356-360
 function IngameLobbyMenuState:_set_lootdrop()
 	if not managers.network.account:inventory_reward(callback(self, self, "_clbk_inventory_reward")) then
 		self:set_lootdrop()
 	end
 end
 
--- Lines 289-305
+-- Lines 362-378
 function IngameLobbyMenuState:_clbk_inventory_reward(error, tradable_list)
 	if error then
 		Application:error("[IngameLobbyMenuState:_clbk_inventory_reward] Failed to reward tradable item (" .. tostring(error) .. ")")
@@ -294,7 +294,7 @@ function IngameLobbyMenuState:_clbk_inventory_reward(error, tradable_list)
 	self:set_lootdrop(drop_category, drop_entry)
 end
 
--- Lines 308-317
+-- Lines 381-390
 function IngameLobbyMenuState:set_lootdrop_skirmish(drop_category, drop_item_id)
 	local got_inventory_reward = drop_item_id ~= nil
 
@@ -311,7 +311,7 @@ function IngameLobbyMenuState:set_lootdrop_skirmish(drop_category, drop_item_id)
 	self._is_generating_skirmish_lootdrop = true
 end
 
--- Lines 320-373
+-- Lines 393-454
 function IngameLobbyMenuState:set_lootdrop(drop_category, drop_item_id)
 	if managers.skirmish:is_skirmish() then
 		self:set_lootdrop_skirmish(drop_category, drop_item_id)
@@ -370,7 +370,7 @@ function IngameLobbyMenuState:set_lootdrop(drop_category, drop_item_id)
 	end
 end
 
--- Lines 375-393
+-- Lines 456-474
 function IngameLobbyMenuState:at_exit()
 	print("[IngameLobbyMenuState:at_exit()]")
 
@@ -382,19 +382,19 @@ function IngameLobbyMenuState:at_exit()
 	managers.menu_component:hide_game_chat_gui()
 end
 
--- Lines 395-399
+-- Lines 476-480
 function IngameLobbyMenuState:on_server_left()
 	Application:debug("IngameLobbyMenuState:on_server_left()")
 	managers.menu_component:set_lootdrop_state("on_server_left")
 end
 
--- Lines 401-405
+-- Lines 482-486
 function IngameLobbyMenuState:on_kicked()
 	Application:debug("IngameLobbyMenuState:on_kicked()")
 	managers.menu_component:set_lootdrop_state("on_kicked")
 end
 
--- Lines 407-411
+-- Lines 488-492
 function IngameLobbyMenuState:on_disconnected()
 	Application:debug("IngameLobbyMenuState:on_disconnected()")
 	managers.menu_component:set_lootdrop_state("on_disconnected")

@@ -369,7 +369,7 @@ function HUDLootScreenSkirmish:make_cards(peer, amount)
 	})
 end
 
--- Lines 406-521
+-- Lines 406-569
 function HUDLootScreenSkirmish:make_lootdrop(lootdrop_data)
 	local peer = lootdrop_data.peer
 	local peer_id = peer and peer:id()
@@ -384,18 +384,21 @@ function HUDLootScreenSkirmish:make_lootdrop(lootdrop_data)
 	local lootdrops = {}
 	local cash = 0
 	local xp = 0
+	local max_cards = #data.cards
 	local card_index = 1
 	local item_panel = nil
 	local coins = lootdrop_data.coins or 0
 
 	if coins > 0 then
-		item_panel = data.cards[card_index].item_panel
-		data.cards[card_index].type = CARD_TYPES.coins
+		if data.cards[card_index] then
+			item_panel = data.cards[card_index].item_panel
+			data.cards[card_index].type = CARD_TYPES.coins
 
-		self:_add_item_textures({
-			type_items = "coins",
-			item_entry = coins
-		}, item_panel)
+			self:_add_item_textures({
+				type_items = "coins",
+				item_entry = coins
+			}, item_panel)
+		end
 
 		card_index = card_index + 1
 	end
@@ -412,10 +415,14 @@ function HUDLootScreenSkirmish:make_lootdrop(lootdrop_data)
 			category = "weapon_color_skins"
 		end
 
-		item_panel = data.cards[card_index].item_panel
-		data.cards[card_index].type = CARD_TYPES[category]
+		item_panel = nil
 
-		self:_add_item_textures(lootdrop_data, item_panel)
+		if data.cards[card_index] then
+			item_panel = data.cards[card_index].item_panel
+			data.cards[card_index].type = CARD_TYPES[category]
+
+			self:_add_item_textures(lootdrop_data, item_panel)
+		end
 
 		td = nil
 
@@ -449,7 +456,7 @@ function HUDLootScreenSkirmish:make_lootdrop(lootdrop_data)
 			td = tweak_data.blackmarket[td_cat][item_id]
 		end
 
-		if category == "textures" then
+		if item_panel and category == "textures" then
 			table.insert(data.patterns, item_panel)
 		end
 
@@ -491,17 +498,17 @@ function HUDLootScreenSkirmish:make_lootdrop(lootdrop_data)
 	self:set_num_visible(math.max(self._num_visible, peer_id))
 end
 
--- Lines 523-525
+-- Lines 571-573
 function HUDLootScreenSkirmish:add_callback(key, clbk)
 	self._callback_handler[key] = clbk
 end
 
--- Lines 527-529
+-- Lines 575-577
 function HUDLootScreenSkirmish:check_all_ready()
 	return not self:is_updating()
 end
 
--- Lines 531-539
+-- Lines 579-587
 function HUDLootScreenSkirmish:clear_other_peers(peer_id)
 	peer_id = peer_id or self:get_local_peer_id()
 
@@ -512,7 +519,7 @@ function HUDLootScreenSkirmish:clear_other_peers(peer_id)
 	end
 end
 
--- Lines 541-549
+-- Lines 589-597
 function HUDLootScreenSkirmish:remove_peer(peer_id, reason)
 	local data = self._peer_data[peer_id]
 
@@ -525,18 +532,18 @@ function HUDLootScreenSkirmish:remove_peer(peer_id, reason)
 	data.panel:hide()
 end
 
--- Lines 551-553
+-- Lines 599-601
 function HUDLootScreenSkirmish:is_updating()
 	return self._update_func ~= nil
 end
 
--- Lines 555-561
+-- Lines 603-609
 function HUDLootScreenSkirmish:set_update(func_name)
 	self._update_func = func_name and callback(self, self, func_name) or nil
 	self._update_t = 0
 end
 
--- Lines 563-573
+-- Lines 611-621
 function HUDLootScreenSkirmish:update(t, dt)
 	if self._wait_t > 0 then
 		self._wait_t = self._wait_t - dt
@@ -551,7 +558,7 @@ function HUDLootScreenSkirmish:update(t, dt)
 	end
 end
 
--- Lines 575-604
+-- Lines 623-652
 function HUDLootScreenSkirmish:_update_flip_cards(t, dt)
 	local data, card = nil
 	local card_index = 1
@@ -588,7 +595,7 @@ function HUDLootScreenSkirmish:_update_flip_cards(t, dt)
 	self:set_update("_update_show_reward_list")
 end
 
--- Lines 606-624
+-- Lines 654-672
 function HUDLootScreenSkirmish:_update_show_reward_list(t, dt)
 	local alpha = self._update_t / 0.5
 
@@ -612,22 +619,22 @@ function HUDLootScreenSkirmish:_update_show_reward_list(t, dt)
 	end
 end
 
--- Lines 626-628
+-- Lines 674-676
 function HUDLootScreenSkirmish:is_active()
 	return self._active
 end
 
--- Lines 630-632
+-- Lines 678-680
 function HUDLootScreenSkirmish:update_layout()
 	self._backdrop:_set_black_borders()
 end
 
--- Lines 634-636
+-- Lines 682-684
 function HUDLootScreenSkirmish:set_layer(layer)
 	self._backdrop:set_layer(layer)
 end
 
--- Lines 638-661
+-- Lines 686-709
 function HUDLootScreenSkirmish:hide()
 	if self._active then
 		return
@@ -656,7 +663,7 @@ function HUDLootScreenSkirmish:hide()
 	end
 end
 
--- Lines 663-698
+-- Lines 711-746
 function HUDLootScreenSkirmish:show()
 	self._backdrop:show()
 
@@ -700,7 +707,7 @@ function HUDLootScreenSkirmish:show()
 		color = Color.black
 	})
 
-	-- Lines 692-695
+	-- Lines 740-743
 	local function fade_out_anim(o)
 		over(0.5, function (p)
 			o:set_alpha(1 - p)
@@ -712,14 +719,14 @@ function HUDLootScreenSkirmish:show()
 	managers.menu_component:lootdrop_is_now_active()
 end
 
--- Lines 700-705
+-- Lines 748-753
 function HUDLootScreenSkirmish:reload()
 	self:close()
 	HUDLootScreenSkirmish.init(self, self._hud, self._workspace, self._lootdrops, self._setup)
 	self:show()
 end
 
--- Lines 707-713
+-- Lines 755-761
 function HUDLootScreenSkirmish:close()
 	self._active = false
 
@@ -729,10 +736,17 @@ function HUDLootScreenSkirmish:close()
 	self._backdrop = nil
 end
 
--- Lines 715-884
+-- Lines 763-965
 function HUDLootScreenSkirmish:_add_item_textures(lootdrop_data, panel)
 	local category = lootdrop_data.type_items
 	local item_id = lootdrop_data.item_entry
+
+	if not panel then
+		Application:stack_dump_error("[HUDLootScreenSkirmish:_add_item_textures] Tried to add item texture to non-existing card!", inspect(lootdrop_data))
+
+		return
+	end
+
 	local center_x = panel:w() / 2
 	local center_y = panel:h() / 2
 
@@ -924,7 +938,7 @@ function HUDLootScreenSkirmish:_add_item_textures(lootdrop_data, panel)
 	end
 end
 
--- Lines 886-906
+-- Lines 967-987
 function HUDLootScreenSkirmish:_texture_loaded_clbk(params, texture_idstring)
 	local is_pattern = params.is_pattern
 	local panel = params.panel
