@@ -400,17 +400,19 @@ function TeamAIMovement:carry_tweak()
 	return self:carry_id() and tweak_data.carry.types[tweak_data.carry[self:carry_id()].type]
 end
 
--- Lines 405-411
+-- Lines 405-412
 function TeamAIMovement:bank_carry()
 	local carry_data = self:carry_data()
 
 	if carry_data then
 		managers.loot:secure(carry_data:carry_id(), carry_data:multiplier())
 		self._carry_unit:set_slot(0)
+
+		self._carry_unit = nil
 	end
 end
 
--- Lines 413-428
+-- Lines 414-429
 function TeamAIMovement:throw_bag(target_unit, reason)
 	if not self:carrying_bag() then
 		return
@@ -430,12 +432,12 @@ function TeamAIMovement:throw_bag(target_unit, reason)
 	end
 end
 
--- Lines 431-433
+-- Lines 432-434
 function TeamAIMovement:was_carrying_bag()
 	return self._was_carrying
 end
 
--- Lines 437-446
+-- Lines 438-447
 function TeamAIMovement:sync_throw_bag(carry_unit, target_unit)
 	if alive(target_unit) then
 		local dir = target_unit:position() - self._unit:position()
@@ -448,7 +450,7 @@ function TeamAIMovement:sync_throw_bag(carry_unit, target_unit)
 	end
 end
 
--- Lines 448-502
+-- Lines 449-503
 function TeamAIMovement:update(...)
 	TeamAIMovement.super.update(self, ...)
 

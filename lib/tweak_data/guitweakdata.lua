@@ -1,6 +1,6 @@
 GuiTweakData = GuiTweakData or class()
 
--- Lines 3-2140
+-- Lines 3-2190
 function GuiTweakData:init(tweak_data)
 	local is_win_32 = SystemInfo:platform() == Idstring("WIN32")
 	local is_nextgen = SystemInfo:platform() == Idstring("PS4") or SystemInfo:platform() == Idstring("XB1")
@@ -1937,6 +1937,7 @@ function GuiTweakData:init(tweak_data)
 			item_class = "CrimeNetSidebarSkirmishItem"
 		},
 		{
+			name_id = "menu_cn_leakedrecording_separator",
 			item_class = "CrimeNetSidebarSeparator"
 		},
 		{
@@ -1946,6 +1947,13 @@ function GuiTweakData:init(tweak_data)
 			id = "leakedrecording",
 			icon = "sidebar_leakedrecording",
 			item_class = "CrimeNetSidebarLeakedRecordingItem"
+		},
+		{
+			name_id = "menu_event_a10th_info",
+			callback = "clbk_pda10_event",
+			id = "event",
+			icon = "sidebar_mutators",
+			item_class = "CrimeNetSidebarEventsItem"
 		}
 	}
 	self.crime_net.codex = {
@@ -5188,8 +5196,12 @@ function GuiTweakData:init(tweak_data)
 				}
 			},
 			{
-				coming_soon = true,
-				poster_icon = "guis/dlcs/lrm/textures/pd2/crimenet/coming_soon_enemies",
+				coming_soon = false,
+				briefing_track = "Play_loc_secr_04",
+				heist = "hox",
+				poster_icon = "guis/dlcs/lrfo/textures/pd2/crimenet/enemies",
+				recording_track = "Play_spe_ets_01",
+				job_value = "LRFO",
 				poster_rect = {
 					0,
 					14,
@@ -5203,6 +5215,30 @@ function GuiTweakData:init(tweak_data)
 		limit = 5
 	}
 
+	table.insert(self.new_heists, {
+		name_id = "menu_nh_pda10_01",
+		texture_path = "guis/dlcs/pda10/textures/pd2/new_heists/pda10_01",
+		epic_url = "https://t.paydaythegame.com/c/vqiyyn",
+		url = "https://t.paydaythegame.com/c/vqiyyn"
+	})
+	table.insert(self.new_heists, {
+		name_id = "menu_nh_pda10_02",
+		texture_path = "guis/dlcs/pda10/textures/pd2/new_heists/pda10_02",
+		epic_url = "https://t.paydaythegame.com/c/f4yt3i",
+		url = "https://t.paydaythegame.com/c/f4yt3i"
+	})
+	table.insert(self.new_heists, {
+		name_id = "menu_nh_pda10_03",
+		texture_path = "guis/dlcs/pda10/textures/pd2/new_heists/pda10_03",
+		epic_url = "https://t.paydaythegame.com/c/20jyqr",
+		url = "https://t.paydaythegame.com/c/20jyqr"
+	})
+	table.insert(self.new_heists, {
+		name_id = "menu_nh_pda10_04",
+		texture_path = "guis/dlcs/pda10/textures/pd2/new_heists/pda10_04",
+		epic_url = "https://t.paydaythegame.com/c/wcxnzh",
+		url = "https://t.paydaythegame.com/c/oedttw"
+	})
 	table.insert(self.new_heists, {
 		name_id = "menu_nh_deep_01",
 		texture_path = "guis/dlcs/deep/textures/pd2/new_heists/deep_01",
@@ -5723,7 +5759,7 @@ function GuiTweakData:init(tweak_data)
 	})
 end
 
--- Lines 2142-2161
+-- Lines 2192-2211
 function GuiTweakData:_create_location_bounding_boxes()
 	for _, location in ipairs(self.crime_net.locations) do
 		local params = location[1]
@@ -5751,7 +5787,7 @@ function GuiTweakData:_create_location_bounding_boxes()
 	end
 end
 
--- Lines 2163-2231
+-- Lines 2213-2281
 function GuiTweakData:_create_location_spawning_dots()
 	local map_w = 2048
 	local map_h = 1024
@@ -5829,15 +5865,15 @@ function GuiTweakData:_create_location_spawning_dots()
 	self.crime_net.locations = new_locations
 end
 
--- Lines 2233-2235
+-- Lines 2283-2285
 function GuiTweakData:create_narrative_locations(locations)
 end
 
--- Lines 2237-2246
+-- Lines 2287-2296
 function GuiTweakData:print_locations()
 end
 
--- Lines 2248-2282
+-- Lines 2298-2332
 function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	skipnewlines = skipnewlines or false
 	depth = depth or 0
@@ -5876,7 +5912,7 @@ function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	return tmp
 end
 
--- Lines 2284-2409
+-- Lines 2334-2459
 function GuiTweakData:tradable_inventory_sort_func(index)
 	if type(index) == "string" then
 		index = self:tradable_inventory_sort_index(index)
@@ -5999,12 +6035,12 @@ function GuiTweakData:tradable_inventory_sort_func(index)
 	return nil
 end
 
--- Lines 2411-2413
+-- Lines 2461-2463
 function GuiTweakData:tradable_inventory_sort_name(index)
 	return self.tradable_inventory_sort_list[index] or "none"
 end
 
--- Lines 2415-2422
+-- Lines 2465-2472
 function GuiTweakData:tradable_inventory_sort_index(name)
 	for index, n in ipairs(self.tradable_inventory_sort_list) do
 		if n == name then
@@ -6015,7 +6051,7 @@ function GuiTweakData:tradable_inventory_sort_index(name)
 	return 0
 end
 
--- Lines 2424-2444
+-- Lines 2474-2494
 function GuiTweakData:get_locked_sort_number(dlc, ...)
 	local dlc_data = dlc and Global.dlc_manager.all_dlc_data[dlc]
 	local is_dlc_locked = dlc and not managers.dlc:is_dlc_unlocked(dlc) or false

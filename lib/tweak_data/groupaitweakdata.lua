@@ -192,7 +192,7 @@ function GroupAITweakData:_init_chatter_data()
 	}
 end
 
--- Lines 133-1881
+-- Lines 133-1913
 function GroupAITweakData:_init_unit_categories(difficulty_index)
 	local access_type_walk_only = {
 		walk = true
@@ -1384,9 +1384,29 @@ function GroupAITweakData:_init_unit_categories(difficulty_index)
 		},
 		access = access_type_all
 	}
+	self.unit_categories.piggydozer = {
+		unit_types = {
+			america = {
+				Idstring("units/pd2_dlc_pda10/characters/ene_dozer_piggy/ene_dozer_piggy")
+			},
+			russia = {
+				Idstring("units/pd2_dlc_pda10/characters/ene_dozer_piggy/ene_dozer_piggy")
+			},
+			zombie = {
+				Idstring("units/pd2_dlc_pda10/characters/ene_dozer_piggy/ene_dozer_piggy")
+			},
+			murkywater = {
+				Idstring("units/pd2_dlc_pda10/characters/ene_dozer_piggy/ene_dozer_piggy")
+			},
+			federales = {
+				Idstring("units/pd2_dlc_pda10/characters/ene_dozer_piggy/ene_dozer_piggy")
+			}
+		},
+		access = access_type_all
+	}
 end
 
--- Lines 1920-2650
+-- Lines 1952-2691
 function GroupAITweakData:_init_enemy_spawn_groups(difficulty_index)
 	self._tactics = {
 		Phalanx_minion = {
@@ -3323,9 +3343,27 @@ function GroupAITweakData:_init_enemy_spawn_groups(difficulty_index)
 			"tac_bull_rush"
 		})
 	}
+	self.enemy_spawn_groups.piggydozer = {
+		amount = {
+			1,
+			1
+		},
+		spawn = {
+			{
+				freq = 1,
+				amount_min = 1,
+				rank = 1,
+				unit = "piggydozer",
+				tactics = self._tactics.tank_rush
+			}
+		},
+		spawn_point_chk_ref = table.list_to_set({
+			"tac_bull_rush"
+		})
+	}
 end
 
--- Lines 2654-2715
+-- Lines 2695-2756
 function GroupAITweakData:_init_enemy_spawn_groups_level(tweak_data, difficulty_index)
 	local lvl_tweak_data = tweak_data.levels[Global.game_settings and Global.game_settings.level_id or Global.level_data and Global.level_data.level_id]
 
@@ -3416,7 +3454,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_level(tweak_data, difficulty_
 	end
 end
 
--- Lines 2719-3295
+-- Lines 2760-3342
 function GroupAITweakData:_init_task_data(difficulty_index, difficulty)
 	local is_console = SystemInfo:platform() ~= Idstring("WIN32")
 	self.max_nr_simultaneous_boss_types = 0
@@ -4345,6 +4383,11 @@ function GroupAITweakData:_init_task_data(difficulty_index, difficulty)
 		0,
 		0
 	}
+	self.besiege.assault.groups.piggydozer = {
+		0,
+		0,
+		0
+	}
 	self.besiege.reenforce.interval = {
 		10,
 		20,
@@ -4626,6 +4669,11 @@ function GroupAITweakData:_init_task_data(difficulty_index, difficulty)
 		0,
 		0
 	}
+	self.besiege.recon.groups.piggydozer = {
+		0,
+		0,
+		0
+	}
 	self.besiege.cloaker.groups = {
 		single_spooc = {
 			1,
@@ -4700,7 +4748,7 @@ function GroupAITweakData:_init_task_data(difficulty_index, difficulty)
 	self.safehouse = deep_clone(self.besiege)
 end
 
--- Lines 3316-3322
+-- Lines 3363-3369
 function GroupAITweakData:_read_mission_preset(tweak_data)
 	if not Global.game_settings then
 		return
@@ -4710,7 +4758,7 @@ function GroupAITweakData:_read_mission_preset(tweak_data)
 	self._mission_preset = lvl_tweak_data.group_ai_preset
 end
 
--- Lines 3326-3372
+-- Lines 3373-3419
 function GroupAITweakData:_create_table_structure()
 	self.enemy_spawn_groups = {}
 	self.besiege = {

@@ -35,6 +35,7 @@ ContractBrokerGui.tabs = {
 }
 ContractBrokerGui.MAX_SEARCH_LENGTH = 20
 ContractBrokerGui.RELEASE_WINDOW = 7
+ContractBrokerGui.event_levels = table.map_keys(tweak_data.mutators.piggyrevenge.level_coordinates)
 
 -- Lines 37-97
 function ContractBrokerGui:init(ws, fullscreen_ws, node)
@@ -873,6 +874,58 @@ end
 -- Lines 837-839
 function ContractBrokerGui:perform_job_filter_skirmish(job_id, contact, job_tweak, contact_tweak)
 	return self:perform_filter_skirmish(contact)
+end
+
+-- Lines 843-855
+function ContractBrokerGui:perform_job_filter_event_gamemode(job_id, contact, job_tweak, contact_tweak)
+	if #job_tweak.chain == 0 then
+		return false
+	end
+
+	for _, stage in ipairs(job_tweak.chain) do
+		if not table.contains(self.event_levels, stage.level_id) then
+			return false
+		end
+	end
+
+	return contact_tweak and not contact_tweak.hidden
+end
+
+-- Lines 858-880
+function ContractBrokerGui:_setup_filter_gamemode_tactic()
+	local tactics = {
+		{
+			"menu_st_category_all"
+		}
+	}
+	local last_y = 0
+	local check_new_job_data = {
+		filter_key = "job",
+		filter_func = ContractBrokerGui.perform_filter_gamemode_tactic
+	}
+
+	for index, filter in ipairs(tactics) do
+		check_new_job_data.filter_param = index
+		local text = self:_add_filter_button(filter[1], last_y, {
+			check_new_job_data = check_new_job_data,
+			text_macros = filter[2]
+		})
+		last_y = text:bottom() + 1
+	end
+
+	self:add_filter("job", ContractBrokerGui.perform_filter_gamemode_tactic)
+	self:set_sorting_function(ContractBrokerGui.perform_standard_sort)
+end
+
+-- Lines 882-905
+function ContractBrokerGui:perform_filter_gamemode_tactic(job_tweak, wrapped_tweak, optional_current_filter)
+	local current_filter = optional_current_filter or self._current_filter or 1
+
+	if current_filter == 1 then
+		return true
+	end
+
+	return false
 end
 
 -- Lines 910-913

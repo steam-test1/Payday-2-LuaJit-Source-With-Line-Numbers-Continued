@@ -16,6 +16,7 @@ function IngameLobbyMenuState:init(game_state_machine)
 		managers.hud:hide(self.GUI_LOOTSCREEN)
 	end
 
+	self._mass_drop_data = nil
 	self._continue_cb = callback(self, self, "_continue")
 end
 
@@ -106,42 +107,45 @@ function IngameLobbyMenuState:set_controller_enabled(enabled)
 	end
 end
 
--- Lines 109-185
+-- Lines 109-186
 function IngameLobbyMenuState:update(t, dt)
-	if self._is_generating_skirmish_lootdrop and managers.skirmish:has_finished_generating_additional_rewards() then
-		self._is_generating_skirmish_lootdrop = nil
-		local lootdrops = managers.skirmish:get_generated_lootdrops()
-		local lootdrop_data = {
-			peer = managers.network:session() and managers.network:session():local_peer(),
-			items = lootdrops.items or {},
-			coins = lootdrops.coins or 0
-		}
+	if self._mass_drop_data and self._mass_drop_data.ready then
+		local lootdrops = managers.lootdrop:fetch_mass_lootdrops(self._mass_drop_data)
 
-		if self._inventory_reward then
-			table.insert(lootdrop_data.items, 1, self._inventory_reward)
+		if lootdrops then
+			local lootdrop_data = {
+				peer = managers.network:session() and managers.network:session():local_peer(),
+				items = lootdrops.items or {},
+				coins = lootdrops.coins or 0,
+				cash = lootdrops.cash or 0,
+				xp = lootdrops.xp or 0
+			}
 
-			self._inventory_reward = nil
-		end
-
-		managers.hud:make_lootdrop_hud(lootdrop_data)
-
-		if not Global.game_settings.single_player and managers.network:session() then
-			local lootdrop_string = ""
-			lootdrop_string = lootdrop_string .. tostring(lootdrops.coins or 0)
-			local global_index = nil
-			local global_values = tweak_data.lootdrop.global_value_list_map
-
-			for _, item in ipairs(lootdrops.items or {}) do
-				global_index = global_values[item.global_value] or 1
-				lootdrop_string = lootdrop_string .. " " .. tostring(global_index) .. "-" .. tostring(item.type_items) .. "-" .. tostring(item.item_entry)
+			if self._mass_drop_data.inventory_reward then
+				table.insert(lootdrop_data.items, 1, self._mass_drop_data.inventory_reward)
 			end
 
-			managers.network:session():send_to_peers("feed_lootdrop_skirmish", lootdrop_string)
+			self._mass_drop_data = nil
+
+			managers.hud:make_lootdrop_hud(lootdrop_data)
+
+			if not Global.game_settings.single_player and managers.network:session() then
+				local lootdrop_string = string.format("%d %d %d", lootdrops.coins or 0, lootdrops.cash or 0, lootdrops.xp or 0)
+				local global_index = nil
+				local global_values = tweak_data.lootdrop.global_value_list_map
+
+				for _, item in ipairs(lootdrops.items or {}) do
+					global_index = global_values[item.global_value] or 1
+					lootdrop_string = lootdrop_string .. " " .. tostring(global_index) .. "-" .. tostring(item.type_items) .. "-" .. tostring(item.item_entry)
+				end
+
+				managers.network:session():send_to_peers("feed_lootdrop_skirmish", lootdrop_string)
+			end
 		end
 	end
 end
 
--- Lines 188-249
+-- Lines 189-250
 function IngameLobbyMenuState:at_enter()
 	managers.music:stop()
 	managers.platform:set_presence("Mission_end")
@@ -191,7 +195,7 @@ function IngameLobbyMenuState:at_enter()
 	end
 end
 
--- Lines 252-263
+-- Lines 253-264
 function IngameLobbyMenuState:load_loothud_skirmish(should_show)
 	if not self._setup then
 		self._setup = true
@@ -206,11 +210,11 @@ function IngameLobbyMenuState:load_loothud_skirmish(should_show)
 	end
 end
 
--- Lines 266-288
+-- Lines 267-289
 function IngameLobbyMenuState:load_loothud(should_show)
 	local gui_lootscreen = self.GUI_LOOTSCREEN
 
-	if managers.skirmish:is_skirmish() then
+	if self:get_mass_drop_class() then
 		gui_lootscreen = self.GUI_LOOTSCREEN_SKIRMISH
 	end
 
@@ -227,7 +231,7 @@ function IngameLobbyMenuState:load_loothud(should_show)
 	end
 end
 
--- Lines 290-295
+-- Lines 291-296
 function IngameLobbyMenuState:open_lootscreen()
 	managers.menu:open_menu("loot_menu")
 
@@ -237,10 +241,33 @@ function IngameLobbyMenuState:open_lootscreen()
 	managers.menu_component:pre_set_game_chat_leftbottom(0, 0)
 end
 
--- Lines 312-354
-function IngameLobbyMenuState:make_lootdrop()
+-- Lines 299-310
+function IngameLobbyMenuState:get_mass_drop_class()
 	if managers.skirmish:is_skirmish() then
-		local amount_cards = managers.skirmish:get_amount_rewards()
+		return managers.skirmish
+	else
+		local mutator_class = managers.mutators:get_mass_drop_mutator()
+
+		if mutator_class then
+			return mutator_class
+		end
+	end
+
+	return false
+end
+
+-- Lines 313-356
+function IngameLobbyMenuState:make_lootdrop()
+	self._mass_drop_data = nil
+	local mass_drop_class = self:get_mass_drop_class()
+
+	if mass_drop_class then
+		self._mass_drop_data = mass_drop_class:get_mass_drop_data() or {}
+		self._mass_drop_data.ready = false
+	end
+
+	if self._mass_drop_data then
+		local amount_cards = managers.lootdrop:get_amount_mass_drop(self._mass_drop_data)
 
 		managers.hud:make_skirmish_cards_hud(managers.network:session() and managers.network:session():local_peer(), amount_cards)
 
@@ -267,14 +294,14 @@ function IngameLobbyMenuState:make_lootdrop()
 	self:_set_lootdrop()
 end
 
--- Lines 356-360
+-- Lines 358-362
 function IngameLobbyMenuState:_set_lootdrop()
 	if not managers.network.account:inventory_reward(callback(self, self, "_clbk_inventory_reward")) then
 		self:set_lootdrop()
 	end
 end
 
--- Lines 362-378
+-- Lines 364-380
 function IngameLobbyMenuState:_clbk_inventory_reward(error, tradable_list)
 	if error then
 		Application:error("[IngameLobbyMenuState:_clbk_inventory_reward] Failed to reward tradable item (" .. tostring(error) .. ")")
@@ -294,27 +321,20 @@ function IngameLobbyMenuState:_clbk_inventory_reward(error, tradable_list)
 	self:set_lootdrop(drop_category, drop_entry)
 end
 
--- Lines 381-390
-function IngameLobbyMenuState:set_lootdrop_skirmish(drop_category, drop_item_id)
-	local got_inventory_reward = drop_item_id ~= nil
-
-	if got_inventory_reward then
-		self._inventory_reward = {
-			global_value = managers.blackmarket:get_global_value(drop_category, drop_item_id),
-			type_items = drop_category,
-			item_entry = drop_item_id
-		}
-	end
-
-	managers.skirmish:make_lootdrops(got_inventory_reward)
-
-	self._is_generating_skirmish_lootdrop = true
-end
-
--- Lines 393-454
+-- Lines 395-457
 function IngameLobbyMenuState:set_lootdrop(drop_category, drop_item_id)
-	if managers.skirmish:is_skirmish() then
-		self:set_lootdrop_skirmish(drop_category, drop_item_id)
+	if self._mass_drop_data then
+		if drop_item_id ~= nil then
+			self._mass_drop_data.inventory_reward = {
+				global_value = managers.blackmarket:get_global_value(drop_category, drop_item_id),
+				type_items = drop_category,
+				item_entry = drop_item_id
+			}
+		end
+
+		managers.lootdrop:set_mass_drop(self._mass_drop_data)
+
+		self._mass_drop_data.ready = true
 
 		return
 	end
@@ -370,7 +390,7 @@ function IngameLobbyMenuState:set_lootdrop(drop_category, drop_item_id)
 	end
 end
 
--- Lines 456-474
+-- Lines 459-477
 function IngameLobbyMenuState:at_exit()
 	print("[IngameLobbyMenuState:at_exit()]")
 
@@ -382,19 +402,19 @@ function IngameLobbyMenuState:at_exit()
 	managers.menu_component:hide_game_chat_gui()
 end
 
--- Lines 476-480
+-- Lines 479-483
 function IngameLobbyMenuState:on_server_left()
 	Application:debug("IngameLobbyMenuState:on_server_left()")
 	managers.menu_component:set_lootdrop_state("on_server_left")
 end
 
--- Lines 482-486
+-- Lines 485-489
 function IngameLobbyMenuState:on_kicked()
 	Application:debug("IngameLobbyMenuState:on_kicked()")
 	managers.menu_component:set_lootdrop_state("on_kicked")
 end
 
--- Lines 488-492
+-- Lines 491-495
 function IngameLobbyMenuState:on_disconnected()
 	Application:debug("IngameLobbyMenuState:on_disconnected()")
 	managers.menu_component:set_lootdrop_state("on_disconnected")

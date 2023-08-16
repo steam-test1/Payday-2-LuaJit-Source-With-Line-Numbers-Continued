@@ -194,336 +194,346 @@ function GenericDLCManager:has_lawp()
 end
 
 -- Lines 244-246
+function GenericDLCManager:has_lrfo()
+	return self:is_dlc_unlocked("lrfo")
+end
+
+-- Lines 249-251
 function GenericDLCManager:has_m422()
 	return self:is_dlc_unlocked("m422")
 end
 
--- Lines 249-251
+-- Lines 254-256
 function GenericDLCManager:has_mar21()
 	return self:is_dlc_unlocked("mar21")
 end
 
--- Lines 254-256
+-- Lines 259-261
 function GenericDLCManager:has_mar22()
 	return self:is_dlc_unlocked("mar22")
 end
 
--- Lines 259-261
+-- Lines 264-266
 function GenericDLCManager:has_maw()
 	return self:is_dlc_unlocked("maw")
 end
 
--- Lines 264-266
+-- Lines 269-271
 function GenericDLCManager:has_mbs()
 	return self:is_dlc_unlocked("mbs")
 end
 
--- Lines 274-276
+-- Lines 279-281
 function GenericDLCManager:has_mex()
 	return self:is_dlc_unlocked("mex")
 end
 
--- Lines 279-281
+-- Lines 284-286
 function GenericDLCManager:has_mmh()
 	return self:is_dlc_unlocked("mmh")
 end
 
--- Lines 284-286
+-- Lines 289-291
 function GenericDLCManager:has_mrwi()
 	return self:is_dlc_unlocked("mrwi")
 end
 
--- Lines 289-291
+-- Lines 294-296
 function GenericDLCManager:has_mts()
 	return self:is_dlc_unlocked("mts")
 end
 
--- Lines 294-296
+-- Lines 299-301
 function GenericDLCManager:has_mwm()
 	return self:is_dlc_unlocked("mwm")
 end
 
--- Lines 299-301
+-- Lines 304-306
 function GenericDLCManager:has_mxm()
 	return self:is_dlc_unlocked("mxm")
 end
 
--- Lines 304-306
+-- Lines 309-311
 function GenericDLCManager:has_mxw()
 	return self:is_dlc_unlocked("mxw")
 end
 
--- Lines 309-311
+-- Lines 314-316
 function GenericDLCManager:has_ocp()
 	return self:is_dlc_unlocked("ocp")
 end
 
--- Lines 314-316
+-- Lines 319-321
 function GenericDLCManager:has_oct21()
 	return self:is_dlc_unlocked("oct21")
 end
 
 -- Lines 324-326
+function GenericDLCManager:has_pda10()
+	return self:is_dlc_unlocked("pda10")
+end
+
+-- Lines 329-331
 function GenericDLCManager:has_pda8()
 	return self:is_dlc_unlocked("pda8")
 end
 
--- Lines 329-331
+-- Lines 334-336
 function GenericDLCManager:has_pda9()
 	return self:is_dlc_unlocked("pda9")
 end
 
--- Lines 334-336
+-- Lines 339-341
 function GenericDLCManager:has_pent()
 	return self:is_dlc_unlocked("pent")
 end
 
--- Lines 339-341
+-- Lines 344-346
 function GenericDLCManager:has_pex()
 	return self:is_dlc_unlocked("pex")
 end
 
--- Lines 344-346
+-- Lines 349-351
 function GenericDLCManager:has_pgo()
 	return self:is_dlc_unlocked("pgo")
 end
 
--- Lines 349-351
+-- Lines 354-356
 function GenericDLCManager:has_prim()
 	return self:is_dlc_unlocked("prim")
 end
 
--- Lines 354-356
+-- Lines 359-361
 function GenericDLCManager:has_pxp1()
 	return self:is_dlc_unlocked("pxp1")
 end
 
--- Lines 359-361
+-- Lines 364-366
 function GenericDLCManager:has_pxp2()
 	return self:is_dlc_unlocked("pxp2")
 end
 
--- Lines 364-366
+-- Lines 369-371
 function GenericDLCManager:has_pxp3()
 	return self:is_dlc_unlocked("pxp3")
 end
 
--- Lines 369-371
+-- Lines 374-376
 function GenericDLCManager:has_pxp4()
 	return self:is_dlc_unlocked("pxp4")
 end
 
--- Lines 374-376
+-- Lines 379-381
 function GenericDLCManager:has_ranc()
 	return self:is_dlc_unlocked("ranc")
 end
 
--- Lines 379-381
+-- Lines 384-386
 function GenericDLCManager:has_rat()
 	return self:is_dlc_unlocked("rat")
 end
 
--- Lines 384-386
+-- Lines 389-391
 function GenericDLCManager:has_saco()
 	return self:is_dlc_unlocked("saco")
 end
 
--- Lines 389-391
+-- Lines 394-396
 function GenericDLCManager:has_sand()
 	return self:is_dlc_unlocked("sand")
 end
 
--- Lines 394-396
+-- Lines 399-401
 function GenericDLCManager:has_savi()
 	return self:is_dlc_unlocked("savi")
 end
 
--- Lines 399-401
+-- Lines 404-406
 function GenericDLCManager:has_sawp()
 	return self:is_dlc_unlocked("sawp")
 end
 
--- Lines 404-406
+-- Lines 409-411
 function GenericDLCManager:has_sbzac2()
 	return self:is_dlc_unlocked("sbzac2")
 end
 
--- Lines 409-411
+-- Lines 414-416
 function GenericDLCManager:has_scm()
 	return self:is_dlc_unlocked("scm")
 end
 
--- Lines 414-416
+-- Lines 419-421
 function GenericDLCManager:has_sdm()
 	return self:is_dlc_unlocked("sdm")
 end
 
--- Lines 419-421
+-- Lines 424-426
 function GenericDLCManager:has_sdtp()
 	return self:is_dlc_unlocked("sdtp")
 end
 
--- Lines 424-426
+-- Lines 429-431
 function GenericDLCManager:has_sft()
 	return self:is_dlc_unlocked("sft")
 end
 
--- Lines 429-431
+-- Lines 434-436
 function GenericDLCManager:has_shl()
 	return self:is_dlc_unlocked("shl")
 end
 
--- Lines 434-436
+-- Lines 439-441
 function GenericDLCManager:has_skm()
 	return self:is_dlc_unlocked("skm")
 end
 
--- Lines 439-441
+-- Lines 444-446
 function GenericDLCManager:has_smo()
 	return self:is_dlc_unlocked("smo")
 end
 
--- Lines 444-446
+-- Lines 449-451
 function GenericDLCManager:has_sms()
 	return self:is_dlc_unlocked("sms")
 end
 
--- Lines 449-451
+-- Lines 454-456
 function GenericDLCManager:has_snow()
 	return self:is_dlc_unlocked("snow")
 end
 
--- Lines 454-456
+-- Lines 459-461
 function GenericDLCManager:has_srtr()
 	return self:is_dlc_unlocked("srtr")
 end
 
--- Lines 464-466
+-- Lines 469-471
 function GenericDLCManager:has_sus()
 	return self:is_dlc_unlocked("sus")
 end
 
--- Lines 469-471
+-- Lines 474-476
 function GenericDLCManager:has_svc()
 	return self:is_dlc_unlocked("svc")
 end
 
--- Lines 474-476
+-- Lines 479-481
 function GenericDLCManager:has_taco()
 	return self:is_dlc_unlocked("taco")
 end
 
--- Lines 479-481
+-- Lines 484-486
 function GenericDLCManager:has_tam()
 	return self:is_dlc_unlocked("tam")
 end
 
--- Lines 484-486
+-- Lines 489-491
 function GenericDLCManager:has_tar()
 	return self:is_dlc_unlocked("tar")
 end
 
--- Lines 489-491
+-- Lines 494-496
 function GenericDLCManager:has_tawp()
 	return self:is_dlc_unlocked("tawp")
 end
 
--- Lines 499-501
+-- Lines 504-506
 function GenericDLCManager:has_tjp()
 	return self:is_dlc_unlocked("tjp")
 end
 
--- Lines 504-506
+-- Lines 509-511
 function GenericDLCManager:has_tma1()
 	return self:is_dlc_unlocked("tma1")
 end
 
--- Lines 509-511
+-- Lines 514-516
 function GenericDLCManager:has_toon()
 	return self:is_dlc_unlocked("toon")
 end
 
--- Lines 514-516
+-- Lines 519-521
 function GenericDLCManager:has_trai()
 	return self:is_dlc_unlocked("trai")
 end
 
--- Lines 519-521
+-- Lines 524-526
 function GenericDLCManager:has_trd()
 	return self:is_dlc_unlocked("trd")
 end
 
--- Lines 524-526
+-- Lines 529-531
 function GenericDLCManager:has_trik()
 	return self:is_dlc_unlocked("trik")
 end
 
--- Lines 529-531
+-- Lines 534-536
 function GenericDLCManager:has_trt()
 	return self:is_dlc_unlocked("trt")
 end
 
--- Lines 534-536
+-- Lines 539-541
 function GenericDLCManager:has_tstp()
 	return self:is_dlc_unlocked("tstp")
 end
 
--- Lines 539-541
+-- Lines 544-546
 function GenericDLCManager:has_txt1()
 	return self:is_dlc_unlocked("txt1")
 end
 
--- Lines 544-546
+-- Lines 549-551
 function GenericDLCManager:has_txt2()
 	return self:is_dlc_unlocked("txt2")
 end
 
--- Lines 549-551
+-- Lines 554-556
 function GenericDLCManager:has_txt3()
 	return self:is_dlc_unlocked("txt3")
 end
 
--- Lines 554-556
+-- Lines 559-561
 function GenericDLCManager:has_txt4()
 	return self:is_dlc_unlocked("txt4")
 end
 
--- Lines 564-566
+-- Lines 569-571
 function GenericDLCManager:has_wcc()
 	return self:is_dlc_unlocked("wcc")
 end
 
--- Lines 569-571
+-- Lines 574-576
 function GenericDLCManager:has_wcc_s01()
 	return self:is_dlc_unlocked("wcc_s01")
 end
 
--- Lines 574-576
+-- Lines 579-581
 function GenericDLCManager:has_wcc_s02()
 	return self:is_dlc_unlocked("wcc_s02")
 end
 
--- Lines 579-581
+-- Lines 584-586
 function GenericDLCManager:has_wcs()
 	return self:is_dlc_unlocked("wcs")
 end
 
--- Lines 584-586
+-- Lines 589-591
 function GenericDLCManager:has_xm20()
 	return self:is_dlc_unlocked("xm20")
 end
 
--- Lines 589-591
+-- Lines 594-596
 function GenericDLCManager:has_xm21()
 	return self:is_dlc_unlocked("xm21")
 end
 
--- Lines 594-596
+-- Lines 599-601
 function GenericDLCManager:has_xm22()
 	return self:is_dlc_unlocked("xm22")
 end
 
--- Lines 599-601
+-- Lines 604-606
 function GenericDLCManager:has_xmn()
 	return self:is_dlc_unlocked("xmn")
 end
@@ -732,6 +742,11 @@ function WINDLCManager:init_generated()
 		epic_id = "ca4528520efe4b89a5df2850989ab111",
 		no_install = true
 	}
+	Global.dlc_manager.all_dlc_data.lrfo = {
+		app_id = "218620",
+		epic_id = "c9e33efd38a7409e8aeee22f7a6f2e06",
+		no_install = true
+	}
 	Global.dlc_manager.all_dlc_data.m422 = {
 		app_id = "218620",
 		epic_id = "c9e33efd38a7409e8aeee22f7a6f2e06",
@@ -804,6 +819,11 @@ function WINDLCManager:init_generated()
 		webpage = "https://pd2.link/FEXWCP3YB"
 	}
 	Global.dlc_manager.all_dlc_data.oct21 = {
+		app_id = "218620",
+		epic_id = "c9e33efd38a7409e8aeee22f7a6f2e06",
+		no_install = true
+	}
+	Global.dlc_manager.all_dlc_data.pda10 = {
 		app_id = "218620",
 		epic_id = "c9e33efd38a7409e8aeee22f7a6f2e06",
 		no_install = true

@@ -3238,7 +3238,23 @@ function MenuManager:show_cg22_event_dialog()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 2493-2514
+-- Lines 2493-2501
+function MenuManager:show_pda10_event_dialog()
+	local dialog_data = {
+		title = managers.localization:text("dialog_pda10_event_title"),
+		text = managers.localization:text("dialog_pda10_event_text")
+	}
+	local ok_button = {
+		text = managers.localization:text("dialog_ok")
+	}
+	dialog_data.button_list = {
+		ok_button
+	}
+
+	managers.system_menu:show(dialog_data)
+end
+
+-- Lines 2505-2526
 function MenuManager:show_external_items_dialog(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_external_items_title")
@@ -3269,7 +3285,7 @@ function MenuManager:show_external_items_dialog(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 2518-2584
+-- Lines 2530-2596
 function MenuManager:show_accept_gamesight_telemetry(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_gamesight_telemetry_title"),
@@ -3288,7 +3304,7 @@ function MenuManager:show_accept_gamesight_telemetry(params)
 		privacy_button.text = managers.localization:text("dialog_privacy")
 		privacy_button.no_close = true
 
-		-- Lines 2534-2536
+		-- Lines 2546-2548
 		function privacy_button.callback_func()
 			managers.network.account:overlay_activate("url", tweak_data.gui.privacy_webpage)
 		end
@@ -3296,7 +3312,7 @@ function MenuManager:show_accept_gamesight_telemetry(params)
 		license_button.text = managers.localization:text("dialog_license")
 		license_button.no_close = true
 
-		-- Lines 2540-2542
+		-- Lines 2552-2554
 		function license_button.callback_func()
 			managers.network.account:overlay_activate("url", tweak_data.gui.license_webpage)
 		end
@@ -3341,7 +3357,7 @@ function MenuManager:show_accept_gamesight_telemetry(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 2586-2631
+-- Lines 2598-2643
 function MenuManager:show_policy_seen(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_gamesight_telemetry_title"),
@@ -3360,7 +3376,7 @@ function MenuManager:show_policy_seen(params)
 		privacy_button.text = managers.localization:text("dialog_privacy")
 		privacy_button.no_close = true
 
-		-- Lines 2602-2604
+		-- Lines 2614-2616
 		function privacy_button.callback_func()
 			managers.network.account:overlay_activate("url", tweak_data.gui.privacy_webpage)
 		end
@@ -3368,7 +3384,7 @@ function MenuManager:show_policy_seen(params)
 		license_button.text = managers.localization:text("dialog_license")
 		license_button.no_close = true
 
-		-- Lines 2608-2610
+		-- Lines 2620-2622
 		function license_button.callback_func()
 			managers.network.account:overlay_activate("url", tweak_data.gui.license_webpage)
 		end
@@ -3394,7 +3410,7 @@ function MenuManager:show_policy_seen(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 2636-2682
+-- Lines 2648-2694
 function MenuManager:show_accept_policy_new(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_gamesight_telemetry_title"),
@@ -3407,7 +3423,7 @@ function MenuManager:show_accept_policy_new(params)
 		privacy_button.text = managers.localization:text("dialog_privacy")
 		privacy_button.no_close = true
 
-		-- Lines 2646-2652
+		-- Lines 2658-2664
 		function privacy_button.callback_func()
 			if MenuCallbackHandler:is_overlay_enabled() then
 				Steam:overlay_activate("url", tweak_data.gui.privacy_webpage)
@@ -3419,7 +3435,7 @@ function MenuManager:show_accept_policy_new(params)
 		license_button.text = managers.localization:text("dialog_license")
 		license_button.no_close = true
 
-		-- Lines 2656-2662
+		-- Lines 2668-2674
 		function license_button.callback_func()
 			if MenuCallbackHandler:is_overlay_enabled() then
 				Steam:overlay_activate("url", tweak_data.gui.license_webpage)
@@ -3448,7 +3464,7 @@ function MenuManager:show_accept_policy_new(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 2684-2704
+-- Lines 2696-2716
 function MenuManager:show_accept_telemetry_new(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_telemetry_title_new"),
@@ -3471,7 +3487,7 @@ function MenuManager:show_accept_telemetry_new(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 2706-2726
+-- Lines 2718-2738
 function MenuManager:show_accept_gamesight_new(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_gamesight_title"),
@@ -3494,7 +3510,7 @@ function MenuManager:show_accept_gamesight_new(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 2729-2751
+-- Lines 2741-2763
 function MenuManager:show_accept_telemetry(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_telemetry_title"),
@@ -3525,7 +3541,7 @@ function MenuManager:show_accept_telemetry(params)
 	managers.system_menu:show_document(dialog_data)
 end
 
--- Lines 2754-2762
+-- Lines 2766-2774
 function MenuManager:show_lron_dialog(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_lron_event_title"),
@@ -3541,7 +3557,7 @@ function MenuManager:show_lron_dialog(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 2765-2773
+-- Lines 2777-2785
 function MenuManager:show_lrtw_dialog(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_lrtw_event_title"),
@@ -3557,7 +3573,7 @@ function MenuManager:show_lrtw_dialog(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 2776-2784
+-- Lines 2788-2796
 function MenuManager:show_lrth_dialog(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_lrth_event_title"),
@@ -3573,7 +3589,23 @@ function MenuManager:show_lrth_dialog(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 2798-2828
+-- Lines 2799-2807
+function MenuManager:show_lrfo_dialog(params)
+	local dialog_data = {
+		title = managers.localization:text("dialog_lrfo_event_title"),
+		text = managers.localization:text("dialog_lrfo_event_text")
+	}
+	local ok_button = {
+		text = managers.localization:text("dialog_ok")
+	}
+	dialog_data.button_list = {
+		ok_button
+	}
+
+	managers.system_menu:show(dialog_data)
+end
+
+-- Lines 2810-2840
 function MenuManager:show_eos_no_connect_dialog(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_eos_no_connect_title"),
@@ -3612,7 +3644,7 @@ function MenuManager:show_eos_no_connect_dialog(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 2830-2841
+-- Lines 2842-2853
 function MenuManager:show_epic_separate_window_opened(params)
 	local dialog_data = {
 		title = managers.localization:text("dialog_epic_separate_window_title"),
@@ -3629,7 +3661,7 @@ function MenuManager:show_epic_separate_window_opened(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 2844-2868
+-- Lines 2856-2880
 function MenuManager:show_socialhub_action_dialog(params)
 	local dialog_data = {
 		title = managers.localization:text("menu_socialhub_confirmation_dialog_title")
@@ -3659,7 +3691,7 @@ function MenuManager:show_socialhub_action_dialog(params)
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 2870-2884
+-- Lines 2882-2896
 function MenuManager:show_shub_blocked_dialog(params)
 	local title = "dialog_mp_shub_blocked_title"
 	local dialog_data = {
@@ -3679,7 +3711,7 @@ function MenuManager:show_shub_blocked_dialog(params)
 	Global.on_remove_peer_message = nil
 end
 
--- Lines 2886-2900
+-- Lines 2898-2912
 function MenuManager:show_shub_not_friend_dialog(params)
 	local title = "dialog_mp_shub_not_friend_title"
 	local dialog_data = {
@@ -3699,7 +3731,7 @@ function MenuManager:show_shub_not_friend_dialog(params)
 	Global.on_remove_peer_message = nil
 end
 
--- Lines 2902-2916
+-- Lines 2914-2928
 function MenuManager:show_host_loading_dialog(params)
 	local title = "dialog_mp_host_loading_title"
 	local dialog_data = {
@@ -3719,7 +3751,7 @@ function MenuManager:show_host_loading_dialog(params)
 	Global.on_remove_peer_message = nil
 end
 
--- Lines 2918-2932
+-- Lines 2930-2944
 function MenuManager:show_already_joined_dialog(params)
 	local title = "dialog_mp_already_joined_title"
 	local dialog_data = {

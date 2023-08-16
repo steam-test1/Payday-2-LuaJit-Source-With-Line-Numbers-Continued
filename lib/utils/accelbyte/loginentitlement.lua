@@ -694,19 +694,136 @@ function Entitlement:UpdateStat(stat_code, stat_value, update_method, callback)
 	HttpRequest:put(Url, callback, payload_content_type, payload_json, headers)
 end
 
--- Lines 677-783
+-- Lines 677-774
+function Entitlement:UpdateCrossGameRecognition()
+	if not Login.player_session.access_token then
+		return
+	end
+
+	local base_url = BaseUrl
+	local namespace = Namespace
+	local user_id = Login.player_session.user_id
+	local headers = {
+		Authorization = "Bearer " .. Login.player_session.access_token,
+		Accept = "application/json"
+	}
+	local payload_content_type = "application/json"
+	local completed_index = 0
+	local completed_achievement_list = {
+		"skull_very_hard",
+		"skull_overkill",
+		"skull_easywish",
+		"skull_deathwish",
+		"skull_smwish",
+		"ggez_1"
+	}
+
+	for index, achievement_id in ipairs(completed_achievement_list) do
+		local achievement = managers.achievment:get_info(achievement_id)
+
+		if achievement and achievement.awarded then
+			completed_index = index
+		end
+	end
+
+	local wanted_stats = {
+		["user-infamy"] = managers.experience:current_rank(),
+		["diff-very-hard"] = completed_index >= 1 and 1 or 0,
+		["diff-overkill"] = completed_index >= 2 and 1 or 0,
+		["diff-mayhem"] = completed_index >= 3 and 1 or 0,
+		["diff-deathwish"] = completed_index >= 4 and 1 or 0,
+		["diff-deathsentence"] = completed_index >= 5 and 1 or 0,
+		["diff-ds-one"] = completed_index >= 6 and 1 or 0,
+		secret = managers.achievment:get_info("fin_1").awarded and 1 or 0
+	}
+	local create_stats = {}
+	local update_stats = {}
+
+	-- Lines 723-761
+	local function on_stats_received(success, body)
+		cat_print("accelbyte", "[AccelByte] on_stats_received", success, body)
+
+		if success then
+			local stats = json.decode(body)
+			local existing_stats = {}
+
+			if stats and stats.data then
+				for _, stat in ipairs(stats.data) do
+					existing_stats[stat.statCode] = stat.value
+				end
+			end
+
+			for stat_code, value in pairs(wanted_stats) do
+				if not existing_stats[stat_code] then
+					table.insert(create_stats, {
+						statCode = stat_code
+					})
+				end
+
+				if existing_stats[stat_code] ~= value then
+					table.insert(update_stats, {
+						updateStrategy = "OVERRIDE",
+						statCode = stat_code,
+						value = value
+					})
+				end
+			end
+
+			if #create_stats > 0 then
+				local url = string.format("%s/social/v1/public/namespaces/%s/users/%s/statitems/bulk", base_url, namespace, user_id)
+				local payload_json = json.encode(create_stats)
+
+				-- Lines 748-748
+				local function clbk(...)
+					cat_print("accelbyte", "[AccelByte]", ...)
+				end
+
+				HttpRequest:post(url, clbk, payload_content_type, payload_json, headers)
+			end
+
+			if #update_stats > 0 then
+				local url = string.format("%s/social/v2/public/namespaces/%s/users/%s/statitems/value/bulk", base_url, namespace, user_id)
+				local payload_json = json.encode(update_stats)
+
+				-- Lines 756-756
+				local function clbk(...)
+					cat_print("accelbyte", "[AccelByte]", ...)
+				end
+
+				HttpRequest:put(url, clbk, payload_content_type, payload_json, headers)
+			end
+		end
+	end
+
+	local stat_code_url = ""
+	local stat_codes = table.map_keys(wanted_stats)
+
+	for index, stat_code in ipairs(stat_codes) do
+		stat_code_url = stat_code_url .. stat_code
+
+		if index < #stat_codes then
+			stat_code_url = stat_code_url .. "%2C"
+		end
+	end
+
+	local url = string.format("%s/social/v1/public/namespaces/%s/users/%s/statitems?statCodes=%s&offset=0&limit=%d", base_url, namespace, user_id, stat_code_url, #stat_codes)
+
+	HttpRequest:get(url, on_stats_received, headers)
+end
+
+-- Lines 778-888
 function Entitlement:CheckAndVerifyUserEntitlement(callback)
 	Entitlement.result.data = {}
 	local player_id = managers.network.account:player_id()
 
 	Telemetry:send_on_game_launch()
 
-	-- Lines 687-692
+	-- Lines 788-793
 	local function entitlement_callback(success)
 		Entitlement:SetDLCEntitlements()
 	end
 
-	-- Lines 694-708
+	-- Lines 795-813
 	local function login_callback(error_code, status_code, response_body)
 		cat_print("accelbyte", "Callback login_callback ")
 
@@ -715,16 +832,17 @@ function Entitlement:CheckAndVerifyUserEntitlement(callback)
 		Telemetry:on_login()
 		Telemetry:on_login_screen_passed()
 
-		-- Lines 702-705
+		-- Lines 803-810
 		local function update_stat_callback(error_code, status_code, response_body)
 			cat_print("accelbyte", "Callback update_stat_callback ")
 			Entitlement:QueryEntitlementAsString(0, 100, entitlement_callback)
+			Entitlement:UpdateCrossGameRecognition()
 		end
 
 		Entitlement:UpdateStat("sync-platformupgrade", 1, "INCREMENT", update_stat_callback)
 	end
 
-	-- Lines 710-759
+	-- Lines 815-864
 	local function check_platform_callback(success)
 		cat_print("accelbyte", "Callback Platform Check")
 
@@ -736,7 +854,7 @@ function Entitlement:CheckAndVerifyUserEntitlement(callback)
 			if SystemInfo:distribution() == Idstring("STEAM") then
 				local ticket = Utility:get_steamticket()
 
-				-- Lines 722-730
+				-- Lines 827-835
 				local function login_with_steam_callback(success, reason)
 					if success then
 						cat_print("accelbyte", "[AccelByte] Successfully authenticated the Steam Ticket, now logging in with Steam to AB Backend , callback reason " .. reason)
@@ -774,7 +892,7 @@ function Entitlement:CheckAndVerifyUserEntitlement(callback)
 		end
 	end
 
-	-- Lines 762-774
+	-- Lines 867-879
 	local function get_client_token_callback(success)
 		if success then
 			Login:CheckPlatformIdForExistingAccount(player_id, check_platform_callback)
@@ -796,7 +914,7 @@ function Entitlement:CheckAndVerifyUserEntitlement(callback)
 	end
 end
 
--- Lines 785-941
+-- Lines 890-1046
 function Entitlement:SerializeJsonString(document)
 	cat_print("accelbyte", "[AccelByte] Entitlement:SerializeJsonString")
 

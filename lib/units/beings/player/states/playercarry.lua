@@ -246,7 +246,7 @@ function PlayerCarry:_perform_jump(jump_vec)
 	PlayerCarry.super._perform_jump(self, jump_vec)
 end
 
--- Lines 334-367
+-- Lines 334-374
 function PlayerCarry:_get_max_walk_speed(...)
 	local multiplier = tweak_data.carry.types[self._tweak_data_name].move_speed_modifier
 
@@ -268,28 +268,35 @@ function PlayerCarry:_get_max_walk_speed(...)
 		multiplier = math.clamp(multiplier, 0, 1)
 	end
 
+	local mutator = nil
+
 	if managers.mutators:is_mutator_active(MutatorCG22) then
-		local mutator = managers.mutators:get_mutator(MutatorCG22)
+		mutator = managers.mutators:get_mutator(MutatorCG22)
+	elseif managers.mutators:is_mutator_active(MutatorPiggyRevenge) then
+		mutator = managers.mutators:get_mutator(MutatorPiggyRevenge)
+	end
+
+	if mutator and mutator.get_bag_speed_increase_multiplier then
 		multiplier = multiplier * mutator:get_bag_speed_increase_multiplier()
 	end
 
 	return PlayerCarry.super._get_max_walk_speed(self, ...) * multiplier
 end
 
--- Lines 369-371
+-- Lines 376-378
 function PlayerCarry:_get_walk_headbob(...)
 	return PlayerCarry.super._get_walk_headbob(self, ...) * tweak_data.carry.types[self._tweak_data_name].move_speed_modifier
 end
 
--- Lines 375-377
+-- Lines 382-384
 function PlayerCarry:pre_destroy(unit)
 end
 
--- Lines 381-383
+-- Lines 388-390
 function PlayerCarry:destroy()
 end
 
--- Lines 388-390
+-- Lines 395-397
 function PlayerCarry:_get_input(...)
 	return PlayerCarry.super._get_input(self, ...)
 end

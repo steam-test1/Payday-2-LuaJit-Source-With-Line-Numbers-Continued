@@ -927,7 +927,7 @@ function TweakData:get_scene_pose(scene, pose_category, ...)
 	return pose, required_poses
 end
 
--- Lines 563-613
+-- Lines 563-615
 function TweakData:_setup_scene_pose_items()
 	self.scene_pose_items = {
 		husk1 = {},
@@ -980,6 +980,9 @@ function TweakData:_setup_scene_pose_items()
 		husk_minigun_2 = {
 			"primary"
 		},
+		husk_bessy = {
+			"primary"
+		},
 		cvc_var1 = {},
 		cvc_var2 = {},
 		cvc_var3 = {},
@@ -998,7 +1001,7 @@ function TweakData:_setup_scene_pose_items()
 	}
 end
 
--- Lines 615-749
+-- Lines 617-753
 function TweakData:_setup_scene_poses()
 	self.scene_poses = {
 		generic = {
@@ -1154,6 +1157,10 @@ function TweakData:_setup_scene_poses()
 		},
 		kacchainsaw = {
 			"husk_minigun_2",
+			required_pose = true
+		},
+		bessy = {
+			"husk_bessy",
 			required_pose = true
 		}
 	}

@@ -1607,7 +1607,7 @@ end
 
 CustomSafehouseGuiRewardItem = CustomSafehouseGuiRewardItem or class(CustomSafehouseGuiItem)
 
--- Lines 1550-1783
+-- Lines 1550-1787
 function CustomSafehouseGuiRewardItem:init(daily_page, panel, order, reward_data, id, is_safehouse_daily)
 	self._daily_page = daily_page
 	self._reward = reward_data or {}
@@ -1683,6 +1683,10 @@ function CustomSafehouseGuiRewardItem:init(daily_page, panel, order, reward_data
 
 		if category == "upgrades" then
 			category = managers.upgrades:get_category(id)
+		end
+
+		if category == "melee_weapon" then
+			category = "melee_weapons"
 		end
 
 		local td = tweak_data:get_raw_value("blackmarket", category, id) or tweak_data:get_raw_value(category, id)
@@ -1805,7 +1809,7 @@ function CustomSafehouseGuiRewardItem:init(daily_page, panel, order, reward_data
 	end
 
 	if completed and not reward_data.rewarded then
-		-- Lines 1753-1759
+		-- Lines 1757-1763
 		local function glow_anim(o)
 			while true do
 				over(5, function (p)
@@ -1846,12 +1850,12 @@ function CustomSafehouseGuiRewardItem:init(daily_page, panel, order, reward_data
 	self:set_active(true)
 end
 
--- Lines 1785-1787
+-- Lines 1789-1791
 function CustomSafehouseGuiRewardItem:panel()
 	return self._panel
 end
 
--- Lines 1789-1797
+-- Lines 1793-1801
 function CustomSafehouseGuiRewardItem:refresh()
 	if managers.menu:is_pc_controller() then
 		self._text:set_visible(self._selected or self._reward.completed)
@@ -1862,12 +1866,12 @@ function CustomSafehouseGuiRewardItem:refresh()
 	end
 end
 
--- Lines 1799-1801
+-- Lines 1803-1805
 function CustomSafehouseGuiRewardItem:inside(x, y)
 	return self._panel:inside(x, y)
 end
 
--- Lines 1803-1888
+-- Lines 1807-1892
 function CustomSafehouseGuiRewardItem:trigger()
 	if self:is_active() then
 		if self._is_safehouse_daily and managers.custom_safehouse:has_completed_daily() and not managers.custom_safehouse:has_rewarded_daily() then
@@ -1944,7 +1948,7 @@ function CustomSafehouseGuiRewardItem:trigger()
 	end
 end
 
--- Lines 1890-1902
+-- Lines 1894-1906
 function CustomSafehouseGuiRewardItem:set_selected(selected, ...)
 	CustomSafehouseGuiRewardItem.super.set_selected(self, selected, ...)
 

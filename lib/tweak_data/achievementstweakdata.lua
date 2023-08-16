@@ -52,7 +52,7 @@ end
 
 AchievementsTweakData = AchievementsTweakData or class()
 
--- Lines 76-3117
+-- Lines 76-3136
 function AchievementsTweakData:init(tweak_data)
 	local normal_and_above = {
 		"normal",
@@ -1057,6 +1057,14 @@ function AchievementsTweakData:init(tweak_data)
 			stat = "cg22_post_objective_5",
 			enemy = "tank",
 			difficulty = overkill_and_above
+		},
+		pda10_dozer_post_objective = {
+			enemy = "tank",
+			stat = "pda10_dozer_post_objective"
+		},
+		pda10_musket_post_objective = {
+			weapon_type = "snp",
+			stat = "pda10_musket_post_objective"
 		}
 	}
 	self.enemy_melee_hit_achievements = {
@@ -1372,6 +1380,24 @@ function AchievementsTweakData:init(tweak_data)
 				variation = "default",
 				style = "scrub"
 			}
+		},
+		pda10_hammer_objective = {
+			stat = "pda10_hammer_objective",
+			is_not_civilian = true,
+			result = "death",
+			melee_weapons = {
+				"piggy_hammer"
+			}
+		},
+		pda10_hammer_post_objective = {
+			is_not_civilian = true,
+			stat = "pda10_hammer_post_objective",
+			result = "death"
+		},
+		pda10_dozer_post_objective = {
+			stat = "pda10_dozer_post_objective",
+			enemy = "tank",
+			result = "death"
 		}
 	}
 	self.complete_heist_achievements = {
@@ -6539,6 +6565,9 @@ function AchievementsTweakData:init(tweak_data)
 			killed = {
 				medic = 0
 			}
+		},
+		pda10_heist_post_objective = {
+			stat = "pda10_heist_post_objective"
 		}
 	}
 	local skirmish_complete_heists = {
@@ -6799,6 +6828,10 @@ function AchievementsTweakData:init(tweak_data)
 			jobs = {
 				"kosugi"
 			}
+		},
+		pda10_bags_post_objective = {
+			bag_with_value = true,
+			stat = "pda10_bags_post_objective"
 		}
 	}
 	self.job_list = {
@@ -8115,6 +8148,11 @@ function AchievementsTweakData:init(tweak_data)
 			weapon = "victor",
 			stat = "cg22_post_objective_3",
 			multi_kill = 2
+		},
+		pda10_musket_objective = {
+			weapon = "bessy",
+			stat = "pda10_musket_objective",
+			multi_kill = 2
 		}
 	}
 	self.inventory = {}
@@ -8496,6 +8534,15 @@ function AchievementsTweakData:init(tweak_data)
 				"tea_chca",
 				"tea_pent"
 			}
+		},
+		lrfo_1 = {
+			award = "lrfo_1",
+			collection = {
+				"LRON_played",
+				"LRTW_played",
+				"LRTH_played",
+				"LRFO_played"
+			}
 		}
 	}
 
@@ -8655,7 +8702,7 @@ local tracking = {
 	rarely = "rarely"
 }
 
--- Lines 3136-3163
+-- Lines 3155-3182
 local function from_complete_heist_stats_item(self, item)
 	local heists = nil
 
@@ -8666,7 +8713,7 @@ local function from_complete_heist_stats_item(self, item)
 		heists = table.list_copy(self.job_list[item.contact])
 	end
 
-	-- Lines 3145-3156
+	-- Lines 3164-3175
 	local function get_todo()
 		local res = table.list_to_set(heists)
 
@@ -8696,7 +8743,7 @@ local function from_complete_heist_stats_item(self, item)
 	}
 end
 
--- Lines 3165-3170
+-- Lines 3184-3189
 local function from_crimespree_item(item)
 	return {
 		get = function ()
@@ -8709,7 +8756,7 @@ local function from_crimespree_item(item)
 	}
 end
 
--- Lines 3172-3180
+-- Lines 3191-3199
 local function from_level(level)
 	if not level then
 		error()
@@ -8725,7 +8772,7 @@ local function from_level(level)
 	}
 end
 
--- Lines 3182-3190
+-- Lines 3201-3209
 local function from_owned_weapons(num)
 	if not num then
 		error()
@@ -8741,7 +8788,7 @@ local function from_owned_weapons(num)
 	}
 end
 
--- Lines 3192-3203
+-- Lines 3211-3222
 local function from_timed_memory(item, memory_name, count_name)
 	count_name = count_name or "count"
 
@@ -8763,7 +8810,7 @@ local function from_timed_memory(item, memory_name, count_name)
 	}
 end
 
--- Lines 3208-3426
+-- Lines 3227-3445
 function AchievementsTweakData:_init_visual(tweak_data)
 	self.tags = {
 		progress = {
@@ -8922,7 +8969,7 @@ function AchievementsTweakData:_init_visual(tweak_data)
 	end
 end
 
--- Lines 3461-3607
+-- Lines 3480-3626
 function AchievementsTweakData:_init_non_auto_generated(tweak_data)
 	self.visual.bulldog_1.unlock_icons = {
 		{
@@ -9113,7 +9160,7 @@ function AchievementsTweakData:_init_non_auto_generated(tweak_data)
 		max = self.spend_money_to_make_money
 	}
 
-	-- Lines 3585-3585
+	-- Lines 3604-3604
 	local function dummy_progress()
 		return 0
 	end

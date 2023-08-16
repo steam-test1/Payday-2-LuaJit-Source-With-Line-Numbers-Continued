@@ -675,7 +675,12 @@ end
 
 -- Lines 651-654
 function MutatorCG22:sync_on_snowman_spawned()
-	managers.hud:add_buff("snowman_spawn", "hud_buff_snowman_warning", Color.white, 5)
+	managers.hud:add_buff({
+		name_id = "hud_buff_snowman_warning",
+		buff_id = "snowman_spawn",
+		time_left = 5,
+		color = Color.white
+	})
 	self:announcer_say("Play_alm_xmas22_09", false)
 end
 
@@ -878,7 +883,12 @@ function MutatorCG22:activate_health_refresh_buff(buff_td)
 
 	if unit_damage then
 		unit_damage:restore_health(buff_td.amount, true)
-		managers.hud:add_buff("recover_health", buff_td.hud_string_id, buff_td.color, 2)
+		managers.hud:add_buff({
+			name_id = "buff_td.hud_string_id",
+			buff_id = "recover_health",
+			time_left = 2,
+			color = buff_td.color
+		})
 	end
 end
 
@@ -891,7 +901,12 @@ function MutatorCG22:activate_ammo_refresh_buff(buff_td)
 			if alive(weapon.unit) then
 				weapon.unit:base():replenish()
 				managers.hud:set_ammo_amount(id, weapon.unit:base():ammo_info())
-				managers.hud:add_buff("ammo_refresh", buff_td.hud_string_id, buff_td.color, 2)
+				managers.hud:add_buff({
+					buff_id = "ammo_refresh",
+					time_left = 2,
+					name_id = buff_td.hud_string_id,
+					color = buff_td.color
+				})
 			end
 		end
 	end
@@ -901,10 +916,15 @@ end
 function MutatorCG22:activate_bag_speed_increase_buff(buff_td)
 	self._perma_buffs.bag_speed_amount = self._perma_buffs.bag_speed_amount + 1
 
-	managers.hud:add_buff("bag_speed_increase", buff_td.hud_string_id, buff_td.color, 2)
+	managers.hud:add_buff({
+		buff_id = "bag_speed_increase",
+		time_left = 2,
+		name_id = buff_td.hud_string_id,
+		color = buff_td.color
+	})
 end
 
--- Lines 875-895
+-- Lines 875-894
 function MutatorCG22:activate_ammo_types_buff(buff_td)
 	local ammo_type = self:get_random_buff_no_repeat(buff_td.ammo_types, self:get_last_temp_buff_by_id("ammo_types"))
 
@@ -921,10 +941,15 @@ function MutatorCG22:activate_ammo_types_buff(buff_td)
 		unit_inventory:ammo_type_buff_add(ammo_type)
 	end
 
-	managers.hud:add_buff("ammo_types_" .. ammo_type, buff_td.hud_string_id .. "_" .. ammo_type, buff_td.color, buff_td.duration)
+	managers.hud:add_buff({
+		buff_id = "ammo_types_" .. ammo_type,
+		name_id = buff_td.hud_string_id .. "_" .. ammo_type,
+		color = buff_td.color,
+		time_left = buff_td.duration
+	})
 end
 
--- Lines 897-909
+-- Lines 896-908
 function MutatorCG22:remove_ammo_types_buff(buff_id, ammo_type)
 	local unit = managers.player:player_unit()
 	local unit_inventory = alive(unit) and unit:inventory() or nil
@@ -934,21 +959,21 @@ function MutatorCG22:remove_ammo_types_buff(buff_id, ammo_type)
 	end
 end
 
--- Lines 911-915
+-- Lines 910-914
 function MutatorCG22:safe_run_sequence(unit, sequence)
 	if alive(unit) and unit:damage() and unit:damage():has_sequence(sequence) then
 		unit:damage():run_sequence_simple(sequence)
 	end
 end
 
--- Lines 917-921
+-- Lines 916-920
 function MutatorCG22:sync_santa_anim(unit, anim_id)
 	if alive(unit) then
 		unit:movement():play_redirect("cm_so_drunk_sit")
 	end
 end
 
--- Lines 923-928
+-- Lines 922-927
 function MutatorCG22:on_snowman_killed(unit, damage_info)
 	managers.event_jobs:award("cg22_snowman_objective")
 
@@ -959,7 +984,7 @@ function MutatorCG22:on_snowman_killed(unit, damage_info)
 	end
 end
 
--- Lines 930-935
+-- Lines 929-934
 function MutatorCG22:on_bag_pickup(carry_id)
 	if not self._has_played_first_pickup and carry_id == "cg22_bag" or carry_id == "cg22_bag_green" or carry_id == "cg22_bag_yellow" then
 		self._has_played_first_pickup = true
@@ -967,7 +992,7 @@ function MutatorCG22:on_bag_pickup(carry_id)
 	end
 end
 
--- Lines 937-943
+-- Lines 936-942
 function MutatorCG22:announcer_say(dialog, sync)
 	local success = managers.dialog:queue_dialog(dialog, {
 		on_unit = self._announcer_unit
@@ -980,22 +1005,22 @@ function MutatorCG22:announcer_say(dialog, sync)
 	return success
 end
 
--- Lines 945-947
+-- Lines 944-946
 function MutatorCG22:get_intro_event(default_intro_event)
 	return "Play_alm_xmas22_01"
 end
 
--- Lines 949-951
+-- Lines 948-950
 function MutatorCG22:get_outro_event(default_outro_event)
 	return "Play_alm_xmas22_end_win"
 end
 
--- Lines 953-955
+-- Lines 952-954
 function MutatorCG22:get_failure_event()
 	return "Play_alm_xmas22_end_fail"
 end
 
--- Lines 957-961
+-- Lines 956-960
 function MutatorCG22:check_heist_end_achievements(heist_success)
 	if not heist_success then
 		return

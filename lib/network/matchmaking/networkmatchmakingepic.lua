@@ -107,6 +107,7 @@ function NetworkMatchMakingEPIC:load_user_filters()
 	Global.game_settings.crime_spree_max_lobby_diff = managers.user:get_setting("crime_spree_lobby_diff")
 	Global.game_settings.search_only_weekly_skirmish = managers.user:get_setting("crimenet_filter_weekly_skirmish")
 	Global.game_settings.skirmish_wave_filter = managers.user:get_setting("crimenet_filter_skirmish_wave")
+	Global.game_settings.search_event_lobbies_override = false
 	local new_servers = managers.user:get_setting("crimenet_filter_new_servers_only")
 	local in_lobby = managers.user:get_setting("crimenet_filter_in_lobby")
 	local max_servers = managers.user:get_setting("crimenet_filter_max_servers")
@@ -349,7 +350,7 @@ function NetworkMatchMakingEPIC:lobby_search_reset()
 	LobbyBrowser:reset()
 end
 
--- Lines 355-524
+-- Lines 355-526
 function NetworkMatchMakingEPIC:search_lobby(friends_only, no_filters)
 	self._search_friends_only = friends_only
 
@@ -406,7 +407,8 @@ function NetworkMatchMakingEPIC:search_lobby(friends_only, no_filters)
 		"kick_option",
 		"job_class_min",
 		"job_class_max",
-		"allow_mods"
+		"allow_mods",
+		"event"
 	}
 
 	if self._BUILD_SEARCH_INTEREST_KEY then
@@ -468,16 +470,19 @@ function NetworkMatchMakingEPIC:search_lobby(friends_only, no_filters)
 			LobbyBrowser:set_lobby_filter("crime_spree", min_level, "equalto_or_greater_than")
 			LobbyBrowser:set_lobby_filter("skirmish", 0, "equalto_less_than")
 			LobbyBrowser:set_lobby_filter("skirmish_wave")
+			LobbyBrowser:set_lobby_filter("event", 0, "equal")
 		elseif Global.game_settings.gamemode_filter == "skirmish" then
 			local min = SkirmishManager.LOBBY_NORMAL
 
 			LobbyBrowser:set_lobby_filter("crime_spree", -1, "equalto_less_than")
 			LobbyBrowser:set_lobby_filter("skirmish", min, "equalto_or_greater_than")
 			LobbyBrowser:set_lobby_filter("skirmish_wave", Global.game_settings.skirmish_wave_filter or 99, "equalto_less_than")
+			LobbyBrowser:set_lobby_filter("event", 0, "equal")
 		elseif Global.game_settings.gamemode_filter == GamemodeStandard.id then
 			LobbyBrowser:set_lobby_filter("crime_spree", -1, "equalto_less_than")
 			LobbyBrowser:set_lobby_filter("skirmish", 0, "equalto_less_than")
 			LobbyBrowser:set_lobby_filter("skirmish_wave")
+			LobbyBrowser:set_lobby_filter("event", Global.game_settings.search_event_lobbies_override and 1 or 0, "equal")
 		end
 	end
 
@@ -494,27 +499,27 @@ function NetworkMatchMakingEPIC:search_lobby(friends_only, no_filters)
 	LobbyBrowser:refresh()
 end
 
--- Lines 526-528
+-- Lines 528-530
 function NetworkMatchMakingEPIC:search_lobby_done()
 	managers.system_menu:close("find_server")
 end
 
--- Lines 531-533
+-- Lines 533-535
 function NetworkMatchMakingEPIC:game_owner_name()
 	return managers.network.matchmake.lobby_handler:get_lobby_data("owner_name")
 end
 
--- Lines 535-537
+-- Lines 537-539
 function NetworkMatchMakingEPIC:game_owner_account_type_str()
 	return managers.network.matchmake.lobby_handler:get_lobby_data("owner_account_type")
 end
 
--- Lines 539-541
+-- Lines 541-543
 function NetworkMatchMakingEPIC:game_owner_account_id()
 	return managers.network.matchmake.lobby_handler:get_lobby_data("owner_account_id")
 end
 
--- Lines 552-652
+-- Lines 554-654
 function NetworkMatchMakingEPIC:is_server_ok(friends_only, room, attributes_list, is_invite)
 	local lobby = EpicMM:lobby(room.room_id)
 
@@ -595,12 +600,12 @@ function NetworkMatchMakingEPIC:is_server_ok(friends_only, room, attributes_list
 	return true
 end
 
--- Lines 654-721
+-- Lines 656-722
 function NetworkMatchMakingEPIC:join_server_with_check(room_id, is_invite)
 	managers.menu:show_joining_lobby_dialog()
 	managers.socialhub:remove_pending_lobby(room_id)
 
-	-- Lines 658-718
+	-- Lines 660-719
 	local function lobby_found_cb(lobby)
 		print("NetworkMatchMakingEPIC:join_server_with_check lobby_found_cb", lobby)
 
@@ -626,12 +631,23 @@ function NetworkMatchMakingEPIC:join_server_with_check(room_id, is_invite)
 			end
 		end
 
+		local event_key = lobby:key_value("event")
+		local wanted_event_key = Global.game_settings.search_event_lobbies_override and 1 or 0
+
+		if event_key == "value_missing" or event_key == "value_pending" or tonumber(event_key) ~= wanted_event_key then
+			print("Wrong event game mode!", "wanted", wanted_event_key, "event key", event_key)
+			managers.system_menu:close("join_server")
+			managers.menu:show_failed_joining_dialog()
+
+			return
+		end
+
 		local server_ok, ok_error = self:is_server_ok(nil, self:_make_room_info(lobby), {
 			numbers = attributes
 		}, is_invite)
 
 		if server_ok then
-			self:join_server(room_id, true)
+			self:join_server(room_id, true, false, is_invite)
 		else
 			managers.system_menu:close("join_server")
 
@@ -656,7 +672,7 @@ function NetworkMatchMakingEPIC:join_server_with_check(room_id, is_invite)
 	EpicMM:lobby(room_id, lobby_found_cb)
 end
 
--- Lines 723-741
+-- Lines 724-742
 function NetworkMatchMakingEPIC._on_member_left(epic_id, status)
 	if not managers.network:session() then
 		return
@@ -681,7 +697,7 @@ function NetworkMatchMakingEPIC._on_member_left(epic_id, status)
 	managers.network:session():on_peer_left_lobby(peer)
 end
 
--- Lines 743-765
+-- Lines 744-766
 function NetworkMatchMakingEPIC._on_memberstatus_change(memberstatus)
 	print("[NetworkMatchMakingEPIC._on_memberstatus_change]", memberstatus)
 
@@ -692,17 +708,17 @@ function NetworkMatchMakingEPIC._on_memberstatus_change(memberstatus)
 	end
 end
 
--- Lines 767-769
+-- Lines 768-770
 function NetworkMatchMakingEPIC._on_data_update(...)
 end
 
--- Lines 771-974
-function NetworkMatchMakingEPIC:join_server(room_id, skip_showing_dialog, quickplay)
+-- Lines 772-975
+function NetworkMatchMakingEPIC:join_server(room_id, skip_showing_dialog, quickplay, is_invite)
 	if not skip_showing_dialog then
 		managers.menu:show_joining_lobby_dialog()
 	end
 
-	-- Lines 786-971
+	-- Lines 787-972
 	local function f(result, handler)
 		print("[NetworkMatchMakingEPIC:join_server:f]", result, handler)
 		managers.system_menu:close("join_server")
@@ -750,7 +766,7 @@ function NetworkMatchMakingEPIC:join_server(room_id, skip_showing_dialog, quickp
 
 			managers.skirmish:on_joined_server(lobby_data)
 
-			-- Lines 829-961
+			-- Lines 830-962
 			local function joined_game(res, level_index, difficulty_index, state_index)
 				if res ~= "JOINED_LOBBY" and res ~= "JOINED_GAME" then
 					managers.crime_spree:disable_crime_spree_gamemode()
@@ -854,7 +870,7 @@ function NetworkMatchMakingEPIC:join_server(room_id, skip_showing_dialog, quickp
 				end
 			end
 
-			managers.network:join_game_at_host_rpc(self._server_rpc, joined_game)
+			managers.network:join_game_at_host_rpc(self._server_rpc, is_invite, joined_game)
 
 			if quickplay then
 				Telemetry:last_quickplay_room_id(self.lobby_handler:id())
@@ -868,16 +884,16 @@ function NetworkMatchMakingEPIC:join_server(room_id, skip_showing_dialog, quickp
 	EpicMM:join_lobby(room_id, f)
 end
 
--- Lines 977-978
+-- Lines 978-979
 function NetworkMatchMakingEPIC:send_join_invite(friend)
 end
 
--- Lines 981-983
+-- Lines 982-984
 function NetworkMatchMakingEPIC:set_server_attributes(settings)
 	self:set_attributes(settings)
 end
 
--- Lines 985-1022
+-- Lines 986-1023
 function NetworkMatchMakingEPIC:create_lobby(settings)
 	self._num_players = nil
 	local dialog_data = {
@@ -889,7 +905,7 @@ function NetworkMatchMakingEPIC:create_lobby(settings)
 
 	managers.system_menu:show(dialog_data)
 
-	-- Lines 998-1019
+	-- Lines 999-1020
 	local function f(result, handler)
 		print("Create lobby callback!!", result, handler)
 
@@ -925,7 +941,7 @@ function NetworkMatchMakingEPIC:create_lobby(settings)
 	return EpicMM:create_lobby(f, NetworkMatchMakingEPIC.OPEN_SLOTS, "invisible")
 end
 
--- Lines 1024-1032
+-- Lines 1025-1033
 function NetworkMatchMakingEPIC:set_num_players(num)
 	print("NetworkMatchMakingEPIC:set_num_players", num)
 
@@ -938,7 +954,7 @@ function NetworkMatchMakingEPIC:set_num_players(num)
 	end
 end
 
--- Lines 1046-1059
+-- Lines 1047-1060
 function NetworkMatchMakingEPIC:set_server_state(state)
 	if self._lobby_attributes then
 		local state_id = tweak_data:server_state_to_index(state)
@@ -954,7 +970,7 @@ function NetworkMatchMakingEPIC:set_server_state(state)
 	end
 end
 
--- Lines 1061-1068
+-- Lines 1062-1069
 function NetworkMatchMakingEPIC:set_server_joinable(state)
 	print("[NetworkMatchMakingEPIC:set_server_joinable]", state)
 
@@ -965,22 +981,22 @@ function NetworkMatchMakingEPIC:set_server_joinable(state)
 	end
 end
 
--- Lines 1070-1072
+-- Lines 1071-1073
 function NetworkMatchMakingEPIC:is_server_joinable()
 	return self._server_joinable
 end
 
--- Lines 1074-1076
+-- Lines 1075-1077
 function NetworkMatchMakingEPIC:server_state_name()
 	return tweak_data:index_to_server_state(self._lobby_attributes.state)
 end
 
--- Lines 1079-1081
+-- Lines 1080-1082
 function NetworkMatchMakingEPIC:no_mod_string()
 	return "7d66a433be3a1fe2"
 end
 
--- Lines 1082-1107
+-- Lines 1083-1108
 function NetworkMatchMakingEPIC:build_mods_list()
 	if MenuCallbackHandler:is_modded_client() then
 		local mods = nil
@@ -997,7 +1013,7 @@ function NetworkMatchMakingEPIC:build_mods_list()
 	end
 end
 
--- Lines 1109-1115
+-- Lines 1110-1116
 function NetworkMatchMakingEPIC:get_modded_lobby_filter()
 	if MenuCallbackHandler:is_modded_client() or Global.game_settings.search_modded_lobbies then
 		return false
@@ -1006,7 +1022,7 @@ function NetworkMatchMakingEPIC:get_modded_lobby_filter()
 	end
 end
 
--- Lines 1117-1123
+-- Lines 1118-1124
 function NetworkMatchMakingEPIC:get_allow_mods_setting()
 	if MenuCallbackHandler:is_modded_client() then
 		return 1
@@ -1015,7 +1031,7 @@ function NetworkMatchMakingEPIC:get_allow_mods_setting()
 	end
 end
 
--- Lines 1125-1131
+-- Lines 1126-1132
 function NetworkMatchMakingEPIC:get_allow_mods_filter()
 	if MenuCallbackHandler:is_modded_client() then
 		return true, 1, "equal"
@@ -1024,7 +1040,7 @@ function NetworkMatchMakingEPIC:get_allow_mods_filter()
 	end
 end
 
--- Lines 1145-1204
+-- Lines 1146-1203
 function NetworkMatchMakingEPIC:set_attributes(settings)
 	if not self.lobby_handler then
 		return
@@ -1056,7 +1072,8 @@ function NetworkMatchMakingEPIC:set_attributes(settings)
 		job_plan = settings.numbers[10],
 		mods = self:build_mods_list(),
 		allow_mods = self:get_allow_mods_setting(),
-		one_down = Global.game_settings.one_down and 1 or 0
+		one_down = Global.game_settings.one_down and 1 or 0,
+		event = Global.game_settings.search_event_lobbies_override and 1 or 0
 	}
 
 	if self._BUILD_SEARCH_INTEREST_KEY then
@@ -1073,7 +1090,7 @@ function NetworkMatchMakingEPIC:set_attributes(settings)
 	self.lobby_handler:set_lobby_type(permissions[settings.numbers[3]])
 end
 
--- Lines 1206-1218
+-- Lines 1205-1217
 function NetworkMatchMakingEPIC:_lobby_to_numbers(lobby)
 	return {
 		tonumber(lobby:key_value("level")) + 1000 * tonumber(lobby:key_value("job_id")),
@@ -1089,7 +1106,7 @@ function NetworkMatchMakingEPIC:_lobby_to_numbers(lobby)
 	}
 end
 
--- Lines 1220-1225
+-- Lines 1219-1224
 function NetworkMatchMakingEPIC:get_lobby_type()
 	if not self.lobby_handler then
 		return "unknown"
@@ -1098,7 +1115,7 @@ function NetworkMatchMakingEPIC:get_lobby_type()
 	return self.lobby_handler:lobby_type()
 end
 
--- Lines 1227-1237
+-- Lines 1226-1236
 function NetworkMatchMakingEPIC:from_host_lobby_re_opened(status)
 	print("[NetworkMatchMakingEPIC::from_host_lobby_re_opened]", self._try_re_enter_lobby, status)
 
@@ -1113,7 +1130,7 @@ function NetworkMatchMakingEPIC:from_host_lobby_re_opened(status)
 	end
 end
 
--- Lines 1239-1242
+-- Lines 1238-1241
 function NetworkMatchMakingEPIC:server_time()
 	return os.time()
 end

@@ -1,6 +1,6 @@
 TweakDataVR = TweakDataVR or class()
 
--- Lines 4-6324
+-- Lines 4-6384
 function TweakDataVR:init(tweak_data)
 	self.melee_offsets = {
 		default = {
@@ -384,6 +384,9 @@ function TweakDataVR:init(tweak_data)
 		bayonets = {
 			wpn_fps_snp_mosin_ns_bayonet = {
 				hit_point = Vector3(0, 30, -3)
+			},
+			wpn_fps_spec_bessy_bayonette = {
+				hit_point = Vector3(0, 30, -3)
 			}
 		},
 		custom = {
@@ -748,6 +751,9 @@ function TweakDataVR:init(tweak_data)
 			},
 			kacchainsaw = {
 				position = Vector3(-0, 5, 5)
+			},
+			bessy = {
+				position = Vector3(0, -6, 2)
 			},
 			m32 = {
 				position = Vector3(-0.5, 0, 2)
@@ -2049,6 +2055,10 @@ function TweakDataVR:init(tweak_data)
 						position = Vector3(0, 49, 10)
 					}
 				}
+			},
+			bessy = {
+				grip = "idle_wpn",
+				position = Vector3(0, 40, 0)
 			},
 			contender = {
 				grip = "idle_wpn",
@@ -10258,6 +10268,105 @@ function TweakDataVR:init(tweak_data)
 				}
 			}
 		},
+		bessy = {
+			manual_reload_reduction = 2,
+			reload_part_type = "barrel",
+			custom_mag_unit = "units/pd2_dlc_pda10/weapons/wpn_fps_spec_bessy_pts/wpn_vr_spec_bessy_pouch",
+			start = {
+				{
+					time = 0,
+					anims = {
+						{
+							anim_group = "reload",
+							part = "stock",
+							from = 0,
+							state = "auto",
+							to = 11.1
+						},
+						{
+							anim_group = "reload",
+							part = "extra",
+							from = 0,
+							state = "auto",
+							to = 11.1
+						},
+						{
+							anim_group = "reload",
+							part = "reciever",
+							from = 0,
+							state = "auto",
+							to = 11.1
+						},
+						{
+							anim_group = "reload",
+							part = "stock",
+							from = 0,
+							state = "manual",
+							to = 9.166666666666666
+						},
+						{
+							anim_group = "reload",
+							part = "extra",
+							from = 0,
+							state = "manual",
+							to = 9.166666666666666
+						},
+						{
+							anim_group = "reload",
+							part = "reciever",
+							from = 0,
+							state = "manual",
+							to = 9.166666666666666
+						}
+					}
+				},
+				{
+					time = 0,
+					sound = "wp_musket_flint_pull"
+				},
+				{
+					time = 0.4,
+					sound = "wp_musket_hammer_pull"
+				},
+				{
+					time = 2.4,
+					sound = "wp_musket_rod_in_barrel_first"
+				},
+				{
+					time = 3.4,
+					sound = "wp_musket_rod_out_side_first"
+				}
+			},
+			finish = {
+				{
+					time = 0,
+					sound = "wp_musket_rod_out_barrel_second",
+					anims = {
+						{
+							anim_group = "reload",
+							part = "stock",
+							from = 10.966666666666667,
+							state = "manual",
+							to = 11.1
+						},
+						{
+							anim_group = "reload",
+							part = "extra",
+							from = 10.966666666666667,
+							state = "manual",
+							to = 11.1
+						},
+						{
+							anim_group = "reload",
+							part = "reciever",
+							from = 10.6,
+							state = "manual",
+							to = 11.1
+						}
+					}
+				}
+			}
+		},
 		m32 = {
 			custom_mag_unit = "units/pd2_dlc_vr/units/wpn_vr_m_grenade/wpn_vr_m_grenade_6",
 			start = {
@@ -10924,7 +11033,7 @@ function TweakDataVR:init(tweak_data)
 	}
 end
 
--- Lines 6330-6441
+-- Lines 6390-6501
 function TweakDataVR:init_specializations(tweak_data)
 	local addon_indices = {
 		"health",
@@ -11139,7 +11248,7 @@ function TweakDataVR:init_specializations(tweak_data)
 	end
 end
 
--- Lines 6445-6505
+-- Lines 6505-6565
 function TweakDataVR:init_skills(tweak_data)
 	self.post_warp = {
 		min = 1,
@@ -11219,7 +11328,7 @@ function TweakDataVR:init_skills(tweak_data)
 	}
 end
 
--- Lines 6508-6520
+-- Lines 6568-6580
 function TweakDataVR:is_locked(category, id, ...)
 	local locked = self.locked[category] and self.locked[category][id]
 
@@ -11240,7 +11349,7 @@ function TweakDataVR:is_locked(category, id, ...)
 	return locked
 end
 
--- Lines 6522-6548
+-- Lines 6582-6608
 function TweakDataVR:get_offset_by_id(id, ...)
 	if id == "magazine" then
 		return self:_get_magazine_offsets_by_id(...)
@@ -11261,14 +11370,14 @@ function TweakDataVR:get_offset_by_id(id, ...)
 	return {}
 end
 
--- Lines 6550-6554
+-- Lines 6610-6614
 local function combine_offset(offset, new)
 	for key, value in pairs(new) do
 		offset[key] = offset[key] or value
 	end
 end
 
--- Lines 6556-6568
+-- Lines 6616-6628
 function TweakDataVR:_get_melee_offset_by_id(id)
 	local offset = {}
 	local tweak = tweak_data.blackmarket.melee_weapons[id]
@@ -11286,7 +11395,7 @@ function TweakDataVR:_get_melee_offset_by_id(id)
 	return offset
 end
 
--- Lines 6570-6578
+-- Lines 6630-6638
 function TweakDataVR:_get_weapon_offset_by_id(id)
 	local offset = {}
 
@@ -11299,7 +11408,7 @@ function TweakDataVR:_get_weapon_offset_by_id(id)
 	return offset
 end
 
--- Lines 6580-6584
+-- Lines 6640-6644
 function TweakDataVR:_get_mask_offsets_by_id(id)
 	local offset = {}
 
@@ -11308,7 +11417,7 @@ function TweakDataVR:_get_mask_offsets_by_id(id)
 	return offset
 end
 
--- Lines 6586-6594
+-- Lines 6646-6654
 function TweakDataVR:_get_throwable_offsets_by_id(id)
 	local offset = {}
 
@@ -11323,7 +11432,7 @@ function TweakDataVR:_get_throwable_offsets_by_id(id)
 	return offset
 end
 
--- Lines 6596-6603
+-- Lines 6656-6663
 function TweakDataVR:_get_magazine_offsets_by_id(id)
 	local offset = {}
 
@@ -11336,7 +11445,7 @@ function TweakDataVR:_get_magazine_offsets_by_id(id)
 	return offset
 end
 
--- Lines 6605-6612
+-- Lines 6665-6672
 function TweakDataVR:_get_bow_offsets_by_id(id)
 	local offset = {}
 

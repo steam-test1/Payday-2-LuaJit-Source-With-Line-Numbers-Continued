@@ -225,8 +225,9 @@ function NewRaycastWeaponBaseVR:update_reload_finish(t, dt)
 	end
 end
 
--- Lines 213-224
+-- Lines 213-227
 function NewRaycastWeaponBase:_play_reload_anim(anim_group_id, to, from, unit)
+	local speed_multiplier = self:reload_speed_multiplier()
 	unit = unit or self._unit
 
 	unit:anim_stop(anim_group_id)
@@ -236,18 +237,22 @@ function NewRaycastWeaponBase:_play_reload_anim(anim_group_id, to, from, unit)
 	end
 
 	if to then
-		unit:anim_play_to(anim_group_id, to)
+		unit:anim_play_to(anim_group_id, to, speed_multiplier)
 	else
-		unit:anim_play(anim_group_id)
+		local length = unit:anim_length(anim_group_id)
+
+		unit:anim_play_to(anim_group_id, length, speed_multiplier)
 	end
 end
 
--- Lines 226-298
+-- Lines 229-307
 function NewRaycastWeaponBaseVR:update_reload_mag(time)
 	if not self._timeline then
 		return
 	end
 
+	local auto_reload = managers.vr:get_setting("auto_reload")
+	local reload_state = auto_reload and "auto" or "manual"
 	local mag_data = self._timeline:get_data(time)
 
 	self._reload_mag_unit:set_local_position(mag_data.pos)
@@ -293,22 +298,24 @@ function NewRaycastWeaponBaseVR:update_reload_mag(time)
 
 	if mag_data.anims then
 		for _, anim_data in ipairs(mag_data.anims) do
-			if anim_data.part then
-				local part_list = managers.weapon_factory:get_parts_from_weapon_by_type_or_perk(anim_data.part, self._factory_id, self._blueprint)
+			if not anim_data.state or anim_data.state == reload_state then
+				if anim_data.part then
+					local part_list = managers.weapon_factory:get_parts_from_weapon_by_type_or_perk(anim_data.part, self._factory_id, self._blueprint)
 
-				for _, part_name in ipairs(part_list or {}) do
-					local part_data = self._parts[part_name]
+					for _, part_name in ipairs(part_list or {}) do
+						local part_data = self._parts[part_name]
 
-					if part_data.animations and part_data.animations[anim_data.anim_group] then
-						local anim_group_id = Idstring(part_data.animations[anim_data.anim_group])
+						if part_data.animations and part_data.animations[anim_data.anim_group] then
+							local anim_group_id = Idstring(part_data.animations[anim_data.anim_group])
 
-						self:_play_reload_anim(anim_group_id, anim_data.to, anim_data.from, part_data.unit)
+							self:_play_reload_anim(anim_group_id, anim_data.to, anim_data.from, part_data.unit)
+						end
 					end
-				end
-			else
-				local anim_group_id = Idstring(anim_data.anim_group)
+				else
+					local anim_group_id = Idstring(anim_data.anim_group)
 
-				self:_play_reload_anim(anim_group_id, anim_data.to, anim_data.from)
+					self:_play_reload_anim(anim_group_id, anim_data.to, anim_data.from)
+				end
 			end
 		end
 	end
@@ -336,17 +343,17 @@ function NewRaycastWeaponBaseVR:update_reload_mag(time)
 	end
 end
 
--- Lines 300-302
+-- Lines 309-311
 function NewRaycastWeaponBaseVR:is_finishing_reload()
 	return not not self._reload_finish_current_time
 end
 
--- Lines 304-306
+-- Lines 313-315
 function NewRaycastWeaponBaseVR:get_reload_mag_unit()
 	return self._reload_mag_unit
 end
 
--- Lines 308-314
+-- Lines 317-323
 function NewRaycastWeaponBaseVR:_mag_data()
 	local mag_list = managers.weapon_factory:get_parts_from_weapon_by_type_or_perk("magazine", self._factory_id, self._blueprint)
 	local mag_id = mag_list and mag_list[1]
@@ -356,14 +363,14 @@ function NewRaycastWeaponBaseVR:_mag_data()
 	end
 end
 
--- Lines 316-319
+-- Lines 325-328
 function NewRaycastWeaponBaseVR:custom_magazine_name()
 	local data = tweak_data.vr.reload_timelines[self.name_id]
 
 	return data and data.custom_mag_unit
 end
 
--- Lines 321-334
+-- Lines 330-343
 function NewRaycastWeaponBaseVR:spawn_belt_magazine_unit(pos)
 	local belt_mag_unit = self:custom_magazine_name()
 
@@ -380,7 +387,7 @@ function NewRaycastWeaponBaseVR:spawn_belt_magazine_unit(pos)
 	return self:spawn_magazine_unit(pos)
 end
 
--- Lines 336-341
+-- Lines 345-350
 function NewRaycastWeaponBaseVR:reload_object_name()
 	local mag_data = self:_mag_data()
 
@@ -389,20 +396,20 @@ function NewRaycastWeaponBaseVR:reload_object_name()
 	end
 end
 
--- Lines 343-346
+-- Lines 352-355
 function NewRaycastWeaponBaseVR:_set_part_temporary_visibility(part_id, visible)
 	self._invisible_parts = self._invisible_parts or {}
 	self._invisible_parts[part_id] = not visible
 end
 
--- Lines 348-350
+-- Lines 357-359
 function NewRaycastWeaponBaseVR:_is_part_visible(part_id)
 	return not self._invisible_parts or not self._invisible_parts[part_id]
 end
 
 local __get_sound_event = NewRaycastWeaponBase._get_sound_event
 
--- Lines 353-363
+-- Lines 362-372
 function NewRaycastWeaponBaseVR:_get_sound_event(event, alternative_event)
 	local sound_overrides = tweak_data.vr.weapon_sound_overrides[self.name_id]
 
