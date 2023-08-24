@@ -5717,7 +5717,6 @@ function UpgradesTweakData:init(tweak_data)
 	self:_c96_definitions()
 	self:_sterling_definitions()
 	self:_mosin_definitions()
-	self:_bessy_definitions()
 	self:_m1928_definitions()
 	self:_l85a2_definitions()
 	self:_vhs_definitions()
@@ -5851,7 +5850,6 @@ function UpgradesTweakData:init(tweak_data)
 	self:_x_rota_weapon_definitions()
 	self:_shuno_weapon_definitions()
 	self:_system_weapon_definitions()
-	self:_money_weapon_definitions()
 	self:_komodo_weapon_definitions()
 	self:_elastic_weapon_definitions()
 	self:_legacy_weapon_definitions()
@@ -11963,16 +11961,6 @@ function UpgradesTweakData:_mosin_definitions()
 	}
 end
 
--- Lines 9049-9056
-function UpgradesTweakData:_bessy_definitions()
-	self.definitions.bessy = {
-		dlc = "pda10",
-		factory_id = "wpn_fps_spec_bessy",
-		weapon_id = "bessy",
-		category = "weapon"
-	}
-end
-
 -- Lines 9060-9067
 function UpgradesTweakData:_m1928_definitions()
 	self.definitions.m1928 = {
@@ -12167,10 +12155,6 @@ function UpgradesTweakData:_melee_weapon_definitions()
 	}
 	self.definitions.alien_maul = {
 		dlc = "alienware_alpha_promo",
-		category = "melee_weapon"
-	}
-	self.definitions.piggy_hammer = {
-		dlc = "pda10",
 		category = "melee_weapon"
 	}
 	self.definitions.shillelagh = {
@@ -16878,16 +16862,6 @@ function UpgradesTweakData:_system_weapon_definitions()
 	self.definitions.system = {
 		factory_id = "wpn_fps_fla_system",
 		weapon_id = "system",
-		category = "weapon"
-	}
-end
-
--- Lines 13917-13924
-function UpgradesTweakData:_money_weapon_definitions()
-	self.definitions.money = {
-		dlc = "pda8_wpn_money",
-		factory_id = "wpn_fps_fla_money",
-		weapon_id = "money",
 		category = "weapon"
 	}
 end

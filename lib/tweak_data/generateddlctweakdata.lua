@@ -1,4 +1,4 @@
--- Lines 3-1467
+-- Lines 3-1470
 function DLCTweakData:init_generated()
 	self.a10th_bundle = {
 		free = true,
@@ -317,6 +317,28 @@ function DLCTweakData:init_generated()
 	}
 	self.deep_bundle.content.loot_global_value = "deep"
 	self.deep_bundle.content.loot_drops = {}
+	self.dgs_bundle = {
+		dlc = "has_dgs",
+		content = {}
+	}
+	self.dgs_bundle.content.loot_global_value = "dgs"
+	self.dgs_bundle.content.loot_drops = {
+		{
+			type_items = "player_styles",
+			item_entry = "dgame",
+			amount = 1
+		},
+		{
+			type_items = "weapon_mods",
+			item_entry = "wpn_fps_upg_charm_deadgame",
+			amount = 1
+		},
+		{
+			type_items = "weapon_mods",
+			item_entry = "wpn_fps_upg_charm_deadgame_alt",
+			amount = 1
+		}
+	}
 	self.dot_bundle = {
 		dlc = "has_dot",
 		content = {}
