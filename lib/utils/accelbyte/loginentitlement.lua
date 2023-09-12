@@ -694,7 +694,7 @@ function Entitlement:UpdateStat(stat_code, stat_value, update_method, callback)
 	HttpRequest:put(Url, callback, payload_content_type, payload_json, headers)
 end
 
--- Lines 677-774
+-- Lines 677-775
 function Entitlement:UpdateCrossGameRecognition()
 	if not Login.player_session.access_token then
 		return
@@ -710,11 +710,11 @@ function Entitlement:UpdateCrossGameRecognition()
 	local payload_content_type = "application/json"
 	local completed_index = 0
 	local completed_achievement_list = {
-		"skull_very_hard",
-		"skull_overkill",
-		"skull_easywish",
-		"skull_deathwish",
-		"skull_smwish",
+		"death_28",
+		"death_29",
+		"pick_66",
+		"death_30",
+		"axe_66",
 		"ggez_1"
 	}
 
@@ -727,6 +727,7 @@ function Entitlement:UpdateCrossGameRecognition()
 	end
 
 	local wanted_stats = {
+		["user-launch-game"] = 1,
 		["user-infamy"] = managers.experience:current_rank(),
 		["diff-very-hard"] = completed_index >= 1 and 1 or 0,
 		["diff-overkill"] = completed_index >= 2 and 1 or 0,
@@ -739,7 +740,7 @@ function Entitlement:UpdateCrossGameRecognition()
 	local create_stats = {}
 	local update_stats = {}
 
-	-- Lines 723-761
+	-- Lines 724-762
 	local function on_stats_received(success, body)
 		cat_print("accelbyte", "[AccelByte] on_stats_received", success, body)
 
@@ -773,7 +774,7 @@ function Entitlement:UpdateCrossGameRecognition()
 				local url = string.format("%s/social/v1/public/namespaces/%s/users/%s/statitems/bulk", base_url, namespace, user_id)
 				local payload_json = json.encode(create_stats)
 
-				-- Lines 748-748
+				-- Lines 749-749
 				local function clbk(...)
 					cat_print("accelbyte", "[AccelByte]", ...)
 				end
@@ -785,7 +786,7 @@ function Entitlement:UpdateCrossGameRecognition()
 				local url = string.format("%s/social/v2/public/namespaces/%s/users/%s/statitems/value/bulk", base_url, namespace, user_id)
 				local payload_json = json.encode(update_stats)
 
-				-- Lines 756-756
+				-- Lines 757-757
 				local function clbk(...)
 					cat_print("accelbyte", "[AccelByte]", ...)
 				end
@@ -811,19 +812,19 @@ function Entitlement:UpdateCrossGameRecognition()
 	HttpRequest:get(url, on_stats_received, headers)
 end
 
--- Lines 778-888
+-- Lines 779-889
 function Entitlement:CheckAndVerifyUserEntitlement(callback)
 	Entitlement.result.data = {}
 	local player_id = managers.network.account:player_id()
 
 	Telemetry:send_on_game_launch()
 
-	-- Lines 788-793
+	-- Lines 789-794
 	local function entitlement_callback(success)
 		Entitlement:SetDLCEntitlements()
 	end
 
-	-- Lines 795-813
+	-- Lines 796-814
 	local function login_callback(error_code, status_code, response_body)
 		cat_print("accelbyte", "Callback login_callback ")
 
@@ -832,7 +833,7 @@ function Entitlement:CheckAndVerifyUserEntitlement(callback)
 		Telemetry:on_login()
 		Telemetry:on_login_screen_passed()
 
-		-- Lines 803-810
+		-- Lines 804-811
 		local function update_stat_callback(error_code, status_code, response_body)
 			cat_print("accelbyte", "Callback update_stat_callback ")
 			Entitlement:QueryEntitlementAsString(0, 100, entitlement_callback)
@@ -842,7 +843,7 @@ function Entitlement:CheckAndVerifyUserEntitlement(callback)
 		Entitlement:UpdateStat("sync-platformupgrade", 1, "INCREMENT", update_stat_callback)
 	end
 
-	-- Lines 815-864
+	-- Lines 816-865
 	local function check_platform_callback(success)
 		cat_print("accelbyte", "Callback Platform Check")
 
@@ -854,7 +855,7 @@ function Entitlement:CheckAndVerifyUserEntitlement(callback)
 			if SystemInfo:distribution() == Idstring("STEAM") then
 				local ticket = Utility:get_steamticket()
 
-				-- Lines 827-835
+				-- Lines 828-836
 				local function login_with_steam_callback(success, reason)
 					if success then
 						cat_print("accelbyte", "[AccelByte] Successfully authenticated the Steam Ticket, now logging in with Steam to AB Backend , callback reason " .. reason)
@@ -892,7 +893,7 @@ function Entitlement:CheckAndVerifyUserEntitlement(callback)
 		end
 	end
 
-	-- Lines 867-879
+	-- Lines 868-880
 	local function get_client_token_callback(success)
 		if success then
 			Login:CheckPlatformIdForExistingAccount(player_id, check_platform_callback)
@@ -914,7 +915,7 @@ function Entitlement:CheckAndVerifyUserEntitlement(callback)
 	end
 end
 
--- Lines 890-1046
+-- Lines 891-1047
 function Entitlement:SerializeJsonString(document)
 	cat_print("accelbyte", "[AccelByte] Entitlement:SerializeJsonString")
 
