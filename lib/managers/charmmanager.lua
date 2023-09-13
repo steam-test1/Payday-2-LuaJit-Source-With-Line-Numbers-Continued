@@ -64,11 +64,11 @@ function CharmManager:init()
 	self._is_upd_capped = set_fps and true or false
 end
 
--- Lines 149-305
+-- Lines 149-296
 function CharmManager:get_movement_data(weapon, user, is_menu)
 	local data = {}
 
-	if not user then
+	if not alive(user) then
 		if not is_menu then
 			cat_print("charm_manager", "[CharmManager:get_movement_data] ERROR? - In-game weapon has no user unit", weapon)
 
@@ -124,25 +124,21 @@ function CharmManager:get_movement_data(weapon, user, is_menu)
 
 			data.update_type = "simulate_ingame_standard"
 			local cam_ext = user:camera()
-			data.user_m_pos = cam_ext:position()
-			data.m_fwd = cam_ext:forward()
-			data.m_right = cam_ext:right()
-			local chk_ext = user:camera()
 
-			if chk_ext then
+			if cam_ext then
 				data.update_type = "simulate_ingame_standard"
-				data.user_m_pos = chk_ext:position()
-				data.m_fwd = chk_ext:forward()
-				data.m_right = chk_ext:right()
+				data.user_m_pos = cam_ext:position()
+				data.m_fwd = cam_ext:forward()
+				data.m_right = cam_ext:right()
 			else
 				cat_print("charm_manager", "[CharmManager:get_movement_data] ERROR - Local player unit has no camera() extension, falling back to movement() extension", user)
 
-				chk_ext = user:movement()
+				local mov_ext = user:movement()
 
-				if chk_ext then
+				if mov_ext then
 					data.update_type = "simulate_ingame_upd_m"
 					data.user_unit = user
-					data.user_m_pos = chk_ext:m_head_pos()
+					data.user_m_pos = mov_ext:m_head_pos()
 				else
 					cat_print("charm_manager", "[CharmManager:get_movement_data] ERROR - Local player unit has no movement() extension", user)
 
@@ -176,7 +172,7 @@ function CharmManager:get_movement_data(weapon, user, is_menu)
 	return data
 end
 
--- Lines 308-327
+-- Lines 299-318
 function CharmManager:set_common_mov_data(weapon, data)
 	data.fwd_dot = 0
 	data.right_dot = 0
@@ -195,7 +191,7 @@ function CharmManager:set_common_mov_data(weapon, data)
 	mvec3_sub(prev_weap_pos, weap_pos)
 end
 
--- Lines 329-389
+-- Lines 320-380
 function CharmManager:get_charm_data(charm_data_table, charm_unit, custom_body_obj, custom_parent_obj, is_menu)
 	local u_key = charm_unit:key()
 
@@ -250,7 +246,7 @@ function CharmManager:get_charm_data(charm_data_table, charm_unit, custom_body_o
 	return charm_entry
 end
 
--- Lines 391-556
+-- Lines 382-547
 function CharmManager:add_weapon(weapon_unit, parts, user_unit, is_menu, custom_params)
 	custom_params = custom_params or {}
 	local custom_units = custom_params.custom_units
@@ -363,7 +359,7 @@ function CharmManager:add_weapon(weapon_unit, parts, user_unit, is_menu, custom_
 	end
 end
 
--- Lines 558-603
+-- Lines 549-594
 function CharmManager:remove_weapon(weapon_unit)
 	local u_key = weapon_unit:key()
 	local weapons = self._weapons
@@ -413,7 +409,7 @@ function CharmManager:remove_weapon(weapon_unit)
 	self:_chk_updator()
 end
 
--- Lines 607-664
+-- Lines 598-655
 function CharmManager:enable_charm_upd(weapon_unit)
 	local u_key = weapon_unit:key()
 	local entry = self._weapons[u_key]
@@ -471,7 +467,7 @@ function CharmManager:enable_charm_upd(weapon_unit)
 	self:_chk_updator()
 end
 
--- Lines 666-703
+-- Lines 657-694
 function CharmManager:disable_charm_upd(weapon_unit)
 	local u_key = weapon_unit:key()
 	local entry = self._weapons[u_key]
@@ -509,7 +505,7 @@ function CharmManager:disable_charm_upd(weapon_unit)
 	self:_chk_updator()
 end
 
--- Lines 729-750
+-- Lines 720-741
 function CharmManager:_chk_updator()
 	if next(self._enabled_weapons) then
 		if self._is_upd_empty then
@@ -532,11 +528,11 @@ function CharmManager:_chk_updator()
 	end
 end
 
--- Lines 752-753
+-- Lines 743-744
 function CharmManager:update_empty()
 end
 
--- Lines 756-765
+-- Lines 747-756
 function CharmManager:update(_, dt)
 	local mov_data = nil
 
@@ -547,7 +543,7 @@ function CharmManager:update(_, dt)
 	end
 end
 
--- Lines 767-783
+-- Lines 758-774
 function CharmManager:update_capped(t, dt)
 	dt = t - self._last_frame_timestamp
 
@@ -565,7 +561,7 @@ function CharmManager:update_capped(t, dt)
 	end
 end
 
--- Lines 786-813
+-- Lines 777-804
 function CharmManager:_orient_charm(prev_rot, cur_rot)
 	local prev_pitch = mrot_pitch(prev_rot)
 	local prev_roll = mrot_roll(prev_rot)
@@ -592,7 +588,7 @@ function CharmManager:_orient_charm(prev_rot, cur_rot)
 	mrot_set(prev_rot, 0, math_clamp(charm_pitch, -self.pitch_angle, self.pitch_angle), math_clamp(charm_roll, self.menu_left_roll_angle, self.menu_right_roll_angle))
 end
 
--- Lines 815-826
+-- Lines 806-817
 function CharmManager:GetMappedRangeValueClamped(input_range_first, input_range_second, output_range_first, output_range_second, value)
 	local m = (output_range_second - output_range_first) / (input_range_second - input_range_first)
 	local b = output_range_first - m * input_range_first
@@ -603,7 +599,7 @@ function CharmManager:GetMappedRangeValueClamped(input_range_first, input_range_
 	return math_clamp(y, output_min, output_max)
 end
 
--- Lines 828-842
+-- Lines 819-833
 function CharmManager:random_smooth(value)
 	local array = self._random_array
 	local index = self._random_i
@@ -619,7 +615,7 @@ function CharmManager:random_smooth(value)
 	return sum / array_size
 end
 
--- Lines 846-872
+-- Lines 837-863
 function CharmManager:reset_vel_mutables(entry, mov_data)
 	local cur_user_pos = mov_data.user_m_pos
 
@@ -650,7 +646,7 @@ function CharmManager:reset_vel_mutables(entry, mov_data)
 	mov_data.inertia_transpired = mov_data.inertia_transpired and 0 or nil
 end
 
--- Lines 875-909
+-- Lines 866-900
 function CharmManager:set_velocities(m_comb_vel, m_user_vel, m_weap_vel, mov_data, weap_unit, dt)
 	local cur_user_pos = mov_data.user_m_pos
 	local prev_user_pos = mov_data.prev_user_pos
@@ -679,7 +675,7 @@ function CharmManager:set_velocities(m_comb_vel, m_user_vel, m_weap_vel, mov_dat
 	mvec3_set_z(m_user_vel, mvec3_x(m_user_vel))
 end
 
--- Lines 912-923
+-- Lines 903-914
 function CharmManager:project_velocities(fwd, right, combined_vel, user_vel, weap_vel)
 	local vert_vel = mvec3_dot(combined_vel, math_up)
 	local weapon_z_clamp = self.weapon_velocity_z_clamp
@@ -691,7 +687,7 @@ function CharmManager:project_velocities(fwd, right, combined_vel, user_vel, wea
 	return fwd_vel, side_vel, vert_vel
 end
 
--- Lines 925-955
+-- Lines 916-946
 function CharmManager:get_new_dots(mov_data, fwd_vel_dot, side_vel_dot, vert_vel_dot, beta, dt)
 	local fwd_dot = mov_data.fwd_dot * beta + fwd_vel_dot * (1 - beta)
 	local right_dot = mov_data.right_dot * beta + side_vel_dot * (1 - beta)
@@ -724,7 +720,7 @@ function CharmManager:get_new_dots(mov_data, fwd_vel_dot, side_vel_dot, vert_vel
 	return fwd_dot, right_dot, up_dot
 end
 
--- Lines 959-969
+-- Lines 950-960
 function CharmManager:simulate_menu_standard(entry, _, charm_data)
 	local new_rot = tmp_rot1
 
@@ -737,7 +733,7 @@ function CharmManager:simulate_menu_standard(entry, _, charm_data)
 	end
 end
 
--- Lines 973-984
+-- Lines 964-975
 function CharmManager:simulate_menu_no_character(entry, mov_data, charm_data)
 	local weap_rot = tmp_rot1
 
@@ -753,12 +749,12 @@ function CharmManager:simulate_menu_no_character(entry, mov_data, charm_data)
 	end
 end
 
--- Lines 987-989
+-- Lines 978-980
 function CharmManager:simulate_menu_vr(...)
 	self:simulate_menu_no_character(...)
 end
 
--- Lines 991-1026
+-- Lines 982-1017
 function CharmManager:_get_ingame_rotation(entry, mov_data, dt)
 	local weap_unit = entry.weapon_unit
 	local weap_rot = tmp_rot1
@@ -799,7 +795,7 @@ function CharmManager:_get_ingame_rotation(entry, mov_data, dt)
 	return new_rot
 end
 
--- Lines 1031-1038
+-- Lines 1022-1029
 function CharmManager:simulate_ingame_standard(entry, mov_data, charm_data, dt)
 	local new_rot = self:_get_ingame_rotation(entry, mov_data, dt)
 
@@ -809,7 +805,7 @@ function CharmManager:simulate_ingame_standard(entry, mov_data, charm_data, dt)
 	end
 end
 
--- Lines 1043-1060
+-- Lines 1034-1051
 function CharmManager:simulate_ingame_vr(entry, mov_data, charm_data, dt)
 	if not alive(entry.weapon_unit) or not entry.weapon_unit:parent() then
 		return
@@ -828,7 +824,7 @@ function CharmManager:simulate_ingame_vr(entry, mov_data, charm_data, dt)
 	self:simulate_ingame_standard(entry, mov_data, charm_data, dt)
 end
 
--- Lines 1064-1081
+-- Lines 1055-1072
 function CharmManager:simulate_ingame_vr_third_person(entry, mov_data, charm_data, dt)
 	local mov_ext = mov_data.user_unit:movement()
 
@@ -848,7 +844,7 @@ function CharmManager:simulate_ingame_vr_third_person(entry, mov_data, charm_dat
 	self:simulate_ingame_standard(entry, mov_data, charm_data, dt)
 end
 
--- Lines 1086-1093
+-- Lines 1077-1084
 function CharmManager:simulate_ingame_upd_m(entry, mov_data, charm_data, dt)
 	local m_rot = mov_data.user_unit:movement():m_rot()
 
@@ -857,7 +853,7 @@ function CharmManager:simulate_ingame_upd_m(entry, mov_data, charm_data, dt)
 	self:simulate_ingame_standard(entry, mov_data, charm_data, dt)
 end
 
--- Lines 1096-1098
+-- Lines 1087-1089
 function CharmManager:simulate_ingame_no_user(...)
 	self:simulate_menu_no_character(...)
 end

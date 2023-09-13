@@ -390,11 +390,11 @@ end
 function NetworkAccountEPIC:set_playing(state)
 end
 
--- Lines 409-411
-function NetworkAccountEPIC:set_played_with(id)
+-- Lines 409-410
+function NetworkAccountEPIC:set_played_with(peer)
 end
 
--- Lines 413-415
+-- Lines 412-414
 function NetworkAccountEPIC:get_friend_user(user_id)
 	return {
 		invite = function (self, lobby_id)
@@ -403,12 +403,12 @@ function NetworkAccountEPIC:get_friend_user(user_id)
 	}
 end
 
--- Lines 417-419
+-- Lines 416-418
 function NetworkAccountEPIC:is_player_friend(player_id)
 	return NetworkAccountEPIC.super.is_player_friend(self, player_id)
 end
 
--- Lines 421-432
+-- Lines 420-431
 function NetworkAccountEPIC:_load_globals()
 	if Global.epic and Global.epic.account then
 		self._outfit_signature = Global.epic.account.outfit_signature and Global.epic.account.outfit_signature:get_data()
@@ -421,7 +421,7 @@ function NetworkAccountEPIC:_load_globals()
 	end
 end
 
--- Lines 434-439
+-- Lines 433-438
 function NetworkAccountEPIC:_save_globals()
 	Global.epic = Global.epic or {}
 	Global.epic.account = {
@@ -429,12 +429,12 @@ function NetworkAccountEPIC:_save_globals()
 	}
 end
 
--- Lines 441-447
+-- Lines 440-446
 function NetworkAccountEPIC:is_ready_to_close()
 	return not self._inventory_is_loading and not self._inventory_outfit_refresh_requested and not self._inventory_outfit_refresh_in_progress
 end
 
--- Lines 449-466
+-- Lines 448-465
 function NetworkAccountEPIC:open_dlc_store_page(dlc_data, context)
 	if dlc_data then
 		if context == "buy_dlc" and dlc_data.epic_webpage then
@@ -451,7 +451,7 @@ function NetworkAccountEPIC:open_dlc_store_page(dlc_data, context)
 	return false
 end
 
--- Lines 468-473
+-- Lines 467-472
 function NetworkAccountEPIC:open_new_heist_page(new_heist_data)
 	if new_heist_data then
 		return false
@@ -460,41 +460,41 @@ function NetworkAccountEPIC:open_new_heist_page(new_heist_data)
 	return false
 end
 
--- Lines 476-477
+-- Lines 475-476
 function NetworkAccountEPIC:inventory_load()
 end
 
--- Lines 479-481
+-- Lines 478-480
 function NetworkAccountEPIC:inventory_is_loading()
 	return false
 end
 
--- Lines 483-485
+-- Lines 482-484
 function NetworkAccountEPIC:inventory_reward(reward_callback, item)
 	return false
 end
 
--- Lines 487-488
+-- Lines 486-487
 function NetworkAccount:inventory_reward_unlock(safe, safe_instance_id, drill_instance_id, reward_unlock_callback)
 end
 
--- Lines 490-491
+-- Lines 489-490
 function NetworkAccount:inventory_reward_open(safe, safe_instance_id, reward_unlock_callback)
 end
 
--- Lines 493-494
+-- Lines 492-493
 function NetworkAccountEPIC:inventory_reward_dlc(def_id, reward_promo_callback)
 end
 
--- Lines 496-497
+-- Lines 495-496
 function NetworkAccountEPIC:inventory_outfit_refresh()
 end
 
--- Lines 499-500
+-- Lines 498-499
 function NetworkAccountEPIC:_inventory_outfit_refresh()
 end
 
--- Lines 502-514
+-- Lines 501-513
 function NetworkAccountEPIC:_chk_inventory_outfit_refresh()
 	if not self._inventory_outfit_refresh_requested then
 		return
@@ -509,48 +509,48 @@ function NetworkAccountEPIC:_chk_inventory_outfit_refresh()
 	self:_inventory_outfit_refresh()
 end
 
--- Lines 516-518
+-- Lines 515-517
 function NetworkAccountEPIC:inventory_outfit_verify(user_id, outfit_data, outfit_callback)
 	return outfit_callback and outfit_callback(nil, false, {})
 end
 
--- Lines 520-523
+-- Lines 519-522
 function NetworkAccountEPIC:inventory_outfit_signature()
 	return "foobar"
 end
 
--- Lines 525-526
+-- Lines 524-525
 function NetworkAccountEPIC:_on_item_converted(error, items_new, items_removed)
 end
 
--- Lines 528-529
+-- Lines 527-528
 function NetworkAccountEPIC:inventory_repair_list(list)
 end
 
--- Lines 531-532
+-- Lines 530-531
 function NetworkAccountEPIC:_clbk_inventory_load(error, list)
 end
 
--- Lines 534-535
+-- Lines 533-534
 function NetworkAccountEPIC:_clbk_tradable_outfit_data(error, outfit_signature)
 end
 
--- Lines 538-539
+-- Lines 537-538
 function NetworkAccountEPIC:_on_drill_converted(data, error, items_new, items_removed)
 end
 
--- Lines 541-542
+-- Lines 540-541
 function NetworkAccountEPIC:convert_drills_to_safes(list)
 end
 
--- Lines 548-551
+-- Lines 547-550
 function NetworkAccountEPIC:achievement_unlock_time(key)
 	local res = tonumber(EpicAchievementHandler:achievement_unlock_time(key))
 
 	return res ~= -1 and res or nil
 end
 
--- Lines 553-647
+-- Lines 552-646
 function NetworkAccountEPIC:publish_statistics(stats, force_store)
 	if managers.dlc:is_trial() then
 		return

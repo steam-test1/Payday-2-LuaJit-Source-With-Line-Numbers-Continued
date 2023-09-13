@@ -10,7 +10,7 @@ end
 
 ContractBrokerHeistItem = ContractBrokerHeistItem or class()
 
--- Lines 11-320
+-- Lines 11-318
 function ContractBrokerHeistItem:init(parent_panel, job_data, idx)
 	self._parent = parent_panel
 	self._job_data = job_data
@@ -280,25 +280,44 @@ function ContractBrokerHeistItem:init(parent_panel, job_data, idx)
 		last_icon = stealth
 	end
 
+	if self:is_holiday_event() then
+		local holiday = icons_panel:text({
+			layer = 1,
+			vertical = "top",
+			align = "right",
+			halign = "right",
+			valign = "top",
+			text = managers.localization:get_default_macro("BTN_XMAS"),
+			font = tweak_data.menu.pd2_medium_font,
+			font_size = tweak_data.menu.pd2_medium_font_size,
+			color = tweak_data.screen_colors.text
+		})
+
+		make_fine_text(holiday)
+		holiday:set_right(last_icon:left() - padding)
+
+		last_icon = holiday
+	end
+
 	self:refresh()
 end
 
--- Lines 322-324
+-- Lines 320-322
 function ContractBrokerHeistItem:destroy()
 	self._parent:remove(self._panel)
 end
 
--- Lines 326-328
+-- Lines 324-326
 function ContractBrokerHeistItem:top()
 	return self._panel:top()
 end
 
--- Lines 330-332
+-- Lines 328-330
 function ContractBrokerHeistItem:bottom()
 	return self._panel:bottom()
 end
 
--- Lines 334-364
+-- Lines 332-362
 function ContractBrokerHeistItem:get_last_played_text()
 	local current_date = DateTime:new("now")
 	local last_played_date = managers.crimenet:get_last_played_job(self._job_data.job_id)
@@ -343,7 +362,7 @@ function ContractBrokerHeistItem:get_last_played_text()
 	})
 end
 
--- Lines 366-396
+-- Lines 364-394
 function ContractBrokerHeistItem:get_dlc_name_and_color(job_tweak)
 	local dlc_name = ""
 	local dlc_color = Color(1, 0, 1)
@@ -369,7 +388,7 @@ function ContractBrokerHeistItem:get_dlc_name_and_color(job_tweak)
 	return dlc_name, dlc_color
 end
 
--- Lines 398-415
+-- Lines 396-413
 function ContractBrokerHeistItem:is_stealthable()
 	local job_tweak = tweak_data.narrative:job_data(self._job_data.job_id)
 
@@ -389,7 +408,15 @@ function ContractBrokerHeistItem:is_stealthable()
 	return false
 end
 
--- Lines 423-431
+-- Lines 415-424
+function ContractBrokerHeistItem:is_holiday_event()
+	local is_xmas = false
+	local is_xmas = managers.perpetual_event:get_holiday_tactics() == "BTN_XMAS"
+
+	return is_xmas and managers.job:is_christmas_job(self._job_data.job_id)
+end
+
+-- Lines 426-434
 function ContractBrokerHeistItem:_job_num_days()
 	local job_tweak = tweak_data.narrative:job_data(self._job_data.job_id)
 
@@ -402,7 +429,7 @@ function ContractBrokerHeistItem:_job_num_days()
 	end
 end
 
--- Lines 433-440
+-- Lines 436-443
 function ContractBrokerHeistItem:get_heist_day_text()
 	local days = self:_job_num_days()
 
@@ -417,7 +444,7 @@ function ContractBrokerHeistItem:get_heist_day_text()
 	end
 end
 
--- Lines 442-451
+-- Lines 445-454
 function ContractBrokerHeistItem:get_heist_day_icon()
 	local days = self:_job_num_days()
 
@@ -430,12 +457,12 @@ function ContractBrokerHeistItem:get_heist_day_icon()
 	end
 end
 
--- Lines 455-457
+-- Lines 458-460
 function ContractBrokerHeistItem:refresh()
 	self._favourite:set_color(managers.crimenet:is_job_favourite(self._job_data.job_id) and Color.yellow or Color.white)
 end
 
--- Lines 459-468
+-- Lines 462-471
 function ContractBrokerHeistItem:select()
 	if not self._selected then
 		self._selected = true
@@ -450,7 +477,7 @@ function ContractBrokerHeistItem:select()
 	end
 end
 
--- Lines 470-478
+-- Lines 473-481
 function ContractBrokerHeistItem:deselect()
 	if self._selected then
 		self._selected = false
@@ -463,7 +490,7 @@ function ContractBrokerHeistItem:deselect()
 	end
 end
 
--- Lines 480-507
+-- Lines 483-510
 function ContractBrokerHeistItem:mouse_moved(button, x, y, used)
 	local used = used
 	local pointer = nil
@@ -497,7 +524,7 @@ function ContractBrokerHeistItem:mouse_moved(button, x, y, used)
 	return used, pointer
 end
 
--- Lines 509-519
+-- Lines 512-522
 function ContractBrokerHeistItem:mouse_clicked(o, button, x, y)
 	if self._favourite:inside(x, y) then
 		self:toggle_favourite()
@@ -512,7 +539,7 @@ function ContractBrokerHeistItem:mouse_clicked(o, button, x, y)
 	end
 end
 
--- Lines 521-557
+-- Lines 524-560
 function ContractBrokerHeistItem:trigger()
 	if self._job_data and not self._job_data.enabled then
 		local store_page_opened = self:trigger_open_store_page()
@@ -550,7 +577,7 @@ function ContractBrokerHeistItem:trigger()
 	})
 end
 
--- Lines 559-568
+-- Lines 562-571
 function ContractBrokerHeistItem:trigger_open_store_page()
 	local job_tweak = self._job_data and tweak_data.narrative.jobs[self._job_data.job_id]
 	local dlc = job_tweak and job_tweak.dlc
@@ -562,7 +589,7 @@ function ContractBrokerHeistItem:trigger_open_store_page()
 	return false
 end
 
--- Lines 570-575
+-- Lines 573-578
 function ContractBrokerHeistItem:toggle_favourite()
 	local is_fav = managers.crimenet:is_job_favourite(self._job_data.job_id)
 

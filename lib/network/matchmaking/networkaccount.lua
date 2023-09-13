@@ -197,7 +197,7 @@ function NetworkAccount:set_playing(state)
 end
 
 -- Lines 159-160
-function NetworkAccount:set_played_with(id)
+function NetworkAccount:set_played_with(peer)
 end
 
 -- Lines 162-163

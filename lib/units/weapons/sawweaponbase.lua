@@ -240,20 +240,7 @@ function SawWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, sh
 	return result, valid_hit
 end
 
--- Lines 221-224
-function SawWeaponBase:ammo_info()
-	return self:get_ammo_max_per_clip(), self:get_ammo_remaining_in_clip(), self:remaining_full_clips(), self:get_ammo_max()
-end
-
--- Lines 227-232
-function SawWeaponBase:set_ammo_info(max_clip, current_clip, current_left, max)
-	self:set_ammo_max_per_clip(max_clip)
-	self:set_ammo_max(max)
-	self:set_remaining_full_clips(current_left)
-	self:set_ammo_remaining_in_clip(current_clip)
-end
-
--- Lines 235-237
+-- Lines 237-239
 function SawWeaponBase:can_reload()
 	return self:clip_empty() and SawWeaponBase.super.can_reload(self)
 end
@@ -272,7 +259,7 @@ local tank_client_names = {
 	Idstring("units/payday2/characters/ene_bulldozer_4/ene_bulldozer_4_husk")
 }
 
--- Lines 256-277
+-- Lines 258-279
 function SawHit:on_collision(col_ray, weapon_unit, user_unit, damage)
 	local hit_unit = col_ray.unit
 
@@ -295,7 +282,7 @@ function SawHit:on_collision(col_ray, weapon_unit, user_unit, damage)
 	return result
 end
 
--- Lines 280-282
+-- Lines 282-284
 function SawHit:play_impact_sound_and_effects(weapon_unit, col_ray)
 	managers.game_play_central:play_impact_sound_and_effects({
 		decal = "saw",

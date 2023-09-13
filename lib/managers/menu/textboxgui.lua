@@ -115,7 +115,7 @@ function TextBoxGui:recreate_text_box(...)
 	self._thread = self._panel:animate(self._update, self)
 end
 
--- Lines 103-400
+-- Lines 103-358
 function TextBoxGui:_create_text_box(ws, title, text, content_data, config)
 	self._ws = ws
 	self._init_layer = self._ws:panel():layer()
@@ -356,29 +356,9 @@ function TextBoxGui:_create_text_box(ws, title, text, content_data, config)
 		end
 	end
 
-	local scroll_up_indicator_shade = main:panel({
-		halign = "right",
-		name = "scroll_up_indicator_shade",
-		valign = "top",
-		y = 100,
-		layer = 5,
-		x = scroll_panel:x(),
-		w = main:w() - buttons_panel:w()
-	})
-	local scroll_down_indicator_shade = main:panel({
-		halign = "right",
-		name = "scroll_down_indicator_shade",
-		valign = "bottom",
-		y = 100,
-		layer = 5,
-		x = scroll_panel:x(),
-		w = main:w() - buttons_panel:w()
-	})
 	local texture, rect = tweak_data.hud_icons:get_icon_data("scrollbar_arrow")
 
 	scroll_panel:grow(-rect[3], 0)
-	scroll_up_indicator_shade:set_w(scroll_panel:w())
-	scroll_down_indicator_shade:set_w(scroll_panel:w())
 	text:set_w(scroll_panel:w())
 
 	local _, _, ttw, tth = text:text_rect()
@@ -411,50 +391,8 @@ function TextBoxGui:_create_text_box(ws, title, text, content_data, config)
 
 	top_line:set_world_bottom(scroll_panel:world_top())
 	bottom_line:set_world_top(scroll_panel:world_bottom())
-	scroll_up_indicator_shade:set_top(top_line:bottom())
-	scroll_down_indicator_shade:set_bottom(bottom_line:top())
-
-	local scroll_up_indicator_arrow = main:bitmap({
-		name = "scroll_up_indicator_arrow",
-		layer = 3,
-		halign = "right",
-		valign = "top",
-		texture = texture,
-		texture_rect = rect,
-		color = Color.white
-	})
-
-	scroll_up_indicator_arrow:set_lefttop(scroll_panel:right() + 2, scroll_up_indicator_shade:top() + 8)
-
-	local scroll_down_indicator_arrow = main:bitmap({
-		name = "scroll_down_indicator_arrow",
-		layer = 3,
-		halign = "right",
-		valign = "bottom",
-		rotation = 180,
-		texture = texture,
-		texture_rect = rect,
-		color = Color.white
-	})
-
-	scroll_down_indicator_arrow:set_leftbottom(scroll_panel:right() + 2, scroll_down_indicator_shade:bottom() - 8)
-	BoxGuiObject:new(scroll_up_indicator_shade, {
-		sides = {
-			0,
-			0,
-			2,
-			0
-		}
-	}):set_aligns("scale", "scale")
-	BoxGuiObject:new(scroll_down_indicator_shade, {
-		sides = {
-			0,
-			0,
-			0,
-			2
-		}
-	}):set_aligns("scale", "scale")
 	lower_static_panel:set_bottom(buttons_panel:top() - 2)
+	self:_setup_scroll_bar(main, scroll_panel, buttons_panel, top_line, bottom_line)
 
 	self._info_box = BoxGuiObject:new(info_area, {
 		sides = {
@@ -464,28 +402,6 @@ function TextBoxGui:_create_text_box(ws, title, text, content_data, config)
 			1
 		}
 	})
-	local bar_h = scroll_down_indicator_arrow:top() - scroll_up_indicator_arrow:bottom()
-	local scroll_bar = main:panel({
-		name = "scroll_bar",
-		halign = "right",
-		w = 4,
-		layer = 4,
-		h = bar_h
-	})
-	self._scroll_bar_box_class = BoxGuiObject:new(scroll_bar, {
-		sides = {
-			2,
-			2,
-			0,
-			0
-		}
-	})
-
-	self._scroll_bar_box_class:set_aligns("scale", "scale")
-	scroll_bar:set_w(8)
-	scroll_bar:set_bottom(scroll_down_indicator_arrow:top())
-	scroll_bar:set_center_x(scroll_down_indicator_arrow:center_x())
-
 	local legend_minimize = main:text({
 		text = "MINIMIZE",
 		name = "legend_minimize",
@@ -547,7 +463,98 @@ function TextBoxGui:_create_text_box(ws, title, text, content_data, config)
 	return main
 end
 
--- Lines 403-477
+-- Lines 360-391
+function TextBoxGui:_setup_scroll_bar(main, scroll_panel, buttons_panel, top_line, bottom_line)
+	local scroll_up_indicator_shade = main:panel({
+		halign = "right",
+		name = "scroll_up_indicator_shade",
+		valign = "top",
+		y = 100,
+		layer = 5,
+		x = scroll_panel:x(),
+		w = main:w() - buttons_panel:w()
+	})
+	local scroll_down_indicator_shade = main:panel({
+		halign = "right",
+		name = "scroll_down_indicator_shade",
+		valign = "bottom",
+		y = 100,
+		layer = 5,
+		x = scroll_panel:x(),
+		w = main:w() - buttons_panel:w()
+	})
+
+	scroll_up_indicator_shade:set_w(scroll_panel:w())
+	scroll_down_indicator_shade:set_w(scroll_panel:w())
+	scroll_up_indicator_shade:set_top(top_line:bottom())
+	scroll_down_indicator_shade:set_bottom(bottom_line:top())
+
+	local texture, rect = tweak_data.hud_icons:get_icon_data("scrollbar_arrow")
+	local scroll_up_indicator_arrow = main:bitmap({
+		name = "scroll_up_indicator_arrow",
+		layer = 3,
+		halign = "right",
+		valign = "top",
+		texture = texture,
+		texture_rect = rect,
+		color = Color.white
+	})
+
+	scroll_up_indicator_arrow:set_lefttop(scroll_panel:right() + 2, scroll_up_indicator_shade:top() + 8)
+
+	local scroll_down_indicator_arrow = main:bitmap({
+		name = "scroll_down_indicator_arrow",
+		layer = 3,
+		halign = "right",
+		valign = "bottom",
+		rotation = 180,
+		texture = texture,
+		texture_rect = rect,
+		color = Color.white
+	})
+
+	scroll_down_indicator_arrow:set_leftbottom(scroll_panel:right() + 2, scroll_down_indicator_shade:bottom() - 8)
+	BoxGuiObject:new(scroll_up_indicator_shade, {
+		sides = {
+			0,
+			0,
+			2,
+			0
+		}
+	}):set_aligns("scale", "scale")
+	BoxGuiObject:new(scroll_down_indicator_shade, {
+		sides = {
+			0,
+			0,
+			0,
+			2
+		}
+	}):set_aligns("scale", "scale")
+
+	local bar_h = scroll_down_indicator_arrow:top() - scroll_up_indicator_arrow:bottom()
+	local scroll_bar = main:panel({
+		name = "scroll_bar",
+		halign = "right",
+		w = 4,
+		layer = 4,
+		h = bar_h
+	})
+	self._scroll_bar_box_class = BoxGuiObject:new(scroll_bar, {
+		sides = {
+			2,
+			2,
+			0,
+			0
+		}
+	})
+
+	self._scroll_bar_box_class:set_aligns("scale", "scale")
+	scroll_bar:set_w(8)
+	scroll_bar:set_bottom(scroll_down_indicator_arrow:top())
+	scroll_bar:set_center_x(scroll_down_indicator_arrow:center_x())
+end
+
+-- Lines 394-468
 function TextBoxGui:_setup_stats_panel(scroll_panel, stats_list, stats_text)
 	local has_stats = stats_list and #stats_list > 0
 	local stats_panel = scroll_panel:panel({
@@ -735,7 +742,7 @@ function TextBoxGui:_setup_stats_panel(scroll_panel, stats_list, stats_text)
 	return stats_panel
 end
 
--- Lines 480-541
+-- Lines 471-532
 function TextBoxGui:_setup_buttons_panel(info_area, button_list, focus_button, only_buttons)
 	local has_buttons = button_list and #button_list > 0
 	local buttons_panel = info_area:panel({
@@ -824,11 +831,11 @@ function TextBoxGui:_setup_buttons_panel(info_area, button_list, focus_button, o
 	return buttons_panel
 end
 
--- Lines 543-545
+-- Lines 534-536
 function TextBoxGui:_create_lower_static_panel(lower_static_panel)
 end
 
--- Lines 547-555
+-- Lines 538-546
 function TextBoxGui:check_focus_button(x, y)
 	for i, panel in ipairs(self._text_box_buttons_panel:children()) do
 		if panel.child and panel:inside(x, y) then
@@ -841,7 +848,7 @@ function TextBoxGui:check_focus_button(x, y)
 	return false
 end
 
--- Lines 557-568
+-- Lines 548-559
 function TextBoxGui:set_focus_button(focus_button)
 	if focus_button ~= self._text_box_focus_button then
 		managers.menu:post_event("highlight")
@@ -856,7 +863,7 @@ function TextBoxGui:set_focus_button(focus_button)
 	end
 end
 
--- Lines 570-582
+-- Lines 561-573
 function TextBoxGui:update_toggle(index)
 	local button_panel = self._text_box_buttons_panel:child(index - 1)
 
@@ -873,7 +880,7 @@ function TextBoxGui:update_toggle(index)
 	end
 end
 
--- Lines 584-617
+-- Lines 575-608
 function TextBoxGui:_set_button_selected(index, is_selected)
 	local button_panel = self._text_box_buttons_panel:child(index - 1)
 
@@ -901,7 +908,7 @@ function TextBoxGui:_set_button_selected(index, is_selected)
 	end
 end
 
--- Lines 619-628
+-- Lines 610-619
 function TextBoxGui:change_focus_button(change)
 	local button_count = self._text_box_buttons_panel:num_children() - 1
 	local focus_button = (self._text_box_focus_button + change) % button_count
@@ -913,17 +920,17 @@ function TextBoxGui:change_focus_button(change)
 	self:set_focus_button(focus_button)
 end
 
--- Lines 630-632
+-- Lines 621-623
 function TextBoxGui:get_focus_button()
 	return self._text_box_focus_button
 end
 
--- Lines 634-636
+-- Lines 625-627
 function TextBoxGui:get_focus_button_id()
 	return self._text_box_buttons_panel:child(self._text_box_focus_button - 1):name()
 end
 
--- Lines 638-658
+-- Lines 629-649
 function TextBoxGui:_set_scroll_indicator()
 	local info_area = self._text_box:child("info_area")
 	local scroll_panel = info_area:child("scroll_panel")
@@ -945,7 +952,7 @@ function TextBoxGui:_set_scroll_indicator()
 	self._text_box:child("scroll_down_indicator_arrow"):set_visible(is_visible)
 end
 
--- Lines 660-692
+-- Lines 651-683
 function TextBoxGui:_check_scroll_indicator_states()
 	local info_area = self._text_box:child("info_area")
 	local scroll_panel = info_area:child("scroll_panel")
@@ -978,17 +985,17 @@ function TextBoxGui:_check_scroll_indicator_states()
 	scroll_bar:set_top(up_arrow:bottom() - scroll_text:top() * (scroll_panel:h() - up_arrow:h() * 2 - 16) / sh)
 end
 
--- Lines 694-696
+-- Lines 685-687
 function TextBoxGui:input_focus()
 	return false
 end
 
--- Lines 698-700
+-- Lines 689-691
 function TextBoxGui:mouse_pressed(button, x, y)
 	return false
 end
 
--- Lines 702-716
+-- Lines 693-707
 function TextBoxGui:check_close(x, y)
 	if not self:can_take_input() then
 		return false
@@ -1007,7 +1014,7 @@ function TextBoxGui:check_close(x, y)
 	return false
 end
 
--- Lines 718-732
+-- Lines 709-723
 function TextBoxGui:check_minimize(x, y)
 	if not self:can_take_input() then
 		return false
@@ -1026,7 +1033,7 @@ function TextBoxGui:check_minimize(x, y)
 	return false
 end
 
--- Lines 734-760
+-- Lines 725-751
 function TextBoxGui:check_grab_scroll_bar(x, y)
 	if not self:can_take_input() or not alive(self._text_box) or not self._text_box:child("scroll_bar"):visible() then
 		return false
@@ -1062,7 +1069,7 @@ function TextBoxGui:check_grab_scroll_bar(x, y)
 	return false
 end
 
--- Lines 762-774
+-- Lines 753-765
 function TextBoxGui:release_scroll_bar()
 	self._pressing_arrow_up = false
 	self._pressing_arrow_down = false
@@ -1082,7 +1089,7 @@ function TextBoxGui:release_scroll_bar()
 	return false
 end
 
--- Lines 776-864
+-- Lines 767-855
 function TextBoxGui:mouse_moved(x, y)
 	if not self:can_take_input() or not alive(self._panel) then
 		return false, "arrow"
@@ -1142,7 +1149,7 @@ function TextBoxGui:mouse_moved(x, y)
 	return false, "arrow"
 end
 
--- Lines 866-912
+-- Lines 857-903
 function TextBoxGui:moved_scroll_bar(x, y)
 	self._x = x
 	self._y = y
@@ -1197,7 +1204,7 @@ function TextBoxGui:moved_scroll_bar(x, y)
 	return false, "hand"
 end
 
--- Lines 914-925
+-- Lines 905-916
 function TextBoxGui:mouse_wheel_up(x, y)
 	if not self._visible then
 		return false
@@ -1213,7 +1220,7 @@ function TextBoxGui:mouse_wheel_up(x, y)
 	end
 end
 
--- Lines 927-938
+-- Lines 918-929
 function TextBoxGui:mouse_wheel_down(x, y)
 	if not self._visible then
 		return false
@@ -1229,7 +1236,7 @@ function TextBoxGui:mouse_wheel_down(x, y)
 	end
 end
 
--- Lines 941-961
+-- Lines 932-952
 function TextBoxGui:scroll_up(y)
 	if not alive(self._text_box) then
 		return
@@ -1252,7 +1259,7 @@ function TextBoxGui:scroll_up(y)
 	self:_check_scroll_indicator_states()
 end
 
--- Lines 964-982
+-- Lines 955-973
 function TextBoxGui:scroll_down(y)
 	if not alive(self._text_box) then
 		return
@@ -1275,7 +1282,7 @@ function TextBoxGui:scroll_down(y)
 	self:_check_scroll_indicator_states()
 end
 
--- Lines 985-1004
+-- Lines 976-995
 function TextBoxGui:scroll_with_bar(target_y, current_y)
 	local arrow_size = self._text_box:child("scroll_up_indicator_arrow"):size()
 	local info_area = self._text_box:child("info_area")
@@ -1301,7 +1308,7 @@ function TextBoxGui:scroll_with_bar(target_y, current_y)
 	end
 end
 
--- Lines 1006-1016
+-- Lines 997-1007
 function TextBoxGui:update_indicator(t, dt)
 	if alive(self._indicator) then
 		self._indicator:rotate(180 * dt)
@@ -1314,7 +1321,7 @@ function TextBoxGui:update_indicator(t, dt)
 	end
 end
 
--- Lines 1018-1029
+-- Lines 1009-1020
 function TextBoxGui:set_fade(fade)
 	self:_set_alpha(fade)
 
@@ -1327,13 +1334,13 @@ function TextBoxGui:set_fade(fade)
 	end
 end
 
--- Lines 1031-1035
+-- Lines 1022-1026
 function TextBoxGui:_set_alpha(alpha)
 	self._panel:set_alpha(alpha)
 	self._panel:set_visible(alpha ~= 0)
 end
 
--- Lines 1037-1048
+-- Lines 1028-1039
 function TextBoxGui:_set_alpha_recursive(obj, alpha)
 	if obj.set_color then
 		local a = self._target_alpha[obj:key()] and self._target_alpha[obj:key()] * alpha or alpha
@@ -1348,7 +1355,7 @@ function TextBoxGui:_set_alpha_recursive(obj, alpha)
 	end
 end
 
--- Lines 1050-1056
+-- Lines 1041-1047
 function TextBoxGui:set_title(title)
 	local title_text = self._panel:child("title")
 
@@ -1360,29 +1367,29 @@ function TextBoxGui:set_title(title)
 	title_text:set_visible(title and true or false)
 end
 
--- Lines 1058-1062
+-- Lines 1049-1053
 function TextBoxGui:set_text(txt, no_upper)
 	local text = self._panel:child("info_area"):child("scroll_panel"):child("text")
 
 	text:set_text(no_upper and txt or utf8.to_upper(txt or ""))
 end
 
--- Lines 1064-1066
+-- Lines 1055-1057
 function TextBoxGui:set_use_minimize_legend(use)
 	self._panel:child("legend_minimize"):set_visible(use)
 end
 
--- Lines 1068-1070
+-- Lines 1059-1061
 function TextBoxGui:in_focus(x, y)
 	return self._panel:inside(x, y)
 end
 
--- Lines 1072-1074
+-- Lines 1063-1065
 function TextBoxGui:in_info_area_focus(x, y)
 	return self._panel:child("info_area"):inside(x, y)
 end
 
--- Lines 1076-1087
+-- Lines 1067-1078
 function TextBoxGui:_set_visible_state()
 	local visible = self._visible and self._enabled
 
@@ -1397,19 +1404,19 @@ function TextBoxGui:_set_visible_state()
 	end
 end
 
--- Lines 1089-1091
+-- Lines 1080-1082
 function TextBoxGui:can_take_input()
 	return self._visible and self._enabled
 end
 
--- Lines 1093-1097
+-- Lines 1084-1088
 function TextBoxGui:set_visible(visible)
 	self._visible = visible
 
 	self:_set_visible_state()
 end
 
--- Lines 1099-1113
+-- Lines 1090-1104
 function TextBoxGui:set_enabled(enabled)
 	if self._enabled == enabled then
 		return
@@ -1428,19 +1435,19 @@ function TextBoxGui:set_enabled(enabled)
 	end
 end
 
--- Lines 1115-1117
+-- Lines 1106-1108
 function TextBoxGui:enabled()
 	return self._enabled
 end
 
--- Lines 1119-1124
+-- Lines 1110-1115
 function TextBoxGui:_maximize(data)
 	self:set_visible(true)
 	self:set_minimized(false, nil)
 	self:_remove_minimized(data.id)
 end
 
--- Lines 1126-1132
+-- Lines 1117-1123
 function TextBoxGui:set_minimized(minimized, minimized_data)
 	self._minimized = minimized
 	self._minimized_data = minimized_data
@@ -1450,7 +1457,7 @@ function TextBoxGui:set_minimized(minimized, minimized_data)
 	end
 end
 
--- Lines 1134-1138
+-- Lines 1125-1129
 function TextBoxGui:_add_minimized()
 	self._minimized_data.callback = callback(self, self, "_maximize")
 
@@ -1459,29 +1466,29 @@ function TextBoxGui:_add_minimized()
 	self._minimized_id = managers.menu_component:add_minimized(self._minimized_data)
 end
 
--- Lines 1140-1143
+-- Lines 1131-1134
 function TextBoxGui:_remove_minimized(id)
 	self._minimized_id = nil
 
 	managers.menu_component:remove_minimized(id)
 end
 
--- Lines 1145-1147
+-- Lines 1136-1138
 function TextBoxGui:minimized()
 	return self._minimized
 end
 
--- Lines 1149-1151
+-- Lines 1140-1142
 function TextBoxGui:set_position(x, y)
 	self._panel:set_position(x, y)
 end
 
--- Lines 1153-1155
+-- Lines 1144-1146
 function TextBoxGui:position()
 	return self._panel:position()
 end
 
--- Lines 1157-1220
+-- Lines 1148-1211
 function TextBoxGui:set_size(x, y)
 	self._panel:set_size(x, y)
 
@@ -1561,50 +1568,50 @@ function TextBoxGui:set_size(x, y)
 	self:_check_scroll_indicator_states()
 end
 
--- Lines 1222-1224
+-- Lines 1213-1215
 function TextBoxGui:size()
 	return self._panel:size()
 end
 
--- Lines 1226-1226
+-- Lines 1217-1217
 function TextBoxGui:open_page()
 end
 
--- Lines 1227-1227
+-- Lines 1218-1218
 function TextBoxGui:close_page()
 end
 
--- Lines 1229-1229
+-- Lines 1220-1220
 function TextBoxGui:x()
 	return self._panel:x()
 end
 
--- Lines 1230-1230
+-- Lines 1221-1221
 function TextBoxGui:y()
 	return self._panel:y()
 end
 
--- Lines 1231-1231
+-- Lines 1222-1222
 function TextBoxGui:h()
 	return self._panel:h()
 end
 
--- Lines 1232-1232
+-- Lines 1223-1223
 function TextBoxGui:w()
 	return self._panel:w()
 end
 
--- Lines 1234-1236
+-- Lines 1225-1227
 function TextBoxGui:h()
 	return self._panel:h()
 end
 
--- Lines 1238-1240
+-- Lines 1229-1231
 function TextBoxGui:visible()
 	return self._visible
 end
 
--- Lines 1242-1267
+-- Lines 1233-1258
 function TextBoxGui:close()
 	if self._minimized then
 		self:_remove_minimized(self._minimized_id)

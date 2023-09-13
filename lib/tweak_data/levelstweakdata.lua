@@ -3280,7 +3280,7 @@ function LevelsTweakData:get_default_team_ID(type)
 	end
 end
 
--- Lines 3382-3426
+-- Lines 3382-3428
 function LevelsTweakData:get_team_setup()
 	local lvl_tweak = nil
 	lvl_tweak = (not Application:editor() or not managers.editor or self[managers.editor:layer("Level Settings"):get_setting("simulation_level_id")]) and Global.level_data and Global.level_data.level_id and self[Global.level_data.level_id]
@@ -3345,7 +3345,7 @@ function LevelsTweakData:get_team_setup()
 	return teams
 end
 
--- Lines 3428-3446
+-- Lines 3430-3448
 function LevelsTweakData:get_default_team_IDs()
 	local lvl_tweak = nil
 	lvl_tweak = (not Application:editor() or not managers.editor or self[managers.editor:layer("Level Settings"):get_setting("simulation_level_id")]) and Global.level_data and Global.level_data.level_id and self[Global.level_data.level_id]
@@ -3360,7 +3360,7 @@ function LevelsTweakData:get_default_team_IDs()
 	return default_team_IDs
 end
 
--- Lines 3448-3462
+-- Lines 3450-3464
 function LevelsTweakData:get_team_names_indexed()
 	local teams_index = self._teams_index
 
@@ -3380,7 +3380,7 @@ function LevelsTweakData:get_team_names_indexed()
 	return teams_index
 end
 
--- Lines 3464-3471
+-- Lines 3466-3473
 function LevelsTweakData:get_team_index(team_id)
 	local teams_index = self:get_team_names_indexed()
 
@@ -3391,7 +3391,7 @@ function LevelsTweakData:get_team_index(team_id)
 	end
 end
 
--- Lines 3473-3484
+-- Lines 3475-3486
 function LevelsTweakData:get_ai_group_type()
 	local level_data = Global.level_data and Global.level_data.level_id and self[Global.level_data.level_id]
 
@@ -3408,7 +3408,7 @@ function LevelsTweakData:get_ai_group_type()
 	return self.ai_groups.default
 end
 
--- Lines 3487-3500
+-- Lines 3489-3502
 function LevelsTweakData:get_narrator_prefix(narrator)
 	if not narrator then
 		local level_data = Global.level_data and Global.level_data.level_id and self[Global.level_data.level_id]

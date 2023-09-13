@@ -94,7 +94,7 @@ function BootupState:on_savefile_loaded(slot, success, is_setting_slot, cache_on
 	end
 end
 
--- Lines 47-111
+-- Lines 47-116
 function BootupState:setup()
 	local res = RenderSettings.resolution
 	local safe_rect_pixels = managers.gui_data:scaled_size()
@@ -153,6 +153,10 @@ function BootupState:setup()
 	local play_intros = not Application:production_build()
 
 	if play_intros then
+		if SystemInfo:distribution() == Idstring("EPIC") and EpicMM.wait_for_logged_on then
+			EpicMM:wait_for_logged_on(5)
+		end
+
 		self:setup_intro_videos()
 	end
 
@@ -176,7 +180,7 @@ function BootupState:setup()
 	end
 end
 
--- Lines 113-128
+-- Lines 118-133
 function BootupState:setup_intro_videos()
 	local res = RenderSettings.resolution
 	local safe_rect_pixels = managers.gui_data:scaled_size()
@@ -219,7 +223,7 @@ function BootupState:setup_intro_videos()
 	})
 end
 
--- Lines 130-164
+-- Lines 135-169
 function BootupState:at_enter()
 	managers.menu:input_enabled(false)
 
@@ -254,14 +258,14 @@ function BootupState:at_enter()
 	end
 end
 
--- Lines 166-170
+-- Lines 171-175
 function BootupState:clbk_game_has_music_control(status)
 	if self._play_data and self._play_data.video then
 		self._gui_obj:set_volume_gain(status and self._bootup_volume or 0)
 	end
 end
 
--- Lines 172-191
+-- Lines 177-196
 function BootupState:update(t, dt)
 	if self._wait_for_textures then
 		if TextureCache:check_textures_loaded() then
@@ -284,7 +288,7 @@ function BootupState:update(t, dt)
 	end
 end
 
--- Lines 193-205
+-- Lines 198-210
 function BootupState:check_confirm_pressed()
 	for index, controller in ipairs(self._controller_list) do
 		if controller:get_input_pressed("confirm") then
@@ -300,7 +304,7 @@ function BootupState:check_confirm_pressed()
 	end
 end
 
--- Lines 207-247
+-- Lines 212-252
 function BootupState:update_fades()
 	local time, duration = nil
 	local old_fade = self._fade
@@ -341,7 +345,7 @@ function BootupState:update_fades()
 	end
 end
 
--- Lines 249-261
+-- Lines 254-266
 function BootupState:apply_fade()
 	if self._play_data and self._play_data.gui then
 		local script = self._gui_obj.script and self._gui_obj:script()
@@ -356,7 +360,7 @@ function BootupState:apply_fade()
 	end
 end
 
--- Lines 263-271
+-- Lines 268-276
 function BootupState:is_skipped()
 	for _, controller in ipairs(self._controller_list) do
 		if controller:get_any_input_pressed() then
@@ -367,7 +371,7 @@ function BootupState:is_skipped()
 	return false
 end
 
--- Lines 273-283
+-- Lines 278-288
 function BootupState:is_playing()
 	if alive(self._gui_obj) then
 		if self._gui_obj.loop_count then
@@ -380,7 +384,7 @@ function BootupState:is_playing()
 	return false
 end
 
--- Lines 285-389
+-- Lines 290-394
 function BootupState:play_next(is_skipped)
 	self._play_time = TimerManager:game():time()
 	self._play_index = (self._play_index or 0) + 1
@@ -495,7 +499,7 @@ function BootupState:play_next(is_skipped)
 	end
 end
 
--- Lines 391-436
+-- Lines 396-441
 function BootupState:at_exit()
 	managers.platform:remove_event_callback("media_player_control", self._clbk_game_has_music_control_callback)
 

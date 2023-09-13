@@ -901,7 +901,17 @@ function NetworkMatchMaking:get_lobby_type()
 	return self.lobby_handler:lobby_type()
 end
 
--- Lines 887-890
+-- Lines 888-890
+function NetworkMatchMaking:set_login_time(login_time)
+	self._login_time = login_time
+end
+
+-- Lines 892-894
+function NetworkMatchMaking:login_time()
+	return self._login_time or self:server_time()
+end
+
+-- Lines 897-900
 function NetworkMatchMaking:server_time()
 	return 0
 end

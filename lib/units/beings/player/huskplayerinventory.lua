@@ -258,7 +258,7 @@ function HuskPlayerInventory._get_weapon_name_from_sync_index(w_index)
 	end
 end
 
--- Lines 240-247
+-- Lines 240-249
 function HuskPlayerInventory:set_weapon_underbarrel(selection_index, underbarrel_id, is_on)
 	selection_index = (tonumber(selection_index) - 1) % 2 + 1
 	local selection = self._available_selections[selection_index]
@@ -267,10 +267,12 @@ function HuskPlayerInventory:set_weapon_underbarrel(selection_index, underbarrel
 		return
 	end
 
-	selection.unit:base():set_underbarrel(underbarrel_id, is_on)
+	if selection.unit:base().set_underbarrel then
+		selection.unit:base():set_underbarrel(underbarrel_id, is_on)
+	end
 end
 
--- Lines 252-259
+-- Lines 254-261
 function HuskPlayerInventory:set_visibility_state(state)
 	local state_name = self._unit:movement():current_state_name()
 	local is_clean = HuskPlayerMovement.clean_states[state_name]

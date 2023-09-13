@@ -23,7 +23,7 @@ function MachineGunBeltManager:init()
 	self.super.init(self)
 end
 
--- Lines 56-104
+-- Lines 56-105
 function MachineGunBeltManager:add_weapon(weapon_unit, parts, user_unit, is_menu, custom_params)
 	if not custom_params or not custom_params.bullet_belt or not custom_params.bullet_belt.parts then
 		return
@@ -58,6 +58,7 @@ function MachineGunBeltManager:add_weapon(weapon_unit, parts, user_unit, is_menu
 	end
 
 	local entry = {
+		amplitude = 0,
 		weapon_unit = weapon_unit,
 		charm_data = charm_data,
 		mov_data = self:get_movement_data(weapon_unit, user_unit, is_menu),
@@ -70,7 +71,7 @@ function MachineGunBeltManager:add_weapon(weapon_unit, parts, user_unit, is_menu
 	self:_chk_updator()
 end
 
--- Lines 106-125
+-- Lines 107-126
 function MachineGunBeltManager:simulate_menu_standard(entry, _, charm_data)
 	local new_rot = Rotation()
 
@@ -87,7 +88,7 @@ function MachineGunBeltManager:simulate_menu_standard(entry, _, charm_data)
 	end
 end
 
--- Lines 127-157
+-- Lines 128-158
 function MachineGunBeltManager:simulate_menu_no_character(entry, mov_data, charm_data)
 	local weap_rot = Rotation()
 
@@ -118,7 +119,7 @@ function MachineGunBeltManager:simulate_menu_no_character(entry, mov_data, charm
 	end
 end
 
--- Lines 161-216
+-- Lines 162-217
 function MachineGunBeltManager:simulate_ingame_standard(entry, mov_data, charm_data, dt)
 	local alpha = 1
 	local is_shooting = entry.weapon_unit:base():shooting()
@@ -166,7 +167,7 @@ function MachineGunBeltManager:simulate_ingame_standard(entry, mov_data, charm_d
 	end
 end
 
--- Lines 219-229
+-- Lines 220-230
 function MachineGunBeltManager:_calculate_belt_damping(c_data, dist, belt_length)
 	if c_data.damping_factor then
 		return c_data.damping_factor
@@ -178,7 +179,7 @@ function MachineGunBeltManager:_calculate_belt_damping(c_data, dist, belt_length
 	return c_data.damping_factor
 end
 
--- Lines 231-237
+-- Lines 232-238
 function MachineGunBeltManager:_curve(x, max)
 	x = x / max
 	local ret = (-32.6401 * math.pow(x, 4) + 70.4845 * math.pow(x, 3) - 46.9253 * math.pow(x, 2) + 9.9483 * x + 0.1004) * max
@@ -186,7 +187,7 @@ function MachineGunBeltManager:_curve(x, max)
 	return ret
 end
 
--- Lines 239-254
+-- Lines 240-255
 function MachineGunBeltManager:_noise_signal(entry, c_data, dt, distance_to_root, belt_length, is_shooting)
 	if is_shooting then
 		entry.amplitude = math_clamp(entry.amplitude + dt * self.noise_gain_speed, 0, self.max_noise_gain_speed)
@@ -199,7 +200,7 @@ function MachineGunBeltManager:_noise_signal(entry, c_data, dt, distance_to_root
 	return 0
 end
 
--- Lines 256-258
+-- Lines 257-259
 function MachineGunBeltManager:_chaos()
 	return (math.random() + 0.5) * self.chaos_factor
 end

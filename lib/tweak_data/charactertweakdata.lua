@@ -712,7 +712,8 @@ function CharacterTweakData:_init_marshal_marksman(presets)
 	self.marshal_marksman = deep_clone(presets.base)
 	self.marshal_marksman.tags = {
 		"law",
-		"marksman"
+		"marksman",
+		"special"
 	}
 	self.marshal_marksman.experience = {
 		cable_tie = "tie_swat"
@@ -865,7 +866,8 @@ function CharacterTweakData:_init_marshal_shield(presets)
 	self.marshal_shield = deep_clone(presets.base)
 	self.marshal_shield.tags = {
 		"law",
-		"shield"
+		"shield",
+		"special"
 	}
 	self.marshal_shield.experience = {}
 	self.marshal_shield.weapon = deep_clone(presets.weapon.normal)
@@ -11749,7 +11751,7 @@ function CharacterTweakData:enemy_list()
 	return self._enemy_list
 end
 
--- Lines 5491-5509
+-- Lines 5491-5512
 function CharacterTweakData:_set_easy()
 	self:_multiply_all_hp(1, 1)
 	self:_multiply_all_speeds(2.05, 2.1)
@@ -11765,9 +11767,11 @@ function CharacterTweakData:_set_easy()
 	self:_set_characters_weapon_preset("normal")
 
 	self.flashbang_multiplier = 1
+
+	self:_process_weapon_usage_table()
 end
 
--- Lines 5513-5706
+-- Lines 5516-5712
 function CharacterTweakData:_set_normal()
 	self:_multiply_all_hp(1, 1)
 	self:_multiply_all_speeds(1.05, 1.1)
@@ -12726,9 +12730,11 @@ function CharacterTweakData:_set_normal()
 	self.presets.weapon.gang_member.is_shotgun_mag = deep_clone(self.presets.weapon.gang_member.is_shotgun_pump)
 	self.flashbang_multiplier = 1
 	self.concussion_multiplier = 1
+
+	self:_process_weapon_usage_table()
 end
 
--- Lines 5710-5874
+-- Lines 5716-5882
 function CharacterTweakData:_set_hard()
 	self:_multiply_all_hp(1, 1)
 	self:_multiply_all_speeds(2.05, 2.1)
@@ -13378,9 +13384,11 @@ function CharacterTweakData:_set_hard()
 			}
 		}
 	}
+
+	self:_process_weapon_usage_table()
 end
 
--- Lines 5878-6050
+-- Lines 5886-6061
 function CharacterTweakData:_set_overkill()
 	self:_multiply_all_hp(2, 2)
 	self:_multiply_all_speeds(2.05, 2.1)
@@ -14031,9 +14039,11 @@ function CharacterTweakData:_set_overkill()
 	}
 	self.flashbang_multiplier = 1.5
 	self.concussion_multiplier = 1
+
+	self:_process_weapon_usage_table()
 end
 
--- Lines 6054-6148
+-- Lines 6065-6162
 function CharacterTweakData:_set_overkill_145()
 	if SystemInfo:platform() == Idstring("PS3") then
 		self:_multiply_all_hp(3, 3)
@@ -14227,9 +14237,11 @@ function CharacterTweakData:_set_overkill_145()
 	}
 	self.flashbang_multiplier = 1.75
 	self.concussion_multiplier = 1
+
+	self:_process_weapon_usage_table()
 end
 
--- Lines 6152-6331
+-- Lines 6166-6352
 function CharacterTweakData:_set_easy_wish()
 	if SystemInfo:platform() == Idstring("PS3") then
 		self:_multiply_all_hp(6, 2)
@@ -14776,11 +14788,11 @@ function CharacterTweakData:_set_easy_wish()
 		0
 	}
 	self.tank.weapon.is_rifle.focus_delay = 0
-	self.tank.weapon.mini.aim_delay = {
+	self.tank_mini.weapon.mini.aim_delay = {
 		0,
 		0
 	}
-	self.tank.weapon.mini.focus_delay = 0
+	self.tank_mini.weapon.mini.focus_delay = 0
 	self.shield.weapon.is_smg.aim_delay = {
 		0,
 		0
@@ -14802,9 +14814,11 @@ function CharacterTweakData:_set_easy_wish()
 	self.phalanx_vip.DAMAGE_CLAMP_EXPLOSION = self.phalanx_vip.DAMAGE_CLAMP_BULLET
 	self.flashbang_multiplier = 2
 	self.concussion_multiplier = 1
+
+	self:_process_weapon_usage_table()
 end
 
--- Lines 6333-6573
+-- Lines 6354-6608
 function CharacterTweakData:_set_overkill_290()
 	if SystemInfo:platform() == Idstring("PS3") then
 		self:_multiply_all_hp(6, 1.5)
@@ -15638,12 +15652,12 @@ function CharacterTweakData:_set_overkill_290()
 			}
 		}
 	}
-	self.tank.weapon.mini.aim_delay = {
+	self.tank_mini.weapon.mini.aim_delay = {
 		0,
 		0
 	}
-	self.tank.weapon.mini.focus_delay = 0
-	self.tank.weapon.mini.FALLOFF = {
+	self.tank_mini.weapon.mini.focus_delay = 0
+	self.tank_mini.weapon.mini.FALLOFF = {
 		{
 			dmg_mul = 5,
 			r = 100,
@@ -16032,9 +16046,11 @@ function CharacterTweakData:_set_overkill_290()
 	self.phalanx_vip.DAMAGE_CLAMP_EXPLOSION = self.phalanx_vip.DAMAGE_CLAMP_BULLET
 	self.flashbang_multiplier = 2
 	self.concussion_multiplier = 1
+
+	self:_process_weapon_usage_table()
 end
 
--- Lines 6575-6820
+-- Lines 6610-6871
 function CharacterTweakData:_set_sm_wish()
 	if SystemInfo:platform() == Idstring("PS3") then
 		self:_multiply_all_hp(6, 1.5)
@@ -16870,12 +16886,12 @@ function CharacterTweakData:_set_sm_wish()
 			}
 		}
 	}
-	self.tank.weapon.mini.aim_delay = {
+	self.tank_mini.weapon.mini.aim_delay = {
 		0,
 		0
 	}
-	self.tank.weapon.mini.focus_delay = 0
-	self.tank.weapon.mini.FALLOFF = {
+	self.tank_mini.weapon.mini.focus_delay = 0
+	self.tank_mini.weapon.mini.FALLOFF = {
 		{
 			dmg_mul = 6,
 			r = 100,
@@ -16967,11 +16983,11 @@ function CharacterTweakData:_set_sm_wish()
 			}
 		}
 	}
-	self.tank.weapon.mini.aim_delay = {
+	self.tank_mini.weapon.mini.aim_delay = {
 		0,
 		0
 	}
-	self.tank.weapon.mini.focus_delay = 0
+	self.tank_mini.weapon.mini.focus_delay = 0
 	self.shield.weapon.is_smg.aim_delay = {
 		0,
 		0
@@ -17269,9 +17285,11 @@ function CharacterTweakData:_set_sm_wish()
 	self.phalanx_vip.DAMAGE_CLAMP_EXPLOSION = self.phalanx_vip.DAMAGE_CLAMP_BULLET
 	self.flashbang_multiplier = 2
 	self.concussion_multiplier = 1
+
+	self:_process_weapon_usage_table()
 end
 
--- Lines 6824-6831
+-- Lines 6875-6882
 function CharacterTweakData:_multiply_weapon_delay(weap_usage_table, mul)
 	for _, weap_id in ipairs(self.weap_ids) do
 		local usage_data = weap_usage_table[weap_id]
@@ -17282,7 +17300,7 @@ function CharacterTweakData:_multiply_weapon_delay(weap_usage_table, mul)
 	end
 end
 
--- Lines 6835-7066
+-- Lines 6886-7117
 function CharacterTweakData:_multiply_all_hp(hp_mul, hs_mul)
 	self.fbi.HEALTH_INIT = self.fbi.HEALTH_INIT * hp_mul
 	self.swat.HEALTH_INIT = self.swat.HEALTH_INIT * hp_mul
@@ -17479,7 +17497,7 @@ function CharacterTweakData:_multiply_all_hp(hp_mul, hs_mul)
 	end
 end
 
--- Lines 7070-7127
+-- Lines 7121-7178
 function CharacterTweakData:_multiply_all_speeds(walk_mul, run_mul)
 	local all_units = {
 		"security",
@@ -17533,7 +17551,7 @@ function CharacterTweakData:_multiply_all_speeds(walk_mul, run_mul)
 	self.fbi_swat.SPEED_RUN = self.fbi_swat.SPEED_RUN * run_mul
 end
 
--- Lines 7130-7141
+-- Lines 7181-7192
 function CharacterTweakData:_set_characters_weapon_preset(preset)
 	local all_units = {
 		"security",
@@ -17553,7 +17571,7 @@ function CharacterTweakData:_set_characters_weapon_preset(preset)
 	end
 end
 
--- Lines 7145-8055
+-- Lines 7196-8106
 function CharacterTweakData:character_map()
 	local char_map = {
 		basic = {

@@ -1113,7 +1113,17 @@ function NetworkMatchMakingEPIC:from_host_lobby_re_opened(status)
 	end
 end
 
--- Lines 1238-1241
+-- Lines 1239-1241
+function NetworkMatchMakingEPIC:set_login_time(login_time)
+	self._login_time = login_time
+end
+
+-- Lines 1243-1245
+function NetworkMatchMakingEPIC:login_time()
+	return self._login_time or self:server_time()
+end
+
+-- Lines 1248-1251
 function NetworkMatchMakingEPIC:server_time()
 	return os.time()
 end

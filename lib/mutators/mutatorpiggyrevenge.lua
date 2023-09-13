@@ -45,7 +45,12 @@ local idstr_size = Idstring("size")
 function MutatorPiggyRevenge:register_values(mutator_manager)
 end
 
--- Lines 46-81
+-- Lines 47-49
+function MutatorPiggyRevenge:next_interupt_stage(interupt)
+	return nil
+end
+
+-- Lines 52-87
 function MutatorPiggyRevenge:setup(mutator_manager)
 	print("MutatorPiggyRevenge:setup")
 
@@ -77,7 +82,7 @@ function MutatorPiggyRevenge:setup(mutator_manager)
 	self._sound_source:set_position(self._position)
 end
 
--- Lines 99-146
+-- Lines 105-152
 function MutatorPiggyRevenge:on_game_started(mutator_manager)
 	print("MutatorPiggyRevenge:on_game_started")
 
@@ -137,7 +142,7 @@ function MutatorPiggyRevenge:on_game_started(mutator_manager)
 	}
 end
 
--- Lines 148-163
+-- Lines 154-169
 function MutatorPiggyRevenge:_setup_navigation()
 	if Network:is_server() then
 		if managers.navigation:is_data_ready() then
@@ -155,7 +160,7 @@ function MutatorPiggyRevenge:_setup_navigation()
 	end
 end
 
--- Lines 165-181
+-- Lines 171-187
 function MutatorPiggyRevenge:progress_dialog_count(trigger_id, amount)
 	local data = self._dialog_count_trigger[trigger_id]
 
@@ -171,7 +176,7 @@ function MutatorPiggyRevenge:progress_dialog_count(trigger_id, amount)
 	end
 end
 
--- Lines 183-191
+-- Lines 189-197
 function MutatorPiggyRevenge:sync_piggybank_dialog(sync_index)
 	for id, data in pairs(self._dialog_count_trigger) do
 		if data.count and data.sync_index == sync_index then
@@ -184,12 +189,12 @@ function MutatorPiggyRevenge:sync_piggybank_dialog(sync_index)
 	end
 end
 
--- Lines 193-195
+-- Lines 199-201
 function MutatorPiggyRevenge:get_intro_event(default_intro_event)
 	return "Play_alm_pda9_01"
 end
 
--- Lines 197-203
+-- Lines 203-209
 function MutatorPiggyRevenge:get_outro_event(default_outro_event)
 	if self._exploded_pig_level then
 		return {
@@ -201,7 +206,7 @@ function MutatorPiggyRevenge:get_outro_event(default_outro_event)
 	return default_outro_event
 end
 
--- Lines 205-216
+-- Lines 211-222
 function MutatorPiggyRevenge:sync_save(mutator_manager, save_data)
 	local my_save_data = {}
 	save_data.piggyrevenge_mutator = my_save_data
@@ -214,7 +219,7 @@ function MutatorPiggyRevenge:sync_save(mutator_manager, save_data)
 	my_save_data.boss_count = self._boss_count
 end
 
--- Lines 218-268
+-- Lines 224-274
 function MutatorPiggyRevenge:sync_load(mutator_manager, load_data)
 	local my_load_data = load_data.piggyrevenge_mutator
 	self._pig_level = my_load_data.pig_level
@@ -271,7 +276,7 @@ function MutatorPiggyRevenge:sync_load(mutator_manager, load_data)
 	end
 end
 
--- Lines 270-285
+-- Lines 276-291
 function MutatorPiggyRevenge:server_feed_piggybank(bag_unit)
 	print("MutatorPiggyRevenge:server_feed_piggybank", bag_unit)
 
@@ -284,7 +289,7 @@ function MutatorPiggyRevenge:server_feed_piggybank(bag_unit)
 	self:sync_feed_piggybank(bag_unit, reached_next_level, last_carried_player)
 end
 
--- Lines 287-316
+-- Lines 293-322
 function MutatorPiggyRevenge:sync_feed_piggybank(bag_unit, reached_next_level, last_carried_player)
 	print("MutatorPiggyRevenge:sync_feed_piggybank", bag_unit, reached_next_level)
 
@@ -307,7 +312,7 @@ function MutatorPiggyRevenge:sync_feed_piggybank(bag_unit, reached_next_level, l
 	end
 end
 
--- Lines 318-338
+-- Lines 324-344
 function MutatorPiggyRevenge:on_pig_fed(bag_unit, current_piggybank_unit)
 	if alive(current_piggybank_unit) then
 		local obj = current_piggybank_unit:get_object(Idstring("coin_slot"))
@@ -339,7 +344,7 @@ function MutatorPiggyRevenge:on_pig_fed(bag_unit, current_piggybank_unit)
 	end
 end
 
--- Lines 340-380
+-- Lines 346-386
 function MutatorPiggyRevenge:increase_pig_level()
 	print("MutatorPiggyRevenge:increase_pig_level", self._pig_level)
 
@@ -380,7 +385,7 @@ function MutatorPiggyRevenge:increase_pig_level()
 	managers.hud:show_stage_transition(self._pig_level - 1, string.format("%.0f", self._tweakdata.pig_levels[self._pig_level + 1] and 0 or 100))
 end
 
--- Lines 382-395
+-- Lines 388-401
 function MutatorPiggyRevenge:show_next_piggybank()
 	print("MutatorPiggyRevenge:show_next_piggybank")
 
@@ -397,7 +402,7 @@ function MutatorPiggyRevenge:show_next_piggybank()
 	end
 end
 
--- Lines 397-554
+-- Lines 403-560
 function MutatorPiggyRevenge:update(t, dt)
 	managers.hud:update_mutator_hud(t, dt)
 
@@ -578,17 +583,17 @@ function MutatorPiggyRevenge:update(t, dt)
 	end
 end
 
--- Lines 556-558
+-- Lines 562-564
 function MutatorPiggyRevenge:main_category()
 	return "event"
 end
 
--- Lines 560-562
+-- Lines 566-568
 function MutatorPiggyRevenge:get_exploded_pig_level()
 	return self._exploded_pig_level
 end
 
--- Lines 564-569
+-- Lines 570-575
 function MutatorPiggyRevenge:can_spawn_bag()
 	if managers.mutators:is_mutator_active(MutatorPiggyRevenge) then
 		return not self._exploded_pig_level and self._pig_level < #self._tweakdata.pig_levels
@@ -597,7 +602,7 @@ function MutatorPiggyRevenge:can_spawn_bag()
 	return false
 end
 
--- Lines 571-627
+-- Lines 577-633
 function MutatorPiggyRevenge:on_enemy_killed(dead_unit, attack_data)
 	local attacker_unit = attack_data.attacker_unit
 	local weapon_unit = attack_data.weapon_unit
@@ -652,7 +657,7 @@ function MutatorPiggyRevenge:on_enemy_killed(dead_unit, attack_data)
 	end
 end
 
--- Lines 629-662
+-- Lines 635-668
 function MutatorPiggyRevenge:server_spawn_bag(wanted_pos, wanted_rot, push_force)
 	if Network:is_server() and self:can_spawn_bag() then
 		local pos = mvec1
@@ -693,7 +698,7 @@ function MutatorPiggyRevenge:server_spawn_bag(wanted_pos, wanted_rot, push_force
 	end
 end
 
--- Lines 664-700
+-- Lines 670-706
 function MutatorPiggyRevenge:sync_explode_piggybank()
 	if self._exploded_pig_level then
 		return
@@ -740,19 +745,19 @@ function MutatorPiggyRevenge:sync_explode_piggybank()
 	})
 end
 
--- Lines 702-705
+-- Lines 708-711
 function MutatorPiggyRevenge:_remove_piggybank_clbk(piggybank_unit)
 	piggybank_unit:interaction():set_active(false)
 	piggybank_unit:set_enabled(false)
 end
 
--- Lines 707-710
+-- Lines 713-716
 function MutatorPiggyRevenge:_explode_piggybank_clbk()
 	managers.network:session():send_to_peers_synched("sync_explode_piggybank")
 	self:sync_explode_piggybank()
 end
 
--- Lines 713-737
+-- Lines 719-743
 function MutatorPiggyRevenge:activate_buff(buff_id, sync_if_host)
 	local buff_td = self._tweakdata.buffs[buff_id]
 
@@ -785,14 +790,14 @@ function MutatorPiggyRevenge:activate_buff(buff_id, sync_if_host)
 	end
 end
 
--- Lines 739-742
+-- Lines 745-748
 function MutatorPiggyRevenge:is_buff_active(buff_id)
 	self._active_buffs = self._active_buffs or {}
 
 	return table.contains(self._active_buffs, buff_id)
 end
 
--- Lines 744-760
+-- Lines 750-766
 function MutatorPiggyRevenge:activate_categories_buff(categories)
 	if not Network:is_server() then
 		return
@@ -814,7 +819,7 @@ function MutatorPiggyRevenge:activate_categories_buff(categories)
 	end
 end
 
--- Lines 762-764
+-- Lines 768-770
 function MutatorPiggyRevenge:add_buff_hud(buff_td)
 	managers.hud:add_buff({
 		time_left = -1,
@@ -825,108 +830,108 @@ function MutatorPiggyRevenge:add_buff_hud(buff_td)
 	})
 end
 
--- Lines 766-769
+-- Lines 772-775
 function MutatorPiggyRevenge:activate_drill_speed_buff(buff_td)
 	self:add_buff_hud(buff_td)
 end
 
--- Lines 771-774
+-- Lines 777-780
 function MutatorPiggyRevenge:activate_bag_speed_buff(buff_td)
 	self:add_buff_hud(buff_td)
 end
 
--- Lines 776-779
+-- Lines 782-785
 function MutatorPiggyRevenge:activate_bag_throw_buff(buff_td)
 	self:add_buff_hud(buff_td)
 end
 
--- Lines 781-784
+-- Lines 787-790
 function MutatorPiggyRevenge:activate_ammo_modifier_buff(buff_td)
 	self:add_buff_hud(buff_td)
 end
 
--- Lines 786-789
+-- Lines 792-795
 function MutatorPiggyRevenge:activate_critical_chance_buff(buff_td)
 	self:add_buff_hud(buff_td)
 end
 
--- Lines 791-794
+-- Lines 797-800
 function MutatorPiggyRevenge:activate_ammo_free_chance_buff(buff_td)
 	self:add_buff_hud(buff_td)
 end
 
--- Lines 796-799
+-- Lines 802-805
 function MutatorPiggyRevenge:activate_headshot_aoe_buff(buff_td)
 	managers.player:register_message(Message.OnLethalHeadShot, "activate_headshot_aoe_buff", callback(self, self, "on_headshot_aoe"))
 	self:add_buff_hud(buff_td)
 end
 
--- Lines 801-804
+-- Lines 807-810
 function MutatorPiggyRevenge:activate_damage_reduction_buff(buff_td)
 	self:add_buff_hud(buff_td)
 end
 
--- Lines 806-809
+-- Lines 812-815
 function MutatorPiggyRevenge:activate_auto_revive_buff(buff_td)
 	self:add_buff_hud(buff_td)
 end
 
--- Lines 811-814
+-- Lines 817-820
 function MutatorPiggyRevenge:activate_faster_armor_regen_buff(buff_td)
 	self:add_buff_hud(buff_td)
 end
 
--- Lines 816-819
+-- Lines 822-825
 function MutatorPiggyRevenge:activate_downed_free_chance_buff(buff_td)
 	self:add_buff_hud(buff_td)
 end
 
--- Lines 821-823
+-- Lines 827-829
 function MutatorPiggyRevenge:get_bag_speed_increase_multiplier()
 	return self:is_buff_active("bag_speed") and (self._tweakdata.buffs.bag_speed.speed_multiplier or 1) or 1
 end
 
--- Lines 824-826
+-- Lines 830-832
 function MutatorPiggyRevenge:get_interaction_override()
 	return self:is_buff_active("bag_speed") and (self._tweakdata.buffs.bag_speed.interaction_override or 1) or 1
 end
 
--- Lines 828-830
+-- Lines 834-836
 function MutatorPiggyRevenge:get_bag_throw_multiplier(carry_id)
 	return self:is_buff_active("bag_throw") and carry_id == "pda9_feed" and (self._tweakdata.buffs.bag_throw.throw_multiplier or 1) or 1
 end
 
--- Lines 832-834
+-- Lines 838-840
 function MutatorPiggyRevenge:damage_reduction_multiplier()
 	return self:is_buff_active("damage_reduction") and 1 - (self._tweakdata.buffs.damage_reduction.damage_reduction_multiplier or 0) or 1
 end
 
--- Lines 836-838
+-- Lines 842-844
 function MutatorPiggyRevenge:additional_critical_chance()
 	return self:is_buff_active("critical_chance") and self._tweakdata.buffs.critical_chance.additional_critical_chance or 0
 end
 
--- Lines 840-842
+-- Lines 846-848
 function MutatorPiggyRevenge:armor_regen_timer_multiplier()
 	return self:is_buff_active("faster_armor_regen") and self._tweakdata.buffs.faster_armor_regen.armor_regen_timer_multiplier or 1
 end
 
--- Lines 844-846
+-- Lines 850-852
 function MutatorPiggyRevenge:drill_speed_multiplier()
 	return self:is_buff_active("drill_speed") and self._tweakdata.buffs.drill_speed.drill_speed_multiplier or 1
 end
 
--- Lines 848-850
+-- Lines 854-856
 function MutatorPiggyRevenge:auto_revive_timer()
 	return self:is_buff_active("auto_revive") and self._tweakdata.buffs.auto_revive.revive_timer or nil
 end
 
--- Lines 852-854
+-- Lines 858-860
 function MutatorPiggyRevenge:check_ignore_reduce_revive()
 	return self:is_buff_active("downed_free_chance") and math.rand(1) <= self._tweakdata.buffs.downed_free_chance.chance_percentage or nil
 end
 
--- Lines 856-869
+-- Lines 862-875
 function MutatorPiggyRevenge:check_modify_weapon(weapon_base)
 	if self:is_buff_active("ammo_modifier") then
 		local tweak_modifiers = self._tweakdata.buffs.ammo_modifier.weapon_modifiers or {}
@@ -943,7 +948,7 @@ function MutatorPiggyRevenge:check_modify_weapon(weapon_base)
 	end
 end
 
--- Lines 871-878
+-- Lines 877-884
 function MutatorPiggyRevenge:get_free_ammo_chance()
 	if not self:is_buff_active("ammo_free_chance") then
 		return false
@@ -954,7 +959,7 @@ function MutatorPiggyRevenge:get_free_ammo_chance()
 	return chance < (self._tweakdata.buffs.ammo_free_chance.free_ammo_percentage or 1 or 1)
 end
 
--- Lines 880-941
+-- Lines 886-947
 function MutatorPiggyRevenge:on_headshot_aoe(attack_data)
 	if attack_data then
 		local dead_unit = attack_data.col_ray and attack_data.col_ray.unit
@@ -1026,7 +1031,7 @@ function MutatorPiggyRevenge:on_headshot_aoe(attack_data)
 	end
 end
 
--- Lines 943-950
+-- Lines 949-956
 function MutatorPiggyRevenge:spawn_piggydozer()
 	if not Network:is_server() then
 		return
@@ -1037,13 +1042,13 @@ function MutatorPiggyRevenge:spawn_piggydozer()
 	})
 end
 
--- Lines 952-955
+-- Lines 958-961
 function MutatorPiggyRevenge:_server_on_boss_spawned()
 	managers.network:session():send_to_peers_synched("sync_on_snowman_spawned")
 	self:sync_on_snowman_spawned()
 end
 
--- Lines 958-973
+-- Lines 964-979
 function MutatorPiggyRevenge:sync_on_snowman_spawned()
 	self:announcer_say("Play_alm_pda9_20", false)
 
@@ -1067,7 +1072,7 @@ function MutatorPiggyRevenge:sync_on_snowman_spawned()
 	end
 end
 
--- Lines 975-985
+-- Lines 981-991
 function MutatorPiggyRevenge:on_boss_killed(dead_unit, damage_info)
 	managers.event_jobs:award("pda10_dozer_objective")
 
@@ -1082,21 +1087,21 @@ function MutatorPiggyRevenge:on_boss_killed(dead_unit, damage_info)
 	end
 end
 
--- Lines 987-991
+-- Lines 993-997
 function MutatorPiggyRevenge:on_unit_start_interact(interaction_id, interaction_tweak_data)
 	if interaction_tweak_data.mutator_sound_start and self._pig_level < 6 then
 		self:announcer_say(interaction_tweak_data.mutator_sound_start)
 	end
 end
 
--- Lines 994-998
+-- Lines 1000-1004
 function MutatorPiggyRevenge:safe_run_sequence(unit, sequence)
 	if alive(unit) and unit:damage() and unit:damage():has_sequence(sequence) then
 		unit:damage():run_sequence_simple(sequence)
 	end
 end
 
--- Lines 1000-1002
+-- Lines 1006-1008
 function MutatorPiggyRevenge:announcer_say(dialog)
 	managers.dialog:queue_dialog(dialog, {
 		on_unit = self._announcer_unit,
@@ -1104,17 +1109,17 @@ function MutatorPiggyRevenge:announcer_say(dialog)
 	})
 end
 
--- Lines 1004-1006
+-- Lines 1010-1012
 function MutatorPiggyRevenge:dialog_done_cbk(reason)
 	print("MutatorPiggyRevenge:dialog_done_cbk", reason)
 end
 
--- Lines 1008-1010
+-- Lines 1014-1016
 function MutatorPiggyRevenge:got_mass_drop()
 	return self:get_exploded_pig_level()
 end
 
--- Lines 1012-1035
+-- Lines 1018-1041
 function MutatorPiggyRevenge:get_mass_drop_data()
 	local pig_level = self:get_exploded_pig_level()
 
@@ -1143,7 +1148,7 @@ function MutatorPiggyRevenge:get_mass_drop_data()
 	return data
 end
 
--- Lines 1037-1042
+-- Lines 1043-1048
 function MutatorPiggyRevenge:check_heist_end_achievements(heist_success)
 	if not heist_success or not self._exploded_pig_level then
 		return

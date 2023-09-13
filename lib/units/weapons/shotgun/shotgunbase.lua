@@ -91,7 +91,7 @@ local mvec_ax = Vector3()
 local mvec_ay = Vector3()
 local mvec_spread_direction = Vector3()
 
--- Lines 154-481
+-- Lines 154-482
 function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul)
 	if self:gadget_overrides_weapon_functions() then
 		return self:gadget_function_override("_fire_raycast", self, user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul)
@@ -285,7 +285,8 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 
 				if hit_result.type == "death" then
 					kill_data.kills = kill_data.kills + 1
-					local unit_type = hit.unit:base() and hit.unit:base()._tweak_table
+					local unit_base = hit.unit:base()
+					local unit_type = unit_base and unit_base._tweak_table
 					local is_civilian = unit_type and is_civ_f(unit_type)
 
 					if is_civilian then
@@ -295,7 +296,7 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 					end
 
 					if check_additional_achievements then
-						self:_check_kill_achievements(cop_kill_count, unit_type, is_civilian, hit_through_wall, hit_through_shield)
+						self:_check_kill_achievements(cop_kill_count, unit_base, unit_type, is_civilian, hit_through_wall, hit_through_shield)
 					end
 				end
 			end
@@ -324,7 +325,7 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 	return result
 end
 
--- Lines 485-529
+-- Lines 486-530
 function ShotgunBase:_check_one_shot_shotgun_achievements(kill_data)
 	if not tweak_data.achievement or not tweak_data.achievement.shotgun_single_shot_kills then
 		return
@@ -380,7 +381,7 @@ end
 
 SaigaShotgun = SaigaShotgun or class(ShotgunBase)
 
--- Lines 535-538
+-- Lines 536-539
 function SaigaShotgun:init(...)
 	SaigaShotgun.super.init(self, ...)
 
@@ -389,7 +390,7 @@ end
 
 InstantElectricBulletBase = InstantElectricBulletBase or class(InstantBulletBase)
 
--- Lines 548-563
+-- Lines 549-564
 function InstantElectricBulletBase:give_impact_damage(col_ray, weapon_unit, user_unit, damage, armor_piercing)
 	local hit_unit = col_ray.unit
 	local action_data = {

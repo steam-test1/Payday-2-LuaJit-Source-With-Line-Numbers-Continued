@@ -1,6 +1,6 @@
 SkillTreeTweakData = SkillTreeTweakData or class()
 
--- Lines 3-2398
+-- Lines 3-2451
 function SkillTreeTweakData:init()
 	-- Lines 10-10
 	local function digest(value)
@@ -3009,6 +3009,176 @@ function SkillTreeTweakData:init()
 	}
 	self.skill_switches = {
 		{
+			locks = {
+				level = 0
+			}
+		},
+		{
+			locks = {
+				level = 25
+			}
+		},
+		{
+			locks = {
+				level = 50
+			}
+		},
+		{
+			locks = {
+				level = 75
+			}
+		},
+		{
+			locks = {
+				level = 100
+			}
+		},
+		{
+			locks = {
+				level = 100
+			}
+		},
+		{
+			locks = {
+				level = 100
+			}
+		},
+		{
+			locks = {
+				level = 100
+			}
+		},
+		{
+			locks = {
+				level = 100
+			}
+		},
+		{
+			locks = {
+				level = 100
+			}
+		},
+		{
+			locks = {
+				level = 100
+			}
+		},
+		{
+			locks = {
+				level = 100
+			}
+		},
+		{
+			locks = {
+				level = 100
+			}
+		},
+		{
+			locks = {
+				level = 100
+			}
+		},
+		{
+			locks = {
+				level = 100
+			}
+		},
+		{
+			locks = {
+				level = 100
+			}
+		},
+		{
+			locks = {
+				level = 100
+			}
+		},
+		{
+			locks = {
+				level = 100
+			}
+		},
+		{
+			locks = {
+				level = 100
+			}
+		},
+		{
+			locks = {
+				level = 100
+			}
+		},
+		{
+			locks = {
+				level = 100
+			}
+		},
+		{
+			locks = {
+				level = 100
+			}
+		},
+		{
+			locks = {
+				level = 100
+			}
+		},
+		{
+			locks = {
+				level = 100
+			}
+		},
+		{
+			locks = {
+				level = 100
+			}
+		},
+		{
+			locks = {
+				level = 100
+			}
+		},
+		{
+			locks = {
+				level = 100
+			}
+		},
+		{
+			locks = {
+				level = 100
+			}
+		},
+		{
+			locks = {
+				level = 100
+			}
+		},
+		{
+			locks = {
+				level = 100
+			}
+		}
+	}
+	self.skill_switches[10].locks.achievement = "frog_1"
+	self.skill_switch_switch = {
+		1,
+		3,
+		4,
+		5,
+		11,
+		12,
+		13,
+		14,
+		15,
+		16,
+		17,
+		18,
+		19,
+		20,
+		10
+	}
+	self.old_skill_switches = {
+		{
 			name_id = "menu_st_skill_switch_1"
 		},
 		{
@@ -5351,7 +5521,7 @@ function SkillTreeTweakData:init()
 	}
 end
 
--- Lines 2400-2416
+-- Lines 2453-2469
 function SkillTreeTweakData:get_tier_position_from_skill_name(skill_name)
 	for tree_idx in pairs(self.trees) do
 		local count = 0
@@ -5372,7 +5542,7 @@ function SkillTreeTweakData:get_tier_position_from_skill_name(skill_name)
 	return -1
 end
 
--- Lines 2418-2427
+-- Lines 2471-2480
 function SkillTreeTweakData:get_tree(tree_name)
 	local list = {}
 
@@ -5385,16 +5555,16 @@ function SkillTreeTweakData:get_tree(tree_name)
 	return list
 end
 
--- Lines 2429-2432
+-- Lines 2482-2485
 function SkillTreeTweakData:get_tiers(tree_idx)
 	local tiers = deep_clone(self.trees[tree_idx].tiers)
 
 	return tiers
 end
 
--- Lines 2434-2442
+-- Lines 2487-2495
 function SkillTreeTweakData:get_tier_unlocks()
-	-- Lines 2435-2435
+	-- Lines 2488-2488
 	local function digest(value)
 		return Application:digest_value(value, false)
 	end
@@ -5409,7 +5579,7 @@ function SkillTreeTweakData:get_tier_unlocks()
 	return unlock_values
 end
 
--- Lines 2444-2467
+-- Lines 2497-2520
 function SkillTreeTweakData:get_specialization_icon_data(spec, no_fallback)
 	spec = spec or managers.skilltree:get_specialization_value("current_specialization")
 

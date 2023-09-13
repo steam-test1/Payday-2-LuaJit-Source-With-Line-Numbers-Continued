@@ -89,13 +89,28 @@ function CopBase:enable_leg_arm_hitbox()
 	end
 end
 
--- Lines 93-122
+-- Lines 93-126
 function CopBase:_chk_spawn_gear()
 	local tweak = managers.job:current_level_data()
 
 	if tweak and tweak.is_christmas_heist then
 		if self._tweak_table == "spooc" then
 			self._headwear_unit = safe_spawn_unit("units/payday2/characters/ene_acc_spook_santa_hat/ene_acc_spook_santa_hat", Vector3(), Rotation())
+		elseif managers.perpetual_event:has_event_santa_hats() then
+			if self._tweak_table == "tank_medic" or self._tweak_table == "tank_mini" then
+				self._headwear_unit = safe_spawn_unit("units/pd2_dlc_xm20/characters/ene_acc_dozer_zeal_santa_hat/ene_acc_dozer_zeal_santa_hat", Vector3(), Rotation())
+			elseif self._tweak_table == "tank" then
+				local region = tweak_data.levels:get_ai_group_type()
+				local difficulty_index = tweak_data:difficulty_to_index(Global and Global.game_settings and Global.game_settings.difficulty or "overkill")
+
+				if region == "russia" or region == "federales" then
+					self._headwear_unit = safe_spawn_unit("units/pd2_dlc_xm20/characters/ene_acc_dozer_akan_santa_hat/ene_acc_dozer_akan_santa_hat", Vector3(), Rotation())
+				elseif difficulty_index == 8 then
+					self._headwear_unit = safe_spawn_unit("units/pd2_dlc_xm20/characters/ene_acc_dozer_zeal_santa_hat/ene_acc_dozer_zeal_santa_hat", Vector3(), Rotation())
+				else
+					self._headwear_unit = safe_spawn_unit("units/pd2_dlc_xm20/characters/ene_acc_dozer_santa_hat/ene_acc_dozer_santa_hat", Vector3(), Rotation())
+				end
+			end
 		end
 
 		if self._headwear_unit then
@@ -107,7 +122,7 @@ function CopBase:_chk_spawn_gear()
 	end
 end
 
--- Lines 126-137
+-- Lines 130-141
 function CopBase:_set_tags(tags)
 	local tag_type = type(tags)
 
@@ -122,12 +137,12 @@ function CopBase:_set_tags(tags)
 	end
 end
 
--- Lines 139-141
+-- Lines 143-145
 function CopBase:has_tag(tag)
 	return self._tags and self._tags[tag] or false
 end
 
--- Lines 143-157
+-- Lines 147-161
 function CopBase:has_all_tags(tags)
 	local my_tags = self._tags
 
@@ -144,7 +159,7 @@ function CopBase:has_all_tags(tags)
 	return true
 end
 
--- Lines 159-173
+-- Lines 163-177
 function CopBase:has_any_tag(tags)
 	local my_tags = self._tags
 
@@ -161,7 +176,12 @@ function CopBase:has_any_tag(tags)
 	return false
 end
 
--- Lines 177-207
+-- Lines 179-181
+function CopBase:get_tags()
+	return self._tags
+end
+
+-- Lines 185-215
 function CopBase:default_weapon_name(selection_name)
 	local weap_ids = tweak_data.character.weap_ids
 	local weap_unit_names = tweak_data.character.weap_unit_names
@@ -191,22 +211,22 @@ function CopBase:default_weapon_name(selection_name)
 	Application:error("[CopBase:default_weapon_name] No weapon unit name in CharacterTweakData with default weapon id '" .. default_weapon_id .. "' for unit:", self._unit)
 end
 
--- Lines 211-213
+-- Lines 219-221
 function CopBase:visibility_state()
 	return self._visibility_state
 end
 
--- Lines 217-219
+-- Lines 225-227
 function CopBase:lod_stage()
 	return self._lod_stage
 end
 
--- Lines 223-225
+-- Lines 231-233
 function CopBase:set_allow_invisible(allow)
 	self._allow_invisible = allow
 end
 
--- Lines 229-281
+-- Lines 237-289
 function CopBase:set_visibility_state(stage)
 	local state = stage and true
 
@@ -263,17 +283,17 @@ function CopBase:set_visibility_state(stage)
 	self:chk_freeze_anims()
 end
 
--- Lines 285-287
+-- Lines 293-295
 function CopBase:set_anim_lod(stage)
 	self._unit:set_animation_lod(unpack(self._anim_lods[stage]))
 end
 
--- Lines 291-293
+-- Lines 299-301
 function CopBase:on_death_exit()
 	self._unit:set_animations_enabled(false)
 end
 
--- Lines 297-325
+-- Lines 305-333
 function CopBase:chk_freeze_anims()
 	if (not self._lod_stage or self._lod_stage > 1) and self._ext_anim.can_freeze and self._ext_anim.upper_body_empty then
 		if not self._anims_frozen then
@@ -290,7 +310,7 @@ function CopBase:chk_freeze_anims()
 	end
 end
 
--- Lines 330-338
+-- Lines 338-346
 function CopBase:anim_act_clbk(unit, anim_act, send_to_action)
 	if send_to_action then
 		unit:movement():on_anim_act_clbk(anim_act)
@@ -299,7 +319,7 @@ function CopBase:anim_act_clbk(unit, anim_act, send_to_action)
 	end
 end
 
--- Lines 342-374
+-- Lines 350-382
 function CopBase:save(save_data)
 	local my_save_data = {}
 
@@ -334,7 +354,7 @@ function CopBase:save(save_data)
 	end
 end
 
--- Lines 378-405
+-- Lines 386-413
 function CopBase:load(load_data)
 	local my_load_data = load_data.base
 
@@ -361,7 +381,7 @@ function CopBase:load(load_data)
 	end
 end
 
--- Lines 409-423
+-- Lines 417-431
 function CopBase:swap_material_config(material_applied_clbk)
 	local new_material = self._material_translation_map[self._loading_material_key or tostring(self._unit:material_config():key())]
 
@@ -380,7 +400,7 @@ function CopBase:swap_material_config(material_applied_clbk)
 	end
 end
 
--- Lines 427-441
+-- Lines 435-449
 function CopBase:on_material_applied(material_applied_clbk)
 	if not alive(self._unit) then
 		return
@@ -397,34 +417,34 @@ function CopBase:on_material_applied(material_applied_clbk)
 	end
 end
 
--- Lines 445-447
+-- Lines 453-455
 function CopBase:is_in_original_material()
 	return self._is_in_original_material
 end
 
--- Lines 451-455
+-- Lines 459-463
 function CopBase:set_material_state(original)
 	if original and not self._is_in_original_material or not original and self._is_in_original_material then
 		self:swap_material_config()
 	end
 end
 
--- Lines 459-461
+-- Lines 467-469
 function CopBase:char_tweak_name()
 	return self._tweak_table
 end
 
--- Lines 463-465
+-- Lines 471-473
 function CopBase:char_tweak()
 	return self._char_tweak
 end
 
--- Lines 469-472
+-- Lines 477-480
 function CopBase:melee_weapon()
 	return self._melee_weapon_table or self._char_tweak.melee_weapon or "weapon"
 end
 
--- Lines 476-488
+-- Lines 484-496
 function CopBase:pre_destroy(unit)
 	if alive(self._headwear_unit) then
 		self._headwear_unit:set_slot(0)
@@ -440,7 +460,7 @@ function CopBase:pre_destroy(unit)
 	self._tweak_data_listener_holder = nil
 end
 
--- Lines 493-505
+-- Lines 501-513
 function CopBase:_refresh_buff_total(name)
 	local buff_list = self._buffs[name]
 	local sum = 0
@@ -456,13 +476,13 @@ function CopBase:_refresh_buff_total(name)
 	end
 end
 
--- Lines 507-510
+-- Lines 515-518
 function CopBase:_sync_buff_total(name, total)
 	self._buffs[name] = self._buffs[name] or {}
 	self._buffs[name]._total = total * 0.001
 end
 
--- Lines 512-533
+-- Lines 520-541
 function CopBase:add_buff(name, value)
 	if not Network:is_server() then
 		return
@@ -488,7 +508,7 @@ function CopBase:add_buff(name, value)
 	return id
 end
 
--- Lines 535-549
+-- Lines 543-557
 function CopBase:remove_buff_by_id(name, id)
 	if not Network:is_server() then
 		return
@@ -505,7 +525,7 @@ function CopBase:remove_buff_by_id(name, id)
 	self:_refresh_buff_total(name)
 end
 
--- Lines 551-562
+-- Lines 559-570
 function CopBase:get_total_buff(name)
 	local buff_list = self._buffs[name]
 
@@ -520,7 +540,7 @@ function CopBase:get_total_buff(name)
 	return 0
 end
 
--- Lines 568-575
+-- Lines 576-583
 function CopBase:add_tweak_data_changed_listener(key, clbk)
 	if not self._tweak_data_listener_holder then
 		self._tweak_data_listener_holder = ListenerHolder:new()
@@ -529,7 +549,7 @@ function CopBase:add_tweak_data_changed_listener(key, clbk)
 	self._tweak_data_listener_holder:add(key, clbk)
 end
 
--- Lines 577-590
+-- Lines 585-598
 function CopBase:remove_tweak_data_changed_listener(key)
 	if not self._tweak_data_listener_holder then
 		return
@@ -542,14 +562,14 @@ function CopBase:remove_tweak_data_changed_listener(key)
 	end
 end
 
--- Lines 592-596
+-- Lines 600-604
 function CopBase:_chk_call_tweak_data_changed_listeners(...)
 	if self._tweak_data_listener_holder then
 		self._tweak_data_listener_holder:call(...)
 	end
 end
 
--- Lines 600-632
+-- Lines 608-640
 function CopBase:change_char_tweak(new_tweak_name)
 	local new_tweak_data = tweak_data.character[new_tweak_name]
 
@@ -569,7 +589,7 @@ function CopBase:change_char_tweak(new_tweak_name)
 	self:_chk_call_tweak_data_changed_listeners(old_tweak_data, new_tweak_data)
 end
 
--- Lines 634-655
+-- Lines 642-663
 function CopBase:change_stats_name(new_stats_name)
 	if not new_stats_name or new_stats_name == self._stats_name then
 		return

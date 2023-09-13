@@ -204,7 +204,7 @@ function MultiProfileManager:has_previous()
 	return self._global._current_profile > 1
 end
 
--- Lines 203-249
+-- Lines 203-252
 function MultiProfileManager:open_quick_select()
 	local dialog_data = {
 		title = "",
@@ -214,6 +214,11 @@ function MultiProfileManager:open_quick_select()
 
 	for idx, profile in pairs(self._global._profiles) do
 		local text = profile.name or "Profile " .. idx
+
+		if idx == self._global._current_profile then
+			text = utf8.char(187) .. text
+			dialog_data.focus_button = idx
+		end
 
 		table.insert(dialog_data.button_list, {
 			text = text,
@@ -257,16 +262,23 @@ function MultiProfileManager:open_quick_select()
 	managers.system_menu:show_buttons(dialog_data)
 end
 
--- Lines 251-257
+-- Lines 254-261
 function MultiProfileManager:save(data)
 	local save_data = deep_clone(self._global._profiles)
 	save_data.current_profile = self._global._current_profile
+	save_data.SKILL_SWITCH_SWITCHED = 1
 	data.multi_profile = save_data
 end
 
--- Lines 259-268
+-- Lines 263-278
 function MultiProfileManager:load(data)
 	if data.multi_profile then
+		if not data.SKILL_SWITCH_SWITCHED then
+			for i, profile in ipairs(data.multi_profile) do
+				profile.skillset = tweak_data.skilltree.skill_switch_switch[profile.skillset] or profile.skillset
+			end
+		end
+
 		for i, profile in ipairs(data.multi_profile) do
 			self:_add_profile(profile, i)
 		end
@@ -277,7 +289,7 @@ function MultiProfileManager:load(data)
 	self:_check_amount()
 end
 
--- Lines 270-282
+-- Lines 280-292
 function MultiProfileManager:reset()
 	local name = nil
 	local current_profile = self._global._current_profile
@@ -294,16 +306,16 @@ function MultiProfileManager:reset()
 	self._global._current_profile = current_profile
 end
 
--- Lines 284-288
+-- Lines 294-298
 function MultiProfileManager:infamy_reset()
 	for idx, profile in pairs(self._global._profiles) do
 		profile.skillset = 1
 	end
 end
 
--- Lines 290-310
+-- Lines 300-320
 function MultiProfileManager:_check_amount()
-	local wanted_amount = 15
+	local wanted_amount = 30
 
 	if not self:current_profile() then
 		self:save_current()

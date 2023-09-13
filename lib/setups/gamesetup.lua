@@ -270,7 +270,7 @@ require("lib/units/cameras/CinematicStateCamera")
 
 GameSetup = GameSetup or class(Setup)
 
--- Lines 383-559
+-- Lines 383-563
 function GameSetup:load_packages()
 	Setup.load_packages(self)
 
@@ -341,6 +341,12 @@ function GameSetup:load_packages()
 	else
 		local lvl_tweak_data = Global.level_data and Global.level_data.level_id and tweak_data.levels[Global.level_data.level_id]
 		level_package = lvl_tweak_data and lvl_tweak_data.package
+		local add_xmas_package = false
+		local add_xmas_package = Global.perpetual_manager.active_event == "xmas_snow" or Global.perpetual_manager.active_event == "xmas_gifts"
+
+		if add_xmas_package and lvl_tweak_data and lvl_tweak_data.is_christmas_heist then
+			table.insert(event_packages, "packages/event_xmas")
+		end
 	end
 
 	if level_package then
@@ -437,7 +443,7 @@ function GameSetup:load_packages()
 	end
 end
 
--- Lines 561-653
+-- Lines 565-657
 function GameSetup:gather_packages_to_unload()
 	Setup.unload_packages(self)
 
@@ -521,12 +527,12 @@ function GameSetup:gather_packages_to_unload()
 	end
 end
 
--- Lines 655-657
+-- Lines 659-661
 function GameSetup:unload_packages()
 	Setup.unload_packages(self)
 end
 
--- Lines 659-699
+-- Lines 663-703
 function GameSetup:init_managers(managers)
 	Setup.init_managers(self, managers)
 
@@ -560,7 +566,7 @@ function GameSetup:init_managers(managers)
 	end
 end
 
--- Lines 701-749
+-- Lines 705-753
 function GameSetup:init_game()
 	local gsm = Setup.init_game(self)
 
@@ -608,7 +614,7 @@ function GameSetup:init_game()
 	return gsm
 end
 
--- Lines 751-801
+-- Lines 755-805
 function GameSetup:init_finalize()
 	if script_data.level_script and script_data.level_script.post_init then
 		script_data.level_script:post_init()
@@ -652,7 +658,7 @@ function GameSetup:init_finalize()
 	managers.custom_safehouse:init_finalize()
 end
 
--- Lines 803-847
+-- Lines 807-851
 function GameSetup:update(t, dt)
 	Setup.update(self, t, dt)
 	managers.interaction:update(t, dt)
@@ -683,7 +689,7 @@ function GameSetup:update(t, dt)
 	self:_update_debug_input()
 end
 
--- Lines 849-859
+-- Lines 853-863
 function GameSetup:paused_update(t, dt)
 	Setup.paused_update(self, t, dt)
 	managers.groupai:paused_update(t, dt)
@@ -695,7 +701,7 @@ function GameSetup:paused_update(t, dt)
 	self:_update_debug_input()
 end
 
--- Lines 861-877
+-- Lines 865-881
 function GameSetup:destroy()
 	Setup.destroy(self)
 
@@ -709,13 +715,13 @@ function GameSetup:destroy()
 	managers.network.account:set_playing(false)
 end
 
--- Lines 879-884
+-- Lines 883-888
 function GameSetup:end_update(t, dt)
 	Setup.end_update(self, t, dt)
 	managers.game_play_central:end_update(t, dt)
 end
 
--- Lines 886-918
+-- Lines 890-922
 function GameSetup:save(data)
 	Setup.save(self, data)
 	managers.game_play_central:save(data)
@@ -741,7 +747,7 @@ function GameSetup:save(data)
 	managers.mutators:sync_save(data)
 end
 
--- Lines 920-953
+-- Lines 924-957
 function GameSetup:load(data)
 	Setup.load(self, data)
 	managers.game_play_central:load(data)
@@ -768,7 +774,7 @@ function GameSetup:load(data)
 	managers.mutators:sync_load(data)
 end
 
--- Lines 956-987
+-- Lines 960-991
 function GameSetup:_update_debug_input()
 end
 

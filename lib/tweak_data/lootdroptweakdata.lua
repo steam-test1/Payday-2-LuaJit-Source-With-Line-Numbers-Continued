@@ -2,7 +2,7 @@ LootDropTweakData = LootDropTweakData or class()
 
 require("lib/tweak_data/GeneratedLootDropTweakData")
 
--- Lines 5-2377
+-- Lines 5-2438
 function LootDropTweakData:init(tweak_data)
 	self.PC_STEP = 10
 	self.no_drop = {
@@ -1734,6 +1734,54 @@ function LootDropTweakData:init(tweak_data)
 		sort_number = 510,
 		category = "global_event"
 	}
+	self.global_values.pda10_bessy = {
+		name_id = "bm_global_value_pda10",
+		desc_id = "menu_l_global_value_pda10",
+		unlock_id = "bm_wpn_money_event_ended",
+		color = tweak_data.screen_colors.event_color,
+		dlc = true,
+		free = false,
+		hide_unavailable = true,
+		chance = 1,
+		value_multiplier = 1,
+		durability_multiplier = 1,
+		drops = false,
+		track = true,
+		sort_number = 510,
+		category = "global_event"
+	}
+	self.global_values.pda10_piggy_hammer = {
+		name_id = "bm_global_value_pda10",
+		desc_id = "menu_l_global_value_pda10",
+		unlock_id = "bm_wpn_money_event_ended",
+		color = tweak_data.screen_colors.event_color,
+		dlc = true,
+		free = false,
+		hide_unavailable = true,
+		chance = 1,
+		value_multiplier = 1,
+		durability_multiplier = 1,
+		drops = false,
+		track = true,
+		sort_number = 510,
+		category = "global_event"
+	}
+	self.global_values.xmas_snowball = {
+		name_id = "bm_global_value_xmas_snowball",
+		desc_id = "menu_l_global_value_xm21",
+		unlock_id = "bm_wpn_money_event_ended",
+		color = tweak_data.screen_colors.event_color,
+		dlc = true,
+		free = false,
+		hide_unavailable = true,
+		chance = 1,
+		value_multiplier = 1,
+		durability_multiplier = 1,
+		drops = false,
+		track = true,
+		sort_number = 510,
+		category = "global_event"
+	}
 	self.global_values.mrwi_deck = {
 		name_id = "bm_global_value_mrwi",
 		desc_id = "menu_l_global_value_mrwi",
@@ -1902,7 +1950,7 @@ function LootDropTweakData:init(tweak_data)
 	self:_create_global_value_list_map()
 end
 
--- Lines 2379-2384
+-- Lines 2440-2445
 function LootDropTweakData:_create_global_value_list_map()
 	self.global_value_list_map = {}
 

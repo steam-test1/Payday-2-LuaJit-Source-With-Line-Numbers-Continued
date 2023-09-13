@@ -3,7 +3,7 @@ function BlackMarketTweakData:_init_bullets(tweak_data)
 	self.bullets = {}
 end
 
--- Lines 32-1022
+-- Lines 32-1020
 function BlackMarketTweakData:_init_projectiles(tweak_data)
 	self.projectiles = {
 		frag = {}
@@ -616,6 +616,31 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 	self.projectiles.underbarrel_m203_groza.unit = "units/pd2_dlc_sawp/weapons/wpn_launcher_electric/wpn_underbarrel_m203_groza"
 	self.projectiles.underbarrel_m203_groza.weapon_id = "groza"
 	self.projectiles.underbarrel_m203_groza.dlc = "sawp"
+	self.projectiles.xmas_snowball = {
+		name_id = "bm_grenade_xmas_snowball",
+		unit = "units/pd2_dlc_xm21/weapons/wpn_xmas_snowball/wpn_xmas_snowball",
+		unit_dummy = "units/pd2_dlc_xm21/weapons/wpn_xmas_snowball/wpn_xmas_snowball_husk",
+		local_unit = "units/pd2_dlc_xm21/weapons/wpn_xmas_snowball/wpn_xmas_snowball_local",
+		icon = "guis/dlcs/xm21/textures/pd2/hud_snowball",
+		texture_bundle_folder = "xm21",
+		base_cooldown = 2,
+		throw_shout = true,
+		no_shouting = true,
+		impact_detonation = true,
+		client_authoritative = true,
+		no_cheat_count = true,
+		add_trail_effect = true,
+		is_a_grenade = true,
+		throwable = true,
+		animation = "throw_snowball",
+		max_amount = 6,
+		anim_global_param = "projectile_snowball",
+		throw_allowed_expire_t = 0.15,
+		expire_t = 0.8,
+		repeat_expire_t = 0.15,
+		dlc = "xmas_snowball",
+		ignore_auto_equip = true
+	}
 	self.projectiles.poison_gas_grenade = {
 		name_id = "bm_grenade_poison_gas_grenade",
 		desc_id = "bm_grenade_poison_gas_grenade_desc",
@@ -759,6 +784,7 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 		"underbarrel_electric_groza",
 		"underbarrel_m203_groza",
 		"copr_ability",
+		"xmas_snowball",
 		"poison_gas_grenade",
 		"launcher_poison",
 		"launcher_poison_ms3gl_conversion",
@@ -785,12 +811,12 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 	self:_add_desc_from_name_macro(self.projectiles)
 end
 
--- Lines 1024-1026
+-- Lines 1022-1024
 function BlackMarketTweakData:get_projectiles_index()
 	return self._projectiles_index
 end
 
--- Lines 1028-1035
+-- Lines 1026-1033
 function BlackMarketTweakData:get_index_from_projectile_id(projectile_id)
 	for index, entry_name in ipairs(self._projectiles_index) do
 		if entry_name == projectile_id then
@@ -801,7 +827,7 @@ function BlackMarketTweakData:get_index_from_projectile_id(projectile_id)
 	return 0
 end
 
--- Lines 1037-1039
+-- Lines 1035-1037
 function BlackMarketTweakData:get_projectile_name_from_index(index)
 	return self._projectiles_index[index]
 end

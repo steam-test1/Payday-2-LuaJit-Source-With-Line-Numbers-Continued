@@ -92,9 +92,13 @@ function CivilianDamage:no_intimidation_by_dmg()
 	return true
 end
 
--- Lines 92-107
+-- Lines 92-111
 function CivilianDamage:is_friendly_fire(unit)
-	if not unit then
+	if not alive(unit) or not unit:movement() then
+		return false
+	end
+
+	if not alive(self._unit) or not self._unit:movement() then
 		return false
 	end
 
@@ -111,7 +115,7 @@ function CivilianDamage:is_friendly_fire(unit)
 	return false
 end
 
--- Lines 111-124
+-- Lines 115-128
 function CivilianDamage:damage_bullet(attack_data)
 	if managers.player:has_category_upgrade("player", "civ_harmless_bullets") and self.no_intimidation_by_dmg and not self:no_intimidation_by_dmg() and (not self._survive_shot_t or self._survive_shot_t < TimerManager:game():time()) then
 		self._survive_shot_t = TimerManager:game():time() + 2.5
@@ -126,7 +130,7 @@ function CivilianDamage:damage_bullet(attack_data)
 	return CopDamage.damage_bullet(self, attack_data)
 end
 
--- Lines 128-133
+-- Lines 132-137
 function CivilianDamage:damage_explosion(attack_data)
 	if attack_data.variant == "explosion" then
 		attack_data.damage = 10
@@ -135,7 +139,7 @@ function CivilianDamage:damage_explosion(attack_data)
 	return CopDamage.damage_explosion(self, attack_data)
 end
 
--- Lines 135-143
+-- Lines 139-147
 function CivilianDamage:damage_fire(attack_data)
 	if attack_data.variant == "fire" then
 		attack_data.damage = 10
@@ -144,7 +148,7 @@ function CivilianDamage:damage_fire(attack_data)
 	return CopDamage.damage_fire(self, attack_data)
 end
 
--- Lines 146-161
+-- Lines 150-165
 function CivilianDamage:stun_hit(attack_data)
 	if self._dead or self._invulnerable then
 		return
@@ -161,7 +165,7 @@ function CivilianDamage:stun_hit(attack_data)
 	end
 end
 
--- Lines 163-169
+-- Lines 167-173
 function CivilianDamage:_lie_down_clbk(attacker_unit)
 	if alive(attacker_unit) and alive(self._unit) then
 		local params = {
@@ -174,7 +178,7 @@ function CivilianDamage:_lie_down_clbk(attacker_unit)
 	end
 end
 
--- Lines 174-196
+-- Lines 178-200
 function CivilianDamage:damage_melee(attack_data)
 	if managers.player:has_category_upgrade("player", "civ_harmless_melee") and self.no_intimidation_by_dmg and not self:no_intimidation_by_dmg() and (not self._survive_shot_t or self._survive_shot_t < TimerManager:game():time()) then
 		self._survive_shot_t = TimerManager:game():time() + 2.5
@@ -193,7 +197,7 @@ function CivilianDamage:damage_melee(attack_data)
 	return CopDamage.damage_melee(self, attack_data)
 end
 
--- Lines 201-210
+-- Lines 205-214
 function CivilianDamage:damage_tase(attack_data)
 	if self._dead or self._invulnerable or self._char_tweak.is_escort then
 		return
@@ -204,12 +208,12 @@ function CivilianDamage:damage_tase(attack_data)
 	self:_send_tase_attack_result(attack_data, 0, 0)
 end
 
--- Lines 212-214
+-- Lines 216-218
 function CivilianDamage:sync_damage_tase(attacker_unit, damage_percent, variant, death)
 	self:_play_civilian_tase_effect()
 end
 
--- Lines 216-228
+-- Lines 220-232
 function CivilianDamage:_play_civilian_tase_effect()
 	if self._tase_effect then
 		World:effect_manager():fade_kill(self._tase_effect)
@@ -225,7 +229,7 @@ function CivilianDamage:_play_civilian_tase_effect()
 	end
 end
 
--- Lines 230-235
+-- Lines 234-239
 function CivilianDamage:_tase_effect_clbk(attacker_unit)
 	if alive(self._unit) then
 		self:on_tase_ended()
