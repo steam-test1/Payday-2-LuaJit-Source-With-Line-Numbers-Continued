@@ -1157,7 +1157,7 @@ end
 
 -- Lines 963-965
 function StageEndScreenGui:input_focus()
-	return self._enabled and true or nil
+	return self._enabled and 1 or nil
 end
 
 -- Lines 967-975

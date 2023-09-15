@@ -273,7 +273,7 @@ end
 -- Lines 263-278
 function MultiProfileManager:load(data)
 	if data.multi_profile then
-		if not data.SKILL_SWITCH_SWITCHED then
+		if not data.multi_profile.SKILL_SWITCH_SWITCHED then
 			for i, profile in ipairs(data.multi_profile) do
 				profile.skillset = tweak_data.skilltree.skill_switch_switch[profile.skillset] or profile.skillset
 			end
