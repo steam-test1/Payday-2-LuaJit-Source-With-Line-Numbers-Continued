@@ -113,13 +113,14 @@ function PlayerFatal:update(t, dt)
 	PlayerFatal.super.update(self, t, dt)
 end
 
--- Lines 113-164
+-- Lines 113-169
 function PlayerFatal:_update_check_actions(t, dt)
 	local input = self:_get_input(t, dt)
 
 	self:_update_foley(t, input)
 
 	local new_action = nil
+	local cur_state = self._ext_movement:current_state_name()
 
 	if input.btn_stats_screen_press then
 		self._unit:base():set_stats_screen_visible(true)
@@ -127,7 +128,13 @@ function PlayerFatal:_update_check_actions(t, dt)
 		self._unit:base():set_stats_screen_visible(false)
 	end
 
-	new_action = new_action or self:_check_action_interact(t, input)
+	if not new_action then
+		new_action = self:_check_action_interact(t, input)
+
+		if cur_state ~= self._ext_movement:current_state_name() then
+			return
+		end
+	end
 
 	if not new_action then
 		local projectile_entry = managers.blackmarket:equipped_projectile()
@@ -139,7 +146,7 @@ function PlayerFatal:_update_check_actions(t, dt)
 	end
 end
 
--- Lines 170-187
+-- Lines 175-192
 function PlayerFatal:_check_action_interact(t, input)
 	if input.btn_interact_press then
 		if _G.IS_VR then
@@ -158,7 +165,7 @@ function PlayerFatal:_check_action_interact(t, input)
 	end
 end
 
--- Lines 190-198
+-- Lines 195-203
 function PlayerFatal:_start_action_dead(t)
 	self:_interupt_action_running(t)
 
@@ -170,7 +177,7 @@ function PlayerFatal:_start_action_dead(t)
 	self:_activate_mover(Idstring("duck"))
 end
 
--- Lines 202-213
+-- Lines 207-218
 function PlayerFatal:_end_action_dead(t)
 	if not self:_can_stand() then
 		return
@@ -184,15 +191,19 @@ function PlayerFatal:_end_action_dead(t)
 	self:_activate_mover(Idstring("stand"))
 end
 
--- Lines 217-221
-function PlayerFatal:pre_destroy(unit)
+-- Lines 222-227
+function PlayerFatal:pre_destroy(...)
+	PlayerFatal.super.pre_destroy(self, ...)
+
 	if Network:is_server() then
 		PlayerBleedOut._unregister_revive_SO(self)
 	end
 end
 
--- Lines 225-229
-function PlayerFatal:destroy()
+-- Lines 231-236
+function PlayerFatal:destroy(...)
+	PlayerFatal.super.destroy(self, ...)
+
 	if Network:is_server() then
 		PlayerBleedOut._unregister_revive_SO(self)
 	end

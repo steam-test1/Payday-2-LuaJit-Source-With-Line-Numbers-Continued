@@ -1034,8 +1034,8 @@ function HUDManager:set_progress_timer_bar_width(current, total)
 end
 
 -- Lines 1122-1124
-function HUDManager:set_progress_timer_bar_valid(valid, text_id)
-	self._progress_timer:set_bar_valid(valid, text_id)
+function HUDManager:set_progress_timer_bar_valid(valid, text_id, macros)
+	self._progress_timer:set_bar_valid(valid, text_id, macros)
 end
 
 -- Lines 1126-1128

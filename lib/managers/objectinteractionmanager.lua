@@ -128,7 +128,7 @@ end
 local mvec1 = Vector3()
 local index_table = {}
 
--- Lines 162-533
+-- Lines 162-548
 function ObjectInteractionManager:_update_targeted(player_pos, player_unit, hand_unit, hand_id)
 	local close_units_list = self._close_units
 
@@ -237,6 +237,10 @@ function ObjectInteractionManager:_update_targeted(player_pos, player_unit, hand
 			local distance = mvec3_dis(player_pos, self._active_unit:interaction():interact_position())
 			locked = self._active_unit:interaction():interact_dont_interupt_on_distance() or distance <= self._active_unit:interaction():interact_distance()
 			locked = locked or _G.IS_VR
+
+			if self._active_unit:interaction():text_dirty() then
+				self._active_unit:interaction():update_show_interact(player_unit, self._active_locator)
+			end
 		end
 	end
 
@@ -369,12 +373,13 @@ function ObjectInteractionManager:_update_targeted(player_pos, player_unit, hand
 				self._active_locator = nil
 			end
 		elseif alive(self._active_unit) and self._active_unit:interaction():dirty() then
-			self._active_unit:interaction():set_dirty(false)
 			self._active_unit:interaction():unselect()
 
 			if not self._active_unit:interaction():selected(player_unit, self._active_locator, hand_id) then
 				active_unit = nil
 			end
+		elseif alive(self._active_unit) and self._active_unit:interaction():text_dirty() then
+			self._active_unit:interaction():update_show_interact(player_unit, self._active_locator)
 		end
 
 		self._active_unit = active_unit
@@ -419,7 +424,7 @@ end
 
 local m_obj_pos = Vector3()
 
--- Lines 539-580
+-- Lines 554-595
 function ObjectInteractionManager:_raycheck_ok(unit, camera_pos, locator)
 	if locator then
 		local obstructed = World:raycast("ray", locator:position(), camera_pos, "ray_type", "bag body", "slot_mask", self._slotmask_interaction_obstruction, "report")
@@ -448,7 +453,7 @@ function ObjectInteractionManager:_raycheck_ok(unit, camera_pos, locator)
 	return false
 end
 
--- Lines 582-597
+-- Lines 597-612
 function ObjectInteractionManager:_in_close_list(unit, id)
 	local close_units_list = self._close_units
 
@@ -467,7 +472,7 @@ function ObjectInteractionManager:_in_close_list(unit, id)
 	return false
 end
 
--- Lines 599-603
+-- Lines 614-618
 function ObjectInteractionManager:on_interaction_released(data)
 	if self._active_unit then
 		self._active_unit:interaction():on_interaction_released(data)

@@ -260,8 +260,8 @@ function PlayerArrested:clbk_entry_speech()
 end
 
 -- Lines 274-282
-function PlayerArrested:pre_destroy(unit)
-	PlayerArrested.super.pre_destroy(self, unit)
+function PlayerArrested:pre_destroy(...)
+	PlayerArrested.super.pre_destroy(self, ...)
 	PlayerBleedOut._unregister_revive_SO(self)
 
 	if self._entry_speech_clbk then
@@ -271,7 +271,8 @@ function PlayerArrested:pre_destroy(unit)
 	end
 end
 
--- Lines 286-288
-function PlayerArrested:destroy()
-	PlayerBleedOut._unregister_revive_SO(self)
+-- Lines 286-289
+function PlayerArrested:destroy(...)
+	PlayerArrested.super.destroy(self, ...)
+	PlayerBleedOut._unregister_revive_SO(self, ...)
 end

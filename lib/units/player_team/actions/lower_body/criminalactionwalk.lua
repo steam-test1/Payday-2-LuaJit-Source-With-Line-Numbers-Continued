@@ -42,20 +42,7 @@ CriminalActionWalk._anim_block_presets = {
 CriminalActionWalk._walk_anim_velocities = HuskPlayerMovement._walk_anim_velocities
 CriminalActionWalk._walk_anim_lengths = HuskPlayerMovement._walk_anim_lengths
 
--- Lines 48-57
-function CriminalActionWalk:init(action_desc, common_data)
-	if common_data.ext_movement:carrying_bag() then
-		local can_run = tweak_data.carry.types[tweak_data.carry[common_data.ext_movement:carry_id()].type].can_run
-
-		if not can_run and action_desc.variant == "run" then
-			action_desc.variant = "walk"
-		end
-	end
-
-	return CriminalActionWalk.super.init(self, action_desc, common_data)
-end
-
--- Lines 59-70
+-- Lines 48-59
 function CriminalActionWalk:_get_max_walk_speed()
 	local speed = deep_clone(CriminalActionWalk.super._get_max_walk_speed(self))
 
@@ -70,7 +57,7 @@ function CriminalActionWalk:_get_max_walk_speed()
 	return speed
 end
 
--- Lines 72-81
+-- Lines 61-70
 function CriminalActionWalk:_get_current_max_walk_speed(move_dir)
 	local speed = CriminalActionWalk.super._get_current_max_walk_speed(self, move_dir)
 

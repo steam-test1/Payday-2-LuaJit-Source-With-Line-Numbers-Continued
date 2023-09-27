@@ -1,6 +1,6 @@
 InteractionTweakData = InteractionTweakData or class()
 
--- Lines 3-8692
+-- Lines 3-8698
 function InteractionTweakData:init(tweak_data)
 	self.CULLING_DISTANCE = 2000
 	self.INTERACT_DISTANCE = 200
@@ -1660,7 +1660,8 @@ function InteractionTweakData:init(tweak_data)
 			upgrade = "alarm_pager_speed_multiplier",
 			category = "player"
 		},
-		interact_dont_interupt_on_distance = true
+		interact_dont_interupt_on_distance = true,
+		cancel_text_add = "_alarm"
 	}
 	self.corpse_dispose = {
 		icon = "develop",
@@ -4558,7 +4559,8 @@ function InteractionTweakData:init(tweak_data)
 		action_text_id = "hud_action_hold_phone_office",
 		timer = 2,
 		interact_distance = 150,
-		start_active = false
+		start_active = false,
+		cancel_text_add = "_alarm"
 	}
 	self.friend_pku_yayo_cocaine = {
 		text_id = "hud_int_hold_take_yayo",

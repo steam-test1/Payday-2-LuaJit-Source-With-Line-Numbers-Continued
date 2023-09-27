@@ -105,7 +105,7 @@ function PlayerCivilian:update(t, dt)
 	end
 end
 
--- Lines 113-161
+-- Lines 113-169
 function PlayerCivilian:_update_check_actions(t, dt)
 	local input = self:_get_input(t, dt)
 	self._stick_move = self._controller:get_input_axis("move")
@@ -119,7 +119,12 @@ function PlayerCivilian:_update_check_actions(t, dt)
 		mvector3.rotate_with(self._move_dir, cam_flat_rot)
 	end
 
-	self:_update_interaction_timers(t)
+	local cur_state = self._ext_movement:current_state_name()
+	local new_action = self:_update_interaction_timers(t)
+
+	if cur_state ~= self._ext_movement:current_state_name() then
+		return
+	end
 
 	if input.btn_stats_screen_press then
 		self._unit:base():set_stats_screen_visible(true)
@@ -129,8 +134,13 @@ function PlayerCivilian:_update_check_actions(t, dt)
 
 	self:_update_foley(t, input)
 
-	local new_action = nil
-	new_action = new_action or self:_check_action_interact(t, input)
+	if not new_action then
+		new_action = self:_check_action_interact(t, input)
+
+		if cur_state ~= self._ext_movement:current_state_name() then
+			return
+		end
+	end
 
 	if not new_action and self._state_data.ducking then
 		self:_end_action_ducking(t)
@@ -142,11 +152,19 @@ function PlayerCivilian:_update_check_actions(t, dt)
 	self:_check_action_use_item(t, input)
 end
 
--- Lines 166-201
+-- Lines 174-232
 function PlayerCivilian:_check_action_interact(t, input)
-	local new_action, timer, interact_object = nil
+	local new_action, timer, interact_object, pressed, released, holding = nil
 
-	if input.btn_interact_press then
+	if self._interact_expire_t then
+		pressed, released, holding = self:_check_tap_to_interact_inputs(t, input.btn_interact_press, input.btn_interact_release, input.btn_interact_state)
+	else
+		holding = input.btn_interact_state
+		released = input.btn_interact_release
+		pressed = input.btn_interact_press
+	end
+
+	if pressed then
 		if _G.IS_VR then
 			self._interact_hand = input.btn_interact_left_press and PlayerHand.LEFT or PlayerHand.RIGHT
 		end
@@ -161,6 +179,7 @@ function PlayerCivilian:_check_action_interact(t, input)
 
 				self._ext_camera:camera_unit():base():set_limits(80, 50)
 				self:_start_action_interact(t, input, timer, interact_object)
+				self:_chk_tap_to_interact_enable(t, timer, interact_object)
 			end
 		end
 
@@ -169,14 +188,14 @@ function PlayerCivilian:_check_action_interact(t, input)
 		end
 	end
 
-	if input.btn_interact_release then
+	if released then
 		self:_interupt_action_interact()
 	end
 
 	return new_action
 end
 
--- Lines 203-218
+-- Lines 234-249
 function PlayerCivilian:_start_action_interact(t, input, timer, interact_object)
 	if _G.IS_VR then
 		managers.hud:link_interaction_hud(self._unit:hand():hand_unit(self._interact_hand), interact_object)
@@ -195,8 +214,10 @@ function PlayerCivilian:_start_action_interact(t, input, timer, interact_object)
 	managers.network:session():send_to_peers_synched("sync_teammate_progress", 1, true, self._interact_params.tweak_data, timer, false)
 end
 
--- Lines 220-239
+-- Lines 251-274
 function PlayerCivilian:_interupt_action_interact(t, input, complete)
+	self:_clear_tap_to_interact()
+
 	if self._interact_expire_t then
 		self._interact_expire_t = nil
 
@@ -219,7 +240,7 @@ function PlayerCivilian:_interupt_action_interact(t, input, complete)
 	end
 end
 
--- Lines 241-266
+-- Lines 276-303
 function PlayerCivilian:_update_interaction_timers(t)
 	if self._interact_expire_t then
 		local dt = self:_get_interaction_speed()
@@ -234,40 +255,42 @@ function PlayerCivilian:_update_interaction_timers(t)
 				self:_end_action_interact(t)
 
 				self._interact_expire_t = nil
+
+				return true
 			end
 		end
 	end
 end
 
--- Lines 270-274
+-- Lines 307-311
 function PlayerCivilian:_check_action_jump(t, input)
 	if input.btn_duck_press then
 		managers.hint:show_hint("clean_block_interact")
 	end
 end
 
--- Lines 276-280
+-- Lines 313-317
 function PlayerCivilian:_check_action_duck(t, input)
 	if input.btn_jump_press then
 		managers.hint:show_hint("clean_block_interact")
 	end
 end
 
--- Lines 282-286
+-- Lines 319-323
 function PlayerCivilian:_check_action_run(t, input)
 	if input.btn_run_press then
 		managers.hint:show_hint("clean_block_interact")
 	end
 end
 
--- Lines 288-292
+-- Lines 325-329
 function PlayerCivilian:_check_action_use_item(t, input)
 	if input.btn_use_item_press then
 		managers.hint:show_hint("clean_block_interact")
 	end
 end
 
--- Lines 294-300
+-- Lines 331-337
 function PlayerCivilian:clbk_enemy_weapons_hot()
 	if self._enemy_weapons_hot_listen_id then
 		managers.groupai:state():remove_listener(self._enemy_weapons_hot_listen_id)
@@ -276,12 +299,12 @@ function PlayerCivilian:clbk_enemy_weapons_hot()
 	end
 end
 
--- Lines 302-304
+-- Lines 339-341
 function PlayerCivilian:interaction_blocked()
 	return false
 end
 
--- Lines 306-308
+-- Lines 343-345
 function PlayerCivilian:_get_walk_headbob()
 	return 0.0125
 end

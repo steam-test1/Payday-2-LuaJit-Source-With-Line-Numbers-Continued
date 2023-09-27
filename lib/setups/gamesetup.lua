@@ -721,7 +721,7 @@ function GameSetup:end_update(t, dt)
 	managers.game_play_central:end_update(t, dt)
 end
 
--- Lines 890-922
+-- Lines 890-923
 function GameSetup:save(data)
 	Setup.save(self, data)
 	managers.game_play_central:save(data)
@@ -745,9 +745,10 @@ function GameSetup:save(data)
 	managers.crime_spree:sync_save(data)
 	managers.skirmish:sync_save(data)
 	managers.mutators:sync_save(data)
+	managers.worlddefinition:sync_save(data)
 end
 
--- Lines 924-957
+-- Lines 925-959
 function GameSetup:load(data)
 	Setup.load(self, data)
 	managers.game_play_central:load(data)
@@ -772,9 +773,10 @@ function GameSetup:load(data)
 	managers.crime_spree:sync_load(data)
 	managers.skirmish:sync_load(data)
 	managers.mutators:sync_load(data)
+	managers.worlddefinition:sync_load(data)
 end
 
--- Lines 960-991
+-- Lines 962-993
 function GameSetup:_update_debug_input()
 end
 

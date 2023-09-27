@@ -4505,6 +4505,7 @@ function PlayerInventoryGui:open_weapon_category_menu(category)
 	new_node_data.topic_params = {
 		weapon_category = managers.localization:text("bm_menu_weapons")
 	}
+	new_node_data.search_box_disconnect_callback_name = "on_search_item"
 
 	managers.menu:open_node("blackmarket_node", {
 		new_node_data
@@ -5041,6 +5042,7 @@ function PlayerInventoryGui:open_mask_menu()
 	new_node_data.topic_params = {
 		weapon_category = managers.localization:text("bm_menu_masks")
 	}
+	new_node_data.search_box_disconnect_callback_name = "on_search_item"
 
 	managers.menu:open_node("blackmarket_node", {
 		new_node_data

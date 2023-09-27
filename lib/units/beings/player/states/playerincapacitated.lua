@@ -181,13 +181,14 @@ function PlayerIncapacitated:_end_action_incapacitated(t)
 end
 
 -- Lines 214-218
-function PlayerIncapacitated:pre_destroy(unit)
-	PlayerIncapacitated.super.pre_destroy(self, unit)
+function PlayerIncapacitated:pre_destroy(...)
+	PlayerIncapacitated.super.pre_destroy(self, ...)
 	PlayerBleedOut._unregister_revive_SO(self)
 end
 
--- Lines 220-223
-function PlayerIncapacitated:destroy(unit)
+-- Lines 220-224
+function PlayerIncapacitated:destroy(...)
+	PlayerIncapacitated.super.destroy(self, ...)
 	PlayerBleedOut._unregister_revive_SO(self)
 	managers.environment_controller:set_taser_value(1)
 end
