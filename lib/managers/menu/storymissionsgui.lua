@@ -348,7 +348,7 @@ function StoryMissionsGui:_update_side(current)
 	self._side_scroll:scroll_to_show(shown_mission_item)
 end
 
--- Lines 318-520
+-- Lines 318-529
 function StoryMissionsGui:_update_info(mission)
 	self._info_scroll:clear()
 	self:_change_legend("select", false)
@@ -458,6 +458,8 @@ function StoryMissionsGui:_update_info(mission)
 	}), nil, 0)
 
 	local locked = false
+	local can_skip_mission = false
+	local levels = {}
 
 	if not mission.hide_progress then
 		placer:add_row(canvas:fine_text({
@@ -469,9 +471,13 @@ function StoryMissionsGui:_update_info(mission)
 
 		local num_objective_groups = #mission.objectives
 		local obj_padd_x = num_objective_groups > 1 and 15 or nil
+		local owned, global_value, gvalue_tweak = nil
 
 		for i, objective_row in ipairs(mission.objectives) do
 			for _, objective in ipairs(objective_row) do
+				owned = not objective.dlc or managers.dlc:is_dlc_unlocked(objective.dlc)
+				global_value = objective.dlc and managers.dlc:dlc_to_global_value(objective.dlc)
+				gvalue_tweak = global_value and tweak_data.lootdrop.global_values[global_value]
 				local text = placer:add_row(canvas:fine_text({
 					wrap = true,
 					word_wrap = true,
@@ -481,14 +487,22 @@ function StoryMissionsGui:_update_info(mission)
 					color = text_col
 				}), obj_padd_x, 0)
 
+				if not mission.completed then
+					table.list_append(levels, objective.levels or {})
+				end
+
 				if (not mission.completed or objective.basic) and (not objective.completed or objective.basic) and objective.levels and (not objective.basic or not Network:is_server()) and not Network:is_client() and mission.completed == mission.rewarded then
-					if objective.dlc and not managers.dlc:is_dlc_unlocked(objective.dlc) and not Global.game_settings.single_player then
+					if not owned and gvalue_tweak and gvalue_tweak.hide_unavailable then
 						placer:add_right(canvas:fine_text({
-							text = managers.localization:to_upper_text("menu_ultimate_edition_short"),
+							text = managers.localization:to_upper_text("menu_sm_dlc_unavailable"),
 							font = small_font,
 							font_size = small_font_size,
-							color = tweak_data.screen_colors.dlc_color
+							color = tweak_data.screen_colors.important_1
 						}), 5)
+
+						can_skip_mission = true
+						locked = true
+					elseif not owned and not Global.game_settings.single_player then
 						placer:add_right(canvas:fine_text({
 							text_id = "menu_sm_dlc_locked",
 							font = small_font,
@@ -539,7 +553,7 @@ function StoryMissionsGui:_update_info(mission)
 							1
 						}
 					})
-				else
+				elseif objective.completed or owned or not gvalue_tweak or not gvalue_tweak.hide_unavailable then
 					local texture = "guis/textures/menu_tickbox"
 					local texture_rect = {
 						objective.completed and 24 or 0,
@@ -571,8 +585,8 @@ function StoryMissionsGui:_update_info(mission)
 	if locked then
 		placer:add_row(canvas:fine_text({
 			wrap = true,
-			text_id = "menu_sm_dlc_locked_help_text",
 			word_wrap = true,
+			text_id = can_skip_mission and "menu_sm_dlc_unavailable_help_text" or "menu_sm_dlc_locked_help_text",
 			font = small_font,
 			font_size = small_font_size,
 			color = text_col
@@ -590,9 +604,10 @@ function StoryMissionsGui:_update_info(mission)
 			input = true
 		})
 		local r_placer = r_panel:placer()
+		local skipped_mission = managers.story:get_last_skipped_mission() == mission
 
 		for i, reward in ipairs(mission.rewards) do
-			local item = StoryMissionGuiRewardItem:new(r_panel, reward)
+			local item = StoryMissionGuiRewardItem:new(r_panel, reward, nil, skipped_mission)
 
 			if r_placer:current_right() + item:w() < canvas:w() * 0.5 then
 				r_placer:add_right(item)
@@ -659,36 +674,30 @@ function StoryMissionsGui:_update_info(mission)
 	end
 
 	if not mission.completed then
-		for i, objective_row in ipairs(mission.objectives) do
-			for _, objective in ipairs(objective_row) do
-				if objective.levels then
-					for _, level in ipairs(objective.levels) do
-						if level == managers.story:get_last_failed_heist() then
-							local btn = TextButton:new(canvas, {
-								text_id = "menu_skip_story",
-								font = medium_font,
-								font_size = medium_font_size
-							}, callback(self, self, "_skip_mission_dialog"))
+		can_skip_mission = can_skip_mission or table.contains(levels, managers.story:get_last_failed_heist())
 
-							placer:add_row(btn)
-							btn:set_right(canvas:w())
-							btn:set_y(btn:y() + 15)
-						end
+		if can_skip_mission then
+			local btn = TextButton:new(canvas, {
+				text_id = "menu_skip_story",
+				font = medium_font,
+				font_size = medium_font_size
+			}, callback(self, self, "_skip_mission_dialog"))
 
-						self:_change_legend("skip_mission", level == managers.story:get_last_failed_heist())
-					end
-				end
-			end
+			placer:add_row(btn)
+			btn:set_right(canvas:w())
+			btn:set_y(btn:y() + 15)
 		end
+
+		self:_change_legend("skip_mission", can_skip_mission)
 	end
 end
 
--- Lines 522-528
+-- Lines 531-537
 function StoryMissionsGui:_get_reward_string(mission)
 	return managers.story:get_last_skipped_mission() == mission and mission.reward_id .. "_halved" or mission.reward_id
 end
 
--- Lines 531-536
+-- Lines 540-545
 function StoryMissionsGui:_skip_mission(mission)
 	managers.statistics:_increment_menu("story_menu_skip", 1)
 	managers.statistics:publish_menu_stats_to_steam()
@@ -696,7 +705,7 @@ function StoryMissionsGui:_skip_mission(mission)
 	self:_update(mission)
 end
 
--- Lines 574-588
+-- Lines 583-597
 function StoryMissionsGui:toggle_voice_message(message)
 	if not self._voice then
 		return
@@ -724,7 +733,7 @@ function StoryMissionsGui:toggle_voice_message(message)
 	end
 end
 
--- Lines 590-597
+-- Lines 599-606
 function StoryMissionsGui:sound_event_callback(event_type, duration)
 	if not self._voice or not alive(self._voice.text) then
 		return
@@ -738,7 +747,7 @@ function StoryMissionsGui:sound_event_callback(event_type, duration)
 	end
 end
 
--- Lines 599-617
+-- Lines 608-626
 function StoryMissionsGui:update()
 	if not managers.menu:is_pc_controller() and self:allow_input() and (not managers.system_menu or not managers.system_menu:is_active() or not not managers.system_menu:is_closing()) then
 		local axis_x, axis_y = managers.menu_component:get_right_controller_axis()
@@ -760,7 +769,7 @@ function StoryMissionsGui:update()
 	end
 end
 
--- Lines 619-643
+-- Lines 628-652
 function StoryMissionsGui:_change_selected_level(axis)
 	if self._change_level_btn_disabled then
 		return
@@ -791,19 +800,19 @@ function StoryMissionsGui:_change_selected_level(axis)
 	end
 end
 
--- Lines 645-647
+-- Lines 654-656
 function StoryMissionsGui:_enable_selected_level_btns()
 	self._change_level_btn_disabled = nil
 end
 
--- Lines 649-653
+-- Lines 658-662
 function StoryMissionsGui:confirm_pressed()
 	if alive(self._select_btn) then
 		self._select_btn:_trigger()
 	end
 end
 
--- Lines 655-662
+-- Lines 664-671
 function StoryMissionsGui:_start_mission_general()
 	if self._selected_level_btn then
 		self._selected_level_btn:_trigger()
@@ -814,7 +823,7 @@ function StoryMissionsGui:_start_mission_general()
 	managers.story:start_current()
 end
 
--- Lines 664-668
+-- Lines 673-677
 function StoryMissionsGui:_toggle_online()
 	managers.menu_component:post_event("menu_enter")
 
@@ -823,7 +832,7 @@ function StoryMissionsGui:_toggle_online()
 	self:_update()
 end
 
--- Lines 670-686
+-- Lines 679-695
 function StoryMissionsGui:_skip_mission_dialog()
 	local dialog_data = {
 		title = managers.localization:text("menu_skip_story_title"),
@@ -846,14 +855,14 @@ function StoryMissionsGui:_skip_mission_dialog()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 688-690
+-- Lines 697-699
 function StoryMissionsGui:input_focus()
 	return alive(self._panel) and self._panel:visible() and 1
 end
 
 StoryMissionsGuiSidebarItem = StoryMissionsGuiSidebarItem or class(BaseButton)
 
--- Lines 696-735
+-- Lines 705-744
 function StoryMissionsGuiSidebarItem:init(panel, parameters)
 	StoryMissionsGuiSidebarItem.super.init(self, panel)
 
@@ -885,12 +894,12 @@ function StoryMissionsGuiSidebarItem:init(panel, parameters)
 	self:set_color(self._color)
 end
 
--- Lines 737-739
+-- Lines 746-748
 function StoryMissionsGuiSidebarItem:set_text(text)
 	self._text:set_text(text)
 end
 
--- Lines 741-748
+-- Lines 750-757
 function StoryMissionsGuiSidebarItem:set_icon(icon)
 	if icon then
 		self._icon:set_visible(true)
@@ -900,13 +909,13 @@ function StoryMissionsGuiSidebarItem:set_icon(icon)
 	end
 end
 
--- Lines 750-753
+-- Lines 759-762
 function StoryMissionsGuiSidebarItem:set_color(color)
 	self._text:set_color(color)
 	self._icon:set_color(color)
 end
 
--- Lines 755-760
+-- Lines 764-769
 function StoryMissionsGuiSidebarItem:_hover_changed(hover)
 	self:set_color(hover and self._color_highlight or self._color)
 
@@ -917,7 +926,7 @@ end
 
 StoryActGuiSidebarItem = StoryActGuiSidebarItem or class(BaseButton)
 
--- Lines 767-784
+-- Lines 776-793
 function StoryActGuiSidebarItem:init(panel, parameters)
 	StoryActGuiSidebarItem.super.init(self, panel)
 
@@ -936,7 +945,7 @@ function StoryActGuiSidebarItem:init(panel, parameters)
 	self:set_h(self._text:bottom())
 end
 
--- Lines 789-797
+-- Lines 798-806
 local function set_defaults(target, source)
 	target = target or {}
 
@@ -952,8 +961,8 @@ end
 StoryMissionGuiRewardItem = StoryMissionGuiRewardItem or class(ExtendedPanel)
 StoryMissionGuiRewardItem.SIZE = 128
 
--- Lines 804-886
-function StoryMissionGuiRewardItem:init(panel, reward_data, config)
+-- Lines 813-899
+function StoryMissionGuiRewardItem:init(panel, reward_data, config, skipped_mission)
 	config = set_defaults(config, {
 		input = true,
 		w = self.SIZE,
@@ -968,9 +977,15 @@ function StoryMissionGuiRewardItem:init(panel, reward_data, config)
 	local is_weapon = false
 
 	if reward_data[1] == "safehouse_coins" then
+		local amount = reward_data[2]
+
+		if skipped_mission then
+			amount = math.floor(amount / 2)
+		end
+
 		texture_path = "guis/dlcs/chill/textures/pd2/safehouse/continental_coins_drop"
 		reward_string = managers.localization:text("menu_es_safehouse_reward_coins", {
-			amount = managers.experience:cash_string(reward_data[2], "")
+			amount = managers.experience:cash_string(amount, "")
 		})
 	elseif reward_data.choose_weapon_reward then
 		texture_path = "guis/textures/pd2/icon_modbox_df"
@@ -1054,7 +1069,7 @@ function StoryMissionGuiRewardItem:init(panel, reward_data, config)
 	self._text:set_x(self:w() * 0.5 - self._text:w() * 0.5)
 end
 
--- Lines 888-890
+-- Lines 901-903
 function StoryMissionGuiRewardItem:mouse_moved(button, x, y)
 	self._text:set_visible(self:inside(x, y))
 end

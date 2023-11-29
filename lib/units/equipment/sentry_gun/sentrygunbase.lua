@@ -271,12 +271,11 @@ function SentryGunBase:activate_as_module(team_type, tweak_table_id)
 		auto_reload = true,
 		expend_ammo = true,
 		spread_mul = 1,
-		autoaim = true,
 		alert_AI = false,
 		ignore_units = {
 			self._unit
 		},
-		bullet_slotmask = managers.slot:get_mask("bullet_impact_targets")
+		bullet_slotmask = managers.slot:get_mask(Network:is_server() and "bullet_impact_targets" or "bullet_blank_impact_targets")
 	}
 
 	self._unit:weapon():setup(weapon_setup_data, 1)
@@ -361,9 +360,8 @@ function SentryGunBase:setup(owner, ammo_multiplier, armor_multiplier, spread_mu
 
 	local setup_data = {
 		expend_ammo = true,
-		autoaim = true,
-		alert_AI = true,
 		creates_alerts = true,
+		alert_AI = true,
 		user_unit = self._owner,
 		ignore_units = {
 			self._unit,
@@ -577,19 +575,24 @@ function SentryGunBase:weapon_tweak_data()
 	return tweak_data.weapon[self._unit:weapon()._name_id]
 end
 
--- Lines 542-553
+-- Lines 540-542
+function SentryGunBase:set_use_armor_piercing(state)
+	self._use_armor_piercing = true
+end
+
+-- Lines 546-557
 function SentryGunBase:check_interact_blocked(player)
 	local result = not alive(self._unit) or self._unit:character_damage():dead() or self._unit:weapon():ammo_ratio() == 1 or not self:get_net_event_id(player) or false
 
 	return result
 end
 
--- Lines 555-557
+-- Lines 559-561
 function SentryGunBase:can_interact(player)
 	return not self:check_interact_blocked(player)
 end
 
--- Lines 559-566
+-- Lines 563-570
 function SentryGunBase:show_blocked_hint(interaction_tweak_data, player, skip_hint)
 	local event_id, wanted, possible = self:get_net_event_id(player)
 
@@ -619,7 +622,7 @@ local refill_ratios = {
 	0.0625
 }
 
--- Lines 570-623
+-- Lines 574-627
 function SentryGunBase:get_net_event_id(player)
 	local sentry_gun_reload_ratio = tweak_data.upgrades.sentry_gun_reload_ratio or 1
 
@@ -670,18 +673,18 @@ function SentryGunBase:get_net_event_id(player)
 	return event_id, wanted_event_id, possible_event_id
 end
 
--- Lines 625-627
+-- Lines 629-631
 function SentryGunBase:interaction_text_id()
 	return "hud_interact_sentry_gun_switch_fire_mode"
 end
 
--- Lines 629-632
+-- Lines 633-636
 function SentryGunBase:add_string_macros(macroes)
 	local event_id, wanted_event_id, possible_event_id = self:get_net_event_id(managers.player:local_player())
 	macroes.AMMO = wanted_event_id and string.format("%2.f%%", (1 - refill_ratios[wanted_event_id]) * 100) or "100%"
 end
 
--- Lines 634-693
+-- Lines 638-697
 function SentryGunBase:sync_net_event(event_id, peer)
 	print("SentryGunBase:sync_net_event", event_id, inspect(peer), Network:is_server())
 
@@ -739,7 +742,7 @@ function SentryGunBase:sync_net_event(event_id, peer)
 	end
 end
 
--- Lines 695-711
+-- Lines 699-715
 function SentryGunBase:refill(ammo_ratio)
 	if self._unit:character_damage():dead() then
 		return
@@ -758,35 +761,35 @@ function SentryGunBase:refill(ammo_ratio)
 	self._unit:interaction():set_dirty(true)
 end
 
--- Lines 713-715
+-- Lines 717-719
 function SentryGunBase:set_waiting_for_refill(state)
 	self._waiting_for_refill = state and true or nil
 end
 
--- Lines 717-719
+-- Lines 721-723
 function SentryGunBase:waiting_for_refill()
 	return self._waiting_for_refill
 end
 
--- Lines 724-727
+-- Lines 728-731
 function SentryGunBase:on_death()
 	self._unit:set_extension_update_enabled(Idstring("base"), false)
 	self:unregister()
 end
 
--- Lines 731-734
+-- Lines 735-738
 function SentryGunBase:enable_shield()
 	self._has_shield = true
 
 	self._unit:damage():run_sequence_simple("shield_on")
 end
 
--- Lines 739-741
+-- Lines 743-745
 function SentryGunBase:has_shield()
 	return self._has_shield or false
 end
 
--- Lines 746-751
+-- Lines 750-755
 function SentryGunBase:unregister()
 	if self._registered then
 		self._registered = nil
@@ -795,14 +798,14 @@ function SentryGunBase:unregister()
 	end
 end
 
--- Lines 755-758
+-- Lines 759-762
 function SentryGunBase:register()
 	self._registered = true
 
 	managers.groupai:state():register_criminal(self._unit)
 end
 
--- Lines 762-769
+-- Lines 766-773
 function SentryGunBase:save(save_data)
 	local my_save_data = {}
 	save_data.base = my_save_data
@@ -811,12 +814,12 @@ function SentryGunBase:save(save_data)
 	my_save_data.is_dynamic = self._is_dynamic
 end
 
--- Lines 771-773
+-- Lines 775-777
 function SentryGunBase:ammo_ratio()
 	return self._unit:weapon():ammo_ratio()
 end
 
--- Lines 777-794
+-- Lines 781-795
 function SentryGunBase:load(save_data)
 	self._was_dropin = true
 	local my_save_data = save_data.base
@@ -828,15 +831,11 @@ function SentryGunBase:load(save_data)
 	end
 
 	if self._is_module then
-		local turret_units = managers.groupai:state():turrets()
-
-		if not turret_units or not table.contains(turret_units, self._unit) then
-			managers.groupai:state():register_turret(self._unit)
-		end
+		managers.groupai:state():register_turret(self._unit)
 	end
 end
 
--- Lines 798-813
+-- Lines 799-814
 function SentryGunBase:pre_destroy()
 	SentryGunBase.super.pre_destroy(self, self._unit)
 	managers.mission:remove_global_event_listener(self._sentry_uid)

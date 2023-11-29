@@ -196,7 +196,7 @@ function CopActionTase:on_destroy()
 	end
 end
 
--- Lines 191-291
+-- Lines 191-289
 function CopActionTase:update(t)
 	if self._expired then
 		return
@@ -302,15 +302,10 @@ function CopActionTase:update(t)
 						CopDamage._notify_listeners("on_criminal_tased", self._unit, self._attention.unit)
 
 						self._discharging = true
+						self._tasered_sound = self._unit:sound():play("tasered_3rd", nil)
 
-						if not self._tasing_local_unit:base().is_local_player then
-							self._tasered_sound = self._unit:sound():play("tasered_3rd", nil)
-						end
-
-						local redir_res = self._ext_movement:play_redirect("recoil")
-
-						if redir_res then
-							self._machine:set_parameter(redir_res, "hvy", 0)
+						if self._unit:base():lod_stage() == 1 then
+							self._ext_movement:play_redirect("recoil_single")
 						end
 
 						self._shoot_t = nil
@@ -318,10 +313,9 @@ function CopActionTase:update(t)
 				end
 			elseif not self._tasing_local_unit then
 				self._tasered_sound = self._unit:sound():play("tasered_3rd", nil)
-				local redir_res = self._ext_movement:play_redirect("recoil")
 
-				if redir_res then
-					self._machine:set_parameter(redir_res, "hvy", 0)
+				if self._unit:base():lod_stage() == 1 then
+					self._ext_movement:play_redirect("recoil_single")
 				end
 
 				self._shoot_t = nil
@@ -330,31 +324,31 @@ function CopActionTase:update(t)
 	end
 end
 
--- Lines 295-297
+-- Lines 293-295
 function CopActionTase:type()
 	return "tase"
 end
 
--- Lines 301-303
+-- Lines 299-301
 function CopActionTase:fire_taser()
 	self._shoot_t = 0
 end
 
--- Lines 307-309
+-- Lines 305-307
 function CopActionTase:chk_block(action_type, t)
 	return CopActionAct.chk_block(self, action_type, t)
 end
 
--- Lines 313-314
+-- Lines 311-312
 function CopActionTase:_upd_empty(t)
 end
 
--- Lines 318-320
+-- Lines 316-318
 function CopActionTase:need_upd()
 	return true
 end
 
--- Lines 324-331
+-- Lines 322-329
 function CopActionTase:get_husk_interrupt_desc()
 	local action_desc = {
 		block_type = "action",
@@ -365,7 +359,7 @@ function CopActionTase:get_husk_interrupt_desc()
 	return action_desc
 end
 
--- Lines 335-356
+-- Lines 333-354
 function CopActionTase:clbk_malfunction()
 	self._malfunction_clbk_id = nil
 

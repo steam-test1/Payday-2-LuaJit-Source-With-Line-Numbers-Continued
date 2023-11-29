@@ -2,7 +2,7 @@ LootDropTweakData = LootDropTweakData or class()
 
 require("lib/tweak_data/GeneratedLootDropTweakData")
 
--- Lines 5-2438
+-- Lines 5-2461
 function LootDropTweakData:init(tweak_data)
 	self.PC_STEP = 10
 	self.no_drop = {
@@ -1063,6 +1063,7 @@ function LootDropTweakData:init(tweak_data)
 		chance = 1,
 		value_multiplier = tweak_data:get_value("money_manager", "global_value_multipliers", "berry"),
 		durability_multiplier = 1,
+		hide_unavailable = true,
 		drops = true,
 		track = true,
 		sort_number = 109,
@@ -1119,6 +1120,7 @@ function LootDropTweakData:init(tweak_data)
 		chance = 1,
 		value_multiplier = 1,
 		durability_multiplier = 1,
+		hide_unavailable = true,
 		drops = true,
 		track = true,
 		sort_number = 115,
@@ -1293,6 +1295,7 @@ function LootDropTweakData:init(tweak_data)
 		chance = 1,
 		value_multiplier = 1,
 		durability_multiplier = 1,
+		hide_unavailable = true,
 		drops = true,
 		track = true,
 		sort_number = 301,
@@ -1305,12 +1308,28 @@ function LootDropTweakData:init(tweak_data)
 		chance = 1,
 		value_multiplier = 1,
 		durability_multiplier = 1,
+		hide_unavailable = true,
 		drops = true,
 		track = true,
 		sort_number = 301,
 		dlc = true,
 		category = "collaboration",
-		unlock_id = "bm_global_value_rvd_unlock"
+		unlock_id = "bm_menu_dlc_locked"
+	}
+	self.global_values.john_wick_character = {
+		name_id = "bm_global_value_rvd",
+		desc_id = "menu_l_global_value_rvd",
+		color = community_color,
+		chance = 1,
+		value_multiplier = 1,
+		durability_multiplier = 1,
+		hide_unavailable = true,
+		drops = true,
+		track = true,
+		sort_number = 301,
+		dlc = true,
+		category = "collaboration",
+		unlock_id = "bm_menu_dlc_locked"
 	}
 	self.global_values.swm = {
 		name_id = "bm_global_value_swm",
@@ -1350,6 +1369,7 @@ function LootDropTweakData:init(tweak_data)
 		chance = 1,
 		value_multiplier = tweak_data:get_value("money_manager", "global_value_multipliers", "spa"),
 		durability_multiplier = 1,
+		hide_unavailable = true,
 		drops = true,
 		track = true,
 		sort_number = 302,
@@ -1950,7 +1970,7 @@ function LootDropTweakData:init(tweak_data)
 	self:_create_global_value_list_map()
 end
 
--- Lines 2440-2445
+-- Lines 2463-2468
 function LootDropTweakData:_create_global_value_list_map()
 	self.global_value_list_map = {}
 

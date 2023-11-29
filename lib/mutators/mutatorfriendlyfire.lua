@@ -32,40 +32,40 @@ function MutatorFriendlyFire:name()
 	end
 end
 
--- Lines 32-39
+-- Lines 32-40
 function MutatorFriendlyFire:setup(mutator_manager)
 	MutatorFriendlyFire.super.setup(mutator_manager)
-
-	managers.slot._masks.bullet_impact_targets = managers.slot._masks.bullet_impact_targets_ff
 end
 
--- Lines 41-43
+-- Lines 42-44
 function MutatorFriendlyFire:get_friendly_fire_damage_multiplier()
 	return self:value("damage_multiplier")
 end
 
--- Lines 45-53
+-- Lines 46-56
 function MutatorFriendlyFire:modify_value(id, value)
 	if id == "PlayerDamage:FriendlyFire" then
 		return false
 	elseif id == "HuskPlayerDamage:FriendlyFireDamage" then
 		return value * self:get_friendly_fire_damage_multiplier() * 0.25
-	elseif id == "ProjectileBase:create_sweep_data:slot_mask" then
+	elseif id == "ProjectileBase:create_sweep_data:slot_mask" or id == "RaycastWeaponBase:modify_slot_mask" or id == "PlayerStandard:modify_melee_slot_mask" then
 		return value + 3
 	end
+
+	return value
 end
 
--- Lines 57-59
+-- Lines 60-62
 function MutatorFriendlyFire:_min_damage()
 	return 0.25
 end
 
--- Lines 61-63
+-- Lines 64-66
 function MutatorFriendlyFire:_max_damage()
 	return 3
 end
 
--- Lines 65-88
+-- Lines 68-91
 function MutatorFriendlyFire:setup_options_gui(node)
 	local params = {
 		name = "ff_damage_slider",
@@ -91,12 +91,12 @@ function MutatorFriendlyFire:setup_options_gui(node)
 	return new_item
 end
 
--- Lines 90-92
+-- Lines 93-95
 function MutatorFriendlyFire:_update_damage_multiplier(item)
 	self:set_value("damage_multiplier", item:value())
 end
 
--- Lines 94-105
+-- Lines 97-108
 function MutatorFriendlyFire:reset_to_default()
 	self:clear_values()
 
@@ -109,7 +109,7 @@ function MutatorFriendlyFire:reset_to_default()
 	end
 end
 
--- Lines 107-109
+-- Lines 110-112
 function MutatorFriendlyFire:options_fill()
 	return self:_get_percentage_fill(self:_min_damage(), self:_max_damage(), self:get_friendly_fire_damage_multiplier())
 end

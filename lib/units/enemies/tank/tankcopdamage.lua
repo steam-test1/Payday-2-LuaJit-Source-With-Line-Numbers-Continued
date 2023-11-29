@@ -36,23 +36,7 @@ local bodies_tmp = {
 TankCopDamage._priority_bodies_ids = bodies_tmp
 bodies_tmp = nil
 
--- Lines 58-61
-function TankCopDamage:init(...)
-	TankCopDamage.super.init(self, ...)
-
-	self._is_halloween = self._unit:name() == Idstring("units/payday2/characters/ene_bulldozer_4/ene_bulldozer_4")
-end
-
--- Lines 63-69
-function TankCopDamage:damage_bullet(attack_data, ...)
-	if self._is_halloween then
-		attack_data.damage = math.min(attack_data.damage, 235)
-	end
-
-	return TankCopDamage.super.damage_bullet(self, attack_data, ...)
-end
-
--- Lines 71-78
+-- Lines 58-65
 function TankCopDamage:seq_clbk_vizor_shatter()
 	if not self._unit:character_damage():dead() then
 		self._unit:sound():say("visor_lost")

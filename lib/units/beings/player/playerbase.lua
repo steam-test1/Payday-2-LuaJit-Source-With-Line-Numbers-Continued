@@ -34,7 +34,7 @@ function PlayerBase:init(unit)
 	managers.job:set_memory("mad_3", true)
 end
 
--- Lines 41-53
+-- Lines 41-52
 function PlayerBase:post_init()
 	self._unit:movement():post_init()
 	self:_equip_default_weapon()
@@ -49,15 +49,16 @@ function PlayerBase:post_init()
 	self:update_concealment()
 end
 
--- Lines 57-62
+-- Lines 56-61
 function PlayerBase:update_concealment()
 	local con_mul, index = managers.blackmarket:get_concealment_of_peer(managers.network:session():local_peer())
 
 	self:set_suspicion_multiplier("equipment", 1 / con_mul)
 	self:set_detection_multiplier("equipment", 1 / con_mul)
+	self:setup_hud_offset()
 end
 
--- Lines 66-79
+-- Lines 65-78
 function PlayerBase:update(unit, t, dt)
 	if self._wanted_controller_enabled_t then
 		if self._wanted_controller_enabled_t <= 0 then
@@ -75,7 +76,7 @@ function PlayerBase:update(unit, t, dt)
 	end
 end
 
--- Lines 83-94
+-- Lines 82-93
 function PlayerBase:_setup_suspicion_and_detection_data()
 	self._suspicion_settings = deep_clone(tweak_data.player.suspicion)
 	self._suspicion_settings.multipliers = {}
@@ -91,16 +92,16 @@ function PlayerBase:_setup_suspicion_and_detection_data()
 	}
 end
 
--- Lines 96-102
-function PlayerBase:setup_hud_offset(peer)
+-- Lines 95-101
+function PlayerBase:setup_hud_offset()
 	if not self._suspicion_settings then
 		return
 	end
 
-	self._suspicion_settings.hud_offset = managers.blackmarket:get_suspicion_offset_of_peer(peer or managers.network:session():local_peer(), tweak_data.player.SUSPICION_OFFSET_LERP or 0.75)
+	self._suspicion_settings.hud_offset = managers.blackmarket:get_suspicion_offset_of_peer(managers.network:session():local_peer(), tweak_data.player.SUSPICION_OFFSET_LERP or 0.75)
 end
 
--- Lines 106-128
+-- Lines 105-127
 function PlayerBase:save(data)
 	data.upgrades = {}
 	data.temporary_upgrades = {}
@@ -128,7 +129,7 @@ function PlayerBase:save(data)
 	data.concealment_modifier = managers.blackmarket:_get_concealment_from_local_player()
 end
 
--- Lines 132-155
+-- Lines 131-154
 function PlayerBase:sync_unit_upgrades()
 	local sus_multiplier = 1
 	local det_multiplier = 1
@@ -157,12 +158,12 @@ function PlayerBase:sync_unit_upgrades()
 	end
 end
 
--- Lines 159-161
+-- Lines 158-160
 function PlayerBase:stats_screen_visible()
 	return self._stats_screen_visible
 end
 
--- Lines 163-170
+-- Lines 162-169
 function PlayerBase:set_stats_screen_visible(visible)
 	self._stats_screen_visible = visible
 
@@ -173,12 +174,12 @@ function PlayerBase:set_stats_screen_visible(visible)
 	end
 end
 
--- Lines 175-177
+-- Lines 174-176
 function PlayerBase:set_enabled(enabled)
 	self._unit:set_extension_update_enabled(Idstring("movement"), enabled)
 end
 
--- Lines 179-194
+-- Lines 178-193
 function PlayerBase:set_visible(visible)
 	self._unit:set_visible(visible)
 
@@ -193,7 +194,7 @@ function PlayerBase:set_visible(visible)
 	end
 end
 
--- Lines 197-227
+-- Lines 196-226
 function PlayerBase:_setup_hud()
 	if not managers.hud:exists(self.PLAYER_HUD) then
 		managers.hud:load_hud(self.PLAYER_HUD, false, false, true, {})
@@ -204,11 +205,11 @@ function PlayerBase:_setup_hud()
 	end
 end
 
--- Lines 231-232
+-- Lines 230-231
 function PlayerBase:_equip_default_weapon()
 end
 
--- Lines 236-240
+-- Lines 235-239
 function PlayerBase:_setup_controller()
 	self._controller = managers.controller:create_controller("player_" .. tostring(self._id), nil, false)
 
@@ -216,17 +217,17 @@ function PlayerBase:_setup_controller()
 	managers.controller:set_ingame_mode("main")
 end
 
--- Lines 244-246
+-- Lines 243-245
 function PlayerBase:id()
 	return self._id
 end
 
--- Lines 250-252
+-- Lines 249-251
 function PlayerBase:nick_name()
 	return managers.network:session():local_peer():name()
 end
 
--- Lines 256-269
+-- Lines 255-268
 function PlayerBase:set_controller_enabled(enabled)
 	if not self._controller then
 		return
@@ -245,14 +246,14 @@ function PlayerBase:set_controller_enabled(enabled)
 	end
 end
 
--- Lines 271-273
+-- Lines 270-272
 function PlayerBase:controller()
 	return self._controller
 end
 
 local on_ladder_footstep_material = Idstring("steel")
 
--- Lines 278-310
+-- Lines 277-309
 function PlayerBase:anim_data_clbk_footstep(foot)
 	local obj = self._unit:orientation_object()
 	local proj_dir = math.UP
@@ -269,12 +270,12 @@ function PlayerBase:anim_data_clbk_footstep(foot)
 	self._unit:sound():play_footstep(foot, material_name)
 end
 
--- Lines 314-316
+-- Lines 313-315
 function PlayerBase:get_rumble_position()
 	return self._unit:position() + math.UP * 100
 end
 
--- Lines 320-333
+-- Lines 319-332
 function PlayerBase:replenish()
 	for id, weapon in pairs(self._unit:inventory():available_selections()) do
 		if alive(weapon.unit) then
@@ -286,17 +287,17 @@ function PlayerBase:replenish()
 	self._unit:character_damage():replenish()
 end
 
--- Lines 337-339
+-- Lines 336-338
 function PlayerBase:suspicion_settings()
 	return self._suspicion_settings
 end
 
--- Lines 343-345
+-- Lines 342-344
 function PlayerBase:detection_settings()
 	return self._detection_settings
 end
 
--- Lines 349-363
+-- Lines 348-362
 function PlayerBase:set_suspicion_multiplier(reason, multiplier)
 	self._suspicion_settings.multipliers[reason] = multiplier
 	local buildup_mul = self._suspicion_settings.init_buildup_mul
@@ -314,7 +315,7 @@ function PlayerBase:set_suspicion_multiplier(reason, multiplier)
 	self._suspicion_settings.range_mul = range_mul
 end
 
--- Lines 367-378
+-- Lines 366-377
 function PlayerBase:set_detection_multiplier(reason, multiplier)
 	self._detection_settings.multipliers[reason] = multiplier
 	local delay_mul = self._detection_settings.init_delay_mul
@@ -329,12 +330,12 @@ function PlayerBase:set_detection_multiplier(reason, multiplier)
 	self._detection_settings.range_mul = range_mul
 end
 
--- Lines 382-384
+-- Lines 381-383
 function PlayerBase:arrest_settings()
 	return tweak_data.player.arrest
 end
 
--- Lines 388-395
+-- Lines 387-394
 function PlayerBase:_unregister()
 	if not self._unregistered then
 		self._unit:movement():attention_handler():set_attention(nil)
@@ -344,7 +345,7 @@ function PlayerBase:_unregister()
 	end
 end
 
--- Lines 399-425
+-- Lines 398-424
 function PlayerBase:pre_destroy(unit)
 	self:_unregister()
 	UnitBase.pre_destroy(self, unit)
@@ -377,17 +378,17 @@ function PlayerBase:pre_destroy(unit)
 	unit:character_damage():pre_destroy()
 end
 
--- Lines 433-435
+-- Lines 432-434
 function PlayerBase:upgrade_value(category, upgrade)
 	return managers.player:upgrade_value_nil(category, upgrade)
 end
 
--- Lines 437-439
+-- Lines 436-438
 function PlayerBase:upgrade_level(category, upgrade)
 	return managers.player:upgrade_level_nil(category, upgrade)
 end
 
--- Lines 443-445
+-- Lines 442-444
 function PlayerBase:character_name()
 	return managers.criminals:character_name_by_unit(self._unit)
 end

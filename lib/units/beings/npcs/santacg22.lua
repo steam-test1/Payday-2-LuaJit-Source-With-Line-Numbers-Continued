@@ -4,7 +4,7 @@ require("lib/units/civilians/HuskCivilianBase")
 
 SantaBase = SantaBase or class(CivilianBase)
 
--- Lines 6-27
+-- Lines 6-28
 function SantaBase:post_init()
 	self._ext_movement = self._unit:movement()
 	self._ext_anim = self._unit:anim_data()
@@ -36,7 +36,7 @@ HuskSantaBase = HuskSantaBase or class(HuskCivilianBase)
 HuskSantaBase.post_init = SantaBase.post_init
 SantaBrain = SantaBrain or class(CivilianBrain)
 
--- Lines 33-44
+-- Lines 34-45
 function SantaBrain:post_init()
 	self._logics = CopBrain._logic_variants[self._unit:base()._tweak_table]
 

@@ -1,68 +1,185 @@
 MedicDamage = MedicDamage or class(CopDamage)
 
--- Lines 3-10
+-- Lines 3-7
 function MedicDamage:init(...)
 	MedicDamage.super.init(self, ...)
+	self:_init_medic()
+end
 
+-- Lines 9-18
+function MedicDamage:_init_medic()
+	self._heal_cooldown = tweak_data.medic.cooldown
+	self._heal_cooldown = managers.modifiers:modify_value("MedicDamage:CooldownTime", self._heal_cooldown)
 	self._heal_cooldown_t = 0
+	self._heal_radius = tweak_data.medic.radius
+
+	self:_register_healing()
 end
 
--- Lines 12-23
-function MedicDamage:update(t, dt)
+-- Lines 34-48
+function MedicDamage:_register_healing()
+	if not self._registered then
+		self._registered = true
+
+		managers.enemy:register_medic(self._unit)
+	end
 end
 
--- Lines 25-83
-function MedicDamage:heal_unit(unit, override_cooldown)
-	local t = Application:time()
-	local cooldown = tweak_data.medic.cooldown
-	cooldown = managers.modifiers:modify_value("MedicDamage:CooldownTime", cooldown)
+-- Lines 50-64
+function MedicDamage:_unregister_healing()
+	if self._registered then
+		self._registered = nil
 
-	if t < self._heal_cooldown_t + cooldown and not override_cooldown then
+		managers.enemy:unregister_medic(self._unit)
+	end
+end
+
+-- Lines 66-68
+function MedicDamage:get_healing_radius()
+	return self._heal_radius
+end
+
+-- Lines 70-72
+function MedicDamage:get_healing_radius_sq()
+	return self._heal_radius * self._heal_radius
+end
+
+-- Lines 74-99
+function MedicDamage:verify_heal_requesting_unit(requesting_unit)
+	local base_ext = requesting_unit:base()
+	local char_tweak = base_ext and base_ext.char_tweak and base_ext:char_tweak()
+
+	if not char_tweak or char_tweak.can_be_healed == false then
 		return false
 	end
 
-	if self._unit:anim_data() and self._unit:anim_data().act then
+	local mov_ext = requesting_unit:movement()
+	local team = mov_ext and mov_ext.team and mov_ext:team()
+
+	if not team then
 		return false
 	end
 
-	local tweak_table = unit:base()._tweak_table
+	local my_team = self._unit:movement():team()
 
-	if table.contains(tweak_data.medic.disabled_units, tweak_table) then
+	if team ~= my_team and not team.friends[my_team.id] then
 		return false
 	end
 
-	if unit:brain() and unit:brain()._logic_data then
-		local team = unit:brain()._logic_data.team
+	return true
+end
 
-		if team and team.id ~= "law1" and (not team.friends or not team.friends.law1) then
-			return false
-		end
-	end
-
-	if unit:brain() and unit:brain()._logic_data and unit:brain()._logic_data.is_converted then
+-- Lines 101-115
+function MedicDamage:is_available_for_healing(requesting_unit)
+	if self._unit:anim_data().act then
 		return false
 	end
 
-	local cop_dmg = unit:character_damage()
-	cop_dmg._health = cop_dmg._HEALTH_INIT
-	cop_dmg._health_ratio = 1
+	if TimerManager:game():time() <= self._heal_cooldown_t then
+		return false
+	end
 
-	cop_dmg:_update_debug_ws()
+	if not self:verify_heal_requesting_unit(requesting_unit) then
+		return false
+	end
 
-	self._heal_cooldown_t = t
+	return true
+end
 
-	if not self._unit:character_damage():dead() then
-		local action_data = {
-			body_part = 3,
-			type = "heal",
-			client_interrupt = Network:is_client() and true or false
+-- Lines 118-144
+function MedicDamage:heal_unit(unit)
+	self._heal_cooldown_t = TimerManager:game():time() + self._heal_cooldown
+
+	unit:character_damage():do_medic_heal()
+
+	local action_data = {
+		client_interrupt = true,
+		body_part = 3,
+		type = "heal",
+		blocks = {
+			action = -1
 		}
+	}
 
+	self._unit:movement():action_request(action_data)
+	self._unit:sound():say("heal")
+	managers.network:session():send_to_peers_synched("sync_medic_heal", self._unit:id() ~= -1 and self._unit or nil)
+	MedicActionHeal.check_achievements()
+
+	return true
+end
+
+-- Lines 146-152
+function MedicDamage:heal_unit_external(unit, skip_verification)
+	if not skip_verification and not self:verify_heal_requesting_unit(unit) then
+		return false
+	end
+
+	return unit:character_damage():do_medic_heal_and_action(true)
+end
+
+-- Lines 154-190
+function MedicDamage:sync_heal_action()
+	self._heal_cooldown_t = TimerManager:game():time() + self._heal_cooldown
+	local action_data = nil
+
+	if Network:is_server() then
+		if not self._unit:anim_data().act then
+			action_data = {
+				body_part = 3,
+				type = "heal",
+				blocks = {
+					action = -1
+				}
+			}
+		end
+	else
+		action_data = {
+			block_type = "action",
+			type = "heal",
+			body_part = 3,
+			client_interrupt = not self._unit:anim_data().act,
+			blocks = {
+				action = -1
+			}
+		}
+	end
+
+	if action_data then
 		self._unit:movement():action_request(action_data)
 	end
 
-	managers.modifiers:run_func("OnEnemyHealed", self._unit, unit)
-	managers.network:session():send_to_peers("sync_medic_heal", self._unit)
+	if self._unit:sound() then
+		self._unit:sound():say("heal")
+	end
+end
 
-	return true
+-- Lines 192-198
+function MedicDamage:check_medic_heal(...)
+	if self._healed then
+		return false
+	end
+
+	return MedicDamage.super.check_medic_heal(self, ...)
+end
+
+-- Lines 200-206
+function MedicDamage:do_medic_heal_and_action(...)
+	if self._healed then
+		return false
+	end
+
+	return MedicDamage.super.do_medic_heal_and_action(self, ...)
+end
+
+-- Lines 208-212
+function MedicDamage:die(...)
+	MedicDamage.super.die(self, ...)
+	self:_unregister_healing()
+end
+
+-- Lines 214-218
+function MedicDamage:destroy(...)
+	MedicDamage.super.destroy(self, ...)
+	self:_unregister_healing()
 end

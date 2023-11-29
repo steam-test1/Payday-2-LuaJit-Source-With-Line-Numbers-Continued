@@ -5,11 +5,14 @@ StatisticsManager = StatisticsManager or class()
 StatisticsManager.special_unit_ids = {
 	"shield",
 	"spooc",
+	"shadow_spooc",
 	"tank",
 	"tank_hw",
 	"tank_green",
 	"tank_black",
 	"tank_skull",
+	"tank_medic",
+	"tank_mini",
 	"taser",
 	"medic",
 	"sniper",
@@ -22,17 +25,26 @@ StatisticsManager.special_unit_ids = {
 	"hector_boss",
 	"hector_boss_no_armor",
 	"drug_lord_boss",
-	"drug_lord_boss_stealth"
+	"drug_lord_boss_stealth",
+	"ranchmanager",
+	"marshal_marksman",
+	"marshal_shield",
+	"marshal_shield_break",
+	"triad_boss",
+	"triad_boss_no_armor",
+	"deep_boss",
+	"snowman_boss",
+	"piggydozer"
 }
 StatisticsManager.JOB_STATS_VERSION = 2
 
--- Lines 33-36
+-- Lines 65-68
 function StatisticsManager:init()
 	self:_setup()
 	self:_reset_session()
 end
 
--- Lines 38-99
+-- Lines 70-131
 function StatisticsManager:_setup(reset)
 	local _, _, _, _, _, _, enemy_list = tweak_data.statistics:statistics_table()
 	self._defaults = {
@@ -139,12 +151,12 @@ function StatisticsManager:_setup(reset)
 	self._global = self._global or Global.statistics_manager
 end
 
--- Lines 101-103
+-- Lines 133-135
 function StatisticsManager:reset()
 	self:_setup(true)
 end
 
--- Lines 105-112
+-- Lines 137-144
 function StatisticsManager:_reset_session()
 	if self._global then
 		self._global.session = deep_clone(self._defaults)
@@ -153,7 +165,7 @@ function StatisticsManager:_reset_session()
 	end
 end
 
--- Lines 115-120
+-- Lines 147-152
 function StatisticsManager:_write_log_header()
 	local file_handle = SystemFS:open(self._data_log_name, "w")
 
@@ -161,7 +173,7 @@ function StatisticsManager:_write_log_header()
 	file_handle:puts(Network:is_server() and "true" or "false")
 end
 
--- Lines 123-145
+-- Lines 155-177
 function StatisticsManager:_flush_log()
 	if not self._data_log or #self._data_log == 0 then
 		return
@@ -186,7 +198,7 @@ function StatisticsManager:_flush_log()
 	self._data_log = {}
 end
 
--- Lines 147-171
+-- Lines 179-203
 function StatisticsManager:update(t, dt)
 	if self._data_log then
 		self._log_timer = self._log_timer - dt
@@ -240,7 +252,7 @@ function StatisticsManager:update(t, dt)
 	end
 end
 
--- Lines 174-199
+-- Lines 206-231
 function StatisticsManager:_check_days_in_row()
 	local SEC_IN_DAY = 86400
 	local d = self._global.days_in_row
@@ -267,18 +279,18 @@ function StatisticsManager:_check_days_in_row()
 	end
 end
 
--- Lines 201-203
+-- Lines 233-235
 function StatisticsManager:get_days_in_row()
 	return self._global.days_in_row and self._global.days_in_row.count or 0
 end
 
--- Lines 206-209
+-- Lines 238-241
 function StatisticsManager:_check_days_alone(sp)
 	local d = self._global.days_alone
 	self._global.days_alone_time = sp and self._global.days_alone_time or os.time()
 end
 
--- Lines 211-219
+-- Lines 243-251
 function StatisticsManager:get_days_alone()
 	local SEC_IN_DAY = 86400
 	self._global.days_alone_time = self._global.days_alone_time or os.time()
@@ -286,7 +298,7 @@ function StatisticsManager:get_days_alone()
 	return (os.time() - self._global.days_alone_time) / SEC_IN_DAY
 end
 
--- Lines 222-263
+-- Lines 254-295
 function StatisticsManager:start_session(data)
 	if self._session_started then
 		return
@@ -322,19 +334,19 @@ function StatisticsManager:start_session(data)
 	self._session_started = true
 end
 
--- Lines 265-267
+-- Lines 297-299
 function StatisticsManager:has_session_started()
 	return self._session_started or false
 end
 
--- Lines 269-272
+-- Lines 301-304
 function StatisticsManager:get_session_time_seconds()
 	local t = Application:time()
 
 	return t - (self._start_session_time or t)
 end
 
--- Lines 274-360
+-- Lines 306-392
 function StatisticsManager:stop_session(data)
 	if not self._session_started then
 		if data and data.quit then
@@ -414,12 +426,12 @@ function StatisticsManager:stop_session(data)
 	end
 end
 
--- Lines 362-364
+-- Lines 394-396
 function StatisticsManager:started_session_from_beginning()
 	return self._start_session_from_beginning
 end
 
--- Lines 367-378
+-- Lines 399-410
 function StatisticsManager:_increment_misc(name, amount)
 	if not self._global.misc then
 		self._global.misc = {}
@@ -439,7 +451,7 @@ function StatisticsManager:_increment_misc(name, amount)
 	end
 end
 
--- Lines 381-387
+-- Lines 413-419
 function StatisticsManager:_increment_menu(name, amount)
 	if not self._global.menu then
 		self._global.menu = {}
@@ -448,78 +460,78 @@ function StatisticsManager:_increment_menu(name, amount)
 	self._global.menu[name] = (self._global.menu[name] or 0) + amount
 end
 
--- Lines 390-392
+-- Lines 422-424
 function StatisticsManager:use_trip_mine()
 	self:_increment_misc("deploy_trip", 1)
 end
 
--- Lines 394-396
+-- Lines 426-428
 function StatisticsManager:use_ammo_bag()
 	self:_increment_misc("deploy_ammo", 1)
 end
 
--- Lines 398-400
+-- Lines 430-432
 function StatisticsManager:use_doctor_bag()
 	self:_increment_misc("deploy_medic", 1)
 end
 
--- Lines 402-404
+-- Lines 434-436
 function StatisticsManager:use_ecm_jammer()
 	self:_increment_misc("deploy_jammer", 1)
 end
 
--- Lines 406-408
+-- Lines 438-440
 function StatisticsManager:use_sentry_gun()
 	self:_increment_misc("deploy_sentry", 1)
 end
 
--- Lines 410-412
+-- Lines 442-444
 function StatisticsManager:use_first_aid()
 	self:_increment_misc("deploy_firstaid", 1)
 end
 
--- Lines 414-416
+-- Lines 446-448
 function StatisticsManager:use_body_bag()
 	self:_increment_misc("deploy_bodybag", 1)
 end
 
--- Lines 418-420
+-- Lines 450-452
 function StatisticsManager:use_armor_bag()
 	self:_increment_misc("deploy_armorbag", 1)
 end
 
--- Lines 423-425
+-- Lines 455-457
 function StatisticsManager:use_grenade_crate()
 	self:_increment_misc("deploy_grenadecrate", 1)
 end
 
--- Lines 428-430
+-- Lines 460-462
 function StatisticsManager:in_custody()
 	self:_increment_misc("in_custody", 1)
 end
 
--- Lines 432-434
+-- Lines 464-466
 function StatisticsManager:trade(data)
 	self:_increment_misc("trade", 1)
 end
 
--- Lines 436-438
+-- Lines 468-470
 function StatisticsManager:aquired_money(amount)
 	self:_increment_misc("cash", amount * 1000)
 end
 
--- Lines 441-443
+-- Lines 473-475
 function StatisticsManager:aquired_coins(coins)
 	self:_increment_misc("coins", coins)
 end
 
--- Lines 453-456
+-- Lines 485-488
 function StatisticsManager:mission_stats(name)
 	self._global.session.mission_stats = self._global.session.mission_stats or {}
 	self._global.session.mission_stats[name] = (self._global.session.mission_stats[name] or 0) + 1
 end
 
--- Lines 458-843
+-- Lines 490-875
 function StatisticsManager:publish_to_steam(session, success, completion)
 	if Application:editor() or not managers.criminals:local_character_name() then
 		return
@@ -1089,7 +1101,7 @@ function StatisticsManager:publish_to_steam(session, success, completion)
 	managers.network.account:publish_statistics(stats)
 end
 
--- Lines 845-892
+-- Lines 877-924
 function StatisticsManager:publish_level_to_steam()
 	if Application:editor() then
 		return
@@ -1147,7 +1159,7 @@ function StatisticsManager:publish_level_to_steam()
 	managers.network.account:publish_statistics(stats)
 end
 
--- Lines 895-904
+-- Lines 927-936
 function StatisticsManager:publish_menu_stats_to_steam(name, value)
 	local stats = {}
 
@@ -1159,7 +1171,7 @@ function StatisticsManager:publish_menu_stats_to_steam(name, value)
 	end
 end
 
--- Lines 907-923
+-- Lines 939-955
 function StatisticsManager:publish_custom_stat_to_steam(name, value)
 	if Application:editor() then
 		return
@@ -1181,7 +1193,7 @@ function StatisticsManager:publish_custom_stat_to_steam(name, value)
 	managers.network.account:publish_statistics(stats)
 end
 
--- Lines 925-931
+-- Lines 957-963
 function StatisticsManager:_table_contains(list, item)
 	for index, name in pairs(list) do
 		if name == item then
@@ -1190,7 +1202,7 @@ function StatisticsManager:_table_contains(list, item)
 	end
 end
 
--- Lines 933-1025
+-- Lines 965-1057
 function StatisticsManager:gather_equipment_data()
 	if Application:editor() then
 		return
@@ -1321,7 +1333,7 @@ function StatisticsManager:gather_equipment_data()
 	return stats
 end
 
--- Lines 1027-1038
+-- Lines 1059-1070
 function StatisticsManager:publish_equipped_to_steam()
 	if Global.block_publish_equipped_to_steam then
 		return
@@ -1337,7 +1349,7 @@ function StatisticsManager:publish_equipped_to_steam()
 	Telemetry:send_on_player_change_loadout(stats)
 end
 
--- Lines 1040-1101
+-- Lines 1072-1133
 function StatisticsManager:publish_skills_to_steam(skip_version_check)
 	if Application:editor() then
 		return
@@ -1415,7 +1427,7 @@ function StatisticsManager:publish_skills_to_steam(skip_version_check)
 	managers.network.account:publish_statistics(stats)
 end
 
--- Lines 1103-1124
+-- Lines 1135-1156
 function StatisticsManager:check_version()
 	local CURRENT_VERSION = 2
 	local stats = {}
@@ -1454,7 +1466,7 @@ function StatisticsManager:check_version()
 	return stats
 end
 
--- Lines 1126-1140
+-- Lines 1158-1172
 function StatisticsManager:debug_estimate_steam_players()
 	local key = nil
 	local stats = {}
@@ -1483,7 +1495,7 @@ function StatisticsManager:debug_estimate_steam_players()
 	Application:debug(managers.money:add_decimal_marks_to_string(tostring(num_players)) .. " players have summited statistics to Steam the last 60 days.")
 end
 
--- Lines 1142-1184
+-- Lines 1174-1216
 function StatisticsManager:_calculate_average()
 	local t = self._global.sessions.count ~= 0 and self._global.sessions.count or 1
 	self._global.average = {
@@ -1532,7 +1544,7 @@ function StatisticsManager:_calculate_average()
 	end
 end
 
--- Lines 1186-1207
+-- Lines 1218-1239
 function StatisticsManager:_get_boom_guns()
 	if not self._boom_guns then
 		self._boom_guns = {
@@ -1567,7 +1579,7 @@ function StatisticsManager:_get_boom_guns()
 	return self._boom_guns
 end
 
--- Lines 1219-1283
+-- Lines 1251-1315
 function StatisticsManager:killed_by_anyone(data)
 	local name_id = alive(data.weapon_unit) and data.weapon_unit:base():get_name_id()
 
@@ -1625,7 +1637,7 @@ function StatisticsManager:killed_by_anyone(data)
 	end
 end
 
--- Lines 1285-1373
+-- Lines 1317-1405
 function StatisticsManager:killed(data)
 	local stats_name = data.stats_name or data.name
 	data.type = tweak_data.character[data.name] and tweak_data.character[data.name].challenges.type
@@ -1707,7 +1719,7 @@ function StatisticsManager:killed(data)
 	end
 end
 
--- Lines 1375-1391
+-- Lines 1407-1423
 function StatisticsManager:_add_to_killed_by_weapon(kills_table, name_id, data, add_global)
 	if not name_id then
 		return
@@ -1730,7 +1742,7 @@ function StatisticsManager:_add_to_killed_by_weapon(kills_table, name_id, data, 
 	end
 end
 
--- Lines 1393-1407
+-- Lines 1425-1439
 function StatisticsManager:_get_name_id_and_throwable_id(weapon_unit)
 	if not alive(weapon_unit) then
 		return nil, nil
@@ -1749,12 +1761,12 @@ function StatisticsManager:_get_name_id_and_throwable_id(weapon_unit)
 	end
 end
 
--- Lines 1409-1411
+-- Lines 1441-1443
 function StatisticsManager:register_melee_hit()
 	self._global.session.melee_hit = true
 end
 
--- Lines 1413-1448
+-- Lines 1445-1480
 function StatisticsManager:completed_job(job_id, difficulty, require_one_down)
 	local job_stats = self._global.sessions.jobs
 	local tweak_jobs = tweak_data.narrative.jobs
@@ -1766,7 +1778,7 @@ function StatisticsManager:completed_job(job_id, difficulty, require_one_down)
 		job_wrapper = tweak_jobs[tweak_jobs[job_id].wrapped_to_job].job_wrapper
 	end
 
-	-- Lines 1424-1435
+	-- Lines 1456-1467
 	local function single_job_count(job_id, difficulty, require_one_down)
 		local stat_prefix = tostring(job_id) .. "_" .. tostring(difficulty)
 		local stat_suffix = "_completed"
@@ -1795,7 +1807,7 @@ function StatisticsManager:completed_job(job_id, difficulty, require_one_down)
 	return single_job_count(job_id, difficulty, require_one_down)
 end
 
--- Lines 1469-1482
+-- Lines 1501-1514
 function StatisticsManager:tied(data)
 	data.type = tweak_data.character[data.name] and tweak_data.character[data.name].challenges.type
 
@@ -1819,7 +1831,7 @@ function StatisticsManager:tied(data)
 	end
 end
 
--- Lines 1484-1497
+-- Lines 1516-1529
 function StatisticsManager:revived(data)
 	if not data.reviving_unit or data.reviving_unit ~= managers.player:player_unit() then
 		return
@@ -1840,13 +1852,13 @@ function StatisticsManager:revived(data)
 	end
 end
 
--- Lines 1499-1502
+-- Lines 1531-1534
 function StatisticsManager:camera_destroyed(data)
 	self._global.cameras.count = self._global.cameras.count + 1
 	self._global.session.cameras.count = self._global.session.cameras.count + 1
 end
 
--- Lines 1504-1512
+-- Lines 1536-1544
 function StatisticsManager:objective_completed(data)
 	if managers.platform:presence() ~= "Playing" and managers.platform:presence() ~= "Mission_end" then
 		return
@@ -1856,13 +1868,13 @@ function StatisticsManager:objective_completed(data)
 	self._global.session.objectives.count = self._global.session.objectives.count + 1
 end
 
--- Lines 1514-1517
+-- Lines 1546-1549
 function StatisticsManager:health_subtracted(amount)
 	self._global.health.amount_lost = self._global.health.amount_lost + amount
 	self._global.session.health.amount_lost = self._global.session.health.amount_lost + amount
 end
 
--- Lines 1519-1552
+-- Lines 1551-1584
 function StatisticsManager:shot_fired(data)
 	local name_id = data.name_id or data.weapon_unit:base():get_name_id()
 
@@ -1906,7 +1918,7 @@ function StatisticsManager:shot_fired(data)
 	end
 end
 
--- Lines 1554-1561
+-- Lines 1586-1593
 function StatisticsManager:used_weapon(weapon_id)
 	if not Network:is_server() then
 		return
@@ -1916,12 +1928,12 @@ function StatisticsManager:used_weapon(weapon_id)
 	managers.network:session():send_to_peers("sync_used_weapon", weapon_id)
 end
 
--- Lines 1563-1565
+-- Lines 1595-1597
 function StatisticsManager:_used_weapon(weapon_id)
 	self._global.session.used_weapons[weapon_id] = true
 end
 
--- Lines 1567-1576
+-- Lines 1599-1608
 function StatisticsManager:used_projectile(projectile_id)
 	if not self._global.session.used_projectiles[projectile_id] then
 		if Network:is_server() then
@@ -1933,12 +1945,12 @@ function StatisticsManager:used_projectile(projectile_id)
 	end
 end
 
--- Lines 1578-1580
+-- Lines 1610-1612
 function StatisticsManager:_used_projectile(projectile_id)
 	self._global.session.used_projectiles[projectile_id] = true
 end
 
--- Lines 1582-1593
+-- Lines 1614-1625
 function StatisticsManager:downed(data)
 	managers.achievment:set_script_data("stand_together_fail", true)
 
@@ -1957,7 +1969,7 @@ function StatisticsManager:downed(data)
 	end
 end
 
--- Lines 1605-1612
+-- Lines 1637-1644
 function StatisticsManager:reloaded(data)
 	self._global.reloads.count = self._global.reloads.count + 1
 	self._global.session.reloads.count = self._global.session.reloads.count + 1
@@ -1973,7 +1985,7 @@ function StatisticsManager:reloaded(data)
 	end
 end
 
--- Lines 1614-1626
+-- Lines 1646-1658
 function StatisticsManager:recieved_experience(data)
 	self._global.experience[data.size] = self._global.experience[data.size] or {
 		count = 0,
@@ -1991,22 +2003,22 @@ function StatisticsManager:recieved_experience(data)
 	self._global.session.experience[data.size].actions[data.action] = self._global.session.experience[data.size].actions[data.action] + 1
 end
 
--- Lines 1628-1630
+-- Lines 1660-1662
 function StatisticsManager:get_killed()
 	return self._global.killed
 end
 
--- Lines 1632-1634
+-- Lines 1664-1666
 function StatisticsManager:get_play_time()
 	return self._global and self._global.play_time and self._global.play_time.minutes or 0
 end
 
--- Lines 1637-1639
+-- Lines 1669-1671
 function StatisticsManager:get_play_time_hours()
 	return self:get_play_time() / 60
 end
 
--- Lines 1642-1649
+-- Lines 1674-1681
 function StatisticsManager:count_up(id)
 	if not self._statistics[id] then
 		Application:stack_dump_error("Bad id to count up, " .. tostring(id) .. ".")
@@ -2017,7 +2029,7 @@ function StatisticsManager:count_up(id)
 	self._statistics[id].count = self._statistics[id].count + 1
 end
 
--- Lines 1651-1700
+-- Lines 1683-1732
 function StatisticsManager:print_stats()
 	local time_text = self:_time_text(math.round(self._global.sessions.time))
 	local time_average_text = self:_time_text(math.round(self._global.average.sessions.time))
@@ -2062,12 +2074,12 @@ function StatisticsManager:print_stats()
 	self:_print_experience_stats()
 end
 
--- Lines 1702-1704
+-- Lines 1734-1736
 function StatisticsManager:is_dropin()
 	return self._start_session_drop_in
 end
 
--- Lines 1706-1725
+-- Lines 1738-1757
 function StatisticsManager:_print_experience_stats()
 	local t = self._global.sessions.count ~= 0 and self._global.sessions.count or 1
 	local average = self._global.average.experience
@@ -2095,7 +2107,7 @@ function StatisticsManager:_print_experience_stats()
 	print("\nTotal:" .. self:_amount_format(total) .. "/" .. self:_amount_format(total / t, true))
 end
 
--- Lines 1727-1732
+-- Lines 1759-1764
 function StatisticsManager:_amount_format(amount, left)
 	amount = math.round(amount)
 	local s = ""
@@ -2107,7 +2119,7 @@ function StatisticsManager:_amount_format(amount, left)
 	return left and amount .. s or s .. amount
 end
 
--- Lines 1734-1744
+-- Lines 1766-1776
 function StatisticsManager:_time_text(time, params)
 	local no_days = params and params.no_days
 	local days = no_days and 0 or math.floor(time / 86400)
@@ -2121,7 +2133,7 @@ function StatisticsManager:_time_text(time, params)
 	return (no_days and "" or (days < 10 and "0" .. days or days) .. ":") .. (hours < 10 and "0" .. hours or hours) .. ":" .. (minutes < 10 and "0" .. minutes or minutes) .. ":" .. (seconds < 10 and "0" .. seconds or seconds)
 end
 
--- Lines 1746-1781
+-- Lines 1778-1813
 function StatisticsManager:_check_loaded_data()
 	if not self._global.downed.incapacitated then
 		self._global.downed.incapacitated = 0
@@ -2156,7 +2168,7 @@ function StatisticsManager:_check_loaded_data()
 	self:_migrate_job_completion_stats()
 end
 
--- Lines 1783-1813
+-- Lines 1815-1845
 function StatisticsManager:_migrate_job_completion_stats()
 	local from_version = self._global.sessions.job_stats_version or 1
 	local job_stats = self._global.sessions.jobs
@@ -2186,7 +2198,7 @@ function StatisticsManager:_migrate_job_completion_stats()
 	self._global.sessions.job_stats_version = StatisticsManager.JOB_STATS_VERSION
 end
 
--- Lines 1817-1821
+-- Lines 1849-1853
 function StatisticsManager:time_played()
 	local time = math.round(self._global.sessions.time)
 	local time_text = self:_time_text(time)
@@ -2194,7 +2206,7 @@ function StatisticsManager:time_played()
 	return time_text, time
 end
 
--- Lines 1823-1831
+-- Lines 1855-1863
 function StatisticsManager:favourite_level()
 	local started = 0
 	local c_name = nil
@@ -2212,7 +2224,7 @@ function StatisticsManager:favourite_level()
 	return c_name and tweak_data.levels:get_localized_level_name_from_level_id(c_name) or managers.localization:text("debug_undecided")
 end
 
--- Lines 1833-1839
+-- Lines 1865-1871
 function StatisticsManager:total_completed_campaigns()
 	local i = 0
 
@@ -2223,7 +2235,7 @@ function StatisticsManager:total_completed_campaigns()
 	return i
 end
 
--- Lines 1841-1851
+-- Lines 1873-1883
 function StatisticsManager:favourite_weapon()
 	local weapon_id = nil
 	local count = 0
@@ -2238,17 +2250,17 @@ function StatisticsManager:favourite_weapon()
 	return weapon_id and managers.localization:text(tweak_data.weapon[weapon_id].name_id) or managers.localization:text("debug_undecided")
 end
 
--- Lines 1853-1855
+-- Lines 1885-1887
 function StatisticsManager:total_kills()
 	return self._global.killed.total.count
 end
 
--- Lines 1857-1859
+-- Lines 1889-1891
 function StatisticsManager:total_head_shots()
 	return self._global.killed.total.head_shots
 end
 
--- Lines 1861-1866
+-- Lines 1893-1898
 function StatisticsManager:hit_accuracy()
 	if self._global.shots_fired.total == 0 then
 		return 0
@@ -2257,17 +2269,17 @@ function StatisticsManager:hit_accuracy()
 	return math.floor(self._global.shots_fired.hits / self._global.shots_fired.total * 100)
 end
 
--- Lines 1868-1870
+-- Lines 1900-1902
 function StatisticsManager:total_completed_objectives()
 	return self._global.objectives.count
 end
 
--- Lines 1872-1874
+-- Lines 1904-1906
 function StatisticsManager:total_downed()
 	return self._global.session.downed.bleed_out + self._global.session.downed.incapacitated
 end
 
--- Lines 1877-1881
+-- Lines 1909-1913
 function StatisticsManager:session_time_played()
 	local time = math.round(self._global.session.sessions.time)
 	local time_text = self:_time_text(time, {
@@ -2277,12 +2289,12 @@ function StatisticsManager:session_time_played()
 	return time_text, time
 end
 
--- Lines 1883-1885
+-- Lines 1915-1917
 function StatisticsManager:completed_objectives()
 	return self._global.session.objectives.count
 end
 
--- Lines 1887-1903
+-- Lines 1919-1935
 function StatisticsManager:session_favourite_weapon()
 	local weapon_id = nil
 	local count = 0
@@ -2303,7 +2315,7 @@ function StatisticsManager:session_favourite_weapon()
 	return weapon_id and managers.localization:text(weapon_tweak_data.name_id) or managers.localization:text("debug_undecided")
 end
 
--- Lines 1905-1913
+-- Lines 1937-1945
 function StatisticsManager:session_used_weapons()
 	local weapons_used = {}
 
@@ -2316,12 +2328,12 @@ function StatisticsManager:session_used_weapons()
 	return weapons_used
 end
 
--- Lines 1915-1917
+-- Lines 1947-1949
 function StatisticsManager:session_melee_hit()
 	return self._global.session.melee_hit
 end
 
--- Lines 1919-1925
+-- Lines 1951-1957
 function StatisticsManager:session_killed_by_grenade()
 	local count = 0
 
@@ -2332,7 +2344,7 @@ function StatisticsManager:session_killed_by_grenade()
 	return count
 end
 
--- Lines 1927-1933
+-- Lines 1959-1965
 function StatisticsManager:session_anyone_killed_by_grenade()
 	local count = 0
 
@@ -2343,17 +2355,17 @@ function StatisticsManager:session_anyone_killed_by_grenade()
 	return count
 end
 
--- Lines 1935-1937
+-- Lines 1967-1969
 function StatisticsManager:session_killed_by_projectile(projectile_id)
 	return self._global.session.killed_by_grenade[projectile_id] or 0
 end
 
--- Lines 1940-1942
+-- Lines 1972-1974
 function StatisticsManager:session_anyone_killed_by_projectile(projectile_id)
 	return self._global.session.killed_by_anyone.killed_by_grenade[projectile_id] or 0
 end
 
--- Lines 1944-1950
+-- Lines 1976-1982
 function StatisticsManager:session_killed_by_melee()
 	local count = 0
 
@@ -2364,7 +2376,7 @@ function StatisticsManager:session_killed_by_melee()
 	return count
 end
 
--- Lines 1952-1958
+-- Lines 1984-1990
 function StatisticsManager:session_anyone_killed_by_melee()
 	local count = 0
 
@@ -2375,12 +2387,12 @@ function StatisticsManager:session_anyone_killed_by_melee()
 	return count
 end
 
--- Lines 1960-1962
+-- Lines 1992-1994
 function StatisticsManager:session_killed_by_weapon(weapon_id)
 	return self._global.session.killed_by_weapon[weapon_id] and self._global.session.killed_by_weapon[weapon_id].count or 0
 end
 
--- Lines 1964-1970
+-- Lines 1996-2002
 function StatisticsManager:session_killed_by_weapons()
 	local count = 0
 
@@ -2391,7 +2403,7 @@ function StatisticsManager:session_killed_by_weapons()
 	return count
 end
 
--- Lines 1972-1978
+-- Lines 2004-2010
 function StatisticsManager:session_anyone_killed_by_weapons()
 	local count = 0
 
@@ -2402,7 +2414,7 @@ function StatisticsManager:session_anyone_killed_by_weapons()
 	return count
 end
 
--- Lines 1980-1988
+-- Lines 2012-2020
 function StatisticsManager:session_killed_by_weapons_except(weapons_table)
 	local count = 0
 
@@ -2415,7 +2427,7 @@ function StatisticsManager:session_killed_by_weapons_except(weapons_table)
 	return count
 end
 
--- Lines 1990-1998
+-- Lines 2022-2030
 function StatisticsManager:session_anyone_killed_by_weapons_except(weapons_table)
 	local count = 0
 
@@ -2428,7 +2440,7 @@ function StatisticsManager:session_anyone_killed_by_weapons_except(weapons_table
 	return count
 end
 
--- Lines 2000-2008
+-- Lines 2032-2040
 function StatisticsManager:session_killed_by_weapon_category(category)
 	local count = 0
 
@@ -2441,12 +2453,12 @@ function StatisticsManager:session_killed_by_weapon_category(category)
 	return count
 end
 
--- Lines 2010-2012
+-- Lines 2042-2044
 function StatisticsManager:create_unified_weapon_name(weapon_id)
 	return string.gsub(string.gsub(weapon_id, "_npc", ""), "_crew", "")
 end
 
--- Lines 2014-2022
+-- Lines 2046-2054
 function StatisticsManager:session_anyone_killed_by_weapon_category(category)
 	local count = 0
 
@@ -2459,7 +2471,7 @@ function StatisticsManager:session_anyone_killed_by_weapon_category(category)
 	return count
 end
 
--- Lines 2024-2033
+-- Lines 2056-2065
 function StatisticsManager:session_killed_by_weapon_category_except(category_table)
 	local count = 0
 
@@ -2474,7 +2486,7 @@ function StatisticsManager:session_killed_by_weapon_category_except(category_tab
 	return count
 end
 
--- Lines 2035-2044
+-- Lines 2067-2076
 function StatisticsManager:session_anyone_killed_by_weapon_category_except(category_table)
 	local count = 0
 
@@ -2489,17 +2501,17 @@ function StatisticsManager:session_anyone_killed_by_weapon_category_except(categ
 	return count
 end
 
--- Lines 2046-2048
+-- Lines 2078-2080
 function StatisticsManager:session_anyone_used_weapons()
 	return self._global.session.used_weapons
 end
 
--- Lines 2050-2052
+-- Lines 2082-2084
 function StatisticsManager:session_anyone_used_weapon(weapon_id)
 	return self._global.session.used_weapons[self:create_unified_weapon_name(weapon_id)]
 end
 
--- Lines 2054-2060
+-- Lines 2086-2092
 function StatisticsManager:_session_anyone_used_weapon_except(weapon_id)
 	for id in pairs(self._global.session.used_weapons) do
 		if self:create_unified_weapon_name(id) ~= self:create_unified_weapon_name(weapon_id) then
@@ -2508,7 +2520,7 @@ function StatisticsManager:_session_anyone_used_weapon_except(weapon_id)
 	end
 end
 
--- Lines 2062-2078
+-- Lines 2094-2110
 function StatisticsManager:session_anyone_used_weapon_except(weapon_id)
 	if type(weapon_id) == "table" then
 		for id in pairs(self._global.session.used_weapons) do
@@ -2527,7 +2539,7 @@ function StatisticsManager:session_anyone_used_weapon_except(weapon_id)
 	return false
 end
 
--- Lines 2080-2086
+-- Lines 2112-2118
 function StatisticsManager:session_anyone_used_weapon_category(category)
 	for weapon_id in pairs(self._global.session.used_weapons) do
 		if tweak_data:get_raw_value("weapon", self:create_unified_weapon_name(weapon_id), "categories", 1) == category then
@@ -2536,7 +2548,7 @@ function StatisticsManager:session_anyone_used_weapon_category(category)
 	end
 end
 
--- Lines 2088-2094
+-- Lines 2120-2126
 function StatisticsManager:session_anyone_used_weapon_category_except(category)
 	for weapon_id in pairs(self._global.session.used_weapons) do
 		if tweak_data:get_raw_value("weapon", self:create_unified_weapon_name(weapon_id), "categories", 1) ~= category then
@@ -2545,12 +2557,12 @@ function StatisticsManager:session_anyone_used_weapon_category_except(category)
 	end
 end
 
--- Lines 2096-2098
+-- Lines 2128-2130
 function StatisticsManager:session_anyone_used_projectiles()
 	return self._global.session.used_projectiles
 end
 
--- Lines 2100-2116
+-- Lines 2132-2148
 function StatisticsManager:session_anyone_used_projectile_except(projectile_id)
 	if type(projectile_id) == "table" then
 		for id in pairs(self._global.session.used_projectiles) do
@@ -2569,27 +2581,27 @@ function StatisticsManager:session_anyone_used_projectile_except(projectile_id)
 	return false
 end
 
--- Lines 2119-2121
+-- Lines 2151-2153
 function StatisticsManager:session_enemy_killed_by_type(enemy, type)
 	return self._global.session.killed and self._global.session.killed[enemy] and self._global.session.killed[enemy][type] or 0
 end
 
--- Lines 2123-2125
+-- Lines 2155-2157
 function StatisticsManager:session_killed()
 	return self._global.session.killed
 end
 
--- Lines 2127-2129
+-- Lines 2159-2161
 function StatisticsManager:session_total_kills()
 	return self._global.session.killed.total.count
 end
 
--- Lines 2131-2133
+-- Lines 2163-2165
 function StatisticsManager:session_total_killed()
 	return self._global.session.killed.total
 end
 
--- Lines 2135-2150
+-- Lines 2167-2182
 function StatisticsManager:session_total_kills_by_anyone()
 	local total_kills = 0
 
@@ -2608,7 +2620,7 @@ function StatisticsManager:session_total_kills_by_anyone()
 	return total_kills
 end
 
--- Lines 2152-2165
+-- Lines 2184-2197
 function StatisticsManager:session_total_shots(weapon_type)
 	if weapon_type == "all" then
 		local total_shots = 0
@@ -2626,7 +2638,7 @@ function StatisticsManager:session_total_shots(weapon_type)
 	return weapon_data and weapon_data.total or 0
 end
 
--- Lines 2167-2179
+-- Lines 2199-2211
 function StatisticsManager:session_total_specials_kills()
 	local count = 0
 
@@ -2639,12 +2651,12 @@ function StatisticsManager:session_total_specials_kills()
 	return count
 end
 
--- Lines 2181-2183
+-- Lines 2213-2215
 function StatisticsManager:session_total_head_shots()
 	return self._global.session.killed.total.head_shots
 end
 
--- Lines 2185-2190
+-- Lines 2217-2222
 function StatisticsManager:session_hit_accuracy()
 	if self._global.session.shots_fired.total == 0 then
 		return 0
@@ -2653,17 +2665,17 @@ function StatisticsManager:session_hit_accuracy()
 	return math.floor(self._global.session.shots_fired.hits / self._global.session.shots_fired.total * 100)
 end
 
--- Lines 2192-2194
+-- Lines 2224-2226
 function StatisticsManager:sessions_jobs()
 	return self._global.sessions.jobs
 end
 
--- Lines 2196-2198
+-- Lines 2228-2230
 function StatisticsManager:session_total_civilian_kills()
 	return self._global.session.killed.civilian.count + self._global.session.killed.civilian_female.count
 end
 
--- Lines 2200-2216
+-- Lines 2232-2248
 function StatisticsManager:send_statistics()
 	if not managers.network:session() then
 		return
@@ -2683,10 +2695,10 @@ function StatisticsManager:send_statistics()
 	end
 end
 
--- Lines 2223-2240
+-- Lines 2255-2272
 function StatisticsManager:check_stats()
 	if self._global.stat_check and self._global.stat_check.h then
-		-- Lines 2225-2229
+		-- Lines 2257-2261
 		local function result_function(success, body)
 		end
 
@@ -2699,7 +2711,7 @@ function StatisticsManager:check_stats()
 	end
 end
 
--- Lines 2246-2278
+-- Lines 2278-2310
 function StatisticsManager:save(data)
 	local state = {
 		camera = self._global.cameras,
@@ -2726,7 +2738,7 @@ function StatisticsManager:save(data)
 	data.StatisticsManager = state
 end
 
--- Lines 2280-2289
+-- Lines 2312-2321
 function StatisticsManager:load(data)
 	local state = data.StatisticsManager
 

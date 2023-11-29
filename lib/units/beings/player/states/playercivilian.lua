@@ -216,9 +216,9 @@ end
 
 -- Lines 251-274
 function PlayerCivilian:_interupt_action_interact(t, input, complete)
-	self:_clear_tap_to_interact()
-
 	if self._interact_expire_t then
+		self:_clear_tap_to_interact()
+
 		self._interact_expire_t = nil
 
 		if alive(self._interact_params.object) then

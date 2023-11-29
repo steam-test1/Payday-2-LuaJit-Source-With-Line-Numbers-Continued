@@ -12,21 +12,24 @@ MutatorShotgunTweak.icon_coords = {
 	7,
 	1
 }
+local tmp_vec = Vector3()
+local tmp_rot = Rotation()
+local shotgun_wat_effect = Idstring("physic_effects/shotgun_wat")
 
--- Lines 15-18
+-- Lines 20-23
 function MutatorShotgunTweak:register_values(mutator_manager)
 	self:register_value("pull_strength", 3, "ps")
 	self:register_value("mothership", false, "ms")
 end
 
--- Lines 20-23
+-- Lines 25-28
 function MutatorShotgunTweak:setup(mutator_manager)
 	mutator_manager:register_message(Message.OnShotgunPush, "ShotgunTweak", callback(self, self, "_on_shotgun_push"))
 
 	self._sound_device = SoundDevice:create_source("MutatorShotgunTweak")
 end
 
--- Lines 25-34
+-- Lines 30-39
 function MutatorShotgunTweak:name()
 	local name = MutatorShotgunTweak.super.name(self)
 
@@ -39,7 +42,7 @@ function MutatorShotgunTweak:name()
 	end
 end
 
--- Lines 38-44
+-- Lines 43-49
 function MutatorShotgunTweak:get_pull_strength()
 	if self:get_to_the_mothership() then
 		return self:to_the_mothership_strength()
@@ -48,7 +51,7 @@ function MutatorShotgunTweak:get_pull_strength()
 	end
 end
 
--- Lines 46-53
+-- Lines 51-58
 function MutatorShotgunTweak:get_to_the_mothership()
 	local value = self:value("mothership")
 
@@ -59,34 +62,78 @@ function MutatorShotgunTweak:get_to_the_mothership()
 	end
 end
 
--- Lines 55-57
+-- Lines 60-62
 function MutatorShotgunTweak:to_the_mothership_strength()
 	return 0.01
 end
 
--- Lines 61-83
+-- Lines 66-133
 function MutatorShotgunTweak:_on_shotgun_push(unit, hit_pos, dir, distance, attacker)
-	if alive(unit) and alive(attacker) then
-		local str = self:get_pull_strength()
+	if not alive(unit) or not alive(attacker) or not managers.groupai:state():criminal_record(attacker:key()) then
+		return
+	end
 
-		World:play_physic_effect(Idstring("physic_effects/shotgun_wat"), unit:body("rag_Head"), attacker:body("inflict_reciever"), str)
-		World:play_physic_effect(Idstring("physic_effects/shotgun_wat"), unit:body("rag_Hips"), attacker:body("inflict_reciever"), str)
-		World:play_physic_effect(Idstring("physic_effects/shotgun_wat"), unit:body("rag_Spine"), attacker:body("inflict_reciever"), str)
-		World:play_physic_effect(Idstring("physic_effects/shotgun_wat"), unit:body("rag_Spine1"), attacker:body("inflict_reciever"), str)
-		World:play_physic_effect(Idstring("physic_effects/shotgun_wat"), unit:body("rag_Spine2"), attacker:body("inflict_reciever"), str)
-		World:play_physic_effect(Idstring("physic_effects/shotgun_wat"), unit:body("rag_RightForeArm"), attacker:body("inflict_reciever"), str)
-		World:play_physic_effect(Idstring("physic_effects/shotgun_wat"), unit:body("rag_LeftForeArm"), attacker:body("inflict_reciever"), str)
+	local str = self:get_pull_strength()
+	local attacker_base_ext = attacker:base()
+	local attacker_body_name = attacker_base_ext and attacker_base_ext.is_local_player and "inflict_reciever" or "body"
+	local attacker_body = attacker:body(attacker_body_name)
 
-		if attacker == managers.player:player_unit() and self._sound_device then
-			self._sound_device:stop()
-			self._sound_device:set_position(attacker:position())
-			self._sound_device:set_orientation(attacker:rotation())
-			self._sound_device:post_event("mutators_hfos_01")
+	if not attacker_body then
+		return
+	end
+
+	local world = World
+	local play_physic_effect_f = world.play_physic_effect
+	local get_body_f = unit.body
+
+	if self:get_to_the_mothership() then
+		local body = nil
+		local valid_bodies = {}
+
+		for i = 0, unit:num_bodies() - 1 do
+			body = get_body_f(unit, i)
+
+			if body and body:enabled() and body:dynamic() then
+				valid_bodies[#valid_bodies + 1] = body
+			end
+		end
+
+		local nr_valid_bodies = #valid_bodies
+
+		for i = 1, nr_valid_bodies do
+			body = valid_bodies[i]
+
+			for idx = 1, nr_valid_bodies do
+				play_physic_effect_f(world, shotgun_wat_effect, body, attacker_body, str)
+			end
+		end
+	else
+		local body = nil
+
+		for i = 0, unit:num_bodies() - 1 do
+			body = get_body_f(unit, i)
+
+			if body and body:enabled() and body:dynamic() then
+				play_physic_effect_f(world, shotgun_wat_effect, body, attacker_body, str)
+			end
 		end
 	end
+
+	local sound_source = self._sound_device
+
+	if not sound_source then
+		return
+	end
+
+	attacker:m_position(tmp_vec)
+	attacker:m_rotation(tmp_rot)
+	sound_source:stop()
+	sound_source:set_position(tmp_vec)
+	sound_source:set_orientation(tmp_rot)
+	sound_source:post_event("mutators_hfos_01")
 end
 
--- Lines 85-108
+-- Lines 135-153
 function MutatorShotgunTweak:modify_value(id, value)
 	if id == "GamePlayCentralManager:get_shotgun_push_range" then
 		return math.huge
@@ -97,10 +144,6 @@ function MutatorShotgunTweak:modify_value(id, value)
 			return math.min(value, 16)
 		end
 	elseif id == "ShotgunBase:_fire_raycast" then
-		if value and value.hit_enemy and value.type == "death" then
-			value.type = "death"
-		end
-
 		if value and value.variant == "explosion" then
 			value.type = "death"
 		end
@@ -109,24 +152,24 @@ function MutatorShotgunTweak:modify_value(id, value)
 	end
 end
 
--- Lines 110-114
+-- Lines 155-159
 function MutatorShotgunTweak:OnEnemyKilledByExplosion(unit, was_shotgun)
 	if was_shotgun then
 		self:_on_shotgun_push(unit, nil, nil, nil, managers.player:player_unit())
 	end
 end
 
--- Lines 118-120
+-- Lines 163-165
 function MutatorShotgunTweak:_min_strength()
 	return 1
 end
 
--- Lines 122-124
+-- Lines 167-169
 function MutatorShotgunTweak:_max_strength()
 	return 5
 end
 
--- Lines 126-164
+-- Lines 171-209
 function MutatorShotgunTweak:setup_options_gui(node)
 	local params = {
 		name = "pull_strength_slider",
@@ -194,12 +237,12 @@ function MutatorShotgunTweak:setup_options_gui(node)
 	return new_item
 end
 
--- Lines 166-168
+-- Lines 211-213
 function MutatorShotgunTweak:_update_pull_strength(item)
 	self:set_value("pull_strength", item:value())
 end
 
--- Lines 170-182
+-- Lines 215-227
 function MutatorShotgunTweak:_update_mothership_toggle(item)
 	local value = item:value() == "on" and true or false
 
@@ -218,7 +261,7 @@ function MutatorShotgunTweak:_update_mothership_toggle(item)
 	end
 end
 
--- Lines 184-203
+-- Lines 229-248
 function MutatorShotgunTweak:reset_to_default()
 	self:clear_values()
 
@@ -238,7 +281,7 @@ function MutatorShotgunTweak:reset_to_default()
 	end
 end
 
--- Lines 205-207
+-- Lines 250-252
 function MutatorShotgunTweak:options_fill()
 	return self:_get_percentage_fill(self:_min_strength(), self:_max_strength(), self:get_pull_strength())
 end

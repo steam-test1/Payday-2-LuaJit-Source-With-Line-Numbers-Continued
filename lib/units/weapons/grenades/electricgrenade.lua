@@ -42,7 +42,7 @@ function ElectricGrenade:_on_collision(col_ray)
 	self:_detonate()
 end
 
--- Lines 64-99
+-- Lines 64-101
 function ElectricGrenade:_detonate(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 	if self._detonated then
 		return
@@ -71,12 +71,15 @@ function ElectricGrenade:_detonate(tag, unit, body, other_unit, other_body, posi
 		verify_callback = callback(self, self, "_can_tase_unit")
 	})
 
-	managers.network:session():send_to_peers_synched("sync_unit_event_id_16", self._unit, "base", GrenadeBase.EVENT_IDS.detonate)
+	if self._unit:id() ~= -1 then
+		managers.network:session():send_to_peers_synched("sync_unit_event_id_16", self._unit, "base", GrenadeBase.EVENT_IDS.detonate)
+	end
+
 	self:_tase_player()
-	self._unit:set_slot(0)
+	self:_handle_hiding_and_destroying(true, nil)
 end
 
--- Lines 101-116
+-- Lines 103-118
 function ElectricGrenade:_can_tase_unit(unit)
 	local unit_name = nil
 
@@ -95,7 +98,7 @@ function ElectricGrenade:_can_tase_unit(unit)
 	end
 end
 
--- Lines 120-131
+-- Lines 122-134
 function ElectricGrenade:_detonate_on_client()
 	if self._detonated then
 		return
@@ -107,9 +110,10 @@ function ElectricGrenade:_detonate_on_client()
 
 	managers.explosion:play_sound_and_effects(pos, math.UP, range, self._custom_params)
 	self:_tase_player()
+	self:_handle_hiding_and_destroying(true, nil)
 end
 
--- Lines 133-146
+-- Lines 136-149
 function ElectricGrenade:_tase_player()
 	local player = managers.player:player_unit()
 
@@ -124,7 +128,7 @@ function ElectricGrenade:_tase_player()
 	end
 end
 
--- Lines 150-157
+-- Lines 153-160
 function ElectricGrenade:bullet_hit()
 	if not Network:is_server() then
 		return

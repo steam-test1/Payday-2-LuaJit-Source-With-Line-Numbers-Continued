@@ -116,9 +116,9 @@ function NetworkPeer:set_rpc(rpc)
 end
 
 -- Lines 122-128
-function NetworkPeer:create_ticket()
+function NetworkPeer:create_ticket(verifyer_id)
 	if self._need_steam_ticket then
-		return Steam:create_ticket(self._account_id)
+		return Steam:create_ticket(self._account_id, verifyer_id)
 	end
 
 	return ""
@@ -2295,7 +2295,7 @@ function NetworkPeer:unit_delete()
 		end
 
 		if self._unit:id() ~= -1 then
-			Network:detach_unit(self._unit)
+			detach_unit_from_network(self._unit)
 		end
 
 		self._unit:inventory():destroy_all_items()
@@ -2305,7 +2305,7 @@ function NetworkPeer:unit_delete()
 	self._unit = nil
 end
 
--- Lines 2518-2541
+-- Lines 2518-2538
 function NetworkPeer:_update_equipped_armor()
 	if not alive(self._unit) then
 		return
@@ -2317,25 +2317,31 @@ function NetworkPeer:_update_equipped_armor()
 
 	if self._equipped_armor_id ~= new_armor_id then
 		self._equipped_armor_id = new_armor_id
-		local con_mul, index = managers.blackmarket:get_concealment_of_peer(self)
 
-		self._unit:base():set_suspicion_multiplier("equipment", 1 / con_mul)
-		self._unit:base():set_detection_multiplier("equipment", 1 / con_mul)
-		self._unit:base():setup_hud_offset(self)
+		self:update_concealment()
 	end
 end
 
--- Lines 2545-2547
+-- Lines 2540-2546
+function NetworkPeer:update_concealment()
+	if not alive(self._unit) then
+		return
+	end
+
+	self._unit:base():update_concealment()
+end
+
+-- Lines 2550-2552
 function NetworkPeer:set_is_dropin(is_dropin)
 	self._is_dropin = is_dropin
 end
 
--- Lines 2549-2551
+-- Lines 2554-2556
 function NetworkPeer:is_dropin()
 	return self._is_dropin
 end
 
--- Lines 2556-2572
+-- Lines 2561-2577
 function NetworkPeer:register_mod(id, friendly)
 	for _, mod in ipairs(self._mods) do
 		if mod.id == id then
@@ -2351,17 +2357,17 @@ function NetworkPeer:register_mod(id, friendly)
 	})
 end
 
--- Lines 2574-2576
+-- Lines 2579-2581
 function NetworkPeer:is_modded()
 	return #self._mods > 0
 end
 
--- Lines 2578-2580
+-- Lines 2583-2585
 function NetworkPeer:synced_mods()
 	return self._mods
 end
 
--- Lines 2582-2604
+-- Lines 2587-2609
 function NetworkPeer:sync_mods(to_peer)
 	local mods = nil
 	mods = MenuCallbackHandler:build_mods_list()
@@ -2375,7 +2381,7 @@ function NetworkPeer:sync_mods(to_peer)
 	end
 end
 
--- Lines 2608-2620
+-- Lines 2613-2625
 function NetworkPeer:sync_is_vr(to_peer)
 	if _G.IS_VR then
 		if self == managers.network:session():local_peer() then
@@ -2390,17 +2396,17 @@ function NetworkPeer:sync_is_vr(to_peer)
 	end
 end
 
--- Lines 2622-2624
+-- Lines 2627-2629
 function NetworkPeer:set_is_vr()
 	self._is_vr = true
 end
 
--- Lines 2626-2628
+-- Lines 2631-2633
 function NetworkPeer:is_vr()
 	return self._is_vr
 end
 
--- Lines 2646-2650
+-- Lines 2651-2655
 function NetworkPeer:overlay_inspect()
 	if self._account_type_str == "STEAM" then
 		return managers.network.account:overlay_activate("url", tweak_data.gui.fbi_files_webpage .. "/suspect/" .. self:account_id() .. "/")

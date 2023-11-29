@@ -112,3 +112,27 @@ function safe_spawn_unit_without_extensions(unit_name, ...)
 
 	return World:spawn_unit_without_extensions(unit_name:id(), ...)
 end
+
+-- Lines 104-125
+function detach_unit_from_network(unit)
+	local ext = nil
+	local extensions = unit:extensions()
+
+	for idx, ext_name in ipairs(extensions) do
+		ext = unit[ext_name](unit)
+
+		if ext.on_pre_detached_from_network then
+			ext:on_pre_detached_from_network()
+		end
+	end
+
+	Network:detach_unit(unit)
+
+	for idx, ext_name in ipairs(extensions) do
+		ext = unit[ext_name](unit)
+
+		if ext.on_post_detached_from_network then
+			ext:on_post_detached_from_network()
+		end
+	end
+end

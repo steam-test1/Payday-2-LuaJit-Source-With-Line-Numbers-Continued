@@ -136,7 +136,7 @@ function MenuSetup:unload_packages()
 	end
 end
 
--- Lines 163-291
+-- Lines 163-293
 function MenuSetup:init_game()
 	local gsm = Setup.init_game(self)
 
@@ -170,6 +170,8 @@ function MenuSetup:init_game()
 
 						intro_skipped = true
 					end
+				elseif arg == "-single_shot_autofire" then
+					Global.single_shot_autofire = true
 				elseif arg == "+connect_lobby" then
 					Global.boot_invite = arg_list[i + 1]
 				elseif is_steam and is_mm_eos and arg == managers.network.account.connect_string then
@@ -201,7 +203,7 @@ function MenuSetup:init_game()
 	return gsm
 end
 
--- Lines 293-305
+-- Lines 295-307
 function MenuSetup:init_managers(managers)
 	Setup.init_managers(self, managers)
 	managers.sequence:preload()
@@ -213,7 +215,7 @@ function MenuSetup:init_managers(managers)
 	managers.network = NetworkManager:new()
 end
 
--- Lines 307-337
+-- Lines 309-339
 function MenuSetup:init_finalize()
 	Setup.init_finalize(self)
 
@@ -247,7 +249,7 @@ function MenuSetup:init_finalize()
 	TestAPIHelper.on_event("exit_to_menu")
 end
 
--- Lines 339-358
+-- Lines 341-360
 function MenuSetup:update_wait_for_savegame_info(t, dt)
 	managers.savefile:update(t, dt)
 	print("Checking fetch_savegame_hdd_space_required")
@@ -265,32 +267,32 @@ function MenuSetup:update_wait_for_savegame_info(t, dt)
 	end
 end
 
--- Lines 360-365
+-- Lines 362-367
 function MenuSetup:update(t, dt)
 	Setup.update(self, t, dt)
 	managers.crimenet:update(t, dt)
 	managers.network:update(t, dt)
 end
 
--- Lines 367-371
+-- Lines 369-373
 function MenuSetup:paused_update(t, dt)
 	Setup.paused_update(self, t, dt)
 	managers.network:update(t, dt)
 end
 
--- Lines 373-401
+-- Lines 375-403
 function MenuSetup:end_update(t, dt)
 	Setup.end_update(self, t, dt)
 	managers.network:end_update()
 end
 
--- Lines 403-407
+-- Lines 405-409
 function MenuSetup:paused_end_update(t, dt)
 	Setup.paused_end_update(self, t, dt)
 	managers.network:end_update()
 end
 
--- Lines 409-412
+-- Lines 411-414
 function MenuSetup:destroy()
 	MenuSetup.super.destroy(self)
 	managers.menu_scene:destroy()

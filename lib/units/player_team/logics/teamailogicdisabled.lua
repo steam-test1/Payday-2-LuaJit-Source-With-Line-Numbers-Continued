@@ -3,7 +3,7 @@ require("lib/units/enemies/cop/logics/CopLogicAttack")
 TeamAILogicDisabled = class(TeamAILogicAssault)
 TeamAILogicDisabled.on_long_dis_interacted = TeamAILogicIdle.on_long_dis_interacted
 
--- Lines 12-58
+-- Lines 12-61
 function TeamAILogicDisabled.enter(data, new_logic_name, enter_params)
 	TeamAILogicBase.enter(data, new_logic_name, enter_params)
 	data.unit:brain():cancel_all_pathing_searches()
@@ -17,10 +17,13 @@ function TeamAILogicDisabled.enter(data, new_logic_name, enter_params)
 	my_data.enemy_detect_slotmask = managers.slot:get_mask("enemies")
 
 	if old_internal_data then
+		my_data.turning = old_internal_data.turning
+		my_data.firing = old_internal_data.firing
+		my_data.shooting = old_internal_data.shooting
+		my_data.attention_unit = old_internal_data.attention_unit
+
 		CopLogicAttack._set_best_cover(data, my_data, old_internal_data.best_cover)
 		CopLogicAttack._set_nearest_cover(my_data, old_internal_data.nearest_cover)
-
-		my_data.attention_unit = old_internal_data.attention_unit
 	end
 
 	local key_str = tostring(data.key)
@@ -48,7 +51,7 @@ function TeamAILogicDisabled.enter(data, new_logic_name, enter_params)
 	end
 end
 
--- Lines 62-87
+-- Lines 65-90
 function TeamAILogicDisabled.exit(data, new_logic_name, enter_params)
 	TeamAILogicBase.exit(data, new_logic_name, enter_params)
 
@@ -76,7 +79,7 @@ function TeamAILogicDisabled.exit(data, new_logic_name, enter_params)
 	end
 end
 
--- Lines 91-105
+-- Lines 94-108
 function TeamAILogicDisabled._upd_enemy_detection(data)
 	data.t = TimerManager:game():time()
 	local my_data = data.internal_data
@@ -88,11 +91,11 @@ function TeamAILogicDisabled._upd_enemy_detection(data)
 	CopLogicBase.queue_task(my_data, my_data.detection_task_key, TeamAILogicDisabled._upd_enemy_detection, data, data.t + delay)
 end
 
--- Lines 109-114
+-- Lines 112-117
 function TeamAILogicDisabled.on_intimidated(data, amount, aggressor_unit)
 end
 
--- Lines 118-155
+-- Lines 121-158
 function TeamAILogicDisabled._consider_surrender(data, my_data)
 	my_data.stay_cool_chk_t = TimerManager:game():time()
 	local my_health_ratio = data.unit:character_damage():health_ratio()
@@ -141,14 +144,14 @@ function TeamAILogicDisabled._consider_surrender(data, my_data)
 	end
 end
 
--- Lines 159-217
+-- Lines 162-218
 function TeamAILogicDisabled._upd_aim(data, my_data)
 	local shoot, aim = nil
 	local focus_enemy = data.attention_obj
 
 	if my_data.stay_cool then
 		-- Nothing
-	elseif focus_enemy then
+	elseif focus_enemy and AIAttentionObject.REACT_SHOOT <= focus_enemy.reaction then
 		if focus_enemy.verified then
 			if focus_enemy.verified_dis < 2000 or my_data.alert_t and data.t - my_data.alert_t < 7 then
 				shoot = true
@@ -159,8 +162,6 @@ function TeamAILogicDisabled._upd_aim(data, my_data)
 			if my_data.shooting and data.t - focus_enemy.verified_t < 3 then
 				shoot = true
 			end
-		elseif focus_enemy.verified_dis < 600 and my_data.walking_to_cover_shoot_pos then
-			aim = true
 		end
 	end
 
@@ -215,7 +216,7 @@ function TeamAILogicDisabled._upd_aim(data, my_data)
 	end
 end
 
--- Lines 221-235
+-- Lines 222-236
 function TeamAILogicDisabled.on_recovered(data, reviving_unit)
 	local my_data = data.internal_data
 
@@ -234,7 +235,7 @@ function TeamAILogicDisabled.on_recovered(data, reviving_unit)
 	end
 end
 
--- Lines 239-307
+-- Lines 240-308
 function TeamAILogicDisabled._register_revive_SO(data, my_data, rescue_type)
 	local followup_objective = {
 		scan = true,
@@ -296,7 +297,7 @@ function TeamAILogicDisabled._register_revive_SO(data, my_data, rescue_type)
 	my_data.deathguard_SO_id = PlayerBleedOut._register_deathguard_SO(data.unit)
 end
 
--- Lines 311-328
+-- Lines 312-329
 function TeamAILogicDisabled._unregister_revive_SO(my_data)
 	if my_data.deathguard_SO_id then
 		PlayerBleedOut._unregister_deathguard_SO(my_data.deathguard_SO_id)
@@ -318,12 +319,12 @@ function TeamAILogicDisabled._unregister_revive_SO(my_data)
 	end
 end
 
--- Lines 332-334
+-- Lines 333-335
 function TeamAILogicDisabled.is_available_for_assignment(data, new_objective)
 	return false
 end
 
--- Lines 338-354
+-- Lines 339-355
 function TeamAILogicDisabled.damage_clbk(data, damage_info)
 	local my_data = data.internal_data
 
@@ -344,14 +345,14 @@ function TeamAILogicDisabled.damage_clbk(data, damage_info)
 	TeamAILogicIdle.damage_clbk(data, damage_info)
 end
 
--- Lines 358-362
+-- Lines 359-363
 function TeamAILogicDisabled.on_revive_SO_administered(ignore_this, data, receiver_unit)
 	local my_data = data.internal_data
 	my_data.rescuer = receiver_unit
 	my_data.SO_id = nil
 end
 
--- Lines 366-372
+-- Lines 367-373
 function TeamAILogicDisabled.on_revive_SO_failed(ignore_this, data)
 	local my_data = data.internal_data
 
@@ -362,7 +363,7 @@ function TeamAILogicDisabled.on_revive_SO_failed(ignore_this, data)
 	end
 end
 
--- Lines 376-381
+-- Lines 377-382
 function TeamAILogicDisabled.on_new_objective(data, old_objective)
 	TeamAILogicBase.on_new_objective(data, old_objective)
 

@@ -665,7 +665,7 @@ function ZipLine:_send_net_event(event_id)
 	managers.network:session():send_to_peers_synched("sync_unit_event_id_16", self._unit, "zipline", event_id)
 end
 
--- Lines 603-633
+-- Lines 603-634
 function ZipLine:attach_bag(bag)
 	self._booked_bag_peer_id = nil
 	local body = bag:body("hinge_body_1") or bag:body(0)
@@ -673,6 +673,9 @@ function ZipLine:attach_bag(bag)
 	body:set_keyframed()
 
 	self._attached_bag = bag
+
+	self._unit:link(bag)
+
 	local carry_id = self._attached_bag:carry_data():carry_id()
 	self._attached_bag_offset = tweak_data.carry:get_zipline_offset(carry_id)
 	self._bag_disabled_collisions = {}
@@ -694,11 +697,12 @@ function ZipLine:attach_bag(bag)
 	self:run_sequence("on_attached_bag", self._attached_bag)
 end
 
--- Lines 635-655
+-- Lines 636-657
 function ZipLine:release_bag()
 	local body = self._attached_bag:body("hinge_body_1") or self._attached_bag:body(0)
 
 	body:set_dynamic()
+	self._attached_bag:unlink()
 
 	if self._bag_disabled_collisions then
 		for _, body in ipairs(self._bag_disabled_collisions) do
@@ -715,7 +719,7 @@ function ZipLine:release_bag()
 	self._attached_bag = nil
 end
 
--- Lines 659-663
+-- Lines 661-665
 function ZipLine:run_sequence(sequence_name, user_unit)
 	if self._unit:damage():has_sequence(sequence_name) then
 		self._unit:damage():run_sequence_simple(sequence_name, {
@@ -724,17 +728,17 @@ function ZipLine:run_sequence(sequence_name, user_unit)
 	end
 end
 
--- Lines 667-669
+-- Lines 669-671
 function ZipLine:destroy(unit)
 	table.delete(ZipLine.ziplines, self._unit)
 end
 
--- Lines 671-673
+-- Lines 673-675
 function ZipLine:set_debug_state(state)
 	self._debug = state
 end
 
--- Lines 675-693
+-- Lines 677-695
 function ZipLine:debug_draw(t, dt)
 	if not self:is_valid() then
 		return
@@ -756,7 +760,7 @@ function ZipLine:debug_draw(t, dt)
 	brush:sphere(pos, 10)
 end
 
--- Lines 695-706
+-- Lines 697-708
 function ZipLine:save(data)
 	local state = {
 		enabled = self._enabled,
@@ -769,7 +773,7 @@ function ZipLine:save(data)
 	data.ZipLine = state
 end
 
--- Lines 708-720
+-- Lines 710-722
 function ZipLine:load(data)
 	local state = data.ZipLine
 

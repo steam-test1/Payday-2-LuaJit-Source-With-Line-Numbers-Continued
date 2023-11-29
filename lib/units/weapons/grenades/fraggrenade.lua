@@ -57,7 +57,7 @@ function FragGrenade:_on_collision(col_ray)
 	self:_detonate()
 end
 
--- Lines 84-118
+-- Lines 84-119
 function FragGrenade:_detonate(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 	if self._detonated then
 		return
@@ -89,10 +89,10 @@ function FragGrenade:_detonate(tag, unit, body, other_unit, other_body, position
 		managers.network:session():send_to_peers_synched("sync_unit_event_id_16", self._unit, "base", GrenadeBase.EVENT_IDS.detonate)
 	end
 
-	self._unit:set_slot(0)
+	self:_handle_hiding_and_destroying(true, nil)
 end
 
--- Lines 122-139
+-- Lines 123-136
 function FragGrenade:_detonate_on_client()
 	if self._detonated then
 		return
@@ -104,15 +104,10 @@ function FragGrenade:_detonate_on_client()
 
 	managers.explosion:give_local_player_dmg(pos, range, self._player_damage)
 	managers.explosion:explode_on_client(pos, math.UP, nil, self._damage, range, self._curve_pow, self._custom_params)
-
-	if self._unit:id() == -1 then
-		self._unit:set_slot(0)
-	else
-		self._unit:set_visible(false)
-	end
+	self:_handle_hiding_and_destroying(true, nil)
 end
 
--- Lines 143-150
+-- Lines 140-147
 function FragGrenade:bullet_hit()
 	if not Network:is_server() then
 		return

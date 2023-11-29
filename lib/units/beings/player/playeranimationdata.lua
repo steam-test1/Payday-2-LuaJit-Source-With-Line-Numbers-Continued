@@ -34,17 +34,54 @@ function PlayerAnimationData:foot()
 	return self._footstep
 end
 
--- Lines 48-55
-function PlayerAnimationData:anim_clbk_upper_body_empty(unit)
-	unit:anim_state_machine():stop_segment(Idstring("upper_body"))
+-- Lines 49-57
+function PlayerAnimationData:anim_clbk_chk_freeze_anims(unit)
+	self.can_freeze = true
+	local base_ext = unit:base()
+
+	if base_ext and base_ext.chk_freeze_anims then
+		base_ext:chk_freeze_anims()
+	end
 end
 
--- Lines 59-61
+-- Lines 59-75
+function PlayerAnimationData:anim_clbk_upper_body_empty(unit)
+	unit:anim_state_machine():stop_segment(Idstring("upper_body"))
+
+	self.upper_body_active = false
+	self.upper_body_empty = false
+
+	if self.can_freeze then
+		local base_ext = unit:base()
+
+		if base_ext and base_ext.chk_freeze_anims then
+			base_ext:chk_freeze_anims()
+		end
+	end
+end
+
+-- Lines 77-93
+function PlayerAnimationData:anim_clbk_upper_body_ext_empty(unit)
+	unit:anim_state_machine():stop_segment(Idstring("upper_body_ext"))
+
+	self.upper_body_ext_active = false
+	self.upper_body_ext_empty = false
+
+	if self.can_freeze then
+		local base_ext = unit:base()
+
+		if base_ext and base_ext.chk_freeze_anims then
+			base_ext:chk_freeze_anims()
+		end
+	end
+end
+
+-- Lines 97-99
 function PlayerAnimationData:anim_clbk_base_empty(unit)
 	unit:anim_state_machine():stop_segment(Idstring("base"))
 end
 
--- Lines 65-71
+-- Lines 103-109
 function PlayerAnimationData:anim_clbk_death_exit(unit)
 	unit:movement():on_death_exit()
 	unit:base():on_death_exit()

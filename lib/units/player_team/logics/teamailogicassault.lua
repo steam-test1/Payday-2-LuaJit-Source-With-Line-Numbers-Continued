@@ -12,7 +12,7 @@ TeamAILogicAssault.on_objective_unit_destroyed = TeamAILogicBase.on_objective_un
 TeamAILogicAssault.is_available_for_assignment = TeamAILogicIdle.is_available_for_assignment
 TeamAILogicAssault.clbk_heat = TeamAILogicIdle.clbk_heat
 
--- Lines 22-66
+-- Lines 22-69
 function TeamAILogicAssault.enter(data, new_logic_name, enter_params)
 	TeamAILogicBase.enter(data, new_logic_name, enter_params)
 	data.unit:brain():cancel_all_pathing_searches()
@@ -27,6 +27,9 @@ function TeamAILogicAssault.enter(data, new_logic_name, enter_params)
 	my_data.weapon_range = data.char_tweak.weapon[data.unit:inventory():equipped_unit():base():weapon_tweak_data().usage].range
 
 	if old_internal_data then
+		my_data.turning = old_internal_data.turning
+		my_data.firing = old_internal_data.firing
+		my_data.shooting = old_internal_data.shooting
 		my_data.attention_unit = old_internal_data.attention_unit
 
 		CopLogicAttack._set_best_cover(data, my_data, old_internal_data.best_cover)
@@ -49,7 +52,7 @@ function TeamAILogicAssault.enter(data, new_logic_name, enter_params)
 	my_data.cover_test_step = 3
 end
 
--- Lines 70-88
+-- Lines 73-91
 function TeamAILogicAssault.exit(data, new_logic_name, enter_params)
 	TeamAILogicBase.exit(data, new_logic_name, enter_params)
 
@@ -70,7 +73,7 @@ function TeamAILogicAssault.exit(data, new_logic_name, enter_params)
 	data.brain:rem_pos_rsrv("path")
 end
 
--- Lines 92-156
+-- Lines 95-159
 function TeamAILogicAssault.update(data)
 	local my_data = data.internal_data
 	local t = data.t
@@ -136,7 +139,7 @@ function TeamAILogicAssault.update(data)
 	end
 end
 
--- Lines 160-243
+-- Lines 163-246
 function TeamAILogicAssault._upd_enemy_detection(data, is_synchronous)
 	managers.groupai:state():on_unit_detection_updated(data.unit)
 
@@ -208,7 +211,7 @@ function TeamAILogicAssault._upd_enemy_detection(data, is_synchronous)
 	end
 end
 
--- Lines 247-267
+-- Lines 250-270
 function TeamAILogicAssault.find_enemy_to_mark(enemies)
 	local best_nmy, best_nmy_wgt = nil
 
@@ -222,7 +225,7 @@ function TeamAILogicAssault.find_enemy_to_mark(enemies)
 	return best_nmy
 end
 
--- Lines 271-292
+-- Lines 274-295
 function TeamAILogicAssault.mark_enemy(data, criminal, to_mark, play_sound, play_action)
 	if play_sound then
 		local callout = not criminal:brain()._last_mark_shout or tweak_data.sound.criminal_sound.ai_callout_cooldown < TimerManager:game():time() - criminal:brain()._last_mark_shout
@@ -234,10 +237,9 @@ function TeamAILogicAssault.mark_enemy(data, criminal, to_mark, play_sound, play
 		end
 	end
 
-	if play_action and not criminal:movement():chk_action_forbidden("action") then
+	if play_action and not data.unit:anim_data().reload and not criminal:movement():chk_action_forbidden("action") then
 		local new_action = {
 			variant = "arrest",
-			align_sync = true,
 			body_part = 3,
 			type = "act"
 		}
@@ -250,7 +252,7 @@ function TeamAILogicAssault.mark_enemy(data, criminal, to_mark, play_sound, play
 	to_mark:contour():add("mark_enemy", true)
 end
 
--- Lines 296-335
+-- Lines 299-338
 function TeamAILogicAssault.action_complete_clbk(data, action)
 	local my_data = data.internal_data
 	local action_type = action:type()
@@ -292,21 +294,21 @@ function TeamAILogicAssault.action_complete_clbk(data, action)
 	end
 end
 
--- Lines 339-341
+-- Lines 342-344
 function TeamAILogicAssault.damage_clbk(data, damage_info)
 	TeamAILogicIdle.damage_clbk(data, damage_info)
 end
 
--- Lines 345-346
+-- Lines 348-349
 function TeamAILogicAssault.death_clbk(data, damage_info)
 end
 
--- Lines 350-352
+-- Lines 353-355
 function TeamAILogicAssault.on_detected_enemy_destroyed(data, enemy_unit)
 	TeamAILogicIdle.on_cop_neutralized(data, enemy_unit:key())
 end
 
--- Lines 356-366
+-- Lines 359-369
 function TeamAILogicAssault._chk_request_combat_chatter(data, my_data)
 	local focus_enemy = data.attention_obj
 
@@ -315,7 +317,7 @@ function TeamAILogicAssault._chk_request_combat_chatter(data, my_data)
 	end
 end
 
--- Lines 370-382
+-- Lines 373-385
 function TeamAILogicAssault._chk_exit_attack_logic(data, new_reaction)
 	local wanted_state = TeamAILogicBase._get_logic_state_from_reaction(data, new_reaction)
 

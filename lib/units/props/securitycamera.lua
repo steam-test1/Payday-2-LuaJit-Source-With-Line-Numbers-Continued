@@ -463,19 +463,23 @@ function SecurityCamera:set_access_camera_mission_element(access_camera_mission_
 	self._access_camera_mission_element = access_camera_mission_element
 end
 
--- Lines 459-462
-function SecurityCamera:get_mark_check_position()
+-- Lines 459-466
+function SecurityCamera:get_mark_check_position(m_vec)
 	local obj = self._unit:get_object(Idstring("CameraLens")) or self._unit:get_object(Idstring("g_lamp"))
 
-	return obj:position()
+	if obj then
+		obj:m_position(m_vec)
+	else
+		self._unit:m_position(m_vec)
+	end
 end
 
--- Lines 464-466
+-- Lines 468-470
 function SecurityCamera:destroyed()
 	return self._destroyed
 end
 
--- Lines 470-521
+-- Lines 474-525
 function SecurityCamera:_create_detected_attention_object_data(t, u_key, attention_info, settings)
 	attention_info.handler:add_listener("sec_cam_" .. tostring(self._u_key), callback(self, self, "on_detected_attention_obj_modified"))
 	print("[SecurityCamera] _create_detected_attention_object_data ", t, u_key, attention_info.unit)
@@ -528,7 +532,7 @@ function SecurityCamera:_create_detected_attention_object_data(t, u_key, attenti
 	return new_entry
 end
 
--- Lines 525-576
+-- Lines 529-580
 function SecurityCamera:on_detected_attention_obj_modified(modified_u_key)
 	local attention_info = self._detected_attention_objects[modified_u_key]
 
@@ -584,7 +588,7 @@ function SecurityCamera:on_detected_attention_obj_modified(modified_u_key)
 	end
 end
 
--- Lines 580-590
+-- Lines 584-594
 function SecurityCamera:_destroy_detected_attention_object_data(attention_info)
 	attention_info.handler:remove_listener("sec_cam_" .. tostring(self._u_key))
 
@@ -601,7 +605,7 @@ function SecurityCamera:_destroy_detected_attention_object_data(attention_info)
 	self._detected_attention_objects[attention_info.u_key] = nil
 end
 
--- Lines 594-610
+-- Lines 598-614
 function SecurityCamera:_destroy_all_detected_attention_object_data()
 	if not self._detected_attention_objects then
 		return
@@ -624,9 +628,9 @@ function SecurityCamera:_destroy_all_detected_attention_object_data()
 	self._detected_attention_objects = {}
 end
 
--- Lines 614-704
+-- Lines 618-708
 function SecurityCamera:_upd_suspicion(t)
-	-- Lines 615-619
+	-- Lines 619-623
 	local function _exit_func(attention_data)
 		attention_data.unit:movement():on_uncovered(self._unit)
 		self:_sound_the_alarm(attention_data.unit)
@@ -721,7 +725,7 @@ function SecurityCamera:_upd_suspicion(t)
 	self._suspicion = max_suspicion > 0 and max_suspicion
 end
 
--- Lines 708-735
+-- Lines 712-739
 function SecurityCamera:_sound_the_alarm(detected_unit)
 	if self._alarm_sound then
 		return
@@ -754,7 +758,7 @@ function SecurityCamera:_sound_the_alarm(detected_unit)
 	self._alarm_sound = self._unit:sound_source():post_event("camera_alarm_signal")
 end
 
--- Lines 739-752
+-- Lines 743-756
 function SecurityCamera:_stop_all_sounds()
 	if Network:is_server() and (self._alarm_sound or self._suspicion_sound) then
 		self:_send_net_event(self._NET_EVENTS.sound_off)
@@ -771,7 +775,7 @@ function SecurityCamera:_stop_all_sounds()
 	self._suspicion_sound_lvl = 0
 end
 
--- Lines 756-780
+-- Lines 760-784
 function SecurityCamera:_set_suspicion_sound(suspicion_level)
 	if self._suspicion_sound_lvl == suspicion_level then
 		return
@@ -800,7 +804,7 @@ function SecurityCamera:_set_suspicion_sound(suspicion_level)
 	end
 end
 
--- Lines 784-810
+-- Lines 788-814
 function SecurityCamera:_upd_sound(unit, t)
 	if self._alarm_sound then
 		return
@@ -830,7 +834,7 @@ function SecurityCamera:_upd_sound(unit, t)
 	self:_set_suspicion_sound(suspicion_level)
 end
 
--- Lines 814-834
+-- Lines 818-838
 function SecurityCamera:sync_net_event(event_id)
 	local net_events = self._NET_EVENTS
 
@@ -855,12 +859,12 @@ function SecurityCamera:sync_net_event(event_id)
 	end
 end
 
--- Lines 838-840
+-- Lines 842-844
 function SecurityCamera:_send_net_event(event_id)
 	managers.network:session():send_to_peers_synched("sync_unit_event_id_16", self._unit, "base", event_id)
 end
 
--- Lines 844-848
+-- Lines 848-852
 function SecurityCamera:clbk_call_the_police()
 	managers.groupai:state():on_criminal_suspicion_progress(nil, self._unit, "called")
 
@@ -869,7 +873,7 @@ function SecurityCamera:clbk_call_the_police()
 	managers.groupai:state():on_police_called(self._reason_called)
 end
 
--- Lines 852-874
+-- Lines 856-878
 function SecurityCamera:start_tape_loop(tape_loop_t)
 	if alive(SecurityCamera.active_tape_loop_unit) then
 		return
@@ -892,7 +896,7 @@ function SecurityCamera:start_tape_loop(tape_loop_t)
 	end
 end
 
--- Lines 876-892
+-- Lines 880-896
 function SecurityCamera:_request_start_tape_loop_by_upgrade_level(time_upgrade_level)
 	if not Network:is_server() then
 		return
@@ -911,14 +915,14 @@ function SecurityCamera:_request_start_tape_loop_by_upgrade_level(time_upgrade_l
 	end
 end
 
--- Lines 894-897
+-- Lines 898-901
 function SecurityCamera:_start_tape_loop_by_upgrade_level(time_upgrade_level)
 	local tape_loop_t = managers.player:upgrade_value_by_level("player", "tape_loop_duration", time_upgrade_level)
 
 	self:_start_tape_loop(tape_loop_t)
 end
 
--- Lines 899-922
+-- Lines 903-926
 function SecurityCamera:_start_tape_loop(tape_loop_t)
 	self:_deactivate_tape_loop_restart()
 
@@ -948,7 +952,7 @@ function SecurityCamera:_start_tape_loop(tape_loop_t)
 	managers.enemy:add_delayed_clbk(self._tape_loop_expired_clbk_id, callback(self, self, "_clbk_tape_loop_expired"), self._tape_loop_end_t)
 end
 
--- Lines 924-939
+-- Lines 928-943
 function SecurityCamera:_clbk_tape_loop_expired(...)
 	self._tape_loop_expired_clbk_id = nil
 	self._tape_loop_end_t = nil
@@ -968,7 +972,7 @@ function SecurityCamera:_clbk_tape_loop_expired(...)
 	SecurityCamera.active_tape_loop_unit = nil
 end
 
--- Lines 941-953
+-- Lines 945-957
 function SecurityCamera:_activate_tape_loop_restart(restart_t)
 	if not managers.groupai:state():whisper_mode() then
 		if self._camera_wrong_image_sound then
@@ -987,7 +991,7 @@ function SecurityCamera:_activate_tape_loop_restart(restart_t)
 	end
 end
 
--- Lines 955-984
+-- Lines 959-988
 function SecurityCamera:_deactivate_tape_loop()
 	if Network:is_server() then
 		self:_send_net_event(self._NET_EVENTS.deactivate_tape_loop)
@@ -1021,7 +1025,7 @@ function SecurityCamera:_deactivate_tape_loop()
 	end
 end
 
--- Lines 986-1000
+-- Lines 990-1004
 function SecurityCamera:_deactivate_tape_loop_restart()
 	if not self._tape_loop_restarting_t then
 		return
@@ -1042,12 +1046,12 @@ function SecurityCamera:_deactivate_tape_loop_restart()
 	end
 end
 
--- Lines 1002-1004
+-- Lines 1006-1008
 function SecurityCamera:can_apply_tape_loop()
 	return not self._tape_loop_end_t or self._tape_loop_end_t < Application:time()
 end
 
--- Lines 1008-1013
+-- Lines 1012-1017
 function SecurityCamera:on_camera_access_changed()
 	local current_state = game_state_machine:current_state()
 
@@ -1056,19 +1060,19 @@ function SecurityCamera:on_camera_access_changed()
 	end
 end
 
--- Lines 1017-1020
+-- Lines 1021-1024
 function SecurityCamera:set_access_camera_enabled(enabled)
 	self._set_access_camera_enabled = enabled
 
 	self:on_camera_access_changed()
 end
 
--- Lines 1022-1024
+-- Lines 1026-1028
 function SecurityCamera:access_enabled()
 	return self._unit:enabled() and self._set_access_camera_enabled
 end
 
--- Lines 1028-1037
+-- Lines 1032-1041
 function SecurityCamera:on_unit_set_enabled(enabled)
 	if self._destroyed then
 		return
@@ -1081,7 +1085,7 @@ function SecurityCamera:on_unit_set_enabled(enabled)
 	self:on_camera_access_changed()
 end
 
--- Lines 1041-1061
+-- Lines 1045-1065
 function SecurityCamera:save(data)
 	if self._alarm_sound then
 		data.alarm = true
@@ -1105,7 +1109,7 @@ function SecurityCamera:save(data)
 	end
 end
 
--- Lines 1065-1085
+-- Lines 1069-1089
 function SecurityCamera:load(data)
 	if data.alarm then
 		self:_sound_the_alarm()
@@ -1128,7 +1132,7 @@ function SecurityCamera:load(data)
 	end
 end
 
--- Lines 1089-1106
+-- Lines 1093-1110
 function SecurityCamera:destroy(unit)
 	table.delete(SecurityCamera.cameras, self._unit)
 

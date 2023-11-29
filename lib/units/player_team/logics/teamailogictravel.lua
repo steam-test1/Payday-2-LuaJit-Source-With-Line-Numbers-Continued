@@ -20,7 +20,7 @@ TeamAILogicTravel.get_pathing_prio = CopLogicTravel.get_pathing_prio
 TeamAILogicTravel.action_complete_clbk = CopLogicTravel.action_complete_clbk
 TeamAILogicTravel.on_intimidated = TeamAILogicIdle.on_intimidated
 
--- Lines 29-114
+-- Lines 29-117
 function TeamAILogicTravel.enter(data, new_logic_name, enter_params)
 	CopLogicBase.enter(data, new_logic_name, enter_params)
 	data.unit:brain():cancel_all_pathing_searches()
@@ -32,6 +32,9 @@ function TeamAILogicTravel.enter(data, new_logic_name, enter_params)
 	}
 
 	if old_internal_data then
+		my_data.turning = old_internal_data.turning
+		my_data.firing = old_internal_data.firing
+		my_data.shooting = old_internal_data.shooting
 		my_data.attention_unit = old_internal_data.attention_unit
 
 		if old_internal_data.nearest_cover then
@@ -101,7 +104,7 @@ function TeamAILogicTravel.enter(data, new_logic_name, enter_params)
 	end
 end
 
--- Lines 118-139
+-- Lines 121-142
 function TeamAILogicTravel.exit(data, new_logic_name, enter_params)
 	TeamAILogicBase.exit(data, new_logic_name, enter_params)
 
@@ -126,7 +129,7 @@ function TeamAILogicTravel.exit(data, new_logic_name, enter_params)
 	data.brain:rem_pos_rsrv("path")
 end
 
--- Lines 143-170
+-- Lines 146-173
 function TeamAILogicTravel.check_inspire(data, attention)
 	if not attention then
 		return
@@ -163,7 +166,7 @@ function TeamAILogicTravel.check_inspire(data, attention)
 	end
 end
 
--- Lines 172-181
+-- Lines 175-184
 function TeamAILogicTravel.update(data)
 	if data.objective.type == "revive" and managers.player:is_custom_cooldown_not_active("team", "crew_inspire") then
 		local attention = data.detected_attention_objects[data.objective.follow_unit:key()]
@@ -174,7 +177,7 @@ function TeamAILogicTravel.update(data)
 	return CopLogicTravel.upd_advance(data)
 end
 
--- Lines 185-254
+-- Lines 188-257
 function TeamAILogicTravel._upd_enemy_detection(data)
 	data.t = TimerManager:game():time()
 	local my_data = data.internal_data
@@ -237,7 +240,7 @@ function TeamAILogicTravel._upd_enemy_detection(data)
 	CopLogicBase.queue_task(my_data, my_data.detection_task_key, TeamAILogicTravel._upd_enemy_detection, data, data.t + delay)
 end
 
--- Lines 258-265
+-- Lines 261-268
 function TeamAILogicTravel._remove_enemy_attention(param)
 	local data = param.data
 
@@ -248,7 +251,7 @@ function TeamAILogicTravel._remove_enemy_attention(param)
 	CopLogicBase._reset_attention(data)
 end
 
--- Lines 269-280
+-- Lines 272-283
 function TeamAILogicTravel.is_available_for_assignment(data, new_objective)
 	if new_objective and new_objective.forced then
 		return true

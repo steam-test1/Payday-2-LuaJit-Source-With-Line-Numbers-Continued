@@ -255,9 +255,11 @@ function TankCopLogicAttack.queue_update(data, my_data)
 	CopLogicBase.queue_task(my_data, my_data.update_queue_id, TankCopLogicAttack.queued_update, data, data.t + 1.5, data.important)
 end
 
--- Lines 246-263
+-- Lines 246-265
 function TankCopLogicAttack._chk_request_action_walk_to_chase_pos(data, my_data, speed, end_rot)
 	if not data.unit:movement():chk_action_forbidden("walk") then
+		TankCopLogicAttack._correct_path_start_pos(data, my_data.chase_path)
+
 		local new_action_data = {
 			type = "walk",
 			body_part = 2,
@@ -274,21 +276,21 @@ function TankCopLogicAttack._chk_request_action_walk_to_chase_pos(data, my_data,
 	end
 end
 
--- Lines 267-271
+-- Lines 269-273
 function TankCopLogicAttack.is_advancing(data)
 	if data.internal_data.walking_to_chase_pos and data.pos_rsrv.move_dest then
 		return data.pos_rsrv.move_dest.position
 	end
 end
 
--- Lines 275-279
+-- Lines 277-281
 function TankCopLogicAttack._get_all_paths(data)
 	return {
 		chase_path = data.internal_data.chase_path
 	}
 end
 
--- Lines 283-285
+-- Lines 285-287
 function TankCopLogicAttack._set_verified_paths(data, verified_paths)
 	data.internal_data.chase_path = verified_paths.chase_path
 end

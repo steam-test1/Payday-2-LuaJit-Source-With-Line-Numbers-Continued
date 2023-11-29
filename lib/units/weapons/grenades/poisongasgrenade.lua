@@ -55,7 +55,7 @@ function PoisonGasGrenade:projectile_entry()
 	return self._projectile_entry or self._tweak_projectile_entry or "launcher_poison"
 end
 
--- Lines 55-95
+-- Lines 55-96
 function PoisonGasGrenade:_detonate(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 	if self._detonated then
 		return
@@ -68,13 +68,10 @@ function PoisonGasGrenade:_detonate(tag, unit, body, other_unit, other_body, pos
 	local tweak_entry = tweak_data.projectiles[grenade_entry]
 
 	managers.player:spawn_poison_gas(pos, normal, tweak_entry, self._unit)
-	self._unit:body("static_body"):set_fixed()
 	self._unit:set_extension_update_enabled(Idstring("base"), false)
 
 	self._timer = nil
 	self._detonated = true
-
-	self:remove_trail_effect()
 
 	if Network:is_server() then
 		local slot_mask = managers.slot:get_mask("explosion_targets")
@@ -93,15 +90,20 @@ function PoisonGasGrenade:_detonate(tag, unit, body, other_unit, other_body, pos
 
 		managers.explosion:give_local_player_dmg(pos, range, self._player_damage)
 		managers.explosion:play_sound_and_effects(pos, normal, range, self._custom_params)
-		managers.network:session():send_to_peers_synched("sync_unit_event_id_16", self._unit, "base", GrenadeBase.EVENT_IDS.detonate)
+
+		if self._unit:id() ~= -1 then
+			managers.network:session():send_to_peers_synched("sync_unit_event_id_16", self._unit, "base", GrenadeBase.EVENT_IDS.detonate)
+		end
 	end
+
+	self:_handle_hiding_and_destroying(false, nil)
 end
 
--- Lines 97-99
+-- Lines 98-100
 function PoisonGasGrenade:bullet_hit()
 end
 
--- Lines 103-114
+-- Lines 104-115
 function PoisonGasGrenade:_detonate_on_client()
 	if self._detonated then
 		return
@@ -116,7 +118,7 @@ function PoisonGasGrenade:_detonate_on_client()
 	managers.explosion:explode_on_client(pos, math.UP, nil, self._damage, range, self._curve_pow, self._custom_params)
 end
 
--- Lines 118-128
+-- Lines 119-129
 function PoisonGasGrenade:update(unit, t, dt)
 	if self._timer then
 		self._timer = self._timer - dt
@@ -131,8 +133,10 @@ function PoisonGasGrenade:update(unit, t, dt)
 	ProjectileBase.update(self, unit, t, dt)
 end
 
--- Lines 132-141
+-- Lines 133-144
 function PoisonGasGrenade:save(data)
+	PoisonGasGrenade.super.save(self, data)
+
 	local state = {
 		timer = self._timer,
 		detonated = self._detonated,
@@ -142,8 +146,10 @@ function PoisonGasGrenade:save(data)
 	data.PoisonGasGrenade = state
 end
 
--- Lines 145-160
+-- Lines 148-169
 function PoisonGasGrenade:load(data)
+	PoisonGasGrenade.super.load(self, data)
+
 	local state = data.PoisonGasGrenade
 	self._timer = state.timer
 	self._detonated = state.detonated
@@ -153,5 +159,9 @@ function PoisonGasGrenade:load(data)
 
 	if state.has_trail_effect then
 		self:add_trail_effect()
+	end
+
+	if self._detonated then
+		self:_handle_hiding_and_destroying(false, nil)
 	end
 end

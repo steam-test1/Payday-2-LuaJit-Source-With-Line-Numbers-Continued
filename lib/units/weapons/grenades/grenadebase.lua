@@ -210,17 +210,3 @@ function GrenadeBase:_check_achievements(unit, is_dead, damage_percent, hit_coun
 		end
 	end
 end
-
--- Lines 247-251
-function GrenadeBase:save(data)
-	local state = {
-		timer = self._timer
-	}
-	data.GrenadeBase = state
-end
-
--- Lines 255-258
-function GrenadeBase:load(data)
-	local state = data.GrenadeBase
-	self._timer = state.timer
-end

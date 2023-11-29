@@ -16,7 +16,7 @@ function SmokeScreenGrenade:set_thrower_unit(unit, ...)
 	self._has_dodge_bonus = self._thrower_unit ~= managers.player:player_unit() and self._thrower_unit:base():upgrade_value("player", "sicario_multiplier")
 end
 
--- Lines 19-31
+-- Lines 19-33
 function SmokeScreenGrenade:_detonate(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 	local pos = self._unit:position()
 	local normal = math.UP
@@ -27,25 +27,28 @@ function SmokeScreenGrenade:_detonate(tag, unit, body, other_unit, other_body, p
 	end
 
 	managers.player:spawn_smoke_screen(pos, normal, self._unit, self._has_dodge_bonus)
-	managers.groupai:state():propagate_alert({
-		"explosion",
-		pos,
-		range,
-		managers.groupai:state("civilian_enemies"),
-		self._unit
-	})
+
+	if Network:is_server() then
+		managers.groupai:state():propagate_alert({
+			"explosion",
+			pos,
+			range,
+			managers.groupai:state("civilian_enemies"),
+			self._unit
+		})
+	end
 end
 
--- Lines 33-35
+-- Lines 35-37
 function SmokeScreenGrenade:bullet_hit()
 end
 
--- Lines 39-41
+-- Lines 41-43
 function SmokeScreenGrenade:_detonate_on_client()
 	self:_detonate()
 end
 
--- Lines 45-55
+-- Lines 47-57
 function SmokeScreenGrenade:update(unit, t, dt)
 	if self._timer then
 		self._timer = self._timer - dt

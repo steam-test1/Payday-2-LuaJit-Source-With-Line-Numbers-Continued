@@ -271,7 +271,7 @@ function CivilianBrain:is_tied()
 	return self._logic_data.is_tied
 end
 
--- Lines 259-266
+-- Lines 259-270
 function CivilianBrain:save(save_data)
 	CivilianBrain.super.save(self, save_data)
 
@@ -279,5 +279,9 @@ function CivilianBrain:save(save_data)
 
 	if self._following_hostage_contour_id then
 		my_save_data.following_hostage_contour = true
+	end
+
+	if self._logic_data.is_tied then
+		my_save_data.is_civilian_tied = true
 	end
 end

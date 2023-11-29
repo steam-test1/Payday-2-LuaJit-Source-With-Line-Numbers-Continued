@@ -246,25 +246,14 @@ function SawWeaponBase:can_reload()
 end
 
 SawHit = SawHit or class(InstantBulletBase)
-local tank_server_names = {
-	Idstring("units/payday2/characters/ene_bulldozer_1/ene_bulldozer_1"),
-	Idstring("units/payday2/characters/ene_bulldozer_2/ene_bulldozer_2"),
-	Idstring("units/payday2/characters/ene_bulldozer_3/ene_bulldozer_3"),
-	Idstring("units/payday2/characters/ene_bulldozer_4/ene_bulldozer_4")
-}
-local tank_client_names = {
-	Idstring("units/payday2/characters/ene_bulldozer_1/ene_bulldozer_1_husk"),
-	Idstring("units/payday2/characters/ene_bulldozer_2/ene_bulldozer_2_husk"),
-	Idstring("units/payday2/characters/ene_bulldozer_3/ene_bulldozer_3_husk"),
-	Idstring("units/payday2/characters/ene_bulldozer_4/ene_bulldozer_4_husk")
-}
 
--- Lines 258-279
+-- Lines 245-270
 function SawHit:on_collision(col_ray, weapon_unit, user_unit, damage)
 	local hit_unit = col_ray.unit
+	local base_ext = hit_unit:base()
 
-	if hit_unit and (table.contains(tank_server_names, hit_unit:name()) or table.contains(tank_client_names, hit_unit:name())) then
-		damage = 50
+	if base_ext and base_ext.has_tag and base_ext:has_tag("tank") then
+		damage = damage + 50
 	end
 
 	local result = InstantBulletBase.on_collision(self, col_ray, weapon_unit, user_unit, damage)
@@ -282,7 +271,7 @@ function SawHit:on_collision(col_ray, weapon_unit, user_unit, damage)
 	return result
 end
 
--- Lines 282-284
+-- Lines 273-275
 function SawHit:play_impact_sound_and_effects(weapon_unit, col_ray)
 	managers.game_play_central:play_impact_sound_and_effects({
 		decal = "saw",

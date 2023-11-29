@@ -1,4 +1,5 @@
 CriminalActionWalk = CriminalActionWalk or class(CopActionWalk)
+CriminalActionWalk.is_criminal = true
 CriminalActionWalk._anim_block_presets = {
 	block_all = {
 		light_hurt = -1,
@@ -41,30 +42,3 @@ CriminalActionWalk._anim_block_presets = {
 }
 CriminalActionWalk._walk_anim_velocities = HuskPlayerMovement._walk_anim_velocities
 CriminalActionWalk._walk_anim_lengths = HuskPlayerMovement._walk_anim_lengths
-
--- Lines 48-59
-function CriminalActionWalk:_get_max_walk_speed()
-	local speed = deep_clone(CriminalActionWalk.super._get_max_walk_speed(self))
-
-	if self._ext_movement:carrying_bag() then
-		local speed_modifier = tweak_data.carry.types[tweak_data.carry[self._ext_movement:carry_id()].type].move_speed_modifier
-
-		for k, v in pairs(speed) do
-			speed[k] = v * speed_modifier
-		end
-	end
-
-	return speed
-end
-
--- Lines 61-70
-function CriminalActionWalk:_get_current_max_walk_speed(move_dir)
-	local speed = CriminalActionWalk.super._get_current_max_walk_speed(self, move_dir)
-
-	if self._ext_movement:carrying_bag() then
-		local speed_modifier = tweak_data.carry.types[tweak_data.carry[self._ext_movement:carry_id()].type].move_speed_modifier
-		speed = speed * speed_modifier
-	end
-
-	return speed
-end

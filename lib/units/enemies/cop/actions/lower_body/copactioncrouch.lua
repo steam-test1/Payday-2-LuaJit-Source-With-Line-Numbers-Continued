@@ -1,6 +1,6 @@
 CopActionCrouch = CopActionCrouch or class()
 
--- Lines 4-56
+-- Lines 4-57
 function CopActionCrouch:init(action_desc, common_data)
 	self._ext_movement = common_data.ext_movement
 	local enter_t = nil
@@ -49,7 +49,7 @@ function CopActionCrouch:init(action_desc, common_data)
 	local redir_result = common_data.ext_movement:play_redirect("crouch", enter_t)
 
 	if redir_result then
-		if Network:is_server() then
+		if Network:is_server() and not action_desc.no_sync then
 			common_data.ext_network:send("set_pose", 2)
 		end
 
@@ -61,21 +61,19 @@ function CopActionCrouch:init(action_desc, common_data)
 	end
 end
 
--- Lines 60-66
+-- Lines 61-65
 function CopActionCrouch:update(t)
-	if self._ext_anim.base_need_upd then
-		self._ext_movement:upd_m_head_pos()
-	else
+	if not self._ext_anim.upper_need_upd then
 		self._expired = true
 	end
 end
 
--- Lines 70-72
+-- Lines 69-71
 function CopActionCrouch:expired()
 	return self._expired
 end
 
--- Lines 76-78
+-- Lines 75-77
 function CopActionCrouch:type()
 	return "crouch"
 end

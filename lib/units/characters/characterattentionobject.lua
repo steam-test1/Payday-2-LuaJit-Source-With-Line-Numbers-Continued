@@ -7,13 +7,15 @@ function CharacterAttentionObject:init(unit)
 	CharacterAttentionObject.super.init(self, unit, true)
 end
 
--- Lines 11-14
-function CharacterAttentionObject:setup_attention_positions(m_head_pos, m_pos)
-	self._m_head_pos = m_head_pos or self._unit:movement():m_head_pos()
-	self._m_pos = m_pos or self._unit:movement():m_pos()
+-- Lines 11-16
+function CharacterAttentionObject:setup_attention_positions(m_att_pos, m_pos, m_detect_pos)
+	local mov_ext = self._unit:movement()
+	self._m_att_pos = m_att_pos or mov_ext:m_head_pos()
+	self._m_pos = m_pos or mov_ext:m_pos()
+	self._m_detect_pos = m_detect_pos or mov_ext.m_detect_pos and mov_ext:m_detect_pos() or self._m_att_pos
 end
 
--- Lines 18-56
+-- Lines 20-58
 function CharacterAttentionObject:chk_settings_diff(settings_set)
 	local attention_data = self._attention_data
 	local changes = nil
@@ -60,7 +62,7 @@ function CharacterAttentionObject:chk_settings_diff(settings_set)
 	return changes
 end
 
--- Lines 60-127
+-- Lines 62-133
 function CharacterAttentionObject:set_settings_set(settings_set)
 	local attention_data = self._attention_data
 	local changed, register, unregister = nil
@@ -121,32 +123,35 @@ function CharacterAttentionObject:set_settings_set(settings_set)
 	self._attention_data = settings_set
 
 	if register then
-		self:_register()
-	elseif unregister then
-		managers.groupai:state():unregister_AI_attention_object((self._parent_unit or self._unit):key())
+		if not self._registered then
+			self:_register()
+		end
+	elseif unregister and self._registered then
+		self:_unregister()
 	end
 
-	if changed or unregister then
+	if changed then
 		self:_call_listeners()
+		self:_chk_update_registered_state()
 	end
-end
-
--- Lines 131-133
-function CharacterAttentionObject:get_attention_m_pos(settings)
-	return self._m_head_pos
 end
 
 -- Lines 137-139
-function CharacterAttentionObject:get_detection_m_pos()
-	return self._m_head_pos
+function CharacterAttentionObject:get_attention_m_pos(settings)
+	return self._m_att_pos
 end
 
 -- Lines 143-145
+function CharacterAttentionObject:get_detection_m_pos()
+	return self._m_detect_pos
+end
+
+-- Lines 149-151
 function CharacterAttentionObject:get_ground_m_pos()
 	return self._m_pos
 end
 
--- Lines 149-151
-function CharacterAttentionObject:_register()
-	managers.groupai:state():register_AI_attention_object(self._parent_unit or self._unit, self, self._unit:movement() and self._unit:movement():nav_tracker())
+-- Lines 155-164
+function CharacterAttentionObject:is_attention_irrelevant_for_weapons_hot(...)
+	return false
 end

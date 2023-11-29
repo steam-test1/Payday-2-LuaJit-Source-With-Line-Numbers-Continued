@@ -479,10 +479,9 @@ function MutatorHydra.play_split_particle(position, rotation)
 	end
 end
 
--- Lines 309-334
-function MutatorHydra:split_enemy(cop_damage, attack_data)
+-- Lines 309-333
+function MutatorHydra:split_enemy(parent_unit, attack_data)
 	if Network:is_server() then
-		local parent_unit = cop_damage._unit
 		local spawn_selector = self.enemy_list[parent_unit:name():key()]
 
 		if spawn_selector then
@@ -502,7 +501,7 @@ function MutatorHydra:split_enemy(cop_damage, attack_data)
 	end
 end
 
--- Lines 336-366
+-- Lines 335-365
 function MutatorHydra:_spawn_unit(name, parent_unit, depth)
 	if not name or self:get_max_unit_depth() <= depth then
 		return false
@@ -534,27 +533,27 @@ function MutatorHydra:_spawn_unit(name, parent_unit, depth)
 	})
 end
 
--- Lines 368-370
+-- Lines 367-369
 function MutatorHydra:get_hydra_depth(unit)
 	return self._units[unit:key()] or 0
 end
 
--- Lines 372-374
+-- Lines 371-373
 function MutatorHydra:set_hydra_depth(unit, depth)
 	self._units[unit:key()] = depth
 end
 
--- Lines 378-380
+-- Lines 377-379
 function MutatorHydra:_min_splits()
 	return 1
 end
 
--- Lines 382-384
+-- Lines 381-383
 function MutatorHydra:_max_splits()
 	return 4
 end
 
--- Lines 386-409
+-- Lines 385-408
 function MutatorHydra:setup_options_gui(node)
 	local params = {
 		name = "hydra_split_slider",
@@ -580,12 +579,12 @@ function MutatorHydra:setup_options_gui(node)
 	return new_item
 end
 
--- Lines 411-413
+-- Lines 410-412
 function MutatorHydra:_update_max_unit_depth(item)
 	self:set_value("max_unit_depth", math.round(item:value()))
 end
 
--- Lines 415-426
+-- Lines 414-425
 function MutatorHydra:reset_to_default()
 	self:clear_values()
 
@@ -598,7 +597,7 @@ function MutatorHydra:reset_to_default()
 	end
 end
 
--- Lines 428-430
+-- Lines 427-429
 function MutatorHydra:options_fill()
 	return self:_get_percentage_fill(1, self:_max_splits(), self:get_max_unit_depth())
 end

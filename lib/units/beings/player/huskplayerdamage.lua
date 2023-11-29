@@ -128,13 +128,11 @@ end
 -- Lines 143-148
 function HuskPlayerDamage:damage_fire(attack_data)
 	if managers.mutators:is_mutator_active(MutatorFriendlyFire) then
-		attack_data.damage = attack_data.damage * 0.2
-
 		self:_send_damage_to_owner(attack_data)
 	end
 end
 
--- Lines 150-163
+-- Lines 151-164
 function HuskPlayerDamage:_send_damage_to_owner(attack_data)
 	local peer_id = managers.criminals:character_peer_id_by_unit(self._unit)
 	local damage = managers.mutators:modify_value("HuskPlayerDamage:FriendlyFireDamage", attack_data.damage)

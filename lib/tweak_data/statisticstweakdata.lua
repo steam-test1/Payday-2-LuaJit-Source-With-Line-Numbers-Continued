@@ -46,7 +46,7 @@ function StatisticsTweakData:statistics_specializations()
 	return table.size(tweak_data.skilltree.specializations)
 end
 
--- Lines 41-374
+-- Lines 41-380
 function StatisticsTweakData:statistics_table()
 	if not self._level_list then
 		self._level_list = {}
@@ -171,11 +171,14 @@ function StatisticsTweakData:statistics_table()
 		"robbers_safehouse",
 		"cop",
 		"fbi",
+		"fbi_female",
 		"fbi_swat",
 		"fbi_heavy_swat",
 		"swat",
 		"heavy_swat",
 		"city_swat",
+		"zeal_swat",
+		"zeal_heavy_swat",
 		"security",
 		"gensec",
 		"gangster",
@@ -197,6 +200,7 @@ function StatisticsTweakData:statistics_table()
 		"chavez_boss",
 		"triad",
 		"captain",
+		"captain_female",
 		"tank_green",
 		"tank_black",
 		"tank_skull",
@@ -205,6 +209,7 @@ function StatisticsTweakData:statistics_table()
 		"phalanx_vip",
 		"phalanx_minion",
 		"biker",
+		"biker_female",
 		"inside_man",
 		"bank_manager",
 		"cop_scared",
@@ -299,7 +304,7 @@ function StatisticsTweakData:statistics_table()
 	return self._level_list, self._job_list, self._mask_list, self._weapon_list, self._melee_list, self._grenade_list, enemy_list, armor_list, character_list, deployable_list, self._suit_list, self._weapon_color_list, self._glove_list, self._charm_list
 end
 
--- Lines 376-378
+-- Lines 382-384
 function StatisticsTweakData:resolution_statistics_table()
 	return {
 		"2560x1440",
@@ -318,7 +323,7 @@ function StatisticsTweakData:resolution_statistics_table()
 	}
 end
 
--- Lines 380-382
+-- Lines 386-388
 function StatisticsTweakData:mission_statistics_table()
 	return {
 		"labrat"

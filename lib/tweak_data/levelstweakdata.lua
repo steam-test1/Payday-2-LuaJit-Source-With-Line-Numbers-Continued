@@ -9,7 +9,7 @@ LevelsTweakData.LevelType = {
 	Federales = "federales"
 }
 
--- Lines 20-3136
+-- Lines 20-3177
 function LevelsTweakData:init()
 	local america = LevelsTweakData.LevelType.America
 	local russia = LevelsTweakData.LevelType.Russia
@@ -881,6 +881,7 @@ function LevelsTweakData:init()
 				foes = {
 					converted_enemy = true,
 					criminal1 = true,
+					hacked_turret = true,
 					mobster1 = true
 				},
 				friends = {}
@@ -889,16 +890,22 @@ function LevelsTweakData:init()
 				foes = {
 					converted_enemy = true,
 					law1 = true,
+					hacked_turret = true,
 					criminal1 = true
 				},
-				friends = {}
+				friends = {
+					mobster_boss = true
+				}
 			},
 			mobster_boss = {
 				foes = {
 					converted_enemy = true,
-					criminal1 = true
+					criminal1 = true,
+					hacked_turret = true
 				},
-				friends = {}
+				friends = {
+					mobster1 = true
+				}
 			},
 			converted_enemy = {
 				foes = {
@@ -916,6 +923,7 @@ function LevelsTweakData:init()
 			},
 			hacked_turret = {
 				foes = {
+					mobster_boss = true,
 					law1 = true,
 					mobster1 = true
 				},
@@ -1247,7 +1255,8 @@ function LevelsTweakData:init()
 		},
 		cube = "cube_apply_heist_bank",
 		max_bags = 1000,
-		ai_group_type = america
+		ai_group_type = america,
+		no_police_calling = true
 	}
 	self.peta = {
 		name_id = "heist_peta_hl",
@@ -1301,7 +1310,8 @@ function LevelsTweakData:init()
 		music = "heist",
 		package = "packages/narr_man",
 		cube = "cube_apply_heist_bank",
-		max_bags = 10
+		max_bags = 10,
+		no_police_calling = true
 	}
 	self.dark = {
 		name_id = "heist_dark_hl",
@@ -1331,7 +1341,10 @@ function LevelsTweakData:init()
 		music = "heist",
 		package = "packages/lvl_mad",
 		cube = "cube_apply_heist_bank",
-		ai_group_type = russia
+		ai_group_type = russia,
+		prevent_carry_disposal = table.list_to_set({
+			"person"
+		})
 	}
 	self.biker_train = {
 		name_id = "heist_biker_train_hl",
@@ -1499,7 +1512,8 @@ function LevelsTweakData:init()
 			no_hostages = true
 		},
 		is_safehouse = true,
-		disable_mutators = true
+		disable_mutators = true,
+		no_police_calling = true
 	}
 	self.chill_combat = {
 		name_id = "heist_chill_combat_hl",
@@ -1650,7 +1664,15 @@ function LevelsTweakData:init()
 		equipment = {
 			"saw"
 		},
-		player_style = "raincoat"
+		player_style = "raincoat",
+		no_police_calling = true,
+		on_enter_clbks = {
+			function ()
+				if Network:is_server() then
+					managers.groupai:state():on_police_weapons_hot(managers.groupai:state().analyse_giveaway("empty"))
+				end
+			end
+		}
 	}
 	self.dah = {
 		name_id = "heist_dah_hl",
@@ -2108,6 +2130,7 @@ function LevelsTweakData:init()
 				foes = {
 					converted_enemy = true,
 					criminal1 = true,
+					hacked_turret = true,
 					mobster1 = true
 				},
 				friends = {}
@@ -2116,6 +2139,7 @@ function LevelsTweakData:init()
 				foes = {
 					converted_enemy = true,
 					law1 = true,
+					hacked_turret = true,
 					criminal1 = true
 				},
 				friends = {}
@@ -2167,62 +2191,7 @@ function LevelsTweakData:init()
 		narrator = "locke",
 		ghost_bonus = 0.15,
 		load_screen = "guis/dlcs/fex/textures/loading/job_fex_01_df",
-		teams = {
-			criminal1 = {
-				foes = {
-					law1 = true,
-					mobster1 = true
-				},
-				friends = {
-					converted_enemy = true,
-					escort = true
-				}
-			},
-			law1 = {
-				foes = {
-					converted_enemy = true,
-					criminal1 = true,
-					mobster1 = true
-				},
-				friends = {}
-			},
-			mobster1 = {
-				foes = {
-					converted_enemy = true,
-					law1 = true,
-					criminal1 = true
-				},
-				friends = {}
-			},
-			converted_enemy = {
-				foes = {
-					law1 = true,
-					mobster1 = true
-				},
-				friends = {
-					criminal1 = true,
-					escort = true
-				}
-			},
-			neutral1 = {
-				foes = {},
-				friends = {}
-			},
-			hacked_turret = {
-				foes = {
-					law1 = true,
-					mobster1 = true
-				},
-				friends = {}
-			},
-			escort = {
-				foes = {},
-				friends = {
-					converted_enemy = true,
-					criminal1 = true
-				}
-			}
-		}
+		teams = deep_clone(self.pex.teams)
 	}
 	self.chas = {
 		name_id = "heist_chas_hl",
@@ -2241,62 +2210,7 @@ function LevelsTweakData:init()
 		narrator = "locke",
 		ghost_bonus = 0.15,
 		load_screen = "guis/dlcs/chas/textures/loading/job_chas_01_df",
-		teams = {
-			criminal1 = {
-				foes = {
-					law1 = true,
-					mobster1 = true
-				},
-				friends = {
-					converted_enemy = true,
-					escort = true
-				}
-			},
-			law1 = {
-				foes = {
-					converted_enemy = true,
-					criminal1 = true,
-					mobster1 = true
-				},
-				friends = {}
-			},
-			mobster1 = {
-				foes = {
-					converted_enemy = true,
-					law1 = true,
-					criminal1 = true
-				},
-				friends = {}
-			},
-			converted_enemy = {
-				foes = {
-					law1 = true,
-					mobster1 = true
-				},
-				friends = {
-					criminal1 = true,
-					escort = true
-				}
-			},
-			neutral1 = {
-				foes = {},
-				friends = {}
-			},
-			hacked_turret = {
-				foes = {
-					law1 = true,
-					mobster1 = true
-				},
-				friends = {}
-			},
-			escort = {
-				foes = {},
-				friends = {
-					converted_enemy = true,
-					criminal1 = true
-				}
-			}
-		}
+		teams = deep_clone(self.fex.teams)
 	}
 	self.sand = {
 		name_id = "heist_sand_hl",
@@ -2315,62 +2229,7 @@ function LevelsTweakData:init()
 		narrator = "locke",
 		ghost_bonus = 0.15,
 		load_screen = "guis/dlcs/sand/textures/loading/job_sand_01_df",
-		teams = {
-			criminal1 = {
-				foes = {
-					law1 = true,
-					mobster1 = true
-				},
-				friends = {
-					converted_enemy = true,
-					escort = true
-				}
-			},
-			law1 = {
-				foes = {
-					converted_enemy = true,
-					criminal1 = true,
-					mobster1 = true
-				},
-				friends = {}
-			},
-			mobster1 = {
-				foes = {
-					converted_enemy = true,
-					law1 = true,
-					criminal1 = true
-				},
-				friends = {}
-			},
-			converted_enemy = {
-				foes = {
-					law1 = true,
-					mobster1 = true
-				},
-				friends = {
-					criminal1 = true,
-					escort = true
-				}
-			},
-			neutral1 = {
-				foes = {},
-				friends = {}
-			},
-			hacked_turret = {
-				foes = {
-					law1 = true,
-					mobster1 = true
-				},
-				friends = {}
-			},
-			escort = {
-				foes = {},
-				friends = {
-					converted_enemy = true,
-					criminal1 = true
-				}
-			}
-		}
+		teams = deep_clone(self.chas.teams)
 	}
 	self.chca = {
 		name_id = "heist_chca_hl",
@@ -2392,62 +2251,7 @@ function LevelsTweakData:init()
 		narrator = "locke",
 		ghost_bonus = 0.15,
 		load_screen = "guis/dlcs/chca/textures/loading/job_chca_01_df",
-		teams = {
-			criminal1 = {
-				foes = {
-					law1 = true,
-					mobster1 = true
-				},
-				friends = {
-					converted_enemy = true,
-					escort = true
-				}
-			},
-			law1 = {
-				foes = {
-					converted_enemy = true,
-					criminal1 = true,
-					mobster1 = true
-				},
-				friends = {}
-			},
-			mobster1 = {
-				foes = {
-					converted_enemy = true,
-					law1 = true,
-					criminal1 = true
-				},
-				friends = {}
-			},
-			converted_enemy = {
-				foes = {
-					law1 = true,
-					mobster1 = true
-				},
-				friends = {
-					criminal1 = true,
-					escort = true
-				}
-			},
-			neutral1 = {
-				foes = {},
-				friends = {}
-			},
-			hacked_turret = {
-				foes = {
-					law1 = true,
-					mobster1 = true
-				},
-				friends = {}
-			},
-			escort = {
-				foes = {},
-				friends = {
-					converted_enemy = true,
-					criminal1 = true
-				}
-			}
-		}
+		teams = deep_clone(self.sand.teams)
 	}
 	self.pent = {
 		name_id = "heist_pent_hl",
@@ -2466,62 +2270,7 @@ function LevelsTweakData:init()
 		narrator = "locke",
 		ghost_bonus = 0.15,
 		load_screen = "guis/dlcs/pent/textures/loading/job_pent_01_df",
-		teams = {
-			criminal1 = {
-				foes = {
-					law1 = true,
-					mobster1 = true
-				},
-				friends = {
-					converted_enemy = true,
-					escort = true
-				}
-			},
-			law1 = {
-				foes = {
-					converted_enemy = true,
-					criminal1 = true,
-					mobster1 = true
-				},
-				friends = {}
-			},
-			mobster1 = {
-				foes = {
-					converted_enemy = true,
-					law1 = true,
-					criminal1 = true
-				},
-				friends = {}
-			},
-			converted_enemy = {
-				foes = {
-					law1 = true,
-					mobster1 = true
-				},
-				friends = {
-					criminal1 = true,
-					escort = true
-				}
-			},
-			neutral1 = {
-				foes = {},
-				friends = {}
-			},
-			hacked_turret = {
-				foes = {
-					law1 = true,
-					mobster1 = true
-				},
-				friends = {}
-			},
-			escort = {
-				foes = {},
-				friends = {
-					converted_enemy = true,
-					criminal1 = true
-				}
-			}
-		}
+		teams = deep_clone(self.chca.teams)
 	}
 	self.ranc = {
 		name_id = "heist_ranc_hl",
@@ -2541,62 +2290,7 @@ function LevelsTweakData:init()
 		narrator = "locke",
 		ghost_bonus = 0.15,
 		load_screen = "guis/dlcs/ranc/textures/loading/job_ranc_01_df",
-		teams = {
-			criminal1 = {
-				foes = {
-					law1 = true,
-					mobster1 = true
-				},
-				friends = {
-					converted_enemy = true,
-					escort = true
-				}
-			},
-			law1 = {
-				foes = {
-					converted_enemy = true,
-					criminal1 = true,
-					mobster1 = true
-				},
-				friends = {}
-			},
-			mobster1 = {
-				foes = {
-					converted_enemy = true,
-					law1 = true,
-					criminal1 = true
-				},
-				friends = {}
-			},
-			converted_enemy = {
-				foes = {
-					law1 = true,
-					mobster1 = true
-				},
-				friends = {
-					criminal1 = true,
-					escort = true
-				}
-			},
-			neutral1 = {
-				foes = {},
-				friends = {}
-			},
-			hacked_turret = {
-				foes = {
-					law1 = true,
-					mobster1 = true
-				},
-				friends = {}
-			},
-			escort = {
-				foes = {},
-				friends = {
-					converted_enemy = true,
-					criminal1 = true
-				}
-			}
-		}
+		teams = deep_clone(self.pent.teams)
 	}
 	self.trai = {
 		name_id = "heist_trai_hl",
@@ -2627,62 +2321,7 @@ function LevelsTweakData:init()
 				}
 			}
 		},
-		teams = {
-			criminal1 = {
-				foes = {
-					law1 = true,
-					mobster1 = true
-				},
-				friends = {
-					converted_enemy = true,
-					escort = true
-				}
-			},
-			law1 = {
-				foes = {
-					converted_enemy = true,
-					criminal1 = true,
-					mobster1 = true
-				},
-				friends = {}
-			},
-			mobster1 = {
-				foes = {
-					converted_enemy = true,
-					law1 = true,
-					criminal1 = true
-				},
-				friends = {}
-			},
-			converted_enemy = {
-				foes = {
-					law1 = true,
-					mobster1 = true
-				},
-				friends = {
-					criminal1 = true,
-					escort = true
-				}
-			},
-			neutral1 = {
-				foes = {},
-				friends = {}
-			},
-			hacked_turret = {
-				foes = {
-					law1 = true,
-					mobster1 = true
-				},
-				friends = {}
-			},
-			escort = {
-				foes = {},
-				friends = {
-					converted_enemy = true,
-					criminal1 = true
-				}
-			}
-		}
+		teams = deep_clone(self.ranc.teams)
 	}
 	self.corp = {
 		name_id = "heist_corp_hl",
@@ -2713,62 +2352,7 @@ function LevelsTweakData:init()
 				}
 			}
 		},
-		teams = {
-			criminal1 = {
-				foes = {
-					law1 = true,
-					mobster1 = true
-				},
-				friends = {
-					converted_enemy = true,
-					escort = true
-				}
-			},
-			law1 = {
-				foes = {
-					converted_enemy = true,
-					criminal1 = true,
-					mobster1 = true
-				},
-				friends = {}
-			},
-			mobster1 = {
-				foes = {
-					converted_enemy = true,
-					law1 = true,
-					criminal1 = true
-				},
-				friends = {}
-			},
-			converted_enemy = {
-				foes = {
-					law1 = true,
-					mobster1 = true
-				},
-				friends = {
-					criminal1 = true,
-					escort = true
-				}
-			},
-			neutral1 = {
-				foes = {},
-				friends = {}
-			},
-			hacked_turret = {
-				foes = {
-					law1 = true,
-					mobster1 = true
-				},
-				friends = {}
-			},
-			escort = {
-				foes = {},
-				friends = {
-					converted_enemy = true,
-					criminal1 = true
-				}
-			}
-		}
+		teams = deep_clone(self.trai.teams)
 	}
 	self.deep = {
 		name_id = "heist_deep_hl",
@@ -2814,62 +2398,7 @@ function LevelsTweakData:init()
 				}
 			}
 		},
-		teams = {
-			criminal1 = {
-				foes = {
-					law1 = true,
-					mobster1 = true
-				},
-				friends = {
-					converted_enemy = true,
-					escort = true
-				}
-			},
-			law1 = {
-				foes = {
-					converted_enemy = true,
-					criminal1 = true,
-					mobster1 = true
-				},
-				friends = {}
-			},
-			mobster1 = {
-				foes = {
-					converted_enemy = true,
-					law1 = true,
-					criminal1 = true
-				},
-				friends = {}
-			},
-			converted_enemy = {
-				foes = {
-					law1 = true,
-					mobster1 = true
-				},
-				friends = {
-					criminal1 = true,
-					escort = true
-				}
-			},
-			neutral1 = {
-				foes = {},
-				friends = {}
-			},
-			hacked_turret = {
-				foes = {
-					law1 = true,
-					mobster1 = true
-				},
-				friends = {}
-			},
-			escort = {
-				foes = {},
-				friends = {
-					converted_enemy = true,
-					criminal1 = true
-				}
-			}
-		}
+		teams = deep_clone(self.corp.teams)
 	}
 	self._level_index = {
 		"welcome_to_the_jungle_1",
@@ -3022,12 +2551,12 @@ function LevelsTweakData:init()
 	}
 end
 
--- Lines 3140-3142
+-- Lines 3181-3183
 function LevelsTweakData:get_level_index()
 	return self._level_index
 end
 
--- Lines 3144-3149
+-- Lines 3185-3190
 function LevelsTweakData:get_world_name_from_index(index)
 	if not self._level_index[index] then
 		return
@@ -3036,12 +2565,12 @@ function LevelsTweakData:get_world_name_from_index(index)
 	return self[self._level_index[index]].world_name
 end
 
--- Lines 3153-3155
+-- Lines 3194-3196
 function LevelsTweakData:get_level_name_from_index(index)
 	return self._level_index[index]
 end
 
--- Lines 3159-3165
+-- Lines 3200-3206
 function LevelsTweakData:get_index_from_world_name(world_name)
 	for index, entry_name in ipairs(self._level_index) do
 		if world_name == self[entry_name].world_name then
@@ -3050,7 +2579,7 @@ function LevelsTweakData:get_index_from_world_name(world_name)
 	end
 end
 
--- Lines 3169-3175
+-- Lines 3210-3216
 function LevelsTweakData:get_index_from_level_id(level_id)
 	for index, entry_name in ipairs(self._level_index) do
 		if entry_name == level_id then
@@ -3059,17 +2588,17 @@ function LevelsTweakData:get_index_from_level_id(level_id)
 	end
 end
 
--- Lines 3177-3179
+-- Lines 3218-3220
 function LevelsTweakData:requires_dlc(level_id)
 	return self[level_id].dlc
 end
 
--- Lines 3181-3183
+-- Lines 3222-3224
 function LevelsTweakData:requires_dlc_by_index(index)
 	return self[self._level_index[index]].dlc
 end
 
--- Lines 3187-3193
+-- Lines 3228-3234
 function LevelsTweakData:get_level_name_from_world_name(world_name)
 	for _, entry_name in ipairs(self._level_index) do
 		if world_name == self[entry_name].world_name then
@@ -3078,7 +2607,7 @@ function LevelsTweakData:get_level_name_from_world_name(world_name)
 	end
 end
 
--- Lines 3195-3201
+-- Lines 3236-3242
 function LevelsTweakData:get_localized_level_name_from_world_name(world_name)
 	for _, entry_name in ipairs(self._level_index) do
 		if world_name == self[entry_name].world_name then
@@ -3087,7 +2616,7 @@ function LevelsTweakData:get_localized_level_name_from_world_name(world_name)
 	end
 end
 
--- Lines 3203-3209
+-- Lines 3244-3250
 function LevelsTweakData:get_localized_level_name_from_level_id(level_id)
 	for _, entry_name in ipairs(self._level_index) do
 		if level_id == entry_name then
@@ -3096,12 +2625,12 @@ function LevelsTweakData:get_localized_level_name_from_level_id(level_id)
 	end
 end
 
--- Lines 3211-3213
+-- Lines 3252-3254
 function LevelsTweakData:get_music_style(level_id)
 	return self:get_music_style_from_level_data(tweak_data.levels[level_id])
 end
 
--- Lines 3215-3229
+-- Lines 3256-3270
 function LevelsTweakData:get_music_style_from_level_data(level_data)
 	local music_id = level_data and level_data.music or "default"
 
@@ -3116,7 +2645,7 @@ function LevelsTweakData:get_music_style_from_level_data(level_data)
 	return "heist"
 end
 
--- Lines 3231-3282
+-- Lines 3272-3323
 function LevelsTweakData:get_music_switches()
 	if not Global.level_data then
 		return nil
@@ -3175,7 +2704,7 @@ function LevelsTweakData:get_music_switches()
 	return switches
 end
 
--- Lines 3284-3292
+-- Lines 3325-3333
 function LevelsTweakData:get_music_event(stage)
 	local level_data = Global.level_data.level_id and tweak_data.levels[Global.level_data.level_id]
 
@@ -3188,7 +2717,7 @@ function LevelsTweakData:get_music_event(stage)
 	return tweak_data.music[music_id][stage]
 end
 
--- Lines 3294-3301
+-- Lines 3335-3342
 function LevelsTweakData:get_music_event_ext()
 	local level_data = Global.level_data.level_id and tweak_data.levels[Global.level_data.level_id]
 	local music = level_data and level_data.music_ext
@@ -3197,7 +2726,7 @@ function LevelsTweakData:get_music_event_ext()
 	return music, music_start
 end
 
--- Lines 3304-3358
+-- Lines 3345-3399
 function LevelsTweakData:get_music_event_ext_ghost()
 	if not Global.level_data then
 		return nil, nil
@@ -3257,7 +2786,7 @@ function LevelsTweakData:get_music_event_ext_ghost()
 	return table.random(ghost_music_exts), level_data.music_ext_start
 end
 
--- Lines 3362-3380
+-- Lines 3403-3421
 function LevelsTweakData:get_default_team_ID(type)
 	local lvl_tweak = self[Global.level_data.level_id]
 
@@ -3280,7 +2809,7 @@ function LevelsTweakData:get_default_team_ID(type)
 	end
 end
 
--- Lines 3382-3428
+-- Lines 3423-3469
 function LevelsTweakData:get_team_setup()
 	local lvl_tweak = nil
 	lvl_tweak = (not Application:editor() or not managers.editor or self[managers.editor:layer("Level Settings"):get_setting("simulation_level_id")]) and Global.level_data and Global.level_data.level_id and self[Global.level_data.level_id]
@@ -3303,6 +2832,7 @@ function LevelsTweakData:get_team_setup()
 				foes = {
 					converted_enemy = true,
 					criminal1 = true,
+					hacked_turret = true,
 					mobster1 = true
 				},
 				friends = {}
@@ -3311,6 +2841,7 @@ function LevelsTweakData:get_team_setup()
 				foes = {
 					converted_enemy = true,
 					law1 = true,
+					hacked_turret = true,
 					criminal1 = true
 				},
 				friends = {}
@@ -3345,7 +2876,7 @@ function LevelsTweakData:get_team_setup()
 	return teams
 end
 
--- Lines 3430-3448
+-- Lines 3471-3489
 function LevelsTweakData:get_default_team_IDs()
 	local lvl_tweak = nil
 	lvl_tweak = (not Application:editor() or not managers.editor or self[managers.editor:layer("Level Settings"):get_setting("simulation_level_id")]) and Global.level_data and Global.level_data.level_id and self[Global.level_data.level_id]
@@ -3360,7 +2891,7 @@ function LevelsTweakData:get_default_team_IDs()
 	return default_team_IDs
 end
 
--- Lines 3450-3464
+-- Lines 3491-3505
 function LevelsTweakData:get_team_names_indexed()
 	local teams_index = self._teams_index
 
@@ -3380,7 +2911,7 @@ function LevelsTweakData:get_team_names_indexed()
 	return teams_index
 end
 
--- Lines 3466-3473
+-- Lines 3507-3514
 function LevelsTweakData:get_team_index(team_id)
 	local teams_index = self:get_team_names_indexed()
 
@@ -3391,7 +2922,7 @@ function LevelsTweakData:get_team_index(team_id)
 	end
 end
 
--- Lines 3475-3486
+-- Lines 3516-3527
 function LevelsTweakData:get_ai_group_type()
 	local level_data = Global.level_data and Global.level_data.level_id and self[Global.level_data.level_id]
 
@@ -3403,12 +2934,10 @@ function LevelsTweakData:get_ai_group_type()
 		end
 	end
 
-	print("[LevelsTweakData:get_ai_group_type] group is not defined for this level, fallback on default")
-
 	return self.ai_groups.default
 end
 
--- Lines 3489-3502
+-- Lines 3530-3543
 function LevelsTweakData:get_narrator_prefix(narrator)
 	if not narrator then
 		local level_data = Global.level_data and Global.level_data.level_id and self[Global.level_data.level_id]
@@ -3424,4 +2953,26 @@ function LevelsTweakData:get_narrator_prefix(narrator)
 	}
 
 	return narrator_codes[narrator] or "ban"
+end
+
+-- Lines 3546-3554
+function LevelsTweakData:get_can_call_the_police()
+	local level_data = Global.level_data and Global.level_data.level_id and self[Global.level_data.level_id]
+
+	if level_data and level_data.no_police_calling then
+		return false
+	end
+
+	return true
+end
+
+-- Lines 3556-3564
+function LevelsTweakData:get_prevent_carry_disposal(carry_id)
+	local level_data = Global.level_data and Global.level_data.level_id and self[Global.level_data.level_id]
+
+	if level_data and level_data.prevent_carry_disposal and level_data.prevent_carry_disposal[carry_id] then
+		return true
+	end
+
+	return false
 end

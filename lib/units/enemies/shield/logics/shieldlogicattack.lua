@@ -236,9 +236,11 @@ function ShieldLogicAttack._process_pathing_results(data, my_data)
 	end
 end
 
--- Lines 248-269
+-- Lines 248-271
 function ShieldLogicAttack._chk_request_action_walk_to_optimal_pos(data, my_data, end_rot)
 	if not data.unit:movement():chk_action_forbidden("walk") then
+		ShieldLogicAttack._correct_path_start_pos(data, my_data.optimal_path)
+
 		local new_action_data = {
 			type = "walk",
 			body_part = 2,
@@ -259,7 +261,7 @@ function ShieldLogicAttack._chk_request_action_walk_to_optimal_pos(data, my_data
 	end
 end
 
--- Lines 273-290
+-- Lines 275-292
 function ShieldLogicAttack._cancel_optimal_attempt(data, my_data)
 	if my_data.optimal_path then
 		my_data.optimal_path = nil
@@ -286,12 +288,12 @@ function ShieldLogicAttack._cancel_optimal_attempt(data, my_data)
 	end
 end
 
--- Lines 295-297
+-- Lines 297-299
 function ShieldLogicAttack.queue_update(data, my_data)
 	CopLogicBase.queue_task(my_data, my_data.update_queue_id, ShieldLogicAttack.queued_update, data, data.t + (data.important and 0.5 or 1.5), data.important and true)
 end
 
--- Lines 301-540
+-- Lines 303-542
 function ShieldLogicAttack._upd_enemy_detection(data)
 	managers.groupai:state():on_unit_detection_updated(data.unit)
 
@@ -541,7 +543,7 @@ function ShieldLogicAttack._upd_enemy_detection(data)
 	end
 end
 
--- Lines 544-561
+-- Lines 546-563
 function ShieldLogicAttack.action_complete_clbk(data, action)
 	local my_data = data.internal_data
 	local action_type = action:type()
@@ -561,26 +563,26 @@ function ShieldLogicAttack.action_complete_clbk(data, action)
 	end
 end
 
--- Lines 565-569
+-- Lines 567-571
 function ShieldLogicAttack.is_advancing(data)
 	if data.internal_data.walking_to_optimal_pos and data.pos_rsrv.move_dest then
 		return data.pos_rsrv.move_dest.position
 	end
 end
 
--- Lines 573-577
+-- Lines 575-579
 function ShieldLogicAttack._get_all_paths(data)
 	return {
 		optimal_path = data.internal_data.optimal_path
 	}
 end
 
--- Lines 581-583
+-- Lines 583-585
 function ShieldLogicAttack._set_verified_paths(data, verified_paths)
 	data.internal_data.optimal_path = verified_paths.optimal_path
 end
 
--- Lines 587-661
+-- Lines 589-663
 function ShieldLogicAttack.chk_wall_distance(data, my_data, pos, second_pass)
 	if not data.char_tweak.wall_fwd_offset then
 		return pos

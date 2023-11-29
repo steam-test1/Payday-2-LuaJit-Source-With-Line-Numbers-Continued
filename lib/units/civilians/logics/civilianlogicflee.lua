@@ -91,7 +91,7 @@ function CivilianLogicFlee.enter(data, new_logic_name, enter_params)
 
 	data.unit:brain():set_attention_settings(attention_settings)
 
-	if data.char_tweak.calls_in and not managers.groupai:state():is_police_called() then
+	if data.char_tweak.calls_in and not managers.groupai:state():is_police_called() and managers.groupai:state():can_police_be_called() then
 		my_data.call_police_clbk_id = "civ_call_police" .. key_str
 		local call_t = math.max(data.call_police_delay_t or 0, TimerManager:game():time() + math.lerp(1, 10, math.random()))
 
@@ -579,7 +579,7 @@ function CivilianLogicFlee._cancel_pathing(data, my_data)
 	my_data.coarse_path_index = nil
 end
 
--- Lines 509-573
+-- Lines 509-574
 function CivilianLogicFlee._find_hide_cover(data)
 	local my_data = data.internal_data
 	my_data.cover_search_task_key = nil
@@ -609,9 +609,10 @@ function CivilianLogicFlee._find_hide_cover(data)
 		else
 			avoid_pos = Vector3()
 
-			mvector3.random_orthogonal(avoid_pos, math.UP)
+			mvector3.set(avoid_pos, math.UP)
+			mvector3.random_orthogonal(avoid_pos)
 			mvector3.multiply(avoid_pos, 100)
-			mvector3.add(data.m_pos, 100)
+			mvector3.add(avoid_pos, data.m_pos)
 		end
 	end
 
@@ -674,7 +675,7 @@ function CivilianLogicFlee._find_hide_cover(data)
 	end
 end
 
--- Lines 577-600
+-- Lines 578-601
 function CivilianLogicFlee._start_moving_to_cover(data, my_data)
 	data.unit:sound():say("a03x_any", true)
 	CivilianLogicFlee._unregister_rescue_SO(data, my_data)
@@ -698,7 +699,7 @@ function CivilianLogicFlee._start_moving_to_cover(data, my_data)
 	end
 end
 
--- Lines 604-632
+-- Lines 605-633
 function CivilianLogicFlee._add_delayed_rescue_SO(data, my_data)
 	if my_data.rescue_active then
 		return
@@ -731,7 +732,7 @@ function CivilianLogicFlee._add_delayed_rescue_SO(data, my_data)
 	my_data.rescue_active = true
 end
 
--- Lines 636-729
+-- Lines 637-730
 function CivilianLogicFlee.register_rescue_SO(ignore_this, data)
 	local my_data = data.internal_data
 
@@ -827,7 +828,7 @@ function CivilianLogicFlee.register_rescue_SO(ignore_this, data)
 	managers.groupai:state():register_rescueable_hostage(data.unit, nil)
 end
 
--- Lines 733-748
+-- Lines 734-749
 function CivilianLogicFlee._unregister_rescue_SO(data, my_data)
 	if my_data.rescuer then
 		local rescuer = my_data.rescuer
@@ -849,7 +850,7 @@ function CivilianLogicFlee._unregister_rescue_SO(data, my_data)
 	my_data.rescue_active = nil
 end
 
--- Lines 752-761
+-- Lines 753-762
 function CivilianLogicFlee.on_rescue_SO_administered(ignore_this, data, receiver_unit)
 	managers.groupai:state():on_civilian_try_freed()
 
@@ -860,7 +861,7 @@ function CivilianLogicFlee.on_rescue_SO_administered(ignore_this, data, receiver
 	managers.groupai:state():unregister_rescueable_hostage(data.key)
 end
 
--- Lines 765-779
+-- Lines 766-780
 function CivilianLogicFlee.rescue_SO_verification(ignore_this, params, unit)
 	local areas = params.areas
 	local data = params.logic_data
@@ -878,7 +879,7 @@ function CivilianLogicFlee.rescue_SO_verification(ignore_this, params, unit)
 	end
 end
 
--- Lines 783-791
+-- Lines 784-792
 function CivilianLogicFlee.on_rescue_SO_failed(ignore_this, data)
 	local my_data = data.internal_data
 
@@ -890,7 +891,7 @@ function CivilianLogicFlee.on_rescue_SO_failed(ignore_this, data)
 	end
 end
 
--- Lines 795-824
+-- Lines 796-830
 function CivilianLogicFlee.on_rescue_SO_completed(ignore_this, data, good_pig)
 	if data.internal_data.rescuer and good_pig:key() == data.internal_data.rescuer:key() then
 		data.internal_data.rescue_active = nil
@@ -921,8 +922,13 @@ function CivilianLogicFlee.on_rescue_SO_completed(ignore_this, data, good_pig)
 				was_rescued = true,
 				type = "free"
 			})
-		elseif not CivilianLogicFlee._get_coarse_flee_path(data) then
-			return
+		else
+			data.unit:base():set_slot(data.unit, 21)
+			managers.network:session():send_to_peers_synched("sync_unit_event_id_16", data.unit, "brain", HuskCopBrain._NET_EVENTS.surrender_civilian_untied)
+
+			if not CivilianLogicFlee._get_coarse_flee_path(data) then
+				return
+			end
 		end
 	end
 
@@ -931,7 +937,7 @@ function CivilianLogicFlee.on_rescue_SO_completed(ignore_this, data, good_pig)
 	good_pig:sound():say("h01", true)
 end
 
--- Lines 828-890
+-- Lines 834-896
 function CivilianLogicFlee._get_coarse_flee_path(data)
 	if data.cannot_flee then
 		return
@@ -994,33 +1000,33 @@ function CivilianLogicFlee._get_coarse_flee_path(data)
 	return true
 end
 
--- Lines 894-896
+-- Lines 900-902
 function CivilianLogicFlee.on_new_objective(data, old_objective)
 	CivilianLogicIdle.on_new_objective(data, old_objective)
 end
 
--- Lines 900-909
+-- Lines 906-915
 function CivilianLogicFlee.on_rescue_allowed_state(data, state)
 end
 
--- Lines 913-915
+-- Lines 919-921
 function CivilianLogicFlee.wants_rescue(data)
 	return data.internal_data.rescue_SO_id
 end
 
--- Lines 919-923
+-- Lines 925-929
 function CivilianLogicFlee._get_all_paths(data)
 	return {
 		flee_path = data.internal_data.flee_path
 	}
 end
 
--- Lines 927-929
+-- Lines 933-935
 function CivilianLogicFlee._set_verified_paths(data, verified_paths)
 	data.internal_data.flee_path = verified_paths.flee_path
 end
 
--- Lines 933-942
+-- Lines 939-948
 function CivilianLogicFlee.reset_actions(data)
 	local walk_action = data.unit:movement()._active_actions[2]
 
@@ -1034,7 +1040,7 @@ function CivilianLogicFlee.reset_actions(data)
 	end
 end
 
--- Lines 946-954
+-- Lines 952-960
 function CivilianLogicFlee._chk_add_delayed_rescue_SO(data, my_data)
 	if not my_data.exiting and not data.unit:anim_data().move and managers.groupai:state():rescue_state() and not data.unit:brain()._dont_rescue then
 		if not my_data.rescue_active then
@@ -1045,7 +1051,7 @@ function CivilianLogicFlee._chk_add_delayed_rescue_SO(data, my_data)
 	end
 end
 
--- Lines 958-973
+-- Lines 964-979
 function CivilianLogicFlee.clbk_chk_run_away(ignore_this, data)
 	local my_data = data.internal_data
 
@@ -1062,7 +1068,7 @@ function CivilianLogicFlee.clbk_chk_run_away(ignore_this, data)
 	CivilianLogicFlee.schedule_run_away_clbk(data)
 end
 
--- Lines 977-987
+-- Lines 983-993
 function CivilianLogicFlee.schedule_run_away_clbk(data)
 	local my_data = data.internal_data
 
@@ -1076,7 +1082,7 @@ function CivilianLogicFlee.schedule_run_away_clbk(data)
 	CopLogicBase.add_delayed_clbk(my_data, my_data.run_away_clbk_id, callback(CivilianLogicFlee, CivilianLogicFlee, "clbk_chk_run_away", data), data.run_away_next_chk_t)
 end
 
--- Lines 991-1031
+-- Lines 997-1037
 function CivilianLogicFlee.clbk_chk_call_the_police(ignore_this, data)
 	local my_data = data.internal_data
 
@@ -1121,12 +1127,12 @@ function CivilianLogicFlee.clbk_chk_call_the_police(ignore_this, data)
 	CopLogicBase.add_delayed_clbk(my_data, my_data.call_police_clbk_id, callback(CivilianLogicFlee, CivilianLogicFlee, "clbk_chk_call_the_police", data), TimerManager:game():time() + math.lerp(15, 20, math.random()))
 end
 
--- Lines 1035-1037
+-- Lines 1041-1043
 function CivilianLogicFlee._say_call_the_police(data, my_data)
 	data.unit:sound():say("911_call", true, false)
 end
 
--- Lines 1041-1043
+-- Lines 1047-1049
 function CivilianLogicFlee.on_police_call_success(data)
 	data.internal_data.called_the_police = true
 end

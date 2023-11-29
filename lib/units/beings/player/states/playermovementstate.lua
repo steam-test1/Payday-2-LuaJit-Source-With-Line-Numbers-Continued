@@ -20,26 +20,26 @@ PlayerMovementState.settings_clbks_to_add = {
 	}
 }
 
--- Lines 26-31
+-- Lines 20-25
 function PlayerMovementState:init(unit)
 	self._unit = unit
 
 	managers.user:check_add_setting_clbks_to_obj(self)
 end
 
--- Lines 35-36
+-- Lines 29-30
 function PlayerMovementState:enter(state_data, enter_data)
 end
 
--- Lines 40-41
+-- Lines 34-35
 function PlayerMovementState:exit(state_data)
 end
 
--- Lines 45-46
+-- Lines 39-40
 function PlayerMovementState:update(t, dt)
 end
 
--- Lines 52-59
+-- Lines 46-53
 function PlayerMovementState:chk_action_forbidden(action_type)
 	if self._current_action then
 		local unblock_data = self._current_action["unblock_" .. action_type .. "_t"]
@@ -50,12 +50,12 @@ function PlayerMovementState:chk_action_forbidden(action_type)
 	end
 end
 
--- Lines 63-65
+-- Lines 57-59
 function PlayerMovementState:_reset_delay_action()
 	self._delay_action = nil
 end
 
--- Lines 69-75
+-- Lines 63-69
 function PlayerMovementState:_set_delay_action(action_data)
 	if self._delay_action then
 		self:_reset_delay_action()
@@ -64,7 +64,7 @@ function PlayerMovementState:_set_delay_action(action_data)
 	self._delay_action = action_data
 end
 
--- Lines 79-91
+-- Lines 73-85
 function PlayerMovementState:_reset_current_action()
 	local previous_action = self._current_action
 
@@ -79,7 +79,7 @@ function PlayerMovementState:_reset_current_action()
 	self._current_action = nil
 end
 
--- Lines 95-102
+-- Lines 89-96
 function PlayerMovementState:_set_current_action(action_data)
 	if self._current_action then
 		self:_reset_current_action()
@@ -88,30 +88,30 @@ function PlayerMovementState:_set_current_action(action_data)
 	self._current_action = action_data
 end
 
--- Lines 106-108
+-- Lines 100-102
 function PlayerMovementState:interaction_blocked()
 	return false
 end
 
--- Lines 112-113
+-- Lines 106-107
 function PlayerMovementState:save(data)
 end
 
--- Lines 117-121
+-- Lines 111-115
 function PlayerMovementState:pre_destroy()
 	if managers.user then
 		managers.user:check_remove_setting_clbks_from_obj(self)
 	end
 end
 
--- Lines 123-127
+-- Lines 117-121
 function PlayerMovementState:destroy()
 	if managers.user then
 		managers.user:check_remove_setting_clbks_from_obj(self)
 	end
 end
 
--- Lines 141-143
+-- Lines 135-137
 function PlayerMovementState:_clbk_sett_var_changed(setting_name, old_value, new_value)
 	self["_setting_" .. setting_name] = new_value ~= "off" and new_value or nil
 end

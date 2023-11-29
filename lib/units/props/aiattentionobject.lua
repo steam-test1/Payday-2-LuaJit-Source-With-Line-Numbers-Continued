@@ -26,8 +26,6 @@ function AIAttentionObject:init(unit, is_not_extension)
 	self._is_extension = not is_not_extension
 
 	if self._is_extension then
-		self:set_update_enabled(true)
-
 		if Network:is_client() and unit:unit_data().only_visible_in_editor then
 			unit:set_visible(false)
 		end
@@ -42,27 +40,42 @@ function AIAttentionObject:init(unit, is_not_extension)
 				self:add_attention(att_setting)
 			end
 		end
+
+		self:set_update_enabled(true)
 	end
 end
 
--- Lines 48-51
+-- Lines 48-50
+function AIAttentionObject:is_extension()
+	return self._is_extension
+end
+
+-- Lines 54-58
 function AIAttentionObject:update(unit, t, dt)
 	self._attention_obj:m_position(self._observer_info.m_pos)
 end
 
--- Lines 55-57
+-- Lines 62-72
 function AIAttentionObject:set_update_enabled(state)
+	if not self._is_extension then
+		return
+	end
+
+	if state and not self._registered then
+		state = false
+	end
+
 	self._unit:set_extension_update_enabled(Idstring("attention"), state)
 end
 
--- Lines 61-64
+-- Lines 76-79
 function AIAttentionObject:set_detection_object_name(obj_name)
 	self._attention_obj_name = obj_name
 
 	self:setup_attention_positions()
 end
 
--- Lines 68-78
+-- Lines 83-93
 function AIAttentionObject:setup_attention_positions()
 	if self._attention_obj_name then
 		self._attention_obj = self._unit:get_object(Idstring(self._attention_obj_name))
@@ -75,17 +88,17 @@ function AIAttentionObject:setup_attention_positions()
 	}
 end
 
--- Lines 82-84
+-- Lines 97-99
 function AIAttentionObject:attention_data()
 	return self._attention_data
 end
 
--- Lines 88-90
+-- Lines 103-105
 function AIAttentionObject:unit()
 	return self._unit
 end
 
--- Lines 94-109
+-- Lines 109-124
 function AIAttentionObject:add_attention(settings)
 	local needs_register = nil
 
@@ -96,14 +109,14 @@ function AIAttentionObject:add_attention(settings)
 
 	self._attention_data[settings.id] = settings
 
-	if needs_register then
+	if needs_register or not self._registered then
 		self:_register()
 	end
 
 	self:_call_listeners()
 end
 
--- Lines 113-127
+-- Lines 128-148
 function AIAttentionObject:remove_attention(id)
 	if not self._attention_data then
 		return
@@ -113,26 +126,34 @@ function AIAttentionObject:remove_attention(id)
 		self._attention_data[id] = nil
 
 		if not next(self._attention_data) then
-			managers.groupai:state():unregister_AI_attention_object((self._parent_unit or self._unit):key())
-
 			self._attention_data = nil
+
+			if self._registered then
+				self:_unregister()
+			end
+		else
+			self:_chk_update_registered_state()
 		end
 
 		self:_call_listeners()
 	end
 end
 
--- Lines 131-150
+-- Lines 152-175
 function AIAttentionObject:set_attention(settings, id)
 	if self._attention_data then
 		if settings then
 			self._attention_data = {
 				[id or settings.id] = settings
 			}
+
+			self:_chk_update_registered_state()
 		else
 			self._attention_data = nil
 
-			managers.groupai:state():unregister_AI_attention_object((self._parent_unit or self._unit):key())
+			if self._registered then
+				self:_unregister()
+			end
 		end
 
 		self:_call_listeners()
@@ -147,12 +168,14 @@ function AIAttentionObject:set_attention(settings, id)
 	end
 end
 
--- Lines 154-172
+-- Lines 179-198
 function AIAttentionObject:override_attention(original_preset_name, override_preset)
 	if override_preset then
 		self._overrides = self._overrides or {}
 		local call_listeners = self._attention_data and self._attention_data[original_preset_name] or self._overrides[original_preset_name]
 		self._overrides[original_preset_name] = override_preset
+
+		self:_chk_update_registered_state()
 
 		if call_listeners then
 			self:_call_listeners()
@@ -164,13 +187,14 @@ function AIAttentionObject:override_attention(original_preset_name, override_pre
 			self._overrides = nil
 		end
 
+		self:_chk_update_registered_state()
 		self:_call_listeners()
 	end
 end
 
--- Lines 176-217
+-- Lines 202-243
 function AIAttentionObject:get_attention(filter, min, max, team)
-	if not self._attention_data then
+	if not self._registered or not self._attention_data then
 		return
 	end
 
@@ -205,7 +229,7 @@ function AIAttentionObject:get_attention(filter, min, max, team)
 	return settings_match
 end
 
--- Lines 221-228
+-- Lines 247-254
 function AIAttentionObject:verify_attention(test_settings, min, max, team)
 	if not self._attention_data then
 		return
@@ -216,45 +240,128 @@ function AIAttentionObject:verify_attention(test_settings, min, max, team)
 	return new_settings == test_settings
 end
 
--- Lines 232-234
+-- Lines 258-260
 function AIAttentionObject:get_attention_m_pos(settings)
 	return self._observer_info.m_pos
 end
 
--- Lines 238-240
+-- Lines 264-266
 function AIAttentionObject:get_detection_m_pos()
 	return self._observer_info.m_pos
 end
 
--- Lines 244-246
+-- Lines 270-272
 function AIAttentionObject:get_ground_m_pos()
 	return self._observer_info.m_pos
 end
 
--- Lines 250-252
+-- Lines 276-278
 function AIAttentionObject:add_listener(key, clbk)
 	self._listener_holder:add(key, clbk)
 end
 
--- Lines 256-258
+-- Lines 282-284
 function AIAttentionObject:remove_listener(key)
 	self._listener_holder:remove(key)
 end
 
--- Lines 262-266
+-- Lines 288-302
 function AIAttentionObject:_call_listeners()
-	local u_key = (self._parent_unit or self._unit):key()
+	if not self._register_key then
+		return
+	end
 
-	managers.groupai:state():on_AI_attention_changed(u_key)
-	self._listener_holder:call(u_key)
+	managers.groupai:state():on_AI_attention_changed(self._register_key)
+	self._listener_holder:call(self._register_key)
 end
 
--- Lines 270-272
+-- Lines 306-328
 function AIAttentionObject:_register()
-	managers.groupai:state():register_AI_attention_object(self._parent_unit or self._unit, self, nil)
+	if self._registered then
+		debug_pause_unit(self._unit, "[AIAttentionObject:_register] Already registered? ", self._parent_unit, self._unit)
+
+		return
+	end
+
+	if not managers.groupai:state():enemy_weapons_hot() or not self:is_attention_irrelevant_for_weapons_hot() then
+		local tracker = not self._is_extension and self._unit:movement() and self._unit:movement():nav_tracker()
+
+		managers.groupai:state():register_AI_attention_object(self._parent_unit or self._unit, self, tracker)
+
+		self._registered = true
+		self._register_key = (self._parent_unit or self._unit):key()
+
+		self:set_update_enabled(true)
+	end
 end
 
--- Lines 276-321
+-- Lines 330-347
+function AIAttentionObject:_unregister()
+	if not self._registered then
+		debug_pause_unit(self._unit, "[AIAttentionObject:_unregister] Wasn't registered? ", self._parent_unit, self._unit)
+
+		return
+	end
+
+	self._registered = nil
+
+	managers.groupai:state():unregister_AI_attention_object(self._register_key)
+	self:_call_listeners()
+
+	self._register_key = nil
+
+	self:set_update_enabled(false)
+end
+
+-- Lines 349-363
+function AIAttentionObject:_chk_update_registered_state()
+	if not self._attention_data or not managers.groupai:state():enemy_weapons_hot() then
+		return
+	end
+
+	if self._registered then
+		if self:is_attention_irrelevant_for_weapons_hot() then
+			self:_unregister()
+		end
+	elseif not self:is_attention_irrelevant_for_weapons_hot() then
+		self:_register()
+	end
+end
+
+-- Lines 367-396
+function AIAttentionObject:is_attention_irrelevant_for_weapons_hot()
+	if not self._is_extension then
+		return false
+	end
+
+	local overrides = self._overrides
+	local react_requirement = self.REACT_SHOOT
+
+	if overrides then
+		for id, settings in pairs(overrides) do
+			if react_requirement <= settings.reaction then
+				return false
+			end
+		end
+	end
+
+	for id, settings in pairs(self._attention_data) do
+		if (not overrides or not overrides[id]) and react_requirement <= settings.reaction then
+			return false
+		end
+	end
+
+	return true
+end
+
+-- Lines 398-402
+function AIAttentionObject:on_enemy_weapons_hot()
+	if self._registered and self:is_attention_irrelevant_for_weapons_hot() then
+		self:_unregister()
+	end
+end
+
+-- Lines 406-465
 function AIAttentionObject:link(parent_unit, obj_name, local_pos)
 	self._unit:unlink()
 
@@ -283,8 +390,15 @@ function AIAttentionObject:link(parent_unit, obj_name, local_pos)
 			managers.network:session():send_to_peers_synched("link_attention_no_rot", self._parent_unit, self._unit, obj_name, local_pos)
 		end
 
+		if self._registered then
+			self:_unregister()
+			self:_register()
+			self:_call_listeners()
+		end
+
 		self:set_update_enabled(true)
 	else
+		local had_parent = self._parent_unit
 		self._parent_unit = nil
 		self._parent_obj_name = nil
 		self._local_pos = nil
@@ -294,11 +408,17 @@ function AIAttentionObject:link(parent_unit, obj_name, local_pos)
 			managers.network:session():send_to_peers_synched("unlink_attention", self._unit)
 		end
 
+		if had_parent and self._registered then
+			self:_unregister()
+			self:_register()
+			self:_call_listeners()
+		end
+
 		self:set_update_enabled(false)
 	end
 end
 
--- Lines 325-342
+-- Lines 469-486
 function AIAttentionObject:set_team(team)
 	local call_listeners = self._team ~= team or team and team.id ~= self._team.id
 	self._team = team
@@ -318,7 +438,7 @@ function AIAttentionObject:set_team(team)
 	self:_call_listeners()
 end
 
--- Lines 346-353
+-- Lines 490-497
 function AIAttentionObject:save(data)
 	if alive(self._parent_unit) then
 		data.parent_u_id = self._parent_unit:unit_data().unit_id
@@ -327,7 +447,7 @@ function AIAttentionObject:save(data)
 	end
 end
 
--- Lines 357-377
+-- Lines 501-521
 function AIAttentionObject:load(data)
 	if not data or not data.parent_u_id then
 		return
@@ -350,7 +470,7 @@ function AIAttentionObject:load(data)
 	end
 end
 
--- Lines 381-387
+-- Lines 525-531
 function AIAttentionObject:clbk_load_parent_unit(parent_unit)
 	if parent_unit then
 		self:link(parent_unit, self._load_data.parent_obj_name, self._load_data.local_pos)
@@ -359,7 +479,7 @@ function AIAttentionObject:clbk_load_parent_unit(parent_unit)
 	self._load_data = nil
 end
 
--- Lines 391-400
+-- Lines 535-544
 function AIAttentionObject:destroy()
 	self:set_attention(nil)
 

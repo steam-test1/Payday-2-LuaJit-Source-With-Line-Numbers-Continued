@@ -1,22 +1,29 @@
+local tmp_vec1 = Vector3()
 QuickSmokeGrenade = QuickSmokeGrenade or class()
 
--- Lines 5-8
+-- Lines 8-13
 function QuickSmokeGrenade:init(unit)
 	self._unit = unit
 	self._state = 0
+
+	unit:set_visible(false)
 end
 
--- Lines 10-32
+-- Lines 15-48
 function QuickSmokeGrenade:update(unit, t, dt)
-	if self._remove_t and self._remove_t < t then
-		self._unit:set_slot(0)
+	if self._remove_t then
+		if self._remove_t < t then
+			self._unit:set_slot(0)
+		end
+
+		return
 	end
 
 	if self._state == 1 then
 		self._timer = self._timer - dt
 
 		if self._timer <= 0 then
-			self._timer = self._timer + 0.5
+			self._timer = self._timer + 0.2
 			self._state = 2
 
 			self:_play_sound_and_effects()
@@ -25,65 +32,90 @@ function QuickSmokeGrenade:update(unit, t, dt)
 		self._timer = self._timer - dt
 
 		if self._timer <= 0 then
+			self._timer = self._timer + 0.3
 			self._state = 3
+
+			self:_play_sound_and_effects()
+		end
+	elseif self._state == 3 then
+		self._timer = self._timer - dt
+
+		if self._timer <= 0 then
+			self._state = 4
 
 			self:detonate()
 		end
 	end
 end
 
--- Lines 36-38
+-- Lines 52-54
 function QuickSmokeGrenade:activate(position, duration)
 	self:_activate(1, 0.5, position, duration)
 end
 
--- Lines 40-43
+-- Lines 56-59
 function QuickSmokeGrenade:activate_immediately(position, duration)
-	self:_activate(3, 0, position, duration)
-
-	self._remove_t = TimerManager:game():time() + self._duration
+	self._unit:set_visible(true)
+	self:_activate(4, 0, position, duration)
 end
 
--- Lines 45-52
+-- Lines 61-72
 function QuickSmokeGrenade:_activate(state, timer, position, duration)
 	self._state = state
 	self._timer = timer
 	self._shoot_position = position
 	self._duration = duration
 
-	self:_play_sound_and_effects()
+	if state == 4 then
+		self:detonate()
+	else
+		self:_play_sound_and_effects()
+	end
 end
 
--- Lines 56-59
+-- Lines 76-79
 function QuickSmokeGrenade:detonate()
 	self:_play_sound_and_effects()
 
 	self._remove_t = TimerManager:game():time() + self._duration
 end
 
--- Lines 63-66
+-- Lines 83-85
+function QuickSmokeGrenade:sound_playback_complete_clbk(event_instance, sound_source, event_type, sound_source_again)
+end
+
+-- Lines 87-90
 function QuickSmokeGrenade:preemptive_kill()
 	self._unit:sound_source():post_event("grenade_gas_stop")
 	self._unit:set_slot(0)
 end
 
--- Lines 70-98
+-- Lines 94-127
 function QuickSmokeGrenade:_play_sound_and_effects()
 	if self._state == 1 then
-		local sound_source = SoundDevice:create_source("grenade_fire_source")
+		if self._shoot_position then
+			local sound_source = SoundDevice:create_source("grenade_fire_source")
 
-		sound_source:set_position(self._shoot_position)
-		sound_source:post_event("grenade_gas_npc_fire")
+			sound_source:set_position(self._shoot_position)
+			sound_source:post_event("grenade_gas_npc_fire")
+		end
 	elseif self._state == 2 then
-		local bounce_point = Vector3()
+		if self._shoot_position then
+			local bounce_point = tmp_vec1
 
-		mvector3.lerp(bounce_point, self._shoot_position, self._unit:position(), 0.65)
+			self._unit:m_position(bounce_point)
+			mvector3.lerp(bounce_point, self._shoot_position, bounce_point, 0.65)
 
-		local sound_source = SoundDevice:create_source("grenade_bounce_source")
+			local sound_source = SoundDevice:create_source("grenade_bounce_source")
 
-		sound_source:set_position(bounce_point)
-		sound_source:post_event("grenade_gas_bounce")
+			sound_source:set_position(bounce_point)
+			sound_source:post_event("grenade_gas_bounce", callback(self, self, "sound_playback_complete_clbk"), sound_source, "end_of_event")
+		else
+			self._unit:sound_source():post_event("grenade_gas_bounce")
+		end
 	elseif self._state == 3 then
+		self._unit:set_visible(true)
+	elseif self._state == 4 then
 		World:effect_manager():spawn({
 			effect = Idstring("effects/particles/explosions/explosion_smoke_grenade"),
 			position = self._unit:position(),
@@ -99,9 +131,11 @@ function QuickSmokeGrenade:_play_sound_and_effects()
 	end
 end
 
--- Lines 102-106
+-- Lines 131-137
 function QuickSmokeGrenade:destroy()
 	if self._smoke_effect then
 		World:effect_manager():fade_kill(self._smoke_effect)
+
+		self._smoke_effect = nil
 	end
 end

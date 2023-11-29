@@ -602,14 +602,7 @@ function ArrowBase:_tweak_data_play_sound(entry)
 	self._unit:sound_source(Idstring("snd")):post_event(event)
 end
 
--- Lines 642-647
-function ArrowBase:outside_worlds_bounding_box()
-	if Network:is_server() or self._unit:id() == -1 then
-		self._unit:set_slot(0)
-	end
-end
-
--- Lines 651-685
+-- Lines 642-676
 function ArrowBase:save(data)
 	ArrowBase.super.save(self, data)
 
@@ -647,7 +640,7 @@ function ArrowBase:save(data)
 	data.ArrowBase = state
 end
 
--- Lines 687-712
+-- Lines 678-703
 function ArrowBase:load(data)
 	ArrowBase.super.load(self, data)
 
@@ -661,7 +654,7 @@ function ArrowBase:load(data)
 		print(inspect(state.sync_attach_data))
 
 		if state.sync_attach_data then
-			-- Lines 699-704
+			-- Lines 690-695
 			local function _dropin_attach(parent_unit)
 				local parent_body = parent_unit:body(state.sync_attach_data.parent_body_index)
 				local parent_obj = parent_body:root_object()
@@ -681,7 +674,7 @@ function ArrowBase:load(data)
 	end
 end
 
--- Lines 714-741
+-- Lines 705-732
 function ArrowBase:_delay_sync_attach(peer)
 	if not managers.network:session() then
 		return
@@ -698,7 +691,7 @@ function ArrowBase:_delay_sync_attach(peer)
 	peer:send_queued_sync("sync_attach_projectile", self._unit:id() ~= -1 and self._unit or nil, false, self._sync_attach_data.parent_unit, nil, self._sync_attach_data.parent_obj, self._sync_attach_data.local_pos, self._sync_attach_data.dir, tweak_data.blackmarket:get_index_from_projectile_id(self._tweak_projectile_entry), managers.network:session():local_peer():id())
 end
 
--- Lines 745-751
+-- Lines 736-742
 function ArrowBase:_remove_switch_to_pickup_clbk()
 	if not self._switch_to_pickup_clbk or not managers.enemy then
 		return
@@ -709,12 +702,12 @@ function ArrowBase:_remove_switch_to_pickup_clbk()
 	self._switch_to_pickup_clbk = nil
 end
 
--- Lines 755-757
+-- Lines 746-748
 function ArrowBase:_kill_trail()
 	managers.game_play_central:remove_projectile_trail(self._unit)
 end
 
--- Lines 761-800
+-- Lines 752-791
 function ArrowBase:destroy(unit)
 	self:_check_stop_flyby_sound(true)
 
@@ -755,7 +748,7 @@ function ArrowBase:destroy(unit)
 	ArrowBase.super.destroy(self, unit)
 end
 
--- Lines 804-826
+-- Lines 795-817
 function ArrowBase.find_nearest_arrow(peer_id, position)
 	local closest_unit, closest_dist_sq = nil
 
@@ -782,7 +775,7 @@ function ArrowBase.find_nearest_arrow(peer_id, position)
 	return closest_unit
 end
 
--- Lines 831-840
+-- Lines 822-831
 function ArrowBase:reload_contour()
 	if self._unit:contour() then
 		if managers.user:get_setting("throwable_contour") then

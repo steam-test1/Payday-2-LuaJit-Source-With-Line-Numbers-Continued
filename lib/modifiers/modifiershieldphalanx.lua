@@ -3,15 +3,17 @@ ModifierShieldPhalanx._type = "ModifierShieldPhalanx"
 ModifierShieldPhalanx.name_id = "none"
 ModifierShieldPhalanx.desc_id = "menu_cs_modifier_shield_phalanx"
 
--- Lines 7-11
+-- Lines 7-15
 function ModifierShieldPhalanx:init(data)
 	ModifierShieldPhalanx.super.init(data)
 
-	tweak_data.group_ai.unit_categories.CS_shield = tweak_data.group_ai.unit_categories.Phalanx_minion
-	tweak_data.group_ai.unit_categories.FBI_shield = tweak_data.group_ai.unit_categories.Phalanx_minion
+	local copied_tweak = deep_clone(tweak_data.group_ai.unit_categories.Phalanx_minion)
+	copied_tweak.is_captain = nil
+	tweak_data.group_ai.unit_categories.CS_shield = copied_tweak
+	tweak_data.group_ai.unit_categories.FBI_shield = copied_tweak
 end
 
--- Lines 13-25
+-- Lines 17-29
 function ModifierShieldPhalanx:modify_value(id, value, unit)
 	if id ~= "PlayerStandart:_start_action_intimidate" then
 		return value

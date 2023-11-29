@@ -57,7 +57,7 @@ PlayerTurretBase.SETTABLE_STATES = {
 	operational = PlayerTurretBase.STATE_OPERATIONAL
 }
 
--- Lines 57-147
+-- Lines 57-151
 function PlayerTurretBase:init(unit)
 	UnitBase.init(self, unit, false)
 
@@ -72,15 +72,8 @@ function PlayerTurretBase:init(unit)
 	self._digest_values = false
 	self._ammo_data = false
 	self._damage = 0
-	self._autohit_data = {
-		INIT_RATIO = 1,
-		MAX_RATIO = 1,
-		far_angle = 0.0005,
-		far_dis = 10000,
-		MIN_RATIO = 0,
-		near_angle = 0.0005
-	}
-	self._autohit_current = self._autohit_data.INIT_RATIO
+	self._autohit_data = nil
+	self._autohit_current = nil
 	local weap_tweak = self:weapon_tweak_data()
 	self._bullet_class = InstantBulletBase
 	self._bullet_slotmask = self._bullet_class:bullet_slotmask()
@@ -157,12 +150,12 @@ function PlayerTurretBase:init(unit)
 	end
 end
 
--- Lines 151-153
+-- Lines 155-157
 function PlayerTurretBase:tweak_data_clbk_reload()
 	self._tweak_data = tweak_data.player_turrets[self.tweak_data_entry] or tweak_data.player_turrets.ranc_heavy_machine_gun
 end
 
--- Lines 157-191
+-- Lines 161-195
 function PlayerTurretBase:post_init()
 	local unit = self._unit
 	self._ext_movement = unit:movement()
@@ -202,14 +195,14 @@ function PlayerTurretBase:post_init()
 	self:setup(setup_data)
 end
 
--- Lines 195-201
+-- Lines 199-205
 function PlayerTurretBase:setup(setup_data)
 	print("PlayerTurretBase:setup")
 	RaycastWeaponBase.setup(self, setup_data)
 	self:replenish()
 end
 
--- Lines 205-214
+-- Lines 209-218
 function PlayerTurretBase:activate_turret()
 	print("PlayerTurretBase:activate_turret")
 
@@ -222,7 +215,7 @@ function PlayerTurretBase:activate_turret()
 	end
 end
 
--- Lines 217-226
+-- Lines 221-230
 function PlayerTurretBase:deactivate_turret()
 	print("PlayerTurretBase:deactivate_turret")
 
@@ -235,7 +228,7 @@ function PlayerTurretBase:deactivate_turret()
 	end
 end
 
--- Lines 229-238
+-- Lines 233-242
 function PlayerTurretBase:assemble_turret()
 	print("PlayerTurretBase:assemble_turret")
 
@@ -248,7 +241,7 @@ function PlayerTurretBase:assemble_turret()
 	end
 end
 
--- Lines 241-250
+-- Lines 245-254
 function PlayerTurretBase:disassemble_turret()
 	print("PlayerTurretBase:disassemble_turret")
 
@@ -261,12 +254,12 @@ function PlayerTurretBase:disassemble_turret()
 	end
 end
 
--- Lines 254-256
+-- Lines 258-260
 function PlayerTurretBase:get_turret_tweak_data()
 	return self._tweak_data
 end
 
--- Lines 260-281
+-- Lines 264-285
 function PlayerTurretBase:change_state(state)
 	if state == self._current_state or state <= PlayerTurretBase.STATE_INVALID or PlayerTurretBase.STATE_IN_USE < state then
 		return false
@@ -290,7 +283,7 @@ function PlayerTurretBase:change_state(state)
 	return true
 end
 
--- Lines 285-290
+-- Lines 289-294
 function PlayerTurretBase:run_sequence(sequence)
 	print("PlayerTurretBase:run_sequence", sequence)
 
@@ -299,7 +292,7 @@ function PlayerTurretBase:run_sequence(sequence)
 	end
 end
 
--- Lines 294-299
+-- Lines 298-303
 function PlayerTurretBase:get_state_from_action(action)
 	local state = PlayerTurretBase.STATE_ACTIONS[self._current_state]
 	state = state and state[action]
@@ -307,7 +300,7 @@ function PlayerTurretBase:get_state_from_action(action)
 	return state or PlayerTurretBase.STATE_INVALID
 end
 
--- Lines 303-346
+-- Lines 307-350
 function PlayerTurretBase:get_action_for_interaction(player, locator)
 	if not locator then
 		return PlayerTurretBase.INTERACT_INVALID
@@ -360,17 +353,17 @@ function PlayerTurretBase:get_action_for_interaction(player, locator)
 	return PlayerTurretBase.INTERACT_INVALID
 end
 
--- Lines 350-352
+-- Lines 354-356
 function PlayerTurretBase:get_attach_point_obj(third_point)
 	return self._unit:get_object(third_point and self._third_attach_ids or self._player_attach_ids)
 end
 
--- Lines 354-356
+-- Lines 358-360
 function PlayerTurretBase:get_attach_point_local_pos(third_point)
 	return third_point and self._third_attach_local_pos or self._player_attach_local_pos
 end
 
--- Lines 360-373
+-- Lines 364-377
 function PlayerTurretBase:on_player_enter(player_unit)
 	print("on_player_enter", player_unit)
 
@@ -387,7 +380,7 @@ function PlayerTurretBase:on_player_enter(player_unit)
 	end
 end
 
--- Lines 377-390
+-- Lines 381-394
 function PlayerTurretBase:on_player_exit()
 	print("on_player_exit", self._owner)
 	self._ext_brain:switch_off()
@@ -404,7 +397,7 @@ function PlayerTurretBase:on_player_exit()
 	self._owner = nil
 end
 
--- Lines 394-397
+-- Lines 398-401
 function PlayerTurretBase:switch_on()
 	self._setup.user_unit = self._owner
 	self._setup.ignore_units = {
@@ -413,7 +406,7 @@ function PlayerTurretBase:switch_on()
 	}
 end
 
--- Lines 399-402
+-- Lines 403-406
 function PlayerTurretBase:switch_off()
 	self._setup.user_unit = nil
 	self._setup.ignore_units = {
@@ -421,19 +414,19 @@ function PlayerTurretBase:switch_off()
 	}
 end
 
--- Lines 405-408
+-- Lines 409-412
 function PlayerTurretBase:remove_dead_owner(dead_owner)
 	local peer_id = managers.criminals:character_peer_id_by_unit(dead_owner) or 0
 
 	managers.player:sync_exit_player_turret(peer_id, dead_owner)
 end
 
--- Lines 412-414
+-- Lines 416-418
 function PlayerTurretBase:third_person_important()
 	return true
 end
 
--- Lines 419-425
+-- Lines 423-429
 function PlayerTurretBase:start_shooting()
 	PlayerTurretBase.super.start_shooting(self)
 
@@ -442,7 +435,7 @@ function PlayerTurretBase:start_shooting()
 	end
 end
 
--- Lines 427-433
+-- Lines 431-437
 function PlayerTurretBase:stop_shooting()
 	PlayerTurretBase.super.stop_shooting(self)
 
@@ -451,21 +444,21 @@ function PlayerTurretBase:stop_shooting()
 	end
 end
 
--- Lines 435-440
+-- Lines 439-444
 function PlayerTurretBase:set_ammo_remaining_in_clip(ammo_remaining_in_clip)
 	PlayerTurretBase.super.set_ammo_remaining_in_clip(self, ammo_remaining_in_clip)
 	self._sound_fire:set_rtpc("ammo_left", ammo_remaining_in_clip)
 	self:check_bullet_objects()
 end
 
--- Lines 442-446
+-- Lines 446-450
 function PlayerTurretBase:check_bullet_objects()
 	if self._bullet_objects then
 		self:_update_bullet_objects("get_ammo_remaining_in_clip")
 	end
 end
 
--- Lines 448-461
+-- Lines 452-465
 function PlayerTurretBase:_update_bullet_objects(func_name)
 	if self._bullet_objects then
 		local ammo_base = self:ammo_base()
@@ -483,7 +476,7 @@ function PlayerTurretBase:_update_bullet_objects(func_name)
 	end
 end
 
--- Lines 465-482
+-- Lines 469-486
 function PlayerTurretBase:auto_trigger_held(direction)
 	local fired = false
 
@@ -505,7 +498,7 @@ local mto = Vector3()
 local mfrom = Vector3()
 local mspread = Vector3()
 
--- Lines 487-557
+-- Lines 491-561
 function PlayerTurretBase:auto_fire_blank(direction)
 	local user_unit = self._setup.user_unit
 
@@ -580,12 +573,12 @@ function PlayerTurretBase:auto_fire_blank(direction)
 	return true
 end
 
--- Lines 561-563
+-- Lines 565-567
 function PlayerTurretBase:_get_spread()
 	return self._spread * (tweak_data.weapon[self._name_id] and tweak_data.weapon[self._name_id].spread.standing or 1)
 end
 
--- Lines 567-574
+-- Lines 571-578
 function PlayerTurretBase:update_damage()
 	local weapon_stats = tweak_data.weapon.stats
 	local damage_modifier = weapon_stats.stats_modifiers and weapon_stats.stats_modifiers.damage or 1
@@ -594,7 +587,7 @@ function PlayerTurretBase:update_damage()
 	self._damage = (base_damage + self:damage_addend()) * self:damage_multiplier()
 end
 
--- Lines 578-583
+-- Lines 582-587
 function PlayerTurretBase:damage_addend()
 	local user_unit = self._setup and self._setup.user_unit
 	local current_state = alive(user_unit) and user_unit:movement() and user_unit:movement()._current_state
@@ -602,7 +595,7 @@ function PlayerTurretBase:damage_addend()
 	return managers.blackmarket:damage_addend(self._name_id, self:weapon_tweak_data().categories, self._silencer, nil, current_state, self._blueprint)
 end
 
--- Lines 585-590
+-- Lines 589-594
 function PlayerTurretBase:damage_multiplier()
 	local user_unit = self._setup and self._setup.user_unit
 	local current_state = alive(user_unit) and user_unit:movement() and user_unit:movement()._current_state
@@ -610,13 +603,13 @@ function PlayerTurretBase:damage_multiplier()
 	return managers.blackmarket:damage_multiplier(self._name_id, self:weapon_tweak_data().categories, self._silencer, nil, current_state, self._blueprint)
 end
 
--- Lines 594-598
+-- Lines 598-602
 function PlayerTurretBase:pre_destroy()
 	PlayerTurretBase.super.pre_destroy(self, self._unit)
 	self:remove_dead_owner()
 end
 
--- Lines 602-609
+-- Lines 606-613
 function PlayerTurretBase:save(save_data)
 	local my_save_data = {}
 	save_data.base = my_save_data
@@ -625,7 +618,7 @@ function PlayerTurretBase:save(save_data)
 	my_save_data.next_fire_allowed = self._next_fire_allowed - self._unit:timer():time()
 end
 
--- Lines 613-619
+-- Lines 617-623
 function PlayerTurretBase:load(save_data)
 	local my_save_data = save_data.base
 
@@ -635,7 +628,7 @@ function PlayerTurretBase:load(save_data)
 	self._next_fire_allowed = self._unit:timer():time() + my_save_data.next_fire_allowed
 end
 
--- Lines 623-634
+-- Lines 627-638
 function PlayerTurretBase:sync_net_event(state)
 	if state == PlayerTurretBase.SYNC_START_FIRE then
 		self._shooting = true

@@ -68,7 +68,7 @@ function ElementSpawnEnemyDummy:units()
 	return self._units
 end
 
--- Lines 63-118
+-- Lines 63-119
 function ElementSpawnEnemyDummy:produce(params)
 	if not managers.groupai:state():is_AI_enabled() then
 		return
@@ -116,6 +116,7 @@ function ElementSpawnEnemyDummy:produce(params)
 		end
 	end
 
+	unit:base():hide_and_remove_collisions_for_a_few_frames()
 	unit:base():add_destroy_listener(self._unit_destroy_clbk_key, callback(self, self, "clbk_unit_destroyed"))
 
 	unit:unit_data().mission_element = self
@@ -132,7 +133,7 @@ function ElementSpawnEnemyDummy:produce(params)
 	return unit
 end
 
--- Lines 120-127
+-- Lines 121-128
 function ElementSpawnEnemyDummy:clbk_unit_destroyed(unit)
 	local u_key = unit:key()
 
@@ -143,7 +144,7 @@ function ElementSpawnEnemyDummy:clbk_unit_destroyed(unit)
 	end
 end
 
--- Lines 129-135
+-- Lines 130-136
 function ElementSpawnEnemyDummy:event(name, unit)
 	if self._events[name] then
 		for _, callback in ipairs(self._events[name]) do
@@ -152,14 +153,14 @@ function ElementSpawnEnemyDummy:event(name, unit)
 	end
 end
 
--- Lines 137-140
+-- Lines 138-141
 function ElementSpawnEnemyDummy:add_event_callback(name, callback)
 	self._events[name] = self._events[name] or {}
 
 	table.insert(self._events[name], callback)
 end
 
--- Lines 142-151
+-- Lines 143-152
 function ElementSpawnEnemyDummy:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -174,7 +175,7 @@ function ElementSpawnEnemyDummy:on_executed(instigator)
 	ElementSpawnEnemyDummy.super.on_executed(self, unit)
 end
 
--- Lines 153-164
+-- Lines 154-165
 function ElementSpawnEnemyDummy:_create_spawn_AI_parametric(stance, objective, spawn_properties)
 	local entry_action = self._create_action_data(CopActionAct._act_redirects.enemy_spawn[self._values.spawn_action])
 
@@ -197,7 +198,7 @@ function ElementSpawnEnemyDummy:_create_spawn_AI_parametric(stance, objective, s
 	}
 end
 
--- Lines 166-172
+-- Lines 167-173
 function ElementSpawnEnemyDummy._create_action_data(anim_name)
 	if not anim_name or anim_name == "none" then
 		return {
@@ -221,7 +222,7 @@ function ElementSpawnEnemyDummy._create_action_data(anim_name)
 	end
 end
 
--- Lines 174-181
+-- Lines 175-182
 function ElementSpawnEnemyDummy:unspawn_all_units()
 	for _, unit in ipairs(self._units) do
 		if alive(unit) then
@@ -231,7 +232,7 @@ function ElementSpawnEnemyDummy:unspawn_all_units()
 	end
 end
 
--- Lines 183-189
+-- Lines 184-190
 function ElementSpawnEnemyDummy:kill_all_units()
 	for _, unit in ipairs(self._units) do
 		if alive(unit) then
@@ -243,7 +244,7 @@ function ElementSpawnEnemyDummy:kill_all_units()
 	end
 end
 
--- Lines 191-197
+-- Lines 192-198
 function ElementSpawnEnemyDummy:execute_on_all_units(func)
 	for _, unit in ipairs(self._units) do
 		if alive(unit) then
@@ -252,7 +253,7 @@ function ElementSpawnEnemyDummy:execute_on_all_units(func)
 	end
 end
 
--- Lines 199-201
+-- Lines 200-202
 function ElementSpawnEnemyDummy:accessibility()
 	return self.ACCESSIBILITIES[self._values.accessibility]
 end

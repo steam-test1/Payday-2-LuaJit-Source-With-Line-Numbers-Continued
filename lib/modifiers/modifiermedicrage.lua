@@ -3,23 +3,23 @@ ModifierMedicRage._type = "ModifierMedicRage"
 ModifierMedicRage.name_id = "none"
 ModifierMedicRage.desc_id = "menu_cs_modifier_medic_rage"
 
--- Lines 7-23
+-- Lines 7-26
 function ModifierMedicRage:OnEnemyDied(unit)
 	if Network:is_client() then
 		return
 	end
 
-	local team_id = unit:brain()._logic_data.team and unit:brain()._logic_data.team.id or "law1"
+	local base_ext = nil
+	local medics = managers.enemy:find_nearby_affiliated_medics(unit)
+	local buff_name = self:value("damage_buff_name") or "base_damage"
+	local buff_value = self:value("damage") * 0.01
 
-	if team_id ~= "law1" then
-		return
-	end
+	for _, medic in pairs(medics) do
+		base_ext = medic:base()
 
-	local enemies = World:find_units_quick(unit, "sphere", unit:position(), tweak_data.medic.radius, managers.slot:get_mask("enemies"))
-
-	for _, enemy in ipairs(enemies) do
-		if enemy:base():has_tag("medic") then
-			enemy:base():add_buff("base_damage", self:value("damage") * 0.01)
+		if base_ext and base_ext.add_buff then
+			print("[ModifierMedicRage:OnEnemyDied] Valid enemy died within healing range of a Medic, buffing medic damage.")
+			base_ext:add_buff(buff_name, buff_value)
 		end
 	end
 end

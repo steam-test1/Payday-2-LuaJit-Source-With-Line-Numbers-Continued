@@ -833,9 +833,10 @@ function TimerGui:destroy()
 	end
 end
 
--- Lines 829-843
+-- Lines 829-844
 function TimerGui:save(data)
 	local state = {
+		started = self._started,
 		update_enabled = self._update_enabled,
 		timer = self._timer,
 		current_timer = self._current_timer,
@@ -850,7 +851,7 @@ function TimerGui:save(data)
 	data.TimerGui = state
 end
 
--- Lines 845-865
+-- Lines 846-874
 function TimerGui:load(data)
 	local state = data.TimerGui
 
@@ -858,27 +859,35 @@ function TimerGui:load(data)
 
 	if state.done then
 		self:_set_done()
-	elseif state.update_enabled then
-		self:_start(state.timer, state.current_timer)
-
-		if state.jammed then
-			self:_set_jammed(state.jammed)
+	else
+		if state.started and state.update_enabled then
+			self:_start(state.timer, state.current_timer)
+		else
+			self._timer = state.timer
+			self._current_timer = state.current_timer
 		end
 
-		if not state.powered then
-			self:_set_powered(state.powered, state.powered_interaction_enabled)
-		end
+		if state.update_enabled then
+			if state.jammed then
+				self:_set_jammed(state.jammed)
+			end
 
-		if not state.jammed and self._unit:interaction() and self._unit:interaction().check_for_upgrade then
-			self._unit:interaction():check_for_upgrade()
+			if not state.powered then
+				self:_set_powered(state.powered, state.powered_interaction_enabled)
+			end
+
+			if not state.jammed and self._unit:interaction() and self._unit:interaction().check_for_upgrade then
+				self._unit:interaction():check_for_upgrade()
+			end
 		end
 	end
 
 	self:set_visible(state.visible)
 	self:set_timer_multiplier(state.timer_multiplier or 1)
+	self._unit:set_extension_update_enabled(Idstring("timer_gui"), state.update_enabled and true or false)
 end
 
--- Lines 867-890
+-- Lines 876-903
 function TimerGui:post_event(event)
 	if not event then
 		return
@@ -892,6 +901,10 @@ function TimerGui:post_event(event)
 		elseif self._skill == 2 then
 			sound_event = sound_event .. "_basic"
 		end
+	elseif event == self._jam_event and self._skill == 3 and managers.groupai:state():whisper_mode() then
+		self._unit:sound_source():stop()
+
+		return
 	end
 
 	local clbk, cookie = nil

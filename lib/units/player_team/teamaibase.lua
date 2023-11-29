@@ -10,10 +10,8 @@ function TeamAIBase:post_init()
 	self:set_anim_lod(1)
 
 	self._lod_stage = 1
-	self._allow_invisible = true
 
 	self:_register()
-	managers.occlusion:remove_occlusion(self._unit)
 end
 
 -- Lines 22-25
@@ -33,7 +31,7 @@ function TeamAIBase:arrest_settings()
 	return tweak_data.character[self._tweak_table].arrest
 end
 
--- Lines 41-51
+-- Lines 41-53
 function TeamAIBase:pre_destroy(unit)
 	self:remove_upgrades()
 	self:unregister()
@@ -44,13 +42,13 @@ function TeamAIBase:pre_destroy(unit)
 	unit:character_damage():pre_destroy()
 end
 
--- Lines 56-74
+-- Lines 58-76
 function TeamAIBase:set_loadout(loadout)
 	if self._loadout then
 		self:remove_upgrades()
 	end
 
-	-- Lines 61-67
+	-- Lines 63-69
 	local function aquire(item)
 		local definition = tweak_data.upgrades.crew_skill_definitions[item] or {
 			upgrades = item and {
@@ -76,10 +74,10 @@ function TeamAIBase:set_loadout(loadout)
 	self._loadout = loadout
 end
 
--- Lines 79-94
+-- Lines 81-96
 function TeamAIBase:remove_upgrades()
 	if self._loadout then
-		-- Lines 81-87
+		-- Lines 83-89
 		local function unaquire(item)
 			local definition = tweak_data.upgrades.crew_skill_definitions[item] or {
 				upgrades = item and {
@@ -106,7 +104,7 @@ function TeamAIBase:remove_upgrades()
 	end
 end
 
--- Lines 98-109
+-- Lines 100-111
 function TeamAIBase:save(data)
 	local character = managers.criminals:character_by_unit(self._unit)
 	local visual_seed = character and character.visual_state and character.visual_state.visual_seed
@@ -117,14 +115,14 @@ function TeamAIBase:save(data)
 	}
 end
 
--- Lines 113-117
+-- Lines 115-119
 function TeamAIBase:on_death_exit()
 	TeamAIBase.super.on_death_exit(self)
 	self:unregister()
 	self:set_slot(self._unit, 0)
 end
 
--- Lines 121-126
+-- Lines 123-128
 function TeamAIBase:_register()
 	if not self._registered then
 		managers.groupai:state():register_criminal(self._unit)
@@ -133,7 +131,7 @@ function TeamAIBase:_register()
 	end
 end
 
--- Lines 130-141
+-- Lines 132-143
 function TeamAIBase:unregister()
 	if self._registered then
 		if Network:is_server() then
@@ -149,11 +147,7 @@ function TeamAIBase:unregister()
 	end
 end
 
--- Lines 145-146
-function TeamAIBase:chk_freeze_anims()
-end
-
--- Lines 150-152
+-- Lines 147-149
 function TeamAIBase:character_name()
 	return managers.criminals:character_name_by_unit(self._unit)
 end

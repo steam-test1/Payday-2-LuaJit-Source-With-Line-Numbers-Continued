@@ -188,7 +188,7 @@ function Drill:set_jammed(jammed)
 
 		self:_reset_melee_autorepair()
 
-		if self._autorepair and not self._autorepair_clbk_id then
+		if self._autorepair_chance and not self._autorepair_clbk_id and math.random() < self._autorepair_chance then
 			self._autorepair_clbk_id = "Drill_autorepair" .. tostring(self._unit:key())
 
 			managers.enemy:add_delayed_clbk(self._autorepair_clbk_id, callback(self, self, "clbk_autorepair"), TimerManager:game():time() + 5 + 15 * math.random())
@@ -453,7 +453,7 @@ function Drill:on_sabotage_SO_started(saboteur)
 
 	self._unit:timer_gui():set_jammed(true)
 
-	if not self._bain_report_sabotage_clbk_id then
+	if self.is_drill and not self._bain_report_sabotage_clbk_id then
 		self._bain_report_sabotage_clbk_id = "Drill_bain_report_sabotage" .. tostring(self._unit:key())
 
 		managers.enemy:add_delayed_clbk(self._bain_report_sabotage_clbk_id, callback(self, self, "clbk_bain_report_sabotage"), TimerManager:game():time() + 2 + 4 * math.random())
@@ -475,13 +475,11 @@ function Drill:clbk_sabotage_SO_verification(candidate_unit)
 	end
 end
 
--- Lines 456-481
+-- Lines 456-484
 function Drill:_set_attention_state(state)
 	if self.ignore_detection then
 		if self._attention_handler then
 			self._attention_handler:set_attention(nil)
-
-			self._attention_handler = nil
 		end
 
 		return
@@ -489,10 +487,12 @@ function Drill:_set_attention_state(state)
 
 	if state then
 		if not self._attention_setting then
-			self._attention_handler = AIAttentionObject:new(self._unit, true)
+			if not self._attention_handler then
+				self._attention_handler = AIAttentionObject:new(self._unit, true)
 
-			if self._attention_obj_name then
-				self._attention_handler:set_detection_object_name(self._attention_obj_name)
+				if self._attention_obj_name then
+					self._attention_handler:set_detection_object_name(self._attention_obj_name)
+				end
 			end
 
 			local descriptor = self._alert_radius and "drill_civ_ene_ntl" or "drill_silent_civ_ene_ntl"
@@ -502,12 +502,10 @@ function Drill:_set_attention_state(state)
 		end
 	elseif self._attention_handler then
 		self._attention_handler:set_attention(nil)
-
-		self._attention_handler = nil
 	end
 end
 
--- Lines 483-489
+-- Lines 486-492
 function Drill:update_attention_settings(descriptor)
 	local tweak_data = tweak_data.attention.settings[descriptor]
 
@@ -518,7 +516,7 @@ function Drill:update_attention_settings(descriptor)
 	end
 end
 
--- Lines 493-498
+-- Lines 496-501
 function Drill:clbk_enemy_weapons_hot()
 	managers.groupai:state():remove_listener(self._ene_weap_hot_listen_id)
 
@@ -528,7 +526,7 @@ function Drill:clbk_enemy_weapons_hot()
 	self:_set_alert_state(false)
 end
 
--- Lines 502-610
+-- Lines 505-613
 function Drill:set_skill_upgrades(upgrades)
 	if self._disable_upgrades then
 		return
@@ -547,7 +545,7 @@ function Drill:set_skill_upgrades(upgrades)
 	}
 	local background_icon_x = 30
 
-	-- Lines 514-523
+	-- Lines 517-526
 	local function add_bg_icon_func(bg_icon_table, texture_name, color)
 		local icon_data = deep_clone(background_icon_template)
 		icon_data.texture = icon_data.texture .. texture_name
@@ -638,8 +636,8 @@ function Drill:set_skill_upgrades(upgrades)
 				drill_autorepair_chance = drill_autorepair_chance + tweak_data.upgrades.values.player.drill_autorepair_1[1]
 			end
 
-			if Network:is_server() and math.random() < drill_autorepair_chance then
-				self:set_autorepair(true)
+			if Network:is_server() and drill_autorepair_chance > 0 then
+				self:set_autorepair(drill_autorepair_chance)
 			end
 
 			if current_auto_repair_level_1 > 0 and current_auto_repair_level_2 > 0 then
@@ -658,21 +656,23 @@ function Drill:set_skill_upgrades(upgrades)
 	timer_gui_ext:update_sound_event()
 end
 
--- Lines 612-614
+-- Lines 615-617
 function Drill:get_skill_upgrades()
 	return self._skill_upgrades or {}
 end
 
--- Lines 617-632
-function Drill:set_autorepair(state)
+-- Lines 620-638
+function Drill:set_autorepair(chance)
 	if self._skill_upgrades.auto_repair_level_1 and self._skill_upgrades.auto_repair_level_1 > 0 or self._skill_upgrades.auto_repair_level_2 and self._skill_upgrades.auto_repair_level_2 > 0 then
+		self._autorepair_chance = chance
+
 		return
 	end
 
-	self._autorepair = state
+	self._autorepair_chance = chance
 
-	if state then
-		if self._jammed and not self._autorepair_clbk_id then
+	if chance then
+		if self._jammed and not self._autorepair_clbk_id and math.random() < chance then
 			self._autorepair_clbk_id = "Drill_autorepair" .. tostring(self._unit:key())
 
 			managers.enemy:add_delayed_clbk(self._autorepair_clbk_id, callback(self, self, "clbk_autorepair"), TimerManager:game():time() + 5 + 15 * math.random())
@@ -684,7 +684,7 @@ function Drill:set_autorepair(state)
 	end
 end
 
--- Lines 636-641
+-- Lines 642-647
 function Drill:clbk_autorepair()
 	self._autorepair_clbk_id = nil
 
@@ -693,7 +693,7 @@ function Drill:clbk_autorepair()
 	end
 end
 
--- Lines 645-659
+-- Lines 651-665
 function Drill:on_autorepair()
 	local unit = self._unit
 	local int_ext = unit:interaction()
@@ -709,7 +709,7 @@ function Drill:on_autorepair()
 	int_ext:check_for_upgrade()
 end
 
--- Lines 663-674
+-- Lines 669-680
 function Drill:_set_alert_state(state)
 	if self.ignore_detection then
 		state = false
@@ -724,7 +724,7 @@ function Drill:_set_alert_state(state)
 	end
 end
 
--- Lines 678-689
+-- Lines 684-695
 function Drill:set_alert_radius(radius)
 	if radius then
 		self._alert_radius = radius
@@ -740,7 +740,7 @@ function Drill:set_alert_radius(radius)
 	end
 end
 
--- Lines 693-764
+-- Lines 699-770
 function Drill:_register_investigate_SO()
 	if self._investigate_SO_data then
 		return
@@ -807,7 +807,7 @@ function Drill:_register_investigate_SO()
 	managers.groupai:state():add_special_objective(so_id, so_descriptor)
 end
 
--- Lines 768-785
+-- Lines 774-791
 function Drill:_unregister_investigate_SO()
 	if not self._investigate_SO_data then
 		return
@@ -827,7 +827,7 @@ function Drill:_unregister_investigate_SO()
 	self._investigate_SO_data = nil
 end
 
--- Lines 789-812
+-- Lines 795-818
 function Drill:clbk_investigate_SO_verification(candidate_unit)
 	if not self._investigate_SO_data or not self._investigate_SO_data.SO_id then
 		debug_pause_unit(self._unit, "[Drill:clbk_investigate_SO_verification] SO is not registered", self._unit, candidate_unit, inspect(self._investigate_SO_data))
@@ -854,7 +854,7 @@ function Drill:clbk_investigate_SO_verification(candidate_unit)
 	return true
 end
 
--- Lines 816-823
+-- Lines 822-829
 function Drill:on_investigate_SO_administered(receiver_unit)
 	if self._investigate_SO_data.receiver_unit then
 		debug_pause("[Drill:on_investigate_SO_administered] Already had a receiver_unit!!!!", thief, self._investigate_SO_data.receiver_unit)
@@ -864,7 +864,7 @@ function Drill:on_investigate_SO_administered(receiver_unit)
 	self._investigate_SO_data.SO_registered = false
 end
 
--- Lines 827-835
+-- Lines 833-841
 function Drill:on_investigate_SO_completed(receiver_unit)
 	if receiver_unit ~= self._investigate_SO_data.receiver_unit then
 		debug_pause_unit(receiver_unit, "[Drill:on_investigate_SO_completed] idiot thinks he is investigating", receiver_unit)
@@ -875,7 +875,7 @@ function Drill:on_investigate_SO_completed(receiver_unit)
 	self:_register_investigate_SO()
 end
 
--- Lines 839-852
+-- Lines 845-858
 function Drill:on_investigate_SO_failed(receiver_unit)
 	if not self._investigate_SO_data.receiver_unit then
 		return
@@ -892,12 +892,12 @@ function Drill:on_investigate_SO_failed(receiver_unit)
 	self:_register_investigate_SO()
 end
 
--- Lines 856-858
+-- Lines 862-864
 function Drill:attention_handler()
 	return self._attention_handler
 end
 
--- Lines 862-871
+-- Lines 868-877
 function Drill:clbk_bain_report_sabotage()
 	self._bain_report_sabotage_clbk_id = nil
 
@@ -906,12 +906,12 @@ function Drill:clbk_bain_report_sabotage()
 	end
 end
 
--- Lines 875-877
+-- Lines 881-883
 function Drill:set_attention_state(state)
 	self:_set_attention_state(state)
 end
 
--- Lines 881-917
+-- Lines 887-923
 function Drill:destroy(...)
 	Drill.super.destroy(self, ...)
 
@@ -956,12 +956,12 @@ function Drill:destroy(...)
 	self:set_jammed(false)
 end
 
--- Lines 919-921
+-- Lines 925-927
 function Drill:_reset_melee_autorepair()
 	self._peer_ids = {}
 end
 
--- Lines 923-958
+-- Lines 929-964
 function Drill:on_melee_hit(peer_id)
 	if self._disable_upgrades or not self._jammed or self:_does_peer_exist(peer_id) then
 		return
@@ -995,7 +995,7 @@ function Drill:on_melee_hit(peer_id)
 	end
 end
 
--- Lines 960-978
+-- Lines 966-984
 function Drill:on_melee_hit_success()
 	local unit = self._unit
 	local int_ext = unit:interaction()
@@ -1015,7 +1015,7 @@ function Drill:on_melee_hit_success()
 	end
 end
 
--- Lines 980-988
+-- Lines 986-994
 function Drill:_does_peer_exist(peer_id)
 	local count = #self._peer_ids
 
@@ -1028,11 +1028,11 @@ function Drill:_does_peer_exist(peer_id)
 	return false
 end
 
--- Lines 990-999
+-- Lines 996-1005
 function Drill:compare_skill_upgrades(skill_upgrades)
 	if self._disable_upgrades then
 		return false
 	end
 
-	return self._skill_upgrades.auto_repair_level_1 < skill_upgrades.auto_repair_level_1 or self._skill_upgrades.auto_repair_level_2 < skill_upgrades.auto_repair_level_2 or self._skill_upgrades.speed_upgrade_level < skill_upgrades.speed_upgrade_level or skill_upgrades.silent_drill and not self._skill_upgrades.silent_drill or skill_upgrades.reduced_alert and not self._skill_upgrades.reduced_alert
+	return (skill_upgrades.auto_repair_level_1 or 0) > (self._skill_upgrades.auto_repair_level_1 or 0) or (skill_upgrades.auto_repair_level_2 or 0) > (self._skill_upgrades.auto_repair_level_2 or 0) or (skill_upgrades.speed_upgrade_level or 0) > (self._skill_upgrades.speed_upgrade_level or 0) or skill_upgrades.silent_drill and not self._skill_upgrades.silent_drill or skill_upgrades.reduced_alert and not self._skill_upgrades.reduced_alert
 end

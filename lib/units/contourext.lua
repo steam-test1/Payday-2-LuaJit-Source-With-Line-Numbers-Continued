@@ -241,7 +241,7 @@ function ContourExt:apply_to_linked(func_name, ...)
 	end
 end
 
--- Lines 293-423
+-- Lines 293-438
 function ContourExt:add(type, sync, multiplier, override_color, is_element)
 	self._contour_list = self._contour_list or {}
 	local data = self._types[type]
@@ -302,6 +302,12 @@ function ContourExt:add(type, sync, multiplier, override_color, is_element)
 		end
 	end
 
+	if not self._removed_occlusion then
+		self._removed_occlusion = true
+
+		managers.occlusion:remove_occlusion(self._unit)
+	end
+
 	local setup = {
 		ref_c = 1,
 		type = type,
@@ -352,7 +358,7 @@ function ContourExt:add(type, sync, multiplier, override_color, is_element)
 	return setup
 end
 
--- Lines 425-440
+-- Lines 440-455
 function ContourExt:change_color(type, color)
 	if not self._contour_list then
 		return
@@ -371,7 +377,7 @@ function ContourExt:change_color(type, color)
 	self:apply_to_linked("change_color", type, color)
 end
 
--- Lines 442-454
+-- Lines 457-469
 function ContourExt:change_color_by_id(id, ...)
 	if not self._contour_list then
 		return
@@ -386,7 +392,7 @@ function ContourExt:change_color_by_id(id, ...)
 	end
 end
 
--- Lines 456-474
+-- Lines 471-489
 function ContourExt:flash(type, frequency)
 	if not self._contour_list then
 		return
@@ -407,7 +413,7 @@ function ContourExt:flash(type, frequency)
 	self:apply_to_linked("flash", type, frequency)
 end
 
--- Lines 476-488
+-- Lines 491-503
 function ContourExt:flash_by_id(id, ...)
 	if not self._contour_list then
 		return
@@ -422,7 +428,7 @@ function ContourExt:flash_by_id(id, ...)
 	end
 end
 
--- Lines 490-500
+-- Lines 505-515
 function ContourExt:is_flashing()
 	if self._contour_list then
 		for i, setup in ipairs(self._contour_list) do
@@ -435,7 +441,7 @@ function ContourExt:is_flashing()
 	return false
 end
 
--- Lines 502-518
+-- Lines 517-533
 function ContourExt:remove(type, sync, is_element)
 	if not self._contour_list then
 		return
@@ -452,7 +458,7 @@ function ContourExt:remove(type, sync, is_element)
 	self:apply_to_linked("remove", type, false, false)
 end
 
--- Lines 520-534
+-- Lines 535-549
 function ContourExt:remove_by_id(id, ...)
 	if not self._contour_list then
 		return
@@ -467,7 +473,7 @@ function ContourExt:remove_by_id(id, ...)
 	end
 end
 
--- Lines 536-546
+-- Lines 551-561
 function ContourExt:has_id(id)
 	if self._contour_list then
 		for i, setup in ipairs(self._contour_list) do
@@ -480,7 +486,7 @@ function ContourExt:has_id(id)
 	return false
 end
 
--- Lines 563-572
+-- Lines 578-587
 function ContourExt:clear_all()
 	if self._contour_list then
 		while self._contour_list and next(self._contour_list) do
@@ -492,7 +498,7 @@ function ContourExt:clear_all()
 	self._materials = nil
 end
 
--- Lines 574-678
+-- Lines 589-712
 function ContourExt:_remove(index, sync, is_element)
 	local setup = self._contour_list and self._contour_list[index]
 
@@ -514,23 +520,35 @@ function ContourExt:_remove(index, sync, is_element)
 		return
 	end
 
-	if #self._contour_list == 1 then
-		managers.occlusion:add_occlusion(self._unit)
+	local was_swap = nil
 
-		local was_swap = nil
+	if setup.data.material_swap_required then
+		local base_ext = self._unit:base()
 
-		if setup.data.material_swap_required then
-			local base_ext = self._unit:base()
+		if base_ext and base_ext.set_material_state then
+			local should_swap = true
 
-			if base_ext and base_ext.set_material_state then
+			for _, other_setup in ipairs(self._contour_list) do
+				if setup ~= other_setup and other_setup.data.material_swap_required then
+					should_swap = false
+
+					break
+				end
+			end
+
+			if should_swap then
 				was_swap = true
 
 				base_ext:set_material_state(true)
-
-				if base_ext.set_allow_invisible then
-					base_ext:set_allow_invisible(true)
-				end
 			end
+		end
+	end
+
+	if #self._contour_list == 1 then
+		if self._removed_occlusion then
+			self._removed_occlusion = nil
+
+			managers.occlusion:add_occlusion(self._unit)
 		end
 
 		if not was_swap then
@@ -586,7 +604,7 @@ function ContourExt:_remove(index, sync, is_element)
 	end
 end
 
--- Lines 680-763
+-- Lines 714-797
 function ContourExt:update(unit, t, dt)
 	local index = 1
 	local setup, cam_pos, is_current = nil
@@ -668,7 +686,7 @@ function ContourExt:update(unit, t, dt)
 	end
 end
 
--- Lines 765-796
+-- Lines 799-830
 function ContourExt:_upd_opacity(opacity, is_retry, no_child_upd)
 	if opacity == self._last_opacity then
 		return
@@ -696,7 +714,7 @@ function ContourExt:_upd_opacity(opacity, is_retry, no_child_upd)
 	end
 end
 
--- Lines 798-830
+-- Lines 832-864
 function ContourExt:_upd_color(is_retry, no_child_upd)
 	local setup = self._contour_list and self._contour_list[1]
 
@@ -731,7 +749,7 @@ function ContourExt:_upd_color(is_retry, no_child_upd)
 	end
 end
 
--- Lines 832-864
+-- Lines 866-897
 function ContourExt:_apply_top_preset()
 	local setup = self._contour_list[1]
 	self._last_opacity = nil
@@ -758,12 +776,11 @@ function ContourExt:_apply_top_preset()
 			Application:error("[ContourExt:_apply_top_preset] Attempted to apply a material swap contour to a unit without a 'base' extension or required functions.", self._unit)
 		end
 
-		managers.occlusion:remove_occlusion(self._unit)
 		self:material_applied()
 	end
 end
 
--- Lines 866-896
+-- Lines 899-921
 function ContourExt:material_applied(material_was_swapped)
 	if not self._contour_list then
 		return
@@ -773,14 +790,6 @@ function ContourExt:material_applied(material_was_swapped)
 	local data = setup.data
 
 	if material_was_swapped then
-		managers.occlusion:remove_occlusion(self._unit)
-
-		local base_ext = self._unit:base()
-
-		if base_ext and base_ext.set_allow_invisible then
-			base_ext:set_allow_invisible(false)
-		end
-
 		self:update_materials()
 	else
 		self._materials = nil
@@ -796,7 +805,7 @@ function ContourExt:material_applied(material_was_swapped)
 	end
 end
 
--- Lines 898-915
+-- Lines 923-940
 function ContourExt:_chk_update_state()
 	local needs_update = false
 
@@ -817,7 +826,7 @@ function ContourExt:_chk_update_state()
 	end
 end
 
--- Lines 917-944
+-- Lines 942-969
 function ContourExt:_chk_damage_bonuses()
 	local char_dmg_ext = self._unit:character_damage()
 
@@ -845,7 +854,7 @@ function ContourExt:_chk_damage_bonuses()
 	char_dmg_ext:on_marked_state(dmg_bonus, dmg_bonus_dist_idx)
 end
 
--- Lines 947-974
+-- Lines 972-999
 function ContourExt:_chk_mission_marked_events(added_setup)
 	local element = self._unit:unit_data() and self._unit:unit_data().mission_element
 
@@ -875,7 +884,7 @@ function ContourExt:_chk_mission_marked_events(added_setup)
 	end
 end
 
--- Lines 977-989
+-- Lines 1002-1014
 function ContourExt:update_materials()
 	if self._contour_list then
 		self._materials = nil
@@ -889,7 +898,7 @@ function ContourExt:update_materials()
 	end
 end
 
--- Lines 991-1011
+-- Lines 1016-1036
 function ContourExt:save(data)
 	local my_save_data = {}
 
@@ -915,7 +924,7 @@ function ContourExt:save(data)
 	end
 end
 
--- Lines 1013-1027
+-- Lines 1038-1052
 function ContourExt:load(load_data)
 	local my_load_data = load_data.ContourExt
 
@@ -929,5 +938,14 @@ function ContourExt:load(load_data)
 				self:add(setup.type)
 			end
 		end
+	end
+end
+
+-- Lines 1054-1060
+function ContourExt:destroy(unit)
+	if self._removed_occlusion then
+		self._removed_occlusion = nil
+
+		managers.occlusion:add_occlusion(self._unit)
 	end
 end

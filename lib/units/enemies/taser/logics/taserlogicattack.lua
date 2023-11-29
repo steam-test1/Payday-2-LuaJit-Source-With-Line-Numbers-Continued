@@ -131,7 +131,7 @@ function TaserLogicAttack.queued_update(data)
 	CopLogicBase._report_detections(data.detected_attention_objects)
 end
 
--- Lines 148-214
+-- Lines 148-216
 function TaserLogicAttack._upd_enemy_detection(data)
 	managers.groupai:state():on_unit_detection_updated(data.unit)
 
@@ -141,14 +141,17 @@ function TaserLogicAttack._upd_enemy_detection(data)
 
 	CopLogicBase._upd_attention_obj_detection(data, min_reaction, nil)
 
+	local tasing = my_data.tasing
+	local tased_u_key = tasing and tasing.target_u_key
+	local under_fire_nr = 0
 	local under_multiple_fire = nil
 	local alert_chk_t = data.t - 1.2
 
 	for key, enemy_data in pairs(data.detected_attention_objects) do
-		if enemy_data.dmg_t and alert_chk_t < enemy_data.dmg_t then
-			under_multiple_fire = (under_multiple_fire or 0) + 1
+		if tased_u_key ~= key and enemy_data.dmg_t and alert_chk_t < enemy_data.dmg_t then
+			under_fire_nr = under_fire_nr + 1
 
-			if under_multiple_fire > 2 then
+			if under_fire_nr > 2 then
 				under_multiple_fire = true
 
 				break
@@ -157,8 +160,6 @@ function TaserLogicAttack._upd_enemy_detection(data)
 	end
 
 	local find_new_focus_enemy = nil
-	local tasing = my_data.tasing
-	local tased_u_key = tasing and tasing.target_u_key
 	local tase_in_effect = tasing and tasing.target_u_data.unit:movement():tased()
 
 	if tase_in_effect or tasing and data.t - tasing.start_t < math.max(1, data.char_tweak.weapon.is_rifle.aim_delay_tase[2] * 1.5) then
@@ -205,7 +206,7 @@ function TaserLogicAttack._upd_enemy_detection(data)
 	TaserLogicAttack._upd_aim(data, my_data, new_reaction)
 end
 
--- Lines 218-328
+-- Lines 220-330
 function TaserLogicAttack._upd_aim(data, my_data, reaction)
 	local shoot, aim = nil
 	local focus_enemy = data.attention_obj
@@ -348,7 +349,7 @@ function TaserLogicAttack._upd_aim(data, my_data, reaction)
 	CopLogicAttack.aim_allow_fire(shoot, aim, data, my_data)
 end
 
--- Lines 332-364
+-- Lines 334-366
 function TaserLogicAttack.action_complete_clbk(data, action)
 	local my_data = data.internal_data
 	local action_type = action:type()
@@ -389,7 +390,7 @@ function TaserLogicAttack.action_complete_clbk(data, action)
 	end
 end
 
--- Lines 368-373
+-- Lines 370-375
 function TaserLogicAttack._cancel_tase_attempt(data, my_data)
 	if my_data.tasing then
 		local new_action = {
@@ -401,7 +402,7 @@ function TaserLogicAttack._cancel_tase_attempt(data, my_data)
 	end
 end
 
--- Lines 377-387
+-- Lines 379-389
 function TaserLogicAttack.on_criminal_neutralized(data, criminal_key)
 	local my_data = data.internal_data
 
@@ -415,7 +416,7 @@ function TaserLogicAttack.on_criminal_neutralized(data, criminal_key)
 	end
 end
 
--- Lines 391-397
+-- Lines 393-399
 function TaserLogicAttack.on_detected_enemy_destroyed(data, enemy_unit)
 	CopLogicAttack.on_detected_enemy_destroyed(data, enemy_unit)
 
@@ -426,12 +427,12 @@ function TaserLogicAttack.on_detected_enemy_destroyed(data, enemy_unit)
 	end
 end
 
--- Lines 401-403
+-- Lines 403-405
 function TaserLogicAttack.damage_clbk(data, damage_info)
 	CopLogicIdle.damage_clbk(data, damage_info)
 end
 
--- Lines 407-428
+-- Lines 409-430
 function TaserLogicAttack._chk_reaction_to_attention_object(data, attention_data, stationary)
 	local reaction = CopLogicIdle._chk_reaction_to_attention_object(data, attention_data, stationary)
 
@@ -454,10 +455,10 @@ function TaserLogicAttack._chk_reaction_to_attention_object(data, attention_data
 	return reaction
 end
 
--- Lines 432-439
+-- Lines 434-441
 function TaserLogicAttack._chk_play_charge_weapon_sound(data, my_data, focus_enemy)
-	if not my_data.tasing and (not my_data.last_charge_snd_play_t or data.t - my_data.last_charge_snd_play_t > 30) and focus_enemy.verified_dis < 2000 and math.abs(data.m_pos.z - focus_enemy.m_pos.z) < 300 then
-		my_data.last_charge_snd_play_t = data.t
+	if not my_data.tasing and (not data.last_charge_snd_play_t or data.t - data.last_charge_snd_play_t > 30) and focus_enemy.verified_dis < 2000 and math.abs(data.m_pos.z - focus_enemy.m_pos.z) < 300 then
+		data.last_charge_snd_play_t = data.t
 
 		data.unit:sound():play("taser_charge", nil, true)
 	end

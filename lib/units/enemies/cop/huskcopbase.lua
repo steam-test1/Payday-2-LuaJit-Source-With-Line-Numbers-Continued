@@ -1,6 +1,6 @@
 HuskCopBase = HuskCopBase or class(CopBase)
 
--- Lines 5-21
+-- Lines 5-24
 function HuskCopBase:post_init()
 	self._ext_movement = self._unit:movement()
 	self._ext_anim = self._unit:anim_data()
@@ -14,9 +14,10 @@ function HuskCopBase:post_init()
 	managers.enemy:register_enemy(self._unit)
 	self:_chk_spawn_gear()
 	self:enable_leg_arm_hitbox()
+	self:hide_and_remove_collisions_for_a_few_frames()
 end
 
--- Lines 25-36
+-- Lines 28-39
 function HuskCopBase:pre_destroy(unit)
 	if alive(self._headwear_unit) then
 		self._headwear_unit:set_slot(0)

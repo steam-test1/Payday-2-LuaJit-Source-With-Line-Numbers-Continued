@@ -13,7 +13,7 @@ CopActionDodge._SIDES = {
 	"r"
 }
 
--- Lines 9-59
+-- Lines 9-66
 function CopActionDodge:init(action_desc, common_data)
 	self._common_data = common_data
 	self._ext_base = common_data.ext_base
@@ -24,16 +24,22 @@ function CopActionDodge:init(action_desc, common_data)
 	self._timeout = action_desc.timeout
 	self._machine = common_data.machine
 	self._ids_base = Idstring("base")
-	local redir_name = "dodge"
+	local redir_name = "dodge_" .. tostring(action_desc.variation)
 	local redir_res = self._ext_movement:play_redirect(redir_name)
 
 	if redir_res then
-		self._descriptor = action_desc
+		self._side = action_desc.side
+		self._direction = action_desc.direction
+
+		CopActionAct._create_blocks_table(self, action_desc.blocks)
+
 		self._last_vel_z = 0
 
 		self:_determine_rotation_transition()
+
+		self._root_blend_disabled = true
+
 		self._ext_movement:set_root_blend(false)
-		self._machine:set_parameter(redir_res, action_desc.variation, 1)
 
 		if action_desc.speed then
 			self._machine:set_speed(redir_res, action_desc.speed)
@@ -42,9 +48,12 @@ function CopActionDodge:init(action_desc, common_data)
 		self._machine:set_parameter(redir_res, action_desc.side, 1)
 
 		if Network:is_server() then
-			local accuracy = math.clamp(math.floor((action_desc.shoot_accuracy or 1) * 10) / 10, 0, 10)
+			local sync_accuracy = math.clamp(math.floor((action_desc.shoot_accuracy or 1) * 10), 0, 10)
+			self._shoot_accuracy = sync_accuracy / 10
 
-			common_data.ext_network:send("action_dodge_start", self._body_part, CopActionDodge._get_variation_index(action_desc.variation), CopActionDodge._get_side_index(action_desc.side), Rotation(action_desc.direction, math.UP):yaw(), action_desc.speed or 1, accuracy)
+			common_data.ext_network:send("action_dodge_start", self._body_part, CopActionDodge._get_variation_index(action_desc.variation), CopActionDodge._get_side_index(action_desc.side), Rotation(action_desc.direction, math.UP):yaw(), action_desc.speed or 1, sync_accuracy)
+		else
+			self._shoot_accuracy = action_desc.shoot_accuracy / 10
 		end
 
 		self._ext_movement:enable_update()
@@ -57,8 +66,14 @@ function CopActionDodge:init(action_desc, common_data)
 	end
 end
 
--- Lines 63-69
+-- Lines 70-82
 function CopActionDodge:on_exit()
+	if self._root_blend_disabled then
+		self._root_blend_disabled = nil
+
+		self._ext_movement:set_root_blend(true)
+	end
+
 	if Network:is_client() then
 		self._ext_movement:set_m_host_stop_pos(self._ext_movement:m_pos())
 	elseif not self._expired then
@@ -66,7 +81,7 @@ function CopActionDodge:on_exit()
 	end
 end
 
--- Lines 73-104
+-- Lines 86-117
 function CopActionDodge:update(t)
 	if self._ext_anim.dodge then
 		local dt = TimerManager:game():delta_time()
@@ -99,36 +114,36 @@ function CopActionDodge:update(t)
 	end
 end
 
--- Lines 108-110
+-- Lines 121-123
 function CopActionDodge:type()
 	return "dodge"
 end
 
--- Lines 114-116
+-- Lines 127-129
 function CopActionDodge:expired()
 	return self._expired
 end
 
--- Lines 120-122
+-- Lines 133-135
 function CopActionDodge:need_upd()
 	return true
 end
 
--- Lines 126-131
+-- Lines 139-144
 function CopActionDodge:chk_block(action_type, t)
-	if action_type == "death" or action_type == "bleedout" or action_type == "fatal" then
+	if action_type == "death" then
 		return false
 	end
 
-	return true
+	return CopActionAct.chk_block(self, action_type, t)
 end
 
--- Lines 135-137
+-- Lines 148-150
 function CopActionDodge:timeout()
 	return self._timeout
 end
 
--- Lines 141-147
+-- Lines 154-160
 function CopActionDodge._get_variation_index(var_name)
 	for index, test_var_name in ipairs(CopActionDodge._VARIATIONS) do
 		if var_name == test_var_name then
@@ -137,12 +152,12 @@ function CopActionDodge._get_variation_index(var_name)
 	end
 end
 
--- Lines 151-153
+-- Lines 164-166
 function CopActionDodge.get_variation_name(var_index)
 	return CopActionDodge._VARIATIONS[var_index]
 end
 
--- Lines 157-163
+-- Lines 170-176
 function CopActionDodge._get_side_index(side_name)
 	for index, test_side_name in ipairs(CopActionDodge._SIDES) do
 		if side_name == test_side_name then
@@ -151,15 +166,15 @@ function CopActionDodge._get_side_index(side_name)
 	end
 end
 
--- Lines 167-169
+-- Lines 180-182
 function CopActionDodge.get_side_name(side_index)
 	return CopActionDodge._SIDES[side_index]
 end
 
--- Lines 173-194
+-- Lines 186-207
 function CopActionDodge:_determine_rotation_transition()
-	local wanted_side = self._descriptor.side
-	local end_rot = Rotation(self._descriptor.direction, math.UP)
+	local wanted_side = self._side
+	local end_rot = Rotation(self._direction, math.UP)
 
 	if wanted_side == "bwd" then
 		mrotation.set_yaw_pitch_roll(end_rot, mrotation.yaw(end_rot) + 180, 0, 0)
@@ -176,7 +191,7 @@ function CopActionDodge:_determine_rotation_transition()
 	}
 end
 
--- Lines 198-200
+-- Lines 211-213
 function CopActionDodge:accuracy_multiplier()
-	return self._descriptor.shoot_accuracy or 1
+	return self._shoot_accuracy or 1
 end

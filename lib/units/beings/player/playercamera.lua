@@ -287,7 +287,7 @@ end
 
 local mvec1 = Vector3()
 
--- Lines 316-414
+-- Lines 316-410
 function PlayerCamera:set_rotation(rot)
 	if _G.IS_VR then
 		self._camera_object:set_rotation(rot)
@@ -333,13 +333,9 @@ function PlayerCamera:set_rotation(rot)
 	local angle_delta = math.abs(self._sync_dir.yaw - sync_yaw) + math.abs(self._sync_dir.pitch - sync_pitch)
 
 	if tweak_data.network then
-		local update_network = tweak_data.network.camera.network_sync_delta_t < sync_dt and angle_delta > 0 or tweak_data.network.camera.network_angle_delta < angle_delta
-
-		if sync_dt < tweak_data.network.camera.network_max_sync_t then
-			update_network = false
-		end
-
-		if update_network then
+		if angle_delta == 0 then
+			self._last_sync_t = t
+		elseif tweak_data.network.camera.network_sync_delta_t <= sync_dt then
 			local locked_look_dir = self._locked_look_dir_t and t < self._locked_look_dir_t
 
 			if _G.IS_VR then
@@ -364,24 +360,24 @@ function PlayerCamera:set_rotation(rot)
 	end
 end
 
--- Lines 416-420
+-- Lines 412-416
 function PlayerCamera:set_timed_locked_look_dir(t, yaw, pitch)
 	self._locked_look_dir_t = t
 	self._locked_yaw = yaw
 	self._locked_pitch = pitch
 end
 
--- Lines 424-429
+-- Lines 420-425
 function PlayerCamera:set_FOV(fov_value)
 	self._camera_object:set_fov(fov_value)
 end
 
--- Lines 433-435
+-- Lines 429-431
 function PlayerCamera:viewport()
 	return self._vp
 end
 
--- Lines 439-449
+-- Lines 435-445
 function PlayerCamera:set_shaker_parameter(effect, parameter, value)
 	if not self._shakers then
 		return
@@ -392,7 +388,7 @@ function PlayerCamera:set_shaker_parameter(effect, parameter, value)
 	end
 end
 
--- Lines 453-460
+-- Lines 449-456
 function PlayerCamera:play_shaker(effect, amplitude, frequency, offset)
 	if _G.IS_VR then
 		return
@@ -401,12 +397,12 @@ function PlayerCamera:play_shaker(effect, amplitude, frequency, offset)
 	return self._shaker:play(effect, amplitude or 1, frequency or 1, offset or 0)
 end
 
--- Lines 462-464
+-- Lines 458-460
 function PlayerCamera:stop_shaker(id)
 	self._shaker:stop_immediately(id)
 end
 
--- Lines 466-468
+-- Lines 462-464
 function PlayerCamera:shaker()
 	return self._shaker
 end

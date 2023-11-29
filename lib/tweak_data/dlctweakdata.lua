@@ -2,7 +2,7 @@ DLCTweakData = DLCTweakData or class()
 
 require("lib/tweak_data/GeneratedDLCTweakData")
 
--- Lines 10-5279
+-- Lines 10-5294
 function DLCTweakData:init(tweak_data)
 	if managers.dlc:is_installing() then
 		tweak_data.BUNDLED_DLC_PACKAGES = {}
@@ -4608,11 +4608,6 @@ function DLCTweakData:init(tweak_data)
 	self.rip_free.content.loot_global_value = "infamous"
 	self.rip_free.content.loot_drops = {
 		{
-			type_items = "masks",
-			item_entry = "bodhi",
-			amount = 1
-		},
-		{
 			type_items = "weapon_mods",
 			global_value = "normal",
 			item_entry = "wpn_fps_snp_model70_iron_sight",
@@ -5328,7 +5323,7 @@ function DLCTweakData:init(tweak_data)
 		}
 	}
 	self.free_jwshades = {
-		free = true,
+		dlc = "has_john_wick_character",
 		content = {}
 	}
 	self.free_jwshades.content.loot_global_value = "infamous"
@@ -5339,6 +5334,12 @@ function DLCTweakData:init(tweak_data)
 			amount = 1
 		}
 	}
+	self.john_wick_character = {
+		dlc = "has_john_wick_character",
+		content = {}
+	}
+	self.john_wick_character.content.loot_global_value = "pd2_clan"
+	self.john_wick_character.content.loot_drops = {}
 	self.dbd_boo_0_award = {
 		dlc = "has_dbd_clan",
 		content = {}
@@ -6783,6 +6784,23 @@ function DLCTweakData:init(tweak_data)
 		{
 			type_items = "masks",
 			item_entry = "rvd_03",
+			amount = 1
+		}
+	}
+	self.bodhi_bundle = {
+		content = {},
+		dlc = "has_rvd"
+	}
+	self.bodhi_bundle.content.loot_global_value = "infamous"
+	self.bodhi_bundle.content.loot_drops = {
+		{
+			type_items = "masks",
+			item_entry = "bodhi",
+			amount = 1
+		},
+		{
+			type_items = "masks",
+			item_entry = "bodhi_begins",
 			amount = 1
 		}
 	}

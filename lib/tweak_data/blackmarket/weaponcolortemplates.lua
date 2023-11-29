@@ -195,12 +195,12 @@ function WeaponColorTemplates._setup_npc_weapons(tweak_data, weapons)
 	end
 end
 
--- Lines 213-1854
+-- Lines 213-1855
 function WeaponColorTemplates._setup_color_skin_weapons(tweak_data)
 	local weapons = {}
 
 	for weapon, data in pairs(tweak_data.weapon) do
-		if data.autohit then
+		if data.autohit ~= nil then
 			weapons[weapon] = {}
 		end
 	end

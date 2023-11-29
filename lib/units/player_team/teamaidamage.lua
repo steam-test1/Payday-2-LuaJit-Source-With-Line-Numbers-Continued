@@ -811,7 +811,7 @@ function TeamAIDamage:_unregister_unit()
 	managers.groupai:state():on_criminal_neutralized(self._unit)
 	self._unit:base():unregister()
 	self:_clear_damage_transition_callbacks()
-	Network:detach_unit(self._unit)
+	detach_unit_from_network(self._unit)
 end
 
 -- Lines 823-825

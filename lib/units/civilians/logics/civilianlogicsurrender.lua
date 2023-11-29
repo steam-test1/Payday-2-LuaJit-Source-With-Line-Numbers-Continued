@@ -4,7 +4,7 @@ CivilianLogicSurrender.on_new_objective = CivilianLogicIdle.on_new_objective
 CivilianLogicSurrender.on_rescue_allowed_state = CivilianLogicFlee.on_rescue_allowed_state
 CivilianLogicSurrender.wants_rescue = CivilianLogicFlee.wants_rescue
 
--- Lines 15-110
+-- Lines 15-113
 function CivilianLogicSurrender.enter(data, new_logic_name, enter_params)
 	CopLogicBase.enter(data, new_logic_name, enter_params)
 	data.unit:brain():cancel_all_pathing_searches()
@@ -51,9 +51,12 @@ function CivilianLogicSurrender.enter(data, new_logic_name, enter_params)
 
 	data.unit:brain():set_update_enabled_state(false)
 	data.unit:movement():set_allow_fire(false)
-	managers.groupai:state():add_to_surrendered(data.unit, callback(CivilianLogicSurrender, CivilianLogicSurrender, "queued_update", data))
 
-	my_data.surrender_clbk_registered = true
+	if not data.is_tied then
+		managers.groupai:state():add_to_surrendered(data.unit, callback(CivilianLogicSurrender, CivilianLogicSurrender, "queued_update", data))
+
+		my_data.surrender_clbk_registered = true
+	end
 
 	data.unit:movement():set_stance(data.is_tied and "cbt" or "hos")
 	data.unit:movement():set_cool(false)
@@ -117,7 +120,7 @@ function CivilianLogicSurrender.enter(data, new_logic_name, enter_params)
 	end
 end
 
--- Lines 114-154
+-- Lines 117-158
 function CivilianLogicSurrender.exit(data, new_logic_name, enter_params)
 	CopLogicBase.exit(data, new_logic_name, enter_params)
 
@@ -126,8 +129,9 @@ function CivilianLogicSurrender.exit(data, new_logic_name, enter_params)
 	CivilianLogicFlee._unregister_rescue_SO(data, my_data)
 	managers.groupai:state():unregister_fleeing_civilian(data.key)
 
-	if new_logic_name ~= "inactive" then
+	if new_logic_name ~= "inactive" and not data.is_tied then
 		data.unit:base():set_slot(data.unit, 21)
+		managers.network:session():send_to_peers_synched("sync_unit_event_id_16", data.unit, "brain", HuskCopBrain._NET_EVENTS.surrender_civilian_untied)
 	end
 
 	CopLogicBase.cancel_delayed_clbks(my_data)
@@ -161,7 +165,7 @@ function CivilianLogicSurrender.exit(data, new_logic_name, enter_params)
 	end
 end
 
--- Lines 158-181
+-- Lines 162-185
 function CivilianLogicSurrender.queued_update(rubbish, data)
 	local my_data = data.internal_data
 
@@ -196,7 +200,7 @@ function CivilianLogicSurrender.queued_update(rubbish, data)
 	end
 end
 
--- Lines 185-256
+-- Lines 189-267
 function CivilianLogicSurrender.on_tied(data, aggressor_unit, not_tied, can_flee)
 	local my_data = data.internal_data
 
@@ -257,6 +261,13 @@ function CivilianLogicSurrender.on_tied(data, aggressor_unit, not_tied, can_flee
 			data.unit:inventory():destroy_all_items()
 			managers.groupai:state():on_civilian_tied(data.unit:key())
 			data.unit:base():set_slot(data.unit, 22)
+			managers.network:session():send_to_peers_synched("sync_unit_event_id_16", data.unit, "brain", HuskCopBrain._NET_EVENTS.surrender_civilian_tied)
+
+			if my_data.surrender_clbk_registered then
+				my_data.surrender_clbk_registered = nil
+
+				managers.groupai:state():remove_from_surrendered(data.unit)
+			end
 
 			if data.unit:movement() then
 				data.unit:movement():remove_giveaway()
@@ -281,7 +292,7 @@ function CivilianLogicSurrender.on_tied(data, aggressor_unit, not_tied, can_flee
 				managers.statistics:tied({
 					name = data.unit:base()._tweak_table
 				})
-			else
+			elseif aggressor_unit:base() and aggressor_unit:base().is_husk_player then
 				aggressor_unit:network():send_to_unit({
 					"statistics_tied",
 					data.unit:base()._tweak_table
@@ -293,7 +304,7 @@ function CivilianLogicSurrender.on_tied(data, aggressor_unit, not_tied, can_flee
 	end
 end
 
--- Lines 260-270
+-- Lines 271-281
 function CivilianLogicSurrender._do_initial_act(data, amount, aggressor_unit, initial_act)
 	local my_data = data.internal_data
 	local adj_sumbission = amount * data.char_tweak.submission_intimidate
@@ -310,7 +321,7 @@ function CivilianLogicSurrender._do_initial_act(data, amount, aggressor_unit, in
 	data.unit:brain():action_request(action_data)
 end
 
--- Lines 274-284
+-- Lines 285-295
 function CivilianLogicSurrender.action_complete_clbk(data, action)
 	local my_data = data.internal_data
 	local action_type = action:type()
@@ -322,7 +333,7 @@ function CivilianLogicSurrender.action_complete_clbk(data, action)
 	end
 end
 
--- Lines 288-310
+-- Lines 299-321
 function CivilianLogicSurrender.on_intimidated(data, amount, aggressor_unit, skip_delay)
 	if data.is_tied then
 		return
@@ -354,7 +365,7 @@ function CivilianLogicSurrender.on_intimidated(data, amount, aggressor_unit, ski
 	end
 end
 
--- Lines 314-361
+-- Lines 325-372
 function CivilianLogicSurrender._delayed_intimidate_clbk(ignore_this, params)
 	local data = params[1]
 	local my_data = data.internal_data
@@ -425,7 +436,7 @@ function CivilianLogicSurrender._delayed_intimidate_clbk(ignore_this, params)
 	end
 end
 
--- Lines 365-442
+-- Lines 376-453
 function CivilianLogicSurrender.on_alert(data, alert_data)
 	local alert_type = alert_data[1]
 
@@ -519,7 +530,7 @@ function CivilianLogicSurrender.on_alert(data, alert_data)
 	end
 end
 
--- Lines 446-532
+-- Lines 457-552
 function CivilianLogicSurrender._update_enemy_detection(data, my_data)
 	managers.groupai:state():on_unit_detection_updated(data.unit)
 
@@ -533,7 +544,13 @@ function CivilianLogicSurrender._update_enemy_detection(data, my_data)
 	local chk_vis_func = my_tracker.check_visibility
 
 	for e_key, u_data in pairs(enemies) do
-		if not u_data.is_deployable and chk_vis_func(my_tracker, u_data.tracker) then
+		if u_data.is_deployable then
+			local dis = mvector3.distance(my_pos, u_data.m_det_pos)
+
+			if dis < 1000 then
+				my_data.inside_intimidate_aura = true
+			end
+		elseif chk_vis_func(my_tracker, u_data.tracker) then
 			local enemy_unit = u_data.unit
 			local enemy_pos = u_data.m_det_pos
 			local my_vec = tmp_vec1
@@ -555,12 +572,8 @@ function CivilianLogicSurrender._update_enemy_detection(data, my_data)
 
 			if inside_aura then
 				my_data.inside_intimidate_aura = true
-			elseif dis < 700 then
-				local look_dir = enemy_unit:movement():m_head_rot():y()
-
-				if mvector3.dot(my_vec, look_dir) > 0.65 then
-					visible = true
-				end
+			elseif dis < 700 and mvector3.dot(my_vec, enemy_unit:movement():detect_look_dir()) > 0.65 then
+				visible = true
 			end
 		end
 	end
@@ -598,7 +611,7 @@ function CivilianLogicSurrender._update_enemy_detection(data, my_data)
 	my_data.last_upd_t = t
 end
 
--- Lines 536-542
+-- Lines 556-562
 function CivilianLogicSurrender.is_available_for_assignment(data, objective)
 	if objective and objective.forced then
 		return true
