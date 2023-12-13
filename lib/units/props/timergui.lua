@@ -887,7 +887,7 @@ function TimerGui:load(data)
 	self._unit:set_extension_update_enabled(Idstring("timer_gui"), state.update_enabled and true or false)
 end
 
--- Lines 876-903
+-- Lines 876-899
 function TimerGui:post_event(event)
 	if not event then
 		return
@@ -901,10 +901,6 @@ function TimerGui:post_event(event)
 		elseif self._skill == 2 then
 			sound_event = sound_event .. "_basic"
 		end
-	elseif event == self._jam_event and self._skill == 3 and managers.groupai:state():whisper_mode() then
-		self._unit:sound_source():stop()
-
-		return
 	end
 
 	local clbk, cookie = nil
