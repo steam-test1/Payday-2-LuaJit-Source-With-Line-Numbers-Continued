@@ -85,7 +85,7 @@ function BlackMarketTweakData:_add_desc_from_name_macro(tweak_data)
 	end
 end
 
--- Lines 207-280
+-- Lines 207-291
 function BlackMarketTweakData:_init_weapon_mods(tweak_data)
 	if self.weapon_skins then
 		tweak_data.weapon.factory:create_bonuses(tweak_data, self.weapon_skins)
@@ -106,6 +106,7 @@ function BlackMarketTweakData:_init_weapon_mods(tweak_data)
 			pcs = data.pcs,
 			dlc = data.dlc,
 			dlcs = data.dlcs,
+			unlock_dlc = data.unlock_dlc,
 			name_id = data.name_id,
 			desc_id = data.desc_id,
 			infamous = data.infamous,
@@ -156,7 +157,7 @@ function BlackMarketTweakData:_init_weapon_mods(tweak_data)
 	end
 end
 
--- Lines 284-571
+-- Lines 295-578
 function BlackMarketTweakData:_init_characters(tweak_data)
 	self.characters = {
 		locked = {}
@@ -200,6 +201,7 @@ function BlackMarketTweakData:_init_characters(tweak_data)
 	}
 	self.characters.locked.jowi = {
 		sequence = "var_mtr_john_wick",
+		global_value = "pd2_clan",
 		dlc = "john_wick_character",
 		material_config = {
 			fps = "units/payday2/characters/fps_criminals_suit_1/mtr_john_wick",
@@ -267,6 +269,7 @@ function BlackMarketTweakData:_init_characters(tweak_data)
 	}
 	self.characters.locked.jimmy = {
 		texture_bundle_folder = "coco",
+		dlc = "coco",
 		mask_on_sequence = "mask_on_jimmy",
 		mask_off_sequence = "mask_off_jimmy",
 		sequence = "var_mtr_jimmy",
@@ -566,7 +569,7 @@ function BlackMarketTweakData:_init_characters(tweak_data)
 	end
 end
 
--- Lines 575-651
+-- Lines 582-658
 function BlackMarketTweakData:_init_cash()
 	self.cash = {
 		cash10 = {}
@@ -682,7 +685,7 @@ function BlackMarketTweakData:_init_cash()
 	end
 end
 
--- Lines 655-737
+-- Lines 662-744
 function BlackMarketTweakData:_init_xp()
 	self.xp = {
 		xp10 = {}
@@ -805,7 +808,7 @@ function BlackMarketTweakData:_init_xp()
 	}
 end
 
--- Lines 741-780
+-- Lines 748-787
 function BlackMarketTweakData:_init_armors()
 	self.armors = {
 		level_1 = {}
@@ -847,7 +850,7 @@ function BlackMarketTweakData:_init_armors()
 	self:_add_desc_from_name_macro(self.armors)
 end
 
--- Lines 784-822
+-- Lines 791-829
 function BlackMarketTweakData:_init_deployables(tweak_data)
 	self.deployables = {
 		doctor_bag = {}
@@ -886,7 +889,7 @@ function BlackMarketTweakData:_init_deployables(tweak_data)
 	self:_add_desc_from_name_macro(self.deployables)
 end
 
--- Lines 824-837
+-- Lines 831-844
 function BlackMarketTweakData:get_mask_icon(mask_id, character)
 	if character and mask_id == "character_locked" then
 		local character_name = CriminalsManager.convert_old_to_new_character_workname(character)
@@ -903,7 +906,7 @@ function BlackMarketTweakData:get_mask_icon(mask_id, character)
 	return guis_catalog .. "textures/pd2/blackmarket/icons/masks/" .. tostring(mask_id)
 end
 
--- Lines 839-850
+-- Lines 846-857
 function BlackMarketTweakData:get_character_icon(character)
 	local character_name = CriminalsManager.convert_old_to_new_character_workname(character)
 	local guis_catalog = "guis/"

@@ -8,7 +8,7 @@ function CrimeSpreeManager:init()
 	self:_setup()
 end
 
--- Lines 15-33
+-- Lines 15-35
 function CrimeSpreeManager:_setup()
 	if not Global.crime_spree then
 		Global.crime_spree = {}
@@ -16,6 +16,7 @@ function CrimeSpreeManager:_setup()
 
 	self._global = Global.crime_spree
 
+	self:_setup_mission_lists()
 	self:_setup_temporary_job()
 	self:_setup_modifiers()
 
@@ -24,7 +25,7 @@ function CrimeSpreeManager:_setup()
 	end
 end
 
--- Lines 35-98
+-- Lines 37-100
 function CrimeSpreeManager:_setup_modifiers()
 	if not self:is_active() then
 		return
@@ -80,7 +81,7 @@ function CrimeSpreeManager:_setup_modifiers()
 	end
 end
 
--- Lines 100-135
+-- Lines 102-137
 function CrimeSpreeManager:get_modifier_stack_data(modifier_type)
 	local stack_data = {}
 	local modifiers = self:is_active() and self:server_active_modifiers() or self:active_modifiers()
@@ -111,7 +112,7 @@ function CrimeSpreeManager:get_modifier_stack_data(modifier_type)
 	return stack_data
 end
 
--- Lines 137-144
+-- Lines 139-146
 function CrimeSpreeManager:has_active_modifier_of_type(modifier_type)
 	for _, mod in ipairs(self:active_modifier_classes()) do
 		if mod._type == modifier_type then
@@ -122,7 +123,7 @@ function CrimeSpreeManager:has_active_modifier_of_type(modifier_type)
 	return false
 end
 
--- Lines 148-152
+-- Lines 150-154
 function CrimeSpreeManager:clear()
 	Global.crime_spree = nil
 	self._global = nil
@@ -130,7 +131,7 @@ function CrimeSpreeManager:clear()
 	self:_setup()
 end
 
--- Lines 154-180
+-- Lines 156-182
 function CrimeSpreeManager:save(data)
 	local available_missions = {}
 
@@ -156,7 +157,7 @@ function CrimeSpreeManager:save(data)
 	data.crime_spree = save_data
 end
 
--- Lines 182-217
+-- Lines 184-218
 function CrimeSpreeManager:load(data, version)
 	local save_data = data.crime_spree or {}
 	save_data.highest_level = save_data.highest_level or data.highest_level
@@ -190,7 +191,7 @@ function CrimeSpreeManager:load(data, version)
 	self._global.highest_level = save_data.highest_level or 0
 end
 
--- Lines 221-227
+-- Lines 222-228
 function CrimeSpreeManager:sync_save(data)
 	data.crime_spree = {
 		level = self:spree_level(),
@@ -200,7 +201,7 @@ function CrimeSpreeManager:sync_save(data)
 	}
 end
 
--- Lines 229-257
+-- Lines 230-258
 function CrimeSpreeManager:sync_load(data)
 	if not data.crime_spree then
 		return
@@ -225,7 +226,7 @@ function CrimeSpreeManager:sync_load(data)
 	end
 end
 
--- Lines 261-300
+-- Lines 262-301
 function CrimeSpreeManager:update(t, dt)
 	if tweak_data.crime_spree.crash_causes_loss and game_state_machine:current_state_name() == "menu_main" and self._global.start_data and self._global.start_data.mission_id then
 		self:_on_mission_failed(self._global.start_data.mission_id)
@@ -261,7 +262,7 @@ function CrimeSpreeManager:update(t, dt)
 	end
 end
 
--- Lines 302-314
+-- Lines 303-315
 function CrimeSpreeManager:reset_crime_spree()
 	self._global.in_progress = false
 	self._global.spree_level = 0
@@ -276,19 +277,19 @@ function CrimeSpreeManager:reset_crime_spree()
 	self._global.modifiers = {}
 end
 
--- Lines 318-321
+-- Lines 319-322
 function CrimeSpreeManager:_add_frame_callback(clbk)
 	self._frame_callbacks = self._frame_callbacks or {}
 
 	table.insert(self._frame_callbacks, clbk)
 end
 
--- Lines 325-327
+-- Lines 326-328
 function CrimeSpreeManager:_is_host()
 	return Network:is_server() or Global.game_settings.single_player
 end
 
--- Lines 329-335
+-- Lines 330-336
 function CrimeSpreeManager:is_active()
 	if game_state_machine then
 		return game_state_machine:gamemode().id == GamemodeCrimeSpree.id
@@ -297,22 +298,22 @@ function CrimeSpreeManager:is_active()
 	end
 end
 
--- Lines 337-339
+-- Lines 338-340
 function CrimeSpreeManager:unlocked()
 	return tweak_data.crime_spree.unlock_level <= managers.experience:current_level() or managers.experience:current_rank() > 0
 end
 
--- Lines 341-343
+-- Lines 342-344
 function CrimeSpreeManager:in_progress()
 	return self._global.in_progress
 end
 
--- Lines 345-347
+-- Lines 346-348
 function CrimeSpreeManager:spree_level()
 	return self:in_progress() and (self._global.spree_level or 0) or -1
 end
 
--- Lines 349-355
+-- Lines 350-356
 function CrimeSpreeManager:server_spree_level()
 	if not self:_is_host() then
 		return self:get_peer_spree_level(1)
@@ -321,32 +322,32 @@ function CrimeSpreeManager:server_spree_level()
 	end
 end
 
--- Lines 357-359
+-- Lines 358-360
 function CrimeSpreeManager:reward_level()
 	return self:in_progress() and (self._global.reward_level or 0) or -1
 end
 
--- Lines 361-363
+-- Lines 362-364
 function CrimeSpreeManager:spree_level_gained()
 	return self._spree_add or 0
 end
 
--- Lines 365-367
+-- Lines 366-368
 function CrimeSpreeManager:mission_completion_gain()
 	return self._mission_completion_gain or 0
 end
 
--- Lines 369-371
+-- Lines 370-372
 function CrimeSpreeManager:catchup_bonus()
 	return math.floor(self._catchup_bonus or 0)
 end
 
--- Lines 373-375
+-- Lines 374-376
 function CrimeSpreeManager:winning_streak_bonus()
 	return math.floor(self._winning_streak or 0)
 end
 
--- Lines 377-383
+-- Lines 378-384
 function CrimeSpreeManager:mission_start_spree_level()
 	if self._global.start_data then
 		return self._global.start_data and self._global.start_data.spree_level
@@ -355,12 +356,12 @@ function CrimeSpreeManager:mission_start_spree_level()
 	end
 end
 
--- Lines 385-387
+-- Lines 386-388
 function CrimeSpreeManager:missions()
 	return self._global.available_missions or {}
 end
 
--- Lines 389-395
+-- Lines 390-396
 function CrimeSpreeManager:server_missions()
 	if not self:_is_host() then
 		return self._global.server_missions or {}
@@ -369,17 +370,17 @@ function CrimeSpreeManager:server_missions()
 	end
 end
 
--- Lines 397-399
+-- Lines 398-400
 function CrimeSpreeManager:randomization_cost()
 	return self._global.randomization_cost or tweak_data.crime_spree.randomization_cost
 end
 
--- Lines 401-403
+-- Lines 402-404
 function CrimeSpreeManager:current_mission()
 	return self._global.current_mission
 end
 
--- Lines 405-413
+-- Lines 406-414
 function CrimeSpreeManager:current_played_mission()
 	if self._global.start_data and self._global.start_data.mission_id then
 		return self._global.start_data.mission_id
@@ -390,24 +391,24 @@ function CrimeSpreeManager:current_played_mission()
 	end
 end
 
--- Lines 415-417
+-- Lines 416-418
 function CrimeSpreeManager:was_cleared()
 	return not not self._global.cleared
 end
 
--- Lines 419-422
+-- Lines 420-423
 function CrimeSpreeManager:show_cleared_dialog()
 	self._global.cleared = nil
 
 	managers.menu:show_crime_spree_cleared_dialog()
 end
 
--- Lines 424-426
+-- Lines 425-427
 function CrimeSpreeManager:has_failed()
 	return self._global.failure_data ~= nil
 end
 
--- Lines 428-433
+-- Lines 429-434
 function CrimeSpreeManager:server_has_failed()
 	if self._global.peers_spree_state and self._global.peers_spree_state[1] then
 		return self._global.peers_spree_state[1] == "failed"
@@ -416,27 +417,27 @@ function CrimeSpreeManager:server_has_failed()
 	return false
 end
 
--- Lines 435-437
+-- Lines 436-438
 function CrimeSpreeManager:show_crash_dialog()
 	return self._show_crash_dialog and self:has_failed()
 end
 
--- Lines 439-441
+-- Lines 440-442
 function CrimeSpreeManager:clear_crash_dialog()
 	self._show_crash_dialog = nil
 end
 
--- Lines 443-445
+-- Lines 444-446
 function CrimeSpreeManager:highest_level()
 	return self._global.highest_level or 0
 end
 
--- Lines 447-449
+-- Lines 448-450
 function CrimeSpreeManager:active_modifiers()
 	return self._global.modifiers
 end
 
--- Lines 451-457
+-- Lines 452-458
 function CrimeSpreeManager:server_active_modifiers()
 	if not self:_is_host() then
 		return self._global.server_modifiers or {}
@@ -445,12 +446,12 @@ function CrimeSpreeManager:server_active_modifiers()
 	end
 end
 
--- Lines 459-461
+-- Lines 460-462
 function CrimeSpreeManager:active_modifier_classes()
 	return self._modifiers or {}
 end
 
--- Lines 463-497
+-- Lines 464-498
 function CrimeSpreeManager:modifiers_to_select(table_name, add_repeating)
 	local modifiers_table = tweak_data.crime_spree.modifiers[table_name]
 	local base_number = self:server_spree_level() / tweak_data.crime_spree.modifier_levels[table_name]
@@ -485,7 +486,7 @@ function CrimeSpreeManager:modifiers_to_select(table_name, add_repeating)
 	return math.floor(math.max(base_number - active_number, 0))
 end
 
--- Lines 499-511
+-- Lines 500-512
 function CrimeSpreeManager:next_modifier_level(table_name, level, additional)
 	local total = #tweak_data.crime_spree.modifiers[table_name]
 	local is_repeating = tweak_data.crime_spree.repeating_modifiers[table_name] ~= nil
@@ -498,17 +499,17 @@ function CrimeSpreeManager:next_modifier_level(table_name, level, additional)
 	return (count + 1 + (additional or 0)) * tweak_data.crime_spree.modifier_levels[table_name]
 end
 
--- Lines 513-515
+-- Lines 514-516
 function CrimeSpreeManager:active_gage_assets()
 	return self._active_assets or {}
 end
 
--- Lines 517-519
+-- Lines 518-520
 function CrimeSpreeManager:can_refund_entry_fee()
 	return self._global.refund_allowed
 end
 
--- Lines 523-569
+-- Lines 524-570
 function CrimeSpreeManager:get_narrative_tweak_data_for_mission_level(mission_id)
 	local mission = self:get_mission(mission_id)
 	local narrative_id, narrative_data, day, variant = nil
@@ -556,7 +557,7 @@ function CrimeSpreeManager:get_narrative_tweak_data_for_mission_level(mission_id
 	return narrative_data, day, variant
 end
 
--- Lines 571-580
+-- Lines 572-581
 function CrimeSpreeManager:get_mission(mission_id)
 	mission_id = mission_id or self:current_mission()
 
@@ -569,28 +570,26 @@ function CrimeSpreeManager:get_mission(mission_id)
 	end
 end
 
--- Lines 615-637
+-- Lines 616-638
 function CrimeSpreeManager:get_random_missions(prev_missions)
-	local mission_lists = tweak_data.crime_spree.missions
-
 	return {
-		table.random(mission_lists[1]),
-		table.random(mission_lists[2]),
-		table.random(mission_lists[3])
+		table.random(self._global.mission_lists[1]),
+		table.random(self._global.mission_lists[2]),
+		table.random(self._global.mission_lists[3])
 	}
 end
 
--- Lines 639-641
+-- Lines 640-642
 function CrimeSpreeManager:get_random_mission()
 	return table.random(self:get_random_missions())
 end
 
--- Lines 643-645
+-- Lines 644-646
 function CrimeSpreeManager:get_start_cost(level)
 	return math.floor(tweak_data.crime_spree.initial_cost + tweak_data.crime_spree.cost_per_level * (level or 0))
 end
 
--- Lines 647-653
+-- Lines 648-654
 function CrimeSpreeManager:get_continue_cost(level)
 	if level == 0 then
 		return 0
@@ -599,17 +598,17 @@ function CrimeSpreeManager:get_continue_cost(level)
 	end
 end
 
--- Lines 655-657
+-- Lines 656-658
 function CrimeSpreeManager:set_starting_level(level)
 	self._starting_level = level
 end
 
--- Lines 659-661
+-- Lines 660-662
 function CrimeSpreeManager:starting_level()
 	return self._starting_level or 0
 end
 
--- Lines 664-675
+-- Lines 665-676
 function CrimeSpreeManager:check_forced_modifiers()
 	if not self:is_active() then
 		return
@@ -622,22 +621,22 @@ function CrimeSpreeManager:check_forced_modifiers()
 	end
 end
 
--- Lines 677-679
+-- Lines 678-680
 function CrimeSpreeManager:get_forced_modifiers()
 	return self:_get_modifiers("forced", self:modifiers_to_select("forced", true), true)
 end
 
--- Lines 682-688
+-- Lines 683-689
 function CrimeSpreeManager:get_loud_modifiers()
 	return self:_get_modifiers("loud", tweak_data.crime_spree.max_modifiers_displayed)
 end
 
--- Lines 690-696
+-- Lines 691-697
 function CrimeSpreeManager:get_stealth_modifiers()
 	return self:_get_modifiers("stealth", tweak_data.crime_spree.max_modifiers_displayed)
 end
 
--- Lines 698-768
+-- Lines 699-769
 function CrimeSpreeManager:_get_modifiers(table_name, max_count, add_repeating)
 	local modifiers = {}
 	local default_modifier_level = tweak_data.crime_spree.modifier_levels[table_name] or 0
@@ -688,7 +687,7 @@ function CrimeSpreeManager:_get_modifiers(table_name, max_count, add_repeating)
 	return modifiers
 end
 
--- Lines 770-791
+-- Lines 771-792
 function CrimeSpreeManager:select_modifier(modifier_id)
 	if table.contains(self._global.modifiers, modifier_id) then
 		Application:error("Can not add the same modifier twice! ", modifier_id)
@@ -710,7 +709,7 @@ function CrimeSpreeManager:select_modifier(modifier_id)
 	return true
 end
 
--- Lines 793-813
+-- Lines 794-814
 function CrimeSpreeManager:get_modifier(modifier_id)
 	for _, modifiers_table in pairs(tweak_data.crime_spree.modifiers) do
 		for _, data in pairs(modifiers_table) do
@@ -729,7 +728,7 @@ function CrimeSpreeManager:get_modifier(modifier_id)
 	end
 end
 
--- Lines 815-837
+-- Lines 816-838
 function CrimeSpreeManager:make_modifier_description(modifier_id, with_total)
 	local data = managers.crime_spree:get_modifier(modifier_id) or {}
 	local modifier_class = _G[data.class]
@@ -758,7 +757,7 @@ function CrimeSpreeManager:make_modifier_description(modifier_id, with_total)
 	return desc
 end
 
--- Lines 839-847
+-- Lines 840-848
 function CrimeSpreeManager:is_repeating_modifier(modifier_id)
 	for id, mod_table in pairs(tweak_data.crime_spree.repeating_modifiers) do
 		for _, mod_data in pairs(mod_table) do
@@ -769,14 +768,14 @@ function CrimeSpreeManager:is_repeating_modifier(modifier_id)
 	end
 end
 
--- Lines 849-852
+-- Lines 850-853
 function CrimeSpreeManager:get_reward_amount(reward_id)
 	self._global.unshown_rewards = self._global.unshown_rewards or {}
 
 	return math.floor(self._global.unshown_rewards[reward_id] or 0)
 end
 
--- Lines 854-859
+-- Lines 855-860
 function CrimeSpreeManager:flush_reward_amount(reward_id)
 	self._global.unshown_rewards = self._global.unshown_rewards or {}
 
@@ -785,7 +784,7 @@ function CrimeSpreeManager:flush_reward_amount(reward_id)
 	end
 end
 
--- Lines 863-888
+-- Lines 864-889
 function CrimeSpreeManager:start_crime_spree(starting_level)
 	print("CrimeSpreeManager:start_crime_spree")
 
@@ -806,7 +805,7 @@ function CrimeSpreeManager:start_crime_spree(starting_level)
 	return true
 end
 
--- Lines 890-921
+-- Lines 891-922
 function CrimeSpreeManager:continue_crime_spree()
 	if not self:can_continue_spree() then
 		return false
@@ -830,7 +829,7 @@ function CrimeSpreeManager:continue_crime_spree()
 	return true
 end
 
--- Lines 923-940
+-- Lines 924-941
 function CrimeSpreeManager:generate_new_mission_set()
 	if not self:in_progress() then
 		Application:error("Can not generate new missions if a crime spree is not in progress!")
@@ -847,7 +846,7 @@ function CrimeSpreeManager:generate_new_mission_set()
 	end
 end
 
--- Lines 942-966
+-- Lines 943-967
 function CrimeSpreeManager:randomize_mission_set()
 	if not self:in_progress() then
 		Application:error("Can not randomize missions if a crime spree is not in progress!")
@@ -870,7 +869,7 @@ function CrimeSpreeManager:randomize_mission_set()
 	end
 end
 
--- Lines 968-977
+-- Lines 969-978
 function CrimeSpreeManager:calculate_rewards()
 	local rewards = {}
 
@@ -882,18 +881,18 @@ function CrimeSpreeManager:calculate_rewards()
 	return rewards
 end
 
--- Lines 979-982
+-- Lines 980-983
 function CrimeSpreeManager:generate_loot_drops(amount)
 	self._generated_loot_drops = {}
 	self._loot_drops_coroutine = managers.lootdrop:new_make_mass_drop(amount, tweak_data.crime_spree.loot_drop_reward_pay_class, self._generated_loot_drops)
 end
 
--- Lines 985-987
+-- Lines 986-988
 function CrimeSpreeManager:loot_drops()
 	return self._loot_drops or {}
 end
 
--- Lines 990-1009
+-- Lines 991-1010
 function CrimeSpreeManager:_give_all_cosmetics_reward(amount)
 	local all_cosmetics_reward = tweak_data.crime_spree.all_cosmetics_reward
 	local type, amt = nil
@@ -916,7 +915,7 @@ function CrimeSpreeManager:_give_all_cosmetics_reward(amount)
 	}
 end
 
--- Lines 1011-1092
+-- Lines 1012-1093
 function CrimeSpreeManager:generate_cosmetic_drops(amount)
 	local tradables_inventory = managers.blackmarket:get_inventory_tradable()
 	local rewards_pool = {}
@@ -990,12 +989,12 @@ function CrimeSpreeManager:generate_cosmetic_drops(amount)
 	return final_rewards
 end
 
--- Lines 1094-1096
+-- Lines 1095-1097
 function CrimeSpreeManager:cosmetic_rewards()
 	return self._cosmetic_drops or {}
 end
 
--- Lines 1099-1123
+-- Lines 1100-1124
 function CrimeSpreeManager:award_rewards(rewards_table)
 	for id, amount in pairs(rewards_table) do
 		if id == "experience" then
@@ -1012,7 +1011,7 @@ function CrimeSpreeManager:award_rewards(rewards_table)
 	end
 end
 
--- Lines 1128-1149
+-- Lines 1129-1150
 function CrimeSpreeManager:can_start_spree(starting_level)
 	if self:in_progress() then
 		Application:error("Can not start a Crime Spree if one is already in progress!")
@@ -1033,7 +1032,7 @@ function CrimeSpreeManager:can_start_spree(starting_level)
 	return true
 end
 
--- Lines 1152-1159
+-- Lines 1153-1160
 function CrimeSpreeManager:can_select_mission(mission_id)
 	for _, data in ipairs(self:missions()) do
 		if mission_id == data[1] then
@@ -1044,7 +1043,7 @@ function CrimeSpreeManager:can_select_mission(mission_id)
 	return false
 end
 
--- Lines 1162-1189
+-- Lines 1163-1190
 function CrimeSpreeManager:select_mission(mission_id)
 	if mission_id == false then
 		self._global.current_mission = nil
@@ -1067,7 +1066,7 @@ function CrimeSpreeManager:select_mission(mission_id)
 	end
 end
 
--- Lines 1191-1201
+-- Lines 1192-1202
 function CrimeSpreeManager:_setup_global_from_mission_id(mission_id)
 	local mission_data = self:get_mission(mission_id)
 
@@ -1079,7 +1078,7 @@ function CrimeSpreeManager:_setup_global_from_mission_id(mission_id)
 	end
 end
 
--- Lines 1204-1226
+-- Lines 1205-1227
 function CrimeSpreeManager:can_continue_spree()
 	if not self:in_progress() then
 		Application:error("Can not continue a Crime Spree if one is not in progress!")
@@ -1105,12 +1104,12 @@ CrimeSpreeManager.GageAssetEvents = {
 	SendAlreadyUnlocked = 1
 }
 
--- Lines 1235-1237
+-- Lines 1236-1238
 function CrimeSpreeManager:can_unlock_asset_is_in_game()
 	return game_state_machine:current_state_name() ~= "ingame_waiting_for_players" or managers.criminals:get_num_player_criminals() > 0
 end
 
--- Lines 1239-1248
+-- Lines 1240-1249
 function CrimeSpreeManager:can_unlock_asset()
 	if self:can_unlock_asset_is_in_game() then
 		return false, "menu_cs_ga_in_progress"
@@ -1121,7 +1120,7 @@ function CrimeSpreeManager:can_unlock_asset()
 	return not self._has_unlocked_asset, "menu_cs_ga_limit_reached"
 end
 
--- Lines 1250-1256
+-- Lines 1251-1257
 function CrimeSpreeManager:is_asset_unlocked(asset_id)
 	if self._unlocked_assets then
 		return table.contains(self._unlocked_assets, asset_id)
@@ -1130,7 +1129,7 @@ function CrimeSpreeManager:is_asset_unlocked(asset_id)
 	end
 end
 
--- Lines 1258-1264
+-- Lines 1259-1265
 function CrimeSpreeManager:_can_asset_be_unlocked(asset_id)
 	if self._unlocked_assets then
 		return not table.contains(self._unlocked_assets, asset_id)
@@ -1139,7 +1138,7 @@ function CrimeSpreeManager:_can_asset_be_unlocked(asset_id)
 	end
 end
 
--- Lines 1266-1309
+-- Lines 1267-1310
 function CrimeSpreeManager:unlock_gage_asset(asset_id)
 	local asset_tweak_data = tweak_data.crime_spree.assets[asset_id]
 
@@ -1179,7 +1178,7 @@ function CrimeSpreeManager:unlock_gage_asset(asset_id)
 	return true
 end
 
--- Lines 1311-1363
+-- Lines 1312-1364
 function CrimeSpreeManager:_on_asset_unlocked(asset_id, peer, forced)
 	local asset_tweak_data = tweak_data.crime_spree.assets[asset_id]
 	peer = peer or managers.network:session():local_peer()
@@ -1236,14 +1235,33 @@ function CrimeSpreeManager:_on_asset_unlocked(asset_id, peer, forced)
 	return true
 end
 
--- Lines 1365-1372
+-- Lines 1366-1373
 function CrimeSpreeManager:on_gage_asset_event(event_id, asset_id, peer)
 	if event_id == CrimeSpreeManager.GageAssetEvents.Unlock then
 		self:_on_asset_unlocked(asset_id, peer)
 	end
 end
 
--- Lines 1376-1380
+-- Lines 1376-1392
+function CrimeSpreeManager:_setup_mission_lists()
+	self._global.mission_lists = {}
+	local dlc_unlocked, should_hide_unavailable = nil
+
+	for index, mission_list in ipairs(tweak_data.crime_spree.missions) do
+		self._global.mission_lists[index] = {}
+
+		for _, mission in ipairs(mission_list) do
+			dlc_unlocked = not mission.level.dlc or managers.dlc:is_dlc_unlocked(mission.level.dlc)
+			should_hide_unavailable = mission.level.dlc and managers.dlc:should_hide_unavailable(mission.level.dlc) or false
+
+			if dlc_unlocked or not should_hide_unavailable then
+				table.insert(self._global.mission_lists[index], mission)
+			end
+		end
+	end
+end
+
+-- Lines 1396-1400
 function CrimeSpreeManager:set_temporary_mission(mission_id)
 	self._global.current_mission = mission_id
 
@@ -1251,7 +1269,7 @@ function CrimeSpreeManager:set_temporary_mission(mission_id)
 	self:_setup_temporary_job()
 end
 
--- Lines 1382-1393
+-- Lines 1402-1413
 function CrimeSpreeManager:_setup_temporary_job()
 	if not self:current_mission() then
 		return
@@ -1263,7 +1281,7 @@ function CrimeSpreeManager:_setup_temporary_job()
 	}
 end
 
--- Lines 1398-1419
+-- Lines 1418-1439
 function CrimeSpreeManager:on_mission_started(mission_id)
 	if not self:is_active() then
 		return
@@ -1280,7 +1298,7 @@ function CrimeSpreeManager:on_mission_started(mission_id)
 	MenuCallbackHandler:save_progress()
 end
 
--- Lines 1422-1517
+-- Lines 1442-1537
 function CrimeSpreeManager:on_mission_completed(mission_id)
 	if not self:is_active() then
 		return
@@ -1360,7 +1378,7 @@ function CrimeSpreeManager:on_mission_completed(mission_id)
 	end
 end
 
--- Lines 1520-1529
+-- Lines 1540-1549
 function CrimeSpreeManager:on_mission_failed(mission_id)
 	if not self:is_active() then
 		return
@@ -1369,7 +1387,7 @@ function CrimeSpreeManager:on_mission_failed(mission_id)
 	self:_on_mission_failed(mission_id)
 end
 
--- Lines 1531-1565
+-- Lines 1551-1585
 function CrimeSpreeManager:_on_mission_failed(mission_id)
 	print("[CrimeSpreeManager:_on_mission_failed]")
 
@@ -1397,7 +1415,7 @@ function CrimeSpreeManager:_on_mission_failed(mission_id)
 	MenuCallbackHandler:save_progress()
 end
 
--- Lines 1569-1582
+-- Lines 1589-1602
 function CrimeSpreeManager:check_achievements()
 	if not self:is_active() or not self:in_progress() then
 		return
@@ -1410,7 +1428,7 @@ function CrimeSpreeManager:check_achievements()
 	end
 end
 
--- Lines 1586-1617
+-- Lines 1606-1637
 function CrimeSpreeManager:on_spree_complete()
 	if not self:in_progress() then
 		return
@@ -1427,12 +1445,12 @@ function CrimeSpreeManager:on_spree_complete()
 	MenuCallbackHandler:save_progress()
 end
 
--- Lines 1619-1621
+-- Lines 1639-1641
 function CrimeSpreeManager:is_generating_rewards()
 	return self._loot_drops_coroutine ~= nil
 end
 
--- Lines 1623-1628
+-- Lines 1643-1648
 function CrimeSpreeManager:reward_generation_progress()
 	if self._generated_loot_drops then
 		return self._generated_loot_drops.progress.current or 0, self._generated_loot_drops.progress.total or 1
@@ -1441,7 +1459,7 @@ function CrimeSpreeManager:reward_generation_progress()
 	return 1
 end
 
--- Lines 1630-1654
+-- Lines 1650-1674
 function CrimeSpreeManager:has_finished_generating_rewards()
 	if self._loot_drops_coroutine then
 		local status = coroutine.status(self._loot_drops_coroutine)
@@ -1466,17 +1484,17 @@ function CrimeSpreeManager:has_finished_generating_rewards()
 	return true
 end
 
--- Lines 1658-1660
+-- Lines 1678-1680
 function CrimeSpreeManager:enable_crime_spree_gamemode()
 	game_state_machine:change_gamemode_by_name("crime_spree")
 end
 
--- Lines 1662-1664
+-- Lines 1682-1684
 function CrimeSpreeManager:disable_crime_spree_gamemode()
 	game_state_machine:change_gamemode_by_name("standard")
 end
 
--- Lines 1668-1680
+-- Lines 1688-1700
 function CrimeSpreeManager:apply_matchmake_attributes(lobby_attributes)
 	print("[CrimeSpreeManager] Applying lobby attributes...")
 
@@ -1488,14 +1506,14 @@ function CrimeSpreeManager:apply_matchmake_attributes(lobby_attributes)
 	end
 end
 
--- Lines 1682-1688
+-- Lines 1702-1708
 function CrimeSpreeManager:join_server(server_data)
 	self:set_peer_spree_level(1, server_data.crime_spree)
 
 	self._global.current_mission = server_data.crime_spree_mission
 end
 
--- Lines 1690-1721
+-- Lines 1710-1741
 function CrimeSpreeManager:on_entered_lobby()
 	if not self:is_active() then
 		return
@@ -1528,7 +1546,7 @@ function CrimeSpreeManager:on_entered_lobby()
 	self:_send_crime_spree_level_to_peers()
 end
 
--- Lines 1723-1737
+-- Lines 1743-1757
 function CrimeSpreeManager:on_left_lobby()
 	self:disable_crime_spree_gamemode()
 
@@ -1540,7 +1558,7 @@ function CrimeSpreeManager:on_left_lobby()
 	self._global.server_modifiers = nil
 end
 
--- Lines 1739-1766
+-- Lines 1759-1786
 function CrimeSpreeManager:on_peer_finished_loading(peer)
 	if not self:is_active() then
 		return
@@ -1565,7 +1583,7 @@ function CrimeSpreeManager:on_peer_finished_loading(peer)
 	end
 end
 
--- Lines 1770-1784
+-- Lines 1790-1804
 function CrimeSpreeManager:_send_crime_spree_level_to_peers()
 	if not self:is_active() then
 		return
@@ -1580,7 +1598,7 @@ function CrimeSpreeManager:_send_crime_spree_level_to_peers()
 	managers.network:session():send_to_peers("sync_crime_spree_level", unpack(params))
 end
 
--- Lines 1786-1804
+-- Lines 1806-1824
 function CrimeSpreeManager:send_crime_spree_mission_data(mission_slot, mission_id, selected, perform_randomize)
 	if not self:is_active() or not mission_slot or not mission_id then
 		return
@@ -1598,7 +1616,7 @@ function CrimeSpreeManager:send_crime_spree_mission_data(mission_slot, mission_i
 	end
 end
 
--- Lines 1806-1824
+-- Lines 1826-1844
 function CrimeSpreeManager:send_crime_spree_modifier(peer, modifier_data, announce)
 	if not self:is_active() or not modifier_data then
 		return
@@ -1617,7 +1635,7 @@ function CrimeSpreeManager:send_crime_spree_modifier(peer, modifier_data, announ
 	end
 end
 
--- Lines 1828-1846
+-- Lines 1848-1866
 function CrimeSpreeManager:get_peer_spree_level(peer_id)
 	if Network:multiplayer() and managers.network:session() then
 		local peer = managers.network:session():local_peer()
@@ -1634,7 +1652,7 @@ function CrimeSpreeManager:get_peer_spree_level(peer_id)
 	end
 end
 
--- Lines 1848-1861
+-- Lines 1868-1881
 function CrimeSpreeManager:set_peer_spree_level(peer_id, level, has_failed)
 	self._global.peer_spree_levels = self._global.peer_spree_levels or {}
 	self._global.peer_spree_levels[peer_id] = level
@@ -1646,7 +1664,7 @@ function CrimeSpreeManager:set_peer_spree_level(peer_id, level, has_failed)
 	end
 end
 
--- Lines 1863-1887
+-- Lines 1883-1907
 function CrimeSpreeManager:set_server_mission(mission_slot, mission_id, selected, perform_randomize)
 	self._global.server_missions = self._global.server_missions or {}
 	self._global.server_missions[mission_slot] = self:get_mission(mission_id)
@@ -1674,7 +1692,7 @@ function CrimeSpreeManager:set_server_mission(mission_slot, mission_id, selected
 	end
 end
 
--- Lines 1889-1916
+-- Lines 1909-1936
 function CrimeSpreeManager:set_server_modifier(modifier_id, modifier_level, announce)
 	self._global.server_modifiers = self._global.server_modifiers or {}
 
@@ -1697,7 +1715,7 @@ function CrimeSpreeManager:set_server_modifier(modifier_id, modifier_level, anno
 	end
 end
 
--- Lines 1918-1926
+-- Lines 1938-1946
 function CrimeSpreeManager:_announce_modifier(modifier_id)
 	if managers.menu_component and managers.menu_component:crime_spree_details_gui() then
 		managers.menu_component:crime_spree_details_gui():show_new_modifier(modifier_id)
@@ -1706,27 +1724,27 @@ function CrimeSpreeManager:_announce_modifier(modifier_id)
 	end
 end
 
--- Lines 1929-1933
+-- Lines 1949-1953
 function CrimeSpreeManager:on_finalize_modifiers()
 	if not self:_is_host() then
 		self:_setup_modifiers()
 	end
 end
 
--- Lines 1937-1940
+-- Lines 1957-1960
 function CrimeSpreeManager:set_consumable_value(name, value)
 	self._consumable_values = self._consumable_values or {}
 	self._consumable_values[name] = value
 end
 
--- Lines 1942-1945
+-- Lines 1962-1965
 function CrimeSpreeManager:has_consumable_value(name)
 	self._consumable_values = self._consumable_values or {}
 
 	return self._consumable_values[name] ~= nil
 end
 
--- Lines 1947-1954
+-- Lines 1967-1974
 function CrimeSpreeManager:consumable_value(name)
 	self._consumable_values = self._consumable_values or {}
 
@@ -1738,7 +1756,7 @@ function CrimeSpreeManager:consumable_value(name)
 	end
 end
 
--- Lines 1959-1964
+-- Lines 1979-1984
 function CrimeSpreeManager:_check_highest_level(value)
 	if value > (self._global.highest_level or 0) then
 		self._global.highest_level = value

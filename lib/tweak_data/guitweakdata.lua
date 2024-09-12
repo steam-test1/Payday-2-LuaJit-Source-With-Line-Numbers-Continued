@@ -1,6 +1,6 @@
 GuiTweakData = GuiTweakData or class()
 
--- Lines 3-2219
+-- Lines 3-2235
 function GuiTweakData:init(tweak_data)
 	local is_win_32 = SystemInfo:platform() == Idstring("WIN32")
 	local is_nextgen = SystemInfo:platform() == Idstring("PS4") or SystemInfo:platform() == Idstring("XB1")
@@ -1853,7 +1853,7 @@ function GuiTweakData:init(tweak_data)
 			icon = "sidebar_filters"
 		},
 		{
-			visible_callback = "clbk_visible_multiplayer",
+			visible_callback = "clbk_visible_multiplayer_epic_mm",
 			name_id = "menu_cn_search_lobby_code",
 			callback = "clbk_search_lobby_code",
 			id = "search_lobby_code",
@@ -2060,8 +2060,9 @@ function GuiTweakData:init(tweak_data)
 						"jimmy1"
 					}
 				},
+				id = "jimmy_contact",
 				name_id = "menu_jimmy",
-				id = "jimmy_contact"
+				dlc = "coco"
 			},
 			{
 				{
@@ -2071,8 +2072,9 @@ function GuiTweakData:init(tweak_data)
 						"continental1"
 					}
 				},
+				id = "continental_contact",
 				name_id = "menu_continental",
-				id = "continental_contact"
+				dlc = "spa"
 			},
 			{
 				{
@@ -2183,8 +2185,9 @@ function GuiTweakData:init(tweak_data)
 						"jowi4"
 					}
 				},
+				id = "jowi",
 				name_id = "menu_jowi",
-				id = "jowi"
+				dlc = "john_wick_character"
 			},
 			{
 				{
@@ -2286,8 +2289,9 @@ function GuiTweakData:init(tweak_data)
 						"bodhi1"
 					}
 				},
+				id = "bodhi",
 				name_id = "menu_bodhi",
-				id = "bodhi"
+				dlc = "rvd"
 			},
 			{
 				{
@@ -2297,8 +2301,9 @@ function GuiTweakData:init(tweak_data)
 						"jimmy1"
 					}
 				},
+				id = "jimmy",
 				name_id = "menu_jimmy",
-				id = "jimmy"
+				dlc = "coco"
 			},
 			{
 				{
@@ -2330,8 +2335,9 @@ function GuiTweakData:init(tweak_data)
 						"chico1"
 					}
 				},
+				id = "chico",
 				name_id = "menu_chico",
-				id = "chico"
+				dlc = "chico"
 			},
 			{
 				{
@@ -5205,15 +5211,9 @@ function GuiTweakData:init(tweak_data)
 		}
 	}
 	self.new_heists = {
-		limit = 6
+		limit = 5
 	}
 
-	table.insert(self.new_heists, {
-		name_id = "menu_nh_dgs_03",
-		texture_path = "guis/dlcs/dgs/textures/pd2/new_heists/dgs_03_e",
-		epic_url = "https://t.paydaythegame.com/c/30hw2x",
-		url = "https://t.paydaythegame.com/c/8lgjc2"
-	})
 	table.insert(self.new_heists, {
 		name_id = "menu_nh_pda10_04",
 		texture_path = "guis/dlcs/pda10/textures/pd2/new_heists/pda10_04",
@@ -5770,7 +5770,7 @@ function GuiTweakData:init(tweak_data)
 	})
 end
 
--- Lines 2221-2240
+-- Lines 2237-2256
 function GuiTweakData:_create_location_bounding_boxes()
 	for _, location in ipairs(self.crime_net.locations) do
 		local params = location[1]
@@ -5798,7 +5798,7 @@ function GuiTweakData:_create_location_bounding_boxes()
 	end
 end
 
--- Lines 2242-2310
+-- Lines 2258-2326
 function GuiTweakData:_create_location_spawning_dots()
 	local map_w = 2048
 	local map_h = 1024
@@ -5876,15 +5876,15 @@ function GuiTweakData:_create_location_spawning_dots()
 	self.crime_net.locations = new_locations
 end
 
--- Lines 2312-2314
+-- Lines 2328-2330
 function GuiTweakData:create_narrative_locations(locations)
 end
 
--- Lines 2316-2325
+-- Lines 2332-2341
 function GuiTweakData:print_locations()
 end
 
--- Lines 2327-2361
+-- Lines 2343-2377
 function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	skipnewlines = skipnewlines or false
 	depth = depth or 0
@@ -5923,7 +5923,7 @@ function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	return tmp
 end
 
--- Lines 2363-2488
+-- Lines 2379-2504
 function GuiTweakData:tradable_inventory_sort_func(index)
 	if type(index) == "string" then
 		index = self:tradable_inventory_sort_index(index)
@@ -6046,12 +6046,12 @@ function GuiTweakData:tradable_inventory_sort_func(index)
 	return nil
 end
 
--- Lines 2490-2492
+-- Lines 2506-2508
 function GuiTweakData:tradable_inventory_sort_name(index)
 	return self.tradable_inventory_sort_list[index] or "none"
 end
 
--- Lines 2494-2501
+-- Lines 2510-2517
 function GuiTweakData:tradable_inventory_sort_index(name)
 	for index, n in ipairs(self.tradable_inventory_sort_list) do
 		if n == name then
@@ -6062,7 +6062,7 @@ function GuiTweakData:tradable_inventory_sort_index(name)
 	return 0
 end
 
--- Lines 2503-2523
+-- Lines 2519-2539
 function GuiTweakData:get_locked_sort_number(dlc, ...)
 	local dlc_data = dlc and Global.dlc_manager.all_dlc_data[dlc]
 	local is_dlc_locked = dlc and not managers.dlc:is_dlc_unlocked(dlc) or false

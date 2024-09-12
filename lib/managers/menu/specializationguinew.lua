@@ -6,11 +6,11 @@ local function make_fine_text(text)
 	text:set_position(math.round(text:x()), math.round(text:y()))
 end
 
--- Lines 8-16
+-- Lines 8-17
 local function filter_hide_unavailable_items(item)
 	local dlc = tweak_data:get_raw_value("skilltree", "specializations", item.specialization_id, "dlc")
 
-	if dlc and not managers.dlc:is_dlc_unlocked(dlc) and tweak_data:get_raw_value("lootdrop", "global_values", dlc, "hide_unavailable") then
+	if dlc and not managers.dlc:is_dlc_unlocked(dlc) and managers.dlc:should_hide_unavailable(dlc) then
 		return false
 	end
 
@@ -25,7 +25,7 @@ local M_FONT = tweak_data.menu.pd2_medium_font
 local M_FONT_SIZE = tweak_data.menu.pd2_medium_font_size
 SpecializationGuiNew = SpecializationGuiNew or class()
 
--- Lines 27-54
+-- Lines 28-55
 function SpecializationGuiNew:init(ws, fullscreen_ws, node)
 	managers.menu:active_menu().renderer.ws:hide()
 
@@ -49,7 +49,7 @@ function SpecializationGuiNew:init(ws, fullscreen_ws, node)
 	self:set_layer(5)
 end
 
--- Lines 56-190
+-- Lines 57-191
 function SpecializationGuiNew:_setup()
 	if alive(self._panel) then
 		self._ws:panel():remove(self._panel)
@@ -144,7 +144,7 @@ function SpecializationGuiNew:_setup()
 		h = self._fullscreen_ws:panel():h()
 	})
 
-	-- Lines 96-98
+	-- Lines 97-99
 	local function func(o)
 		over(0.6, function (p)
 			o:set_alpha(p)
@@ -319,7 +319,7 @@ function SpecializationGuiNew:_setup()
 	end
 end
 
--- Lines 192-242
+-- Lines 193-243
 function SpecializationGuiNew:on_tab_item_pressed(data)
 	for i, item in ipairs(self._category_tab_items) do
 		if i == data.index then
@@ -332,17 +332,17 @@ function SpecializationGuiNew:on_tab_item_pressed(data)
 	local sort_func = nil
 
 	if data.category == "all" then
-		-- Lines 203-205
+		-- Lines 204-206
 		function sort_func(item)
 			return filter_hide_unavailable_items(item)
 		end
 	elseif data.category == "favorites" then
-		-- Lines 207-209
+		-- Lines 208-210
 		function sort_func(item)
 			return filter_hide_unavailable_items(item) and item:is_favorited()
 		end
 	else
-		-- Lines 211-224
+		-- Lines 212-225
 		function sort_func(item)
 			if not filter_hide_unavailable_items(item) then
 				return false
@@ -377,7 +377,7 @@ function SpecializationGuiNew:on_tab_item_pressed(data)
 	end
 end
 
--- Lines 244-472
+-- Lines 245-474
 function SpecializationGuiNew:update_detail_panels(item)
 	self._details_panel:clear()
 	BoxGuiObject:new(self._details_panel, {
@@ -436,7 +436,7 @@ function SpecializationGuiNew:update_detail_panels(item)
 		if dlc and not managers.dlc:is_dlc_unlocked(dlc) then
 			local unlock_id = tweak_data:get_raw_value("lootdrop", "global_values", dlc, "unlock_id") or "bm_menu_dlc_locked"
 
-			if tweak_data:get_raw_value("lootdrop", "global_values", dlc, "hide_unavailable") then
+			if managers.dlc:should_hide_unavailable(dlc) then
 				unlock_id = "bm_menu_dlc_locked"
 			end
 
@@ -613,7 +613,7 @@ function SpecializationGuiNew:update_detail_panels(item)
 	end
 end
 
--- Lines 474-484
+-- Lines 476-486
 function SpecializationGuiNew:_get_item_spec_id_from_index(index)
 	local items = self._scroll_list:items()
 	local spec_id = index and items[index] and items[index].specialization_id
@@ -621,7 +621,7 @@ function SpecializationGuiNew:_get_item_spec_id_from_index(index)
 	return spec_id
 end
 
--- Lines 486-496
+-- Lines 488-498
 function SpecializationGuiNew:_set_current_specialization(index)
 	local specialization_id = self:_get_item_spec_id_from_index(index)
 
@@ -634,7 +634,7 @@ function SpecializationGuiNew:_set_current_specialization(index)
 	managers.menu_component:post_event("menu_enter")
 end
 
--- Lines 498-507
+-- Lines 500-509
 function SpecializationGuiNew:_refresh_scroll()
 	local current_specialization = managers.skilltree:get_specialization_value("current_specialization")
 
@@ -647,7 +647,7 @@ function SpecializationGuiNew:_refresh_scroll()
 	end
 end
 
--- Lines 509-541
+-- Lines 511-543
 function SpecializationGuiNew:dialog_unlock_specialization_card(index, horizontal_index)
 	local specialization_id = self:_get_item_spec_id_from_index(index)
 
@@ -699,7 +699,7 @@ function SpecializationGuiNew:dialog_unlock_specialization_card(index, horizonta
 	end
 end
 
--- Lines 543-561
+-- Lines 545-563
 function SpecializationGuiNew:unlock_specialization_card(params)
 	local cost, index, horizontal_index = unpack(params)
 	local specialization_id = self:_get_item_spec_id_from_index(index)
@@ -722,7 +722,7 @@ function SpecializationGuiNew:unlock_specialization_card(params)
 	self:update_detail_panels()
 end
 
--- Lines 563-574
+-- Lines 565-576
 function SpecializationGuiNew:toggle_favorite(index)
 	local specialization_id = self:_get_item_spec_id_from_index(index)
 
@@ -737,7 +737,7 @@ function SpecializationGuiNew:toggle_favorite(index)
 	managers.menu_component:post_event(state and "selection_next" or "selection_previous")
 end
 
--- Lines 576-586
+-- Lines 578-588
 function SpecializationGuiNew:show_dlc_store(index)
 	local specialization_id = self:_get_item_spec_id_from_index(index)
 
@@ -752,7 +752,7 @@ function SpecializationGuiNew:show_dlc_store(index)
 	end
 end
 
--- Lines 588-596
+-- Lines 590-598
 function SpecializationGuiNew:is_specialization_dlc_locked(index)
 	local specialization_id = self:_get_item_spec_id_from_index(index)
 
@@ -765,11 +765,11 @@ function SpecializationGuiNew:is_specialization_dlc_locked(index)
 	return dlc and not managers.dlc:is_dlc_unlocked(dlc)
 end
 
--- Lines 598-599
+-- Lines 600-601
 function SpecializationGuiNew:update(t, dt)
 end
 
--- Lines 601-606
+-- Lines 603-608
 function SpecializationGuiNew:input_focus()
 	if managers.menu_scene and managers.menu_scene:input_focus() then
 		return false
@@ -778,17 +778,17 @@ function SpecializationGuiNew:input_focus()
 	return 2
 end
 
--- Lines 608-610
+-- Lines 610-612
 function SpecializationGuiNew:move_up()
 	self._scroll_list:move_up()
 end
 
--- Lines 612-614
+-- Lines 614-616
 function SpecializationGuiNew:move_down()
 	self._scroll_list:move_down()
 end
 
--- Lines 616-624
+-- Lines 618-626
 function SpecializationGuiNew:move_left()
 	self._scroll_horizontal_index = math.clamp(self._scroll_horizontal_index - 1, 0, 9)
 	local selected_item = self._scroll_list:selected_item()
@@ -800,7 +800,7 @@ function SpecializationGuiNew:move_left()
 	end
 end
 
--- Lines 626-634
+-- Lines 628-636
 function SpecializationGuiNew:move_right()
 	self._scroll_horizontal_index = math.clamp(self._scroll_horizontal_index + 1, 0, 9)
 	local selected_item = self._scroll_list:selected_item()
@@ -812,7 +812,7 @@ function SpecializationGuiNew:move_right()
 	end
 end
 
--- Lines 636-661
+-- Lines 638-663
 function SpecializationGuiNew:confirm_pressed()
 	local selected_index = self._scroll_list:selected_index()
 
@@ -840,7 +840,7 @@ function SpecializationGuiNew:confirm_pressed()
 	end
 end
 
--- Lines 663-679
+-- Lines 665-681
 function SpecializationGuiNew:special_btn_pressed(button)
 	local selected_index = self._scroll_list:selected_index()
 
@@ -861,7 +861,7 @@ function SpecializationGuiNew:special_btn_pressed(button)
 	end
 end
 
--- Lines 681-754
+-- Lines 683-756
 function SpecializationGuiNew:mouse_pressed(button, x, y)
 	self._scroll_list:mouse_pressed(button, x, y)
 
@@ -932,20 +932,20 @@ function SpecializationGuiNew:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines 756-757
+-- Lines 758-759
 function SpecializationGuiNew:mouse_clicked(o, button, x, y)
 end
 
--- Lines 759-760
+-- Lines 761-762
 function SpecializationGuiNew:mouse_double_click(o, button, x, y)
 end
 
--- Lines 762-764
+-- Lines 764-766
 function SpecializationGuiNew:mouse_released(button, x, y)
 	self._scroll_list:mouse_released(button, x, y)
 end
 
--- Lines 766-833
+-- Lines 768-835
 function SpecializationGuiNew:mouse_moved(o, x, y)
 	local used = false
 	local pointer = "arrow"
@@ -1023,7 +1023,7 @@ function SpecializationGuiNew:mouse_moved(o, x, y)
 	return used, pointer
 end
 
--- Lines 835-848
+-- Lines 837-850
 function SpecializationGuiNew:next_page()
 	local active_index = -1
 
@@ -1044,7 +1044,7 @@ function SpecializationGuiNew:next_page()
 	end
 end
 
--- Lines 850-863
+-- Lines 852-865
 function SpecializationGuiNew:previous_page()
 	local active_index = -1
 
@@ -1065,7 +1065,7 @@ function SpecializationGuiNew:previous_page()
 	end
 end
 
--- Lines 865-876
+-- Lines 867-878
 function SpecializationGuiNew:close()
 	managers.menu:active_menu().renderer.ws:show()
 
@@ -1080,7 +1080,7 @@ function SpecializationGuiNew:close()
 	self._fullscreen_ws:panel():remove(self._fullscreen_panel)
 end
 
--- Lines 878-885
+-- Lines 880-887
 function SpecializationGuiNew:enable()
 	self._enabled = true
 
@@ -1091,7 +1091,7 @@ function SpecializationGuiNew:enable()
 	end
 end
 
--- Lines 887-897
+-- Lines 889-899
 function SpecializationGuiNew:disable()
 	self._enabled = false
 
@@ -1120,12 +1120,12 @@ function SpecializationGuiNew:disable()
 	})
 end
 
--- Lines 899-901
+-- Lines 901-903
 function SpecializationGuiNew:set_layer(layer)
 	self._panel:set_layer(self._init_layer + layer)
 end
 
--- Lines 903-907
+-- Lines 905-909
 function SpecializationGuiNew:make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
@@ -1135,7 +1135,7 @@ end
 
 SpecializationListItem = SpecializationListItem or class(ListItem)
 
--- Lines 911-940
+-- Lines 913-942
 function SpecializationListItem:init(parent, panel_data, info_data)
 	self.card_base_h_size = 64
 
@@ -1174,7 +1174,7 @@ function SpecializationListItem:init(parent, panel_data, info_data)
 	self:setup()
 end
 
--- Lines 942-1206
+-- Lines 944-1208
 function SpecializationListItem:setup()
 	local card_ratio = 0.6956521739130435
 	local offset = 5
@@ -1454,19 +1454,19 @@ function SpecializationListItem:setup()
 	end
 end
 
--- Lines 1208-1211
+-- Lines 1210-1213
 function SpecializationListItem:set_favorite_button_state(state)
 	self._favorite_button_state = state
 
 	self._favorite_button:set_image("guis/textures/favorite_star", state and 0 or 24, 0, 24, 24)
 end
 
--- Lines 1213-1215
+-- Lines 1215-1217
 function SpecializationListItem:refresh()
 	self:setup()
 end
 
--- Lines 1217-1224
+-- Lines 1219-1226
 function SpecializationListItem:on_card_unlocked(horizontal_index)
 	self:refresh()
 	self:_selected_changed(true)
@@ -1477,7 +1477,7 @@ function SpecializationListItem:on_card_unlocked(horizontal_index)
 	SimpleGUIEffectSpewer.infamous_up(item:child("icon"):center_x(), item:child("icon"):center_y(), item)
 end
 
--- Lines 1226-1252
+-- Lines 1228-1254
 function SpecializationListItem:on_fail_unlocked(horizontal_index)
 	if not self.anim_active then
 		self.anim_active = true
@@ -1510,7 +1510,7 @@ function SpecializationListItem:on_fail_unlocked(horizontal_index)
 	end
 end
 
--- Lines 1254-1269
+-- Lines 1256-1271
 function SpecializationListItem:_selected_changed(state)
 	SpecializationListItem.super._selected_changed(self, state)
 	self._content_panel:set_alpha(state and 1 or 0.5)
@@ -1526,7 +1526,7 @@ function SpecializationListItem:_selected_changed(state)
 	end
 end
 
--- Lines 1271-1286
+-- Lines 1273-1288
 function SpecializationListItem:set_horizontal_index(new_index)
 	local new_h_index = math.clamp(new_index, 0, self._max_horizontal_index)
 
@@ -1542,7 +1542,7 @@ function SpecializationListItem:set_horizontal_index(new_index)
 	end
 end
 
--- Lines 1288-1301
+-- Lines 1290-1303
 function SpecializationListItem:set_equipped(state)
 	local title_panel = self._left_side:child("title_panel")
 	local title_text = title_panel:child("title_text")
@@ -1557,7 +1557,7 @@ function SpecializationListItem:set_equipped(state)
 	equipped_text:set_visible(state)
 end
 
--- Lines 1303-1341
+-- Lines 1305-1343
 function SpecializationListItem:hovered_index(x, y)
 	local index = -1
 
@@ -1595,11 +1595,11 @@ function SpecializationListItem:hovered_index(x, y)
 	return index
 end
 
--- Lines 1343-1353
+-- Lines 1345-1355
 function SpecializationListItem:hovered(x, y)
 end
 
--- Lines 1355-1382
+-- Lines 1357-1384
 function SpecializationListItem:pressed(x, y)
 	if self._panel:inside(x, y) then
 		local selected_item = ""
@@ -1630,43 +1630,43 @@ function SpecializationListItem:pressed(x, y)
 	return false, ""
 end
 
--- Lines 1384-1387
+-- Lines 1386-1389
 function SpecializationListItem:is_dlc_locked()
 	local dlc = tweak_data:get_raw_value("skilltree", "specializations", self.specialization_id, "dlc")
 
 	return dlc and not managers.dlc:is_dlc_unlocked(dlc)
 end
 
--- Lines 1389-1391
+-- Lines 1391-1393
 function SpecializationListItem:is_favorited()
 	return self._favorite_button_state
 end
 
--- Lines 1393-1397
+-- Lines 1395-1399
 function SpecializationListItem:is_purchased(horizontal_index)
 	local current_tier = self:get_current_tier()
 
 	return horizontal_index <= current_tier
 end
 
--- Lines 1399-1403
+-- Lines 1401-1405
 function SpecializationListItem:can_purchase_card(horizontal_index)
 	local current_tier = self:get_current_tier()
 
 	return horizontal_index == current_tier + 1
 end
 
--- Lines 1405-1407
+-- Lines 1407-1409
 function SpecializationListItem:get_current_tier()
 	return managers.skilltree:get_specialization_value(self.specialization_id, "tiers", "current_tier")
 end
 
--- Lines 1410-1412
+-- Lines 1412-1414
 function SpecializationListItem:has_multi_choice(index)
 	return self._has_multi_choice_lookup and self._has_multi_choice_lookup[index] or false
 end
 
--- Lines 1414-1450
+-- Lines 1416-1452
 function SpecializationListItem:switch_multi_choice(tier_index, choice_mod)
 	local spec_data = self.specialization_data[tier_index]
 
@@ -1694,7 +1694,7 @@ end
 
 SpecializationCategoryTabItem = SpecializationCategoryTabItem or class()
 
--- Lines 1455-1474
+-- Lines 1457-1476
 function SpecializationCategoryTabItem:init(parent, panel_data, tab_data)
 	self._on_pressed_callback = tab_data.callback
 	self._active_state = tab_data.initial_state or false
@@ -1726,7 +1726,7 @@ function SpecializationCategoryTabItem:init(parent, panel_data, tab_data)
 	self:selected_changed(false)
 end
 
--- Lines 1476-1480
+-- Lines 1478-1482
 function SpecializationCategoryTabItem:selected_changed(state)
 	self._active_state = state
 
@@ -1734,12 +1734,12 @@ function SpecializationCategoryTabItem:selected_changed(state)
 	self._tab_text:set_color(state and Color.black or BUTTON_COLOR)
 end
 
--- Lines 1482-1484
+-- Lines 1484-1486
 function SpecializationCategoryTabItem:inside(x, y)
 	return self._tab_panel:inside(x, y)
 end
 
--- Lines 1486-1499
+-- Lines 1488-1501
 function SpecializationCategoryTabItem:hovered(state)
 	if self._active_state then
 		return
@@ -1756,19 +1756,19 @@ function SpecializationCategoryTabItem:hovered(state)
 	end
 end
 
--- Lines 1501-1503
+-- Lines 1503-1505
 function SpecializationCategoryTabItem:get_active_state()
 	return self._active_state
 end
 
--- Lines 1505-1509
+-- Lines 1507-1511
 function SpecializationCategoryTabItem:pressed()
 	if not self._active_state and self._on_pressed_callback then
 		self._on_pressed_callback()
 	end
 end
 
--- Lines 1511-1513
+-- Lines 1513-1515
 function SpecializationCategoryTabItem:bounds()
 	return {
 		left = self._tab_panel:left(),

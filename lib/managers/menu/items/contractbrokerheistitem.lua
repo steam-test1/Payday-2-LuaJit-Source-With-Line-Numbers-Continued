@@ -362,13 +362,18 @@ function ContractBrokerHeistItem:get_last_played_text()
 	})
 end
 
--- Lines 364-394
+-- Lines 364-396
 function ContractBrokerHeistItem:get_dlc_name_and_color(job_tweak)
 	local dlc_name = ""
 	local dlc_color = Color(1, 0, 1)
 
 	if job_tweak.dlc then
-		if not tweak_data.dlc[job_tweak.dlc] or not tweak_data.dlc[job_tweak.dlc].free then
+		local global_value = managers.dlc:dlc_to_global_value(job_tweak.dlc)
+		local gv_tweak = tweak_data.lootdrop.global_values[global_value] or {}
+		local is_gv_dlc = gv_tweak.dlc and true or false
+		local is_dlc_free = not tweak_data.dlc[job_tweak.dlc] or tweak_data.dlc[job_tweak.dlc].free
+
+		if is_gv_dlc and not is_dlc_free then
 			if job_tweak.dlc == "pd2_clan" then
 				dlc_color = tweak_data.screen_colors.community_color
 
@@ -388,7 +393,7 @@ function ContractBrokerHeistItem:get_dlc_name_and_color(job_tweak)
 	return dlc_name, dlc_color
 end
 
--- Lines 396-413
+-- Lines 398-415
 function ContractBrokerHeistItem:is_stealthable()
 	local job_tweak = tweak_data.narrative:job_data(self._job_data.job_id)
 
@@ -408,7 +413,7 @@ function ContractBrokerHeistItem:is_stealthable()
 	return false
 end
 
--- Lines 415-424
+-- Lines 417-426
 function ContractBrokerHeistItem:is_holiday_event()
 	local is_xmas = false
 	local is_xmas = managers.perpetual_event:get_holiday_tactics() == "BTN_XMAS"
@@ -416,7 +421,7 @@ function ContractBrokerHeistItem:is_holiday_event()
 	return is_xmas and managers.job:is_christmas_job(self._job_data.job_id)
 end
 
--- Lines 426-434
+-- Lines 428-436
 function ContractBrokerHeistItem:_job_num_days()
 	local job_tweak = tweak_data.narrative:job_data(self._job_data.job_id)
 
@@ -429,7 +434,7 @@ function ContractBrokerHeistItem:_job_num_days()
 	end
 end
 
--- Lines 436-443
+-- Lines 438-445
 function ContractBrokerHeistItem:get_heist_day_text()
 	local days = self:_job_num_days()
 
@@ -444,7 +449,7 @@ function ContractBrokerHeistItem:get_heist_day_text()
 	end
 end
 
--- Lines 445-454
+-- Lines 447-456
 function ContractBrokerHeistItem:get_heist_day_icon()
 	local days = self:_job_num_days()
 
@@ -457,12 +462,12 @@ function ContractBrokerHeistItem:get_heist_day_icon()
 	end
 end
 
--- Lines 458-460
+-- Lines 460-462
 function ContractBrokerHeistItem:refresh()
 	self._favourite:set_color(managers.crimenet:is_job_favourite(self._job_data.job_id) and Color.yellow or Color.white)
 end
 
--- Lines 462-471
+-- Lines 464-473
 function ContractBrokerHeistItem:select()
 	if not self._selected then
 		self._selected = true
@@ -477,7 +482,7 @@ function ContractBrokerHeistItem:select()
 	end
 end
 
--- Lines 473-481
+-- Lines 475-483
 function ContractBrokerHeistItem:deselect()
 	if self._selected then
 		self._selected = false
@@ -490,7 +495,7 @@ function ContractBrokerHeistItem:deselect()
 	end
 end
 
--- Lines 483-510
+-- Lines 485-512
 function ContractBrokerHeistItem:mouse_moved(button, x, y, used)
 	local used = used
 	local pointer = nil
@@ -524,7 +529,7 @@ function ContractBrokerHeistItem:mouse_moved(button, x, y, used)
 	return used, pointer
 end
 
--- Lines 512-522
+-- Lines 514-524
 function ContractBrokerHeistItem:mouse_clicked(o, button, x, y)
 	if self._favourite:inside(x, y) then
 		self:toggle_favourite()
@@ -539,7 +544,7 @@ function ContractBrokerHeistItem:mouse_clicked(o, button, x, y)
 	end
 end
 
--- Lines 524-560
+-- Lines 526-562
 function ContractBrokerHeistItem:trigger()
 	if self._job_data and not self._job_data.enabled then
 		local store_page_opened = self:trigger_open_store_page()
@@ -577,7 +582,7 @@ function ContractBrokerHeistItem:trigger()
 	})
 end
 
--- Lines 562-571
+-- Lines 564-573
 function ContractBrokerHeistItem:trigger_open_store_page()
 	local job_tweak = self._job_data and tweak_data.narrative.jobs[self._job_data.job_id]
 	local dlc = job_tweak and job_tweak.dlc
@@ -589,7 +594,7 @@ function ContractBrokerHeistItem:trigger_open_store_page()
 	return false
 end
 
--- Lines 573-578
+-- Lines 575-580
 function ContractBrokerHeistItem:toggle_favourite()
 	local is_fav = managers.crimenet:is_job_favourite(self._job_data.job_id)
 

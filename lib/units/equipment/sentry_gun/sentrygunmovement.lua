@@ -397,7 +397,7 @@ function SentryGunMovement:m_pos()
 end
 
 -- Lines 409-411
-function CopMovement:m_newest_pos()
+function SentryGunMovement:m_newest_pos()
 	return self._m_head_pos
 end
 

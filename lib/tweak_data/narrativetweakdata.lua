@@ -1,6 +1,6 @@
 NarrativeTweakData = NarrativeTweakData or class()
 
--- Lines 3-4716
+-- Lines 3-4715
 function NarrativeTweakData:init(tweak_data)
 	self.STARS = {
 		{
@@ -4106,6 +4106,7 @@ function NarrativeTweakData:init(tweak_data)
 	self.stages.dark = {
 		type = "d",
 		type_id = "heist_type_assault",
+		dlc = "mad",
 		level_id = "dark"
 	}
 	self.jobs.dark = {
@@ -4114,6 +4115,7 @@ function NarrativeTweakData:init(tweak_data)
 		contact = "jimmy",
 		region = "street",
 		jc = 30,
+		dlc = "mad",
 		chain = {
 			self.stages.dark
 		},
@@ -4167,6 +4169,7 @@ function NarrativeTweakData:init(tweak_data)
 	self.stages.mad = {
 		type = "d",
 		type_id = "heist_type_assault",
+		dlc = "mad",
 		level_id = "mad"
 	}
 	self.jobs.mad = {
@@ -4175,6 +4178,7 @@ function NarrativeTweakData:init(tweak_data)
 		contact = "jimmy",
 		region = "street",
 		jc = 30,
+		dlc = "mad",
 		chain = {
 			self.stages.mad
 		},
@@ -5169,11 +5173,13 @@ function NarrativeTweakData:init(tweak_data)
 	self.stages.rvd_1 = {
 		type = "d",
 		type_id = "heist_type_assault",
+		dlc = "rvd",
 		level_id = "rvd1"
 	}
 	self.stages.rvd_2 = {
 		type = "d",
 		type_id = "heist_type_assault",
+		dlc = "rvd",
 		level_id = "rvd2"
 	}
 	self.jobs.rvd = {
@@ -5976,16 +5982,18 @@ function NarrativeTweakData:init(tweak_data)
 	}
 	self.stages.mex = {
 		type = "d",
-		type_id = "heist_type_assault",
+		dlc = "mex",
 		level_id = "mex",
+		type_id = "heist_type_assault",
 		mission_filter = {
 			1
 		}
 	}
 	self.stages.mex_cooking = {
 		type = "d",
-		type_id = "heist_type_assault",
+		dlc = "mex",
 		level_id = "mex_cooking",
+		type_id = "heist_type_assault",
 		mission_filter = {
 			2
 		}
@@ -6122,8 +6130,9 @@ function NarrativeTweakData:init(tweak_data)
 	}
 	self.stages.bex = {
 		type = "d",
-		type_id = "heist_type_assault",
+		dlc = "bex",
 		level_id = "bex",
+		type_id = "heist_type_assault",
 		mission_filter = {
 			1
 		}
@@ -6197,8 +6206,9 @@ function NarrativeTweakData:init(tweak_data)
 	}
 	self.stages.pex = {
 		type = "d",
-		type_id = "heist_type_assault",
+		dlc = "pex",
 		level_id = "pex",
+		type_id = "heist_type_assault",
 		mission_filter = {
 			1
 		}
@@ -6270,8 +6280,9 @@ function NarrativeTweakData:init(tweak_data)
 	}
 	self.stages.fex = {
 		type = "d",
-		type_id = "heist_type_assault",
+		dlc = "fex",
 		level_id = "fex",
+		type_id = "heist_type_assault",
 		mission_filter = {
 			1
 		}
@@ -6343,8 +6354,9 @@ function NarrativeTweakData:init(tweak_data)
 	}
 	self.stages.chas = {
 		type = "d",
-		type_id = "heist_type_assault",
+		dlc = "chas",
 		level_id = "chas",
+		type_id = "heist_type_assault",
 		mission_filter = {
 			1
 		}
@@ -6416,8 +6428,9 @@ function NarrativeTweakData:init(tweak_data)
 	}
 	self.stages.sand = {
 		type = "d",
-		type_id = "heist_type_assault",
+		dlc = "sand",
 		level_id = "sand",
+		type_id = "heist_type_assault",
 		mission_filter = {
 			1
 		}
@@ -6489,8 +6502,9 @@ function NarrativeTweakData:init(tweak_data)
 	}
 	self.stages.chca = {
 		type = "d",
-		type_id = "heist_type_assault",
+		dlc = "chca",
 		level_id = "chca",
+		type_id = "heist_type_assault",
 		mission_filter = {
 			1
 		}
@@ -6562,8 +6576,9 @@ function NarrativeTweakData:init(tweak_data)
 	}
 	self.stages.pent = {
 		type = "d",
-		type_id = "heist_type_assault",
+		dlc = "pent",
 		level_id = "pent",
+		type_id = "heist_type_assault",
 		mission_filter = {
 			1
 		}
@@ -6635,8 +6650,9 @@ function NarrativeTweakData:init(tweak_data)
 	}
 	self.stages.ranc = {
 		type = "d",
-		type_id = "heist_type_assault",
+		dlc = "ranc",
 		level_id = "ranc",
+		type_id = "heist_type_assault",
 		mission_filter = {
 			1
 		}
@@ -6708,8 +6724,9 @@ function NarrativeTweakData:init(tweak_data)
 	}
 	self.stages.trai = {
 		type = "d",
-		type_id = "heist_type_assault",
+		dlc = "trai",
 		level_id = "trai",
+		type_id = "heist_type_assault",
 		mission_filter = {
 			1
 		}
@@ -6781,8 +6798,9 @@ function NarrativeTweakData:init(tweak_data)
 	}
 	self.stages.corp = {
 		type = "d",
-		type_id = "heist_type_assault",
+		dlc = "corp",
 		level_id = "corp",
+		type_id = "heist_type_assault",
 		mission_filter = {
 			1
 		}
@@ -6854,8 +6872,9 @@ function NarrativeTweakData:init(tweak_data)
 	}
 	self.stages.deep = {
 		type = "d",
-		type_id = "heist_type_assault",
+		dlc = "deep",
 		level_id = "deep",
+		type_id = "heist_type_assault",
 		mission_filter = {
 			1
 		}
@@ -6927,8 +6946,9 @@ function NarrativeTweakData:init(tweak_data)
 	}
 	self.stages.bossp = {
 		type = "d",
-		type_id = "heist_type_assault",
+		dlc = "deep",
 		level_id = "boss",
+		type_id = "heist_type_assault",
 		mission_filter = {
 			1
 		}
@@ -7135,6 +7155,7 @@ function NarrativeTweakData:init(tweak_data)
 	self.stages.nmh = {
 		type = "d",
 		type_id = "heist_type_assault",
+		dlc = "nmh_ipcontent",
 		level_id = "nmh"
 	}
 	self.jobs.nmh = {
@@ -7862,7 +7883,7 @@ function NarrativeTweakData:init(tweak_data)
 	end
 end
 
--- Lines 4720-4735
+-- Lines 4719-4734
 function NarrativeTweakData:set_job_wrappers()
 	for _, job_id in ipairs(self._jobs_index) do
 		local job_wrapper = self.jobs[job_id].job_wrapper
@@ -7881,22 +7902,22 @@ function NarrativeTweakData:set_job_wrappers()
 	end
 end
 
--- Lines 4737-4739
+-- Lines 4736-4738
 function NarrativeTweakData:has_job_wrapper(job_id)
 	return self.jobs[job_id] and not not self.jobs[job_id].job_wrapper
 end
 
--- Lines 4741-4743
+-- Lines 4740-4742
 function NarrativeTweakData:is_wrapped_to_job(job_id)
 	return self.jobs[job_id] and not not self.jobs[job_id].wrapped_to_job
 end
 
--- Lines 4747-4749
+-- Lines 4746-4748
 function NarrativeTweakData:get_jobs_index()
 	return self._jobs_index
 end
 
--- Lines 4753-4760
+-- Lines 4752-4759
 function NarrativeTweakData:get_index_from_job_id(job_id)
 	for index, entry_name in ipairs(self._jobs_index) do
 		if entry_name == job_id then
@@ -7907,12 +7928,12 @@ function NarrativeTweakData:get_index_from_job_id(job_id)
 	return 0
 end
 
--- Lines 4764-4766
+-- Lines 4763-4765
 function NarrativeTweakData:get_job_name_from_index(index)
 	return self._jobs_index[index]
 end
 
--- Lines 4770-4786
+-- Lines 4769-4785
 function NarrativeTweakData:job_data(job_id, unique_to_job)
 	if not job_id or not self.jobs[job_id] then
 		return
@@ -7929,7 +7950,7 @@ function NarrativeTweakData:job_data(job_id, unique_to_job)
 	return self.jobs[job_id]
 end
 
--- Lines 4788-4798
+-- Lines 4787-4797
 function NarrativeTweakData:job_chain(job_id)
 	if not job_id or not self.jobs[job_id] then
 		return {}
@@ -7942,7 +7963,7 @@ function NarrativeTweakData:job_chain(job_id)
 	return self.jobs[job_id].chain or {}
 end
 
--- Lines 4802-4853
+-- Lines 4801-4852
 function NarrativeTweakData:create_job_name(job_id, skip_professional)
 	local color_ranges = {}
 	local job_tweak = self:job_data(job_id)
@@ -7999,7 +8020,7 @@ function NarrativeTweakData:create_job_name(job_id, skip_professional)
 	return text_id, color_ranges
 end
 
--- Lines 4857-4869
+-- Lines 4856-4868
 function NarrativeTweakData:test_contract_packages()
 	for i, job_id in ipairs(self._jobs_index) do
 		local package = self.jobs[job_id] and self.jobs[job_id].package
@@ -8016,7 +8037,7 @@ function NarrativeTweakData:test_contract_packages()
 	end
 end
 
--- Lines 4874-4881
+-- Lines 4873-4880
 function NarrativeTweakData:get_jcs_from_stars(stars, infamy)
 	if type(stars) ~= "number" then
 		return {}
@@ -8027,7 +8048,7 @@ function NarrativeTweakData:get_jcs_from_stars(stars, infamy)
 	return (infamy and self.INFAMY_STARS[stars] or self.STARS[stars] or {}).jcs or {}
 end
 
--- Lines 4886-4901
+-- Lines 4885-4900
 function NarrativeTweakData:is_job_locked(job_id)
 	return false
 end

@@ -1,12 +1,13 @@
 MolotovGrenade = MolotovGrenade or class(FragGrenade)
 
--- Lines 5-11
+-- Lines 5-10
 function MolotovGrenade:_setup_from_tweak_data()
 	local tweak_entry = MolotovGrenade.super._setup_from_tweak_data(self)
 	self._dot_data = tweak_entry.dot_data_name and tweak_data.dot:get_dot_data(tweak_entry.dot_data_name)
+	self._init_timer = tweak_entry.init_timer or nil
 end
 
--- Lines 14-55
+-- Lines 13-54
 function MolotovGrenade:_detonate(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 	if self._detonated then
 		return
@@ -46,14 +47,14 @@ function MolotovGrenade:_detonate(tag, unit, body, other_unit, other_body, posit
 	self:_handle_hiding_and_destroying(true, destruction_delay)
 end
 
--- Lines 57-61
+-- Lines 56-60
 function MolotovGrenade:sync_detonate_molotov_grenade(event_id, normal)
 	if event_id == GrenadeBase.EVENT_IDS.detonate then
 		self:_detonate_on_client(normal)
 	end
 end
 
--- Lines 63-79
+-- Lines 62-78
 function MolotovGrenade:_detonate_on_client(normal)
 	if self._detonated then
 		return
@@ -72,7 +73,7 @@ function MolotovGrenade:_detonate_on_client(normal)
 	self:_handle_hiding_and_destroying(true, destruction_delay)
 end
 
--- Lines 81-97
+-- Lines 80-96
 function MolotovGrenade:_spawn_environment_fire(normal)
 	local position = self._unit:position()
 	local rotation = self._unit:rotation()
@@ -90,7 +91,7 @@ function MolotovGrenade:_spawn_environment_fire(normal)
 	return time_until_destruction
 end
 
--- Lines 99-105
+-- Lines 98-104
 function MolotovGrenade:bullet_hit()
 	if not Network:is_server() then
 		return
@@ -99,7 +100,7 @@ function MolotovGrenade:bullet_hit()
 	self:_detonate()
 end
 
--- Lines 108-128
+-- Lines 107-127
 function MolotovGrenade:add_damage_result(unit, is_dead, damage_percent)
 	if not alive(self._thrower_unit) or self._thrower_unit ~= managers.player:player_unit() then
 		return

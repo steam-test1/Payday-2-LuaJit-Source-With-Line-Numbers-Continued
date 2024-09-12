@@ -207,7 +207,8 @@ function CopInventory:anim_clbk_weapon_attached(unit, state)
 	end
 end
 
--- Lines 226-228
+-- Lines 226-229
 function CopInventory:destroy_all_items()
 	CopInventory.super.destroy_all_items(self)
+	self:_call_listeners("unequip")
 end

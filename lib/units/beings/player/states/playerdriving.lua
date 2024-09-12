@@ -802,22 +802,26 @@ function PlayerDriving:_update_input(dt)
 	end
 end
 
--- Lines 833-842
+-- Lines 833-846
 function PlayerDriving:on_inventory_event(unit, event)
 	local weapon = self._unit:inventory():equipped_unit()
 
-	table.insert(weapon:base()._setup.ignore_units, self._vehicle_unit)
+	if weapon then
+		table.insert(weapon:base()._setup.ignore_units, self._vehicle_unit)
 
-	if alive(self._current_weapon) then
-		table.delete(self._current_weapon:base()._setup.ignore_units, self._vehicle_unit)
+		if alive(self._current_weapon) then
+			table.delete(self._current_weapon:base()._setup.ignore_units, self._vehicle_unit)
+		end
+
+		self._current_weapon = weapon
+
+		weapon:base():set_visibility_state(true)
+	else
+		self._current_weapon = false
 	end
-
-	self._current_weapon = weapon
-
-	weapon:base():set_visibility_state(true)
 end
 
--- Lines 845-855
+-- Lines 849-859
 function PlayerDriving:smoothstep(a, b, step, n)
 	local v = step / n
 	v = 1 - (1 - v) * (1 - v)

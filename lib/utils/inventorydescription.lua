@@ -165,7 +165,7 @@ function InventoryDescription.create_description_safe(safe_entry, ingame_format)
 	return text
 end
 
--- Lines 156-287
+-- Lines 156-290
 function InventoryDescription.create_description_item(item, tweak, colors, ingame_format)
 	local desc = ""
 	color_ranges = {}
@@ -265,10 +265,14 @@ function InventoryDescription.create_description_item(item, tweak, colors, ingam
 		local dlc = tweak_data.weapon[tweak.weapon_id].global_value
 
 		if dlc and dlc ~= "pd2_clan" and dlc ~= "normal" and (not ingame_format or not managers.dlc:is_dlc_unlocked(dlc)) then
-			local dlc_string = func_color_text(managers.localization:text("steam_inventory_dlc_required", {
-				dlc = managers.localization:text("bm_global_value_" .. dlc)
-			}), color_dlc, ingame_format)
-			desc = desc .. func_add_lb(ingame_format) .. func_add_lb(ingame_format) .. dlc_string
+			local dlc_string_id = "bm_global_value_" .. dlc
+
+			if managers.localization:exists(dlc_string_id) then
+				local dlc_string = func_color_text(managers.localization:text("steam_inventory_dlc_required", {
+					dlc = managers.localization:text(dlc_string_id)
+				}), color_dlc, ingame_format)
+				desc = desc .. func_add_lb(ingame_format) .. func_add_lb(ingame_format) .. dlc_string
+			end
 		end
 	end
 
@@ -343,7 +347,7 @@ table.insert(WeaponDescription._stats_shown, {
 	name = "reload"
 })
 
--- Lines 299-318
+-- Lines 302-321
 function WeaponDescription.get_bonus_stats(cosmetic_id, weapon_id, bonus)
 	local base_stats = WeaponDescription._get_base_stats(weapon_id)
 	local mod_stats = WeaponDescription._get_mods_stats(weapon_id, base_stats, {}, bonus)
@@ -365,7 +369,7 @@ function WeaponDescription.get_bonus_stats(cosmetic_id, weapon_id, bonus)
 	return stats
 end
 
--- Lines 320-380
+-- Lines 323-383
 function WeaponDescription.get_weapon_ammo_info(weapon_id, extra_ammo, total_ammo_mod)
 	local weapon_tweak_data = tweak_data.weapon[weapon_id]
 	local ammo_max_multiplier = managers.player:upgrade_value("player", "extra_ammo_multiplier", 1)
@@ -386,9 +390,9 @@ function WeaponDescription.get_weapon_ammo_info(weapon_id, extra_ammo, total_amm
 		ammo_max_multiplier = ammo_max_multiplier * managers.player:body_armor_value("skill_ammo_mul", nil, 1)
 	end
 
-	-- Lines 338-364
+	-- Lines 341-367
 	local function get_ammo_max_per_clip(weapon_id)
-		-- Lines 339-349
+		-- Lines 342-352
 		local function upgrade_blocked(category, upgrade)
 			if not weapon_tweak_data.upgrade_blocks then
 				return false
@@ -433,7 +437,7 @@ function WeaponDescription.get_weapon_ammo_info(weapon_id, extra_ammo, total_amm
 	return ammo_max_per_clip, ammo_max, ammo_data
 end
 
--- Lines 382-533
+-- Lines 385-536
 function WeaponDescription._get_skill_stats(name, category, slot, base_stats, mods_stats, silencer, single_mod, auto_mod, blueprint)
 	local skill_stats = {}
 	local tweak_stats = tweak_data.weapon.stats
@@ -593,7 +597,7 @@ function WeaponDescription._get_skill_stats(name, category, slot, base_stats, mo
 	return skill_stats
 end
 
--- Lines 535-696
+-- Lines 538-699
 function WeaponDescription._get_mods_stats(name, base_stats, equipped_mods, bonus_stats)
 	local mods_stats = {}
 	local weapon_tweak = tweak_data.weapon[name]
@@ -759,7 +763,7 @@ function WeaponDescription._get_mods_stats(name, base_stats, equipped_mods, bonu
 	return mods_stats
 end
 
--- Lines 698-788
+-- Lines 701-791
 function WeaponDescription._get_base_stats(name)
 	local base_stats = {}
 	local index = nil
@@ -852,7 +856,7 @@ function WeaponDescription._get_base_stats(name)
 	return base_stats
 end
 
--- Lines 790-834
+-- Lines 793-837
 function WeaponDescription._get_stats(name, category, slot, blueprint)
 	local equipped_mods = nil
 	local silencer = false
@@ -896,7 +900,7 @@ function WeaponDescription._get_stats(name, category, slot, blueprint)
 	return base_stats, mods_stats, skill_stats
 end
 
--- Lines 836-855
+-- Lines 839-858
 function WeaponDescription.get_stats_for_mod(mod_name, weapon_name, category, slot)
 	local equipped_mods = nil
 	local blueprint = managers.blackmarket:get_weapon_blueprint(category, slot)
@@ -917,7 +921,7 @@ function WeaponDescription.get_stats_for_mod(mod_name, weapon_name, category, sl
 	return WeaponDescription._get_weapon_mod_stats(mod_name, weapon_name, base_stats, mods_stats, equipped_mods)
 end
 
--- Lines 857-1023
+-- Lines 860-1026
 function WeaponDescription._get_weapon_mod_stats(mod_name, weapon_name, base_stats, mods_stats, equipped_mods)
 	local tweak_stats = tweak_data.weapon.stats
 	local tweak_factory = tweak_data.weapon.factory.parts

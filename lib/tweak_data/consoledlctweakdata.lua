@@ -1,4 +1,4 @@
--- Lines 2-1375
+-- Lines 2-1374
 function DLCTweakData:init_console()
 	self.complete_overkill_pack.content_on_consoles = true
 	self.complete_overkill_pack2.content_on_consoles = true
@@ -2739,11 +2739,10 @@ function DLCTweakData:init_console()
 		}
 	}
 	self.ant_free = {
+		dlc = "has_ant_free",
 		content_on_consoles = true,
-		free = true,
 		content = {}
 	}
-	self.ant_free.content.loot_global_value = "ant"
 	self.ant_free.content.loot_drops = {
 		{
 			type_items = "masks",
@@ -2757,10 +2756,10 @@ function DLCTweakData:init_console()
 		}
 	}
 	self.ant = {
+		dlc = "has_ant",
 		content_on_consoles = true,
 		content = {}
 	}
-	self.ant.content.loot_global_value = "ant"
 	self.ant.content.loot_drops = {
 		{
 			type_items = "masks",

@@ -393,7 +393,7 @@ function TweakData:index_to_menu_sync_state(index)
 	return self.menu_sync_states[index]
 end
 
--- Lines 423-2877
+-- Lines 423-2874
 function TweakData:init()
 	self.max_players = 4
 	self.difficulties = {
@@ -1780,7 +1780,9 @@ Play the full version soon to get your full PAYDAY!]],
 			lock = "pal"
 		},
 		{
-			track = "track_44"
+			track = "track_44",
+			hide_unavailable = true,
+			lock = "mad"
 		},
 		{
 			track = "track_45",
@@ -1951,7 +1953,9 @@ Play the full version soon to get your full PAYDAY!]],
 			track = "kosugi_music"
 		},
 		{
-			track = "music_dark"
+			track = "music_dark",
+			hide_unavailable = true,
+			lock = "mad"
 		},
 		{
 			track = "music_fish",
@@ -2030,28 +2034,32 @@ Play the full version soon to get your full PAYDAY!]],
 		{
 			track = "pb_do_you_wanna",
 			hide_unavailable = true,
-			lock = "berry"
+			lock = "locked"
 		},
 		{
 			track = "pb_i_need_your_love",
 			hide_unavailable = true,
-			lock = "berry"
+			lock = "locked"
 		},
 		{
 			track = "pb_still_breathing",
 			hide_unavailable = true,
-			lock = "berry"
+			lock = "locked"
 		},
 		{
 			track = "pb_take_me_down",
 			hide_unavailable = true,
-			lock = "berry"
+			lock = "locked"
 		},
 		{
-			track = "biting_elbows_bad_motherfucker"
+			track = "biting_elbows_bad_motherfucker",
+			hide_unavailable = true,
+			lock = "locked"
 		},
 		{
-			track = "biting_elbows_for_the_kill"
+			track = "biting_elbows_for_the_kill",
+			hide_unavailable = true,
+			lock = "locked"
 		},
 		{
 			track = "half_passed_wicked",
@@ -3090,7 +3098,7 @@ Play the full version soon to get your full PAYDAY!]],
 	self:digest_tweak_data()
 end
 
--- Lines 2881-2914
+-- Lines 2878-2911
 function TweakData:load_movie_list()
 	local CONFIG_PATH = "gamedata/movie_theater"
 	local FILE_EXTENSION = "movie_theater"
@@ -3108,7 +3116,7 @@ function TweakData:load_movie_list()
 	end
 end
 
--- Lines 2919-3025
+-- Lines 2916-3022
 function TweakData:init_screen_colors()
 	self.screen_colors = {
 		text = Color(255, 255, 255, 255) / 255,
@@ -3194,7 +3202,7 @@ function TweakData:init_screen_colors()
 	end
 end
 
--- Lines 3028-3059
+-- Lines 3025-3056
 function TweakData:init_accessibility_colors()
 	self.accessibility_colors = {
 		dot = {}
@@ -3226,14 +3234,14 @@ function TweakData:init_accessibility_colors()
 	self.accessibility_colors.screenflash.blurzone.gray_dark = Color(0.19607843137254902, 0.19607843137254902, 0.19607843137254902)
 end
 
--- Lines 3064-3144
+-- Lines 3061-3141
 function TweakData:free_dlc_list()
 	local free_dlcs = {}
 
 	return free_dlcs
 end
 
--- Lines 3154-3162
+-- Lines 3151-3159
 function TweakData:_execute_reload_clbks()
 	if self._reload_clbks then
 		for key, clbk_data in pairs(self._reload_clbks) do
@@ -3244,7 +3252,7 @@ function TweakData:_execute_reload_clbks()
 	end
 end
 
--- Lines 3166-3169
+-- Lines 3163-3166
 function TweakData:add_reload_callback(object, func)
 	self._reload_clbks = self._reload_clbks or {}
 
@@ -3254,7 +3262,7 @@ function TweakData:add_reload_callback(object, func)
 	})
 end
 
--- Lines 3173-3182
+-- Lines 3170-3179
 function TweakData:remove_reload_callback(object)
 	if self._reload_clbks then
 		for i, k in ipairs(self._reload_clbks) do
@@ -3267,7 +3275,7 @@ function TweakData:remove_reload_callback(object)
 	end
 end
 
--- Lines 3186-3362
+-- Lines 3183-3359
 function TweakData:set_scale()
 	local lang_key = SystemInfo:language():key()
 	local lang_mods = {
@@ -3456,7 +3464,7 @@ function TweakData:set_scale()
 	}
 end
 
--- Lines 3364-3543
+-- Lines 3361-3540
 function TweakData:set_menu_scale()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -3570,7 +3578,7 @@ function TweakData:set_menu_scale()
 	}
 end
 
--- Lines 3545-3625
+-- Lines 3542-3622
 function TweakData:set_hud_values()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -3649,7 +3657,7 @@ function TweakData:set_hud_values()
 	}
 end
 
--- Lines 3628-3632
+-- Lines 3625-3629
 function TweakData:resolution_changed()
 	self:set_scale()
 	self:set_menu_scale()
@@ -3667,7 +3675,7 @@ if (not tweak_data or tweak_data.RELOAD) and managers.dlc then
 	end
 end
 
--- Lines 3649-3864
+-- Lines 3646-3861
 function TweakData:get_controller_help_coords()
 	if managers.controller:get_default_wrapper_type() == "pc" or managers.controller:get_default_wrapper_type() == "steam" then
 		return false

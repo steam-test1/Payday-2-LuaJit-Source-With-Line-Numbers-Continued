@@ -3642,14 +3642,13 @@ function MenuCallbackHandler:buy_weapon_color_dlc(item)
 	MenuCallbackHandler:open_dlc_store_page(dlc, "weapon_colors")
 end
 
--- Lines 3280-3300
+-- Lines 3280-3301
 function MenuCallbackHandler:is_weapon_color_option_visible(item_option)
 	local id = item_option:value()
 	local color_tweak = tweak_data.blackmarket.weapon_skins[id]
 	local global_value = color_tweak.global_value or managers.dlc:dlc_to_global_value(color_tweak.dlc)
-	local gvalue_tweak = tweak_data.lootdrop.global_values[global_value]
 
-	if gvalue_tweak and gvalue_tweak.hide_unavailable and not self:is_weapon_color_option_unlocked(item_option) then
+	if managers.dlc:should_hide_unavailable(global_value, true) and not self:is_weapon_color_option_unlocked(item_option) then
 		return false
 	end
 
@@ -3661,7 +3660,7 @@ function MenuCallbackHandler:is_weapon_color_option_visible(item_option)
 	return value == "all" or value == group_id
 end
 
--- Lines 3302-3307
+-- Lines 3303-3308
 function MenuCallbackHandler:is_weapon_color_option_unlocked(item_option)
 	local unlocked = item_option:get_parameter("unlocked")
 	local have_color = item_option:get_parameter("have_color")
@@ -3669,11 +3668,12 @@ function MenuCallbackHandler:is_weapon_color_option_unlocked(item_option)
 	return unlocked and have_color
 end
 
--- Lines 3309-3355
+-- Lines 3310-3362
 function MenuCallbackHandler:get_weapon_color_disabled_icon(item_option)
 	local id = item_option:value()
 	local color_tweak = tweak_data.blackmarket.weapon_skins[id]
 	local dlc = color_tweak.dlc or managers.dlc:global_value_to_dlc(color_tweak.global_value)
+	local global_value = managers.dlc:dlc_to_global_value(dlc)
 	local unlocked = item_option:get_parameter("unlocked")
 	local have_color = item_option:get_parameter("have_color")
 
@@ -3683,6 +3683,12 @@ function MenuCallbackHandler:get_weapon_color_disabled_icon(item_option)
 		if dlc_data then
 			if dlc_data.source_id then
 				return "guis/textures/pd2/lock_community"
+			end
+
+			local gvalue_tweak = tweak_data.lootdrop.global_values[global_value]
+
+			if gvalue_tweak and gvalue_tweak.unique_lock_icon then
+				return gvalue_tweak.unique_lock_icon
 			end
 
 			return "guis/textures/pd2/lock_dlc"
@@ -3714,7 +3720,7 @@ function MenuCallbackHandler:get_weapon_color_disabled_icon(item_option)
 	return "guis/textures/pd2/skilltree/padlock"
 end
 
--- Lines 3357-3395
+-- Lines 3364-3402
 function MenuCallbackHandler:sort_weapon_colors(x_option, y_option)
 	if x_option.enabled ~= y_option.enabled then
 		return x_option.enabled
@@ -3752,7 +3758,7 @@ function MenuCallbackHandler:sort_weapon_colors(x_option, y_option)
 	return y_id < x_id
 end
 
--- Lines 3399-3407
+-- Lines 3406-3414
 function MenuCallbackHandler:open_dlc_store_page(dlc, context)
 	local dlc_data = Global.dlc_manager.all_dlc_data[dlc]
 
@@ -3766,7 +3772,7 @@ end
 
 MenuArmorSkinEditorInitiator = MenuArmorSkinEditorInitiator or class(MenuInitiatorBase)
 
--- Lines 3415-3761
+-- Lines 3422-3768
 function MenuArmorSkinEditorInitiator:modify_node(node, data)
 	data = data or {}
 	local name = node:parameters().name
@@ -3796,7 +3802,7 @@ function MenuArmorSkinEditorInitiator:modify_node(node, data)
 
 		local skin_exists = editor:get_current_skin() and true
 
-		-- Lines 3442-3448
+		-- Lines 3449-3455
 		local function disable_func(item)
 			if not skin_exists and item:name() ~= "new_skin" and item:name() ~= "edit_skin" then
 				item:set_enabled(false)
@@ -4402,7 +4408,7 @@ function MenuArmorSkinEditorInitiator:modify_node(node, data)
 	return node
 end
 
--- Lines 3765-3770
+-- Lines 3772-3777
 function MenuCallbackHandler:clear_armor_skin()
 	local editor = managers.blackmarket:armor_skin_editor()
 
@@ -4411,7 +4417,7 @@ function MenuCallbackHandler:clear_armor_skin()
 	end
 end
 
--- Lines 3772-3778
+-- Lines 3779-3785
 function MenuCallbackHandler:new_armor_skin()
 	local editor = managers.blackmarket:armor_skin_editor()
 
@@ -4422,7 +4428,7 @@ function MenuCallbackHandler:new_armor_skin()
 	end
 end
 
--- Lines 3780-3785
+-- Lines 3787-3792
 function MenuCallbackHandler:select_armor_skin(item)
 	local editor = managers.blackmarket:armor_skin_editor()
 
@@ -4431,7 +4437,7 @@ function MenuCallbackHandler:select_armor_skin(item)
 	end
 end
 
--- Lines 3787-3810
+-- Lines 3794-3817
 function MenuCallbackHandler:delete_armor_skin()
 	local editor = managers.blackmarket:armor_skin_editor()
 
@@ -4458,7 +4464,7 @@ function MenuCallbackHandler:delete_armor_skin()
 	end
 end
 
--- Lines 3812-3817
+-- Lines 3819-3824
 function MenuCallbackHandler:_dialog_delete_armor_skin_yes()
 	local editor = managers.blackmarket:armor_skin_editor()
 
@@ -4467,11 +4473,11 @@ function MenuCallbackHandler:_dialog_delete_armor_skin_yes()
 	end
 end
 
--- Lines 3819-3821
+-- Lines 3826-3828
 function MenuCallbackHandler:_dialog_delete_armor_skin_no()
 end
 
--- Lines 3823-3832
+-- Lines 3830-3839
 function MenuCallbackHandler:browse_armor_skin()
 	local editor = managers.blackmarket:armor_skin_editor()
 
@@ -4486,7 +4492,7 @@ function MenuCallbackHandler:browse_armor_skin()
 	end
 end
 
--- Lines 3834-3853
+-- Lines 3841-3860
 function MenuCallbackHandler:save_armor_skin()
 	local editor = managers.blackmarket:armor_skin_editor()
 
@@ -4506,16 +4512,16 @@ function MenuCallbackHandler:save_armor_skin()
 	end
 end
 
--- Lines 3855-3857
+-- Lines 3862-3864
 function MenuCallbackHandler:need_convert_armor_skin(item)
 	return false
 end
 
--- Lines 3859-3861
+-- Lines 3866-3868
 function MenuCallbackHandler:convert_armor_skin()
 end
 
--- Lines 3863-3911
+-- Lines 3870-3918
 function MenuCallbackHandler:on_exit_armor_skin_editor(item)
 	local editor = managers.blackmarket:armor_skin_editor()
 
@@ -4537,13 +4543,13 @@ function MenuCallbackHandler:on_exit_armor_skin_editor(item)
 		return false
 	end
 
-	-- Lines 3880-3883
+	-- Lines 3887-3890
 	local function on_yes()
 		editor:save_current_skin()
 		managers.menu:back(true)
 	end
 
-	-- Lines 3885-3888
+	-- Lines 3892-3895
 	local function on_no()
 		editor:set_ignore_unsaved(true)
 		managers.menu:back(true)
@@ -4576,7 +4582,7 @@ function MenuCallbackHandler:on_exit_armor_skin_editor(item)
 	return true
 end
 
--- Lines 3913-4044
+-- Lines 3920-4051
 function MenuCallbackHandler:armor_skin_changed(item)
 	local key = item:parameters().key or item:name()
 	local value = item:value()
@@ -4719,7 +4725,7 @@ function MenuCallbackHandler:armor_skin_changed(item)
 	editor:apply_changes(skin:config().data)
 end
 
--- Lines 4046-4058
+-- Lines 4053-4065
 function MenuCallbackHandler:editor_get_armor_level()
 	local armor_id = nil
 
@@ -4735,7 +4741,7 @@ function MenuCallbackHandler:editor_get_armor_level()
 	return armor_level
 end
 
--- Lines 4060-4088
+-- Lines 4067-4095
 function MenuCallbackHandler:publish_armor_skin(item)
 	local title = managers.menu:active_menu().logic:selected_node():item("title_input"):input_text()
 	local desc = managers.menu:active_menu().logic:selected_node():item("desc_input"):input_text()
@@ -4773,18 +4779,18 @@ function MenuCallbackHandler:publish_armor_skin(item)
 	editor:publish_skin(skin, title, desc, changelog)
 end
 
--- Lines 4090-4092
+-- Lines 4097-4099
 function MenuCallbackHandler:should_add_changelog_armor_skin(item)
 	return managers.blackmarket:armor_skin_editor():get_current_skin():item_exists()
 end
 
--- Lines 4094-4097
+-- Lines 4101-4104
 function MenuCallbackHandler:armor_screenshot_chosen(item)
 	local skin = managers.blackmarket:armor_skin_editor():get_current_skin()
 	skin:config().screenshot = item:value()
 end
 
--- Lines 4102-4136
+-- Lines 4109-4143
 function MenuCallbackHandler:take_armor_screenshot_skin(item)
 	local editor = managers.blackmarket:armor_skin_editor()
 
@@ -4792,7 +4798,7 @@ function MenuCallbackHandler:take_armor_screenshot_skin(item)
 		return
 	end
 
-	-- Lines 4109-4113
+	-- Lines 4116-4120
 	local function screenshot_done(success)
 		managers.mouse_pointer:enable()
 		managers.menu:active_menu().renderer:show()
@@ -4807,7 +4813,7 @@ function MenuCallbackHandler:take_armor_screenshot_skin(item)
 
 	item:set_enabled(false)
 
-	-- Lines 4122-4132
+	-- Lines 4129-4139
 	local function co_screenshot(o)
 		for i = 0, 5 do
 			coroutine.yield()
@@ -4819,7 +4825,7 @@ function MenuCallbackHandler:take_armor_screenshot_skin(item)
 	managers.menu:active_menu().renderer.ws:panel():animate(co_screenshot)
 end
 
--- Lines 4138-4146
+-- Lines 4145-4153
 function MenuCallbackHandler:leave_armor_screenshot_menu(item)
 	local editor = managers.blackmarket:armor_skin_editor()
 
@@ -4829,7 +4835,7 @@ function MenuCallbackHandler:leave_armor_screenshot_menu(item)
 	end
 end
 
--- Lines 4148-4169
+-- Lines 4155-4176
 function MenuCallbackHandler:armor_screenshot_color_changed(item)
 	local skin_editor = managers.blackmarket:armor_skin_editor()
 
@@ -4854,7 +4860,7 @@ function MenuCallbackHandler:armor_screenshot_color_changed(item)
 	end
 end
 
--- Lines 4171-4179
+-- Lines 4178-4186
 function MenuCallbackHandler:armor_screenshots_hide_weapons(item)
 	for _, data in pairs(managers.menu_scene._weapon_units) do
 		for _, u_data in pairs(data) do
@@ -4865,7 +4871,7 @@ function MenuCallbackHandler:armor_screenshots_hide_weapons(item)
 	end
 end
 
--- Lines 4181-4189
+-- Lines 4188-4196
 function MenuCallbackHandler:armor_screenshots_show_weapons(item)
 	for _, data in pairs(managers.menu_scene._weapon_units) do
 		for _, u_data in pairs(data) do
@@ -4876,7 +4882,7 @@ function MenuCallbackHandler:armor_screenshots_show_weapons(item)
 	end
 end
 
--- Lines 4192-4197
+-- Lines 4199-4204
 function MenuCallbackHandler:_armor_screenshots_set_weapon_visibility(unit, state)
 	unit:set_enabled(state)
 
@@ -4885,7 +4891,7 @@ function MenuCallbackHandler:_armor_screenshots_set_weapon_visibility(unit, stat
 	end
 end
 
--- Lines 4199-4205
+-- Lines 4206-4212
 function MenuCallbackHandler:select_armor_skin_level(item)
 	managers.menu_scene:set_character_armor(item:name())
 
@@ -4896,7 +4902,7 @@ function MenuCallbackHandler:select_armor_skin_level(item)
 	end
 end
 
--- Lines 4207-4209
+-- Lines 4214-4216
 function MenuCallbackHandler:select_armor_skin_pose(item)
 	managers.menu_scene:_set_character_unit_pose(item:name(), managers.menu_scene._character_unit)
 end

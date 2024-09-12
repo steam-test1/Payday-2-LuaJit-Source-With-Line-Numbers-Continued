@@ -73,15 +73,20 @@ function NewsFeedGui:update(t, dt)
 	end
 end
 
--- Lines 98-103
+-- Lines 98-105
 function NewsFeedGui:make_news_request()
-	if SystemInfo:distribution() == Idstring("STEAM") then
+	if SystemInfo:distribution() == Idstring("STEAM") or SystemInfo:distribution() == Idstring("EPIC") then
 		print("make_news_request()")
-		HttpRequest:get("http://steamcommunity.com/games/218620/rss", callback(self, self, "news_result"))
+
+		local headers = {
+			["Content-Type"] = "text/xml"
+		}
+
+		HttpRequest:get("https://www.paydaythegame.com/feed/", callback(self, self, "news_result"), headers)
 	end
 end
 
--- Lines 105-124
+-- Lines 107-126
 function NewsFeedGui:news_result(success, body)
 	print("news_result()", success)
 
@@ -91,7 +96,7 @@ function NewsFeedGui:news_result(success, body)
 
 	if success then
 		self._titles = self:_get_text_block(body, "<title>", "</title>", self.MAX_NEWS)
-		self._links = self:_get_text_block(body, "<link><![CDATA[", "]]></link>", self.MAX_NEWS)
+		self._links = self:_get_text_block(body, "<link>", "</link>", self.MAX_NEWS)
 		self._news = {
 			i = 0
 		}
@@ -101,7 +106,7 @@ function NewsFeedGui:news_result(success, body)
 	end
 end
 
--- Lines 126-145
+-- Lines 128-147
 function NewsFeedGui:_create_gui()
 	local size = managers.gui_data:scaled_size()
 	self._panel = self._ws:panel():panel({
@@ -154,13 +159,13 @@ function NewsFeedGui:_create_gui()
 	self._panel:set_bottom(self._panel:parent():h())
 end
 
--- Lines 147-190
+-- Lines 149-208
 function NewsFeedGui:_get_text_block(s, sp, ep, max_results)
 	local result = {}
 	local len = string.len(s)
 	local i = 1
 
-	-- Lines 153-160
+	-- Lines 155-178
 	local function f(s, sp, ep, max_results)
 		local s1, e1 = string.find(s, sp, 1, true)
 
@@ -169,8 +174,19 @@ function NewsFeedGui:_get_text_block(s, sp, ep, max_results)
 		end
 
 		local s2, e2 = string.find(s, ep, e1, true)
+		local text_string = string.sub(s, e1 + 1, s2 - 1)
+		local override = {
+			["8211"] = "-"
+		}
+		text_string = string.gsub(text_string, "–", "-")
+		text_string = string.gsub(text_string, "%b&;", function (word)
+			local char = string.sub(word, 3, -2)
+			local replacement = override[char] or utf8.char(char)
 
-		table.insert(result, string.sub(s, e1 + 1, s2 - 1))
+			return replacement
+		end)
+
+		table.insert(result, text_string)
 	end
 
 	while i < len and max_results > #result do
@@ -191,7 +207,7 @@ function NewsFeedGui:_get_text_block(s, sp, ep, max_results)
 	return result
 end
 
--- Lines 192-197
+-- Lines 210-215
 function NewsFeedGui:mouse_moved(x, y)
 	local inside = self._panel:inside(x, y)
 	self._mouse_over = inside
@@ -199,7 +215,7 @@ function NewsFeedGui:mouse_moved(x, y)
 	return inside, inside and "link"
 end
 
--- Lines 199-209
+-- Lines 217-227
 function NewsFeedGui:mouse_pressed(button, x, y)
 	if not self._news then
 		return
@@ -210,7 +226,7 @@ function NewsFeedGui:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines 211-215
+-- Lines 229-233
 function NewsFeedGui:close()
 	if alive(self._panel) then
 		self._ws:panel():remove(self._panel)

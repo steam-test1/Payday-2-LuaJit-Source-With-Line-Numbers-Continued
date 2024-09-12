@@ -1,4 +1,4 @@
--- Lines 2-9229
+-- Lines 2-9212
 function init_auto_generated_achievement_data(tags)
 	return {
 		ameno_1 = {
@@ -1111,10 +1111,9 @@ function init_auto_generated_achievement_data(tags)
 			}
 		},
 		berry_2 = {
-			need_unlock_icons = true,
-			icon_id = "C_Locke_H_Beneath_Clean",
+			additional_id = true,
 			sort_name = "C_Locke_H_Beneath_Clean",
-			unlock_id = true,
+			icon_id = "C_Locke_H_Beneath_Clean",
 			tags = {
 				tags.progress.heisting,
 				tags.difficulty.normal,
@@ -1146,11 +1145,10 @@ function init_auto_generated_achievement_data(tags)
 			}
 		},
 		berry_5 = {
-			need_unlock_icons = true,
 			icon_id = "Other_H_Any_NoScope",
 			progress = true,
 			sort_name = "Other_H_Any_NoScope",
-			unlock_id = true,
+			additional_id = true,
 			tags = {
 				tags.progress.generic,
 				tags.difficulty.normal,
@@ -2773,10 +2771,9 @@ function init_auto_generated_achievement_data(tags)
 			}
 		},
 		fish_5 = {
-			need_unlock_icons = true,
-			icon_id = "C_Continental_H_YachtHeist_Pacifish",
+			additional_id = true,
 			sort_name = "C_Continental_H_YachtHeist_Pacifish",
-			unlock_id = true,
+			icon_id = "C_Continental_H_YachtHeist_Pacifish",
 			tags = {
 				tags.progress.heisting,
 				tags.difficulty.normal,
@@ -2786,10 +2783,9 @@ function init_auto_generated_achievement_data(tags)
 			}
 		},
 		fish_6 = {
-			need_unlock_icons = true,
-			icon_id = "C_Continental_H_YachtHeist_Blood",
+			additional_id = true,
 			sort_name = "C_Continental_H_YachtHeist_Blood",
-			unlock_id = true,
+			icon_id = "C_Continental_H_YachtHeist_Blood",
 			tags = {
 				tags.progress.heisting,
 				tags.difficulty.normal,
@@ -2972,7 +2968,6 @@ function init_auto_generated_achievement_data(tags)
 			need_unlock_icons = true,
 			icon_id = "C_Butcher_H_Scarface_SayHello",
 			sort_name = "C_Butcher_H_Scarface_SayHello",
-			additional_id = true,
 			unlock_id = true,
 			tags = {
 				tags.progress.heisting,
@@ -4750,10 +4745,9 @@ function init_auto_generated_achievement_data(tags)
 			}
 		},
 		jerry_3 = {
-			need_unlock_icons = true,
-			icon_id = "C_Locke_H_BirthOfSky_NoBlood",
+			additional_id = true,
 			sort_name = "C_Locke_H_BirthOfSky_NoBlood",
-			unlock_id = true,
+			icon_id = "C_Locke_H_BirthOfSky_NoBlood",
 			tags = {
 				tags.progress.heisting,
 				tags.difficulty.overkill,
@@ -4764,10 +4758,9 @@ function init_auto_generated_achievement_data(tags)
 			}
 		},
 		jerry_4 = {
-			need_unlock_icons = true,
-			icon_id = "C_Locke_H_BirthOfSky_OneTwoThree",
+			additional_id = true,
 			sort_name = "C_Locke_H_BirthOfSky_OneTwoThree",
-			unlock_id = true,
+			icon_id = "C_Locke_H_BirthOfSky_OneTwoThree",
 			tags = {
 				tags.progress.heisting,
 				tags.difficulty.overkill,
@@ -6552,12 +6545,10 @@ function init_auto_generated_achievement_data(tags)
 			}
 		},
 		pim_1 = {
-			need_unlock_icons = true,
 			icon_id = "Other_H_Any_NothingPersonal",
 			progress = true,
 			sort_name = "Other_H_Any_NothingPersonal",
 			additional_id = true,
-			unlock_id = true,
 			tags = {
 				tags.progress.generic,
 				tags.difficulty.overkill,
@@ -6568,12 +6559,10 @@ function init_auto_generated_achievement_data(tags)
 			}
 		},
 		pim_2 = {
-			need_unlock_icons = true,
 			icon_id = "C_Jimmy_H_MurkyStation_CrouchedandHidden",
 			progress = true,
 			sort_name = "C_Jimmy_H_MurkyStation_CrouchedandHidden",
 			additional_id = true,
-			unlock_id = true,
 			tags = {
 				tags.progress.heisting,
 				tags.difficulty.normal,
@@ -6585,12 +6574,10 @@ function init_auto_generated_achievement_data(tags)
 			}
 		},
 		pim_3 = {
-			need_unlock_icons = true,
 			icon_id = "C_Jimmy_H_Boiling_UMPForMe",
 			progress = true,
 			sort_name = "C_Jimmy_H_Boiling_UMPForMe",
 			additional_id = true,
-			unlock_id = true,
 			tags = {
 				tags.progress.heisting,
 				tags.difficulty.overkill,
@@ -6602,11 +6589,9 @@ function init_auto_generated_achievement_data(tags)
 			}
 		},
 		pim_4 = {
-			need_unlock_icons = true,
-			icon_id = "C_Hector_H_Firestarter_ForDaisy",
-			sort_name = "C_Hector_H_Firestarter_ForDaisy",
 			additional_id = true,
-			unlock_id = true,
+			sort_name = "C_Hector_H_Firestarter_ForDaisy",
+			icon_id = "C_Hector_H_Firestarter_ForDaisy",
 			tags = {
 				tags.progress.heisting,
 				tags.difficulty.overkill,
@@ -6893,10 +6878,9 @@ function init_auto_generated_achievement_data(tags)
 			}
 		},
 		spa_5 = {
-			need_unlock_icons = true,
-			icon_id = "C_Continental_H_Brooklyn_ARendezvous",
+			additional_id = true,
 			sort_name = "C_Continental_H_Brooklyn_ARendezvous",
-			unlock_id = true,
+			icon_id = "C_Continental_H_Brooklyn_ARendezvous",
 			tags = {
 				tags.progress.heisting,
 				tags.difficulty.overkill,
@@ -6907,10 +6891,9 @@ function init_auto_generated_achievement_data(tags)
 			}
 		},
 		spa_6 = {
-			need_unlock_icons = true,
-			icon_id = "C_Continental_H_Brooklyn_PassTheAmmo",
+			additional_id = true,
 			sort_name = "C_Continental_H_Brooklyn_PassTheAmmo",
-			unlock_id = true,
+			icon_id = "C_Continental_H_Brooklyn_PassTheAmmo",
 			tags = {
 				tags.progress.heisting,
 				tags.difficulty.overkill,

@@ -68,7 +68,7 @@ local mugshot_stencil = {
 	}
 }
 
--- Lines 53-104
+-- Lines 53-105
 function MenuLobbyRenderer:open(...)
 	MenuLobbyRenderer.super.open(self, ...)
 
@@ -133,18 +133,18 @@ function MenuLobbyRenderer:open(...)
 	self:_entered_menu()
 end
 
--- Lines 106-108
+-- Lines 107-109
 function MenuLobbyRenderer:set_bottom_text(...)
 	MenuRenderer.set_bottom_text(self, ...)
 end
 
--- Lines 110-113
+-- Lines 111-114
 function MenuLobbyRenderer:_entered_menu()
 	managers.network:session():on_entered_lobby()
 	self:on_request_lobby_slot_reply()
 end
 
--- Lines 115-125
+-- Lines 116-126
 function MenuLobbyRenderer:close(...)
 	self:set_choose_character_enabled(true)
 	MenuLobbyRenderer.super.close(self, ...)
@@ -154,7 +154,7 @@ function MenuLobbyRenderer:close(...)
 	end
 end
 
--- Lines 127-137
+-- Lines 128-138
 function MenuLobbyRenderer:update_level_id(level_id)
 	if self._level_id == (level_id or Global.game_settings.level_id) then
 		return
@@ -167,7 +167,7 @@ function MenuLobbyRenderer:update_level_id(level_id)
 	self:_update_level_id(level_id)
 end
 
--- Lines 139-145
+-- Lines 140-146
 function MenuLobbyRenderer:sync_update_level_id(level_id)
 	if self._level_id == level_id then
 		return
@@ -178,14 +178,14 @@ function MenuLobbyRenderer:sync_update_level_id(level_id)
 	self:_update_level_id(level_id)
 end
 
--- Lines 147-151
+-- Lines 148-152
 function MenuLobbyRenderer:_update_level_id(level_id)
 	self._level_id = level_id
 
 	Application:debug("_update_level_id", level_id)
 end
 
--- Lines 153-158
+-- Lines 154-159
 function MenuLobbyRenderer:update_difficulty()
 	local difficulty = Global.game_settings.difficulty
 
@@ -193,24 +193,24 @@ function MenuLobbyRenderer:update_difficulty()
 	self:_update_difficulty(difficulty)
 end
 
--- Lines 160-163
+-- Lines 161-164
 function MenuLobbyRenderer:sync_update_difficulty(difficulty)
 	Global.game_settings.difficulty = difficulty
 
 	self:_update_difficulty(difficulty)
 end
 
--- Lines 165-167
+-- Lines 166-168
 function MenuLobbyRenderer:_update_difficulty(difficulty)
 	Application:debug("_update_difficulty", difficulty)
 end
 
--- Lines 169-177
+-- Lines 170-178
 function MenuLobbyRenderer:_verify_player_slot(slot)
 	return self._player_slots and self._player_slots[slot] and true or false
 end
 
--- Lines 179-188
+-- Lines 180-189
 function MenuLobbyRenderer:set_slot_joining(peer, peer_id)
 	if not self:_verify_player_slot(peer_id) then
 		return
@@ -222,22 +222,22 @@ function MenuLobbyRenderer:set_slot_joining(peer, peer_id)
 	slot.peer_id = peer_id
 end
 
--- Lines 190-192
+-- Lines 191-193
 function MenuLobbyRenderer:set_slot_ready(peer, peer_id)
 	managers.hud:set_slot_ready(peer, peer_id)
 end
 
--- Lines 194-196
+-- Lines 195-197
 function MenuLobbyRenderer:set_dropin_progress(peer_id, progress_percentage, mode)
 	managers.hud:set_dropin_progress(peer_id, progress_percentage, mode)
 end
 
--- Lines 198-200
+-- Lines 199-201
 function MenuLobbyRenderer:set_slot_not_ready(peer, peer_id)
 	managers.hud:set_slot_not_ready(peer, peer_id)
 end
 
--- Lines 202-210
+-- Lines 203-211
 function MenuLobbyRenderer:set_player_slots_kit(slot)
 	if not self:_verify_player_slot(slot) then
 		return
@@ -248,7 +248,7 @@ function MenuLobbyRenderer:set_player_slots_kit(slot)
 	Application:debug("set_player_slots_kit", slot)
 end
 
--- Lines 212-222
+-- Lines 213-223
 function MenuLobbyRenderer:set_slot_outfit(slot, criminal_name, outfit_string)
 	if not self:_verify_player_slot(slot) then
 		return
@@ -261,18 +261,18 @@ function MenuLobbyRenderer:set_slot_outfit(slot, criminal_name, outfit_string)
 	managers.hud:set_slot_outfit(slot, criminal_name, outfit)
 end
 
--- Lines 224-228
+-- Lines 225-229
 function MenuLobbyRenderer:set_kit_selection(peer_id, category, id, slot)
 	managers.hud:set_kit_selection(peer_id, category, id, slot)
 	Application:debug("set_kit_selection", peer_id, category, id, slot)
 end
 
--- Lines 230-232
+-- Lines 231-233
 function MenuLobbyRenderer:set_slot_voice(peer, peer_id, active)
 	managers.hud:set_slot_voice(peer, peer_id, active)
 end
 
--- Lines 234-246
+-- Lines 235-247
 function MenuLobbyRenderer:_set_player_slot(nr, params)
 	if not self:_verify_player_slot(nr) then
 		return
@@ -286,7 +286,7 @@ function MenuLobbyRenderer:_set_player_slot(nr, params)
 	managers.hud:set_player_slot(nr, params)
 end
 
--- Lines 248-269
+-- Lines 249-270
 function MenuLobbyRenderer:remove_player_slot_by_peer_id(peer, reason)
 	if not self._player_slots then
 		return
@@ -310,12 +310,12 @@ function MenuLobbyRenderer:remove_player_slot_by_peer_id(peer, reason)
 	end
 end
 
--- Lines 271-273
+-- Lines 272-274
 function MenuLobbyRenderer:set_character(id, character)
 	Application:debug("set_character", id, character)
 end
 
--- Lines 275-284
+-- Lines 276-285
 function MenuLobbyRenderer:set_choose_character_enabled(enabled)
 	for _, node in ipairs(self._logic._node_stack) do
 		for _, item in ipairs(node:items()) do
@@ -328,7 +328,7 @@ function MenuLobbyRenderer:set_choose_character_enabled(enabled)
 	end
 end
 
--- Lines 286-296
+-- Lines 287-297
 function MenuLobbyRenderer:set_server_state(state)
 	local s = ""
 
@@ -343,7 +343,7 @@ function MenuLobbyRenderer:set_server_state(state)
 	self:sync_chat_message(msg, 1)
 end
 
--- Lines 298-316
+-- Lines 299-317
 function MenuLobbyRenderer:on_request_lobby_slot_reply()
 	local local_peer = managers.network:session():local_peer()
 	local local_peer_id = local_peer:id()
@@ -368,7 +368,7 @@ function MenuLobbyRenderer:on_request_lobby_slot_reply()
 	managers.network:session():check_send_outfit()
 end
 
--- Lines 318-326
+-- Lines 319-327
 function MenuLobbyRenderer:get_player_slot_by_peer_id(id)
 	for _, slot in ipairs(self._player_slots) do
 		if slot.peer_id and slot.peer_id == id then
@@ -379,7 +379,7 @@ function MenuLobbyRenderer:get_player_slot_by_peer_id(id)
 	return self._player_slots[id]
 end
 
--- Lines 328-335
+-- Lines 329-336
 function MenuLobbyRenderer:get_player_slot_nr_by_peer_id(id)
 	for i, slot in ipairs(self._player_slots) do
 		if slot.peer_id and slot.peer_id == id then
@@ -390,7 +390,7 @@ function MenuLobbyRenderer:get_player_slot_nr_by_peer_id(id)
 	return nil
 end
 
--- Lines 337-348
+-- Lines 338-349
 function MenuLobbyRenderer:sync_chat_message(message, id)
 	Application:debug("sync_chat_message", message, id)
 
@@ -407,17 +407,17 @@ function MenuLobbyRenderer:sync_chat_message(message, id)
 	return false
 end
 
--- Lines 350-352
+-- Lines 351-353
 function MenuLobbyRenderer:update(t, dt)
 	MenuLobbyRenderer.super.update(self, t, dt)
 end
 
--- Lines 354-356
+-- Lines 355-357
 function MenuLobbyRenderer:highlight_item(item, ...)
 	MenuLobbyRenderer.super.highlight_item(self, item, ...)
 end
 
--- Lines 358-388
+-- Lines 359-389
 function MenuLobbyRenderer:trigger_item(item)
 	MenuRenderer.super.trigger_item(self, item)
 	Application:debug("trigger_item", item)
@@ -447,23 +447,23 @@ function MenuLobbyRenderer:trigger_item(item)
 	end
 end
 
--- Lines 390-392
+-- Lines 391-393
 function MenuLobbyRenderer:post_event(event)
 	self._sound_source:post_event(event)
 end
 
--- Lines 394-398
+-- Lines 395-399
 function MenuLobbyRenderer:navigate_back()
 	MenuLobbyRenderer.super.navigate_back(self)
 	self:post_event("menu_exit")
 end
 
--- Lines 400-402
+-- Lines 401-403
 function MenuLobbyRenderer:resolution_changed(...)
 	MenuLobbyRenderer.super.resolution_changed(self, ...)
 end
 
--- Lines 404-412
+-- Lines 405-413
 function MenuLobbyRenderer:_layout_menu_bg()
 	local res = RenderSettings.resolution
 	local safe_rect_pixels = managers.gui_data:scaled_size()
@@ -473,7 +473,7 @@ function MenuLobbyRenderer:_layout_menu_bg()
 	self:set_stencil_align(self._menu_stencil_align, self._menu_stencil_align_percent)
 end
 
--- Lines 414-459
+-- Lines 415-460
 function MenuLobbyRenderer:_layout_slot_progress_panel(slot, progress)
 	print("MenuLobbyRenderer:_layout_slot_progress_panel()", slot, progress)
 
@@ -517,7 +517,7 @@ function MenuLobbyRenderer:_layout_slot_progress_panel(slot, progress)
 	slot.p_tec:set_w(slot.params and slot.p_sup_bg:w() * (progress[4] or 0) / 49 or slot.p_tec:w())
 end
 
--- Lines 463-513
+-- Lines 464-514
 function MenuLobbyRenderer:_layout_info_panel()
 	local res = RenderSettings.resolution
 	local safe_rect = managers.gui_data:scaled_size()
@@ -571,7 +571,7 @@ function MenuLobbyRenderer:_layout_info_panel()
 	self._difficulty_text:set_w(self._gui_info_panel:w())
 end
 
--- Lines 515-523
+-- Lines 516-524
 function MenuLobbyRenderer:_layout_video()
 	if self._level_video then
 		local w = self._gui_info_panel:w()
@@ -583,12 +583,12 @@ function MenuLobbyRenderer:_layout_video()
 	end
 end
 
--- Lines 525-527
+-- Lines 526-528
 function MenuLobbyRenderer:set_bg_visible(visible)
 	self._menu_bg:set_visible(visible)
 end
 
--- Lines 529-543
+-- Lines 530-544
 function MenuLobbyRenderer:set_bg_area(area)
 	if self._menu_bg then
 		if area == "full" then
@@ -605,17 +605,17 @@ function MenuLobbyRenderer:set_bg_area(area)
 	end
 end
 
--- Lines 545-547
+-- Lines 546-548
 function MenuLobbyRenderer:set_stencil_image(image)
 	MenuRenderer.set_stencil_image(self, image)
 end
 
--- Lines 549-551
+-- Lines 550-552
 function MenuLobbyRenderer:refresh_theme()
 	MenuRenderer.refresh_theme(self)
 end
 
--- Lines 553-594
+-- Lines 554-595
 function MenuLobbyRenderer:set_stencil_align(align, percent)
 	if not self._menu_stencil then
 		return
@@ -664,7 +664,7 @@ function MenuLobbyRenderer:set_stencil_align(align, percent)
 	end
 end
 
--- Lines 597-611
+-- Lines 598-612
 function MenuLobbyRenderer:current_menu_text(topic_id)
 	local ids = {}
 
@@ -684,97 +684,97 @@ function MenuLobbyRenderer:current_menu_text(topic_id)
 	return s
 end
 
--- Lines 613-615
+-- Lines 614-616
 function MenuLobbyRenderer:scroll_up(...)
 	MenuRenderer.scroll_up(self, ...)
 end
 
--- Lines 617-619
+-- Lines 618-620
 function MenuLobbyRenderer:scroll_down(...)
 	MenuRenderer.scroll_down(self, ...)
 end
 
--- Lines 621-623
+-- Lines 622-624
 function MenuLobbyRenderer:accept_input(...)
 	MenuRenderer.accept_input(self, ...)
 end
 
--- Lines 625-627
+-- Lines 626-628
 function MenuLobbyRenderer:mouse_pressed(...)
 	return MenuRenderer.mouse_pressed(self, ...)
 end
 
--- Lines 629-631
+-- Lines 630-632
 function MenuLobbyRenderer:mouse_released(...)
 	return MenuRenderer.mouse_released(self, ...)
 end
 
--- Lines 633-635
+-- Lines 634-636
 function MenuLobbyRenderer:mouse_moved(...)
 	return MenuRenderer.mouse_moved(self, ...)
 end
 
--- Lines 637-639
+-- Lines 638-640
 function MenuLobbyRenderer:input_focus(...)
 	return MenuRenderer.input_focus(self, ...)
 end
 
--- Lines 641-643
+-- Lines 642-644
 function MenuLobbyRenderer:move_up(...)
 	return MenuRenderer.move_up(self, ...)
 end
 
--- Lines 645-647
+-- Lines 646-648
 function MenuLobbyRenderer:move_down(...)
 	return MenuRenderer.move_down(self, ...)
 end
 
--- Lines 649-651
+-- Lines 650-652
 function MenuLobbyRenderer:move_left(...)
 	return MenuRenderer.move_left(self, ...)
 end
 
--- Lines 653-655
+-- Lines 654-656
 function MenuLobbyRenderer:move_right(...)
 	return MenuRenderer.move_right(self, ...)
 end
 
--- Lines 657-659
+-- Lines 658-660
 function MenuLobbyRenderer:next_page(...)
 	return MenuRenderer.next_page(self, ...)
 end
 
--- Lines 661-663
+-- Lines 662-664
 function MenuLobbyRenderer:previous_page(...)
 	return MenuRenderer.previous_page(self, ...)
 end
 
--- Lines 665-667
+-- Lines 666-668
 function MenuLobbyRenderer:confirm_pressed(...)
 	return MenuRenderer.confirm_pressed(self, ...)
 end
 
--- Lines 669-671
+-- Lines 670-672
 function MenuLobbyRenderer:special_btn_pressed(...)
 	return managers.menu_component:special_btn_pressed(...)
 end
 
--- Lines 673-675
+-- Lines 674-676
 function MenuLobbyRenderer:special_btn_released(...)
 	return managers.menu_component:special_btn_released(...)
 end
 
--- Lines 677-679
+-- Lines 678-680
 function MenuLobbyRenderer:back_pressed(...)
 	return MenuRenderer.back_pressed(self, ...)
 end
 
--- Lines 681-683
+-- Lines 682-684
 function MenuLobbyRenderer:mouse_clicked(...)
 	return MenuRenderer.mouse_clicked(self, ...)
 end
 
--- Lines 685-687
+-- Lines 686-688
 function MenuLobbyRenderer:mouse_double_click(...)
 	return MenuRenderer.mouse_double_click(self, ...)
 end
