@@ -41,7 +41,7 @@ function MoneyTweakData._create_value_table(min, max, table_size, round, curve)
 	return t
 end
 
--- Lines 29-1001
+-- Lines 29-1000
 function MoneyTweakData:init(tweak_data)
 	local difficulty = Global.game_settings and Global.game_settings.difficulty or "normal"
 	local difficulty_index = tweak_data:difficulty_to_index(difficulty)
@@ -102,7 +102,7 @@ function MoneyTweakData:init(tweak_data)
 		weapon_glock = 2000,
 		weapon_scar = 2000,
 		drk_bomb_part = 9000,
-		drone_control_helmet = 18000,
+		drone_control_helmet = 20000,
 		toothbrush = 18000,
 		cloaker_gold = 2000,
 		cloaker_money = 1750,
@@ -390,7 +390,7 @@ function MoneyTweakData:init(tweak_data)
 		color_value = self._create_value_table(smallest_mask_part_cost * 0.3, biggest_mask_part_cost, 10, true, 1)
 	}
 
-	-- Lines 541-541
+	-- Lines 540-540
 	local function millions(value)
 		return value * 1000000
 	end

@@ -57,7 +57,7 @@ function FragGrenade:_on_collision(col_ray)
 	self:_detonate()
 end
 
--- Lines 84-119
+-- Lines 84-121
 function FragGrenade:_detonate(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 	if self._detonated then
 		return
@@ -85,14 +85,14 @@ function FragGrenade:_detonate(tag, unit, body, other_unit, other_body, position
 		owner = self._unit
 	})
 
-	if self._unit:id() ~= -1 then
+	if self._unit:id() ~= -1 and managers.network:session() then
 		managers.network:session():send_to_peers_synched("sync_unit_event_id_16", self._unit, "base", GrenadeBase.EVENT_IDS.detonate)
 	end
 
 	self:_handle_hiding_and_destroying(true, nil)
 end
 
--- Lines 123-136
+-- Lines 125-138
 function FragGrenade:_detonate_on_client()
 	if self._detonated then
 		return
@@ -107,7 +107,7 @@ function FragGrenade:_detonate_on_client()
 	self:_handle_hiding_and_destroying(true, nil)
 end
 
--- Lines 140-147
+-- Lines 142-149
 function FragGrenade:bullet_hit()
 	if not Network:is_server() then
 		return

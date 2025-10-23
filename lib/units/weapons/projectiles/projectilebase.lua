@@ -881,7 +881,9 @@ function ProjectileBase:destroy(...)
 	self:_warning_fx_vfx_remove()
 end
 
--- Lines 934-968
+local ids_unit = Idstring("unit")
+
+-- Lines 936-978
 function ProjectileBase.throw_projectile(projectile_type, pos, dir, owner_peer_id)
 	if not ProjectileBase.check_time_cheat(projectile_type, owner_peer_id) then
 		return
@@ -889,6 +891,11 @@ function ProjectileBase.throw_projectile(projectile_type, pos, dir, owner_peer_i
 
 	local tweak_entry = tweak_data.blackmarket.projectiles[projectile_type]
 	local unit_name = Idstring(not Network:is_server() and tweak_entry.local_unit or tweak_entry.unit)
+
+	if not PackageManager:has(ids_unit, unit_name) then
+		return
+	end
+
 	local unit = World:spawn_unit(unit_name, pos, Rotation(dir, math.UP))
 
 	if owner_peer_id and managers.network:session() then
@@ -925,7 +932,7 @@ function ProjectileBase.throw_projectile(projectile_type, pos, dir, owner_peer_i
 	return unit
 end
 
--- Lines 972-995
+-- Lines 982-1005
 function ProjectileBase.throw_projectile_npc(projectile_type, pos, dir, thrower_unit)
 	local tweak_entry = tweak_data.blackmarket.projectiles[projectile_type]
 	local unit_name = Idstring(not Network:is_server() and tweak_entry.local_unit or tweak_entry.unit)
@@ -955,14 +962,14 @@ function ProjectileBase.throw_projectile_npc(projectile_type, pos, dir, thrower_
 	return unit
 end
 
--- Lines 999-1002
+-- Lines 1009-1012
 function ProjectileBase:add_trail_effect()
 	managers.game_play_central:add_projectile_trail(self._unit, self._unit:orientation_object(), self.trail_effect)
 
 	self._added_trail_effect = true
 end
 
--- Lines 1004-1009
+-- Lines 1014-1019
 function ProjectileBase:remove_trail_effect()
 	if self._added_trail_effect then
 		managers.game_play_central:remove_projectile_trail(self._unit)
@@ -971,7 +978,7 @@ function ProjectileBase:remove_trail_effect()
 	end
 end
 
--- Lines 1013-1061
+-- Lines 1023-1071
 function ProjectileBase:_hide_and_freeze(skip_bodies)
 	if not skip_bodies then
 		local body_ray_type = Idstring("body")
@@ -1016,7 +1023,7 @@ function ProjectileBase:_hide_and_freeze(skip_bodies)
 	self:_warning_fx_vfx_remove()
 end
 
--- Lines 1063-1081
+-- Lines 1073-1091
 function ProjectileBase:_handle_hiding_and_destroying(destroy, destruction_delay)
 	self:_hide_and_freeze(true)
 	self._unit:set_enabled(false)
@@ -1034,7 +1041,7 @@ function ProjectileBase:_handle_hiding_and_destroying(destroy, destruction_delay
 	end
 end
 
--- Lines 1083-1089
+-- Lines 1093-1099
 function ProjectileBase:_clbk_destroy()
 	self._destroy_clbk_id = nil
 
@@ -1043,7 +1050,7 @@ function ProjectileBase:_clbk_destroy()
 	end
 end
 
--- Lines 1093-1110
+-- Lines 1103-1120
 function ProjectileBase.check_time_cheat(projectile_type, owner_peer_id)
 	if not owner_peer_id then
 		return true
@@ -1064,18 +1071,18 @@ function ProjectileBase.check_time_cheat(projectile_type, owner_peer_id)
 	return true
 end
 
--- Lines 1114-1125
+-- Lines 1124-1135
 function ProjectileBase.spawn(unit_name, pos, rot)
 	local unit = World:spawn_unit(Idstring(unit_name), pos, rot)
 
 	return unit
 end
 
--- Lines 1129-1130
+-- Lines 1139-1140
 function ProjectileBase._dispose_of_sound(...)
 end
 
--- Lines 1132-1148
+-- Lines 1142-1158
 function ProjectileBase:_detect_and_give_dmg(hit_pos)
 	local params = {
 		hit_pos = hit_pos,
@@ -1095,13 +1102,13 @@ function ProjectileBase:_detect_and_give_dmg(hit_pos)
 	return hit_units, splinters
 end
 
--- Lines 1151-1154
+-- Lines 1161-1164
 function ProjectileBase._explode_on_client(position, normal, user_unit, dmg, range, curve_pow, custom_params)
 	managers.explosion:play_sound_and_effects(position, normal, range, custom_params)
 	managers.explosion:client_damage_and_push(position, normal, user_unit, dmg, range, curve_pow)
 end
 
--- Lines 1156-1158
+-- Lines 1166-1168
 function ProjectileBase._play_sound_and_effects(position, normal, range, custom_params)
 	managers.explosion:play_sound_and_effects(position, normal, range, custom_params)
 end

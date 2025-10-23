@@ -44,7 +44,7 @@ function MedicDamage:get_healing_radius_sq()
 	return self._heal_radius * self._heal_radius
 end
 
--- Lines 74-99
+-- Lines 74-104
 function MedicDamage:verify_heal_requesting_unit(requesting_unit)
 	local base_ext = requesting_unit:base()
 	local char_tweak = base_ext and base_ext.char_tweak and base_ext:char_tweak()
@@ -69,7 +69,7 @@ function MedicDamage:verify_heal_requesting_unit(requesting_unit)
 	return true
 end
 
--- Lines 101-115
+-- Lines 106-126
 function MedicDamage:is_available_for_healing(requesting_unit)
 	if self._unit:anim_data().act then
 		return false
@@ -86,7 +86,7 @@ function MedicDamage:is_available_for_healing(requesting_unit)
 	return true
 end
 
--- Lines 118-144
+-- Lines 129-155
 function MedicDamage:heal_unit(unit)
 	self._heal_cooldown_t = TimerManager:game():time() + self._heal_cooldown
 
@@ -109,7 +109,7 @@ function MedicDamage:heal_unit(unit)
 	return true
 end
 
--- Lines 146-152
+-- Lines 157-163
 function MedicDamage:heal_unit_external(unit, skip_verification)
 	if not skip_verification and not self:verify_heal_requesting_unit(unit) then
 		return false
@@ -118,7 +118,7 @@ function MedicDamage:heal_unit_external(unit, skip_verification)
 	return unit:character_damage():do_medic_heal_and_action(true)
 end
 
--- Lines 154-190
+-- Lines 165-201
 function MedicDamage:sync_heal_action()
 	self._heal_cooldown_t = TimerManager:game():time() + self._heal_cooldown
 	local action_data = nil
@@ -154,7 +154,7 @@ function MedicDamage:sync_heal_action()
 	end
 end
 
--- Lines 192-198
+-- Lines 203-209
 function MedicDamage:check_medic_heal(...)
 	if self._healed then
 		return false
@@ -163,7 +163,7 @@ function MedicDamage:check_medic_heal(...)
 	return MedicDamage.super.check_medic_heal(self, ...)
 end
 
--- Lines 200-206
+-- Lines 211-217
 function MedicDamage:do_medic_heal_and_action(...)
 	if self._healed then
 		return false
@@ -172,13 +172,13 @@ function MedicDamage:do_medic_heal_and_action(...)
 	return MedicDamage.super.do_medic_heal_and_action(self, ...)
 end
 
--- Lines 208-212
+-- Lines 219-223
 function MedicDamage:die(...)
 	MedicDamage.super.die(self, ...)
 	self:_unregister_healing()
 end
 
--- Lines 214-218
+-- Lines 225-229
 function MedicDamage:destroy(...)
 	MedicDamage.super.destroy(self, ...)
 	self:_unregister_healing()

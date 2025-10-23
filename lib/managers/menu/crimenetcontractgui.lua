@@ -1,6 +1,6 @@
 CrimeNetContractGui = CrimeNetContractGui or class()
 
--- Lines 3-906
+-- Lines 3-925
 function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 	self._ws = ws
 	self._fullscreen_ws = fullscreen_ws
@@ -904,81 +904,79 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 		add_line("menu_toggle_drop_in", drop_in[server_data.drop_in])
 	end
 
-	if job_data.mods then
-		local mods_presence = job_data.mods
+	local mods_presence = job_data.mods
 
-		if mods_presence and mods_presence ~= "" and mods_presence ~= "1" then
-			local content_panel = add_tab("menu_cn_game_mods")
-			self._mods_tab = self._tabs[#self._tabs]
-			self._mods_scroll = ScrollablePanel:new(content_panel, "mods_scroll", {
-				padding = 0
+	if mods_presence and mods_presence ~= "" and mods_presence ~= "1" and (not managers.network.matchmake.no_mod_string or mods_presence ~= managers.network.matchmake:no_mod_string()) then
+		local content_panel = add_tab("menu_cn_game_mods")
+		self._mods_tab = self._tabs[#self._tabs]
+		self._mods_scroll = ScrollablePanel:new(content_panel, "mods_scroll", {
+			padding = 0
+		})
+		self._mod_items = {}
+		local _y = 7
+		local add_back = true
+
+		-- Lines 681-732
+		local function add_line(id, text, ignore_back)
+			local canvas = self._mods_scroll:canvas()
+
+			if add_back and not ignore_back then
+				canvas:rect({
+					x = 8,
+					layer = -1,
+					y = _y,
+					h = tweak_data.menu.pd2_small_font_size,
+					w = canvas:w() - 18,
+					color = Color.black:with_alpha(0.7)
+				})
+			end
+
+			add_back = not add_back
+			text = string.upper(text)
+			local left_text = canvas:text({
+				align = "left",
+				name = id,
+				font = tweak_data.menu.pd2_small_font,
+				font_size = tweak_data.menu.pd2_small_font_size,
+				text = text,
+				x = padding,
+				y = _y,
+				h = tweak_data.menu.pd2_small_font_size,
+				w = canvas:w() - double_padding,
+				color = Color(0.8, 0.8, 0.8)
 			})
-			self._mod_items = {}
-			local _y = 7
-			local add_back = true
+			local highlight_text = canvas:text({
+				blend_mode = "add",
+				align = "left",
+				visible = false,
+				name = id,
+				font = tweak_data.menu.pd2_small_font,
+				font_size = tweak_data.menu.pd2_small_font_size,
+				text = text,
+				x = padding,
+				y = _y,
+				h = tweak_data.menu.pd2_small_font_size,
+				w = canvas:w() - double_padding,
+				color = tweak_data.screen_colors.button_stage_2
+			})
+			_y = left_text:bottom() + 2
 
-			-- Lines 676-718
-			local function add_line(id, text, ignore_back)
-				local canvas = self._mods_scroll:canvas()
-
-				if add_back and not ignore_back then
-					canvas:rect({
-						x = 8,
-						layer = -1,
-						y = _y,
-						h = tweak_data.menu.pd2_small_font_size,
-						w = canvas:w() - 18,
-						color = Color.black:with_alpha(0.7)
-					})
-				end
-
-				add_back = not add_back
-				text = string.upper(text)
-				local left_text = canvas:text({
-					align = "left",
-					name = id,
-					font = tweak_data.menu.pd2_small_font,
-					font_size = tweak_data.menu.pd2_small_font_size,
-					text = text,
-					x = padding,
-					y = _y,
-					h = tweak_data.menu.pd2_small_font_size,
-					w = canvas:w() - double_padding,
-					color = Color(0.8, 0.8, 0.8)
-				})
-				local highlight_text = canvas:text({
-					blend_mode = "add",
-					align = "left",
-					visible = false,
-					name = id,
-					font = tweak_data.menu.pd2_small_font,
-					font_size = tweak_data.menu.pd2_small_font_size,
-					text = text,
-					x = padding,
-					y = _y,
-					h = tweak_data.menu.pd2_small_font_size,
-					w = canvas:w() - double_padding,
-					color = tweak_data.screen_colors.button_stage_2
-				})
-				_y = left_text:bottom() + 2
-
-				return left_text, highlight_text
-			end
-
-			local splits = string.split(mods_presence, "|")
-
-			for i = 1, #splits, 2 do
-				local text, highlight = add_line(splits[i + 1] or "", splits[i] or "")
-
-				table.insert(self._mod_items, {
-					text,
-					highlight
-				})
-			end
-
-			add_line("spacer", "", true)
-			self._mods_scroll:update_canvas_size()
+			return left_text, highlight_text
 		end
+
+		local splits = string.split(mods_presence, "|")
+
+		for i = 1, #splits, 2 do
+			local text, highlight = add_line(splits[i + 1] or "", splits[i] or "")
+
+			table.insert(self._mod_items, {
+				text,
+				highlight
+			})
+		end
+
+		add_line("spacer", "", true)
+		self._mods_scroll:update_canvas_size()
 	end
 
 	local days_multiplier = 0
@@ -1132,7 +1130,7 @@ function CrimeNetContractGui:init(ws, fullscreen_ws, node)
 	self._potential_show_max = false
 end
 
--- Lines 908-944
+-- Lines 927-963
 function CrimeNetContractGui:_create_xp_appendices(x, y)
 	local font_size = tweak_data.menu.pd2_small_font_size
 	local font = tweak_data.menu.pd2_small_font
@@ -1196,7 +1194,7 @@ function CrimeNetContractGui:_create_xp_appendices(x, y)
 	return job_xp, add_xp, heat_add_xp, ghost_add_xp
 end
 
--- Lines 946-969
+-- Lines 965-988
 function CrimeNetContractGui:_update_xp_appendices()
 	local job_xp = self._contract_panel:child("job_xp")
 	local add_xp = self._contract_panel:child("add_xp")
@@ -1221,7 +1219,7 @@ function CrimeNetContractGui:_update_xp_appendices()
 	end
 end
 
--- Lines 971-992
+-- Lines 990-1011
 function CrimeNetContractGui:_check_level_up(levels_gained)
 	local gonna_level_up = levels_gained >= 1
 	self._gonna_level_up = self._gonna_level_up or false
@@ -1235,7 +1233,7 @@ function CrimeNetContractGui:_check_level_up(levels_gained)
 		potential_level_up_text:set_blend_mode("normal")
 
 		if gonna_level_up then
-			-- Lines 982-987
+			-- Lines 1001-1006
 			local function pulse_anim(o)
 				o:set_blend_mode("add")
 
@@ -1251,7 +1249,7 @@ function CrimeNetContractGui:_check_level_up(levels_gained)
 	end
 end
 
--- Lines 994-1002
+-- Lines 1013-1021
 function CrimeNetContractGui:_rec_round_object(object)
 	if object.children then
 		for i, d in ipairs(object:children()) do
@@ -1264,20 +1262,20 @@ function CrimeNetContractGui:_rec_round_object(object)
 	object:set_position(math.round(x), math.round(y))
 end
 
--- Lines 1015-1018
+-- Lines 1034-1037
 function CrimeNetContractGui:set_time(t, dt)
 	self._wait_t = t + 1
 	self._step = self._step + 1
 end
 
--- Lines 1020-1025
+-- Lines 1039-1044
 function CrimeNetContractGui:start_sound(t, dt)
 	self:toggle_post_event()
 
 	self._step = self._step + 1
 end
 
--- Lines 1027-1098
+-- Lines 1046-1117
 function CrimeNetContractGui:count_job_stars(t, dt)
 	if self._data.stars.job_stars == 0 then
 		self._step = self._step + 1
@@ -1332,7 +1330,7 @@ function CrimeNetContractGui:count_job_stars(t, dt)
 	end
 end
 
--- Lines 1100-1214
+-- Lines 1119-1233
 function CrimeNetContractGui:count_difficulty_stars(t, dt)
 	if self._data.stars.difficulty_stars == 0 then
 		self._data.gui_objects.risk_text:show()
@@ -1422,7 +1420,7 @@ function CrimeNetContractGui:count_difficulty_stars(t, dt)
 	end
 end
 
--- Lines 1217-1221
+-- Lines 1236-1240
 function CrimeNetContractGui:start_counter(t, dt)
 	managers.menu_component:post_event("count_1")
 
@@ -1430,7 +1428,7 @@ function CrimeNetContractGui:start_counter(t, dt)
 	self._step = self._step + 1
 end
 
--- Lines 1223-1228
+-- Lines 1242-1247
 function CrimeNetContractGui:end_counter(t, dt)
 	managers.menu_component:post_event("count_1_finished")
 
@@ -1439,7 +1437,7 @@ function CrimeNetContractGui:end_counter(t, dt)
 	self._step = self._step + 1
 end
 
--- Lines 1230-1234
+-- Lines 1249-1253
 function CrimeNetContractGui:start_count_payday(t, dt)
 	managers.menu_component:post_event("count_1")
 
@@ -1447,7 +1445,7 @@ function CrimeNetContractGui:start_count_payday(t, dt)
 	self._step = self._step + 1
 end
 
--- Lines 1236-1245
+-- Lines 1255-1264
 function CrimeNetContractGui:count_payday(t, dt)
 	self._data.counted_payday_money = math.round(math.step(self._data.counted_payday_money, self._data.payday_money, dt * math.max(self._data.payday_money / (math.rand(1) + 3.5), 40000)))
 
@@ -1461,7 +1459,7 @@ function CrimeNetContractGui:count_payday(t, dt)
 	end
 end
 
--- Lines 1247-1252
+-- Lines 1266-1271
 function CrimeNetContractGui:end_count_payday(t, dt)
 	managers.menu_component:post_event("count_1_finished")
 
@@ -1470,7 +1468,7 @@ function CrimeNetContractGui:end_count_payday(t, dt)
 	self._step = self._step + 1
 end
 
--- Lines 1264-1321
+-- Lines 1283-1340
 function CrimeNetContractGui:count_job_base(t, dt)
 	local tick = dt * math.max(self._data.experience / (math.rand(1) + 1.5), 4000)
 	self._data.counted_job_xp = math.round(math.step(self._data.counted_job_xp, self._data.experience, tick))
@@ -1527,7 +1525,7 @@ function CrimeNetContractGui:count_job_base(t, dt)
 	end
 end
 
--- Lines 1323-1370
+-- Lines 1342-1389
 function CrimeNetContractGui:count_job_risk(t, dt)
 	self._data.counted_risk_xp = math.round(math.step(self._data.counted_risk_xp, self._data.add_experience, dt * math.max(self._data.add_experience / (math.rand(1) + 0.75), 40000)))
 	self._data.counted_heat_xp = math.round(self._data.heat_experience + math.step(self._data.counted_heat_xp, self._data.heat_add_experience, dt * math.max(self._data.heat_add_experience / (math.rand(1) + 0.75), 40000)))
@@ -1576,7 +1574,7 @@ function CrimeNetContractGui:count_job_risk(t, dt)
 	end
 end
 
--- Lines 1372-1381
+-- Lines 1391-1400
 function CrimeNetContractGui:count_job_payday(t, dt)
 	self._data.counted_payday_money = math.round(math.step(self._data.counted_payday_money, self._data.payday_money, dt * math.max(self._data.payday_money / (math.rand(1) + 1.5), 80000)))
 
@@ -1590,7 +1588,7 @@ function CrimeNetContractGui:count_job_payday(t, dt)
 	end
 end
 
--- Lines 1384-1556
+-- Lines 1403-1575
 function CrimeNetContractGui:set_potential_rewards(show_max)
 	if self._step <= #self._steps then
 		return
@@ -1763,7 +1761,7 @@ function CrimeNetContractGui:set_potential_rewards(show_max)
 	end
 end
 
--- Lines 1559-1792
+-- Lines 1578-1811
 function CrimeNetContractGui:set_all(t, dt)
 	local job_data = self._node:parameters().menu_component_data
 	local narrative = tweak_data.narrative:job_data(job_data.job_id)
@@ -1918,7 +1916,7 @@ function CrimeNetContractGui:set_all(t, dt)
 	end
 end
 
--- Lines 1794-1812
+-- Lines 1813-1831
 function CrimeNetContractGui:free_memory(t, dt)
 	self._data = nil
 	self._step = self._step + 1
@@ -1942,7 +1940,7 @@ function CrimeNetContractGui:free_memory(t, dt)
 	end
 end
 
--- Lines 1814-1833
+-- Lines 1833-1852
 function CrimeNetContractGui:sound_event_callback(event_type, duration)
 	if event_type == "end_of_event" then
 		self._briefing_duration = nil
@@ -1962,7 +1960,7 @@ function CrimeNetContractGui:sound_event_callback(event_type, duration)
 	end
 end
 
--- Lines 1835-1852
+-- Lines 1854-1871
 function CrimeNetContractGui:toggle_post_event()
 	if not self._briefing_event then
 		return
@@ -1982,7 +1980,7 @@ function CrimeNetContractGui:toggle_post_event()
 	end
 end
 
--- Lines 1854-1866
+-- Lines 1873-1885
 function CrimeNetContractGui:set_active_page(index)
 	if self._active_page then
 		self._tabs[self._active_page]:set_active(false)
@@ -1999,7 +1997,7 @@ function CrimeNetContractGui:set_active_page(index)
 	end
 end
 
--- Lines 1868-1891
+-- Lines 1887-1910
 function CrimeNetContractGui:update(t, dt)
 	if self._wait_t then
 		if self._wait_t < t then
@@ -2027,7 +2025,7 @@ function CrimeNetContractGui:update(t, dt)
 	end
 end
 
--- Lines 1893-1954
+-- Lines 1912-1973
 function CrimeNetContractGui:mouse_moved(o, x, y)
 	if alive(self._briefing_len_panel) and self._briefing_len_panel:visible() and self._step > 2 then
 		if self._briefing_len_panel:child("button_text"):inside(x, y) then
@@ -2099,7 +2097,7 @@ function CrimeNetContractGui:mouse_moved(o, x, y)
 	return false, "arrow"
 end
 
--- Lines 1956-1987
+-- Lines 1975-2006
 function CrimeNetContractGui:mouse_pressed(o, button, x, y)
 	if alive(self._briefing_len_panel) and self._briefing_len_panel:visible() and self._step > 2 and self._briefing_len_panel:child("button_text"):inside(x, y) then
 		self:toggle_post_event()
@@ -2136,7 +2134,7 @@ function CrimeNetContractGui:mouse_pressed(o, button, x, y)
 	end
 end
 
--- Lines 1989-2000
+-- Lines 2008-2019
 function CrimeNetContractGui:mouse_wheel_up(x, y)
 	if self._mutators_scroll then
 		self._mutators_scroll:scroll(x, y, 1)
@@ -2147,7 +2145,7 @@ function CrimeNetContractGui:mouse_wheel_up(x, y)
 	end
 end
 
--- Lines 2002-2013
+-- Lines 2021-2032
 function CrimeNetContractGui:mouse_wheel_down(x, y)
 	if self._mutators_scroll then
 		self._mutators_scroll:scroll(x, y, -1)
@@ -2158,7 +2156,7 @@ function CrimeNetContractGui:mouse_wheel_down(x, y)
 	end
 end
 
--- Lines 2015-2020
+-- Lines 2034-2039
 function CrimeNetContractGui:make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
@@ -2166,7 +2164,7 @@ function CrimeNetContractGui:make_fine_text(text)
 	text:set_position(math.round(text:x()), math.round(text:y()))
 end
 
--- Lines 2022-2030
+-- Lines 2041-2049
 function CrimeNetContractGui:_toggle_potential_rewards()
 	if alive(self._potential_rewards_title) and self._step > #self._steps then
 		self._potential_show_max = not self._potential_show_max
@@ -2180,7 +2178,7 @@ function CrimeNetContractGui:_toggle_potential_rewards()
 	end
 end
 
--- Lines 2032-2044
+-- Lines 2051-2063
 function CrimeNetContractGui:special_btn_pressed(button)
 	if button == Idstring("voice_message") or self._smart_matchmaking and button == Idstring("menu_toggle_voice_message") then
 		if alive(self._briefing_len_panel) and self._briefing_len_panel:visible() and self._step > 2 then
@@ -2197,7 +2195,7 @@ function CrimeNetContractGui:special_btn_pressed(button)
 	return false
 end
 
--- Lines 2046-2051
+-- Lines 2065-2070
 function CrimeNetContractGui:previous_page()
 	if self._active_page and self._active_page > 1 then
 		self:set_active_page(self._active_page - 1)
@@ -2206,7 +2204,7 @@ function CrimeNetContractGui:previous_page()
 	end
 end
 
--- Lines 2053-2058
+-- Lines 2072-2077
 function CrimeNetContractGui:next_page()
 	if self._active_page and self._active_page < #self._tabs then
 		self:set_active_page(self._active_page + 1)
@@ -2215,7 +2213,7 @@ function CrimeNetContractGui:next_page()
 	end
 end
 
--- Lines 2060-2098
+-- Lines 2079-2117
 function CrimeNetContractGui:set_difficulty_id(difficulty_id)
 	local job_data = self._node:parameters().menu_component_data
 	local diffs = {
@@ -2259,13 +2257,13 @@ function CrimeNetContractGui:set_difficulty_id(difficulty_id)
 	self:set_potential_rewards(self._potential_show_max)
 end
 
--- Lines 2100-2103
+-- Lines 2119-2122
 function CrimeNetContractGui:set_one_down(one_down)
 	local job_data = self._node:parameters().menu_component_data
 	job_data.one_down = one_down
 end
 
--- Lines 2105-2120
+-- Lines 2124-2139
 function CrimeNetContractGui:close()
 	if not managers.menu:is_pc_controller() then
 		managers.menu:active_menu().input:activate_controller_mouse()

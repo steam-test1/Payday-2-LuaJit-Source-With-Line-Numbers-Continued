@@ -581,7 +581,7 @@ function TimerGui:sync_net_event(event_id)
 	end
 end
 
--- Lines 579-593
+-- Lines 575-583
 function TimerGui:set_jammed(jammed)
 	if managers.network:session() then
 		local event_id = jammed and TimerGui.EVENT_IDS.jammed or TimerGui.EVENT_IDS.unjammed
@@ -592,7 +592,7 @@ function TimerGui:set_jammed(jammed)
 	self:_set_jammed(jammed)
 end
 
--- Lines 596-675
+-- Lines 585-664
 function TimerGui:_set_jammed(jammed)
 	self._jammed = jammed
 
@@ -682,12 +682,12 @@ function TimerGui:_set_jammed(jammed)
 	end
 end
 
--- Lines 677-681
+-- Lines 666-670
 function TimerGui:set_powered(powered, enable_interaction)
 	self:_set_powered(powered, enable_interaction)
 end
 
--- Lines 683-756
+-- Lines 672-745
 function TimerGui:_set_powered(powered, enable_interaction)
 	self._powered = powered
 
@@ -746,7 +746,7 @@ function TimerGui:_set_powered(powered, enable_interaction)
 	self._unit:base():set_powered(powered)
 end
 
--- Lines 758-769
+-- Lines 747-758
 function TimerGui:done()
 	self:_set_done()
 
@@ -761,19 +761,19 @@ function TimerGui:done()
 	end
 end
 
--- Lines 771-773
+-- Lines 760-762
 function TimerGui:is_playing_done_event()
 	return self._is_playing_done_event
 end
 
--- Lines 775-778
+-- Lines 764-767
 function TimerGui:add_listener_to_done_event(clbk)
 	self._done_event_listeners = self._done_event_listeners or {}
 
 	table.insert(self._done_event_listeners, clbk)
 end
 
--- Lines 780-788
+-- Lines 769-777
 function TimerGui:on_done_event_ended()
 	self._is_playing_done_event = false
 
@@ -786,7 +786,7 @@ function TimerGui:on_done_event_ended()
 	end
 end
 
--- Lines 790-798
+-- Lines 779-787
 function TimerGui:_set_done()
 	self._done = true
 
@@ -798,7 +798,7 @@ function TimerGui:_set_done()
 	self._unit:base():done()
 end
 
--- Lines 800-806
+-- Lines 789-795
 function TimerGui:update_sound_event()
 	if self._done or not self._started or self._jammed or not self._powered then
 		return
@@ -807,23 +807,23 @@ function TimerGui:update_sound_event()
 	self:post_event(self._resume_event)
 end
 
--- Lines 808-810
+-- Lines 797-799
 function TimerGui:hide()
 	self._ws:hide()
 end
 
--- Lines 812-814
+-- Lines 801-803
 function TimerGui:show()
 	self._ws:show()
 end
 
--- Lines 816-819
+-- Lines 805-808
 function TimerGui:lock_gui()
 	self._ws:set_cull_distance(self._cull_distance)
 	self._ws:set_frozen(true)
 end
 
--- Lines 821-827
+-- Lines 810-816
 function TimerGui:destroy()
 	if alive(self._new_gui) and alive(self._ws) then
 		self._new_gui:destroy_workspace(self._ws)
@@ -833,7 +833,7 @@ function TimerGui:destroy()
 	end
 end
 
--- Lines 829-844
+-- Lines 818-833
 function TimerGui:save(data)
 	local state = {
 		started = self._started,
@@ -851,7 +851,7 @@ function TimerGui:save(data)
 	data.TimerGui = state
 end
 
--- Lines 846-874
+-- Lines 835-863
 function TimerGui:load(data)
 	local state = data.TimerGui
 
@@ -887,7 +887,7 @@ function TimerGui:load(data)
 	self._unit:set_extension_update_enabled(Idstring("timer_gui"), state.update_enabled and true or false)
 end
 
--- Lines 876-899
+-- Lines 865-888
 function TimerGui:post_event(event)
 	if not event then
 		return

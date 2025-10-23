@@ -6760,31 +6760,36 @@ function GroupAIStateBase:register_phalanx_vip(unit)
 	self._phalanx_data.vip = unit
 end
 
--- Lines 6738-6741
+-- Lines 6738-6740
 function GroupAIStateBase:unregister_phalanx_minion(unit_key)
 	self._phalanx_data.minions[unit_key] = nil
 end
 
--- Lines 6745-6751
+-- Lines 6744-6759
 function GroupAIStateBase:unregister_phalanx_vip()
+	local phalanx_unit = self._phalanx_data.vip
 	self._phalanx_data.vip = nil
 
 	if self.set_assault_endless then
 		self:set_assault_endless(false)
+
+		if alive(phalanx_unit) and phalanx_unit:sound() then
+			phalanx_unit:sound():say("cpw_a04", true, true)
+		end
 	end
 end
 
--- Lines 6755-6757
+-- Lines 6763-6765
 function GroupAIStateBase:is_unit_in_phalanx_minion_data(unit_key)
 	return self._phalanx_data and self._phalanx_data.minions and self._phalanx_data.minions[unit_key] and true
 end
 
--- Lines 6761-6763
+-- Lines 6769-6771
 function GroupAIStateBase:is_unit_team_AI(unit)
 	return self._ai_criminals[unit:key()] and true or false
 end
 
--- Lines 6767-6775
+-- Lines 6775-6783
 function GroupAIStateBase:set_force_attention(data)
 	if data then
 		self._force_attention_data = deep_clone(data)
@@ -6795,7 +6800,7 @@ function GroupAIStateBase:set_force_attention(data)
 	end
 end
 
--- Lines 6777-6783
+-- Lines 6785-6791
 function GroupAIStateBase:add_affected_force_attention_unit(unit)
 	if not self._force_attention_data or not alive(unit) then
 		return
@@ -6804,7 +6809,7 @@ function GroupAIStateBase:add_affected_force_attention_unit(unit)
 	self._force_attention_data.included_units[unit:key()] = true
 end
 
--- Lines 6785-6791
+-- Lines 6793-6799
 function GroupAIStateBase:add_excluded_force_attention_unit(unit)
 	if not self._force_attention_data or not alive(unit) then
 		return
@@ -6813,7 +6818,7 @@ function GroupAIStateBase:add_excluded_force_attention_unit(unit)
 	self._force_attention_data.excluded_units[unit:key()] = true
 end
 
--- Lines 6794-6810
+-- Lines 6802-6818
 function GroupAIStateBase:force_attention_data(unit)
 	if not self._force_attention_data or not alive(unit) then
 		return nil
@@ -6830,7 +6835,7 @@ function GroupAIStateBase:force_attention_data(unit)
 	end
 end
 
--- Lines 6812-6820
+-- Lines 6820-6828
 function GroupAIStateBase:get_AI_attention_object_by_unit(unit)
 	local new_data = {}
 

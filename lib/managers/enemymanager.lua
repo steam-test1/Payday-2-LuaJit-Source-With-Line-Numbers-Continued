@@ -39,7 +39,7 @@ function EnemyManager:init()
 	managers.user:add_setting_changed_callback("corpse_limit", callback(self, self, "corpse_limit_changed_clbk"))
 end
 
--- Lines 47-60
+-- Lines 47-53
 function EnemyManager:update(t, dt)
 	self._queued_task_executed = false
 
@@ -47,7 +47,7 @@ function EnemyManager:update(t, dt)
 	self:_update_queued_tasks(t, dt)
 end
 
--- Lines 62-68
+-- Lines 55-61
 function EnemyManager:corpse_limit()
 	local limit = self._MAX_NR_CORPSES
 	limit = managers.mutators:modify_value("EnemyManager:corpse_limit", limit)
@@ -55,7 +55,7 @@ function EnemyManager:corpse_limit()
 	return limit
 end
 
--- Lines 71-96
+-- Lines 64-89
 function EnemyManager:corpse_limit_changed_clbk(setting_name, old_limit, new_limit)
 	self._MAX_NR_CORPSES = new_limit
 
@@ -79,12 +79,12 @@ function EnemyManager:corpse_limit_changed_clbk(setting_name, old_limit, new_lim
 	end
 end
 
--- Lines 98-100
+-- Lines 91-93
 function EnemyManager:shield_limit()
 	return self._MAX_NR_SHIELDS
 end
 
--- Lines 105-289
+-- Lines 98-282
 function EnemyManager:_update_gfx_lod()
 	if self._gfx_lod_data.enabled and managers.navigation:is_data_ready() then
 		local camera_rot = managers.viewport:get_current_camera_rotation()
@@ -247,7 +247,7 @@ function EnemyManager:_update_gfx_lod()
 	end
 end
 
--- Lines 293-312
+-- Lines 286-305
 function EnemyManager:_remove_i_from_lod_prio(i, anim_lod)
 	anim_lod = anim_lod or managers.user:get_setting("video_animation_lod")
 	local nr_i_lod1 = self._nr_i_lod[anim_lod][1]
@@ -269,7 +269,7 @@ function EnemyManager:_remove_i_from_lod_prio(i, anim_lod)
 	end
 end
 
--- Lines 316-323
+-- Lines 309-316
 function EnemyManager:_create_unit_gfx_lod_data(unit)
 	local lod_entries = self._gfx_lod_data.entries
 
@@ -280,7 +280,7 @@ function EnemyManager:_create_unit_gfx_lod_data(unit)
 	table.insert(lod_entries.com, unit:movement():m_com())
 end
 
--- Lines 327-358
+-- Lines 320-351
 function EnemyManager:_destroy_unit_gfx_lod_data(u_key)
 	local lod_entries = self._gfx_lod_data.entries
 
@@ -327,7 +327,7 @@ function EnemyManager:_destroy_unit_gfx_lod_data(u_key)
 	end
 end
 
--- Lines 362-376
+-- Lines 355-369
 function EnemyManager:set_gfx_lod_enabled(state)
 	if state then
 		self._gfx_lod_data.enabled = state
@@ -345,7 +345,7 @@ function EnemyManager:set_gfx_lod_enabled(state)
 	end
 end
 
--- Lines 378-426
+-- Lines 371-419
 function EnemyManager:chk_any_unit_in_slotmask_visible(slotmask, cam_pos, cam_nav_tracker)
 	if self._gfx_lod_data.enabled and managers.navigation:is_data_ready() then
 		local camera_rot = managers.viewport:get_current_camera_rotation()
@@ -387,7 +387,7 @@ function EnemyManager:chk_any_unit_in_slotmask_visible(slotmask, cam_pos, cam_na
 	end
 end
 
--- Lines 430-489
+-- Lines 423-482
 function EnemyManager:_init_enemy_data()
 	local enemy_data = {}
 	self._enemy_data = enemy_data
@@ -429,27 +429,27 @@ function EnemyManager:_init_enemy_data()
 	self._medic_units = {}
 end
 
--- Lines 493-495
+-- Lines 486-488
 function EnemyManager:all_enemies()
 	return self._enemy_data.unit_data
 end
 
--- Lines 497-499
+-- Lines 490-492
 function EnemyManager:is_enemy(unit)
 	return self._enemy_data.unit_data[unit:key()] and true or false
 end
 
--- Lines 503-505
+-- Lines 496-498
 function EnemyManager:all_civilians()
 	return self._civilian_data.unit_data
 end
 
--- Lines 507-509
+-- Lines 500-502
 function EnemyManager:is_civilian(unit)
 	return self._civilian_data.unit_data[unit:key()] and true or false
 end
 
--- Lines 513-519
+-- Lines 506-512
 function EnemyManager:queue_task(id, task_clbk, data, execute_t, verification_clbk, asap)
 	local task_data = {
 		clbk = task_clbk,
@@ -467,7 +467,7 @@ function EnemyManager:queue_task(id, task_clbk, data, execute_t, verification_cl
 	end
 end
 
--- Lines 521-530
+-- Lines 514-523
 function EnemyManager:update_queue_task(id, task_clbk, data, execute_t, verification_clbk, asap)
 	local task_data, _ = table.find_value(self._queued_tasks, function (td)
 		return td.id == id
@@ -482,7 +482,7 @@ function EnemyManager:update_queue_task(id, task_clbk, data, execute_t, verifica
 	end
 end
 
--- Lines 534-545
+-- Lines 527-538
 function EnemyManager:unqueue_task(id)
 	local tasks = self._queued_tasks
 	local i = #tasks
@@ -500,7 +500,7 @@ function EnemyManager:unqueue_task(id)
 	debug_pause("[EnemyManager:unqueue_task] task", id, "was not queued!!!")
 end
 
--- Lines 549-571
+-- Lines 542-564
 function EnemyManager:unqueue_task_debug(id)
 	if not id then
 		Application:stack_dump()
@@ -529,7 +529,7 @@ function EnemyManager:unqueue_task_debug(id)
 	end
 end
 
--- Lines 575-586
+-- Lines 568-579
 function EnemyManager:has_task(id)
 	local tasks = self._queued_tasks
 	local i = #tasks
@@ -546,7 +546,7 @@ function EnemyManager:has_task(id)
 	return count > 0 and count
 end
 
--- Lines 590-606
+-- Lines 583-599
 function EnemyManager:_execute_queued_task(i)
 	local task = table.remove(self._queued_tasks, i)
 	self._queued_task_executed = true
@@ -558,7 +558,7 @@ function EnemyManager:_execute_queued_task(i)
 	task.clbk(task.data)
 end
 
--- Lines 610-658
+-- Lines 603-651
 function EnemyManager:_update_queued_tasks(t, dt)
 	local i_asap_task, asp_task_t = nil
 	self._queue_buffer = self._queue_buffer + dt
@@ -600,7 +600,7 @@ function EnemyManager:_update_queued_tasks(t, dt)
 	end
 end
 
--- Lines 662-681
+-- Lines 655-674
 function EnemyManager:add_delayed_clbk(id, clbk, execute_t)
 	if not clbk then
 		debug_pause("[EnemyManager:add_delayed_clbk] Empty callback object!!!")
@@ -621,7 +621,7 @@ function EnemyManager:add_delayed_clbk(id, clbk, execute_t)
 	table.insert(all_clbks, i + 1, clbk_data)
 end
 
--- Lines 685-700
+-- Lines 678-693
 function EnemyManager:is_clbk_registered(id)
 	if self._delayed_clbks then
 		for i, clbk_data in ipairs(self._delayed_clbks) do
@@ -634,7 +634,7 @@ function EnemyManager:is_clbk_registered(id)
 	return false
 end
 
--- Lines 704-714
+-- Lines 697-707
 function EnemyManager:get_delayed_clbk_exec_t(id)
 	if self._delayed_clbks then
 		for i, clbk_data in ipairs(self._delayed_clbks) do
@@ -647,7 +647,7 @@ function EnemyManager:get_delayed_clbk_exec_t(id)
 	return nil
 end
 
--- Lines 718-732
+-- Lines 711-725
 function EnemyManager:remove_delayed_clbk(id, no_pause)
 	local all_clbks = self._delayed_clbks
 
@@ -664,7 +664,7 @@ function EnemyManager:remove_delayed_clbk(id, no_pause)
 	end
 end
 
--- Lines 736-763
+-- Lines 729-756
 function EnemyManager:reschedule_delayed_clbk(id, execute_t)
 	local all_clbks = self._delayed_clbks
 	local clbk_data = nil
@@ -693,7 +693,7 @@ function EnemyManager:reschedule_delayed_clbk(id, execute_t)
 	debug_pause("[EnemyManager:reschedule_delayed_clbk] id", id, "was not scheduled!!!")
 end
 
--- Lines 767-780
+-- Lines 760-773
 function EnemyManager:force_delayed_clbk(id)
 	local all_clbks = self._delayed_clbks
 
@@ -710,7 +710,7 @@ function EnemyManager:force_delayed_clbk(id)
 	debug_pause("[EnemyManager:force_delayed_clbk] id", id, "was not scheduled!!!")
 end
 
--- Lines 784-802
+-- Lines 777-795
 function EnemyManager:queued_tasks_by_callback()
 	local t = self._timer:time()
 	local categorised_queued_tasks = {}
@@ -738,7 +738,7 @@ function EnemyManager:queued_tasks_by_callback()
 	end
 end
 
--- Lines 827-851
+-- Lines 820-844
 function EnemyManager:register_enemy(enemy)
 	if self._destroyed then
 		debug_pause("[EnemyManager:register_enemy] enemy manager is destroyed")
@@ -764,7 +764,7 @@ function EnemyManager:register_enemy(enemy)
 	self:on_enemy_registered(enemy)
 end
 
--- Lines 855-948
+-- Lines 848-941
 function EnemyManager:on_enemy_died(dead_unit, damage_info)
 	if self._destroyed then
 		debug_pause("[EnemyManager:on_enemy_died] enemy manager is destroyed", dead_unit)
@@ -834,7 +834,7 @@ function EnemyManager:on_enemy_died(dead_unit, damage_info)
 	end
 end
 
--- Lines 952-1000
+-- Lines 945-993
 function EnemyManager:on_enemy_destroyed(enemy)
 	local u_key = enemy:key()
 	local enemy_data = self._enemy_data
@@ -873,7 +873,7 @@ function EnemyManager:on_enemy_destroyed(enemy)
 	end
 end
 
--- Lines 1004-1008
+-- Lines 997-1001
 function EnemyManager:on_enemy_registered(unit)
 	self._enemy_data.nr_units = self._enemy_data.nr_units + 1
 
@@ -881,19 +881,19 @@ function EnemyManager:on_enemy_registered(unit)
 	managers.groupai:state():on_enemy_registered(unit)
 end
 
--- Lines 1012-1015
+-- Lines 1005-1008
 function EnemyManager:on_enemy_unregistered(unit)
 	self._enemy_data.nr_units = self._enemy_data.nr_units - 1
 
 	managers.groupai:state():on_enemy_unregistered(unit)
 end
 
--- Lines 1020-1022
+-- Lines 1013-1015
 function EnemyManager:is_shield_registered(shield_unit)
 	return self._enemy_data.shields[shield_unit:key()] and true or false
 end
 
--- Lines 1025-1065
+-- Lines 1018-1058
 function EnemyManager:register_shield(shield_unit)
 	local unit_data_ext = shield_unit:unit_data()
 
@@ -931,7 +931,7 @@ function EnemyManager:register_shield(shield_unit)
 	end
 end
 
--- Lines 1068-1114
+-- Lines 1061-1107
 function EnemyManager:unregister_shield(shield_unit)
 	local u_key = shield_unit:key()
 	local enemy_data = self._enemy_data
@@ -973,7 +973,7 @@ function EnemyManager:unregister_shield(shield_unit)
 	end
 end
 
--- Lines 1119-1139
+-- Lines 1112-1132
 function EnemyManager:register_civilian(unit)
 	unit:base():add_destroy_listener(self._unit_clbk_key, callback(self, self, "on_civilian_destroyed"))
 
@@ -994,7 +994,7 @@ function EnemyManager:register_civilian(unit)
 	}
 end
 
--- Lines 1143-1200
+-- Lines 1136-1193
 function EnemyManager:on_civilian_died(dead_unit, damage_info)
 	local u_key = dead_unit:key()
 	local enemy_data = self._enemy_data
@@ -1037,7 +1037,7 @@ function EnemyManager:on_civilian_died(dead_unit, damage_info)
 	managers.hud:remove_waypoint("wp_hostage_trade" .. tostring(dead_unit:key()))
 end
 
--- Lines 1204-1244
+-- Lines 1197-1237
 function EnemyManager:on_civilian_destroyed(civilian)
 	local u_key = civilian:key()
 	local civ_u_data = self._civilian_data.unit_data
@@ -1076,22 +1076,22 @@ function EnemyManager:on_civilian_destroyed(civilian)
 	end
 end
 
--- Lines 1248-1250
+-- Lines 1241-1243
 function EnemyManager:on_criminal_registered(unit)
 	self:_create_unit_gfx_lod_data(unit, false)
 end
 
--- Lines 1254-1256
+-- Lines 1247-1249
 function EnemyManager:on_criminal_unregistered(u_key)
 	self:_destroy_unit_gfx_lod_data(u_key)
 end
 
--- Lines 1260-1262
+-- Lines 1253-1255
 function EnemyManager:_store_for_disposal_detach(u_key, unit)
 	self._corpses_to_detach[u_key] = unit
 end
 
--- Lines 1266-1280
+-- Lines 1259-1273
 function EnemyManager:_chk_detach_stored_units()
 	local units = self._corpses_to_detach
 
@@ -1108,7 +1108,7 @@ function EnemyManager:_chk_detach_stored_units()
 	self._corpses_to_detach = {}
 end
 
--- Lines 1285-1310
+-- Lines 1278-1303
 function EnemyManager:enable_disposal_on_corpse(unit)
 	local u_key = unit:key()
 	local enemy_data = self._enemy_data
@@ -1135,7 +1135,7 @@ function EnemyManager:enable_disposal_on_corpse(unit)
 	end
 end
 
--- Lines 1314-1434
+-- Lines 1307-1427
 function EnemyManager:_upd_corpse_disposal()
 	self._corpse_disposal_id = nil
 	local enemy_data = self._enemy_data
@@ -1234,14 +1234,14 @@ function EnemyManager:_upd_corpse_disposal()
 	enemy_data.nr_corpses = nr_corpses - nr_found
 end
 
--- Lines 1438-1442
+-- Lines 1431-1435
 function EnemyManager:_upd_shield_disposal_fast()
 	self._fast_shield_disposal = false
 
 	self:_upd_shield_disposal()
 end
 
--- Lines 1446-1575
+-- Lines 1439-1568
 function EnemyManager:_upd_shield_disposal()
 	local t = self._timer:time()
 	local enemy_data = self._enemy_data
@@ -1372,7 +1372,7 @@ function EnemyManager:_upd_shield_disposal()
 	end
 end
 
--- Lines 1580-1599
+-- Lines 1573-1592
 function EnemyManager:set_corpse_disposal_enabled(state)
 	local was_enabled = self:is_corpse_disposal_enabled()
 	local state_modifier = state and 1 or -1
@@ -1393,12 +1393,12 @@ function EnemyManager:set_corpse_disposal_enabled(state)
 	end
 end
 
--- Lines 1603-1605
+-- Lines 1596-1598
 function EnemyManager:is_corpse_disposal_enabled()
 	return self._corpse_disposal_enabled > 0 and true
 end
 
--- Lines 1609-1623
+-- Lines 1602-1616
 function EnemyManager:chk_queue_disposal(t)
 	local corpse_disposal_id = self._corpse_disposal_id
 
@@ -1414,16 +1414,16 @@ function EnemyManager:chk_queue_disposal(t)
 	end
 end
 
--- Lines 1627-1629
+-- Lines 1620-1622
 function EnemyManager:on_simulation_ended()
 end
 
--- Lines 1633-1635
+-- Lines 1626-1628
 function EnemyManager:on_simulation_started()
 	self._destroyed = nil
 end
 
--- Lines 1640-1658
+-- Lines 1633-1651
 function EnemyManager:get_my_hostages(id)
 	local civilians = self:all_civilians()
 	local all_hostages = managers.groupai:state():all_hostages()
@@ -1442,7 +1442,7 @@ function EnemyManager:get_my_hostages(id)
 	return list
 end
 
--- Lines 1662-1679
+-- Lines 1655-1672
 function EnemyManager:dispose_all_corpses()
 	self._destroyed = true
 	local detach_f = detach_unit_from_network
@@ -1462,7 +1462,7 @@ function EnemyManager:dispose_all_corpses()
 	end
 end
 
--- Lines 1683-1706
+-- Lines 1676-1699
 function EnemyManager:save(data)
 	local my_data = nil
 
@@ -1489,7 +1489,7 @@ function EnemyManager:save(data)
 	data.enemy_manager = my_data
 end
 
--- Lines 1710-1749
+-- Lines 1703-1742
 function EnemyManager:load(data)
 	local my_data = data.enemy_manager
 
@@ -1547,12 +1547,12 @@ function EnemyManager:load(data)
 	end
 end
 
--- Lines 1753-1755
+-- Lines 1746-1748
 function EnemyManager:get_corpse_unit_data_from_key(u_key)
 	return self._enemy_data.corpses[u_key]
 end
 
--- Lines 1759-1765
+-- Lines 1752-1758
 function EnemyManager:get_corpse_unit_data_from_id(u_id)
 	for u_key, u_data in pairs(self._enemy_data.corpses) do
 		if u_id == u_data.u_id then
@@ -1561,7 +1561,7 @@ function EnemyManager:get_corpse_unit_data_from_id(u_id)
 	end
 end
 
--- Lines 1769-1776
+-- Lines 1762-1769
 function EnemyManager:remove_corpse_by_id(u_id)
 	for u_key, u_data in pairs(self._enemy_data.corpses) do
 		if u_id == u_data.u_id then
@@ -1572,22 +1572,22 @@ function EnemyManager:remove_corpse_by_id(u_id)
 	end
 end
 
--- Lines 1784-1786
+-- Lines 1777-1779
 function EnemyManager:register_medic(medic_unit)
 	self._medic_units[medic_unit:key()] = medic_unit
 end
 
--- Lines 1788-1790
+-- Lines 1781-1783
 function EnemyManager:unregister_medic(medic_unit)
 	self._medic_units[medic_unit:key()] = nil
 end
 
--- Lines 1792-1794
+-- Lines 1785-1787
 function EnemyManager:is_unit_registered_as_medic(test_unit)
 	return self._medic_units[test_unit:key()] and true or false
 end
 
--- Lines 1797-1834
+-- Lines 1790-1827
 function EnemyManager:get_nearby_medic(requesting_unit)
 	local valid_medics = {}
 	local request_u_key = requesting_unit:key()
@@ -1623,7 +1623,7 @@ function EnemyManager:get_nearby_medic(requesting_unit)
 	return closest_medic
 end
 
--- Lines 1838-1867
+-- Lines 1831-1860
 function EnemyManager:find_nearby_affiliated_medics(requesting_unit)
 	local valid_medics = {}
 	local medics_in_range = {}
@@ -1653,7 +1653,7 @@ function EnemyManager:find_nearby_affiliated_medics(requesting_unit)
 	return medics_in_range
 end
 
--- Lines 1872-1915
+-- Lines 1865-1908
 function EnemyManager:add_magazine(mag_unit, col_unit)
 	if alive(mag_unit) then
 		local body_ray_type = Idstring("body")
@@ -1694,7 +1694,7 @@ function EnemyManager:add_magazine(mag_unit, col_unit)
 	end
 end
 
--- Lines 1920-1944
+-- Lines 1913-1937
 function EnemyManager:cleanup_magazines(remove_to_i)
 	local all_mags = self._magazines
 	local nr_mags = #all_mags
@@ -1721,7 +1721,7 @@ function EnemyManager:cleanup_magazines(remove_to_i)
 	self._magazines = new_mags_table
 end
 
--- Lines 1948-1960
+-- Lines 1941-1953
 function EnemyManager:_clbk_unit_tweak_data_changed(u_key, old_tweak_data, new_tweak_data)
 	local u_data = self._enemy_data.unit_data[u_key] or self._civilian_data.unit_data[u_key] or self._enemy_data.corpses[u_key]
 

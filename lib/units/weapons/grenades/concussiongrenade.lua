@@ -40,7 +40,7 @@ function ConcussionGrenade:_on_collision(col_ray)
 	self:_detonate()
 end
 
--- Lines 60-95
+-- Lines 60-97
 function ConcussionGrenade:_detonate(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 	if self._detonated then
 		return
@@ -68,7 +68,7 @@ function ConcussionGrenade:_detonate(tag, unit, body, other_unit, other_body, po
 		verify_callback = callback(self, self, "_can_stun_unit")
 	})
 
-	if self._unit:id() ~= -1 then
+	if self._unit:id() ~= -1 and managers.network:session() then
 		managers.network:session():send_to_peers_synched("sync_unit_event_id_16", self._unit, "base", GrenadeBase.EVENT_IDS.detonate)
 	end
 
@@ -76,7 +76,7 @@ function ConcussionGrenade:_detonate(tag, unit, body, other_unit, other_body, po
 	self:_handle_hiding_and_destroying(true, nil)
 end
 
--- Lines 97-116
+-- Lines 99-118
 function ConcussionGrenade:_can_stun_unit(unit)
 	local can_stun = false
 	local unit_name = nil
@@ -96,7 +96,7 @@ function ConcussionGrenade:_can_stun_unit(unit)
 	end
 end
 
--- Lines 120-133
+-- Lines 122-135
 function ConcussionGrenade:_detonate_on_client()
 	if self._detonated then
 		return
@@ -111,7 +111,7 @@ function ConcussionGrenade:_detonate_on_client()
 	self:_handle_hiding_and_destroying(true, nil)
 end
 
--- Lines 135-144
+-- Lines 137-146
 function ConcussionGrenade:_flash_player()
 	local detonate_pos = self._unit:position() + math.UP * 100
 	local range = self._PLAYER_FLASH_RANGE
@@ -126,7 +126,7 @@ function ConcussionGrenade:_flash_player()
 	end
 end
 
--- Lines 148-155
+-- Lines 150-157
 function ConcussionGrenade:bullet_hit()
 	if not Network:is_server() then
 		return

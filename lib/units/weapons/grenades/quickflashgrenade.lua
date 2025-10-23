@@ -1,5 +1,7 @@
 local tmp_vec1 = Vector3()
 QuickFlashGrenade = QuickFlashGrenade or class()
+local VALUE_FUNC = 1
+local VALUE_TIME = 2
 QuickFlashGrenade.States = {
 	{
 		"_state_launched",
@@ -21,19 +23,19 @@ QuickFlashGrenade.Events = {
 	[1.0] = "on_flashbang_destroyed"
 }
 
--- Lines 21-46
+-- Lines 24-50
 function QuickFlashGrenade:init(unit)
 	self._unit = unit
 	self._state = 0
-	local td = tweak_data.group_ai.flash_grenade
-	self._range = td.range
-	self._light_range = td.light_range
-	self._light_color = td.light_color
-	self._light_specular = td.light_specular
-	self._beep_mul = td.beep_multi
-	self._beep_fade_speed = td.beep_fade_speed
-	self._beep_speeds = td.beep_speed
-	QuickFlashGrenade.States[3][3] = QuickFlashGrenade.States[3][3] or td.timer
+	local flash_grenade_data = tweak_data.group_ai.flash_grenade
+	self._range = flash_grenade_data.range
+	self._light_range = flash_grenade_data.light_range
+	self._light_color = flash_grenade_data.light_color
+	self._light_specular = flash_grenade_data.light_specular
+	self._beep_mul = flash_grenade_data.beep_multi
+	self._beep_fade_speed = flash_grenade_data.beep_fade_speed
+	self._beep_speeds = flash_grenade_data.beep_speed
+	QuickFlashGrenade.States[3][VALUE_TIME] = QuickFlashGrenade.States[3][VALUE_TIME] or flash_grenade_data.timer
 
 	if Network:is_client() then
 		self._unit:set_enabled(false)
@@ -42,7 +44,7 @@ function QuickFlashGrenade:init(unit)
 	self._unit:set_extension_update_enabled(Idstring("base"), false)
 end
 
--- Lines 48-88
+-- Lines 52-94
 function QuickFlashGrenade:update(unit, t, dt)
 	if self._destroyed then
 		return
@@ -56,9 +58,9 @@ function QuickFlashGrenade:update(unit, t, dt)
 			local state = QuickFlashGrenade.States[self._state]
 
 			if state then
-				self[state[1]](self)
+				self[state[VALUE_FUNC]](self)
 
-				self._timer = state[2]
+				self._timer = state[VALUE_TIME]
 			else
 				self._timer = nil
 			end
@@ -81,7 +83,7 @@ function QuickFlashGrenade:update(unit, t, dt)
 	end
 end
 
--- Lines 90-94
+-- Lines 96-101
 function QuickFlashGrenade:_beep()
 	self._unit:sound_source():post_event("pfn_beep")
 
@@ -89,7 +91,7 @@ function QuickFlashGrenade:_beep()
 	self._light_multiplier = self._beep_mul
 end
 
--- Lines 96-102
+-- Lines 103-111
 function QuickFlashGrenade:timer(new)
 	if not self._timer then
 		self._timer = 3
@@ -100,25 +102,25 @@ function QuickFlashGrenade:timer(new)
 	return self._timer
 end
 
--- Lines 104-107
+-- Lines 113-117
 function QuickFlashGrenade:_get_next_beep_time()
 	local beep_speeds = self._beep_speeds
 
 	return self:timer() / beep_speeds[1] * beep_speeds[2]
 end
 
--- Lines 109-111
+-- Lines 119-121
 function QuickFlashGrenade:activate(position)
 	self:_activate(0, 0, position)
 end
 
--- Lines 113-117
+-- Lines 123-127
 function QuickFlashGrenade:activate_immediately(position)
 	self:_activate(4, nil, position)
 	self:_state_detonated()
 end
 
--- Lines 119-129
+-- Lines 129-139
 function QuickFlashGrenade:_activate(state, timer, position)
 	self._state = state
 	self._timer = timer
@@ -131,7 +133,7 @@ function QuickFlashGrenade:_activate(state, timer, position)
 	self._unit:set_extension_update_enabled(Idstring("base"), true)
 end
 
--- Lines 131-141
+-- Lines 141-150
 function QuickFlashGrenade:_state_launched()
 	self._unit:damage():run_sequence_simple("insert")
 
@@ -143,12 +145,12 @@ function QuickFlashGrenade:_state_launched()
 	end
 end
 
--- Lines 143-163
+-- Lines 152-155
 function QuickFlashGrenade:_state_bounced()
 	self._unit:sound_source():post_event("flashbang_bounce")
 end
 
--- Lines 165-185
+-- Lines 157-179
 function QuickFlashGrenade:_state_armed()
 	self._unit:damage():run_sequence_simple("activate")
 	self:_beep()
@@ -171,7 +173,7 @@ function QuickFlashGrenade:_state_armed()
 	self._light_multiplier = 0
 end
 
--- Lines 187-198
+-- Lines 181-195
 function QuickFlashGrenade:_state_detonated()
 	self._beep_t = nil
 	local detonate_pos = self._unit:position()
@@ -191,9 +193,13 @@ function QuickFlashGrenade:_state_detonated()
 	self:_handle_hiding_and_destroying(true, 3)
 end
 
--- Lines 200-220
+-- Lines 197-232
 function QuickFlashGrenade:make_flash(detonate_pos, range, ignore_units)
-	local range = range or 1000
+	range = range or 1000
+	ignore_units = ignore_units or {}
+
+	table.insert(ignore_units, self._unit)
+
 	local effect_params = {
 		sound_event = "flashbang_explosion",
 		effect = "effects/particles/explosions/explosion_flash_grenade",
@@ -202,10 +208,6 @@ function QuickFlashGrenade:make_flash(detonate_pos, range, ignore_units)
 	}
 
 	managers.explosion:play_sound_and_effects(detonate_pos, math.UP, range, effect_params)
-
-	ignore_units = ignore_units or {}
-
-	table.insert(ignore_units, self._unit)
 
 	local affected, line_of_sight, travel_dis, linear_dis = self:_chk_dazzle_local_player(detonate_pos, range, ignore_units)
 
@@ -218,7 +220,7 @@ function QuickFlashGrenade:make_flash(detonate_pos, range, ignore_units)
 	end
 end
 
--- Lines 222-295
+-- Lines 234-303
 function QuickFlashGrenade:_chk_dazzle_local_player(detonate_pos, range, ignore_units)
 	local player = managers.player:player_unit()
 
@@ -236,7 +238,7 @@ function QuickFlashGrenade:_chk_dazzle_local_player(detonate_pos, range, ignore_
 
 	local slotmask = managers.slot:get_mask("bullet_impact_targets")
 
-	-- Lines 247-253
+	-- Lines 256-262
 	local function _vis_ray_func(from, to, boolean)
 		if ignore_units then
 			return World:raycast("ray", from, to, "ignore_unit", ignore_units, "slot_mask", slotmask, boolean and "report" or nil)
@@ -290,16 +292,16 @@ function QuickFlashGrenade:_chk_dazzle_local_player(detonate_pos, range, ignore_
 	end
 end
 
--- Lines 297-299
+-- Lines 305-307
 function QuickFlashGrenade:sound_playback_complete_clbk(event_instance, sound_source, event_type, sound_source_again)
 end
 
--- Lines 302-304
+-- Lines 310-312
 function QuickFlashGrenade:preemptive_kill()
 	self:_handle_hiding_and_destroying(true)
 end
 
--- Lines 306-331
+-- Lines 314-339
 function QuickFlashGrenade:_handle_hiding_and_destroying(destroy, destruction_delay)
 	self._beep_t = nil
 	self._destroyed = true
@@ -322,7 +324,7 @@ function QuickFlashGrenade:_handle_hiding_and_destroying(destroy, destruction_de
 	end
 end
 
--- Lines 333-339
+-- Lines 341-347
 function QuickFlashGrenade:_clbk_destroy()
 	self._destroy_clbk_id = nil
 
@@ -331,7 +333,7 @@ function QuickFlashGrenade:_clbk_destroy()
 	end
 end
 
--- Lines 341-347
+-- Lines 349-355
 function QuickFlashGrenade:remove_light()
 	if alive(self._light) then
 		World:delete_light(self._light)
@@ -340,7 +342,7 @@ function QuickFlashGrenade:remove_light()
 	end
 end
 
--- Lines 350-366
+-- Lines 358-374
 function QuickFlashGrenade:on_flashbang_destroyed(prevent_network)
 	if self._destroyed then
 		return
@@ -356,9 +358,9 @@ function QuickFlashGrenade:on_flashbang_destroyed(prevent_network)
 	self:_handle_hiding_and_destroying(true, 3)
 end
 
--- Lines 369-376
+-- Lines 377-385
 function QuickFlashGrenade:on_network_event(event_id)
-	local event = QuickFlashGrenade.Events[event_id]
+	local event = self.Events[event_id]
 
 	if event and self[event] then
 		self[event](self, true)
@@ -367,7 +369,7 @@ function QuickFlashGrenade:on_network_event(event_id)
 	end
 end
 
--- Lines 378-385
+-- Lines 387-395
 function QuickFlashGrenade:destroy()
 	self:remove_light()
 

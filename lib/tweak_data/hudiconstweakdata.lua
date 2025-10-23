@@ -2,7 +2,7 @@ require("lib/tweak_data/TextureCorrectionTweakData")
 
 HudIconsTweakData = HudIconsTweakData or class()
 
--- Lines 7-3441
+-- Lines 7-3449
 function HudIconsTweakData:init()
 	self.mouse_left_click = {
 		texture = "guis/textures/pd2/mouse_buttons",
@@ -1866,6 +1866,15 @@ function HudIconsTweakData:init()
 	}
 	self.equipment_mould = {
 		texture = "guis/dlcs/ranc/textures/pd2/equipment_mould",
+		texture_rect = {
+			0,
+			0,
+			32,
+			32
+		}
+	}
+	self.equipment_oil_sample = {
+		texture = "guis/dlcs/nmh/textures/pd2/hud_pickups_bloodvial",
 		texture_rect = {
 			0,
 			0,
@@ -15473,7 +15482,7 @@ end
 
 local atlas_data = nil
 
--- Lines 3444-3447
+-- Lines 3452-3455
 function HudIconsTweakData:create_grid_atlas(image_name, tex_w, tex_h, grid_w, grid_h)
 	atlas_data = atlas_data or {}
 	atlas_data[image_name] = {
@@ -15486,7 +15495,7 @@ function HudIconsTweakData:create_grid_atlas(image_name, tex_w, tex_h, grid_w, g
 	}
 end
 
--- Lines 3449-3465
+-- Lines 3457-3473
 function HudIconsTweakData:create_next_icon(image_name)
 	local data = atlas_data[image_name]
 
@@ -15512,7 +15521,7 @@ function HudIconsTweakData:create_next_icon(image_name)
 	return rtn
 end
 
--- Lines 3467-3472
+-- Lines 3475-3480
 function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	local icon_data = self[icon_id]
 	local icon = icon_data and icon_data.texture or icon_id
@@ -15526,7 +15535,7 @@ function HudIconsTweakData:get_icon_data(icon_id, default_rect)
 	return icon, texture_rect
 end
 
--- Lines 3474-3480
+-- Lines 3482-3488
 function HudIconsTweakData:get_icon_or(icon_id, ...)
 	local icon_data = self[icon_id]
 
@@ -15537,7 +15546,7 @@ function HudIconsTweakData:get_icon_or(icon_id, ...)
 	return icon_data.texture, icon_data.texture_rect
 end
 
--- Lines 3482-3488
+-- Lines 3490-3496
 function HudIconsTweakData:get_texture(texture_path)
 	local icon_data = self[texture_path]
 

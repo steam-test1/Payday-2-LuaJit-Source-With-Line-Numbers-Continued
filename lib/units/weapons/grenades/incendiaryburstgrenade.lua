@@ -6,7 +6,7 @@ function IncendiaryBurstGrenade:_setup_from_tweak_data()
 	self._dot_data = tweak_entry.dot_data_name and tweak_data.dot:get_dot_data(tweak_entry.dot_data_name)
 end
 
--- Lines 15-53
+-- Lines 15-55
 function IncendiaryBurstGrenade:_detonate(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 	if self._detonated then
 		return
@@ -36,7 +36,7 @@ function IncendiaryBurstGrenade:_detonate(tag, unit, body, other_unit, other_bod
 	}
 	local hit_units, splinters = managers.fire:detect_and_give_dmg(params)
 
-	if self._unit:id() ~= -1 then
+	if self._unit:id() ~= -1 and managers.network:session() then
 		managers.network:session():send_to_peers_synched("sync_unit_event_id_16", self._unit, "base", GrenadeBase.EVENT_IDS.detonate)
 	end
 
@@ -45,7 +45,7 @@ function IncendiaryBurstGrenade:_detonate(tag, unit, body, other_unit, other_bod
 	self:_handle_hiding_and_destroying(true, destruction_delay)
 end
 
--- Lines 57-72
+-- Lines 59-74
 function IncendiaryBurstGrenade:_detonate_on_client()
 	if self._detonated then
 		return

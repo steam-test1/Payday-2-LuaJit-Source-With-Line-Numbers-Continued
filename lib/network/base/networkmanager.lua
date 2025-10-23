@@ -45,8 +45,9 @@ else
 end
 
 NetworkManager.DROPIN_ENABLED = true
+NetworkManager.MAX_PEER_NAME_LENGTH = 32
 
--- Lines 54-122
+-- Lines 55-123
 function NetworkManager:init()
 	self.OVERWRITEABLE_MSGS = {
 		set_look_dir = {
@@ -124,7 +125,7 @@ function NetworkManager:init()
 	self:load()
 end
 
--- Lines 126-135
+-- Lines 127-136
 function NetworkManager:init_finalize()
 	print("NetworkManager:init_finalize()")
 
@@ -137,7 +138,7 @@ function NetworkManager:init_finalize()
 	end
 end
 
--- Lines 137-190
+-- Lines 138-191
 function NetworkManager:_create_lobby()
 	if self._is_win32 then
 		cat_print("lobby", "Online Lobby is PC")
@@ -193,22 +194,22 @@ function NetworkManager:_create_lobby()
 	end
 end
 
--- Lines 194-194
+-- Lines 195-195
 function NetworkManager:add_event_listener(...)
 	self._event_listener_holder:add(...)
 end
 
--- Lines 195-195
+-- Lines 196-196
 function NetworkManager:remove_event_listener(...)
 	self._event_listener_holder:remove(...)
 end
 
--- Lines 196-196
+-- Lines 197-197
 function NetworkManager:dispatch_event(...)
 	self._event_listener_holder:call(...)
 end
 
--- Lines 200-232
+-- Lines 201-233
 function NetworkManager:ps3_determine_voice(lan)
 	local voice = "voice_quiet"
 
@@ -241,17 +242,17 @@ function NetworkManager:ps3_determine_voice(lan)
 	end
 end
 
--- Lines 236-236
+-- Lines 237-237
 function NetworkManager:session()
 	return self._session
 end
 
--- Lines 240-240
+-- Lines 241-241
 function NetworkManager:shared_handler_data()
 	return self._shared_handler_data
 end
 
--- Lines 244-277
+-- Lines 245-278
 function NetworkManager:load()
 	if Global.network then
 		self._network_bound = Global.network.network_bound
@@ -292,7 +293,7 @@ function NetworkManager:load()
 	end
 end
 
--- Lines 281-302
+-- Lines 282-303
 function NetworkManager:save()
 	if self._started then
 		Global.network = {
@@ -316,7 +317,7 @@ function NetworkManager:save()
 	end
 end
 
--- Lines 306-326
+-- Lines 307-327
 function NetworkManager:update(t, dt)
 	if self._stop_next_frame then
 		self:stop_network(true)
@@ -343,7 +344,7 @@ function NetworkManager:update(t, dt)
 	end
 end
 
--- Lines 330-339
+-- Lines 331-340
 function NetworkManager:end_update()
 	if self._stop_network then
 		self._stop_next_frame = true
@@ -355,7 +356,7 @@ function NetworkManager:end_update()
 	end
 end
 
--- Lines 343-361
+-- Lines 344-362
 function NetworkManager:start_network()
 	if not self._started then
 		self:register_handler("connection", ConnectionNetworkHandler)
@@ -370,7 +371,7 @@ function NetworkManager:start_network()
 	end
 end
 
--- Lines 365-374
+-- Lines 366-375
 function NetworkManager:register_handler(name, handler_class)
 	if not self._handlers then
 		self._handlers = {}
@@ -383,7 +384,7 @@ function NetworkManager:register_handler(name, handler_class)
 	Network:set_receiver(Idstring(name), new_handler)
 end
 
--- Lines 378-385
+-- Lines 379-386
 function NetworkManager:prepare_stop_network(...)
 	if self._session then
 		self._session:prepare_to_close(...)
@@ -394,7 +395,7 @@ function NetworkManager:prepare_stop_network(...)
 	end
 end
 
--- Lines 389-429
+-- Lines 390-430
 function NetworkManager:stop_network(clean)
 	if self._started then
 		self._session:on_network_stopped()
@@ -435,12 +436,12 @@ function NetworkManager:stop_network(clean)
 	end
 end
 
--- Lines 433-435
+-- Lines 434-436
 function NetworkManager:queue_stop_network()
 	self._stop_network = true
 end
 
--- Lines 439-453
+-- Lines 440-454
 function NetworkManager:is_ready_to_load()
 	if self._stop_next_frame or self._stop_network then
 		return false
@@ -457,7 +458,7 @@ function NetworkManager:is_ready_to_load()
 	return true
 end
 
--- Lines 457-467
+-- Lines 458-468
 function NetworkManager:stopping()
 	if not self._started then
 		return true
@@ -470,7 +471,7 @@ function NetworkManager:stopping()
 	return false
 end
 
--- Lines 472-482
+-- Lines 473-483
 function NetworkManager:start_client()
 	self:stop_network(true)
 	self:start_network()
@@ -484,7 +485,7 @@ function NetworkManager:start_client()
 	self._session:create_local_peer(true)
 end
 
--- Lines 487-495
+-- Lines 488-496
 function NetworkManager:discover_hosts(result_cb)
 	self:stop_network(true)
 	self:start_network()
@@ -498,7 +499,7 @@ function NetworkManager:discover_hosts(result_cb)
 	self._session:discover_hosts()
 end
 
--- Lines 500-525
+-- Lines 501-526
 function NetworkManager:on_discover_host_received(sender)
 	if Global.game_settings.single_player then
 		return
@@ -531,7 +532,7 @@ function NetworkManager:on_discover_host_received(sender)
 	sender:discover_host_reply(my_name, level_id, level_name, sender:ip_at_index(0), state, difficulty)
 end
 
--- Lines 530-537
+-- Lines 531-538
 function NetworkManager:on_discover_host_reply(host, host_name, level_name, my_ip, state, difficulty)
 	print("on_discover_host_reply", host, host_name, level_name, my_ip, state)
 
@@ -543,7 +544,7 @@ function NetworkManager:on_discover_host_reply(host, host_name, level_name, my_i
 	end
 end
 
--- Lines 541-565
+-- Lines 542-566
 function NetworkManager:host_game()
 	self:stop_network(true)
 	self:start_network()
@@ -561,7 +562,7 @@ function NetworkManager:host_game()
 	end
 end
 
--- Lines 569-576
+-- Lines 570-578
 function NetworkManager:join_game_at_host_rpc(host_rpc, is_invite, result_cb)
 	self._discover_hosts_cb = nil
 
@@ -572,7 +573,7 @@ function NetworkManager:join_game_at_host_rpc(host_rpc, is_invite, result_cb)
 	end
 end
 
--- Lines 580-583
+-- Lines 582-585
 function NetworkManager:register_spawn_point(id, data)
 	local runtime_data = {
 		pos_rot = {
@@ -584,27 +585,39 @@ function NetworkManager:register_spawn_point(id, data)
 	self._spawn_points[id] = runtime_data
 end
 
--- Lines 587-589
+-- Lines 589-591
 function NetworkManager:unregister_spawn_point(id)
 	self._spawn_points[id] = nil
 end
 
--- Lines 593-595
+-- Lines 595-597
 function NetworkManager:unregister_all_spawn_points()
 	self._spawn_points = {}
 end
 
--- Lines 599-601
+-- Lines 601-603
 function NetworkManager:has_spawn_points()
 	return next(self._spawn_points)
 end
 
--- Lines 605-607
+-- Lines 607-609
 function NetworkManager:spawn_point(sp_id)
 	return self._spawn_points[sp_id]
 end
 
--- Lines 611-635
+-- Lines 613-625
+function NetworkManager:sanitize_peer_name(name)
+	if not name then
+		return "[unknown]"
+	end
+
+	name = name:gsub("[%c]", "")
+	name = utf8.sub(name, 1, self.MAX_PEER_NAME_LENGTH)
+
+	return name
+end
+
+-- Lines 629-653
 function NetworkManager:_register_PSN_matchmaking_callbacks()
 	local gen_clbk = callback(self, self, "clbk_PSN_event")
 
@@ -632,12 +645,12 @@ function NetworkManager:_register_PSN_matchmaking_callbacks()
 	PSN:set_matchmaking_callback("error", gen_clbk)
 end
 
--- Lines 639-641
+-- Lines 657-659
 function NetworkManager:clbk_PSN_event(...)
 	print("[NetworkManager:clbk_PSN_event]", inspect(...))
 end
 
--- Lines 645-653
+-- Lines 663-671
 function NetworkManager:search_ses()
 	PSN:set_matchmaking_callback("session_search", callback(self, self, "clbk_search_session"))
 
@@ -651,7 +664,7 @@ function NetworkManager:search_ses()
 	PSN:search_session(search_params, {}, PSN:get_world_list()[1].world_id)
 end
 
--- Lines 657-662
+-- Lines 675-680
 function NetworkManager:clbk_search_session(search_results)
 	print("[NetworkManager:clbk_search_session]", search_results)
 
@@ -660,7 +673,7 @@ function NetworkManager:clbk_search_session(search_results)
 	end
 end
 
--- Lines 666-677
+-- Lines 684-695
 function NetworkManager.clbk_msg_overwrite(overwrite_data, msg_queue, ...)
 	if msg_queue then
 		if overwrite_data.index then
@@ -679,14 +692,14 @@ function NetworkManager.clbk_msg_overwrite(overwrite_data, msg_queue, ...)
 	end
 end
 
--- Lines 681-685
+-- Lines 699-703
 function NetworkManager:set_packet_throttling_enabled(state)
 	if self._session and self._is_win32 then
 		self._session:set_packet_throttling_enabled(state)
 	end
 end
 
--- Lines 689-723
+-- Lines 707-741
 function NetworkManager:on_peer_added(peer, peer_id)
 	cat_print("multiplayer_base", "NetworkManager:on_peer_added", peer, peer_id)
 

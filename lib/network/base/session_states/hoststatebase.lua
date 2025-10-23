@@ -8,24 +8,24 @@ end
 function HostStateBase:exit(data, name, enter_params)
 end
 
--- Lines 14-25
-function HostStateBase:on_join_request_received(data, peer_name, peer_account_type_str, peer_account_id, is_invite, client_preferred_character, dlcs, xuid, peer_level, peer_rank, peer_stinger_index, gameversion, join_attempt_identifier, auth_ticket, sender)
-	print("[HostStateBase:on_join_request_received]", data, peer_name, peer_account_type_str, peer_account_id, is_invite, client_preferred_character, dlcs, xuid, peer_level, peer_rank, peer_stinger_index, gameversion, join_attempt_identifier, sender:ip_at_index(0))
+-- Lines 14-57
+function HostStateBase:on_join_request_received(data, peer_name, peer_account_type_str, peer_account_id, is_invite, client_preferred_character, xuid, peer_level, peer_rank, peer_stinger_index, join_attempt_identifier, sender)
+	print("[HostStateBase:on_join_request_received]", data, peer_name, peer_account_type_str, peer_account_id, is_invite, client_preferred_character, xuid, peer_level, peer_rank, peer_stinger_index, join_attempt_identifier, sender:ip_at_index(0))
 
 	local my_user_id = data.local_peer:user_id() or ""
 
 	if not managers.network.matchmake:is_server_joinable() then
-		self:_send_request_denied(sender, 3, my_user_id)
+		self:_send_request_denied(sender, HostNetworkSession.JOIN_REPLY.GAME_STARTED, my_user_id)
 
 		return
 	end
 
-	self:_send_request_denied(sender, 0, my_user_id)
+	self:_send_request_denied(sender, HostNetworkSession.JOIN_REPLY.FAILED_CONNECT, my_user_id)
 end
 
--- Lines 27-48
+-- Lines 59-85
 function HostStateBase:_send_request_denied(sender, reason, my_user_id)
-	local xuid = (SystemInfo:platform() == Idstring("X360") or SystemInfo:platform() == Idstring("XB1")) and managers.network.account:player_id() or ""
+	local server_xuid = ""
 	local params = {
 		reason,
 		0,
@@ -41,14 +41,13 @@ function HostStateBase:_send_request_denied(sender, reason, my_user_id)
 		0,
 		0,
 		0,
-		xuid,
-		0
+		server_xuid
 	}
 
 	sender:join_request_reply(unpack(params))
 end
 
--- Lines 52-57
+-- Lines 89-94
 function HostStateBase:_has_peer_left_PSN(peer_name)
 	if SystemInfo:platform() == Idstring("PS3") and managers.network.matchmake:check_peer_join_request_remove(peer_name) then
 		print("this CLIENT has left us from PSN, ignore his request", peer_name)
@@ -57,12 +56,12 @@ function HostStateBase:_has_peer_left_PSN(peer_name)
 	end
 end
 
--- Lines 61-63
+-- Lines 98-100
 function HostStateBase:_is_in_server_state()
 	return managers.network:session() and Network:is_server()
 end
 
--- Lines 74-88
+-- Lines 111-125
 function HostStateBase:_introduce_new_peer_to_old_peers(data, new_peer, loading, peer_name, character, mask_set, xuid, xnaddr)
 	local new_peer_user_id = SystemInfo:platform() == Idstring("WIN32") and new_peer:user_id() or ""
 	local new_peer_id = new_peer:id()
@@ -80,7 +79,7 @@ function HostStateBase:_introduce_new_peer_to_old_peers(data, new_peer, loading,
 	end
 end
 
--- Lines 92-105
+-- Lines 129-142
 function HostStateBase:_introduce_old_peers_to_new_peer(data, new_peer)
 	local new_peer_id = new_peer:id()
 
@@ -97,7 +96,7 @@ function HostStateBase:_introduce_old_peers_to_new_peer(data, new_peer)
 	end
 end
 
--- Lines 109-119
+-- Lines 146-156
 function HostStateBase:_chk_mutual_connection_established(data, peer, introduced_peer_id)
 	local introduced_peer = data.peers[introduced_peer_id]
 
@@ -112,7 +111,7 @@ function HostStateBase:_chk_mutual_connection_established(data, peer, introduced
 	return false
 end
 
--- Lines 123-143
+-- Lines 160-180
 function HostStateBase:on_handshake_confirmation(data, peer, introduced_peer_id)
 	cat_print("multiplayer_base", "[HostStateBase:on_handshake_confirmation]", inspect(peer), peer:id(), introduced_peer_id)
 
@@ -136,7 +135,7 @@ function HostStateBase:on_handshake_confirmation(data, peer, introduced_peer_id)
 	data.session:check_start_game_intro()
 end
 
--- Lines 147-153
+-- Lines 184-190
 function HostStateBase:_is_kicked(data, peer_name, peer_rpc)
 	local ident = SystemInfo:platform() == Idstring("WIN32") and peer_rpc:ip_at_index(0) or peer_name
 
@@ -145,7 +144,7 @@ function HostStateBase:_is_kicked(data, peer_name, peer_rpc)
 	end
 end
 
--- Lines 158-164
+-- Lines 195-201
 function HostStateBase:_is_banned(peer_name, account_id)
 	local identifier = SystemInfo:platform() == Idstring("WIN32") and account_id or peer_name
 
@@ -154,24 +153,7 @@ function HostStateBase:_is_banned(peer_name, account_id)
 	end
 end
 
--- Lines 169-180
-function HostStateBase:_chk_peer_owns_current_dlc(data, peer_dlcs)
-	local requires_dlc = tweak_data.levels[Global.game_settings.level_id].dlc
-
-	if requires_dlc then
-		local i_dlcs = string.split(peer_dlcs, " ")
-
-		for _, dlc in ipairs(i_dlcs) do
-			if requires_dlc == dlc then
-				return true
-			end
-		end
-	end
-
-	return false
-end
-
--- Lines 184-190
+-- Lines 206-212
 function HostStateBase:on_peer_finished_loading(data, peer)
 	print("[HostStateBase:on_peer_finished_loading]", inspect(peer))
 
@@ -181,12 +163,12 @@ function HostStateBase:on_peer_finished_loading(data, peer)
 	end
 end
 
--- Lines 194-196
+-- Lines 216-218
 function HostStateBase:on_load_level(data)
 	data.wants_to_load_level = true
 end
 
--- Lines 200-202
+-- Lines 222-224
 function HostStateBase:is_joinable(data)
 	return false
 end

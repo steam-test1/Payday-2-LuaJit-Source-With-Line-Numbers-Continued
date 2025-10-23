@@ -309,13 +309,22 @@ function GrenadeCrateDeployableBase:init(unit)
 end
 
 -- Lines 296-299
+function GrenadeCrateDeployableBase:set_server_information(peer_id)
+	self._server_information = {
+		owner_peer_id = peer_id
+	}
+
+	managers.network:session():peer(peer_id):set_used_deployable(true)
+end
+
+-- Lines 301-304
 function GrenadeCrateDeployableBase:setup()
 	self._max_grenade_amount = 4
 
 	GrenadeCrateDeployableBase.super.setup(self)
 end
 
--- Lines 301-307
+-- Lines 306-312
 function GrenadeCrateDeployableBase:sync_net_event(event_id, peer)
 	if event_id == 1 then
 		self:sync_grenade_taken(1)
@@ -324,7 +333,7 @@ function GrenadeCrateDeployableBase:sync_net_event(event_id, peer)
 	end
 end
 
--- Lines 309-314
+-- Lines 314-319
 function GrenadeCrateDeployableBase:server_set_dynamic()
 	self:_set_dynamic()
 
@@ -333,7 +342,7 @@ function GrenadeCrateDeployableBase:server_set_dynamic()
 	end
 end
 
--- Lines 316-334
+-- Lines 321-339
 function GrenadeCrateDeployableBase:take_grenade(unit)
 	if self._empty or not self:_can_take_grenade() or not managers.network:session() then
 		return
@@ -358,7 +367,7 @@ function GrenadeCrateDeployableBase:take_grenade(unit)
 	return grenade_amount
 end
 
--- Lines 336-355
+-- Lines 341-360
 function GrenadeCrateDeployableBase:_set_empty()
 	self._grenade_amount = 0
 	self._empty = true

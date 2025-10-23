@@ -318,7 +318,7 @@ function TripMineBase:_raycast()
 	return self._unit:raycast("ray", self._ray_from_pos, self._ray_to_pos, "slot_mask", self._slotmask, "ray_type", "trip_mine body")
 end
 
--- Lines 306-330
+-- Lines 306-331
 function TripMineBase:_sensor(t)
 	local ray = self:_raycast()
 
@@ -342,12 +342,12 @@ function TripMineBase:_sensor(t)
 	end
 end
 
--- Lines 332-334
+-- Lines 333-335
 function TripMineBase:sync_trip_mine_beep_sensor()
 	self:_emit_sensor_sound_and_effect()
 end
 
--- Lines 339-358
+-- Lines 340-359
 function TripMineBase:_check_body()
 	if not self._attached_data then
 		return
@@ -368,7 +368,7 @@ function TripMineBase:_check_body()
 	self._attached_data.index = (self._attached_data.index < self._attached_data.max_index and self._attached_data.index or 0) + 1
 end
 
--- Lines 362-389
+-- Lines 363-393
 function TripMineBase:_check()
 	if not managers.network:session() then
 		return
@@ -397,12 +397,12 @@ function TripMineBase:_check()
 	end
 end
 
--- Lines 393-395
+-- Lines 397-399
 function TripMineBase:sync_trip_mine_beep_explode()
 	self._unit:sound_source():post_event("trip_mine_beep_explode")
 end
 
--- Lines 400-411
+-- Lines 404-415
 function TripMineBase:explode()
 	if not self._active then
 		return
@@ -417,7 +417,7 @@ function TripMineBase:explode()
 	self:_explode(col_ray)
 end
 
--- Lines 413-516
+-- Lines 417-520
 function TripMineBase:_explode(col_ray)
 	if not managers.network:session() or self._detonated then
 		return
@@ -525,7 +525,7 @@ function TripMineBase:_explode(col_ray)
 	self:_handle_hiding_and_destroying(true, destruction_delay)
 end
 
--- Lines 518-525
+-- Lines 522-529
 function TripMineBase:sync_trip_mine_explode_and_spawn_fire(user_unit, ray_from, ray_to, damage_size, damage, added_time, range_multiplier)
 	if self._detonated then
 		return
@@ -536,7 +536,7 @@ function TripMineBase:sync_trip_mine_explode_and_spawn_fire(user_unit, ray_from,
 	self:sync_trip_mine_explode(user_unit, ray_from, ray_to, damage_size, damage, destruction_delay)
 end
 
--- Lines 527-567
+-- Lines 531-571
 function TripMineBase:sync_trip_mine_explode(user_unit, ray_from, ray_to, damage_size, damage, destruction_delay)
 	if self._detonated then
 		return
@@ -580,7 +580,7 @@ function TripMineBase:sync_trip_mine_explode(user_unit, ray_from, ray_to, damage
 	self:_handle_hiding_and_destroying(true, destruction_delay)
 end
 
--- Lines 569-594
+-- Lines 573-598
 function TripMineBase:_handle_hiding_and_destroying(destroy, destruction_delay)
 	self._unit:set_visible(false)
 
@@ -605,7 +605,7 @@ function TripMineBase:_handle_hiding_and_destroying(destroy, destruction_delay)
 	end
 end
 
--- Lines 596-602
+-- Lines 600-606
 function TripMineBase:_clbk_destroy()
 	self._destroy_clbk_id = nil
 
@@ -614,7 +614,7 @@ function TripMineBase:_clbk_destroy()
 	end
 end
 
--- Lines 604-615
+-- Lines 608-619
 function TripMineBase:_spawn_environment_fire(user_unit, added_time, range_multiplier)
 	local position = self._unit:position()
 	local rotation = self._unit:rotation()
@@ -631,7 +631,7 @@ function TripMineBase:_spawn_environment_fire(user_unit, added_time, range_multi
 	return time_until_destruction
 end
 
--- Lines 617-624
+-- Lines 621-628
 function TripMineBase:_play_sound_and_effects()
 	World:effect_manager():spawn({
 		effect = Idstring("effects/particles/explosions/explosion_grenade"),
@@ -648,16 +648,16 @@ function TripMineBase:_play_sound_and_effects()
 	}), TimerManager:game():time() + 4)
 end
 
--- Lines 627-631
+-- Lines 631-635
 function TripMineBase:_emit_sensor_sound_and_effect()
 	self._unit:sound_source():post_event("trip_mine_sensor_alarm")
 end
 
--- Lines 633-634
+-- Lines 637-638
 function TripMineBase._dispose_of_sound(...)
 end
 
--- Lines 636-642
+-- Lines 640-646
 function TripMineBase:sync_net_event(event_id)
 	if event_id == TripMineBase.EVENT_IDS.sensor_beep then
 		self:sync_trip_mine_beep_sensor()
@@ -666,7 +666,7 @@ function TripMineBase:sync_net_event(event_id)
 	end
 end
 
--- Lines 646-658
+-- Lines 650-662
 function TripMineBase:_give_explosion_damage(col_ray, unit, damage)
 	local action_data = {
 		variant = "explosion",
@@ -682,7 +682,7 @@ function TripMineBase:_give_explosion_damage(col_ray, unit, damage)
 	return defense_data
 end
 
--- Lines 662-672
+-- Lines 666-676
 function TripMineBase:save(data)
 	local state = {
 		armed = self._armed,
@@ -696,7 +696,7 @@ function TripMineBase:save(data)
 	data.TripMineBase = state
 end
 
--- Lines 674-700
+-- Lines 678-704
 function TripMineBase:load(data)
 	local state = data.TripMineBase
 	self._init_length = 500
@@ -724,14 +724,14 @@ function TripMineBase:load(data)
 	end
 end
 
--- Lines 704-707
+-- Lines 708-711
 function TripMineBase:_debug_draw(from, to)
 	local brush = Draw:brush(Color.red:with_alpha(0.5))
 
 	brush:cylinder(from, to, 1)
 end
 
--- Lines 709-718
+-- Lines 713-722
 function TripMineBase:destroy()
 	if self._validate_clbk_id then
 		managers.enemy:remove_delayed_clbk(self._validate_clbk_id)

@@ -55,7 +55,7 @@ function PoisonGasGrenade:projectile_entry()
 	return self._projectile_entry or self._tweak_projectile_entry or "launcher_poison"
 end
 
--- Lines 55-96
+-- Lines 55-98
 function PoisonGasGrenade:_detonate(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 	if self._detonated then
 		return
@@ -91,7 +91,7 @@ function PoisonGasGrenade:_detonate(tag, unit, body, other_unit, other_body, pos
 		managers.explosion:give_local_player_dmg(pos, range, self._player_damage)
 		managers.explosion:play_sound_and_effects(pos, normal, range, self._custom_params)
 
-		if self._unit:id() ~= -1 then
+		if self._unit:id() ~= -1 and managers.network:session() then
 			managers.network:session():send_to_peers_synched("sync_unit_event_id_16", self._unit, "base", GrenadeBase.EVENT_IDS.detonate)
 		end
 	end
@@ -99,11 +99,11 @@ function PoisonGasGrenade:_detonate(tag, unit, body, other_unit, other_body, pos
 	self:_handle_hiding_and_destroying(false, nil)
 end
 
--- Lines 98-100
+-- Lines 100-102
 function PoisonGasGrenade:bullet_hit()
 end
 
--- Lines 104-115
+-- Lines 106-117
 function PoisonGasGrenade:_detonate_on_client()
 	if self._detonated then
 		return
@@ -118,7 +118,7 @@ function PoisonGasGrenade:_detonate_on_client()
 	managers.explosion:explode_on_client(pos, math.UP, nil, self._damage, range, self._curve_pow, self._custom_params)
 end
 
--- Lines 119-129
+-- Lines 121-131
 function PoisonGasGrenade:update(unit, t, dt)
 	if self._timer then
 		self._timer = self._timer - dt
@@ -133,7 +133,7 @@ function PoisonGasGrenade:update(unit, t, dt)
 	ProjectileBase.update(self, unit, t, dt)
 end
 
--- Lines 133-144
+-- Lines 135-146
 function PoisonGasGrenade:save(data)
 	PoisonGasGrenade.super.save(self, data)
 
@@ -146,7 +146,7 @@ function PoisonGasGrenade:save(data)
 	data.PoisonGasGrenade = state
 end
 
--- Lines 148-169
+-- Lines 150-171
 function PoisonGasGrenade:load(data)
 	PoisonGasGrenade.super.load(self, data)
 

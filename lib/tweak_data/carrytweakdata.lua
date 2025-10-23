@@ -1,6 +1,6 @@
 CarryTweakData = CarryTweakData or class()
 
--- Lines 3-1325
+-- Lines 3-1330
 function CarryTweakData:init(tweak_data)
 	self.value_multiplier = tweak_data.money_manager.bag_value_multiplier
 	self.dye = {
@@ -531,14 +531,15 @@ function CarryTweakData:init(tweak_data)
 		visual_unit_name = "units/payday2/characters/npc_acc_cage_bag_1/npc_acc_cage_bag_1"
 	}
 	self.unknown = {
+		visual_unit_name = "units/payday2/characters/npc_acc_cage_bag_1/npc_acc_cage_bag_1",
+		skip_exit_secure = false,
 		type = "heavy",
 		name_id = "hud_carry_???",
-		skip_exit_secure = false,
+		unit = "units/payday2/pickups/gen_pku_cage_bag/gen_pku_cage_bag",
+		bag_value = "unknown",
 		AI_carry = {
 			SO_category = "enemies"
-		},
-		unit = "units/payday2/pickups/gen_pku_cage_bag/gen_pku_cage_bag",
-		visual_unit_name = "units/payday2/characters/npc_acc_cage_bag_1/npc_acc_cage_bag_1"
+		}
 	}
 	self.safe_wpn = {
 		type = "slightly_very_heavy",
@@ -792,11 +793,11 @@ function CarryTweakData:init(tweak_data)
 		}
 	}
 	self.drone_control_helmet = {
+		visual_unit_name = "units/payday2/characters/npc_acc_cage_bag_1/npc_acc_cage_bag_1",
 		type = "light",
 		name_id = "hud_carry_helmet",
-		bag_value = "mad_master_server_value_4",
 		unit = "units/payday2/pickups/gen_pku_cage_bag/gen_pku_cage_bag",
-		visual_unit_name = "units/payday2/characters/npc_acc_cage_bag_1/npc_acc_cage_bag_1",
+		bag_value = "drone_control_helmet",
 		AI_carry = {
 			SO_category = "enemies"
 		}
@@ -1139,7 +1140,7 @@ function CarryTweakData:init(tweak_data)
 	}
 end
 
--- Lines 1327-1336
+-- Lines 1332-1341
 function CarryTweakData:get_carry_ids()
 	local t = {}
 
@@ -1154,7 +1155,7 @@ function CarryTweakData:get_carry_ids()
 	return t
 end
 
--- Lines 1338-1348
+-- Lines 1343-1353
 function CarryTweakData:get_carry_ids_lookup_for_area_trigger()
 	local lookup_table = {}
 
@@ -1167,7 +1168,7 @@ function CarryTweakData:get_carry_ids_lookup_for_area_trigger()
 	return lookup_table
 end
 
--- Lines 1351-1359
+-- Lines 1356-1364
 function CarryTweakData:get_zipline_offset(carry_id)
 	local unit_name = tweak_data.carry[carry_id].unit or "units/payday2/pickups/gen_pku_lootbag/gen_pku_lootbag"
 

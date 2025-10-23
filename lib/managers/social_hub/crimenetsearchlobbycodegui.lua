@@ -92,7 +92,7 @@ function CrimenetSearchLobbyCodeGui:searchbox_disconnect_callback(first, second,
 	end
 end
 
--- Lines 64-86
+-- Lines 64-96
 function CrimenetSearchLobbyCodeGui:on_search_lobby_fetched(first, second, third)
 	if not first or not second then
 		return
@@ -115,14 +115,21 @@ function CrimenetSearchLobbyCodeGui:on_search_lobby_fetched(first, second, third
 		self.search_item = nil
 	end
 
-	self.search_item = SocialHubLobbyItem:new(self.scroll:canvas(), third)
+	local owner_name = third.OWNER_NAME
 
-	self.scroll:add_item(self.search_item, nil)
-	self.scroll:place_items_in_order(nil, true, true)
-	self.scroll:select_item(self.search_item)
+	if owner_name and utf8.len(owner_name) <= NetworkManager.MAX_PEER_NAME_LENGTH then
+		third.OWNER_NAME = managers.network:sanitize_peer_name(owner_name)
+		self.search_item = SocialHubLobbyItem:new(self.scroll:canvas(), third)
+
+		self.scroll:add_item(self.search_item, nil)
+		self.scroll:place_items_in_order(nil, true, true)
+		self.scroll:select_item(self.search_item)
+	else
+		Application:error("[CrimenetSearchLobbyCodeGui:on_search_lobby_fetched] found lobby failed filter checks")
+	end
 end
 
--- Lines 88-98
+-- Lines 98-108
 function CrimenetSearchLobbyCodeGui:on_user_lobby_pressed(first, second, third)
 	print("CrimenetSearchLobbyCodeGui:on_user_lobby_pressed", inspect(first or "NO"), inspect(second or "NO"), inspect(third or "NO"))
 
@@ -137,7 +144,7 @@ function CrimenetSearchLobbyCodeGui:on_user_lobby_pressed(first, second, third)
 	end
 end
 
--- Lines 100-120
+-- Lines 110-130
 function CrimenetSearchLobbyCodeGui:setup_panel()
 	self._searchbox = SearchBoxGuiObject:new(self._main_panel, self._ws, nil, {
 		w = 292
@@ -182,7 +189,7 @@ function CrimenetSearchLobbyCodeGui:setup_panel()
 	})
 end
 
--- Lines 122-143
+-- Lines 132-153
 function CrimenetSearchLobbyCodeGui:mouse_moved(button, x, y)
 	local back_button = self._panel:child("back_button")
 
@@ -210,7 +217,7 @@ function CrimenetSearchLobbyCodeGui:mouse_moved(button, x, y)
 	end
 end
 
--- Lines 145-163
+-- Lines 155-173
 function CrimenetSearchLobbyCodeGui:mouse_pressed(button, x, y)
 	local back_button = self._panel:child("back_button")
 
@@ -233,7 +240,7 @@ function CrimenetSearchLobbyCodeGui:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines 165-175
+-- Lines 175-185
 function CrimenetSearchLobbyCodeGui:confirm_pressed()
 	if self._searchbox:input_focus() then
 		self._searchbox:disconnect_search_input()
@@ -248,7 +255,7 @@ function CrimenetSearchLobbyCodeGui:confirm_pressed()
 	end
 end
 
--- Lines 177-183
+-- Lines 187-193
 function CrimenetSearchLobbyCodeGui:special_btn_pressed(button)
 	if button == Idstring("menu_respec_tree") then
 		self._searchbox:clear_text()

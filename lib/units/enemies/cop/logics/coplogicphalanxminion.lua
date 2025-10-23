@@ -39,7 +39,7 @@ CopLogicPhalanxMinion.allowed_transitional_actions = {
 	}
 }
 
--- Lines 35-89
+-- Lines 35-90
 function CopLogicPhalanxMinion.enter(data, new_logic_name, enter_params)
 	CopLogicBase.enter(data, new_logic_name, enter_params)
 
@@ -100,7 +100,7 @@ function CopLogicPhalanxMinion.enter(data, new_logic_name, enter_params)
 	end
 end
 
--- Lines 93-104
+-- Lines 94-105
 function CopLogicPhalanxMinion.exit(data, new_logic_name, enter_params)
 	CopLogicBase.exit(data, new_logic_name, enter_params)
 
@@ -112,7 +112,7 @@ function CopLogicPhalanxMinion.exit(data, new_logic_name, enter_params)
 	data.brain:rem_pos_rsrv("path")
 end
 
--- Lines 108-152
+-- Lines 109-151
 function CopLogicPhalanxMinion.queued_update(data)
 	local my_data = data.internal_data
 	local delay = data.logic._upd_enemy_detection(data)
@@ -154,19 +154,19 @@ function CopLogicPhalanxMinion.queued_update(data)
 	CopLogicBase.queue_task(my_data, my_data.detection_task_key, CopLogicPhalanxMinion.queued_update, data, data.t + delay, data.important and true)
 end
 
--- Lines 156-159
+-- Lines 155-158
 function CopLogicPhalanxMinion.chk_should_turn(data, my_data)
 	return not my_data.turning and not my_data.has_old_action and not data.unit:movement():chk_action_forbidden("walk") and not my_data.moving_to_cover and not my_data.walking_to_cover_shoot_pos and not my_data.surprised
 end
 
--- Lines 163-167
+-- Lines 162-166
 function CopLogicPhalanxMinion.register_in_group_ai(unit)
 	if not managers.groupai:state():is_unit_in_phalanx_minion_data(unit:key()) then
 		managers.groupai:state():register_phalanx_minion(unit)
 	end
 end
 
--- Lines 171-178
+-- Lines 170-179
 function CopLogicPhalanxMinion.chk_should_breakup()
 	local phalanx_minion_count = managers.groupai:state():get_phalanx_minion_count()
 	local min_count_minions = tweak_data.group_ai.phalanx.minions.min_count
@@ -176,7 +176,7 @@ function CopLogicPhalanxMinion.chk_should_breakup()
 	end
 end
 
--- Lines 182-188
+-- Lines 183-189
 function CopLogicPhalanxMinion.chk_should_reposition()
 	local phalanx_minion_count = managers.groupai:state():get_phalanx_minion_count()
 
@@ -185,7 +185,7 @@ function CopLogicPhalanxMinion.chk_should_reposition()
 	end
 end
 
--- Lines 192-231
+-- Lines 193-231
 function CopLogicPhalanxMinion.breakup(remote_call)
 	local groupai = managers.groupai:state()
 	local phalanx_minions = groupai:phalanx_minions()
@@ -209,7 +209,7 @@ function CopLogicPhalanxMinion.breakup(remote_call)
 			local brain = unit:brain()
 
 			if brain and brain:objective() then
-				print("CopLogicPhalanxMinion.breakup current objective type: ", brain:objective().type)
+				print("[PHALANX] CopLogicPhalanxMinion.breakup current objective type: ", brain:objective().type)
 				brain:set_objective(nil)
 			end
 		end

@@ -13,13 +13,30 @@ HostNetworkSession._STATES = {
 	game_end = HostStateGameEnd,
 	closing = HostStateClosing
 }
+HostNetworkSession.JOIN_REPLY = {
+	BANNED = 9,
+	MODS_DISALLOWED = 10,
+	LOW_LEVEL = 6,
+	DO_NOT_OWN_HEIST = 4,
+	SHUB_BLOCKED = 11,
+	AUTH_FAILED = 8,
+	GAME_FULL = 5,
+	WRONG_VERSION = 7,
+	HOST_LOADING = 13,
+	OK = 1,
+	GAME_STARTED = 3,
+	ALREADY_JOINED = 14,
+	SHUB_NOT_FRIEND = 12,
+	FAILED_CONNECT = 0,
+	KICKED = 2
+}
 HostNetworkSession._DEAD_CONNECTION_REPORT_PROCESS_DELAY = math.max(HostNetworkSession.CONNECTION_TIMEOUT, HostNetworkSession.LOADING_CONNECTION_TIMEOUT) + 1.5
 HostNetworkSession._LOAD_COUNTER_LIMITS = {
 	1,
 	1024
 }
 
--- Lines 21-34
+-- Lines 45-58
 function HostNetworkSession:init()
 	HostNetworkSession.super.init(self)
 
@@ -34,7 +51,7 @@ function HostNetworkSession:init()
 	print("[HostNetworkSession:init] self._load_counter", self._load_counter)
 end
 
--- Lines 38-50
+-- Lines 62-74
 function HostNetworkSession:create_local_peer(load_outfit)
 	HostNetworkSession.super.create_local_peer(self, load_outfit)
 
@@ -48,27 +65,40 @@ function HostNetworkSession:create_local_peer(load_outfit)
 	end
 end
 
--- Lines 54-56
-function HostNetworkSession:on_join_request_received(peer_name, peer_account_type_str, peer_account_id, is_invite, preferred_character, dlcs, xuid, peer_level, peer_rank, peer_stinger_index, gameversion, join_attempt_identifier, auth_ticket, sender)
-	return self._state.on_join_request_received and self._state:on_join_request_received(self._state_data, peer_name, peer_account_type_str, peer_account_id, is_invite, preferred_character, dlcs, xuid, peer_level, peer_rank, peer_stinger_index, gameversion, join_attempt_identifier, auth_ticket, sender)
+-- Lines 78-115
+function HostNetworkSession:on_join_request_received(peer_name, peer_account_type_str, peer_account_id, is_invite, preferred_character, xuid, peer_level, peer_rank, peer_stinger_index, join_attempt_identifier, sender)
+	if not self._state.on_join_request_received then
+		return
+	end
+
+	return self._state:on_join_request_received(self._state_data, peer_name, peer_account_type_str, peer_account_id, is_invite, preferred_character, xuid, peer_level, peer_rank, peer_stinger_index, join_attempt_identifier, sender)
 end
 
--- Lines 60-62
+-- Lines 117-123
+function HostNetworkSession:on_join_auth_received(auth_ticket, sender)
+	if not self._state.on_join_auth_received then
+		return
+	end
+
+	return self._state:on_join_auth_received(self._state_data, auth_ticket, sender)
+end
+
+-- Lines 127-129
 function HostNetworkSession:send_to_host(...)
 	debug_pause("[HostNetworkSession:send_to_host] This is dumb. call the function directly instead of sending it...")
 end
 
--- Lines 66-66
+-- Lines 133-133
 function HostNetworkSession:is_host()
 	return true
 end
 
--- Lines 70-70
+-- Lines 137-137
 function HostNetworkSession:is_client()
 	return false
 end
 
--- Lines 74-89
+-- Lines 141-156
 function HostNetworkSession:load_level(...)
 	self:_inc_load_counter()
 	self._state:on_load_level(self._state_data)
@@ -86,7 +116,7 @@ function HostNetworkSession:load_level(...)
 	self:_load_level(...)
 end
 
--- Lines 93-109
+-- Lines 160-176
 function HostNetworkSession:load_lobby(...)
 	self:_inc_load_counter()
 	managers.network.matchmake:set_server_state("loading")
@@ -104,17 +134,17 @@ function HostNetworkSession:load_lobby(...)
 	self:_load_lobby(...)
 end
 
--- Lines 113-116
+-- Lines 180-183
 function HostNetworkSession:broadcast_server_up()
 	print("[HostNetworkSession:broadcast_server_up]")
 	Network:broadcast(NetworkManager.DEFAULT_PORT):server_up()
 end
 
--- Lines 120-121
+-- Lines 187-188
 function HostNetworkSession:on_server_up_received()
 end
 
--- Lines 125-140
+-- Lines 192-207
 function HostNetworkSession:load(data)
 	if Global.load_start_menu_lobby then
 		self:set_state("in_lobby")
@@ -132,7 +162,7 @@ function HostNetworkSession:load(data)
 	}
 end
 
--- Lines 144-181
+-- Lines 211-248
 function HostNetworkSession:on_peer_connection_established(sender_peer, introduced_peer_id)
 	print("[HostNetworkSession:on_peer_connection_established]", sender_peer:id(), introduced_peer_id)
 
@@ -178,7 +208,7 @@ function HostNetworkSession:on_peer_connection_established(sender_peer, introduc
 	end
 end
 
--- Lines 185-193
+-- Lines 252-260
 function HostNetworkSession:set_game_started(state)
 	self._game_started = state
 	self._state_data.game_started = state
@@ -189,7 +219,7 @@ function HostNetworkSession:set_game_started(state)
 	end
 end
 
--- Lines 197-205
+-- Lines 264-272
 function HostNetworkSession:chk_peer_already_in(rpc)
 	local old_peer = nil
 
@@ -202,21 +232,21 @@ function HostNetworkSession:chk_peer_already_in(rpc)
 	return old_peer
 end
 
--- Lines 209-213
+-- Lines 276-280
 function HostNetworkSession:send_ok_to_load_level()
 	for peer_id, peer in pairs(self._peers) do
 		peer:send("ok_to_load_level", self._load_counter)
 	end
 end
 
--- Lines 215-219
+-- Lines 282-286
 function HostNetworkSession:send_ok_to_load_lobby()
 	for peer_id, peer in pairs(self._peers) do
 		peer:send("ok_to_load_lobby", self._load_counter)
 	end
 end
 
--- Lines 223-293
+-- Lines 290-360
 function HostNetworkSession:on_peer_save_received(event, event_data)
 	if managers.network:stopping() then
 		return
@@ -288,13 +318,13 @@ function HostNetworkSession:on_peer_save_received(event, event_data)
 	end
 end
 
--- Lines 297-302
+-- Lines 364-369
 function HostNetworkSession:update()
 	HostNetworkSession.super.update(self)
 	self:process_dead_con_reports()
 end
 
--- Lines 306-360
+-- Lines 373-427
 function HostNetworkSession:set_peer_loading_state(peer, state, load_counter)
 	print("[HostNetworkSession:set_peer_loading_state]", peer:id(), state, load_counter)
 
@@ -352,7 +382,7 @@ function HostNetworkSession:set_peer_loading_state(peer, state, load_counter)
 	end
 end
 
--- Lines 364-382
+-- Lines 431-449
 function HostNetworkSession:on_drop_in_pause_confirmation_received(dropin_peer_id, sender_peer)
 	print("[HostNetworkSession:on_drop_in_pause_confirmation_received]", sender_peer:id(), " paused for ", dropin_peer_id)
 
@@ -376,7 +406,7 @@ function HostNetworkSession:on_drop_in_pause_confirmation_received(dropin_peer_i
 	end
 end
 
--- Lines 386-431
+-- Lines 453-498
 function HostNetworkSession:chk_initiate_dropin_pause(dropin_peer)
 	print("[HostNetworkSession:chk_initiate_dropin_pause]", dropin_peer:id())
 
@@ -431,7 +461,7 @@ function HostNetworkSession:chk_initiate_dropin_pause(dropin_peer)
 	return true
 end
 
--- Lines 435-469
+-- Lines 502-536
 function HostNetworkSession:chk_drop_in_peer(dropin_peer)
 	local dropin_peer_id = dropin_peer:id()
 
@@ -476,12 +506,12 @@ function HostNetworkSession:chk_drop_in_peer(dropin_peer)
 	return true
 end
 
--- Lines 473-475
+-- Lines 540-542
 function HostNetworkSession:dropin_peer()
 	return self._dropin_peer
 end
 
--- Lines 479-501
+-- Lines 546-568
 function HostNetworkSession:add_peer(name, rpc, in_lobby, loading, synched, id, character, user_id, account_type_str, account_id, xuid, xnaddr)
 	id = id or self:_get_free_client_id(user_id)
 
@@ -503,7 +533,7 @@ function HostNetworkSession:add_peer(name, rpc, in_lobby, loading, synched, id, 
 	return id, peer
 end
 
--- Lines 505-526
+-- Lines 572-593
 function HostNetworkSession:_get_free_client_id(user_id)
 	local i = 2
 
@@ -526,7 +556,7 @@ function HostNetworkSession:_get_free_client_id(user_id)
 	until i == tweak_data.max_players + 1
 end
 
--- Lines 530-591
+-- Lines 597-658
 function HostNetworkSession:remove_peer(peer, peer_id, reason)
 	print("[HostNetworkSession:remove_peer]", inspect(peer), peer_id, reason)
 	HostNetworkSession.super.remove_peer(self, peer, peer_id, reason)
@@ -594,7 +624,7 @@ function HostNetworkSession:remove_peer(peer, peer_id, reason)
 	self:chk_server_joinable_state()
 end
 
--- Lines 595-605
+-- Lines 662-672
 function HostNetworkSession:on_remove_peer_confirmation(sender_peer, removed_peer_id)
 	print("[HostNetworkSession:on_remove_peer_confirmation]", sender_peer:id(), removed_peer_id)
 
@@ -609,7 +639,7 @@ function HostNetworkSession:on_remove_peer_confirmation(sender_peer, removed_pee
 	self:check_start_game_intro()
 end
 
--- Lines 609-621
+-- Lines 676-688
 function HostNetworkSession:on_dead_connection_reported(reporter_peer_id, other_peer_id)
 	print("[HostNetworkSession:on_dead_connection_reported]", reporter_peer_id, other_peer_id)
 
@@ -627,7 +657,7 @@ function HostNetworkSession:on_dead_connection_reported(reporter_peer_id, other_
 	table.insert(self._dead_con_reports, entry)
 end
 
--- Lines 625-648
+-- Lines 692-715
 function HostNetworkSession:process_dead_con_reports()
 	if self._dead_con_reports then
 		local t = TimerManager:wall():time()
@@ -659,7 +689,7 @@ function HostNetworkSession:process_dead_con_reports()
 	end
 end
 
--- Lines 652-697
+-- Lines 719-764
 function HostNetworkSession:chk_spawn_member_unit(peer, peer_id)
 	print("[HostNetworkSession:chk_spawn_member_unit]", peer:name(), peer_id)
 
@@ -698,20 +728,20 @@ function HostNetworkSession:chk_spawn_member_unit(peer, peer_id)
 	end
 end
 
--- Lines 700-705
+-- Lines 767-772
 function HostNetworkSession:_add_waiting(peer)
 	managers.wait:add_waiting(peer:id())
 	peer:make_waiting()
 end
 
--- Lines 710-716
+-- Lines 777-783
 function HostNetworkSession:_spawn_dropin_player(peer)
 	managers.achievment:set_script_data("cant_touch_fail", true)
 	peer:spawn_unit(0, true)
 	managers.groupai:state():fill_criminal_team_with_AI(true)
 end
 
--- Lines 720-767
+-- Lines 787-834
 function HostNetworkSession:chk_server_joinable_state()
 	for peer_id, peer in pairs(self._peers) do
 		if peer:force_open_lobby_state() then
@@ -767,7 +797,7 @@ function HostNetworkSession:chk_server_joinable_state()
 	managers.network.matchmake:set_server_joinable(true)
 end
 
--- Lines 771-808
+-- Lines 838-875
 function HostNetworkSession:on_load_complete(simulation)
 	HostNetworkSession.super.on_load_complete(self, simulation)
 
@@ -809,13 +839,13 @@ function HostNetworkSession:on_load_complete(simulation)
 	self._local_peer:set_synched(true)
 end
 
--- Lines 812-815
+-- Lines 879-882
 function HostNetworkSession:prepare_to_close(...)
 	HostNetworkSession.super.prepare_to_close(self, ...)
 	self:set_state("closing")
 end
 
--- Lines 819-835
+-- Lines 886-902
 function HostNetworkSession:chk_peer_handshakes_complete(peer)
 	local peer_id = peer:id()
 	local peer_handshakes = peer:handshakes()
@@ -839,7 +869,7 @@ function HostNetworkSession:chk_peer_handshakes_complete(peer)
 	return true
 end
 
--- Lines 839-852
+-- Lines 906-919
 function HostNetworkSession:chk_all_handshakes_complete()
 	for peer_id, peer in pairs(self._peers) do
 		local peer_handshakes = peer:handshakes()
@@ -856,7 +886,7 @@ function HostNetworkSession:chk_all_handshakes_complete()
 	return true
 end
 
--- Lines 857-870
+-- Lines 924-937
 function HostNetworkSession:set_dropin_pause_request(peer, dropin_peer_id, state)
 	if state == "asked" then
 		local dropin_peer = self._peers[dropin_peer_id]
@@ -873,7 +903,7 @@ function HostNetworkSession:set_dropin_pause_request(peer, dropin_peer_id, state
 	end
 end
 
--- Lines 874-891
+-- Lines 941-958
 function HostNetworkSession:chk_send_ready_to_unpause()
 	for peer_id, peer in pairs(self._peers) do
 		if peer:loaded() and not peer:synched() then
@@ -893,7 +923,7 @@ function HostNetworkSession:chk_send_ready_to_unpause()
 	return true
 end
 
--- Lines 895-906
+-- Lines 962-973
 function HostNetworkSession:set_state(name, enter_params)
 	local state = self._STATES[name]
 	local state_data = self._state_data
@@ -910,7 +940,7 @@ function HostNetworkSession:set_state(name, enter_params)
 	state:enter(state_data, enter_params)
 end
 
--- Lines 910-916
+-- Lines 977-983
 function HostNetworkSession:on_re_open_lobby_request(peer, state)
 	if state then
 		peer:send("re_open_lobby_reply", true)
@@ -920,7 +950,7 @@ function HostNetworkSession:on_re_open_lobby_request(peer, state)
 	self:chk_server_joinable_state()
 end
 
--- Lines 920-933
+-- Lines 987-1000
 function HostNetworkSession:all_peers_done_loading_outfits()
 	if not self:are_all_peer_assets_loaded() then
 		return false
@@ -937,7 +967,7 @@ function HostNetworkSession:all_peers_done_loading_outfits()
 	return true
 end
 
--- Lines 937-949
+-- Lines 1004-1016
 function HostNetworkSession:chk_request_peer_outfit_load_status()
 	print("[HostNetworkSession:chk_request_peer_outfit_load_status]")
 	Application:stack_dump()
@@ -954,7 +984,7 @@ function HostNetworkSession:chk_request_peer_outfit_load_status()
 	end
 end
 
--- Lines 953-978
+-- Lines 1020-1045
 function HostNetworkSession:on_peer_finished_loading_outfit(peer, request_id, outfit_versions_str_in)
 	print("[HostNetworkSession:on_peer_finished_loading_outfit] peer:id()", peer:id(), "request_id", request_id, "self._peer_outfit_loaded_status_request_id", self._peer_outfit_loaded_status_request_id, "outfit_versions_str_in", outfit_versions_str_in, "self:_get_peer_outfit_versions_str()", self:_get_peer_outfit_versions_str())
 
@@ -979,7 +1009,7 @@ function HostNetworkSession:on_peer_finished_loading_outfit(peer, request_id, ou
 	end
 end
 
--- Lines 983-991
+-- Lines 1050-1058
 function HostNetworkSession:on_set_member_ready(peer_id, ready, state_changed, from_network)
 	HostNetworkSession.super.on_set_member_ready(self, peer_id, ready, state_changed, from_network)
 	self:check_start_game_intro()
@@ -989,7 +1019,7 @@ function HostNetworkSession:on_set_member_ready(peer_id, ready, state_changed, f
 	end
 end
 
--- Lines 995-1002
+-- Lines 1062-1069
 function HostNetworkSession:_increment_outfit_loading_status_request_id()
 	if self._peer_outfit_loaded_status_request_id == 100 then
 		self._peer_outfit_loaded_status_request_id = 0
@@ -1000,7 +1030,7 @@ function HostNetworkSession:_increment_outfit_loading_status_request_id()
 	return self._peer_outfit_loaded_status_request_id
 end
 
--- Lines 1006-1011
+-- Lines 1073-1078
 function HostNetworkSession:_reset_outfit_loading_status_request()
 	self:_increment_outfit_loading_status_request_id()
 
@@ -1009,7 +1039,7 @@ function HostNetworkSession:_reset_outfit_loading_status_request()
 	end
 end
 
--- Lines 1015-1023
+-- Lines 1082-1090
 function HostNetworkSession:on_peer_outfit_loaded(peer)
 	print("[HostNetworkSession:on_peer_outfit_loaded]", peer:id())
 
@@ -1020,7 +1050,7 @@ function HostNetworkSession:on_peer_outfit_loaded(peer)
 	end
 end
 
--- Lines 1027-1033
+-- Lines 1094-1100
 function HostNetworkSession:_inc_load_counter()
 	if self._load_counter == self._LOAD_COUNTER_LIMITS[2] then
 		self._load_counter = self._LOAD_COUNTER_LIMITS[1]

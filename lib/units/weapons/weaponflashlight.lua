@@ -183,12 +183,12 @@ function WeaponFlashLight:update(unit, t, dt)
 	end
 end
 
--- Lines 197-200
+-- Lines 197-199
 function WeaponFlashLight:run_net_event(event_id)
 	self:sync_net_event(event_id)
 end
 
--- Lines 202-220
+-- Lines 201-218
 function WeaponFlashLight:update_flicker(t, dt)
 	if self._flicker_t then
 		self._flicker_t = math.max(0, self._flicker_t - dt)
@@ -207,7 +207,7 @@ function WeaponFlashLight:update_flicker(t, dt)
 	end
 end
 
--- Lines 222-241
+-- Lines 220-239
 function WeaponFlashLight:update_laughter(t, dt)
 	if self._laughter_t then
 		self._laughter_t = math.max(0, self._laughter_t - dt)
@@ -228,7 +228,7 @@ function WeaponFlashLight:update_laughter(t, dt)
 	end
 end
 
--- Lines 243-252
+-- Lines 241-250
 function WeaponFlashLight:update_frozen(t, dt)
 	if self._frozen_t and self._frozen_t <= t then
 		local obj = self._unit:get_object(Idstring("a_flashlight"))
@@ -245,7 +245,7 @@ WeaponFlashLight.EFFECT_OPACITY_MAX = 16
 WeaponFlashLight.NPC_GLOW_OPACITY_MAX = 100
 WeaponFlashLight.NPC_CONE_OPACITY_MAX = 8
 
--- Lines 260-300
+-- Lines 258-298
 function WeaponFlashLight:set_color(color)
 	if self:is_haunted() then
 		return
@@ -278,7 +278,7 @@ function WeaponFlashLight:set_color(color)
 	end
 end
 
--- Lines 302-305
+-- Lines 300-303
 function WeaponFlashLight:color()
 	local col = self._light:color()
 

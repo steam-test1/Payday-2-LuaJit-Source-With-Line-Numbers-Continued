@@ -961,7 +961,7 @@ function Drill:_reset_melee_autorepair()
 	self._peer_ids = {}
 end
 
--- Lines 929-964
+-- Lines 929-970
 function Drill:on_melee_hit(peer_id)
 	if self._disable_upgrades or not self._jammed or self:_does_peer_exist(peer_id) then
 		return
@@ -995,7 +995,7 @@ function Drill:on_melee_hit(peer_id)
 	end
 end
 
--- Lines 966-984
+-- Lines 972-990
 function Drill:on_melee_hit_success()
 	local unit = self._unit
 	local int_ext = unit:interaction()
@@ -1015,7 +1015,7 @@ function Drill:on_melee_hit_success()
 	end
 end
 
--- Lines 986-994
+-- Lines 992-1000
 function Drill:_does_peer_exist(peer_id)
 	local count = #self._peer_ids
 
@@ -1028,7 +1028,7 @@ function Drill:_does_peer_exist(peer_id)
 	return false
 end
 
--- Lines 996-1005
+-- Lines 1002-1011
 function Drill:compare_skill_upgrades(skill_upgrades)
 	if self._disable_upgrades then
 		return false
