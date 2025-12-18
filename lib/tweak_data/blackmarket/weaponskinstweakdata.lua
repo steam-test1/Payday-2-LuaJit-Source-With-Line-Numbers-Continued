@@ -1,6 +1,6 @@
 require("lib/tweak_data/blackmarket/WeaponColorTemplates")
 
--- Lines 343-40323
+-- Lines 343-40892
 function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins = {
 		serbu_woodland = {}
@@ -11,7 +11,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.serbu_woodland.rarity = "common"
 	self.weapon_skins.serbu_woodland.bonus = "concealment_p1"
 	self.weapon_skins.serbu_woodland.reserve_quality = true
-	self.weapon_skins.serbu_woodland.texture_bundle_folder = "cash/safes/sputnik"
+	self.weapon_skins.serbu_woodland.texture_bundle_folder = "sputnik"
 	self.weapon_skins.serbu_woodland.base_gradient = Idstring("units/payday2_cash/safes/sputnik/base_gradient/base_sput_001_df")
 	self.weapon_skins.p90_woodland = {
 		name_id = "bm_wskn_p90_woodland",
@@ -20,7 +20,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/sputnik",
+		texture_bundle_folder = "sputnik",
 		base_gradient = Idstring("units/payday2_cash/safes/sputnik/base_gradient/base_sput_004_df"),
 		pattern_tweak = Vector3(6.35822, 0, 0),
 		pattern_pos = Vector3(0.826616, -0.375387, 0),
@@ -59,7 +59,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "concealment_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/sputnik",
+		texture_bundle_folder = "sputnik",
 		base_gradient = Idstring("units/payday2_cash/safes/sputnik/base_gradient/base_sput_001_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/shared/pattern_gradient/gradient_shared_004_df"),
 		pattern = Idstring("units/payday2_cash/safes/sputnik/pattern/pattern_pixel_camo_df"),
@@ -73,7 +73,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/sputnik",
+		texture_bundle_folder = "sputnik",
 		base_gradient = Idstring("units/payday2_cash/safes/shared/base_gradient/base_shared_001_df"),
 		pattern_tweak = Vector3(5.26115, 0, 2),
 		pattern_pos = Vector3(-1.17618, -0.715976, 0),
@@ -94,7 +94,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/sputnik",
+		texture_bundle_folder = "sputnik",
 		base_gradient = Idstring("units/payday2_cash/safes/sputnik/base_gradient/base_sput_005_df"),
 		parts = {
 			wpn_fps_pis_ppk_body_standard = {
@@ -127,7 +127,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "common",
 		bonus = "concealment_p1",
-		texture_bundle_folder = "cash/safes/sputnik",
+		texture_bundle_folder = "sputnik",
 		base_gradient = Idstring("units/payday2_cash/safes/shared/base_gradient/base_shared_002_df"),
 		parts = {
 			wpn_fps_pis_judge_body_standard = {
@@ -154,7 +154,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "concealment_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/sputnik",
+		texture_bundle_folder = "sputnik",
 		base_gradient = Idstring("units/payday2_cash/safes/shared/base_gradient/base_shared_003_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/shared/pattern_gradient/gradient_shared_009_df"),
 		pattern = Idstring("units/payday2_cash/safes/sputnik/pattern/pattern_flag_stripes_df"),
@@ -167,7 +167,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "recoil_p1",
 		base_gradient = Idstring("units/payday2_cash/safes/sputnik/base_gradient/base_sput_004_df"),
-		texture_bundle_folder = "cash/safes/sputnik",
+		texture_bundle_folder = "sputnik",
 		reserve_quality = true
 	}
 	self.weapon_skins.flamethrower_mk2_goldstripes = {
@@ -177,7 +177,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "damage_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/sputnik",
+		texture_bundle_folder = "sputnik",
 		base_gradient = Idstring("units/payday2_cash/safes/shared/base_gradient/base_shared_003_df"),
 		parts = {
 			wpn_fps_fla_mk2_mag = {
@@ -213,7 +213,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		reserve_quality = true,
 		bonus = "spread_p1",
-		texture_bundle_folder = "cash/safes/sputnik",
+		texture_bundle_folder = "sputnik",
 		base_gradient = Idstring("units/payday2_cash/safes/shared/base_gradient/base_shared_006_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/sputnik/pattern_gradient/gradient_sput_004_df"),
 		pattern = Idstring("units/payday2_cash/safes/sputnik/pattern/pattern_leopard_df"),
@@ -226,7 +226,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "rare",
 		bonus = "recoil_p1",
-		texture_bundle_folder = "cash/safes/sputnik",
+		texture_bundle_folder = "sputnik",
 		base_gradient = Idstring("units/payday2_cash/safes/sputnik/base_gradient/base_sput_001_df"),
 		parts = {
 			wpn_fps_upg_o_acog = {
@@ -298,7 +298,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "rare",
 		bonus = "total_ammo_p1",
-		texture_bundle_folder = "cash/safes/sputnik",
+		texture_bundle_folder = "sputnik",
 		base_gradient = Idstring("units/payday2_cash/safes/shared/base_gradient/base_shared_003_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/cf15/pattern_gradient/gradient_cf15_crackled_ground_df"),
 		parts = {
@@ -340,7 +340,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "concealment_p3",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/sputnik",
+		texture_bundle_folder = "sputnik",
 		base_gradient = Idstring("units/payday2_cash/safes/shared/base_gradient/base_shared_004_df"),
 		default_blueprint = {
 			"wpn_fps_pis_beretta_body_beretta",
@@ -390,7 +390,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "epic",
 		bonus = "damage_p2",
-		texture_bundle_folder = "cash/safes/sputnik",
+		texture_bundle_folder = "sputnik",
 		base_gradient = Idstring("units/payday2_cash/safes/shared/base_gradient/base_tactical_001_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/shared/pattern_gradient/pattern_gradient_camo_snow_001_df"),
 		pattern = Idstring("units/payday2_cash/safes/sputnik/pattern/pattern_wheat_df"),
@@ -451,7 +451,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "epic",
 		bonus = "spread_n1",
-		texture_bundle_folder = "cash/safes/sputnik",
+		texture_bundle_folder = "sputnik",
 		base_gradient = Idstring("units/payday2_cash/safes/shared/base_gradient/base_shared_006_df"),
 		parts = {
 			wpn_fps_shot_huntsman_b_long = {
@@ -499,7 +499,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "legendary",
 		bonus = "spread_p1",
-		texture_bundle_folder = "cash/safes/sputnik",
+		texture_bundle_folder = "sputnik",
 		unique_name_id = "bm_wskn_ak74_rodina",
 		locked = true,
 		base_gradient = Idstring("units/payday2_cash/safes/sputnik/base_gradient/base_sput_005_df"),
@@ -508,12 +508,12 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 			"wpn_fps_ass_ak_body_lowerreceiver",
 			"wpn_fps_ass_74_b_legend",
 			"wpn_fps_upg_ak_m_uspalm",
+			"wpn_fps_upg_o_cmore",
+			"wpn_fps_upg_o_ak_scopemount",
 			"wpn_upg_ak_s_legend",
 			"wpn_upg_ak_g_legend",
 			"wpn_upg_ak_fg_legend",
-			"wpn_upg_ak_fl_legend",
-			"wpn_fps_upg_o_cmore",
-			"wpn_fps_upg_o_ak_scopemount"
+			"wpn_upg_ak_fl_legend"
 		},
 		parts = {
 			wpn_fps_upg_ak_m_uspalm = {
@@ -525,6 +525,27 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 					uv_scale = Vector3(0.01, 1.12082, 0),
 					uv_offset_rot = Vector3(0.244694, 0.979251, 0),
 					pattern_gradient = Idstring("units/payday2_cash/safes/sputnik/pattern_gradient/gradient_sput_004_df")
+				}
+			},
+			wpn_fps_upg_ak_m_quad = {
+				[Idstring("mtr_quadstack"):key()] = {
+					sticker = Idstring("units/payday2_cash/safes/sputnik/sticker/sticker_russian_flag_df"),
+					uv_offset_rot = Vector3(0, 0.995251, 0),
+					uv_scale = Vector3(0.310353, 0.930124, 0.2)
+				}
+			},
+			wpn_fps_upg_ak_m_quick = {
+				[Idstring("ak74_mag"):key()] = {
+					sticker = Idstring("units/payday2_cash/safes/sputnik/sticker/sticker_russian_flag_2_df"),
+					uv_offset_rot = Vector3(0.139757, 1, 0),
+					uv_scale = Vector3(1, 1, 0.2)
+				}
+			},
+			wpn_fps_ass_74_m_standard = {
+				[Idstring("ak74_mag"):key()] = {
+					sticker = Idstring("units/payday2_cash/safes/sputnik/sticker/sticker_russian_flag_2_df"),
+					uv_offset_rot = Vector3(0.139757, 1, 0),
+					uv_scale = Vector3(1, 1, 0.2)
 				}
 			},
 			wpn_fps_ass_74_body_upperreceiver = {
@@ -539,6 +560,13 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 					sticker = Idstring("units/payday2_cash/safes/sputnik/sticker/sticker_starbomb_df"),
 					uv_scale = Vector3(4.26735, 4.69642, 1),
 					uv_offset_rot = Vector3(-0.223752, 0.977171, 0)
+				}
+			},
+			wpn_fps_upg_ak_body_upperreceiver_zenitco = {
+				[Idstring("mtr_ak_body_upperreceiver_zenitco"):key()] = {
+					uv_offset_rot = Vector3(-0.110355, 0.561504, 0),
+					sticker = Idstring("units/payday2_cash/safes/sputnik/sticker/sticker_starbomb_df"),
+					uv_scale = Vector3(2.88479, 2.85811, 1)
 				}
 			},
 			wpn_upg_ak_fg_legend = {
@@ -562,7 +590,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "total_ammo_p1",
 		base_gradient = Idstring("units/payday2_cash/safes/cf15/base_gradient/base_cf15_001_df"),
-		texture_bundle_folder = "cash/safes/cf15"
+		texture_bundle_folder = "cf15"
 	}
 	self.weapon_skins.famas_forest = {
 		name_id = "bm_wskn_famas_forest",
@@ -571,7 +599,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "common",
 		bonus = "spread_p1",
-		texture_bundle_folder = "cash/safes/cf15",
+		texture_bundle_folder = "cf15",
 		base_gradient = Idstring("units/payday2_cash/safes/shared/base_gradient/base_shared_007_df"),
 		parts = {
 			wpn_fps_ass_famas_body_standard = {
@@ -590,7 +618,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "common",
 		bonus = "recoil_p1",
-		texture_bundle_folder = "cash/safes/cf15",
+		texture_bundle_folder = "cf15",
 		base_gradient = Idstring("units/payday2_cash/safes/cf15/base_gradient/base_cf15_001_df")
 	}
 	self.weapon_skins.r93_forest = {
@@ -600,7 +628,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "common",
 		bonus = "recoil_p1",
-		texture_bundle_folder = "cash/safes/cf15",
+		texture_bundle_folder = "cf15",
 		base_gradient = Idstring("units/payday2_cash/safes/shared/base_gradient/base_shared_005_df"),
 		parts = {
 			wpn_fps_snp_r93_b_standard = {
@@ -622,7 +650,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 					pattern_gradient = Idstring("units/payday2_cash/safes/sputnik/pattern_gradient/gradient_sput_005_df")
 				}
 			},
-			wpn_fps_upg_o_shortdot = {
+			wpn_fps_upg_o_shortdot_vanilla = {
 				[Idstring("mtr_shortdot"):key()] = {
 					pattern = Idstring("units/payday2_cash/safes/cf15/pattern/fire_pattern_df"),
 					pattern_pos = Vector3(0.883854, 0.168376, 0),
@@ -646,7 +674,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "common",
 		bonus = "recoil_p1",
-		texture_bundle_folder = "cash/safes/cf15",
+		texture_bundle_folder = "cf15",
 		base_gradient = Idstring("units/payday2_cash/safes/cf15/base_gradient/base_cf15_003_df")
 	}
 	self.weapon_skins.m134_forest = {
@@ -656,7 +684,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "common",
 		bonus = "spread_p1",
-		texture_bundle_folder = "cash/safes/cf15",
+		texture_bundle_folder = "cf15",
 		base_gradient = Idstring("units/payday2_cash/safes/cf15/base_gradient/base_cf15_001_df"),
 		parts = {
 			wpn_fps_lmg_m134_body = {
@@ -676,7 +704,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_n1",
 		base_gradient = Idstring("units/payday2_cash/safes/cf15/base_gradient/base_cf15_002_df"),
-		texture_bundle_folder = "cash/safes/cf15",
+		texture_bundle_folder = "cf15",
 		reserve_quality = true
 	}
 	self.weapon_skins.new_m14_camohex = {
@@ -686,7 +714,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "recoil_p1",
 		base_gradient = Idstring("units/payday2_cash/safes/cf15/base_gradient/base_cf15_new_m14_df"),
-		texture_bundle_folder = "cash/safes/cf15",
+		texture_bundle_folder = "cf15",
 		reserve_quality = true
 	}
 	self.weapon_skins.judge_camohex = {
@@ -696,7 +724,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_n1",
 		base_gradient = Idstring("units/payday2_cash/safes/cf15/base_gradient/base_cf15_002_df"),
-		texture_bundle_folder = "cash/safes/cf15",
+		texture_bundle_folder = "cf15",
 		reserve_quality = true,
 		parts = {
 			wpn_fps_pis_judge_body_modern = {
@@ -713,7 +741,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cf15",
+		texture_bundle_folder = "cf15",
 		base_gradient = Idstring("units/payday2_cash/safes/cf15/base_gradient/base_cf15_003_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/shared/pattern_gradient/gradient_shared_001_df"),
 		pattern_tweak = Vector3(0.634393, 2.64684, 0.942682),
@@ -734,7 +762,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "rare",
 		bonus = "concealment_p2",
-		texture_bundle_folder = "cash/safes/cf15",
+		texture_bundle_folder = "cf15",
 		base_gradient = Idstring("units/payday2_cash/safes/shared/base_gradient/base_tactical_001_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/cf15/pattern_gradient/gradient_cf15_binary_df"),
 		parts = {
@@ -773,8 +801,15 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		default_blueprint = {
 			"wpn_fps_smg_p90_body_p90",
 			"wpn_fps_smg_p90_m_std",
-			"wpn_fps_smg_p90_b_ninja",
-			"wpn_fps_upg_o_eotech"
+			"wpn_fps_smg_p90_b_ninja"
+		},
+		special_blueprint = {
+			p90 = {
+				"wpn_fps_upg_o_eotech"
+			},
+			x_p90 = {
+				"wpn_upg_o_marksmansight_rear_vanilla"
+			}
 		}
 	}
 	self.weapon_skins.ak74_luxury = {
@@ -784,7 +819,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "rare",
 		bonus = "spread_p1",
-		texture_bundle_folder = "cash/safes/cf15",
+		texture_bundle_folder = "cf15",
 		base_gradient = Idstring("units/payday2_cash/safes/cf15/base_gradient/base_cf15_002_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/cf15/pattern_gradient/gradient_cf15_002_df"),
 		parts = {
@@ -845,7 +880,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "rare",
 		bonus = "recoil_p1",
-		texture_bundle_folder = "cash/safes/cf15",
+		texture_bundle_folder = "cf15",
 		base_gradient = Idstring("units/payday2_cash/safes/cf15/base_gradient/base_cf15_003_df"),
 		parts = {
 			wpn_fps_pis_ppk_g_standard = {
@@ -917,7 +952,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "total_ammo_p3",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cf15",
+		texture_bundle_folder = "cf15",
 		base_gradient = Idstring("units/payday2_cash/safes/cf15/base_gradient/base_cf15_005_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/cf15/pattern_gradient/gradient_cf15_005_df"),
 		pattern = Idstring("units/payday2_cash/safes/cf15/pattern/pattern_waves_df"),
@@ -939,7 +974,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "epic",
 		bonus = "spread_p1",
-		texture_bundle_folder = "cash/safes/cf15",
+		texture_bundle_folder = "cf15",
 		base_gradient = Idstring("units/payday2_cash/safes/cf15/base_gradient/base_cf15_002_df"),
 		pattern_tweak = Vector3(0.968283, 0, 1),
 		pattern_pos = Vector3(0.187455, -0.0510372, 0),
@@ -1023,7 +1058,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "legendary",
 		bonus = "recoil_p2",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cf15",
+		texture_bundle_folder = "cf15",
 		unique_name_id = "bm_wskn_deagle_bling",
 		locked = true,
 		base_gradient = Idstring("units/payday2_cash/safes/cf15/base_gradient/base_cf15_004_df"),
@@ -1031,7 +1066,9 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 			"wpn_fps_pis_deagle_body_standard",
 			"wpn_fps_pis_deagle_m_standard",
 			"wpn_fps_pis_deagle_b_legend",
-			"wpn_fps_pis_deagle_g_ergo"
+			"wpn_fps_pis_deagle_g_ergo",
+			"wpn_fps_pis_deagle_o_standard_front",
+			"wpn_fps_pis_deagle_o_standard_rear"
 		},
 		special_blueprint = {
 			deagle = {
@@ -1044,6 +1081,24 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 					base_gradient = Idstring("units/payday2_cash/safes/shared/base_gradient/base_tactical_001_df")
 				},
 				[Idstring("grip"):key()] = {
+					pattern = Idstring("units/payday2_cash/safes/cf15/pattern/pattern_goldcoins_df"),
+					pattern_tweak = Vector3(4.54567, 0, 1),
+					uv_scale = Vector3(2.64641, 2.64641, 1),
+					uv_offset_rot = Vector3(-0.170117, 1.01187, 4.70977),
+					pattern_gradient = Idstring("units/payday2_cash/safes/cf15/pattern_gradient/gradient_cf15_005_df")
+				}
+			},
+			wpn_fps_pis_deagle_g_standard = {
+				[Idstring("grip"):key()] = {
+					pattern = Idstring("units/payday2_cash/safes/cf15/pattern/pattern_goldcoins_df"),
+					pattern_tweak = Vector3(4.54567, 0, 1),
+					uv_scale = Vector3(2.64641, 2.64641, 1),
+					uv_offset_rot = Vector3(-0.170117, 1.01187, 4.70977),
+					pattern_gradient = Idstring("units/payday2_cash/safes/cf15/pattern_gradient/gradient_cf15_005_df")
+				}
+			},
+			wpn_fps_pis_deagle_g_bling = {
+				[Idstring("bling"):key()] = {
 					pattern = Idstring("units/payday2_cash/safes/cf15/pattern/pattern_goldcoins_df"),
 					pattern_tweak = Vector3(4.54567, 0, 1),
 					uv_scale = Vector3(2.64641, 2.64641, 1),
@@ -1099,7 +1154,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "rare",
 		bonus = "spread_p1_tem_p1",
-		texture_bundle_folder = "cash/safes/cop",
+		texture_bundle_folder = "cop",
 		base_gradient = Idstring("units/payday2_cash/safes/cop/base_gradient/base_cop_ferrar_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/cop/pattern_gradient/gradient_cop_zebrafade_df"),
 		pattern = Idstring("units/payday2_cash/safes/shared/pattern/pattern_fade_001_df"),
@@ -1188,7 +1243,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "rare",
 		bonus = "recoil_p1_tem_p1",
-		texture_bundle_folder = "cash/safes/cop",
+		texture_bundle_folder = "cop",
 		base_gradient = Idstring("units/payday2_cash/safes/shared/base_gradient/base_shared_007_df"),
 		parts = {
 			wpn_fps_pis_deagle_g_ergo = {
@@ -1239,8 +1294,12 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 			"wpn_fps_pis_deagle_co_long",
 			"wpn_fps_pis_deagle_m_extended",
 			"wpn_fps_pis_deagle_g_ergo",
-			"wpn_fps_pis_deagle_extra",
-			"wpn_upg_o_marksmansight_rear"
+			"wpn_fps_pis_deagle_extra"
+		},
+		special_blueprint = {
+			deagle = {
+				"wpn_upg_o_marksmansight_rear"
+			}
 		}
 	}
 	self.weapon_skins.p90_skullimov = {
@@ -1250,7 +1309,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "rare",
 		bonus = "spread_p1_tem_p1",
-		texture_bundle_folder = "cash/safes/cop",
+		texture_bundle_folder = "cop",
 		base_gradient = Idstring("units/payday2_cash/safes/shared/base_gradient/base_shared_003_df"),
 		uv_scale = Vector3(1.21617, 1.1685, 0),
 		uv_offset_rot = Vector3(-0.00333858, 0.836156, 0),
@@ -1293,8 +1352,12 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 			"wpn_fps_smg_p90_body_p90",
 			"wpn_fps_smg_p90_m_std",
 			"wpn_fps_smg_p90_b_long",
-			"wpn_fps_upg_o_cmore",
 			"wpn_fps_upg_ass_ns_jprifles"
+		},
+		special_blueprint = {
+			p90 = {
+				"wpn_fps_upg_o_cmore"
+			}
 		}
 	}
 	self.weapon_skins.plainsrider_skullimov = {
@@ -1304,7 +1367,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "rare",
 		bonus = "total_ammo_p3_tem_p1",
-		texture_bundle_folder = "cash/safes/cop",
+		texture_bundle_folder = "cop",
 		base_gradient = Idstring("units/payday2_cash/safes/shared/base_gradient/base_shared_004_df"),
 		uv_scale = Vector3(1.21617, 1.1685, 1),
 		uv_offset_rot = Vector3(-0.00333858, 0.836156, 0),
@@ -1334,7 +1397,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		name_id = "bm_wskn_m95_bombmatta",
 		desc_id = "bm_wskn_m95_bombmatta_desc",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cop",
+		texture_bundle_folder = "cop",
 		base_gradient = Idstring("units/payday2_cash/safes/shared/base_gradient/base_shared_002_df"),
 		pattern_tweak = Vector3(1.3439, 0, 1.04841),
 		uv_scale = Vector3(1.14466, 7.10995, 1),
@@ -1402,7 +1465,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "rare",
 		bonus = "spread_n1_tem_p1",
-		texture_bundle_folder = "cash/safes/cop",
+		texture_bundle_folder = "cop",
 		base_gradient = Idstring("units/payday2_cash/safes/shared/base_gradient/base_shared_003_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/sputnik/pattern_gradient/gradient_sput_stars_df"),
 		pattern_tweak = Vector3(2.25614, 1.45804, 2),
@@ -1450,7 +1513,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "rare",
 		bonus = "recoil_p1_tem_p1",
-		texture_bundle_folder = "cash/safes/cop",
+		texture_bundle_folder = "cop",
 		base_gradient = Idstring("units/payday2_cash/safes/cop/base_gradient/base_cop_007_df"),
 		parts = {
 			wpn_fps_snp_r93_body_wood = {
@@ -1482,7 +1545,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "rare",
 		bonus = "spread_p1_tem_p1",
-		texture_bundle_folder = "cash/safes/cop",
+		texture_bundle_folder = "cop",
 		base_gradient = Idstring("units/payday2_cash/safes/cop/base_gradient/base_cop_checker_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/shared/pattern_gradient/gradient_shared_checker_df"),
 		pattern_tweak = Vector3(0.272407, 0, 0),
@@ -1558,7 +1621,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "rare",
 		bonus = "spread_p1_tem_p1",
-		texture_bundle_folder = "cash/safes/cop",
+		texture_bundle_folder = "cop",
 		base_gradient = Idstring("units/payday2_cash/safes/cop/base_gradient/base_cop_008_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/cop/pattern_gradient/gradient_cop_smoker_df"),
 		pattern_tweak = Vector3(2.44694, 1.45804, 2),
@@ -1631,7 +1694,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "rare",
 		bonus = "spread_p1_tem_p1",
-		texture_bundle_folder = "cash/safes/cop",
+		texture_bundle_folder = "cop",
 		base_gradient = Idstring("units/payday2_cash/safes/cop/base_gradient/base_cop_006_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/cop/pattern_gradient/gradient_cop_008_df"),
 		pattern_tweak = Vector3(5.26115, 1.11338, 2),
@@ -1666,7 +1729,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "rare",
 		bonus = "spread_p1_tem_p1",
-		texture_bundle_folder = "cash/safes/cop",
+		texture_bundle_folder = "cop",
 		base_gradient = Idstring("units/payday2_cash/safes/shared/base_gradient/base_shared_003_df"),
 		parts = {
 			wpn_fps_lmg_m134_body = {
@@ -1699,7 +1762,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "rare",
 		bonus = "damage_p1_tem_p1",
-		texture_bundle_folder = "cash/safes/cop",
+		texture_bundle_folder = "cop",
 		base_gradient = Idstring("units/payday2_cash/safes/cop/base_gradient/base_cop_008_df"),
 		pattern_tweak = Vector3(2.25614, 1.45804, 2),
 		uv_scale = Vector3(1, 0.999, 1),
@@ -1739,7 +1802,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "rare",
 		bonus = "spread_p1_tem_p1",
-		texture_bundle_folder = "cash/safes/cop",
+		texture_bundle_folder = "cop",
 		base_gradient = Idstring("units/payday2_cash/safes/shared/base_gradient/base_shared_002_df"),
 		uv_scale = Vector3(0.01, 0.548726, 1),
 		parts = {
@@ -1767,7 +1830,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		reserve_quality = true,
 		bonus = "spread_p1_tem_p1",
-		texture_bundle_folder = "cash/safes/cop",
+		texture_bundle_folder = "cop",
 		base_gradient = Idstring("units/payday2_cash/safes/cop/base_gradient/base_cop_002_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/cop/pattern_gradient/gradient_cop_overkill_logo_df"),
 		pattern = Idstring("units/payday2_cash/safes/cop/pattern/pattern_flames_df"),
@@ -1829,7 +1892,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "epic",
 		bonus = "spread_p1_tem_p1",
-		texture_bundle_folder = "cash/safes/cop",
+		texture_bundle_folder = "cop",
 		default_blueprint = {
 			"wpn_fps_shot_r870_body_standard",
 			"wpn_fps_shot_r870_b_short",
@@ -1906,7 +1969,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "epic",
 		bonus = "recoil_p1_tem_p1",
-		texture_bundle_folder = "cash/safes/cop",
+		texture_bundle_folder = "cop",
 		base_gradient = Idstring("units/payday2_cash/safes/shared/base_gradient/base_shared_008_df"),
 		parts = {
 			wpn_fps_ass_m14_body_upper = {
@@ -1955,7 +2018,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "epic",
 		bonus = "concealment_p3_tem_p1",
-		texture_bundle_folder = "cash/safes/cop",
+		texture_bundle_folder = "cop",
 		base_gradient = Idstring("units/payday2_cash/safes/cop/base_gradient/base_cop_005_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/cop/pattern_gradient/gradient_cop_008_df"),
 		pattern_tweak = Vector3(1.44527, 0, 1),
@@ -2055,7 +2118,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "epic",
 		bonus = "concealment_p3_tem_p1",
-		texture_bundle_folder = "cash/safes/cop",
+		texture_bundle_folder = "cop",
 		base_gradient = Idstring("units/payday2_cash/safes/sputnik/base_gradient/base_sput_004_df"),
 		pattern_tweak = Vector3(2.25614, 1.45804, 2),
 		uv_scale = Vector3(1, 1, 0),
@@ -2117,7 +2180,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "epic",
 		bonus = "recoil_p1_tem_p1",
-		texture_bundle_folder = "cash/safes/cop",
+		texture_bundle_folder = "cop",
 		base_gradient = Idstring("units/payday2_cash/safes/cop/base_gradient/base_cop_ferrar_df"),
 		default_blueprint = {
 			"wpn_fps_snp_r93_b_standard",
@@ -2163,7 +2226,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "epic",
 		bonus = "spread_p1_tem_p1",
-		texture_bundle_folder = "cash/safes/cop",
+		texture_bundle_folder = "cop",
 		base_gradient = Idstring("units/payday2_cash/safes/cop/base_gradient/base_cop_005_df"),
 		parts = {
 			wpn_fps_upg_ak_m_quad = {
@@ -2234,7 +2297,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "epic",
 		bonus = "concealment_p3_tem_p1",
-		texture_bundle_folder = "cash/safes/cop",
+		texture_bundle_folder = "cop",
 		base_gradient = Idstring("units/payday2_cash/safes/cop/base_gradient/base_cop_008_df"),
 		parts = {
 			wpn_fps_pis_ppk_b_long = {
@@ -2265,7 +2328,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "epic",
 		bonus = "spread_p1_tem_p1",
-		texture_bundle_folder = "cash/safes/cop",
+		texture_bundle_folder = "cop",
 		base_gradient = Idstring("units/payday2_cash/safes/cop/base_gradient/base_cop_005_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/cop/pattern_gradient/gradient_cop_prisonsuit_df"),
 		pattern = Idstring("units/payday2_cash/safes/cf15/pattern/pattern_waves_df"),
@@ -2310,7 +2373,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "legendary",
 		bonus = "damage_p1_tem_p1",
-		texture_bundle_folder = "cash/safes/cop",
+		texture_bundle_folder = "cop",
 		unique_name_id = "bm_wskn_flamethrower_mk2_fire",
 		locked = true,
 		base_gradient = Idstring("units/payday2_cash/safes/shared/base_gradient/base_shared_003_df"),
@@ -2341,6 +2404,20 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 					cubemap_pattern_control = Vector3(0.1772, 0.444312, 0),
 					pattern = Idstring("units/payday2_cash/safes/cop/pattern/pattern_dragon_scales_df")
 				}
+			},
+			wpn_fps_fla_mk2_mag_rare = {
+				[Idstring("flame_fuel_can"):key()] = {
+					pattern_tweak = Vector3(4.97496, 0.1003, 1),
+					cubemap_pattern_control = Vector3(0.1772, 0.444312, 0.6),
+					pattern = Idstring("units/payday2_cash/safes/cop/pattern/pattern_dragon_scales_df")
+				}
+			},
+			wpn_fps_fla_mk2_mag_welldone = {
+				[Idstring("flame_fuel_can"):key()] = {
+					pattern_tweak = Vector3(4.97496, 0.1003, 1),
+					cubemap_pattern_control = Vector3(0.1772, 0.444312, 0.6),
+					pattern = Idstring("units/payday2_cash/safes/cop/pattern/pattern_dragon_scales_df")
+				}
 			}
 		}
 	}
@@ -2351,7 +2428,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "legendary",
 		bonus = "spread_p1_tem_p1",
-		texture_bundle_folder = "cash/safes/cop",
+		texture_bundle_folder = "cop",
 		unique_name_id = "bm_wskn_rpg7_boom",
 		locked = true,
 		base_gradient = Idstring("units/payday2_cash/safes/cop/base_gradient/base_cop_007_df"),
@@ -2408,7 +2485,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "legendary",
 		bonus = "spread_p1_tem_p1",
-		texture_bundle_folder = "cash/safes/cop",
+		texture_bundle_folder = "cop",
 		unique_name_id = "bm_wskn_m134_bulletstorm",
 		locked = true,
 		base_gradient = Idstring("units/payday2_cash/safes/cop/base_gradient/base_cop_008_df"),
@@ -2462,7 +2539,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/red",
+		texture_bundle_folder = "red",
 		base_gradient = Idstring("units/payday2_cash/safes/cf15/base_gradient/base_cf15_004_df"),
 		parts = {
 			wpn_fps_smg_p90_body_boxy = {
@@ -2479,7 +2556,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/red",
+		texture_bundle_folder = "red",
 		base_gradient = Idstring("units/payday2_cash/safes/shared/base_gradient/base_shared_007_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/red/pattern_gradient/pattern_gradient_ornaments_df"),
 		parts = {
@@ -2513,7 +2590,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/red",
+		texture_bundle_folder = "red",
 		base_gradient = Idstring("units/payday2_cash/safes/shared/base_gradient/base_shared_005_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/cf15/pattern_gradient/gradient_cf15_gold_df"),
 		pattern = Idstring("units/payday2_cash/safes/shared/pattern/pattern_stains_df"),
@@ -2527,7 +2604,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/red",
+		texture_bundle_folder = "red",
 		base_gradient = Idstring("units/payday2_cash/safes/shared/base_gradient/base_shared_003_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/cf15/pattern_gradient/gradient_cf15_gold_df"),
 		pattern = Idstring("units/payday2_cash/safes/shared/pattern/pattern_lines_df"),
@@ -2582,7 +2659,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/red",
+		texture_bundle_folder = "red",
 		base_gradient = Idstring("units/payday2_cash/safes/shared/base_gradient/base_shared_005_df")
 	}
 	self.weapon_skins.serbu_golddigger = {
@@ -2592,7 +2669,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_n1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/red",
+		texture_bundle_folder = "red",
 		base_gradient = Idstring("units/payday2_cash/safes/red/base_gradient/base_red_fleur_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/shared/pattern_gradient/gradient_shared_002_df"),
 		parts = {
@@ -2651,7 +2728,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/red",
+		texture_bundle_folder = "red",
 		base_gradient = Idstring("units/payday2_cash/safes/shared/base_gradient/base_shared_002_df"),
 		parts = {
 			wpn_fps_ass_famas_m_standard = {
@@ -2694,7 +2771,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/red",
+		texture_bundle_folder = "red",
 		base_gradient = Idstring("units/payday2_cash/safes/cf15/base_gradient/base_cf15_004_df")
 	}
 	self.weapon_skins.ppk_golddigger = {
@@ -2704,7 +2781,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/red",
+		texture_bundle_folder = "red",
 		base_gradient = Idstring("units/payday2_cash/safes/shared/base_gradient/base_shared_005_df"),
 		pattern_tweak = Vector3(5.48065, 5.50196, 1),
 		pattern_pos = Vector3(-0.007, -0.05, 0),
@@ -2756,7 +2833,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "total_ammo_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/red",
+		texture_bundle_folder = "red",
 		base_gradient = Idstring("units/payday2_cash/safes/shared/base_gradient/base_shared_004_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/red/pattern_gradient/gradient_france_df"),
 		parts = {
@@ -2780,7 +2857,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 					pattern_tweak = Vector3(0.109709, 0, 1)
 				}
 			},
-			wpn_fps_upg_o_shortdot = {
+			wpn_fps_upg_o_shortdot_vanilla = {
 				[Idstring("mtr_shortdot"):key()] = {
 					pattern_pos = Vector3(0.110979, -0.108275, 0),
 					pattern = Idstring("units/payday2_cash/safes/red/pattern/france_df"),
@@ -2823,7 +2900,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/dinner",
+		texture_bundle_folder = "dinner",
 		base_gradient = Idstring("units/payday2_cash/safes/dinner/base_gradient/base_dinner_001_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/cf15/pattern_gradient/gradient_cf15_003_df"),
 		pattern_tweak = Vector3(0.586694, 0, 1),
@@ -2864,7 +2941,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/dinner",
+		texture_bundle_folder = "dinner",
 		base_gradient = Idstring("units/payday2_cash/safes/dinner/base_gradient/base_dinner_002_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/default/pattern_gradient/gradient_default_df"),
 		parts = {
@@ -2893,7 +2970,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/dinner",
+		texture_bundle_folder = "dinner",
 		base_gradient = Idstring("units/payday2_cash/safes/shared/base_gradient/base_shared_001_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/shared/pattern_gradient/gradient_shared_017_df"),
 		pattern = Idstring("units/payday2_cash/safes/shared/pattern/pattern_stains_df"),
@@ -3010,7 +3087,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/dinner",
+		texture_bundle_folder = "dinner",
 		base_gradient = Idstring("units/payday2_cash/safes/dinner/base_gradient/base_dinner_002_df"),
 		default_blueprint = {
 			"wpn_fps_lmg_mg42_reciever",
@@ -3039,7 +3116,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "concealment_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/dinner",
+		texture_bundle_folder = "dinner",
 		base_gradient = Idstring("units/payday2_cash/safes/dinner/base_gradient/base_dinner_001_df")
 	}
 	self.weapon_skins.new_m4_bloodbath = {
@@ -3049,7 +3126,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/dinner",
+		texture_bundle_folder = "dinner",
 		base_gradient = Idstring("units/payday2_cash/safes/dinner/base_gradient/base_assault_001_df")
 	}
 	self.weapon_skins.g36_bloodbath = {
@@ -3059,7 +3136,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/dinner",
+		texture_bundle_folder = "dinner",
 		base_gradient = Idstring("units/payday2_cash/safes/dinner/base_gradient/base_assault_003_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/dinner/pattern_gradient/gradient_din_warning_df"),
 		pattern = Idstring("units/payday2_cash/safes/dinner/pattern/pattern_warning_tape_df"),
@@ -3120,7 +3197,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "damage_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/dinner",
+		texture_bundle_folder = "dinner",
 		base_gradient = Idstring("units/payday2_cash/safes/dinner/base_gradient/base_assault_002_df"),
 		pattern = Idstring("units/payday2_cash/safes/shared/pattern/pattern_stripe_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/cf15/pattern_gradient/gradient_cf15_005_df"),
@@ -3158,7 +3235,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/dinner",
+		texture_bundle_folder = "dinner",
 		base_gradient = Idstring("units/payday2_cash/safes/dinner/base_gradient/base_assault_004_df"),
 		parts = {
 			wpn_fps_pis_deagle_body_standard = {
@@ -3182,7 +3259,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/dinner",
+		texture_bundle_folder = "dinner",
 		base_gradient = Idstring("units/payday2_cash/safes/dinner/base_gradient/base_assault_002_df"),
 		parts = {
 			wpn_fps_rpg7_m_rocket = {
@@ -3209,7 +3286,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "team_exp_money_p3",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/dallas",
+		texture_bundle_folder = "dallas",
 		base_gradient = Idstring("units/payday2_cash/safes/dallas/base_gradient/base_dallas_001_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/dallas/pattern_gradient/gradient_dallas_wood_001_df"),
 		pattern = Idstring("units/payday2_cash/safes/dallas/pattern/pattern_wood_df"),
@@ -3223,7 +3300,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "common",
 		bonus = "team_exp_money_p3",
-		texture_bundle_folder = "cash/safes/dallas",
+		texture_bundle_folder = "dallas",
 		base_gradient = Idstring("units/payday2_cash/safes/dallas/base_gradient/base_dallas_003_df")
 	}
 	self.weapon_skins.famas_dallas = {
@@ -3233,7 +3310,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "common",
 		bonus = "team_exp_money_p3",
-		texture_bundle_folder = "cash/safes/dallas",
+		texture_bundle_folder = "dallas",
 		base_gradient = Idstring("units/payday2_cash/safes/dallas/base_gradient/base_dallas_002_df"),
 		parts = {
 			wpn_fps_ass_famas_body_standard = {
@@ -3272,7 +3349,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "team_exp_money_p3",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/dallas",
+		texture_bundle_folder = "dallas",
 		base_gradient = Idstring("units/payday2_cash/safes/dallas/base_gradient/base_dallas_003_df"),
 		types = {
 			magazine = {
@@ -3287,7 +3364,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "team_exp_money_p3",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/dallas",
+		texture_bundle_folder = "dallas",
 		base_gradient = Idstring("units/payday2_cash/safes/dallas/base_gradient/base_dallas_004_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/cf15/pattern_gradient/gradient_cf15_crackled_ground_df"),
 		pattern = Idstring("units/payday2_cash/safes/dallas/pattern/pattern_snakeskin_df"),
@@ -3300,7 +3377,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "common",
 		bonus = "team_exp_money_p3",
-		texture_bundle_folder = "cash/safes/dallas",
+		texture_bundle_folder = "dallas",
 		base_gradient = Idstring("units/payday2_cash/safes/dallas/base_gradient/base_dallas_002_df"),
 		pattern_tweak = Vector3(5.97663, 0, 1),
 		parts = {
@@ -3331,7 +3408,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "uncommon",
 		bonus = "team_exp_money_p3",
-		texture_bundle_folder = "cash/safes/dallas",
+		texture_bundle_folder = "dallas",
 		base_gradient = Idstring("units/payday2_cash/safes/dallas/base_gradient/base_dallas_001_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/cf15/pattern_gradient/gradient_cf15_crackled_ground_df"),
 		pattern = Idstring("units/payday2_cash/safes/dallas/pattern/pattern_snakeskin_df"),
@@ -3350,7 +3427,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "uncommon",
 		bonus = "team_exp_money_p3",
-		texture_bundle_folder = "cash/safes/dallas",
+		texture_bundle_folder = "dallas",
 		base_gradient = Idstring("units/payday2_cash/safes/dallas/base_gradient/base_dallas_003_df"),
 		parts = {
 			wpn_fps_pis_ppk_b_standard = {
@@ -3376,7 +3453,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "team_exp_money_p3",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/dallas",
+		texture_bundle_folder = "dallas",
 		base_gradient = Idstring("units/payday2_cash/safes/dallas/base_gradient/base_dallas_002_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/cf15/pattern_gradient/gradient_cf15_004_df"),
 		pattern_tweak = Vector3(1.39757, 3.15133, 1),
@@ -3402,7 +3479,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "team_exp_money_p3",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/dallas",
+		texture_bundle_folder = "dallas",
 		base_gradient = Idstring("units/payday2_cash/safes/dallas/base_gradient/base_dallas_001_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/dallas/pattern_gradient/gradient_dallas_wood_002_df"),
 		pattern = Idstring("units/payday2_cash/safes/dallas/pattern/pattern_wood_df"),
@@ -3462,7 +3539,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "rare",
 		bonus = "team_exp_money_p3",
-		texture_bundle_folder = "cash/safes/dallas",
+		texture_bundle_folder = "dallas",
 		base_gradient = Idstring("units/payday2_cash/safes/dallas/base_gradient/base_dallas_003_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/sputnik/pattern_gradient/gradient_sput_stars_df"),
 		default_blueprint = {
@@ -3519,7 +3596,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		rarity = "rare",
 		bonus = "team_exp_money_p3",
-		texture_bundle_folder = "cash/safes/dallas",
+		texture_bundle_folder = "dallas",
 		base_gradient = Idstring("units/payday2_cash/safes/shared/base_gradient/base_shared_003_df"),
 		pattern_tweak = Vector3(4.45028, 1.45804, 1),
 		parts = {
@@ -3564,7 +3641,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "team_exp_money_p3",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/dallas",
+		texture_bundle_folder = "dallas",
 		base_gradient = Idstring("units/payday2_cash/safes/dallas/base_gradient/base_dallas_003_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/sputnik/pattern_gradient/gradient_sput_stars_df"),
 		cubemap_pattern_control = Vector3(0.329836, 0.625566, 0),
@@ -3609,7 +3686,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "team_exp_money_p3",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/dallas",
+		texture_bundle_folder = "dallas",
 		base_gradient = Idstring("units/payday2_cash/safes/dallas/base_gradient/base_dallas_003_df"),
 		default_blueprint = {
 			"wpn_fps_ass_g36_m_standard",
@@ -3665,7 +3742,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "team_exp_money_p3",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/dallas",
+		texture_bundle_folder = "dallas",
 		base_gradient = Idstring("units/payday2_cash/safes/dallas/base_gradient/base_dallas_002_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/sputnik/pattern_gradient/gradient_sput_stars_df"),
 		default_blueprint = {
@@ -3728,7 +3805,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		reserve_quality = true,
 		unique_name_id = "bm_wskn_p90_dallas_sallad",
 		locked = true,
-		texture_bundle_folder = "cash/safes/dallas",
+		texture_bundle_folder = "dallas",
 		base_gradient = Idstring("units/payday2_cash/safes/dallas/base_gradient/base_dallas_005_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/dallas/pattern_gradient/gradient_dallas_wood_001_df"),
 		pattern = Idstring("units/payday2_cash/safes/shared/pattern/pattern_smoke_df"),
@@ -3757,17 +3834,18 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 			},
 			wpn_fps_upg_o_cmore = {
 				[Idstring("cmore"):key()] = {
-					sticker = Idstring("units/payday2_cash/safes/dallas/sticker/sticker_delta_df"),
+					base_gradient = Idstring("units/payday2_cash/safes/dinner/base_gradient/base_dinner_001_df"),
+					uv_offset_rot = Vector3(-0.380086, 0.584203, 0),
 					uv_scale = Vector3(7.35821, 8.93947, 0.401383),
-					uv_offset_rot = Vector3(-0.380086, 0.584203, 0)
+					sticker = Idstring("units/payday2_cash/safes/dallas/sticker/sticker_delta_df")
 				}
 			}
 		},
 		types = {
 			sight = {
-				base_gradient = Idstring("units/payday2_cash/safes/dinner/base_gradient/base_dinner_001_df"),
-				pattern = Idstring("units/payday2_cash/safes/default/pattern/pattern_default_df"),
-				pattern_gradient = Idstring("units/payday2_cash/safes/default/pattern_gradient/gradient_default_df")
+				base_gradient = Idstring("units/payday2_cash/safes/dallas/base_gradient/base_dallas_001_df"),
+				pattern_gradient = Idstring("units/payday2_cash/safes/default/pattern_gradient/gradient_default_df"),
+				pattern = Idstring("units/payday2_cash/safes/default/pattern/pattern_default_df")
 			},
 			gadget = {
 				base_gradient = Idstring("units/payday2_cash/safes/dallas/base_gradient/base_dallas_001_df"),
@@ -3783,7 +3861,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/surf",
+		texture_bundle_folder = "surf",
 		base_gradient = Idstring("units/payday2_cash/safes/surf/base_gradient/base_surf_001_df")
 	}
 	self.weapon_skins.asval_waves = {
@@ -3793,7 +3871,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/surf",
+		texture_bundle_folder = "surf",
 		base_gradient = Idstring("units/payday2_cash/safes/surf/base_gradient/base_surf_002_df"),
 		types = {
 			foregrip = {
@@ -3811,7 +3889,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/surf",
+		texture_bundle_folder = "surf",
 		base_gradient = Idstring("units/payday2_cash/safes/surf/base_gradient/base_surf_003_df")
 	}
 	self.weapon_skins.baka_waves = {
@@ -3821,7 +3899,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/surf",
+		texture_bundle_folder = "surf",
 		base_gradient = Idstring("units/payday2_cash/safes/surf/base_gradient/base_surf_005_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/surf/pattern_gradient/gradient_surf_003_df"),
 		pattern = Idstring("units/payday2_cash/safes/surf/pattern/pattern_surf_003b_df"),
@@ -3834,7 +3912,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/surf",
+		texture_bundle_folder = "surf",
 		base_gradient = Idstring("units/payday2_cash/safes/surf/base_gradient/base_surf_005_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/surf/pattern_gradient/gradient_surf_003_df"),
 		pattern = Idstring("units/payday2_cash/safes/surf/pattern/pattern_surf_003b_df"),
@@ -3848,7 +3926,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/surf",
+		texture_bundle_folder = "surf",
 		base_gradient = Idstring("units/payday2_cash/safes/surf/base_gradient/base_surf_006_df")
 	}
 	self.weapon_skins.mac10_waves = {
@@ -3858,7 +3936,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/surf",
+		texture_bundle_folder = "surf",
 		base_gradient = Idstring("units/payday2_cash/safes/surf/base_gradient/base_surf_007_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/shared/pattern_gradient/gradient_shared_009_df"),
 		pattern = Idstring("units/payday2_cash/safes/surf/pattern/pattern_surf_001_df"),
@@ -3894,7 +3972,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/surf",
+		texture_bundle_folder = "surf",
 		base_gradient = Idstring("units/payday2_cash/safes/surf/base_gradient/base_surf_008_df"),
 		parts = {
 			wpn_fps_aug_body_aug = {
@@ -3927,7 +4005,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/surf",
+		texture_bundle_folder = "surf",
 		base_gradient = Idstring("units/payday2_cash/safes/surf/base_gradient/base_surf_009_b_df"),
 		types = {
 			barrel_ext = {
@@ -3968,7 +4046,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/surf",
+		texture_bundle_folder = "surf",
 		base_gradient = Idstring("units/payday2_cash/safes/surf/base_gradient/base_surf_010_df"),
 		parts = {
 			wpn_fps_pis_1911_g_ergo = {
@@ -4009,7 +4087,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/surf",
+		texture_bundle_folder = "surf",
 		base_gradient = Idstring("units/payday2_cash/safes/surf/base_gradient/base_surf_011_df"),
 		default_blueprint = {
 			"wpn_fps_smg_polymer_body_standard",
@@ -4058,7 +4136,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/surf",
+		texture_bundle_folder = "surf",
 		base_gradient = Idstring("units/payday2_cash/safes/surf/base_gradient/base_surf_012_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/surf/pattern_gradient/gradient_surf_002_b_df"),
 		pattern = Idstring("units/payday2_cash/safes/surf/pattern/pattern_surf_003c_df"),
@@ -4090,7 +4168,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "total_ammo_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/surf",
+		texture_bundle_folder = "surf",
 		base_gradient = Idstring("units/payday2_cash/safes/surf/base_gradient/base_surf_013_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/surf/pattern_gradient/gradient_surf_001_df"),
 		pattern = Idstring("units/payday2_cash/safes/dallas/pattern/pattern_wood_df"),
@@ -4149,7 +4227,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/surf",
+		texture_bundle_folder = "surf",
 		base_gradient = Idstring("units/payday2_cash/safes/surf/base_gradient/base_surf_014_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/shared/pattern_gradient/gradient_shared_007_df"),
 		pattern = Idstring("units/payday2_cash/safes/surf/pattern/pattern_surf_001_df"),
@@ -4272,11 +4350,11 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_g22c_waves = {
 		name_id = "bm_wskn_x_g22c_waves",
 		desc_id = "bm_wskn_x_g22c_waves_desc",
-		weapon_id = "x_g22c",
+		weapon_id = "g22c",
 		rarity = "epic",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/surf",
+		texture_bundle_folder = "surf",
 		base_gradient = Idstring("units/payday2_cash/safes/surf/base_gradient/base_surf_015_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/surf/pattern_gradient/gradient_surf_005_df"),
 		pattern = Idstring("units/payday2_cash/safes/surf/pattern/pattern_surf_002b_df"),
@@ -4322,7 +4400,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "legendary",
 		bonus = "spread_n1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/surf",
+		texture_bundle_folder = "surf",
 		unique_name_id = "bm_wskn_r870_waves",
 		locked = true,
 		base_gradient = Idstring("units/payday2_cash/safes/surf/base_gradient/base_surf_017_df"),
@@ -4379,7 +4457,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "total_ammo_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/flake",
+		texture_bundle_folder = "flake",
 		base_gradient = Idstring("units/payday2_cash/safes/flake/base_gradient/base_flake_001_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/flake/pattern_gradient/flake_pattern_gradient_01_df"),
 		pattern = Idstring("units/payday2_cash/safes/flake/pattern/flake_pattern_01_df"),
@@ -4401,7 +4479,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/flake",
+		texture_bundle_folder = "flake",
 		base_gradient = Idstring("units/payday2_cash/safes/flake/base_gradient/base_flake_002_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/flake/pattern_gradient/flake_pattern_gradient_01_df"),
 		pattern = Idstring("units/payday2_cash/safes/flake/pattern/flake_pattern_01_df"),
@@ -4415,7 +4493,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/flake",
+		texture_bundle_folder = "flake",
 		base_gradient = Idstring("units/payday2_cash/safes/flake/base_gradient/base_flake_003_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/flake/pattern_gradient/gradient_flake_003b_df"),
 		pattern = Idstring("units/payday2_cash/safes/flake/pattern/flake_pattern_03_df"),
@@ -4436,7 +4514,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/flake",
+		texture_bundle_folder = "flake",
 		base_gradient = Idstring("units/payday2_cash/safes/flake/base_gradient/base_flake_004_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/flake/pattern_gradient/gradient_flake_002_df"),
 		pattern = Idstring("units/payday2_cash/safes/flake/pattern/pattern_xmasknit_01_df"),
@@ -4473,11 +4551,11 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_b92fs_ginger = {
 		name_id = "bm_wskn_x_b92fs_ginger",
 		desc_id = "bm_wskn_x_b92fs_ginger_desc",
-		weapon_id = "x_b92fs",
+		weapon_id = "b92fs",
 		rarity = "uncommon",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/flake",
+		texture_bundle_folder = "flake",
 		base_gradient = Idstring("units/payday2_cash/safes/flake/base_gradient/base_flake_005_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/flake/pattern_gradient/gradient_flake_001_df"),
 		pattern = Idstring("units/payday2_cash/safes/flake/pattern/pattern_xmasknit_02_df"),
@@ -4539,7 +4617,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_n1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/flake",
+		texture_bundle_folder = "flake",
 		base_gradient = Idstring("units/payday2_cash/safes/flake/base_gradient/base_flake_006_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/flake/pattern_gradient/gradient_flake_002_df"),
 		pattern = Idstring("units/payday2_cash/safes/flake/pattern/pattern_xmasknit_02_df"),
@@ -4598,7 +4676,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/flake",
+		texture_bundle_folder = "flake",
 		base_gradient = Idstring("units/payday2_cash/safes/flake/base_gradient/base_flake_003b_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/flake/pattern_gradient/gradient_flake_003b_df"),
 		pattern = Idstring("units/payday2_cash/safes/flake/pattern/flake_pattern_09_df"),
@@ -4627,7 +4705,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/flake",
+		texture_bundle_folder = "flake",
 		base_gradient = Idstring("units/payday2_cash/safes/flake/base_gradient/base_flake_008_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/flake/pattern_gradient/gradient_flake_002_df"),
 		pattern = Idstring("units/payday2_cash/safes/flake/pattern/pattern_xmasknit_02_df"),
@@ -4739,7 +4817,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/flake",
+		texture_bundle_folder = "flake",
 		base_gradient = Idstring("units/payday2_cash/safes/flake/base_gradient/base_flake_009_df"),
 		pattern = Idstring("units/payday2_cash/safes/flake/pattern/flake_pattern_01_df"),
 		pattern_tweak = Vector3(0.825187, 0, 0),
@@ -4801,7 +4879,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/flake",
+		texture_bundle_folder = "flake",
 		base_gradient = Idstring("units/payday2_cash/safes/flake/base_gradient/base_flake_010_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/flake/pattern_gradient/flake_pattern_gradient_01_df"),
 		pattern = Idstring("units/payday2_cash/safes/flake/pattern/flake_pattern_01_df"),
@@ -4879,11 +4957,11 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_1911_ginger = {
 		name_id = "bm_wskn_x_1911_ginger",
 		desc_id = "bm_wskn_x_1911_ginger_desc",
-		weapon_id = "x_1911",
+		weapon_id = "colt_1911",
 		rarity = "legendary",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/flake",
+		texture_bundle_folder = "flake",
 		unique_name_id = "bm_wskn_x_1911_ginger",
 		locked = true,
 		base_gradient = Idstring("units/payday2_cash/safes/flake/base_gradient/base_flake_005_b_df"),
@@ -4892,11 +4970,27 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 			"wpn_fps_pis_1911_fl_legendary",
 			"wpn_fps_pis_1911_body_standard",
 			"wpn_fps_pis_1911_b_long",
-			"wpn_fps_pis_1911_o_long",
 			"wpn_fps_pis_1911_m_standard"
+		},
+		types = {
+			barrel_ext = {
+				sticker = Idstring("units/payday2_cash/safes/flake/sticker/flake_sticker_swirl_df"),
+				pattern = Idstring("units/payday2_cash/safes/flake/pattern/flake_pattern_04_df"),
+				base_gradient = Idstring("units/payday2_cash/safes/flake/base_gradient/base_flake_003_df"),
+				uv_offset_rot = Vector3(-0.146434, 1.01741, 0),
+				pattern_pos = Vector3(0.301932, 0, 0),
+				uv_scale = Vector3(1.78827, 2.88479, 1),
+				pattern_tweak = Vector3(1.06368, 0, 1),
+				pattern_gradient = Idstring("units/payday2_cash/safes/flake/pattern_gradient/pattern_gradient_001_df")
+			}
 		},
 		parts = {
 			wpn_fps_pis_1911_o_long = {
+				[Idstring("sights"):key()] = {
+					base_gradient = Idstring("units/payday2_cash/safes/flake/base_gradient/base_flake_003_df")
+				}
+			},
+			wpn_fps_pis_1911_o_standard = {
 				[Idstring("sights"):key()] = {
 					base_gradient = Idstring("units/payday2_cash/safes/flake/base_gradient/base_flake_003_df")
 				}
@@ -4913,6 +5007,33 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 					pattern_gradient = Idstring("units/payday2_cash/safes/flake/pattern_gradient/pattern_gradient_001_df")
 				},
 				[Idstring("barrel_vented"):key()] = {
+					base_gradient = Idstring("units/payday2_cash/safes/flake/base_gradient/base_flake_003_df")
+				}
+			},
+			wpn_fps_pis_1911_b_vented = {
+				[Idstring("slide_vented"):key()] = {
+					sticker = Idstring("units/payday2_cash/safes/flake/sticker/flake_sticker_swirl_df"),
+					pattern = Idstring("units/payday2_cash/safes/flake/pattern/flake_pattern_04_df"),
+					base_gradient = Idstring("units/payday2_cash/safes/flake/base_gradient/base_flake_003_df"),
+					uv_offset_rot = Vector3(-0.146434, 1.01741, 0),
+					pattern_pos = Vector3(0.301932, 0, 0),
+					uv_scale = Vector3(1.78827, 2.88479, 1),
+					pattern_tweak = Vector3(1.06368, 0, 1),
+					pattern_gradient = Idstring("units/payday2_cash/safes/flake/pattern_gradient/pattern_gradient_001_df")
+				}
+			},
+			wpn_fps_pis_1911_b_standard = {
+				[Idstring("slide"):key()] = {
+					sticker = Idstring("units/payday2_cash/safes/flake/sticker/flake_sticker_swirl_df"),
+					pattern = Idstring("units/payday2_cash/safes/flake/pattern/flake_pattern_04_df"),
+					base_gradient = Idstring("units/payday2_cash/safes/flake/base_gradient/base_flake_003_df"),
+					uv_offset_rot = Vector3(-0.146434, 1.01741, 0),
+					pattern_pos = Vector3(0.301932, 0, 0),
+					uv_scale = Vector3(1.78827, 2.88479, 1),
+					pattern_tweak = Vector3(1.06368, 0, 1),
+					pattern_gradient = Idstring("units/payday2_cash/safes/flake/pattern_gradient/pattern_gradient_001_df")
+				},
+				[Idstring("barrel"):key()] = {
 					base_gradient = Idstring("units/payday2_cash/safes/flake/base_gradient/base_flake_003_df")
 				}
 			},
@@ -4943,7 +5064,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/bah",
+		texture_bundle_folder = "bah",
 		base_gradient = Idstring("units/payday2_cash/safes/bah/base_gradient/base_bah_001_df"),
 		parts = {
 			wpn_fps_m4_uupg_m_std_vanilla = {
@@ -5001,7 +5122,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/bah",
+		texture_bundle_folder = "bah",
 		base_gradient = Idstring("units/payday2_cash/safes/bah/base_gradient/base_bah_002_df"),
 		parts = {
 			wpn_fps_snp_wa2000_g_standard = {
@@ -5011,7 +5132,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 					uv_offset_rot = Vector3(0.178376, -0.413546, 0)
 				}
 			},
-			wpn_fps_upg_o_shortdot = {
+			wpn_fps_upg_o_shortdot_vanilla = {
 				[Idstring("mtr_shortdot"):key()] = {
 					base_gradient = Idstring("units/payday2_cash/safes/bah/base_gradient/base_bah_002_b_df")
 				}
@@ -5052,7 +5173,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "concealment_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/bah",
+		texture_bundle_folder = "bah",
 		base_gradient = Idstring("units/payday2_cash/safes/bah/base_gradient/base_bah_003_df"),
 		pattern_pos = Vector3(0, 0.0157406, 0),
 		parts = {
@@ -5099,11 +5220,11 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_g22c_baaah = {
 		name_id = "bm_wskn_x_g22c_baaah",
 		desc_id = "bm_wskn_x_g22c_baaah_desc",
-		weapon_id = "x_g22c",
+		weapon_id = "g22c",
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/bah",
+		texture_bundle_folder = "bah",
 		base_gradient = Idstring("units/payday2_cash/safes/bah/base_gradient/base_bah_004_df"),
 		parts = {
 			wpn_fps_pis_g18c_g_ergo = {
@@ -5139,7 +5260,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/bah",
+		texture_bundle_folder = "bah",
 		base_gradient = Idstring("units/payday2_cash/safes/bah/base_gradient/base_bah_005_df"),
 		parts = {
 			wpn_fps_pis_usp_b_expert = {
@@ -5181,7 +5302,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/bah",
+		texture_bundle_folder = "bah",
 		base_gradient = Idstring("units/payday2_cash/safes/bah/base_gradient/base_bah_006_df"),
 		parts = {
 			wpn_fps_smg_polymer_fg_standard = {
@@ -5223,7 +5344,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/bah",
+		texture_bundle_folder = "bah",
 		base_gradient = Idstring("units/payday2_cash/safes/bah/base_gradient/base_bah_007_df"),
 		parts = {
 			wpn_fps_ass_l85a2_m_emag = {
@@ -5320,7 +5441,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/bah",
+		texture_bundle_folder = "bah",
 		base_gradient = Idstring("units/payday2_cash/safes/bah/base_gradient/base_bah_008_df"),
 		default_blueprint = {
 			"wpn_fps_lmg_m249_body_standard",
@@ -5452,11 +5573,11 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_1911_baaah = {
 		name_id = "bm_wskn_x_1911_baaah",
 		desc_id = "bm_wskn_x_1911_baaah_desc",
-		weapon_id = "x_1911",
+		weapon_id = "colt_1911",
 		rarity = "rare",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/bah",
+		texture_bundle_folder = "bah",
 		base_gradient = Idstring("units/payday2_cash/safes/bah/base_gradient/base_bah_009_df"),
 		default_blueprint = {
 			"wpn_fps_pis_1911_body_standard",
@@ -5501,7 +5622,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "concealment_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/bah",
+		texture_bundle_folder = "bah",
 		base_gradient = Idstring("units/payday2_cash/safes/bah/base_gradient/base_bah_010_df"),
 		default_blueprint = {
 			"wpn_fps_sho_ksg_body_standard",
@@ -5571,7 +5692,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "legendary",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/bah",
+		texture_bundle_folder = "bah",
 		unique_name_id = "bm_wskn_model70_baaah",
 		locked = true,
 		base_gradient = Idstring("units/payday2_cash/safes/dallas/base_gradient/base_dallas_003_df"),
@@ -5635,7 +5756,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/pack",
+		texture_bundle_folder = "pack",
 		base_gradient = Idstring("units/payday2_cash/safes/pack/base_gradient/base_pack_001_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/pack/pattern_gradient/gradient_pack_005_df"),
 		pattern = Idstring("units/payday2_cash/safes/pack/pattern/pack_pattern_005_df"),
@@ -5660,7 +5781,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "concealment_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/pack",
+		texture_bundle_folder = "pack",
 		base_gradient = Idstring("units/payday2_cash/safes/pack/base_gradient/base_pack_002_df"),
 		parts = {
 			wpn_fps_upg_o_leupold = {
@@ -5751,7 +5872,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/pack",
+		texture_bundle_folder = "pack",
 		base_gradient = Idstring("units/payday2_cash/safes/pack/base_gradient/base_pack_011_df"),
 		parts = {
 			wpn_fps_pis_1911_g_bling = {
@@ -5788,7 +5909,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/pack",
+		texture_bundle_folder = "pack",
 		base_gradient = Idstring("units/payday2_cash/safes/pack/base_gradient/base_pack_006_df"),
 		parts = {
 			wpn_fps_ass_scar_body_standard = {
@@ -5832,7 +5953,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/pack",
+		texture_bundle_folder = "pack",
 		base_gradient = Idstring("units/payday2_cash/safes/pack/base_gradient/base_pack_005_b_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/shared/pattern_gradient/gradient_shared_006_df"),
 		pattern = Idstring("units/payday2_cash/safes/pack/pattern/pack_pattern_005_df"),
@@ -5855,7 +5976,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/pack",
+		texture_bundle_folder = "pack",
 		base_gradient = Idstring("units/payday2_cash/safes/pack/base_gradient/base_pack_006_df"),
 		pattern_tweak = Vector3(1, 0, 0),
 		types = {
@@ -5877,7 +5998,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/pack",
+		texture_bundle_folder = "pack",
 		base_gradient = Idstring("units/payday2_cash/safes/pack/base_gradient/base_pack_012_df"),
 		pattern_tweak = Vector3(0, 0, 1),
 		pattern_pos = Vector3(0, 0.00620103, 0),
@@ -5917,7 +6038,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/pack",
+		texture_bundle_folder = "pack",
 		base_gradient = Idstring("units/payday2_cash/safes/pack/base_gradient/base_pack_005_df"),
 		types = {
 			lower_reciever = {
@@ -5946,7 +6067,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/pack",
+		texture_bundle_folder = "pack",
 		base_gradient = Idstring("units/payday2_cash/safes/pack/base_gradient/base_pack_005_df"),
 		parts = {
 			wpn_upg_ak_fg_standard = {
@@ -6037,7 +6158,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/pack",
+		texture_bundle_folder = "pack",
 		base_gradient = Idstring("units/payday2_cash/safes/pack/base_gradient/base_pack_013_df"),
 		types = {
 			gadget = {
@@ -6078,7 +6199,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/pack",
+		texture_bundle_folder = "pack",
 		base_gradient = Idstring("units/payday2_cash/safes/pack/base_gradient/base_pack_010_df"),
 		default_blueprint = {
 			"wpn_fps_ass_asval_body_standard",
@@ -6144,7 +6265,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/pack",
+		texture_bundle_folder = "pack",
 		base_gradient = Idstring("units/payday2_cash/safes/pack/base_gradient/base_pack_009_df"),
 		default_blueprint = {
 			"wpn_fps_upg_vg_ass_smg_verticalgrip",
@@ -6207,11 +6328,11 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_deagle_wolf = {
 		name_id = "bm_wskn_x_deagle_wolf",
 		desc_id = "bm_wskn_x_deagle_wolf_desc",
-		weapon_id = "x_deagle",
+		weapon_id = "deagle",
 		rarity = "rare",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/pack",
+		texture_bundle_folder = "pack",
 		base_gradient = Idstring("units/payday2_cash/safes/pack/base_gradient/base_pack_001_df"),
 		default_blueprint = {
 			"wpn_fps_pis_deagle_body_standard",
@@ -6280,7 +6401,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/pack",
+		texture_bundle_folder = "pack",
 		base_gradient = Idstring("units/payday2_cash/safes/pack/base_gradient/base_pack_001_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/pack/pattern_gradient/gradient_pack_001_df"),
 		pattern = Idstring("units/payday2_cash/safes/pack/pattern/pack_pattern_005_df"),
@@ -6339,7 +6460,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/pack",
+		texture_bundle_folder = "pack",
 		base_gradient = Idstring("units/payday2_cash/safes/pack/base_gradient/base_pack_011_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/cop/pattern_gradient/gradient_cop_004_df"),
 		pattern = Idstring("units/payday2_cash/safes/pack/pattern/pack_pattern_003_df"),
@@ -6393,7 +6514,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "legendary",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/pack",
+		texture_bundle_folder = "pack",
 		unique_name_id = "bm_wskn_par_wolf",
 		locked = true,
 		base_gradient = Idstring("units/payday2_cash/safes/pack/base_gradient/base_pack_001_df"),
@@ -6475,7 +6596,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cola",
+		texture_bundle_folder = "cola",
 		base_gradient = Idstring("units/payday2_cash/safes/cola/base_gradient/base_cola_001_df"),
 		types = {
 			slide = {
@@ -6493,7 +6614,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cola",
+		texture_bundle_folder = "cola",
 		base_gradient = Idstring("units/payday2_cash/safes/cola/base_gradient/base_cola_004_df"),
 		parts = {
 			wpn_fps_smg_scorpion_body_standard = {
@@ -6525,7 +6646,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cola",
+		texture_bundle_folder = "cola",
 		base_gradient = Idstring("units/payday2_cash/safes/cola/base_gradient/base_cola_003_df"),
 		types = {
 			gadget = {
@@ -6558,7 +6679,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cola",
+		texture_bundle_folder = "cola",
 		base_gradient = Idstring("units/payday2_cash/safes/cola/base_gradient/base_cola_004_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/cola/pattern_gradient/gradient_cola_003_df"),
 		pattern = Idstring("units/payday2_cash/safes/cola/pattern/cola_pattern_012_df"),
@@ -6585,7 +6706,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cola",
+		texture_bundle_folder = "cola",
 		base_gradient = Idstring("units/payday2_cash/safes/cola/base_gradient/base_cola_005_df"),
 		parts = {
 			wpn_fps_ass_fal_fg_01 = {
@@ -6631,11 +6752,11 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_usp_cola = {
 		name_id = "bm_wskn_x_usp_cola",
 		desc_id = "bm_wskn_x_usp_cola_desc",
-		weapon_id = "x_usp",
+		weapon_id = "usp",
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cola",
+		texture_bundle_folder = "cola",
 		base_gradient = Idstring("units/payday2_cash/safes/cola/base_gradient/base_cola_006_df"),
 		types = {
 			magazine = {
@@ -6664,7 +6785,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cola",
+		texture_bundle_folder = "cola",
 		base_gradient = Idstring("units/payday2_cash/safes/cola/base_gradient/base_cola_007_df"),
 		parts = {
 			wpn_fps_shot_m37_fg_standard = {
@@ -6718,7 +6839,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cola",
+		texture_bundle_folder = "cola",
 		base_gradient = Idstring("units/payday2_cash/safes/cola/base_gradient/base_cola_008_df"),
 		parts = {
 			wpn_fps_pis_sparrow_body_941 = {
@@ -6771,7 +6892,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cola",
+		texture_bundle_folder = "cola",
 		base_gradient = Idstring("units/payday2_cash/safes/cola/base_gradient/base_cola_009_df"),
 		pattern_tweak = Vector3(2.26314, 0, 1),
 		parts = {
@@ -6875,7 +6996,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "total_ammo_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cola",
+		texture_bundle_folder = "cola",
 		base_gradient = Idstring("units/payday2_cash/safes/cola/base_gradient/base_cola_010_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/cola/pattern_gradient/gradient_cola_003_df"),
 		pattern = Idstring("units/payday2_cash/safes/cola/pattern/cola_pattern_006_df"),
@@ -6928,7 +7049,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cola",
+		texture_bundle_folder = "cola",
 		base_gradient = Idstring("units/payday2_cash/safes/cola/base_gradient/base_cola_011_df"),
 		default_blueprint = {
 			"wpn_fps_pis_hs2000_body_standard",
@@ -6993,7 +7114,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cola",
+		texture_bundle_folder = "cola",
 		base_gradient = Idstring("units/payday2_cash/safes/cola/base_gradient/base_cola_012_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/cola/pattern_gradient/gradient_cola_003_df"),
 		pattern = Idstring("units/payday2_cash/safes/cola/pattern/cola_pattern_010_df"),
@@ -7091,7 +7212,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cola",
+		texture_bundle_folder = "cola",
 		base_gradient = Idstring("units/payday2_cash/safes/cola/base_gradient/base_cola_013_e_df"),
 		default_blueprint = {
 			"wpn_fps_ass_g3_b_long",
@@ -7193,7 +7314,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cola",
+		texture_bundle_folder = "cola",
 		base_gradient = Idstring("units/payday2_cash/safes/cola/base_gradient/base_cola_014_df"),
 		default_blueprint = {
 			"wpn_fps_shot_b682_body_standard",
@@ -7271,7 +7392,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "concealment_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cola",
+		texture_bundle_folder = "cola",
 		base_gradient = Idstring("units/payday2_cash/safes/cola/base_gradient/base_cola_015_df"),
 		types = {
 			stock = {
@@ -7301,7 +7422,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "legendary",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cola",
+		texture_bundle_folder = "cola",
 		unique_name_id = "bm_wskn_m16_cola",
 		locked = true,
 		base_gradient = Idstring("units/payday2_cash/safes/cola/base_gradient/base_cola_016_df"),
@@ -7407,7 +7528,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "concealment_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/burn",
+		texture_bundle_folder = "burn",
 		base_gradient = Idstring("units/payday2_cash/safes/burn/base_gradient/base_burn_001_df"),
 		pattern = Idstring("units/payday2_cash/safes/burn/pattern/burn_pattern_001_df"),
 		pattern_tweak = Vector3(2.82853, 1.57791, 1),
@@ -7440,7 +7561,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/burn",
+		texture_bundle_folder = "burn",
 		base_gradient = Idstring("units/payday2_cash/safes/burn/base_gradient/base_burn_002_df"),
 		pattern = Idstring("units/payday2_cash/safes/burn/pattern/burn_pattern_001_df"),
 		pattern_tweak = Vector3(4.16408, 0, 1),
@@ -7486,7 +7607,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/burn",
+		texture_bundle_folder = "burn",
 		base_gradient = Idstring("units/payday2_cash/safes/burn/base_gradient/base_burn_003_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/cola/pattern_gradient/gradient_cola_003_df"),
 		pattern = Idstring("units/payday2_cash/safes/burn/pattern/burn_pattern_001_df"),
@@ -7542,7 +7663,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/burn",
+		texture_bundle_folder = "burn",
 		base_gradient = Idstring("units/payday2_cash/safes/burn/base_gradient/base_burn_004_df"),
 		parts = {
 			wpn_fps_smg_mp9_s_fold = {
@@ -7605,7 +7726,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/burn",
+		texture_bundle_folder = "burn",
 		base_gradient = Idstring("units/payday2_cash/safes/burn/base_gradient/base_burn_005_df"),
 		types = {
 			slide = {
@@ -7638,7 +7759,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "total_ammo_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/burn",
+		texture_bundle_folder = "burn",
 		base_gradient = Idstring("units/payday2_cash/safes/burn/base_gradient/base_burn_006_df"),
 		types = {
 			lower_reciever = {
@@ -7662,7 +7783,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/burn",
+		texture_bundle_folder = "burn",
 		base_gradient = Idstring("units/payday2_cash/safes/burn/base_gradient/base_burn_007_df"),
 		parts = {
 			wpn_fps_sho_ben_s_solid = {
@@ -7733,7 +7854,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "concealment_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/burn",
+		texture_bundle_folder = "burn",
 		base_gradient = Idstring("units/payday2_cash/safes/burn/base_gradient/base_burn_008_df"),
 		pattern_tweak = Vector3(1.82686, 0, 1),
 		pattern_pos = Vector3(0, 1.46578, 0),
@@ -7799,7 +7920,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/burn",
+		texture_bundle_folder = "burn",
 		base_gradient = Idstring("units/payday2_cash/safes/burn/base_gradient/base_burn_009_df"),
 		parts = {
 			wpn_fps_shot_m37_body_standard = {
@@ -7855,7 +7976,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/burn",
+		texture_bundle_folder = "burn",
 		base_gradient = Idstring("units/payday2_cash/safes/burn/base_gradient/base_burn_010_df"),
 		parts = {
 			wpn_fps_sho_s_spas12_solid = {
@@ -7932,7 +8053,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/burn",
+		texture_bundle_folder = "burn",
 		base_gradient = Idstring("units/payday2_cash/safes/burn/base_gradient/base_burn_011_df"),
 		default_blueprint = {
 			"wpn_fps_ass_fal_body_standard",
@@ -8054,16 +8175,21 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/burn",
+		texture_bundle_folder = "burn",
 		base_gradient = Idstring("units/payday2_cash/safes/burn/base_gradient/base_burn_012_df"),
 		default_blueprint = {
 			"wpn_fps_pis_g18c_body_frame",
 			"wpn_fps_pis_g18c_b_standard",
-			"wpn_fps_pis_g18c_s_stock",
 			"wpn_fps_pis_g18c_m_mag_33rnd",
 			"wpn_fps_pis_g26_g_laser",
 			"wpn_fps_upg_fl_pis_crimson",
 			"wpn_fps_upg_ns_pis_ipsccomp"
+		},
+		special_blueprint = {
+			x_g18c = {},
+			glock_18c = {
+				"wpn_fps_pis_g18c_s_stock"
+			}
 		},
 		parts = {
 			wpn_fps_pis_g18c_co_1 = {
@@ -8202,15 +8328,22 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/burn",
+		texture_bundle_folder = "burn",
 		base_gradient = Idstring("units/payday2_cash/safes/burn/base_gradient/base_burn_013_df"),
 		default_blueprint = {
 			"wpn_fps_smg_uzi_b_standard",
 			"wpn_fps_smg_uzi_body_standard",
 			"wpn_fps_smg_uzi_g_standard",
 			"wpn_fps_smg_uzi_m_standard",
-			"wpn_fps_smg_uzi_fg_rail",
-			"wpn_fps_smg_uzi_s_leather"
+			"wpn_fps_smg_uzi_fg_rail"
+		},
+		special_blueprint = {
+			x_uzi = {
+				"wpn_fps_smg_uzi_s_standard"
+			},
+			uzi = {
+				"wpn_fps_smg_uzi_s_leather"
+			}
 		},
 		parts = {
 			wpn_fps_smg_uzi_fg_standard = {
@@ -8298,7 +8431,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/burn",
+		texture_bundle_folder = "burn",
 		base_gradient = Idstring("units/payday2_cash/safes/burn/base_gradient/base_burn_014_df"),
 		default_blueprint = {
 			"wpn_fps_pis_g17_body_standard",
@@ -8426,7 +8559,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/burn",
+		texture_bundle_folder = "burn",
 		base_gradient = Idstring("units/payday2_cash/safes/burn/base_gradient/base_burn_015_df"),
 		default_blueprint = {
 			"wpn_fps_smg_scorpion_body_standard",
@@ -8499,7 +8632,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "legendary",
 		bonus = "spread_n1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/burn",
+		texture_bundle_folder = "burn",
 		unique_name_id = "bm_wskn_judge_burn",
 		locked = true,
 		base_gradient = Idstring("units/payday2_cash/safes/burn/base_gradient/base_burn_016_df"),
@@ -8507,7 +8640,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 			"wpn_fps_pis_judge_body_standard",
 			"wpn_fps_pis_judge_b_legend",
 			"wpn_fps_pis_judge_g_legend",
-			"wpn_fps_upg_a_custom"
+			"wpn_fps_upg_a_custom_free"
 		},
 		parts = {
 			wpn_fps_pis_judge_g_legend = {
@@ -8558,7 +8691,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/buck",
+		texture_bundle_folder = "buck",
 		base_gradient = Idstring("units/payday2_cash/safes/buck/base_gradient/base_buck_001_df"),
 		parts = {
 			wpn_fps_snp_wa2000_g_walnut = {
@@ -8605,7 +8738,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/buck",
+		texture_bundle_folder = "buck",
 		base_gradient = Idstring("units/payday2_cash/safes/buck/base_gradient/base_buck_002_df"),
 		parts = {
 			wpn_fps_smg_akmsu_fg_rail = {
@@ -8650,11 +8783,11 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_1911_buck = {
 		name_id = "bm_wskn_x_1911_buck",
 		desc_id = "bm_wskn_x_1911_buck_desc",
-		weapon_id = "x_1911",
+		weapon_id = "colt_1911",
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/buck",
+		texture_bundle_folder = "buck",
 		base_gradient = Idstring("units/payday2_cash/safes/buck/base_gradient/base_buck_003_df"),
 		parts = {
 			wpn_fps_upg_fl_pis_laser = {
@@ -8696,7 +8829,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/buck",
+		texture_bundle_folder = "buck",
 		base_gradient = Idstring("units/payday2_cash/safes/buck/base_gradient/base_buck_002_df"),
 		parts = {
 			wpn_fps_upg_m4_s_pts = {
@@ -8788,11 +8921,11 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_b92fs_buck = {
 		name_id = "bm_wskn_x_b92fs_buck",
 		desc_id = "bm_wskn_x_b92fs_buck_desc",
-		weapon_id = "x_b92fs",
+		weapon_id = "b92fs",
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/buck",
+		texture_bundle_folder = "buck",
 		base_gradient = Idstring("units/payday2_cash/safes/buck/base_gradient/base_buck_005_df"),
 		pattern_tweak = Vector3(1.87455, 0, 1),
 		parts = {
@@ -8845,7 +8978,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_n1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/buck",
+		texture_bundle_folder = "buck",
 		base_gradient = Idstring("units/payday2_cash/safes/buck/base_gradient/base_buck_006_df"),
 		parts = {
 			wpn_fps_upg_o_docter = {
@@ -8914,7 +9047,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/buck",
+		texture_bundle_folder = "buck",
 		base_gradient = Idstring("units/payday2_cash/safes/buck/base_gradient/base_buck_007_df"),
 		parts = {
 			wpn_fps_lmg_m249_s_modern = {
@@ -9023,7 +9156,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/buck",
+		texture_bundle_folder = "buck",
 		base_gradient = Idstring("units/payday2_cash/safes/buck/base_gradient/base_buck_008_df"),
 		parts = {
 			wpn_fps_upg_ns_pis_medium_slim = {
@@ -9082,7 +9215,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "concealment_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/buck",
+		texture_bundle_folder = "buck",
 		base_gradient = Idstring("units/payday2_cash/safes/buck/base_gradient/base_buck_010_df"),
 		parts = {
 			wpn_fps_saw_b_normal = {
@@ -9124,7 +9257,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/buck",
+		texture_bundle_folder = "buck",
 		base_gradient = Idstring("units/payday2_cash/safes/buck/base_gradient/base_buck_009_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/buck/pattern_gradient/gradient_buck_004_df"),
 		pattern = Idstring("units/payday2_cash/safes/buck/pattern/buck_pattern_007_df"),
@@ -9175,10 +9308,9 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/buck",
+		texture_bundle_folder = "buck",
 		base_gradient = Idstring("units/payday2_cash/safes/buck/base_gradient/base_buck_011_df"),
 		default_blueprint = {
-			"wpn_fps_smg_m45_s_standard",
 			"wpn_fps_smg_m45_b_green",
 			"wpn_fps_upg_ass_ns_surefire",
 			"wpn_fps_smg_m45_g_ergo",
@@ -9186,8 +9318,12 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 			"wpn_fps_smg_m45_body_green"
 		},
 		special_blueprint = {
+			x_m45 = {
+				"wpn_fps_smg_m45_s_folded_vanilla"
+			},
 			m45 = {
-				"wpn_fps_upg_o_reflex"
+				"wpn_fps_upg_o_reflex",
+				"wpn_fps_smg_m45_s_standard"
 			}
 		},
 		parts = {
@@ -9319,7 +9455,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_n1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/buck",
+		texture_bundle_folder = "buck",
 		base_gradient = Idstring("units/payday2_cash/safes/buck/base_gradient/base_buck_012_df"),
 		default_blueprint = {
 			"wpn_fps_smg_akmsu_body_lowerreceiver",
@@ -9577,7 +9713,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/buck",
+		texture_bundle_folder = "buck",
 		base_gradient = Idstring("units/payday2_cash/safes/buck/base_gradient/base_buck_013_df"),
 		default_blueprint = {
 			"wpn_fps_pis_p226_body_standard",
@@ -9632,7 +9768,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/buck",
+		texture_bundle_folder = "buck",
 		base_gradient = Idstring("units/payday2_cash/safes/buck/base_gradient/base_buck_014_df"),
 		default_blueprint = {
 			"wpn_fps_smg_mp5_body_mp5",
@@ -9825,7 +9961,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/buck",
+		texture_bundle_folder = "buck",
 		base_gradient = Idstring("units/payday2_cash/safes/buck/base_gradient/base_buck_015_df"),
 		default_blueprint = {
 			"wpn_fps_smg_thompson_body",
@@ -9900,7 +10036,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "legendary",
 		bonus = "spread_n1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/buck",
+		texture_bundle_folder = "buck",
 		unique_name_id = "bm_wskn_boot_buck",
 		locked = true,
 		base_gradient = Idstring("units/payday2_cash/safes/buck/base_gradient/base_buck_016_df"),
@@ -9924,6 +10060,18 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 				}
 			},
 			wpn_fps_sho_boot_body_standard = {
+				[Idstring("mtr_body"):key()] = {
+					sticker = Idstring("units/payday2_cash/safes/buck/sticker/buck_sticker_017_df"),
+					uv_offset_rot = Vector3(0.027582, 0.99787, 6.28319),
+					uv_scale = Vector3(2.83711, 2.83711, 0),
+					base_gradient = Idstring("units/payday2_cash/safes/buck/base_gradient/base_buck_007_df")
+				},
+				[Idstring("mtr_mech"):key()] = {
+					uv_scale = Vector3(4.7441, 6.60341, 1),
+					uv_offset_rot = Vector3(0, 1.19866, 1.57791)
+				}
+			},
+			wpn_fps_sho_boot_body_exotic = {
 				[Idstring("mtr_body"):key()] = {
 					sticker = Idstring("units/payday2_cash/safes/buck/sticker/buck_sticker_017_df"),
 					uv_offset_rot = Vector3(0.027582, 0.99787, 6.28319),
@@ -10007,7 +10155,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/same",
+		texture_bundle_folder = "same",
 		base_gradient = Idstring("units/payday2_cash/safes/same/base_gradient/base_gradient_same_001_c_df"),
 		parts = {
 			wpn_fps_m4_lower_reciever = {},
@@ -10034,7 +10182,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/same",
+		texture_bundle_folder = "same",
 		base_gradient = Idstring("units/payday2_cash/safes/same/base_gradient/base_gradient_same_002_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/same/pattern_gradient/pattern_gradient_same_002_df"),
 		pattern = Idstring("units/payday2_cash/safes/same/pattern/pattern_same_002_df")
@@ -10046,7 +10194,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "concealment_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/same",
+		texture_bundle_folder = "same",
 		base_gradient = Idstring("units/payday2_cash/safes/same/base_gradient/base_gradient_same_003_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/same/pattern_gradient/pattern_gradient_same_003_df"),
 		pattern = Idstring("units/payday2_cash/safes/same/pattern/pattern_same_003_df"),
@@ -10076,7 +10224,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/same",
+		texture_bundle_folder = "same",
 		base_gradient = Idstring("units/payday2_cash/safes/same/base_gradient/base_gradient_same_005_df"),
 		parts = {
 			wpn_fps_upg_o_rmr = {
@@ -10172,7 +10320,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/same",
+		texture_bundle_folder = "same",
 		base_gradient = "units/payday2_cash/safes/same/base_gradient/base_gradient_same_004_df",
 		parts = {
 			wpn_fps_pis_1911_body_standard = {
@@ -10239,7 +10387,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/same",
+		texture_bundle_folder = "same",
 		base_gradient = "units/payday2_cash/safes/same/base_gradient/base_gradient_same_016_b_df",
 		default_blueprint = {
 			"wpn_fps_pis_beretta_body_beretta",
@@ -10314,7 +10462,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_n1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/same",
+		texture_bundle_folder = "same",
 		parts = {
 			wpn_fps_pis_judge_body_standard = {
 				[Idstring("mtr_mech"):key()] = {
@@ -10390,7 +10538,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/same",
+		texture_bundle_folder = "same",
 		base_gradient = "units/payday2_cash/safes/same/base_gradient/base_gradient_same_007_df",
 		pattern_gradient = "units/payday2_cash/safes/same/pattern_gradient/pattern_gradient_same_007_df",
 		pattern = "units/payday2_cash/safes/same/pattern/pattern_same_007_df",
@@ -10423,7 +10571,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/same",
+		texture_bundle_folder = "same",
 		base_gradient = "units/payday2_cash/safes/same/base_gradient/base_gradient_same_008_df",
 		parts = {
 			wpn_fps_ass_ak_body_lowerreceiver = {
@@ -10463,7 +10611,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/same",
+		texture_bundle_folder = "same",
 		base_gradient = "units/payday2_cash/safes/same/base_gradient/base_gradient_same_009_df",
 		default_blueprint = {
 			"wpn_fps_ass_ak5_body_ak5",
@@ -10490,7 +10638,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/same",
+		texture_bundle_folder = "same",
 		base_gradient = "units/payday2_cash/safes/same/base_gradient/base_gradient_same_010_df",
 		types = {
 			barrel_ext = {
@@ -10534,7 +10682,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/same",
+		texture_bundle_folder = "same",
 		base_gradient = "units/payday2_cash/safes/same/base_gradient/base_gradient_same_011_df",
 		default_blueprint = {
 			"wpn_fps_snp_model70_b_standard",
@@ -10575,7 +10723,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/same",
+		texture_bundle_folder = "same",
 		base_gradient = "units/payday2_cash/safes/same/base_gradient/base_gradient_same_012_df",
 		pattern_gradient = "units/payday2_cash/safes/same/pattern_gradient/pattern_gradient_same_012_b_df",
 		cubemap_pattern_control = Vector3(0.189125, 0, 0),
@@ -10655,7 +10803,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/same",
+		texture_bundle_folder = "same",
 		base_gradient = "units/payday2_cash/safes/same/base_gradient/base_gradient_same_014_df",
 		pattern_gradient = "units/payday2_cash/safes/same/pattern_gradient/pattern_gradient_same_014_df",
 		pattern = "units/payday2_cash/safes/same/pattern/pattern_same_014_df",
@@ -10731,7 +10879,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/same",
+		texture_bundle_folder = "same",
 		base_gradient = "units/payday2_cash/safes/same/base_gradient/base_gradient_same_017_df",
 		parts = {
 			wpn_fps_lmg_par_body_standard = {
@@ -10781,7 +10929,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "legendary",
 		bonus = "spread_n1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/same",
+		texture_bundle_folder = "same",
 		unique_name_id = "bm_wskn_ksg_same",
 		locked = true,
 		base_gradient = "units/payday2_cash/safes/same/base_gradient/base_gradient_same_015_df",
@@ -10853,7 +11001,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_n1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/grunt",
+		texture_bundle_folder = "grunt",
 		base_gradient = Idstring("units/payday2_cash/safes/grunt/base_gradient/base_grunt_001_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/grunt/pattern_gradient/gradient_grunt_001_df"),
 		pattern = Idstring("units/payday2_cash/safes/grunt/pattern/grunt_pattern_001_df"),
@@ -11035,7 +11183,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/grunt",
+		texture_bundle_folder = "grunt",
 		base_gradient = Idstring("units/payday2_cash/safes/buck/base_gradient/base_buck_005_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/cf15/pattern_gradient/gradient_cf15_crime_df"),
 		pattern = Idstring("units/payday2_cash/safes/grunt/pattern/grunt_pattern_008_df"),
@@ -11098,7 +11246,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/grunt",
+		texture_bundle_folder = "grunt",
 		base_gradient = Idstring("units/payday2_cash/safes/grunt/base_gradient/base_grunt_003_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/grunt/pattern_gradient/gradient_grunt_001_df"),
 		pattern = Idstring("units/payday2_cash/safes/grunt/pattern/grunt_pattern_001_df"),
@@ -11190,7 +11338,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "concealment_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/grunt",
+		texture_bundle_folder = "grunt",
 		base_gradient = Idstring("units/payday2_cash/safes/grunt/base_gradient/base_grunt_004_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/grunt/pattern_gradient/gradient_grunt_006_df"),
 		pattern = Idstring("units/payday2_cash/safes/grunt/pattern/grunt_pattern_001_df"),
@@ -11252,7 +11400,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/grunt",
+		texture_bundle_folder = "grunt",
 		base_gradient = Idstring("units/payday2_cash/safes/grunt/base_gradient/base_grunt_005_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/grunt/pattern_gradient/gradient_grunt_010_df"),
 		pattern = Idstring("units/payday2_cash/safes/grunt/pattern/grunt_pattern_006_df"),
@@ -11347,7 +11495,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/grunt",
+		texture_bundle_folder = "grunt",
 		base_gradient = Idstring("units/payday2_cash/safes/grunt/base_gradient/base_grunt_006_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/cf15/pattern_gradient/gradient_cf15_002_df"),
 		pattern = Idstring("units/payday2_cash/safes/grunt/pattern/grunt_pattern_008_df"),
@@ -11419,7 +11567,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_n1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/grunt",
+		texture_bundle_folder = "grunt",
 		base_gradient = Idstring("units/payday2_cash/safes/grunt/base_gradient/base_grunt_007_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/grunt/pattern_gradient/gradient_grunt_004_df"),
 		pattern = Idstring("units/payday2_cash/safes/grunt/pattern/grunt_pattern_002_df"),
@@ -11511,7 +11659,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "concealment_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/grunt",
+		texture_bundle_folder = "grunt",
 		base_gradient = Idstring("units/payday2_cash/safes/grunt/base_gradient/base_grunt_008_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/pack/pattern_gradient/gradient_pack_002_df"),
 		pattern = Idstring("units/payday2_cash/safes/sputnik/pattern/pattern_pixel_camo_df"),
@@ -11616,7 +11764,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/grunt",
+		texture_bundle_folder = "grunt",
 		base_gradient = Idstring("units/payday2_cash/safes/grunt/base_gradient/base_grunt_006_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/bah/pattern_gradient/gradient_bah_001_df"),
 		pattern = Idstring("units/payday2_cash/safes/grunt/pattern/grunt_pattern_001_df"),
@@ -11697,7 +11845,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_n1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/grunt",
+		texture_bundle_folder = "grunt",
 		base_gradient = Idstring("units/payday2_cash/safes/grunt/base_gradient/base_grunt_010_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/bah/pattern_gradient/gradient_bah_002_df"),
 		pattern = Idstring("units/payday2_cash/safes/grunt/pattern/grunt_pattern_001_df"),
@@ -11774,7 +11922,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/grunt",
+		texture_bundle_folder = "grunt",
 		base_gradient = Idstring("units/payday2_cash/safes/grunt/base_gradient/base_grunt_011_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/grunt/pattern_gradient/gradient_grunt_002_df"),
 		pattern = Idstring("units/payday2_cash/safes/grunt/pattern/grunt_pattern_007_df"),
@@ -11860,7 +12008,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/grunt",
+		texture_bundle_folder = "grunt",
 		base_gradient = Idstring("units/payday2_cash/safes/pack/base_gradient/base_pack_002_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/grunt/pattern_gradient/gradient_grunt_007_df"),
 		pattern = Idstring("units/payday2_cash/safes/grunt/pattern/grunt_pattern_001_df"),
@@ -12124,11 +12272,11 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_b92fs_grunt = {
 		name_id = "bm_wskn_x_b92fs_grunt",
 		desc_id = "bm_wskn_x_b92fs_grunt_desc",
-		weapon_id = "x_b92fs",
+		weapon_id = "b92fs",
 		rarity = "rare",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/grunt",
+		texture_bundle_folder = "grunt",
 		base_gradient = Idstring("units/payday2_cash/safes/grunt/base_gradient/base_grunt_008_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/grunt/pattern_gradient/gradient_grunt_006_df"),
 		pattern = Idstring("units/payday2_cash/safes/bah/pattern/bah_pattern_002_df"),
@@ -12382,7 +12530,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/grunt",
+		texture_bundle_folder = "grunt",
 		base_gradient = Idstring("units/payday2_cash/safes/grunt/base_gradient/base_grunt_016_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/bah/pattern_gradient/gradient_bah_009_df"),
 		pattern = Idstring("units/payday2_cash/safes/grunt/pattern/grunt_pattern_008_df"),
@@ -12716,11 +12864,11 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_1911_grunt = {
 		name_id = "bm_wskn_x_1911_grunt",
 		desc_id = "bm_wskn_x_1911_grunt_desc",
-		weapon_id = "x_1911",
+		weapon_id = "colt_1911",
 		rarity = "epic",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/grunt",
+		texture_bundle_folder = "grunt",
 		base_gradient = Idstring("units/payday2_cash/safes/grunt/base_gradient/base_grunt_015_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/grunt/pattern_gradient/gradient_grunt_005_df"),
 		pattern = Idstring("units/payday2_cash/safes/grunt/pattern/grunt_pattern_008_df"),
@@ -12909,7 +13057,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "legendary",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/grunt",
+		texture_bundle_folder = "grunt",
 		unique_name_id = "bm_wskn_tecci_grunt",
 		locked = true,
 		base_gradient = Idstring("units/payday2_cash/safes/grunt/base_gradient/base_grunt_017_df"),
@@ -13000,7 +13148,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "concealment_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/lones",
+		texture_bundle_folder = "lones",
 		base_gradient = Idstring("units/payday2_cash/safes/lones/base_gradient/base_lones_001_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/lones/pattern_gradient/gradient_lones_002_df"),
 		pattern = Idstring("units/payday2_cash/safes/lones/pattern/lones_pattern_002_df"),
@@ -13062,7 +13210,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/lones",
+		texture_bundle_folder = "lones",
 		base_gradient = Idstring("units/payday2_cash/safes/lones/base_gradient/base_lones_002_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/lones/pattern_gradient/gradient_lones_001_df"),
 		pattern = Idstring("units/payday2_cash/safes/lones/pattern/lones_pattern_002_df"),
@@ -13174,7 +13322,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "concealment_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/lones",
+		texture_bundle_folder = "lones",
 		base_gradient = Idstring("units/payday2_cash/safes/lones/base_gradient/base_lones_003_df"),
 		default_blueprint = {
 			"wpn_fps_pis_judge_body_standard",
@@ -13258,11 +13406,11 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_mp5_lones = {
 		name_id = "bm_wskn_x_mp5_lones",
 		desc_id = "bm_wskn_x_mp5_lones_desc",
-		weapon_id = "x_mp5",
+		weapon_id = "new_mp5",
 		rarity = "rare",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/lones",
+		texture_bundle_folder = "lones",
 		base_gradient = Idstring("units/payday2_cash/safes/lones/base_gradient/base_lones_005_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/lones/pattern_gradient/gradient_lones_004_df"),
 		pattern = Idstring("units/payday2_cash/safes/grunt/pattern/grunt_pattern_001_df"),
@@ -13398,7 +13546,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/lones",
+		texture_bundle_folder = "lones",
 		base_gradient = Idstring("units/payday2_cash/safes/lones/base_gradient/base_lones_005_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/lones/pattern_gradient/gradient_lones_005_df"),
 		pattern_tweak = Vector3(1.77916, 2.37212, 1),
@@ -13593,7 +13741,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/lones",
+		texture_bundle_folder = "lones",
 		base_gradient = Idstring("units/payday2_cash/safes/lones/base_gradient/base_lones_006_df"),
 		default_blueprint = {
 			"wpn_fps_lmg_par_body_standard",
@@ -13665,7 +13813,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/lones",
+		texture_bundle_folder = "lones",
 		base_gradient = Idstring("units/payday2_cash/safes/lones/base_gradient/base_lones_007_df"),
 		sticker = Idstring("units/payday2_cash/safes/lones/sticker/lones_sticker_001_df"),
 		default_blueprint = {
@@ -13710,7 +13858,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "legendary",
 		bonus = "spread_n1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/lones",
+		texture_bundle_folder = "lones",
 		unique_name_id = "bm_wskn_serbu_lones",
 		locked = true,
 		base_gradient = Idstring("units/payday2_cash/safes/lones/base_gradient/base_lones_008_df"),
@@ -13785,7 +13933,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "legendary",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/lones",
+		texture_bundle_folder = "lones",
 		unique_name_id = "bm_wskn_new_m14_lones",
 		locked = true,
 		base_gradient = Idstring("units/payday2_cash/safes/lones/base_gradient/base_lones_009_df"),
@@ -13888,11 +14036,11 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_1911_smosh = {
 		name_id = "bm_wskn_x_1911_smosh",
 		desc_id = "bm_wskn_x_1911_smosh_desc",
-		weapon_id = "x_1911",
+		weapon_id = "colt_1911",
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/smosh",
+		texture_bundle_folder = "smosh",
 		base_gradient = "units/payday2_cash/safes/smosh/base_gradient/base_smosh_002_e_df",
 		parts = {
 			wpn_fps_pis_1911_co_1 = {
@@ -14000,7 +14148,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/smosh",
+		texture_bundle_folder = "smosh",
 		base_gradient = "units/payday2_cash/safes/smosh/base_gradient/base_smosh_003_df",
 		parts = {
 			wpn_fps_ass_scar_s_standard = {
@@ -14084,7 +14232,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/smosh",
+		texture_bundle_folder = "smosh",
 		base_gradient = "units/payday2_cash/safes/smosh/base_gradient/base_smosh_003_d_df",
 		parts = {
 			wpn_fps_pis_1911_body_standard = {
@@ -14152,7 +14300,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/smosh",
+		texture_bundle_folder = "smosh",
 		base_gradient = "units/payday2_cash/safes/smosh/base_gradient/base_smosh_006_b_df",
 		parts = {
 			wpn_fps_upg_ass_ns_linear = {
@@ -14236,7 +14384,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/smosh",
+		texture_bundle_folder = "smosh",
 		base_gradient = "units/payday2_cash/safes/smosh/base_gradient/base_smosh_008_df",
 		parts = {
 			wpn_fps_upg_o_rx01 = {
@@ -14538,7 +14686,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_n1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/smosh",
+		texture_bundle_folder = "smosh",
 		base_gradient = "units/payday2_cash/safes/smosh/base_gradient/base_smosh_010_df",
 		pattern_gradient = "units/payday2_cash/safes/smosh/pattern_gradient/gradient_smosh_010_df",
 		parts = {
@@ -14576,7 +14724,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "concealment_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/smosh",
+		texture_bundle_folder = "smosh",
 		base_gradient = "units/payday2_cash/safes/smosh/base_gradient/base_smosh_011_df",
 		parts = {
 			wpn_fps_gre_m32_barrel = {
@@ -14620,7 +14768,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/smosh",
+		texture_bundle_folder = "smosh",
 		base_gradient = "units/payday2_cash/safes/smosh/base_gradient/base_smosh_012_df",
 		default_blueprint = {
 			"wpn_fps_pis_hs2000_body_standard",
@@ -14724,7 +14872,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "concealment_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/smosh",
+		texture_bundle_folder = "smosh",
 		base_gradient = "units/payday2_cash/safes/smosh/base_gradient/base_smosh_013_d_df",
 		parts = {
 			wpn_fps_saw_body_speed = {
@@ -14785,7 +14933,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/smosh",
+		texture_bundle_folder = "smosh",
 		base_gradient = "units/payday2_cash/safes/smosh/base_gradient/base_smosh_015_c_df",
 		pattern_gradient = "units/payday2_cash/safes/smosh/pattern_gradient/gradient_smosh_015_d_df",
 		pattern = "units/payday2_cash/safes/smosh/pattern/smosh_pattern_015_c_df",
@@ -14898,7 +15046,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/smosh",
+		texture_bundle_folder = "smosh",
 		base_gradient = "units/payday2_cash/safes/smosh/base_gradient/base_smosh_016_df",
 		default_blueprint = {
 			"wpn_fps_pis_2006m_body_standard",
@@ -14985,7 +15133,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "legendary",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/smosh",
+		texture_bundle_folder = "smosh",
 		unique_name_id = "bm_wskn_new_raging_bull_smosh",
 		default_blueprint = {
 			"wpn_fps_pis_rage_body_standard",
@@ -15198,7 +15346,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/smosh",
+		texture_bundle_folder = "smosh",
 		base_gradient = "units/payday2_cash/safes/smosh/base_gradient/base_smosh_018_df",
 		default_blueprint = {
 			"wpn_fps_smg_polymer_body_standard",
@@ -15472,7 +15620,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/smosh",
+		texture_bundle_folder = "smosh",
 		base_gradient = "units/payday2_cash/safes/smosh/base_gradient/base_smosh_019_df",
 		parts = {
 			wpn_fps_m4_uupg_fg_rail = {
@@ -15489,7 +15637,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/smosh",
+		texture_bundle_folder = "smosh",
 		base_gradient = "units/payday2_cash/safes/smosh/base_gradient/base_smosh_020_b_df",
 		pattern_gradient = "units/payday2_cash/safes/smosh/pattern_gradient/gradient_smosh_020_df",
 		default_blueprint = {
@@ -15561,7 +15709,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "spread_n1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/smosh",
+		texture_bundle_folder = "smosh",
 		base_gradient = "units/payday2_cash/safes/smosh/base_gradient/base_smosh_021_df",
 		cubemap_pattern_control = Vector3(0.208204, 0.119962, 0),
 		default_blueprint = {
@@ -15672,7 +15820,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/sfs",
+		texture_bundle_folder = "sfs",
 		base_gradient = Idstring("units/payday2_cash/safes/sfs/base_gradient/base_sfs_004_df"),
 		cubemap_pattern_control = Vector3(0, 0.84975, 0),
 		parts = {
@@ -15694,11 +15842,11 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_akmsu_sfs = {
 		name_id = "bm_wskn_x_akmsu_sfs",
 		desc_id = "bm_wskn_x_akmsu_sfs_desc",
-		weapon_id = "x_akmsu",
+		weapon_id = "akmsu",
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/sfs",
+		texture_bundle_folder = "sfs",
 		base_gradient = Idstring("units/payday2_cash/safes/sfs/base_gradient/base_sfs_003_df"),
 		parts = {
 			wpn_fps_upg_ak_m_quad = {
@@ -15744,7 +15892,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "concealment_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/sfs",
+		texture_bundle_folder = "sfs",
 		base_gradient = Idstring("units/payday2_cash/safes/sfs/base_gradient/base_sfs_005_df"),
 		types = {
 			foregrip = {
@@ -15777,7 +15925,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/sfs",
+		texture_bundle_folder = "sfs",
 		base_gradient = Idstring("units/payday2_cash/safes/sfs/base_gradient/base_sfs_001_df"),
 		parts = {
 			wpn_fps_smg_olympic_s_adjust = {
@@ -15808,7 +15956,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/sfs",
+		texture_bundle_folder = "sfs",
 		base_gradient = Idstring("units/payday2_cash/safes/sfs/base_gradient/base_sfs_003_df")
 	}
 	self.weapon_skins.msr_sfs = {
@@ -15818,7 +15966,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/sfs",
+		texture_bundle_folder = "sfs",
 		base_gradient = Idstring("units/payday2_cash/safes/sfs/base_gradient/base_sfs_006_df"),
 		parts = {
 			wpn_fps_snp_msr_body_wood = {
@@ -15839,7 +15987,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/sfs",
+		texture_bundle_folder = "sfs",
 		base_gradient = Idstring("units/payday2_cash/safes/sfs/base_gradient/base_sfs_010_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/lones/pattern_gradient/gradient_lones_004_df"),
 		pattern = Idstring("units/payday2_cash/safes/sfs/pattern/sfs_pattern_003_df"),
@@ -15868,7 +16016,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/sfs",
+		texture_bundle_folder = "sfs",
 		base_gradient = Idstring("units/payday2_cash/safes/sfs/base_gradient/base_sfs_005_df"),
 		parts = {
 			wpn_fps_m4_upper_reciever_edge = {
@@ -15902,7 +16050,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "concealment_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/sfs",
+		texture_bundle_folder = "sfs",
 		base_gradient = Idstring("units/payday2_cash/safes/sfs/base_gradient/base_sfs_008_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/lones/pattern_gradient/gradient_lones_004_df"),
 		pattern = Idstring("units/payday2_cash/safes/sfs/pattern/sfs_pattern_003_df"),
@@ -15934,7 +16082,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_n1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/sfs",
+		texture_bundle_folder = "sfs",
 		base_gradient = Idstring("units/payday2_cash/safes/sfs/base_gradient/base_sfs_009_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/lones/pattern_gradient/gradient_lones_004_df"),
 		pattern = Idstring("units/payday2_cash/safes/sfs/pattern/sfs_pattern_003_df"),
@@ -15962,7 +16110,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/sfs",
+		texture_bundle_folder = "sfs",
 		base_gradient = Idstring("units/payday2_cash/safes/sfs/base_gradient/base_sfs_016_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/cop/pattern_gradient/gradient_cop_blurred_df"),
 		pattern = Idstring("units/payday2_cash/safes/sfs/pattern/sfs_pattern_004_df"),
@@ -16024,7 +16172,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/sfs",
+		texture_bundle_folder = "sfs",
 		base_gradient = Idstring("units/payday2_cash/safes/sfs/base_gradient/base_sfs_012_df"),
 		default_blueprint = {
 			"wpn_fps_smg_mac10_body_mac10",
@@ -16082,7 +16230,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/sfs",
+		texture_bundle_folder = "sfs",
 		base_gradient = Idstring("units/payday2_cash/safes/sfs/base_gradient/base_sfs_014_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/lones/pattern_gradient/gradient_lones_005_df"),
 		pattern = Idstring("units/payday2_cash/safes/sfs/pattern/sfs_pattern_004_df"),
@@ -16151,7 +16299,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "spread_n1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/sfs",
+		texture_bundle_folder = "sfs",
 		base_gradient = Idstring("units/payday2_cash/safes/sfs/base_gradient/base_sfs_017_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/lones/pattern_gradient/gradient_lones_004_df"),
 		pattern = Idstring("units/payday2_cash/safes/sfs/pattern/sfs_pattern_003_df"),
@@ -16203,7 +16351,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/sfs",
+		texture_bundle_folder = "sfs",
 		base_gradient = Idstring("units/payday2_cash/safes/sfs/base_gradient/base_sfs_017_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/sfs/pattern_gradient/gradient_sfs_002_df"),
 		pattern = Idstring("units/payday2_cash/safes/sfs/pattern/sfs_pattern_004_df"),
@@ -16254,7 +16402,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "legendary",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/sfs",
+		texture_bundle_folder = "sfs",
 		unique_name_id = "bm_wskn_contraband_sfs",
 		base_gradient = Idstring("units/payday2_cash/safes/sfs/base_gradient/base_sfs_017_b_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/bah/pattern_gradient/gradient_bah_001_df"),
@@ -16395,7 +16543,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/wac",
+		texture_bundle_folder = "wac",
 		base_gradient = Idstring("units/payday2_cash/safes/wac/base_gradient/base_wac_002_df"),
 		parts = {
 			wpn_fps_pis_2006m_g_bling = {
@@ -16451,7 +16599,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/wac",
+		texture_bundle_folder = "wac",
 		base_gradient = Idstring("units/payday2_cash/safes/wac/base_gradient/base_wac_006_df"),
 		sticker = Idstring("units/payday2_cash/safes/wac/sticker/wac_sticker_027_df"),
 		uv_scale = Vector3(12.8488, 11.8953, 1),
@@ -16501,7 +16649,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/wac",
+		texture_bundle_folder = "wac",
 		base_gradient = Idstring("units/payday2_cash/safes/wac/base_gradient/base_wac_003_df"),
 		pattern_tweak = Vector3(4.06869, 0, 1),
 		parts = {
@@ -16632,7 +16780,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/wac",
+		texture_bundle_folder = "wac",
 		base_gradient = Idstring("units/payday2_cash/safes/wac/base_gradient/base_wac_004_df"),
 		parts = {
 			wpn_fps_pis_g18c_m_mag_33rnd = {
@@ -16722,7 +16870,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_n1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/wac",
+		texture_bundle_folder = "wac",
 		base_gradient = Idstring("units/payday2_cash/safes/wac/base_gradient/base_wac_008_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/wac/pattern_gradient/gradient_wac_001_df"),
 		pattern = Idstring("units/payday2_cash/safes/wac/pattern/wac_pattern_001_df"),
@@ -16827,7 +16975,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/wac",
+		texture_bundle_folder = "wac",
 		base_gradient = Idstring("units/payday2_cash/safes/wac/base_gradient/base_wac_018_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/cop/pattern_gradient/gradient_cop_004_df"),
 		pattern = Idstring("units/payday2_cash/safes/grunt/pattern/grunt_pattern_006_df"),
@@ -16937,7 +17085,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_n1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/wac",
+		texture_bundle_folder = "wac",
 		base_gradient = Idstring("units/payday2_cash/safes/wac/base_gradient/base_wac_005_df"),
 		pattern_tweak = Vector3(4.54567, 0, 1),
 		cubemap_pattern_control = Vector3(0.00787038, 0, 0),
@@ -16968,7 +17116,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/wac",
+		texture_bundle_folder = "wac",
 		base_gradient = Idstring("units/payday2_cash/safes/wac/base_gradient/base_wac_009_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/wac/pattern_gradient/gradient_wac_005_df"),
 		pattern = Idstring("units/payday2_cash/safes/wac/pattern/wac_pattern_001_df"),
@@ -17115,7 +17263,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/wac",
+		texture_bundle_folder = "wac",
 		base_gradient = Idstring("units/payday2_cash/safes/wac/base_gradient/base_wac_007_df"),
 		parts = {
 			wpn_fps_upg_m4_s_mk46 = {
@@ -17248,7 +17396,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/wac",
+		texture_bundle_folder = "wac",
 		base_gradient = Idstring("units/payday2_cash/safes/wac/base_gradient/base_wac_010_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/wac/pattern_gradient/gradient_wac_001_df"),
 		pattern = Idstring("units/payday2_cash/safes/wac/pattern/wac_pattern_001_df"),
@@ -17332,7 +17480,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/wac",
+		texture_bundle_folder = "wac",
 		base_gradient = Idstring("units/payday2_cash/safes/wac/base_gradient/base_wac_011_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/wac/pattern_gradient/gradient_wac_001_df"),
 		pattern = Idstring("units/payday2_cash/safes/wac/pattern/wac_pattern_001_df"),
@@ -17485,7 +17633,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/wac",
+		texture_bundle_folder = "wac",
 		base_gradient = Idstring("units/payday2_cash/safes/wac/base_gradient/base_wac_012_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/wac/pattern_gradient/gradient_wac_005_df"),
 		pattern = Idstring("units/payday2_cash/safes/wac/pattern/wac_pattern_001_df"),
@@ -17573,7 +17721,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/wac",
+		texture_bundle_folder = "wac",
 		base_gradient = Idstring("units/payday2_cash/safes/wac/base_gradient/base_wac_013_df"),
 		pattern_tweak = Vector3(1.01598, 0, 1),
 		default_blueprint = {
@@ -17581,8 +17729,12 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 			"wpn_fps_pis_g26_body_custom",
 			"wpn_fps_pis_g26_b_custom",
 			"wpn_fps_pis_g26_m_standard",
-			"wpn_fps_upg_ns_pis_ipsccomp",
-			"wpn_fps_upg_o_rmr"
+			"wpn_fps_upg_ns_pis_ipsccomp"
+		},
+		special_blueprint = {
+			g26 = {
+				"wpn_fps_upg_o_rmr"
+			}
 		},
 		parts = {
 			wpn_fps_pis_g18c_m_mag_33rnd = {
@@ -17735,11 +17887,11 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_mp5_wac = {
 		name_id = "bm_wskn_x_mp5_wac",
 		desc_id = "bm_wskn_x_mp5_wac_desc",
-		weapon_id = "x_mp5",
+		weapon_id = "new_mp5",
 		rarity = "epic",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/wac",
+		texture_bundle_folder = "wac",
 		base_gradient = Idstring("units/payday2_cash/safes/wac/base_gradient/base_wac_016_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/wac/pattern_gradient/gradient_wac_005_df"),
 		pattern = Idstring("units/payday2_cash/safes/wac/pattern/wac_pattern_001_df"),
@@ -17821,7 +17973,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/wac",
+		texture_bundle_folder = "wac",
 		base_gradient = Idstring("units/payday2_cash/safes/wac/base_gradient/base_wac_015_df"),
 		pattern_tweak = Vector3(17.3289, 0, 1),
 		uv_scale = Vector3(1, 1, 0),
@@ -17918,11 +18070,11 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_akmsu_wac = {
 		name_id = "bm_wskn_x_akmsu_wac",
 		desc_id = "bm_wskn_x_akmsu_wac_desc",
-		weapon_id = "x_akmsu",
+		weapon_id = "akmsu",
 		rarity = "legendary",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/wac",
+		texture_bundle_folder = "wac",
 		unique_name_id = "bm_wskn_x_akmsu_wac",
 		base_gradient = Idstring("units/payday2_cash/safes/wac/base_gradient/base_wac_017_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/wac/pattern_gradient/gradient_wac_004_df"),
@@ -17932,12 +18084,12 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		default_blueprint = {
 			"wpn_fps_smg_akmsu_body_lowerreceiver",
 			"wpn_fps_ass_akm_body_upperreceiver_vanilla",
-			"wpn_fps_smg_akmsu_b_standard",
 			"wpn_fps_upg_ak_g_wgrip",
-			"wpn_fps_upg_fl_ass_peq15",
-			"wpn_fps_upg_ass_ns_surefire",
 			"wpn_fps_upg_ak_m_uspalm",
-			"wpn_fps_smg_akmsu_fg_rail"
+			"wpn_fps_smg_akmsu_fg_rail",
+			"wpn_fps_smg_akmsu_b_standard",
+			"wpn_fps_upg_fl_ass_peq15",
+			"wpn_fps_upg_ass_ns_surefire"
 		},
 		special_blueprint = {
 			akmsu = {
@@ -18145,7 +18297,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_n1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cs3",
+		texture_bundle_folder = "cs3",
 		base_gradient = "units/payday2_cash/safes/cs3/base_gradient/base_cs3_001_df",
 		parts = {
 			wpn_fps_pis_judge_body_standard = {
@@ -18182,7 +18334,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cs3",
+		texture_bundle_folder = "cs3",
 		base_gradient = "units/payday2_cash/safes/cs3/base_gradient/base_cs3_002_c_df",
 		parts = {
 			wpn_fps_smg_polymer_fg_standard = {
@@ -18276,7 +18428,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cs3",
+		texture_bundle_folder = "cs3",
 		base_gradient = "units/payday2_cash/safes/cs3/base_gradient/base_cs3_005_df",
 		parts = {
 			wpn_fps_upg_o_docter = {
@@ -18449,7 +18601,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_n1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cs3",
+		texture_bundle_folder = "cs3",
 		base_gradient = "units/payday2_cash/safes/cs3/base_gradient/base_cs3_006_df",
 		parts = {
 			wpn_fps_sho_aa12_barrel_silenced = {
@@ -18578,7 +18730,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "concealment_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cs3",
+		texture_bundle_folder = "cs3",
 		base_gradient = "units/payday2_cash/safes/cs3/base_gradient/base_cs3_008_b_df",
 		parts = {
 			wpn_fps_saw_body_speed = {
@@ -18655,7 +18807,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cs3",
+		texture_bundle_folder = "cs3",
 		base_gradient = "units/payday2_cash/safes/cs3/base_gradient/base_cs3_021_df",
 		parts = {
 			wpn_fps_snp_m95_barrel_long = {
@@ -18719,7 +18871,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "concealment_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cs3",
+		texture_bundle_folder = "cs3",
 		default_blueprint = {
 			"wpn_fps_pis_sparrow_m_standard",
 			"wpn_fps_pis_sparrow_sl_rpl",
@@ -18951,7 +19103,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "concealment_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cs3",
+		texture_bundle_folder = "cs3",
 		base_gradient = "units/payday2_cash/safes/cs3/base_gradient/base_cs3_012_df",
 		default_blueprint = {
 			"wpn_fps_snp_tti_vg_standard",
@@ -19055,7 +19207,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cs3",
+		texture_bundle_folder = "cs3",
 		base_gradient = "units/payday2_cash/safes/cs3/base_gradient/base_cs3_013_df",
 		default_blueprint = {
 			"wpn_fps_pis_rage_body_standard",
@@ -19168,7 +19320,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "legendary",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cs3",
+		texture_bundle_folder = "cs3",
 		unique_name_id = "bm_wskn_ppk_cs3",
 		base_gradient = "units/payday2_cash/safes/cs3/base_gradient/base_cs3_014_df",
 		pattern_gradient = "units/payday2_cash/safes/cs3/pattern_gradient/gradient_cs3_010_df",
@@ -19314,7 +19466,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cs3",
+		texture_bundle_folder = "cs3",
 		base_gradient = "units/payday2_cash/safes/cs3/base_gradient/base_cs3_015_df",
 		parts = {
 			wpn_fps_upg_o_rx01 = {
@@ -19591,7 +19743,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "concealment_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cs3",
+		texture_bundle_folder = "cs3",
 		base_gradient = "units/payday2_cash/safes/cs3/base_gradient/base_cs3_016_df",
 		parts = {
 			wpn_fps_bow_frankish_b_steel = {
@@ -19622,7 +19774,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "spread_n1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cs3",
+		texture_bundle_folder = "cs3",
 		base_gradient = "units/payday2_cash/safes/cs3/base_gradient/base_cs3_018_df",
 		cubemap_pattern_control = Vector3(0.001, 0.000715595, 0),
 		default_blueprint = {
@@ -19689,7 +19841,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cs3",
+		texture_bundle_folder = "cs3",
 		base_gradient = "units/payday2_cash/safes/cs3/base_gradient/base_cs3_019_df",
 		parts = {
 			wpn_fps_ass_flint_b_standard = {
@@ -19737,7 +19889,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cs3",
+		texture_bundle_folder = "cs3",
 		base_gradient = "units/payday2_cash/safes/cs3/base_gradient/base_cs3_020_df",
 		parts = {
 			wpn_fps_pis_peacemaker_m_standard = {
@@ -19784,7 +19936,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cs3",
+		texture_bundle_folder = "cs3",
 		base_gradient = Idstring("units/payday2_cash/safes/cs3/base_gradient/base_cs3_022_df"),
 		default_blueprint = {
 			"wpn_fps_m4_upper_reciever_round",
@@ -20211,7 +20363,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/mxs",
+		texture_bundle_folder = "mxs",
 		base_gradient = Idstring("units/payday2_cash/safes/mxs/base_gradient/base_mxs_001_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/mxs/pattern_gradient/gradient_mxs_001_df"),
 		pattern = Idstring("units/payday2_cash/safes/mxs/pattern/mxs_pattern_001_df"),
@@ -20249,7 +20401,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/mxs",
+		texture_bundle_folder = "mxs",
 		base_gradient = Idstring("units/payday2_cash/safes/mxs/base_gradient/base_mxs_002_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/shared/pattern_gradient/gradient_shared_002_df"),
 		pattern = Idstring("units/payday2_cash/safes/mxs/pattern/mxs_pattern_004_df"),
@@ -20296,7 +20448,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/mxs",
+		texture_bundle_folder = "mxs",
 		base_gradient = Idstring("units/payday2_cash/safes/mxs/base_gradient/base_mxs_003_b_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/bah/pattern_gradient/gradient_bah_002_df"),
 		pattern_pos = Vector3(-0.348308, 0.0920584, 0),
@@ -20327,7 +20479,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/mxs",
+		texture_bundle_folder = "mxs",
 		base_gradient = Idstring("units/payday2_cash/safes/mxs/base_gradient/base_mxs_004_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/mxs/pattern_gradient/gradient_mxs_004_df"),
 		pattern = Idstring("units/payday2_cash/safes/mxs/pattern/mxs_pattern_006_df"),
@@ -20398,7 +20550,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/mxs",
+		texture_bundle_folder = "mxs",
 		base_gradient = Idstring("units/payday2_cash/safes/mxs/base_gradient/base_mxs_006_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/mxs/pattern_gradient/gradient_mxs_005_df"),
 		pattern = Idstring("units/payday2_cash/safes/mxs/pattern/mxs_pattern_006_df"),
@@ -20420,7 +20572,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_n1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/mxs",
+		texture_bundle_folder = "mxs",
 		base_gradient = Idstring("units/payday2_cash/safes/mxs/base_gradient/base_mxs_007_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/shared/pattern_gradient/pattern_gradient_camo_snow_001_df"),
 		pattern = Idstring("units/payday2_cash/safes/mxs/pattern/mxs_pattern_006_df"),
@@ -20460,11 +20612,11 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_deagle_mxs = {
 		name_id = "bm_wskn_x_deagle_mxs",
 		desc_id = "bm_wskn_x_deagle_mxs_desc",
-		weapon_id = "x_deagle",
+		weapon_id = "deagle",
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/mxs",
+		texture_bundle_folder = "mxs",
 		base_gradient = Idstring("units/payday2_cash/safes/mxs/base_gradient/base_mxs_008_b_df"),
 		parts = {
 			wpn_fps_pis_deagle_g_standard = {
@@ -20506,7 +20658,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/mxs",
+		texture_bundle_folder = "mxs",
 		base_gradient = Idstring("units/payday2_cash/safes/mxs/base_gradient/base_mxs_001_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/bah/pattern_gradient/gradient_bah_002_df"),
 		pattern = Idstring("units/payday2_cash/safes/mxs/pattern/mxs_pattern_002_df"),
@@ -20539,7 +20691,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/mxs",
+		texture_bundle_folder = "mxs",
 		base_gradient = Idstring("units/payday2_cash/safes/mxs/base_gradient/base_mxs_011_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/mxs/pattern_gradient/gradient_mxs_006_df"),
 		pattern = Idstring("units/payday2_cash/safes/mxs/pattern/mxs_pattern_002_df"),
@@ -20612,11 +20764,11 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_chinchilla_mxs = {
 		name_id = "bm_wskn_x_chinchilla_mxs",
 		desc_id = "bm_wskn_x_chinchilla_mxs_desc",
-		weapon_id = "x_chinchilla",
+		weapon_id = "chinchilla",
 		rarity = "legendary",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/mxs",
+		texture_bundle_folder = "mxs",
 		unique_name_id = "bm_wskn_x_chinchilla_mxs",
 		base_gradient = Idstring("units/payday2_cash/safes/mxs/base_gradient/base_mxs_011_b_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/mxs/pattern_gradient/gradient_mxs_008_df"),
@@ -20732,11 +20884,11 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.jowi_mxs = {
 		name_id = "bm_wskn_jowi_mxs",
 		desc_id = "bm_wskn_jowi_mxs_desc",
-		weapon_id = "jowi",
+		weapon_id = "g26",
 		rarity = "rare",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/mxs",
+		texture_bundle_folder = "mxs",
 		base_gradient = Idstring("units/payday2_cash/safes/mxs/base_gradient/base_mxs_009_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/mxs/pattern_gradient/gradient_mxs_006_df"),
 		pattern = Idstring("units/payday2_cash/safes/mxs/pattern/mxs_pattern_002_df"),
@@ -20850,11 +21002,11 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_usp_mxs = {
 		name_id = "bm_wskn_x_usp_mxs",
 		desc_id = "bm_wskn_x_usp_mxs_desc",
-		weapon_id = "x_usp",
+		weapon_id = "usp",
 		rarity = "epic",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/mxs",
+		texture_bundle_folder = "mxs",
 		base_gradient = Idstring("units/payday2_cash/safes/mxs/base_gradient/base_mxs_012_df"),
 		default_blueprint = {
 			"wpn_fps_pis_usp_body_standard",
@@ -20955,7 +21107,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/mxs",
+		texture_bundle_folder = "mxs",
 		base_gradient = Idstring("units/payday2_cash/safes/mxs/base_gradient/base_mxs_006_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/mxs/pattern_gradient/gradient_mxs_004_df"),
 		pattern = Idstring("units/payday2_cash/safes/mxs/pattern/mxs_pattern_006_df"),
@@ -21009,7 +21161,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/mxs",
+		texture_bundle_folder = "mxs",
 		base_gradient = Idstring("units/payday2_cash/safes/mxs/base_gradient/base_mxs_013_df"),
 		default_blueprint = {
 			"wpn_fps_ass_akm_body_upperreceiver_vanilla",
@@ -21297,7 +21449,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_n1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/mxs",
+		texture_bundle_folder = "mxs",
 		base_gradient = Idstring("units/payday2_cash/safes/mxs/base_gradient/base_mxs_001_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/mxs/pattern_gradient/gradient_mxs_004_df"),
 		pattern = Idstring("units/payday2_cash/safes/mxs/pattern/mxs_pattern_006_df"),
@@ -21325,7 +21477,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/mxs",
+		texture_bundle_folder = "mxs",
 		base_gradient = Idstring("units/payday2_cash/safes/mxs/base_gradient/base_mxs_015_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/mxs/pattern_gradient/gradient_mxs_009_df"),
 		pattern = Idstring("units/payday2_cash/safes/mxs/pattern/mxs_pattern_003_df"),
@@ -21561,7 +21713,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cs4",
+		texture_bundle_folder = "cs4",
 		base_gradient = "units/payday2_cash/safes/cs4/base_gradient/base_cs4_001_df",
 		parts = {
 			wpn_fps_smg_polymer_body_standard = {
@@ -21592,7 +21744,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cs4",
+		texture_bundle_folder = "cs4",
 		base_gradient = "units/payday2_cash/safes/cs4/base_gradient/base_cs4_002_b_df",
 		parts = {
 			wpn_fps_ass_l85a2_body_standard = {
@@ -21706,7 +21858,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cs4",
+		texture_bundle_folder = "cs4",
 		base_gradient = "units/payday2_cash/safes/cs4/base_gradient/base_cs4_003_df",
 		parts = {
 			wpn_fps_upg_o_docter = {
@@ -21883,7 +22035,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cs4",
+		texture_bundle_folder = "cs4",
 		base_gradient = "units/payday2_cash/safes/cs4/base_gradient/base_cs4_004_df",
 		parts = {
 			wpn_fps_upg_ns_pis_jungle = {
@@ -22016,7 +22168,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cs4",
+		texture_bundle_folder = "cs4",
 		base_gradient = "units/payday2_cash/safes/cs4/base_gradient/base_cs4_005_b_df",
 		pattern_gradient = "units/payday2_cash/safes/cs4/pattern_gradient/gradient_cs4_005_df",
 		pattern = "units/payday2_cash/safes/cs4/pattern/cs4_pattern_005_df",
@@ -22201,7 +22353,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_n1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cs4",
+		texture_bundle_folder = "cs4",
 		base_gradient = "units/payday2_cash/safes/cs4/base_gradient/base_cs4_006_df",
 		pattern_gradient = Idstring("units/payday2_cash/safes/bah/pattern_gradient/gradient_bah_002_df"),
 		pattern = Idstring("units/payday2_cash/safes/smosh/pattern/smosh_pattern_021_b_df")
@@ -22213,7 +22365,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cs4",
+		texture_bundle_folder = "cs4",
 		base_gradient = Idstring("units/payday2_cash/safes/cs4/base_gradient/base_cs4_007_df"),
 		parts = {
 			wpn_fps_snp_wa2000_b_standard = {
@@ -22284,7 +22436,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_n1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cs4",
+		texture_bundle_folder = "cs4",
 		base_gradient = "units/payday2_cash/safes/cs4/base_gradient/base_cs4_008_df",
 		parts = {
 			wpn_fps_upg_m4_s_mk46 = {
@@ -22484,7 +22636,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cs4",
+		texture_bundle_folder = "cs4",
 		base_gradient = "units/payday2_cash/safes/cs4/base_gradient/base_cs4_010_d_df",
 		parts = {
 			wpn_fps_upg_o_docter = {
@@ -22683,7 +22835,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cs4",
+		texture_bundle_folder = "cs4",
 		default_blueprint = {
 			"wpn_fps_pis_chinchilla_body",
 			"wpn_fps_pis_chinchilla_cylinder",
@@ -22796,7 +22948,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cs4",
+		texture_bundle_folder = "cs4",
 		base_gradient = "units/payday2_cash/safes/cs4/base_gradient/base_cs4_012_b_df",
 		default_blueprint = {
 			"wpn_fps_ass_flint_b_standard",
@@ -23143,7 +23295,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cs4",
+		texture_bundle_folder = "cs4",
 		base_gradient = "units/payday2_cash/safes/cs4/base_gradient/base_cs4_013_df",
 		pattern_gradient = "units/payday2_cash/safes/cs4/pattern_gradient/gradient_cs4_013_df",
 		parts = {
@@ -23173,7 +23325,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_n1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cs4",
+		texture_bundle_folder = "cs4",
 		base_gradient = "units/payday2_cash/safes/cs4/base_gradient/base_cs4_014_df",
 		pattern_gradient = "units/payday2_cash/safes/cs4/pattern_gradient/gradient_cs4_014_df",
 		default_blueprint = {
@@ -23259,15 +23411,15 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 			wpn_fps_upg_o_aimpoint = {
 				[Idstring("aimpoint"):key()] = {
 					sticker = "units/payday2_cash/safes/cs4/sticker/cs4_sticker_014_df",
-					uv_offset_rot = Vector3(-0.246831, 1.18866, 4.79968),
-					uv_scale = Vector3(9.25889, 9.25889, 1)
+					uv_offset_rot = Vector3(0.391329, 1.38492, 4.70977),
+					uv_scale = Vector3(5.15887, 5.15887, 1)
 				}
 			},
 			wpn_fps_upg_o_aimpoint_2 = {
-				[Idstring("aimpoint"):key()] = {
+				[Idstring("aimpoint_preorder"):key()] = {
 					sticker = "units/payday2_cash/safes/cs4/sticker/cs4_sticker_014_df",
-					uv_offset_rot = Vector3(0.391329, 1.38492, 4.70977),
-					uv_scale = Vector3(5.15887, 5.15887, 1)
+					uv_offset_rot = Vector3(-0.246831, 1.18866, 4.79968),
+					uv_scale = Vector3(9.25889, 9.25889, 1)
 				}
 			},
 			wpn_fps_upg_o_t1micro = {
@@ -23332,7 +23484,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cs4",
+		texture_bundle_folder = "cs4",
 		base_gradient = "units/payday2_cash/safes/cs4/base_gradient/base_cs4_015_df",
 		default_blueprint = {
 			"wpn_fps_pis_rage_extra",
@@ -23459,7 +23611,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		unique_name_id = "bm_wskn_p90_cs4",
 		bonus = "concealment_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cs4",
+		texture_bundle_folder = "cs4",
 		base_gradient = "units/payday2_cash/safes/cs4/base_gradient/base_cs4_016_df",
 		pattern_gradient = "units/payday2_cash/safes/cs4/pattern_gradient/gradient_cs4_016_df",
 		pattern = "units/payday2_cash/safes/cs4/pattern/cs4_pattern_016_b_df",
@@ -23517,7 +23669,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cs4",
+		texture_bundle_folder = "cs4",
 		base_gradient = "units/payday2_cash/safes/cs4/base_gradient/base_cs4_019_df",
 		parts = {
 			wpn_fps_smg_mac10_body_modern = {
@@ -23557,7 +23709,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/wwt",
+		texture_bundle_folder = "wwt",
 		base_gradient = Idstring("units/payday2_cash/safes/wwt/base_gradient/base_wwt_003_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/burn/pattern_gradient/gradient_burn_005_df"),
 		pattern = Idstring("units/payday2_cash/safes/wwt/pattern/wwt_pattern_001_df"),
@@ -23652,7 +23804,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_n1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/wwt",
+		texture_bundle_folder = "wwt",
 		base_gradient = Idstring("units/payday2_cash/safes/wwt/base_gradient/base_wwt_001_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/wwt/pattern_gradient/gradient_wwt_001_df"),
 		pattern = Idstring("units/payday2_cash/safes/wwt/pattern/wwt_pattern_001_df"),
@@ -23687,7 +23839,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "total_ammo_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/wwt",
+		texture_bundle_folder = "wwt",
 		base_gradient = Idstring("units/payday2_cash/safes/wwt/base_gradient/base_wwt_002_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/wwt/pattern_gradient/gradient_wwt_001_df"),
 		pattern_tweak = Vector3(1.49297, 0, 1),
@@ -23724,7 +23876,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/wwt",
+		texture_bundle_folder = "wwt",
 		base_gradient = Idstring("units/payday2_cash/safes/wwt/base_gradient/base_wwt_005_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/ast/pattern_gradient/gradient_ast_003_df"),
 		pattern = Idstring("units/payday2_cash/safes/ast/pattern/ast_pattern_004_df"),
@@ -23764,7 +23916,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/wwt",
+		texture_bundle_folder = "wwt",
 		base_gradient = Idstring("units/payday2_cash/safes/wwt/base_gradient/base_wwt_001_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/ast/pattern_gradient/gradient_ast_001_df"),
 		pattern = Idstring("units/payday2_cash/safes/grunt/pattern/grunt_pattern_003_df"),
@@ -23793,7 +23945,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/wwt",
+		texture_bundle_folder = "wwt",
 		base_gradient = Idstring("units/payday2_cash/safes/wwt/base_gradient/base_wwt_006_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/wwt/pattern_gradient/gradient_wwt_007_df"),
 		pattern = Idstring("units/payday2_cash/safes/wwt/pattern/wwt_pattern_007_df"),
@@ -23820,7 +23972,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/wwt",
+		texture_bundle_folder = "wwt",
 		base_gradient = Idstring("units/payday2_cash/safes/wwt/base_gradient/base_wwt_008_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/ast/pattern_gradient/gradient_ast_001_df"),
 		pattern = Idstring("units/payday2_cash/safes/smosh/pattern/smosh_pattern_021_b_df"),
@@ -23907,7 +24059,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_n1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/wwt",
+		texture_bundle_folder = "wwt",
 		base_gradient = Idstring("units/payday2_cash/safes/wwt/base_gradient/base_wwt_004_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/wwt/pattern_gradient/gradient_wwt_001_df"),
 		pattern = Idstring("units/payday2_cash/safes/wwt/pattern/wwt_pattern_001_df"),
@@ -23958,7 +24110,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/wwt",
+		texture_bundle_folder = "wwt",
 		base_gradient = Idstring("units/payday2_cash/safes/wwt/base_gradient/base_wwt_011_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/ast/pattern_gradient/gradient_ast_001_df"),
 		pattern = Idstring("units/payday2_cash/safes/wwt/pattern/wwt_pattern_007_df"),
@@ -24004,7 +24156,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "legendary",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/wwt",
+		texture_bundle_folder = "wwt",
 		unique_name_id = "bm_wskn_colt_1911_wwt",
 		base_gradient = Idstring("units/payday2_cash/safes/wwt/base_gradient/base_wwt_009_df"),
 		default_blueprint = {
@@ -24197,7 +24349,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/wwt",
+		texture_bundle_folder = "wwt",
 		base_gradient = Idstring("units/payday2_cash/safes/grunt/base_gradient/base_grunt_014_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/ast/pattern_gradient/gradient_ast_002_df"),
 		pattern = Idstring("units/payday2_cash/safes/ast/pattern/ast_pattern_002_df"),
@@ -24219,7 +24371,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/skf",
+		texture_bundle_folder = "skf",
 		base_gradient = "units/payday2_cash/safes/skf/base_gradient/base_skf_001_df",
 		pattern_gradient = "units/payday2_cash/safes/skf/pattern_gradient/gradient_skf_001_df",
 		parts = {
@@ -24261,7 +24413,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/skf",
+		texture_bundle_folder = "skf",
 		base_gradient = "units/payday2_cash/safes/skf/base_gradient/base_skf_002_b_df",
 		parts = {
 			wpn_fps_pis_p226_g_standard = {
@@ -24381,7 +24533,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/skf",
+		texture_bundle_folder = "skf",
 		base_gradient = "units/payday2_cash/safes/skf/base_gradient/base_skf_003_df",
 		pattern_gradient = "units/payday2_cash/safes/skf/pattern_gradient/gradient_skf_003_df",
 		pattern = "units/payday2_cash/safes/skf/pattern/skf_pattern_003_df",
@@ -24527,7 +24679,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/skf",
+		texture_bundle_folder = "skf",
 		base_gradient = "units/payday2_cash/safes/skf/base_gradient/base_skf_004_df",
 		parts = {
 			wpn_fps_upg_ns_ass_filter = {
@@ -24630,7 +24782,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/skf",
+		texture_bundle_folder = "skf",
 		base_gradient = "units/payday2_cash/safes/skf/base_gradient/base_skf_005_df",
 		pattern_gradient = Idstring("units/payday2_cash/safes/grunt/pattern_gradient/gradient_grunt_002_df"),
 		pattern_tweak = Vector3(1, 0, 0),
@@ -24807,7 +24959,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/skf",
+		texture_bundle_folder = "skf",
 		base_gradient = "units/payday2_cash/safes/skf/base_gradient/base_skf_006_b_df",
 		parts = {
 			wpn_fps_upg_ns_pis_ipsccomp = {
@@ -24902,7 +25054,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/skf",
+		texture_bundle_folder = "skf",
 		base_gradient = "units/payday2_cash/safes/skf/base_gradient/base_skf_007_df",
 		pattern_gradient = "units/payday2_cash/safes/skf/pattern_gradient/gradient_skf_007_df",
 		parts = {
@@ -24973,7 +25125,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/skf",
+		texture_bundle_folder = "skf",
 		base_gradient = "units/payday2_cash/safes/skf/base_gradient/base_skf_008_b_df",
 		pattern_gradient = "units/payday2_cash/safes/skf/pattern_gradient/gradient_skf_008_df",
 		parts = {
@@ -25064,7 +25216,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/skf",
+		texture_bundle_folder = "skf",
 		base_gradient = "units/payday2_cash/safes/skf/base_gradient/base_skf_009_df",
 		default_blueprint = {
 			"wpn_fps_smg_mp7_b_standard",
@@ -25136,7 +25288,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/skf",
+		texture_bundle_folder = "skf",
 		base_gradient = "units/payday2_cash/safes/skf/base_gradient/base_skf_010_df",
 		parts = {
 			wpn_fps_gre_ray_body = {
@@ -25170,7 +25322,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_n1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/skf",
+		texture_bundle_folder = "skf",
 		base_gradient = "units/payday2_cash/safes/skf/base_gradient/base_skf_011_df",
 		default_blueprint = {
 			"wpn_fps_shot_b682_body_standard",
@@ -25242,7 +25394,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/skf",
+		texture_bundle_folder = "skf",
 		base_gradient = "units/payday2_cash/safes/skf/base_gradient/base_skf_012_df",
 		parts = {
 			wpn_fps_upg_m4_m_straight = {
@@ -25437,7 +25589,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/skf",
+		texture_bundle_folder = "skf",
 		base_gradient = "units/payday2_cash/safes/skf/base_gradient/base_skf_013_df",
 		default_blueprint = {
 			"wpn_fps_ass_scar_m_standard",
@@ -25514,7 +25666,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/skf",
+		texture_bundle_folder = "skf",
 		default_blueprint = {
 			"wpn_fps_ass_famas_body_standard",
 			"wpn_fps_ass_famas_m_standard",
@@ -25659,7 +25811,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/skf",
+		texture_bundle_folder = "skf",
 		base_gradient = Idstring("units/payday2_cash/safes/skf/base_gradient/base_skf_015_b_df"),
 		default_blueprint = {
 			"wpn_fps_ass_g36_s_sl8",
@@ -25794,7 +25946,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "legendary",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/skf",
+		texture_bundle_folder = "skf",
 		unique_name_id = "bm_wskn_mac10_skf",
 		base_gradient = "units/payday2_cash/safes/skf/base_gradient/base_skf_016_df",
 		pattern_gradient = "units/payday2_cash/safes/skf/pattern_gradient/gradient_skf_016_df",
@@ -25884,11 +26036,11 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_1911_css = {
 		name_id = "bm_wskn_x_1911_css",
 		desc_id = "bm_wskn_x_1911_css_desc",
-		weapon_id = "x_1911",
+		weapon_id = "colt_1911",
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/css",
+		texture_bundle_folder = "css",
 		base_gradient = "units/payday2_cash/safes/css/base_gradient/base_css_001_df",
 		parts = {
 			wpn_fps_pis_1911_co_1 = {
@@ -25969,7 +26121,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/css",
+		texture_bundle_folder = "css",
 		base_gradient = "units/payday2_cash/safes/css/base_gradient/base_css_002_df",
 		pattern_gradient = Idstring("units/payday2_cash/safes/bah/pattern_gradient/gradient_bah_001_df"),
 		parts = {
@@ -26026,7 +26178,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/css",
+		texture_bundle_folder = "css",
 		base_gradient = "units/payday2_cash/safes/css/base_gradient/base_css_003_df",
 		pattern_gradient = "units/payday2_cash/safes/css/pattern_gradient/gradient_css_003_df",
 		pattern = "units/payday2_cash/safes/css/pattern/css_pattern_003_c_df",
@@ -26125,7 +26277,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/css",
+		texture_bundle_folder = "css",
 		base_gradient = "units/payday2_cash/safes/css/base_gradient/base_css_004_df",
 		types = {
 			grip = {
@@ -26142,7 +26294,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/css",
+		texture_bundle_folder = "css",
 		base_gradient = "units/payday2_cash/safes/css/base_gradient/base_css_005_df",
 		parts = {
 			wpn_fps_pis_c96_sight = {
@@ -26185,7 +26337,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/css",
+		texture_bundle_folder = "css",
 		base_gradient = "units/payday2_cash/safes/css/base_gradient/base_css_006_df",
 		pattern_gradient = "units/payday2_cash/safes/css/pattern_gradient/gradient_css_006_df",
 		parts = {
@@ -26332,7 +26484,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_n1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/css",
+		texture_bundle_folder = "css",
 		base_gradient = "units/payday2_cash/safes/css/base_gradient/base_css_007_df",
 		pattern_gradient = "units/payday2_cash/safes/css/pattern_gradient/gradient_css_007_df",
 		pattern = "units/payday2_cash/safes/css/pattern/css_pattern_007_df",
@@ -26496,7 +26648,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/css",
+		texture_bundle_folder = "css",
 		base_gradient = "units/payday2_cash/safes/css/base_gradient/base_css_008_df",
 		parts = {
 			wpn_fps_upg_ns_pis_ipsccomp = {
@@ -26686,7 +26838,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/css",
+		texture_bundle_folder = "css",
 		base_gradient = "units/payday2_cash/safes/css/base_gradient/base_css_009_df",
 		pattern_gradient = "units/payday2_cash/safes/css/pattern_gradient/gradient_css_009_df",
 		parts = {
@@ -26719,7 +26871,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/css",
+		texture_bundle_folder = "css",
 		default_blueprint = {
 			"wpn_fps_ass_flint_b_standard",
 			"wpn_fps_ass_flint_body_upperreceiver",
@@ -26872,7 +27024,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "legendary",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/css",
+		texture_bundle_folder = "css",
 		unique_name_id = "bm_wskn_polymer_css",
 		base_gradient = "units/payday2_cash/safes/css/base_gradient/base_css_011_df",
 		default_blueprint = {
@@ -27217,7 +27369,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/css",
+		texture_bundle_folder = "css",
 		base_gradient = "units/payday2_cash/safes/css/base_gradient/base_css_012_df",
 		pattern_gradient = "units/payday2_cash/safes/css/pattern_gradient/gradient_css_012_df",
 		default_blueprint = {
@@ -27348,13 +27500,13 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/css",
+		texture_bundle_folder = "css",
 		base_gradient = "units/payday2_cash/safes/css/base_gradient/base_css_013_df",
 		default_blueprint = {
 			"wpn_fps_snp_r93_b_standard",
 			"wpn_fps_snp_r93_body_standard",
 			"wpn_fps_snp_r93_m_std",
-			"wpn_fps_upg_o_shortdot"
+			"wpn_fps_upg_o_shortdot_vanilla"
 		},
 		parts = {
 			wpn_fps_snp_r93_body_wood = {
@@ -27414,7 +27566,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/css",
+		texture_bundle_folder = "css",
 		pattern_gradient = Idstring("units/payday2_cash/safes/wwt/pattern_gradient/gradient_wwt_007_df"),
 		pattern = Idstring("units/payday2_cash/safes/smosh/pattern/smosh_pattern_021_b_df"),
 		parts = {
@@ -27521,7 +27673,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/css",
+		texture_bundle_folder = "css",
 		base_gradient = "units/payday2_cash/safes/css/base_gradient/base_css_015_b_df",
 		default_blueprint = {
 			"wpn_fps_pis_lemming_b_standard",
@@ -27578,7 +27730,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/css",
+		texture_bundle_folder = "css",
 		base_gradient = "units/payday2_cash/safes/css/base_gradient/base_css_016_df",
 		parts = {
 			wpn_fps_pis_ppk_b_long = {
@@ -27653,7 +27805,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "concealment_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/dss",
+		texture_bundle_folder = "dss",
 		base_gradient = Idstring("units/payday2_cash/safes/dss/base_gradient/dss_basegradient_010_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/dss/pattern_gradient/dss_patterngradient_003_df"),
 		pattern = Idstring("units/payday2_cash/safes/dss/pattern/dss_pattern_001_df"),
@@ -27675,7 +27827,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/dss",
+		texture_bundle_folder = "dss",
 		base_gradient = Idstring("units/payday2_cash/safes/dss/base_gradient/dss_basegradient_004_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/dss/pattern_gradient/dss_patterngradient_008_df"),
 		pattern = Idstring("units/payday2_cash/safes/dss/pattern/dss_pattern_001_df"),
@@ -27707,7 +27859,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_n1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/dss",
+		texture_bundle_folder = "dss",
 		base_gradient = Idstring("units/payday2_cash/safes/dss/base_gradient/dss_basegradient_019_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/dss/pattern_gradient/dss_patterngradient_003_df"),
 		pattern = Idstring("units/payday2_cash/safes/dss/pattern/dss_pattern_001_df"),
@@ -27736,7 +27888,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/dss",
+		texture_bundle_folder = "dss",
 		base_gradient = Idstring("units/payday2_cash/safes/dss/base_gradient/dss_basegradient_018_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/dss/pattern_gradient/dss_patterngradient_002_df"),
 		pattern = Idstring("units/payday2_cash/safes/dss/pattern/dss_pattern_010_df"),
@@ -27758,7 +27910,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/dss",
+		texture_bundle_folder = "dss",
 		base_gradient = Idstring("units/payday2_cash/safes/dss/base_gradient/dss_basegradient_016_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/burn/pattern_gradient/gradient_burn_006_df"),
 		pattern = Idstring("units/payday2_cash/safes/dss/pattern/dss_pattern_010_df"),
@@ -27772,7 +27924,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/dss",
+		texture_bundle_folder = "dss",
 		base_gradient = Idstring("units/payday2_cash/safes/dss/base_gradient/dss_basegradient_011_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/dss/pattern_gradient/dss_patterngradient_003_df"),
 		pattern = Idstring("units/payday2_cash/safes/wwt/pattern/wwt_pattern_001_df"),
@@ -27798,11 +27950,11 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_shrew_dss = {
 		name_id = "bm_wskn_x_shrew_dss",
 		desc_id = "bm_wskn_x_shrew_dss_desc",
-		weapon_id = "x_shrew",
+		weapon_id = "shrew",
 		rarity = "uncommon",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/dss",
+		texture_bundle_folder = "dss",
 		base_gradient = Idstring("units/payday2_cash/safes/dss/base_gradient/dss_basegradient_022_a_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/dss/pattern_gradient/dss_patterngradient_003_df"),
 		pattern = Idstring("units/payday2_cash/safes/dss/pattern/dss_pattern_012_df"),
@@ -27854,7 +28006,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/dss",
+		texture_bundle_folder = "dss",
 		base_gradient = Idstring("units/payday2_cash/safes/dss/base_gradient/dss_basegradient_003_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/dss/pattern_gradient/dss_patterngradient_003_df"),
 		pattern = Idstring("units/payday2_cash/safes/dss/pattern/dss_pattern_001_df"),
@@ -27883,7 +28035,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/dss",
+		texture_bundle_folder = "dss",
 		base_gradient = Idstring("units/payday2_cash/safes/dss/base_gradient/dss_basegradient_013_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/dss/pattern_gradient/dss_patterngradient_005_df"),
 		pattern = Idstring("units/payday2_cash/safes/dss/pattern/dss_pattern_001_df"),
@@ -27906,7 +28058,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/dss",
+		texture_bundle_folder = "dss",
 		base_gradient = Idstring("units/payday2_cash/safes/dss/base_gradient/dss_basegradient_014_df"),
 		parts = {
 			wpn_fps_pis_1911_b_vented = {
@@ -27974,7 +28126,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/dss",
+		texture_bundle_folder = "dss",
 		base_gradient = Idstring("units/payday2_cash/safes/dss/base_gradient/dss_basegradient_019_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/dss/pattern_gradient/dss_patterngradient_003_df"),
 		pattern = Idstring("units/payday2_cash/safes/dss/pattern/dss_pattern_001_df"),
@@ -27996,7 +28148,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/dss",
+		texture_bundle_folder = "dss",
 		base_gradient = Idstring("units/payday2_cash/safes/dss/base_gradient/dss_basegradient_009_df"),
 		default_blueprint = {
 			"wpn_fps_pis_c96_body_standard",
@@ -28058,7 +28210,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/dss",
+		texture_bundle_folder = "dss",
 		base_gradient = Idstring("units/payday2_cash/safes/dss/base_gradient/dss_basegradient_020_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/dss/pattern_gradient/dss_patterngradient_003_df"),
 		pattern = Idstring("units/payday2_cash/safes/dss/pattern/dss_pattern_011_df"),
@@ -28095,7 +28247,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "spread_n1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/dss",
+		texture_bundle_folder = "dss",
 		base_gradient = Idstring("units/payday2_cash/safes/dss/base_gradient/dss_basegradient_017_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/dss/pattern_gradient/dss_patterngradient_003_df"),
 		pattern = Idstring("units/payday2_cash/safes/dss/pattern/dss_pattern_011_df"),
@@ -28114,7 +28266,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "spread_n1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/dss",
+		texture_bundle_folder = "dss",
 		base_gradient = Idstring("units/payday2_cash/safes/dss/base_gradient/dss_basegradient_005_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/dss/pattern_gradient/dss_patterngradient_004_df"),
 		pattern = Idstring("units/payday2_cash/safes/dss/pattern/dss_pattern_003_df"),
@@ -28150,7 +28302,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "legendary",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/dss",
+		texture_bundle_folder = "dss",
 		unique_name_id = "bm_wskn_shrew_dss",
 		base_gradient = Idstring("units/payday2_cash/safes/dss/base_gradient/dss_basegradient_021_df"),
 		pattern_gradient = Idstring("units/payday2_cash/safes/dss/pattern_gradient/dss_patterngradient_010_df"),
@@ -31818,7 +31970,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cat",
+		texture_bundle_folder = "cat",
 		base_gradient = "units/payday2_cash/safes/cat/base_gradient/base_cat_001_df",
 		parts = {
 			wpn_fps_smg_mp7_body_standard = {
@@ -31836,11 +31988,11 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_coal_cat = {
 		name_id = "bm_wskn_x_coal_cat",
 		desc_id = "bm_wskn_x_coal_cat_desc",
-		weapon_id = "x_coal",
+		weapon_id = "coal",
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cat",
+		texture_bundle_folder = "cat",
 		base_gradient = "units/payday2_cash/safes/cat/base_gradient/base_cat_002_df",
 		parts = {
 			wpn_fps_smg_coal_body_standard = {
@@ -31898,7 +32050,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cat",
+		texture_bundle_folder = "cat",
 		base_gradient = "units/payday2_cash/safes/cat/base_gradient/base_cat_003_a_df",
 		parts = {
 			wpn_fps_ass_l85a2_m_emag = {
@@ -31978,7 +32130,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cat",
+		texture_bundle_folder = "cat",
 		base_gradient = "units/payday2_cash/safes/cat/base_gradient/base_cat_004_df",
 		parts = {
 			wpn_fps_ass_scar_body_standard = {
@@ -32029,7 +32181,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cat",
+		texture_bundle_folder = "cat",
 		base_gradient = "units/payday2_cash/safes/cat/base_gradient/base_cat_005_df",
 		parts = {
 			wpn_fps_pis_deagle_b_modern = {
@@ -32127,7 +32279,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cat",
+		texture_bundle_folder = "cat",
 		base_gradient = "units/payday2_cash/safes/cat/base_gradient/base_cat_006_df",
 		default_blueprint = {
 			"wpn_fps_smg_p90_body_boxy",
@@ -32212,7 +32364,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_n1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cat",
+		texture_bundle_folder = "cat",
 		base_gradient = "units/payday2_cash/safes/cat/base_gradient/base_cat_007_df",
 		pattern_gradient = "units/payday2_cash/safes/cat/pattern_gradient/gradient_cat_007_df",
 		pattern = "units/payday2_cash/safes/cat/pattern/cat_pattern_007_a_df",
@@ -32268,7 +32420,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_n1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cat",
+		texture_bundle_folder = "cat",
 		base_gradient = "units/payday2_cash/safes/cat/base_gradient/base_cat_008_df",
 		parts = {
 			wpn_fps_upg_ns_shot_shark = {
@@ -32381,11 +32533,11 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_judge_cat = {
 		name_id = "bm_wskn_x_judge_cat",
 		desc_id = "bm_wskn_x_judge_cat_desc",
-		weapon_id = "x_judge",
+		weapon_id = "judge",
 		rarity = "uncommon",
 		bonus = "spread_n1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cat",
+		texture_bundle_folder = "cat",
 		base_gradient = "units/payday2_cash/safes/cat/base_gradient/base_cat_009_df",
 		pattern_gradient = "units/payday2_cash/safes/cat/pattern_gradient/gradient_cat_009_df",
 		parts = {
@@ -32460,7 +32612,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cat",
+		texture_bundle_folder = "cat",
 		base_gradient = Idstring("units/payday2_cash/safes/cat/base_gradient/base_cat_011_a_df"),
 		pattern_gradient = "units/payday2_cash/safes/cat/pattern_gradient/gradient_cat_011_df",
 		default_blueprint = {
@@ -32642,11 +32794,11 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_chinchilla_cat = {
 		name_id = "bm_wskn_x_chinchilla_cat",
 		desc_id = "bm_wskn_x_chinchilla_cat_desc",
-		weapon_id = "x_chinchilla",
+		weapon_id = "chinchilla",
 		rarity = "rare",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cat",
+		texture_bundle_folder = "cat",
 		base_gradient = "units/payday2_cash/safes/cat/base_gradient/base_cat_012_df",
 		pattern_gradient = "units/payday2_cash/safes/cat/pattern_gradient/gradient_cat_012_df",
 		default_blueprint = {
@@ -32694,7 +32846,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_n1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cat",
+		texture_bundle_folder = "cat",
 		base_gradient = "units/payday2_cash/safes/cat/base_gradient/base_cat_013_a_df",
 		parts = {
 			wpn_fps_sho_boot_body_exotic = {
@@ -32747,7 +32899,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cat",
+		texture_bundle_folder = "cat",
 		base_gradient = "units/payday2_cash/safes/cat/base_gradient/base_cat_014_df",
 		default_blueprint = {
 			"wpn_fps_smg_erma_b_standard",
@@ -32996,11 +33148,11 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_usp_cat = {
 		name_id = "bm_wskn_x_usp_cat",
 		desc_id = "bm_wskn_x_usp_cat_desc",
-		weapon_id = "x_usp",
+		weapon_id = "usp",
 		rarity = "epic",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cat",
+		texture_bundle_folder = "cat",
 		default_blueprint = {
 			"wpn_fps_pis_usp_body_standard",
 			"wpn_fps_pis_usp_m_extended",
@@ -33213,7 +33365,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "legendary",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cat",
+		texture_bundle_folder = "cat",
 		unique_name_id = "bm_wskn_p226_cat",
 		locked = false,
 		default_blueprint = {
@@ -33484,7 +33636,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/cat",
+		texture_bundle_folder = "cat",
 		parts = {
 			wpn_fps_upg_fl_pis_crimson = {
 				[Idstring("mtr_crimson"):key()] = {
@@ -33617,7 +33769,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/ait",
+		texture_bundle_folder = "ait",
 		base_gradient = "units/payday2_cash/safes/ait/base_gradient/base_ait_003_df"
 	}
 	self.weapon_skins.elastic_ait = {
@@ -33627,7 +33779,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/ait",
+		texture_bundle_folder = "ait",
 		base_gradient = "units/payday2_cash/safes/ait/base_gradient/base_ait_004_a_df",
 		pattern_gradient = "units/payday2_cash/safes/ait/pattern_gradient/gradient_ait_004_df",
 		pattern = "units/payday2_cash/safes/ait/pattern/ait_pattern_004_df",
@@ -33649,7 +33801,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "concealment_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/ait",
+		texture_bundle_folder = "ait",
 		base_gradient = "units/payday2_cash/safes/ait/base_gradient/base_ait_005_df",
 		parts = {
 			wpn_fps_gre_slap_b_standard = {
@@ -33669,7 +33821,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "damage_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/ait",
+		texture_bundle_folder = "ait",
 		base_gradient = "units/payday2_cash/safes/ait/base_gradient/base_ait_008_df",
 		pattern_gradient = Idstring("units/payday2_cash/safes/wwt/pattern_gradient/gradient_wwt_004_df"),
 		pattern = Idstring("units/payday2_cash/safes/wwt/pattern/wwt_pattern_001_df"),
@@ -33699,7 +33851,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_n1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/ait",
+		texture_bundle_folder = "ait",
 		base_gradient = "units/payday2_cash/safes/ait/base_gradient/base_ait_013_a_df",
 		default_blueprint = {
 			"wpn_fps_sho_rota_b_long",
@@ -33817,7 +33969,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "recoil_p2",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/ait",
+		texture_bundle_folder = "ait",
 		base_gradient = "units/payday2_cash/safes/ait/base_gradient/base_ait_014_df",
 		default_blueprint = {
 			"wpn_fps_ass_komodo_b_standard",
@@ -33883,7 +34035,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "recoil_p2",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/ait",
+		texture_bundle_folder = "ait",
 		base_gradient = "units/payday2_cash/safes/ait/base_gradient/base_ait_016_df",
 		default_blueprint = {
 			"wpn_fps_pis_deagle_body_standard",
@@ -33979,7 +34131,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/ait",
+		texture_bundle_folder = "ait",
 		base_gradient = "units/payday2_cash/safes/ait/base_gradient/base_ait_017_df",
 		types = {
 			lower_reciever = {
@@ -33996,7 +34148,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/ait",
+		texture_bundle_folder = "ait",
 		base_gradient = "units/payday2_cash/safes/ait/base_gradient/base_ait_018_df",
 		parts = {
 			wpn_fps_smg_mac10_body_mac10 = {
@@ -34022,7 +34174,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/ait",
+		texture_bundle_folder = "ait",
 		base_gradient = "units/payday2_cash/safes/ait/base_gradient/base_ait_019_df",
 		parts = {
 			wpn_fps_upg_vg_ass_smg_verticalgrip = {
@@ -34291,7 +34443,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/ait",
+		texture_bundle_folder = "ait",
 		base_gradient = "units/payday2_cash/safes/ait/base_gradient/base_ait_020_df",
 		parts = {
 			wpn_fps_upg_ns_pis_ipsccomp = {
@@ -34464,7 +34616,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_n1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/ait",
+		texture_bundle_folder = "ait",
 		base_gradient = "units/payday2_cash/safes/ait/base_gradient/base_ait_021_a_df",
 		parts = {
 			wpn_fps_sho_s_spas12_nostock = {
@@ -34551,7 +34703,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/ait",
+		texture_bundle_folder = "ait",
 		base_gradient = "units/payday2_cash/safes/ait/base_gradient/base_ait_022_df",
 		parts = {
 			wpn_fps_upg_ns_ass_smg_large = {
@@ -34578,7 +34730,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/ait",
+		texture_bundle_folder = "ait",
 		base_gradient = "units/payday2_cash/safes/ait/base_gradient/base_ait_023_df",
 		default_blueprint = {
 			"wpn_fps_pis_lemming_body",
@@ -34695,7 +34847,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "recoil_p2",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/ait",
+		texture_bundle_folder = "ait",
 		base_gradient = "units/payday2_cash/safes/ait/base_gradient/base_ait_024_df",
 		default_blueprint = {
 			"wpn_fps_m4_uupg_draghandle",
@@ -35035,7 +35187,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "legendary",
 		bonus = "recoil_p2",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/ait",
+		texture_bundle_folder = "ait",
 		unique_name_id = "bm_wskn_scar_ait",
 		locked = false,
 		base_gradient = "units/payday2_cash/safes/ait/base_gradient/base_ait_025_df",
@@ -35386,7 +35538,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/nin",
+		texture_bundle_folder = "nin",
 		pattern_gradient = Idstring("units/payday2_cash/safes/nin/pattern_gradient/nin_pattern_gradient_001_01_df"),
 		base_gradient = Idstring("units/payday2_cash/safes/nin/base_gradient/nin_base_gradient_001_01_df"),
 		pattern = Idstring("units/payday2_cash/safes/nin/pattern/nin_pattern_001_01_df"),
@@ -35499,7 +35651,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/nin",
+		texture_bundle_folder = "nin",
 		base_gradient = Idstring("units/payday2_cash/safes/nin/base_gradient/nin_base_gradient_002_02_df"),
 		parts = {
 			wpn_fps_pis_g18c_m_mag_33rnd = {
@@ -35527,7 +35679,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/nin",
+		texture_bundle_folder = "nin",
 		base_gradient = Idstring("units/payday2_cash/safes/nin/base_gradient/nin_base_gradient_003_02_df"),
 		parts = {
 			wpn_fps_smg_shepheard_g_standard = {
@@ -35754,11 +35906,11 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_chinchilla_nin = {
 		name_id = "bm_wskn_x_chinchilla_nin",
 		desc_id = "bm_wskn_x_chinchilla_nin_desc",
-		weapon_id = "x_chinchilla",
+		weapon_id = "chinchilla",
 		rarity = "uncommon",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/nin",
+		texture_bundle_folder = "nin",
 		base_gradient = Idstring("units/payday2_cash/safes/nin/base_gradient/nin_base_gradient_004_02_df"),
 		parts = {
 			wpn_fps_pis_chinchilla_m_bullets = {
@@ -35876,7 +36028,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "epic",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/nin",
+		texture_bundle_folder = "nin",
 		base_gradient = Idstring("units/payday2_cash/safes/nin/base_gradient/nin_base_gradient_005_02_df"),
 		default_blueprint = {
 			"wpn_fps_pis_deagle_body_standard",
@@ -35977,7 +36129,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/nin",
+		texture_bundle_folder = "nin",
 		base_gradient = Idstring("units/payday2_cash/safes/nin/base_gradient/nin_base_gradient_006_01_df"),
 		parts = {
 			wpn_fps_upg_o_rms = {
@@ -36191,7 +36343,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "concealment_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/nin",
+		texture_bundle_folder = "nin",
 		default_blueprint = {
 			"wpn_fps_ass_corgi_body_upper",
 			"wpn_fps_ass_corgi_dh_standard",
@@ -36540,7 +36692,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/nin",
+		texture_bundle_folder = "nin",
 		pattern_gradient = Idstring("units/payday2_cash/safes/nin/pattern_gradient/nin_pattern_gradient_008_02_df"),
 		base_gradient = Idstring("units/payday2_cash/safes/nin/base_gradient/nin_base_gradient_008_01_df"),
 		default_blueprint = {
@@ -36595,7 +36747,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "rare",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/nin",
+		texture_bundle_folder = "nin",
 		pattern_gradient = Idstring("units/payday2_cash/safes/nin/pattern_gradient/nin_pattern_gradient_009_01_df"),
 		default_blueprint = {
 			"wpn_fps_ass_akm_body_upperreceiver_vanilla",
@@ -36931,7 +37083,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "concealment_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/nin",
+		texture_bundle_folder = "nin",
 		base_gradient = Idstring("units/payday2_cash/safes/nin/base_gradient/nin_base_gradient_010_01_df"),
 		parts = {
 			wpn_fps_smg_tec9_body_standard = {
@@ -36949,7 +37101,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "spread_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/nin",
+		texture_bundle_folder = "nin",
 		base_gradient = Idstring("units/payday2_cash/safes/nin/base_gradient/nin_base_gradient_011_01_df"),
 		parts = {
 			wpn_fps_gre_ray_sight = {
@@ -36998,7 +37150,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "concealment_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/nin",
+		texture_bundle_folder = "nin",
 		base_gradient = Idstring("units/payday2_cash/safes/nin/base_gradient/nin_base_gradient_012_02_df"),
 		parts = {
 			wpn_fps_upg_m4_s_mk46 = {
@@ -37180,7 +37332,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/nin",
+		texture_bundle_folder = "nin",
 		base_gradient = Idstring("units/payday2_cash/safes/nin/base_gradient/nin_base_gradient_013_02_df"),
 		parts = {
 			wpn_fps_snp_winchester_s_standard = {
@@ -37252,7 +37404,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "legendary",
 		bonus = "concealment_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/nin",
+		texture_bundle_folder = "nin",
 		locked = false,
 		default_blueprint = {
 			"wpn_fps_saw_b_normal",
@@ -37352,7 +37504,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "common",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/nin",
+		texture_bundle_folder = "nin",
 		cubemap_pattern_control = Vector3(0, 0.112807, 0),
 		base_gradient = Idstring("units/payday2_cash/safes/nin/base_gradient/nin_base_gradient_015_02_df"),
 		parts = {
@@ -37432,7 +37584,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		rarity = "uncommon",
 		bonus = "recoil_p1",
 		reserve_quality = true,
-		texture_bundle_folder = "cash/safes/nin",
+		texture_bundle_folder = "nin",
 		base_gradient = Idstring("units/payday2_cash/safes/nin/base_gradient/nin_base_gradient_016_01_df"),
 		parts = {
 			wpn_fps_sho_rota_body_upper = {
@@ -37481,11 +37633,1171 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		"saw",
 		"saw_secondary"
 	}
+	self.weapon_skins.b92fs_luxury.weapon_ids = {
+		"b92fs",
+		"x_b92fs"
+	}
+	self.weapon_skins.g22c_buck.weapon_ids = {
+		"g22c",
+		"x_g22c"
+	}
+	self.weapon_skins.beer_tam.weapon_ids = {
+		"beer",
+		"x_beer"
+	}
+	self.weapon_skins.new_mp5_grunt.weapon_ids = {
+		"new_mp5",
+		"x_mp5"
+	}
+	self.weapon_skins.p90_cat.weapon_ids = {
+		"p90",
+		"x_p90"
+	}
+	self.weapon_skins.akmsu_grunt.weapon_ids = {
+		"akmsu",
+		"x_akmsu"
+	}
+	self.weapon_skins.erma_wwt.weapon_ids = {
+		"erma",
+		"x_erma"
+	}
+	self.weapon_skins.shepheard_nin.weapon_ids = {
+		"shepheard",
+		"x_shepheard"
+	}
+	self.weapon_skins.b92fs_wooh.weapon_ids = {
+		"b92fs",
+		"x_b92fs"
+	}
+	self.weapon_skins.m1928_grunt.weapon_ids = {
+		"m1928",
+		"x_m1928"
+	}
+	self.weapon_skins.judge_wooh.weapon_ids = {
+		"judge",
+		"x_judge"
+	}
+	self.weapon_skins.x_akmsu_sfs.weapon_ids = {
+		"akmsu",
+		"x_akmsu"
+	}
+	self.weapon_skins.mac10_tam.weapon_ids = {
+		"mac10",
+		"x_mac10"
+	}
+	self.weapon_skins.x_baka_tam.weapon_ids = {
+		"baka",
+		"x_baka"
+	}
+	self.weapon_skins.x_judge_cat.weapon_ids = {
+		"judge",
+		"x_judge"
+	}
+	self.weapon_skins.hajk_tam.weapon_ids = {
+		"hajk",
+		"x_hajk"
+	}
+	self.weapon_skins.x_mp5_tam.weapon_ids = {
+		"new_mp5",
+		"x_mp5"
+	}
+	self.weapon_skins.x_breech_tam.weapon_ids = {
+		"breech",
+		"x_breech"
+	}
+	self.weapon_skins.sterling_tam.weapon_ids = {
+		"sterling",
+		"x_sterling"
+	}
+	self.weapon_skins.sterling_wwt.weapon_ids = {
+		"sterling",
+		"x_sterling"
+	}
+	self.weapon_skins.scorpion_nin.weapon_ids = {
+		"scorpion",
+		"x_scorpion"
+	}
+	self.weapon_skins.sparrow_lones.weapon_ids = {
+		"sparrow",
+		"x_sparrow"
+	}
+	self.weapon_skins.akmsu_lones.weapon_ids = {
+		"akmsu",
+		"x_akmsu"
+	}
+	self.weapon_skins.colt_1911_wwt.weapon_ids = {
+		"colt_1911",
+		"x_1911"
+	}
+	self.weapon_skins.olympic_cola.weapon_ids = {
+		"olympic",
+		"x_olympic"
+	}
+	self.weapon_skins.uzi_tam.weapon_ids = {
+		"uzi",
+		"x_uzi"
+	}
+	self.weapon_skins.new_mp5_buck.weapon_ids = {
+		"new_mp5",
+		"x_mp5"
+	}
+	self.weapon_skins.x_packrat_tam.weapon_ids = {
+		"packrat",
+		"x_packrat"
+	}
+	self.weapon_skins.new_raging_bull_goldstripes.weapon_ids = {
+		"new_raging_bull",
+		"x_rage"
+	}
+	self.weapon_skins.polymer_cs4.weapon_ids = {
+		"polymer",
+		"x_polymer"
+	}
+	self.weapon_skins.mp9_wac.weapon_ids = {
+		"mp9",
+		"x_mp9"
+	}
+	self.weapon_skins.x_pl14_tam.weapon_ids = {
+		"pl14",
+		"x_pl14"
+	}
+	self.weapon_skins.deagle_bloodbath.weapon_ids = {
+		"deagle",
+		"x_deagle"
+	}
+	self.weapon_skins.m45_grunt.weapon_ids = {
+		"m45",
+		"x_m45"
+	}
+	self.weapon_skins.new_raging_bull_smosh.weapon_ids = {
+		"new_raging_bull",
+		"x_rage"
+	}
+	self.weapon_skins.akmsu_buck.weapon_ids = {
+		"akmsu",
+		"x_akmsu"
+	}
+	self.weapon_skins.x_stech_tam.weapon_ids = {
+		"stech",
+		"x_stech"
+	}
+	self.weapon_skins.shrew_dss.weapon_ids = {
+		"shrew",
+		"x_shrew"
+	}
+	self.weapon_skins.mac10_cs4.weapon_ids = {
+		"mac10",
+		"x_mac10"
+	}
+	self.weapon_skins.c96_tam.weapon_ids = {
+		"c96",
+		"x_c96"
+	}
+	self.weapon_skins.b92fs_forest.weapon_ids = {
+		"b92fs",
+		"x_b92fs"
+	}
+	self.weapon_skins.ppk_css.weapon_ids = {
+		"ppk",
+		"x_ppk"
+	}
+	self.weapon_skins.p90_dallas_sallad.weapon_ids = {
+		"p90",
+		"x_p90"
+	}
+	self.weapon_skins.x_deagle_wolf.weapon_ids = {
+		"deagle",
+		"x_deagle"
+	}
+	self.weapon_skins.ppk_woodland.weapon_ids = {
+		"ppk",
+		"x_ppk"
+	}
+	self.weapon_skins.p90_woodland.weapon_ids = {
+		"p90",
+		"x_p90"
+	}
+	self.weapon_skins.schakal_tam.weapon_ids = {
+		"schakal",
+		"x_schakal"
+	}
+	self.weapon_skins.g22c_grunt.weapon_ids = {
+		"g22c",
+		"x_g22c"
+	}
+	self.weapon_skins.colt_1911_dss.weapon_ids = {
+		"colt_1911",
+		"x_1911"
+	}
+	self.weapon_skins.uzi_cola.weapon_ids = {
+		"uzi",
+		"x_uzi"
+	}
+	self.weapon_skins.x_p226_tam.weapon_ids = {
+		"p226",
+		"x_p226"
+	}
+	self.weapon_skins.x_shrew_dss.weapon_ids = {
+		"shrew",
+		"x_shrew"
+	}
+	self.weapon_skins.polymer_ait.weapon_ids = {
+		"polymer",
+		"x_polymer"
+	}
+	self.weapon_skins.m45_tam.weapon_ids = {
+		"m45",
+		"x_m45"
+	}
+	self.weapon_skins.p90_skullimov.weapon_ids = {
+		"p90",
+		"x_p90"
+	}
+	self.weapon_skins.coal_css.weapon_ids = {
+		"coal",
+		"x_coal"
+	}
+	self.weapon_skins.chinchilla_dss.weapon_ids = {
+		"chinchilla",
+		"x_chinchilla"
+	}
+	self.weapon_skins.g22c_wolf.weapon_ids = {
+		"g22c",
+		"x_g22c"
+	}
+	self.weapon_skins.baka_same.weapon_ids = {
+		"baka",
+		"x_baka"
+	}
+	self.weapon_skins.mp9_tam.weapon_ids = {
+		"mp9",
+		"x_mp9"
+	}
+	self.weapon_skins.rota_mxs.weapon_ids = {
+		"rota",
+		"x_rota"
+	}
+	self.weapon_skins.p90_luxury.weapon_ids = {
+		"p90",
+		"x_p90"
+	}
+	self.weapon_skins.c96_css.weapon_ids = {
+		"c96",
+		"x_c96"
+	}
+	self.weapon_skins.colt_1911_smosh.weapon_ids = {
+		"colt_1911",
+		"x_1911"
+	}
+	self.weapon_skins.x_usp_tam.weapon_ids = {
+		"usp",
+		"x_usp"
+	}
+	self.weapon_skins.usp_waves.weapon_ids = {
+		"usp",
+		"x_usp"
+	}
+	self.weapon_skins.scorpion_smosh.weapon_ids = {
+		"scorpion",
+		"x_scorpion"
+	}
+	self.weapon_skins.usp_cat.weapon_ids = {
+		"usp",
+		"x_usp"
+	}
+	self.weapon_skins.lemming_tam.weapon_ids = {
+		"lemming",
+		"x_lemming"
+	}
+	self.weapon_skins.baka_tam.weapon_ids = {
+		"baka",
+		"x_baka"
+	}
+	self.weapon_skins.x_mp7_tam.weapon_ids = {
+		"mp7",
+		"x_mp7"
+	}
+	self.weapon_skins.legacy_tam.weapon_ids = {
+		"legacy",
+		"x_legacy"
+	}
+	self.weapon_skins.polymer_tam.weapon_ids = {
+		"polymer",
+		"x_polymer"
+	}
+	self.weapon_skins.ppk_tam.weapon_ids = {
+		"ppk",
+		"x_ppk"
+	}
+	self.weapon_skins.mp7_skf.weapon_ids = {
+		"mp7",
+		"x_mp7"
+	}
+	self.weapon_skins.new_raging_bull_cs4.weapon_ids = {
+		"new_raging_bull",
+		"x_rage"
+	}
+	self.weapon_skins.x_g22c_waves.weapon_ids = {
+		"g22c",
+		"x_g22c"
+	}
+	self.weapon_skins.x_coal_tam.weapon_ids = {
+		"coal",
+		"x_coal"
+	}
+	self.weapon_skins.erma_dss.weapon_ids = {
+		"erma",
+		"x_erma"
+	}
+	self.weapon_skins.erma_cat.weapon_ids = {
+		"erma",
+		"x_erma"
+	}
+	self.weapon_skins.mateba_tam.weapon_ids = {
+		"mateba",
+		"x_2006m"
+	}
+	self.weapon_skins.judge_bloodbath.weapon_ids = {
+		"judge",
+		"x_judge"
+	}
+	self.weapon_skins.x_1911_buck.weapon_ids = {
+		"colt_1911",
+		"x_1911"
+	}
+	self.weapon_skins.x_rota_tam.weapon_ids = {
+		"rota",
+		"x_rota"
+	}
+	self.weapon_skins.x_1911_smosh.weapon_ids = {
+		"colt_1911",
+		"x_1911"
+	}
+	self.weapon_skins.m1928_tam.weapon_ids = {
+		"m1928",
+		"x_m1928"
+	}
+	self.weapon_skins.ppk_bloodsplat.weapon_ids = {
+		"ppk",
+		"x_ppk"
+	}
+	self.weapon_skins.x_uzi_tam.weapon_ids = {
+		"uzi",
+		"x_uzi"
+	}
+	self.weapon_skins.x_chinchilla_nin.weapon_ids = {
+		"chinchilla",
+		"x_chinchilla"
+	}
+	self.weapon_skins.mac10_skf.weapon_ids = {
+		"mac10",
+		"x_mac10"
+	}
+	self.weapon_skins.polymer_smosh.weapon_ids = {
+		"polymer",
+		"x_polymer"
+	}
+	self.weapon_skins.x_m45_tam.weapon_ids = {
+		"m45",
+		"x_m45"
+	}
+	self.weapon_skins.colt_1911_tam.weapon_ids = {
+		"colt_1911",
+		"x_1911"
+	}
+	self.weapon_skins.colt_1911_wolf.weapon_ids = {
+		"colt_1911",
+		"x_1911"
+	}
+	self.weapon_skins.x_judge_tam.weapon_ids = {
+		"judge",
+		"x_judge"
+	}
+	self.weapon_skins.colt_1911_sfs.weapon_ids = {
+		"colt_1911",
+		"x_1911"
+	}
+	self.weapon_skins.lemming_mxs.weapon_ids = {
+		"lemming",
+		"x_lemming"
+	}
+	self.weapon_skins.x_b92fs_ginger.weapon_ids = {
+		"b92fs",
+		"x_b92fs"
+	}
+	self.weapon_skins.polymer_cs3.weapon_ids = {
+		"polymer",
+		"x_polymer"
+	}
+	self.weapon_skins.new_mp5_cs3.weapon_ids = {
+		"new_mp5",
+		"x_mp5"
+	}
+	self.weapon_skins.x_usp_mxs.weapon_ids = {
+		"usp",
+		"x_usp"
+	}
+	self.weapon_skins.mateba_wac.weapon_ids = {
+		"mateba",
+		"x_2006m"
+	}
+	self.weapon_skins.ppk_skf.weapon_ids = {
+		"ppk",
+		"x_ppk"
+	}
+	self.weapon_skins.b92fs_tam.weapon_ids = {
+		"b92fs",
+		"x_b92fs"
+	}
+	self.weapon_skins.mac10_sfs.weapon_ids = {
+		"mac10",
+		"x_mac10"
+	}
+	self.weapon_skins.akmsu_ginger.weapon_ids = {
+		"akmsu",
+		"x_akmsu"
+	}
+	self.weapon_skins.x_b92fs_tam.weapon_ids = {
+		"b92fs",
+		"x_b92fs"
+	}
+	self.weapon_skins.new_mp5_cat.weapon_ids = {
+		"new_mp5",
+		"x_mp5"
+	}
+	self.weapon_skins.x_g22c_baaah.weapon_ids = {
+		"g22c",
+		"x_g22c"
+	}
+	self.weapon_skins.uzi_ait.weapon_ids = {
+		"uzi",
+		"x_uzi"
+	}
+	self.weapon_skins.deagle_cat.weapon_ids = {
+		"deagle",
+		"x_deagle"
+	}
+	self.weapon_skins.mp7_tam.weapon_ids = {
+		"mp7",
+		"x_mp7"
+	}
+	self.weapon_skins.judge_dallas.weapon_ids = {
+		"judge",
+		"x_judge"
+	}
+	self.weapon_skins.x_b92fs_grunt.weapon_ids = {
+		"b92fs",
+		"x_b92fs"
+	}
+	self.weapon_skins.p90_tam.weapon_ids = {
+		"p90",
+		"x_p90"
+	}
+	self.weapon_skins.lemming_skf.weapon_ids = {
+		"lemming",
+		"x_lemming"
+	}
+	self.weapon_skins.usp_cs4.weapon_ids = {
+		"usp",
+		"x_usp"
+	}
+	self.weapon_skins.judge_lones.weapon_ids = {
+		"judge",
+		"x_judge"
+	}
+	self.weapon_skins.new_mp5_ginger.weapon_ids = {
+		"new_mp5",
+		"x_mp5"
+	}
+	self.weapon_skins.mac10_waves.weapon_ids = {
+		"mac10",
+		"x_mac10"
+	}
+	self.weapon_skins.x_chinchilla_mxs.weapon_ids = {
+		"chinchilla",
+		"x_chinchilla"
+	}
+	self.weapon_skins.ppk_cs3.weapon_ids = {
+		"ppk",
+		"x_ppk"
+	}
+	self.weapon_skins.jowi_tam.weapon_ids = {
+		"g26",
+		"jowi"
+	}
+	self.weapon_skins.new_raging_bull_same.weapon_ids = {
+		"new_raging_bull",
+		"x_rage"
+	}
+	self.weapon_skins.new_raging_bull_cs3.weapon_ids = {
+		"new_raging_bull",
+		"x_rage"
+	}
+	self.weapon_skins.polymer_css.weapon_ids = {
+		"polymer",
+		"x_polymer"
+	}
+	self.weapon_skins.x_sparrow_tam.weapon_ids = {
+		"sparrow",
+		"x_sparrow"
+	}
+	self.weapon_skins.b92fs_bloodbath.weapon_ids = {
+		"b92fs",
+		"x_b92fs"
+	}
+	self.weapon_skins.scorpion_tam.weapon_ids = {
+		"scorpion",
+		"x_scorpion"
+	}
+	self.weapon_skins.deagle_bling.weapon_ids = {
+		"deagle",
+		"x_deagle"
+	}
+	self.weapon_skins.peacemaker_cs3.weapon_ids = {
+		"peacemaker",
+		"x_peacemaker"
+	}
+	self.weapon_skins.m1928_dss.weapon_ids = {
+		"m1928",
+		"x_m1928"
+	}
+	self.weapon_skins.breech_wwt.weapon_ids = {
+		"breech",
+		"x_breech"
+	}
+	self.weapon_skins.m1928_buck.weapon_ids = {
+		"m1928",
+		"x_m1928"
+	}
+	self.weapon_skins.ppk_golddigger.weapon_ids = {
+		"ppk",
+		"x_ppk"
+	}
+	self.weapon_skins.x_czech_tam.weapon_ids = {
+		"czech",
+		"x_czech"
+	}
+	self.weapon_skins.x_coal_cat.weapon_ids = {
+		"coal",
+		"x_coal"
+	}
+	self.weapon_skins.b92fs_bloodsplat.weapon_ids = {
+		"b92fs",
+		"x_b92fs"
+	}
+	self.weapon_skins.x_hajk_tam.weapon_ids = {
+		"hajk",
+		"x_hajk"
+	}
+	self.weapon_skins.breech_tam.weapon_ids = {
+		"breech",
+		"x_breech"
+	}
+	self.weapon_skins.new_mp5_tam.weapon_ids = {
+		"new_mp5",
+		"x_mp5"
+	}
+	self.weapon_skins.ppk_dallas.weapon_ids = {
+		"ppk",
+		"x_ppk"
+	}
+	self.weapon_skins.akmsu_tam.weapon_ids = {
+		"akmsu",
+		"x_akmsu"
+	}
+	self.weapon_skins.p226_skf.weapon_ids = {
+		"p226",
+		"x_p226"
+	}
+	self.weapon_skins.hs2000_burn.weapon_ids = {
+		"hs2000",
+		"x_hs2000"
+	}
+	self.weapon_skins.judge_camohex.weapon_ids = {
+		"judge",
+		"x_judge"
+	}
+	self.weapon_skins.tec9_tam.weapon_ids = {
+		"tec9",
+		"x_tec9"
+	}
+	self.weapon_skins.usp_tam.weapon_ids = {
+		"usp",
+		"x_usp"
+	}
+	self.weapon_skins.x_shrew_tam.weapon_ids = {
+		"shrew",
+		"x_shrew"
+	}
+	self.weapon_skins.uzi_sfs.weapon_ids = {
+		"uzi",
+		"x_uzi"
+	}
+	self.weapon_skins.x_1911_baaah.weapon_ids = {
+		"colt_1911",
+		"x_1911"
+	}
+	self.weapon_skins.x_sr2_tam.weapon_ids = {
+		"sr2",
+		"x_sr2"
+	}
+	self.weapon_skins.mp7_cat.weapon_ids = {
+		"mp7",
+		"x_mp7"
+	}
+	self.weapon_skins.sparrow_cola.weapon_ids = {
+		"sparrow",
+		"x_sparrow"
+	}
+	self.weapon_skins.x_shepheard_tam.weapon_ids = {
+		"shepheard",
+		"x_shepheard"
+	}
+	self.weapon_skins.peacemaker_wwt.weapon_ids = {
+		"peacemaker",
+		"x_peacemaker"
+	}
+	self.weapon_skins.b92fs_same.weapon_ids = {
+		"b92fs",
+		"x_b92fs"
+	}
+	self.weapon_skins.legacy_nin.weapon_ids = {
+		"legacy",
+		"x_legacy"
+	}
+	self.weapon_skins.x_deagle_mxs.weapon_ids = {
+		"deagle",
+		"x_deagle"
+	}
+	self.weapon_skins.baka_wolf.weapon_ids = {
+		"baka",
+		"x_baka"
+	}
+	self.weapon_skins.rota_nin.weapon_ids = {
+		"rota",
+		"x_rota"
+	}
+	self.weapon_skins.usp_baaah.weapon_ids = {
+		"usp",
+		"x_usp"
+	}
+	self.weapon_skins.tec9_nin.weapon_ids = {
+		"tec9",
+		"x_tec9"
+	}
+	self.weapon_skins.mateba_smosh.weapon_ids = {
+		"mateba",
+		"x_2006m"
+	}
+	self.weapon_skins.x_deagle_tam.weapon_ids = {
+		"deagle",
+		"x_deagle"
+	}
+	self.weapon_skins.m1928_ginger.weapon_ids = {
+		"m1928",
+		"x_m1928"
+	}
+	self.weapon_skins.p90_golddigger.weapon_ids = {
+		"p90",
+		"x_p90"
+	}
+	self.weapon_skins.lemming_ait.weapon_ids = {
+		"lemming",
+		"x_lemming"
+	}
+	self.weapon_skins.new_raging_bull_bloodbath.weapon_ids = {
+		"new_raging_bull",
+		"x_rage"
+	}
+	self.weapon_skins.b92fs_ait.weapon_ids = {
+		"b92fs",
+		"x_b92fs"
+	}
+	self.weapon_skins.peacemaker_sfs.weapon_ids = {
+		"peacemaker",
+		"x_peacemaker"
+	}
+	self.weapon_skins.mac10_ait.weapon_ids = {
+		"mac10",
+		"x_mac10"
+	}
+	self.weapon_skins.deagle_ait.weapon_ids = {
+		"deagle",
+		"x_deagle"
+	}
+	self.weapon_skins.baka_waves.weapon_ids = {
+		"baka",
+		"x_baka"
+	}
+	self.weapon_skins.c96_dss.weapon_ids = {
+		"c96",
+		"x_c96"
+	}
+	self.weapon_skins.p226_wolf.weapon_ids = {
+		"p226",
+		"x_p226"
+	}
+	self.weapon_skins.deagle_smosh.weapon_ids = {
+		"deagle",
+		"x_deagle"
+	}
+	self.weapon_skins.deagle_skullimov.weapon_ids = {
+		"deagle",
+		"x_deagle"
+	}
+	self.weapon_skins.x_m1928_tam.weapon_ids = {
+		"m1928",
+		"x_m1928"
+	}
+	self.weapon_skins.p226_cat.weapon_ids = {
+		"p226",
+		"x_p226"
+	}
+	self.weapon_skins.judge_burn.weapon_ids = {
+		"judge",
+		"x_judge"
+	}
+	self.weapon_skins.x_usp_cat.weapon_ids = {
+		"usp",
+		"x_usp"
+	}
+	self.weapon_skins.judge_same.weapon_ids = {
+		"judge",
+		"x_judge"
+	}
+	self.weapon_skins.x_beer_tam.weapon_ids = {
+		"beer",
+		"x_beer"
+	}
+	self.weapon_skins.stech_tam.weapon_ids = {
+		"stech",
+		"x_stech"
+	}
+	self.weapon_skins.czech_tam.weapon_ids = {
+		"czech",
+		"x_czech"
+	}
+	self.weapon_skins.tec9_mxs.weapon_ids = {
+		"tec9",
+		"x_tec9"
+	}
+	self.weapon_skins.x_2006m_tam.weapon_ids = {
+		"mateba",
+		"x_2006m"
+	}
+	self.weapon_skins.packrat_tam.weapon_ids = {
+		"packrat",
+		"x_packrat"
+	}
+	self.weapon_skins.peacemaker_tam.weapon_ids = {
+		"peacemaker",
+		"x_peacemaker"
+	}
+	self.weapon_skins.shepheard_tam.weapon_ids = {
+		"shepheard",
+		"x_shepheard"
+	}
+	self.weapon_skins.x_tec9_tam.weapon_ids = {
+		"tec9",
+		"x_tec9"
+	}
+	self.weapon_skins.x_scorpion_tam.weapon_ids = {
+		"scorpion",
+		"x_scorpion"
+	}
+	self.weapon_skins.mac10_wolf.weapon_ids = {
+		"mac10",
+		"x_mac10"
+	}
+	self.weapon_skins.x_schakal_tam.weapon_ids = {
+		"schakal",
+		"x_schakal"
+	}
+	self.weapon_skins.x_rage_tam.weapon_ids = {
+		"new_raging_bull",
+		"x_rage"
+	}
+	self.weapon_skins.x_ppk_tam.weapon_ids = {
+		"ppk",
+		"x_ppk"
+	}
+	self.weapon_skins.usp_same.weapon_ids = {
+		"usp",
+		"x_usp"
+	}
+	self.weapon_skins.x_polymer_tam.weapon_ids = {
+		"polymer",
+		"x_polymer"
+	}
+	self.weapon_skins.x_p90_tam.weapon_ids = {
+		"p90",
+		"x_p90"
+	}
+	self.weapon_skins.deagle_tam.weapon_ids = {
+		"deagle",
+		"x_deagle"
+	}
+	self.weapon_skins.x_olympic_tam.weapon_ids = {
+		"olympic",
+		"x_olympic"
+	}
+	self.weapon_skins.x_mp9_tam.weapon_ids = {
+		"mp9",
+		"x_mp9"
+	}
+	self.weapon_skins.x_mac10_tam.weapon_ids = {
+		"mac10",
+		"x_mac10"
+	}
+	self.weapon_skins.x_hs2000_tam.weapon_ids = {
+		"hs2000",
+		"x_hs2000"
+	}
+	self.weapon_skins.x_erma_tam.weapon_ids = {
+		"erma",
+		"x_erma"
+	}
+	self.weapon_skins.x_c96_tam.weapon_ids = {
+		"c96",
+		"x_c96"
+	}
+	self.weapon_skins.basset_tam.weapon_ids = {
+		"basset",
+		"x_basset"
+	}
+	self.weapon_skins.x_legacy_tam.weapon_ids = {
+		"legacy",
+		"x_legacy"
+	}
+	self.weapon_skins.breech_css.weapon_ids = {
+		"breech",
+		"x_breech"
+	}
+	self.weapon_skins.b92fs_dallas.weapon_ids = {
+		"b92fs",
+		"x_b92fs"
+	}
+	self.weapon_skins.mp7_wac.weapon_ids = {
+		"mp7",
+		"x_mp7"
+	}
+	self.weapon_skins.rota_tam.weapon_ids = {
+		"rota",
+		"x_rota"
+	}
+	self.weapon_skins.shrew_tam.weapon_ids = {
+		"shrew",
+		"x_shrew"
+	}
+	self.weapon_skins.x_usp_cola.weapon_ids = {
+		"usp",
+		"x_usp"
+	}
+	self.weapon_skins.p226_grunt.weapon_ids = {
+		"p226",
+		"x_p226"
+	}
+	self.weapon_skins.m1928_wwt.weapon_ids = {
+		"m1928",
+		"x_m1928"
+	}
+	self.weapon_skins.deagle_same.weapon_ids = {
+		"deagle",
+		"x_deagle"
+	}
+	self.weapon_skins.new_raging_bull_dallas.weapon_ids = {
+		"new_raging_bull",
+		"x_rage"
+	}
+	self.weapon_skins.coal_tam.weapon_ids = {
+		"coal",
+		"x_coal"
+	}
+	self.weapon_skins.m45_dss.weapon_ids = {
+		"m45",
+		"x_m45"
+	}
+	self.weapon_skins.judge_cs3.weapon_ids = {
+		"judge",
+		"x_judge"
+	}
+	self.weapon_skins.colt_1911_same.weapon_ids = {
+		"colt_1911",
+		"x_1911"
+	}
+	self.weapon_skins.mateba_sfs.weapon_ids = {
+		"mateba",
+		"x_2006m"
+	}
+	self.weapon_skins.new_raging_bull_bloodsplat.weapon_ids = {
+		"new_raging_bull",
+		"x_rage"
+	}
+	self.weapon_skins.polymer_waves.weapon_ids = {
+		"polymer",
+		"x_polymer"
+	}
+	self.weapon_skins.peacemaker_dss.weapon_ids = {
+		"peacemaker",
+		"x_peacemaker"
+	}
+	self.weapon_skins.g22c_ginger.weapon_ids = {
+		"g22c",
+		"x_g22c"
+	}
+	self.weapon_skins.hs2000_cola.weapon_ids = {
+		"hs2000",
+		"x_hs2000"
+	}
+	self.weapon_skins.judge_tam.weapon_ids = {
+		"judge",
+		"x_judge"
+	}
+	self.weapon_skins.p226_tam.weapon_ids = {
+		"p226",
+		"x_p226"
+	}
+	self.weapon_skins.olympic_sfs.weapon_ids = {
+		"olympic",
+		"x_olympic"
+	}
+	self.weapon_skins.chinchilla_cs4.weapon_ids = {
+		"chinchilla",
+		"x_chinchilla"
+	}
+	self.weapon_skins.p226_ginger.weapon_ids = {
+		"p226",
+		"x_p226"
+	}
+	self.weapon_skins.x_mp5_lones.weapon_ids = {
+		"new_mp5",
+		"x_mp5"
+	}
+	self.weapon_skins.x_1911_grunt.weapon_ids = {
+		"colt_1911",
+		"x_1911"
+	}
+	self.weapon_skins.p90_cs4.weapon_ids = {
+		"p90",
+		"x_p90"
+	}
+	self.weapon_skins.x_sterling_tam.weapon_ids = {
+		"sterling",
+		"x_sterling"
+	}
+	self.weapon_skins.rota_ait.weapon_ids = {
+		"rota",
+		"x_rota"
+	}
+	self.weapon_skins.jowi_mxs.weapon_ids = {
+		"g26",
+		"jowi"
+	}
+	self.weapon_skins.p226_buck.weapon_ids = {
+		"p226",
+		"x_p226"
+	}
+	self.weapon_skins.chinchilla_tam.weapon_ids = {
+		"chinchilla",
+		"x_chinchilla"
+	}
+	self.weapon_skins.x_1911_css.weapon_ids = {
+		"colt_1911",
+		"x_1911"
+	}
+	self.weapon_skins.scorpion_cola.weapon_ids = {
+		"scorpion",
+		"x_scorpion"
+	}
+	self.weapon_skins.erma_tam.weapon_ids = {
+		"erma",
+		"x_erma"
+	}
+	self.weapon_skins.colt_1911_waves.weapon_ids = {
+		"colt_1911",
+		"x_1911"
+	}
+	self.weapon_skins.x_akmsu_wac.weapon_ids = {
+		"akmsu",
+		"x_akmsu"
+	}
+	self.weapon_skins.sparrow_burn.weapon_ids = {
+		"sparrow",
+		"x_sparrow"
+	}
+	self.weapon_skins.mp9_burn.weapon_ids = {
+		"mp9",
+		"x_mp9"
+	}
+	self.weapon_skins.olympic_tam.weapon_ids = {
+		"olympic",
+		"x_olympic"
+	}
+	self.weapon_skins.chinchilla_mxs.weapon_ids = {
+		"chinchilla",
+		"x_chinchilla"
+	}
+	self.weapon_skins.sparrow_cs3.weapon_ids = {
+		"sparrow",
+		"x_sparrow"
+	}
+	self.weapon_skins.scorpion_burn.weapon_ids = {
+		"scorpion",
+		"x_scorpion"
+	}
+	self.weapon_skins.p90_same.weapon_ids = {
+		"p90",
+		"x_p90"
+	}
+	self.weapon_skins.lemming_css.weapon_ids = {
+		"lemming",
+		"x_lemming"
+	}
+	self.weapon_skins.x_chinchilla_cat.weapon_ids = {
+		"chinchilla",
+		"x_chinchilla"
+	}
+	self.weapon_skins.hs2000_smosh.weapon_ids = {
+		"hs2000",
+		"x_hs2000"
+	}
+	self.weapon_skins.deagle_nin.weapon_ids = {
+		"deagle",
+		"x_deagle"
+	}
+	self.weapon_skins.m1928_smosh.weapon_ids = {
+		"m1928",
+		"x_m1928"
+	}
+	self.weapon_skins.x_1911_ginger.weapon_ids = {
+		"colt_1911",
+		"x_1911"
+	}
+	self.weapon_skins.sparrow_tam.weapon_ids = {
+		"sparrow",
+		"x_sparrow"
+	}
+	self.weapon_skins.judge_woodland.weapon_ids = {
+		"judge",
+		"x_judge"
+	}
+	self.weapon_skins.sparrow_css.weapon_ids = {
+		"sparrow",
+		"x_sparrow"
+	}
+	self.weapon_skins.x_b92fs_buck.weapon_ids = {
+		"b92fs",
+		"x_b92fs"
+	}
+	self.weapon_skins.deagle_dallas.weapon_ids = {
+		"deagle",
+		"x_deagle"
+	}
+	self.weapon_skins.hs2000_tam.weapon_ids = {
+		"hs2000",
+		"x_hs2000"
+	}
+	self.weapon_skins.g22c_tam.weapon_ids = {
+		"g22c",
+		"x_g22c"
+	}
+	self.weapon_skins.pl14_tam.weapon_ids = {
+		"pl14",
+		"x_pl14"
+	}
+	self.weapon_skins.ppk_luxury.weapon_ids = {
+		"ppk",
+		"x_ppk"
+	}
+	self.weapon_skins.new_raging_bull_tam.weapon_ids = {
+		"new_raging_bull",
+		"x_rage"
+	}
+	self.weapon_skins.m45_buck.weapon_ids = {
+		"m45",
+		"x_m45"
+	}
+	self.weapon_skins.c96_wac.weapon_ids = {
+		"c96",
+		"x_c96"
+	}
+	self.weapon_skins.uzi_burn.weapon_ids = {
+		"uzi",
+		"x_uzi"
+	}
+	self.weapon_skins.sr2_tam.weapon_ids = {
+		"sr2",
+		"x_sr2"
+	}
+	self.weapon_skins.x_chinchilla_tam.weapon_ids = {
+		"chinchilla",
+		"x_chinchilla"
+	}
+	self.weapon_skins.x_1911_tam.weapon_ids = {
+		"colt_1911",
+		"x_1911"
+	}
+	self.weapon_skins.x_akmsu_tam.weapon_ids = {
+		"akmsu",
+		"x_akmsu"
+	}
+	self.weapon_skins.x_g22c_tam.weapon_ids = {
+		"g22c",
+		"x_g22c"
+	}
+	self.weapon_skins.x_basset_tam.weapon_ids = {
+		"basset",
+		"x_basset"
+	}
+	self.weapon_skins.polymer_baaah.weapon_ids = {
+		"polymer",
+		"x_polymer"
+	}
+	self.weapon_skins.x_mp5_wac.weapon_ids = {
+		"new_mp5",
+		"x_mp5"
+	}
+	self.weapon_skins.glock_17_burn.weapon_ids = {
+		"glock_17",
+		"x_g17"
+	}
+	self.weapon_skins.glock_17_cola.weapon_ids = {
+		"glock_17",
+		"x_g17"
+	}
+	self.weapon_skins.glock_17_tam.weapon_ids = {
+		"glock_17",
+		"x_g17"
+	}
+	self.weapon_skins.glock_18c_burn.weapon_ids = {
+		"glock_18c",
+		"x_g18c"
+	}
+	self.weapon_skins.glock_18c_wac.weapon_ids = {
+		"glock_18c",
+		"x_g18c"
+	}
+	self.weapon_skins.glock_18c_nin.weapon_ids = {
+		"glock_18c",
+		"x_g18c"
+	}
+	self.weapon_skins.g26_css.weapon_ids = {
+		"g26",
+		"jowi"
+	}
+	self.weapon_skins.g26_wac.weapon_ids = {
+		"g26",
+		"jowi"
+	}
+	self.weapon_skins.g26_skf.weapon_ids = {
+		"g26",
+		"jowi"
+	}
 
 	self:_setup_weapon_color_skins(tweak_data)
 end
 
--- Lines 40326-40420
+-- Lines 40895-40989
 function BlackMarketTweakData:populate_weapon_color_skin(weapon_color_data, variation_data, weapon_id)
 	local weapon_color_skin_template = self.weapon_color_templates.color_skin
 	weapon_color_data.base_gradient = variation_data[weapon_color_skin_template.base_gradient]
@@ -37576,7 +38888,7 @@ function BlackMarketTweakData:populate_weapon_color_skin(weapon_color_data, vari
 	end
 end
 
--- Lines 40423-40449
+-- Lines 40992-41018
 function BlackMarketTweakData:create_new_color_skin(name, data, color_skin_data)
 	data.name_id = "bm_wskn_" .. name
 	data.rarity = "common"
@@ -37601,12 +38913,12 @@ function BlackMarketTweakData:create_new_color_skin(name, data, color_skin_data)
 	table.insert(self.weapon_colors, name)
 end
 
--- Lines 40451-40453
+-- Lines 41020-41022
 function BlackMarketTweakData:get_weapon_color_index_string(color_index)
 	return "menu_weapon_color_index_" .. tostring(color_index)
 end
 
--- Lines 40455-43505
+-- Lines 41024-44073
 function BlackMarketTweakData:_setup_weapon_color_skins(tweak_data)
 	self.weapon_color_templates = WeaponColorTemplates.setup_weapon_color_templates(tweak_data)
 	self.weapon_color_pattern_scales = {

@@ -155,7 +155,7 @@ function HostStateInLobby:on_join_request_received(data, peer_name, peer_account
 	new_peer:send("request_join_auth", HostNetworkSession.JOIN_REPLY.OK, ticket)
 end
 
--- Lines 256-346
+-- Lines 256-354
 function HostStateInLobby:on_join_auth_received(data, auth_ticket, sender)
 	print("[HostStateInLobby:on_join_auth_received] auth ticket received")
 
@@ -214,7 +214,7 @@ function HostStateInLobby:on_join_auth_received(data, auth_ticket, sender)
 	new_peer:send("join_request_reply", unpack(params))
 	new_peer:send("set_loading_state", false, data.session:load_counter())
 	managers.vote:sync_server_kick_option(new_peer)
-	self:_introduce_new_peer_to_old_peers(data, new_peer, false, new_peer:name(), new_peer:character(), "remove", new_peer:xuid(), new_peer:xnaddr())
+	self:_introduce_new_peer_to_old_peers(data, new_peer, false, new_peer:name(), new_peer:character(), new_peer:xuid(), new_peer:xnaddr())
 	self:_introduce_old_peers_to_new_peer(data, new_peer)
 	self:on_handshake_confirmation(data, new_peer, 1)
 	managers.network:session():local_peer():sync_lobby_data(new_peer)
@@ -223,7 +223,7 @@ function HostStateInLobby:on_join_auth_received(data, auth_ticket, sender)
 	managers.crime_spree:on_peer_finished_loading(new_peer)
 end
 
--- Lines 350-352
+-- Lines 358-360
 function HostStateInLobby:is_joinable(data)
 	return not data.wants_to_load_level
 end

@@ -2,7 +2,7 @@ require("lib/tweak_data/GeneratedMarketLinkTweakData")
 
 EconomyTweakData = EconomyTweakData or class()
 
--- Lines 7-1382
+-- Lines 7-2212
 function EconomyTweakData:init(tweak_data)
 	self.safes = {}
 	self.drills = {}
@@ -394,9 +394,7 @@ function EconomyTweakData:init(tweak_data)
 				"x_1911_baaah",
 				"ksg_baaah"
 			},
-			contents = {
-				"event_bah_legendary"
-			}
+			contents = {}
 		},
 		type = "limited"
 	}
@@ -1988,7 +1986,7 @@ function EconomyTweakData:init(tweak_data)
 	self:_init_rarity_contents(tweak_data)
 end
 
--- Lines 1384-1404
+-- Lines 2214-2234
 function EconomyTweakData:_add_content(data, content, tweaks)
 	for category, items in pairs(content.contains) do
 		for _, entry in pairs(items) do
@@ -2011,7 +2009,7 @@ function EconomyTweakData:_add_content(data, content, tweaks)
 	end
 end
 
--- Lines 1406-1477
+-- Lines 2236-2332
 function EconomyTweakData:_init_ip_content(tweak_data)
 	self.safes.wac_01.ip_content = true
 	self.safes.surf_01.ip_content = true
@@ -2021,7 +2019,7 @@ function EconomyTweakData:_init_ip_content(tweak_data)
 	local weapon_skins_tweak = tweak_data.blackmarket.weapon_skins
 	local add_ip_content = nil
 
-	-- Lines 1416-1428
+	-- Lines 2249-2266
 	function add_ip_content(content)
 		content.ip_content = true
 
@@ -2048,7 +2046,7 @@ function EconomyTweakData:_init_ip_content(tweak_data)
 
 	local weapon_id, weapon_tweak, should_hide_unavailable = nil
 
-	-- Lines 1438-1468
+	-- Lines 2278-2323
 	local function set_marketable_weapon_skins(data)
 		local weapon_skins = data.contains.weapon_skins
 
@@ -2091,7 +2089,7 @@ function EconomyTweakData:_init_ip_content(tweak_data)
 	end
 end
 
--- Lines 1479-1531
+-- Lines 2334-2387
 function EconomyTweakData:_init_rarity_contents(tweak_data)
 	local weapon_skin_tweak = tweak_data.blackmarket.weapon_skins
 	local armor_skin_tweak = self.armor_skins
@@ -2151,7 +2149,7 @@ function EconomyTweakData:_init_rarity_contents(tweak_data)
 	end
 end
 
--- Lines 1541-1550
+-- Lines 2397-2406
 function EconomyTweakData:get_entry_from_index(category, index)
 	for entry, data in pairs(self[category] or {}) do
 		if not data.index then
@@ -2164,12 +2162,12 @@ function EconomyTweakData:get_entry_from_index(category, index)
 	end
 end
 
--- Lines 1552-1554
+-- Lines 2408-2410
 function EconomyTweakData:get_index_from_entry(category, entry)
 	return self[category] and self[category][entry] and self[category][entry].index
 end
 
--- Lines 1556-1569
+-- Lines 2412-2427
 function EconomyTweakData:get_bonus_icons(entry)
 	local bonus_data = self.bonuses[entry]
 	local bonuses = {}
@@ -2189,7 +2187,7 @@ end
 
 EconomyTweakData.market_link_search = "https://steamcommunity.com/market/search?appid=218620&q="
 
--- Lines 1572-1589
+-- Lines 2430-2450
 function EconomyTweakData:create_weapon_skin_market_search_url(weapon_id, cosmetic_id)
 	local market_link = self.market_links.weapon_skins[cosmetic_id]
 
@@ -2210,7 +2208,7 @@ function EconomyTweakData:create_weapon_skin_market_search_url(weapon_id, cosmet
 	return nil
 end
 
--- Lines 1592-1605
+-- Lines 2453-2469
 function EconomyTweakData:create_armor_skin_market_search_url(cosmetic_id)
 	local market_link = self.market_links.armor_skins[cosmetic_id]
 
@@ -2229,22 +2227,22 @@ function EconomyTweakData:create_armor_skin_market_search_url(cosmetic_id)
 	return nil
 end
 
--- Lines 1608-1610
+-- Lines 2472-2474
 function EconomyTweakData:create_market_link_url(category, entry)
 	return self[category] and self[category][entry] and self[category][entry].market_link
 end
 
--- Lines 1612-1614
+-- Lines 2476-2478
 function EconomyTweakData:create_buy_tradable_url(def_id, quantity)
 	return "https://store.steampowered.com/buyitem/218620/" .. tostring(def_id) .. "/"
 end
 
--- Lines 1616-1618
+-- Lines 2480-2482
 function EconomyTweakData:create_sell_tradable_url(steam_id, instance_id)
 	return "https://steamcommunity.com/profiles/" .. tostring(steam_id) .. "/inventory/?sellOnLoad=1#218620_2_" .. tostring(instance_id)
 end
 
--- Lines 1620-1650
+-- Lines 2484-2514
 function EconomyTweakData:get_bonuses_by_safe(safe)
 	local safe_tweak = self.contents[safe]
 	local ids = deep_clone(safe_tweak.contains.weapon_skins)

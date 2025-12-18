@@ -129,10 +129,11 @@ require("lib/units/editor/EnvironmentOperatorElement")
 require("lib/units/editor/AreaDespawnElement")
 require("lib/utils/dev/tools/InventoryIconCreator")
 require("lib/utils/dev/tools/PreplanningHelper")
+require("lib/utils/dev/tools/EwsTools")
 
 WorldEditor = WorldEditor or class(CoreEditor)
 
--- Lines 162-169
+-- Lines 163-170
 function WorldEditor:init(game_state_machine)
 	WorldEditor.super.init(self, game_state_machine)
 	Network:set_multiplayer(true)
@@ -141,7 +142,7 @@ function WorldEditor:init(game_state_machine)
 	self._tool_updators = {}
 end
 
--- Lines 171-180
+-- Lines 172-181
 function WorldEditor:update(...)
 	WorldEditor.super.update(self, ...)
 
@@ -154,17 +155,17 @@ function WorldEditor:update(...)
 	end
 end
 
--- Lines 182-184
+-- Lines 183-185
 function WorldEditor:add_tool_updator(name, updator)
 	self._tool_updators[name] = updator
 end
 
--- Lines 186-188
+-- Lines 187-189
 function WorldEditor:remove_tool_updator(name)
 	self._tool_updators[name] = nil
 end
 
--- Lines 190-193
+-- Lines 191-194
 function WorldEditor:_init_mission_difficulties()
 	self._mission_difficulties = {
 		{
@@ -203,7 +204,7 @@ function WorldEditor:_init_mission_difficulties()
 	self._mission_difficulty = "normal"
 end
 
--- Lines 195-198
+-- Lines 196-199
 function WorldEditor:_init_mission_players()
 	self._mission_players = {
 		1,
@@ -214,18 +215,18 @@ function WorldEditor:_init_mission_players()
 	self._mission_player = 1
 end
 
--- Lines 201-204
+-- Lines 202-205
 function WorldEditor:_project_init_layer_classes()
 	self:add_layer("Ai", CoreAiLayer.AiLayer)
 	self:add_layer("Heatmap", CoreHeatmapLayer.HeatmapLayer)
 end
 
--- Lines 207-209
+-- Lines 208-210
 function WorldEditor:_project_init_slot_masks()
 	self._go_through_units_before_simulaton_mask = self._go_through_units_before_simulaton_mask + 15
 end
 
--- Lines 211-217
+-- Lines 212-218
 function WorldEditor:project_prestart_up(with_mission)
 	managers.job:on_simulation_started()
 	managers.navigation:on_simulation_started()
@@ -234,7 +235,7 @@ function WorldEditor:project_prestart_up(with_mission)
 	managers.hud:on_simulation_started()
 end
 
--- Lines 221-250
+-- Lines 222-251
 function WorldEditor:project_run_simulation(with_mission)
 	Global.game_settings.difficulty = self._mission_difficulty
 
@@ -270,11 +271,11 @@ function WorldEditor:project_run_simulation(with_mission)
 	managers.game_play_central:start_heist_timer()
 end
 
--- Lines 252-254
+-- Lines 253-255
 function WorldEditor:_project_check_unit(unit)
 end
 
--- Lines 258-288
+-- Lines 259-289
 function WorldEditor:project_stop_simulation()
 	managers.hud:on_simulation_ended()
 	managers.hud:clear_waypoints()
@@ -303,7 +304,7 @@ function WorldEditor:project_stop_simulation()
 	managers.dot:on_simulation_ended()
 end
 
--- Lines 292-304
+-- Lines 293-305
 function WorldEditor:project_clear_units()
 	managers.groupai:state():set_AI_enabled(false)
 
@@ -320,15 +321,19 @@ function WorldEditor:project_clear_units()
 	end
 end
 
--- Lines 309-310
+-- Lines 310-311
 function WorldEditor:project_clear_layers()
 end
 
--- Lines 315-316
+-- Lines 316-317
 function WorldEditor:project_recreate_layers()
 end
 
--- Lines 319-325
+-- Lines 320-325
+function WorldEditor:_project_add_menubar()
+end
+
+-- Lines 335-341
 function WorldEditor:_project_add_left_upper_toolbar_tool()
 	self._left_upper_toolbar:add_tool("TB_INVENTORY_ICON_CREATOR", "Icon Creator", CoreEWS.image_path("world_editor/icon_creator_16x16.png"), "Material Editor")
 	self._left_upper_toolbar:connect("TB_INVENTORY_ICON_CREATOR", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_open_inventory_icon_creator"), nil)
@@ -336,34 +341,34 @@ function WorldEditor:_project_add_left_upper_toolbar_tool()
 	self._left_upper_toolbar:connect("TB_PREPLANNING_HELPER", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_open_preplanning_helper"), nil)
 end
 
--- Lines 327-330
+-- Lines 343-346
 function WorldEditor:_open_inventory_icon_creator()
 	self._inventory_icon_creator = self._inventory_icon_creator or InventoryIconCreator:new()
 
 	self._inventory_icon_creator:show_ews()
 end
 
--- Lines 332-335
+-- Lines 348-351
 function WorldEditor:_open_preplanning_helper()
 	self._preplanning_helper = self._preplanning_helper or PreplanningHelper:new()
 
 	self._preplanning_helper:show_ews()
 end
 
--- Lines 337-340
+-- Lines 353-356
 function WorldEditor:open()
 	WorldEditor.super.open(self)
 	managers.menu_component:set_rev_visible(self._enable_revision_number)
 end
 
--- Lines 342-346
+-- Lines 358-362
 function WorldEditor:on_enable_revision_number(changed, value)
 	if changed then
 		managers.menu_component:set_rev_visible(value)
 	end
 end
 
--- Lines 348-353
+-- Lines 364-369
 function WorldEditor:deleted_unit(unit)
 	WorldEditor.super.deleted_unit(self, unit)
 
@@ -372,7 +377,7 @@ function WorldEditor:deleted_unit(unit)
 	end
 end
 
--- Lines 355-360
+-- Lines 371-376
 function WorldEditor:select_unit(unit)
 	WorldEditor.super.select_unit(self, unit)
 
@@ -381,7 +386,7 @@ function WorldEditor:select_unit(unit)
 	end
 end
 
--- Lines 362-369
+-- Lines 378-385
 function WorldEditor:select_units(units)
 	WorldEditor.super.select_units(self, units)
 
@@ -392,7 +397,7 @@ function WorldEditor:select_units(units)
 	end
 end
 
--- Lines 371-376
+-- Lines 387-392
 function WorldEditor:on_selected_unit(unit)
 	WorldEditor.super.on_selected_unit(self, unit)
 

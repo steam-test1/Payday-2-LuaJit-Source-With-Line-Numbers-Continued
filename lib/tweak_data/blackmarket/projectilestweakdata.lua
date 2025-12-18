@@ -3,7 +3,7 @@ function BlackMarketTweakData:_init_bullets(tweak_data)
 	self.bullets = {}
 end
 
--- Lines 32-1020
+-- Lines 32-1024
 function BlackMarketTweakData:_init_projectiles(tweak_data)
 	self.projectiles = {
 		frag = {}
@@ -145,8 +145,10 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 	}
 	self.projectiles.launcher_frag_m32 = deep_clone(self.projectiles.launcher_frag)
 	self.projectiles.launcher_frag_m32.weapon_id = "m32"
+	self.projectiles.launcher_frag_m32.time_cheat = 0.45
 	self.projectiles.launcher_incendiary_m32 = deep_clone(self.projectiles.launcher_incendiary)
 	self.projectiles.launcher_incendiary_m32.weapon_id = "m32"
+	self.projectiles.launcher_incendiary_m32.time_cheat = 0.45
 	self.projectiles.launcher_frag_china = deep_clone(self.projectiles.launcher_frag)
 	self.projectiles.launcher_frag_china.weapon_id = "china"
 	self.projectiles.launcher_frag_china.unit = "units/pd2_dlc_lupus/weapons/wpn_launcher_frag_grenade_china/wpn_launcher_frag_grenade_china"
@@ -178,7 +180,7 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 		no_cheat_count = true,
 		impact_detonation = true,
 		is_explosive = true,
-		time_cheat = 1,
+		time_cheat = 0.9,
 		physic_effect = Idstring("physic_effects/anti_gravitate"),
 		adjust_z = 0
 	}
@@ -594,6 +596,7 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 	self.projectiles.launcher_electric_m32 = deep_clone(self.projectiles.launcher_electric)
 	self.projectiles.launcher_electric_m32.unit = "units/pd2_dlc_sawp/weapons/wpn_launcher_electric/wpn_launcher_electric_m32"
 	self.projectiles.launcher_electric_m32.weapon_id = "m32"
+	self.projectiles.launcher_electric_m32.time_cheat = 0.45
 	self.projectiles.launcher_electric_china = deep_clone(self.projectiles.launcher_electric)
 	self.projectiles.launcher_electric_china.unit = "units/pd2_dlc_sawp/weapons/wpn_launcher_electric/wpn_launcher_electric_china"
 	self.projectiles.launcher_electric_china.weapon_id = "china"
@@ -676,6 +679,7 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 	self.projectiles.launcher_poison_gre_m79.weapon_id = "gre_m79"
 	self.projectiles.launcher_poison_m32 = deep_clone(self.projectiles.launcher_poison)
 	self.projectiles.launcher_poison_m32.weapon_id = "m32"
+	self.projectiles.launcher_poison_m32.time_cheat = 0.45
 	self.projectiles.launcher_poison_groza = deep_clone(self.projectiles.launcher_poison)
 	self.projectiles.launcher_poison_groza.weapon_id = "groza"
 	self.projectiles.launcher_poison_china = deep_clone(self.projectiles.launcher_poison)
@@ -689,17 +693,17 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 	self.projectiles.launcher_frag_ms3gl = deep_clone(self.projectiles.launcher_frag)
 	self.projectiles.launcher_frag_ms3gl.unit = "units/pd2_dlc_pxp1/weapons/wpn_launcher_frag_grenade/wpn_launcher_frag_grenade_ms3gl"
 	self.projectiles.launcher_frag_ms3gl.no_cheat_count = true
-	self.projectiles.launcher_frag_ms3gl.time_cheat = nil
+	self.projectiles.launcher_frag_ms3gl.time_cheat = 0.1
 	self.projectiles.launcher_frag_ms3gl.weapon_id = "ms3gl"
 	self.projectiles.launcher_incendiary_ms3gl = deep_clone(self.projectiles.launcher_incendiary)
 	self.projectiles.launcher_incendiary_ms3gl.unit = "units/pd2_dlc_pxp1/weapons/wpn_launcher_incendiary_grenade/wpn_launcher_incendiary_grenade_ms3gl"
 	self.projectiles.launcher_incendiary_ms3gl.no_cheat_count = true
-	self.projectiles.launcher_incendiary_ms3gl.time_cheat = nil
+	self.projectiles.launcher_incendiary_ms3gl.time_cheat = 0.1
 	self.projectiles.launcher_incendiary_ms3gl.weapon_id = "ms3gl"
 	self.projectiles.launcher_electric_ms3gl = deep_clone(self.projectiles.launcher_electric)
 	self.projectiles.launcher_electric_ms3gl.unit = "units/pd2_dlc_pxp1/weapons/wpn_launcher_electric/wpn_launcher_electric_ms3gl"
 	self.projectiles.launcher_electric_ms3gl.no_cheat_count = true
-	self.projectiles.launcher_electric_ms3gl.time_cheat = nil
+	self.projectiles.launcher_electric_ms3gl.time_cheat = 0.1
 	self.projectiles.launcher_electric_ms3gl.weapon_id = "ms3gl"
 	self.projectiles.sticky_grenade = {
 		name_id = "bm_grenade_sticky_grenade",
@@ -811,12 +815,12 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 	self:_add_desc_from_name_macro(self.projectiles)
 end
 
--- Lines 1022-1024
+-- Lines 1026-1028
 function BlackMarketTweakData:get_projectiles_index()
 	return self._projectiles_index
 end
 
--- Lines 1026-1033
+-- Lines 1030-1037
 function BlackMarketTweakData:get_index_from_projectile_id(projectile_id)
 	for index, entry_name in ipairs(self._projectiles_index) do
 		if entry_name == projectile_id then
@@ -827,7 +831,7 @@ function BlackMarketTweakData:get_index_from_projectile_id(projectile_id)
 	return 0
 end
 
--- Lines 1035-1037
+-- Lines 1039-1041
 function BlackMarketTweakData:get_projectile_name_from_index(index)
 	return self._projectiles_index[index]
 end

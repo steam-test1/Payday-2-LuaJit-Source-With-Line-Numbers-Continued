@@ -850,7 +850,7 @@ function Setup:restart()
 	end
 end
 
--- Lines 1165-1225
+-- Lines 1165-1279
 function Setup:block_exec()
 	if not self._main_thread_loading_screen_gui_visible then
 		self:set_main_thread_loading_screen_visible(true)
@@ -861,8 +861,6 @@ function Setup:block_exec()
 	local result = false
 
 	if self._packages_to_unload then
-		print("BLOCKED BY UNLOADING PACKAGES")
-
 		result = true
 	elseif not self._packages_to_unload_gathered then
 		self._packages_to_unload_gathered = true
@@ -872,24 +870,23 @@ function Setup:block_exec()
 		result = true
 	end
 
-	if not managers.network:is_ready_to_load() then
-		print("BLOCKED BY STOPPING NETWORK")
-
+	if not result and not managers.network:is_ready_to_load() then
 		result = true
 	end
 
-	if not managers.dyn_resource:is_ready_to_close() then
-		print("BLOCKED BY DYNAMIC RESOURCE MANAGER")
+	if not result and not managers.dyn_resource:is_ready_to_close() then
+		local t = Application:time()
+
 		managers.dyn_resource:set_file_streaming_chunk_size_mul(1, 1)
 
 		result = true
 	end
 
-	if managers.system_menu:block_exec() then
+	if not result and managers.system_menu:block_exec() then
 		result = true
 	end
 
-	if managers.savefile:is_active() then
+	if not result and managers.savefile:is_active() then
 		result = true
 	end
 
@@ -900,12 +897,12 @@ function Setup:block_exec()
 	return result
 end
 
--- Lines 1227-1229
+-- Lines 1281-1283
 function Setup:block_quit()
 	return self:block_exec()
 end
 
--- Lines 1231-1237
+-- Lines 1285-1291
 function Setup:set_main_thread_loading_screen_visible(visible)
 	if not self._main_thread_loading_screen_gui_visible ~= not visible then
 		cat_print("loading_environment", "[LoadingEnvironment] Main thread loading screen visible: " .. tostring(visible))
@@ -915,14 +912,14 @@ function Setup:set_main_thread_loading_screen_visible(visible)
 	end
 end
 
--- Lines 1239-1243
+-- Lines 1293-1297
 function Setup:set_fps_cap(value)
 	if not self._framerate_low then
 		Application:cap_framerate(value)
 	end
 end
 
--- Lines 1245-1255
+-- Lines 1299-1309
 function Setup:_upd_unload_packages()
 	if self._packages_to_unload then
 		local package_name = table.remove(self._packages_to_unload)
@@ -937,7 +934,7 @@ function Setup:_upd_unload_packages()
 	end
 end
 
--- Lines 1258-1260
+-- Lines 1312-1314
 function Setup:is_unloading()
 	return self._started_unloading_packages and true
 end

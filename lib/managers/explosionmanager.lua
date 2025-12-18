@@ -229,7 +229,7 @@ end
 local decal_ray_from = Vector3()
 local decal_ray_to = Vector3()
 
--- Lines 624-688
+-- Lines 624-704
 function ExplosionManager:spawn_sound_and_effects(position, normal, range, effect_name, sound_event, on_unit, idstr_decal, idstr_effect, molotov_damage_effect_table)
 	effect_name = effect_name or "effects/particles/explosions/explosion_grenade_launcher"
 	local effect_id = nil
@@ -308,7 +308,7 @@ function ExplosionManager:spawn_sound_and_effects(position, normal, range, effec
 	end
 end
 
--- Lines 690-723
+-- Lines 706-733
 function ExplosionManager:project_decal(ray, from, to, on_unit, idstr_decal, idstr_effect)
 	local slotmask_world_geometry = managers.slot:get_mask("world_geometry")
 
@@ -359,7 +359,7 @@ function ExplosionManager:project_decal(ray, from, to, on_unit, idstr_decal, ids
 	end
 end
 
--- Lines 727-855
+-- Lines 737-865
 function ExplosionManager:_detect_hits(params)
 	local hit_pos = params.hit_pos
 	local slotmask = params.collision_slotmask
@@ -406,7 +406,7 @@ function ExplosionManager:_detect_hits(params)
 		end
 	end
 
-	-- Lines 770-772
+	-- Lines 780-782
 	local function is_alive_character(unit)
 		return unit:character_damage() and unit:character_damage().dead and not unit:character_damage():dead()
 	end
@@ -484,7 +484,7 @@ function ExplosionManager:_detect_hits(params)
 	return results
 end
 
--- Lines 857-973
+-- Lines 867-977
 function ExplosionManager:_damage_characters(detect_results, params, variant, damage_func_name)
 	local user_unit = params.user
 	local owner = params.owner
@@ -515,7 +515,7 @@ function ExplosionManager:_damage_characters(detect_results, params, variant, da
 	}
 	local criminal_names = CriminalsManager.character_names()
 
-	-- Lines 879-885
+	-- Lines 889-895
 	local function get_first_body_hit(bodies_hit)
 		for _, hit_body in ipairs(bodies_hit or {}) do
 			if alive(hit_body) then
@@ -525,18 +525,12 @@ function ExplosionManager:_damage_characters(detect_results, params, variant, da
 	end
 
 	local dir, len, type, count_table, hit_body = nil
-	local characters_hit_list = {}
-	local characters_key_list = {}
-
-	for key, unit in pairs(detect_results.characters_hit) do
-		table.insert(characters_hit_list, unit)
-		table.insert(characters_key_list, key)
-	end
+	local characters_hit_list = table.map_values(detect_results.characters_hit)
 
 	ExplosionManager.sort_units_target_prio(characters_hit_list)
 
 	for i, unit in ipairs(characters_hit_list) do
-		local key = characters_key_list[i]
+		local key = unit:key()
 		hit_body = get_first_body_hit(detect_results.bodies_hit[key])
 		dir = hit_body and hit_body:center_of_mass() or alive(unit) and unit:position()
 		len = mvector3.direction(dir, hit_pos, dir)
@@ -607,7 +601,7 @@ function ExplosionManager:_damage_characters(detect_results, params, variant, da
 	return results
 end
 
--- Lines 975-995
+-- Lines 979-999
 function ExplosionManager:_damage_bodies(detect_results, params)
 	local user_unit = params.user
 	local hit_pos = params.hit_pos
@@ -631,7 +625,7 @@ function ExplosionManager:_damage_bodies(detect_results, params)
 	end
 end
 
--- Lines 997-1030
+-- Lines 1001-1034
 function ExplosionManager:detect_and_tase(params)
 	local user_unit = params.user
 	local owner = params.owner
@@ -670,7 +664,7 @@ function ExplosionManager:detect_and_tase(params)
 	return detect_results.units_hit, detect_results.splinters, results
 end
 
--- Lines 1033-1065
+-- Lines 1037-1069
 function ExplosionManager:detect_and_stun(params)
 	local user_unit = params.user
 	local owner = params.owner
@@ -708,7 +702,7 @@ function ExplosionManager:detect_and_stun(params)
 	return detect_results.units_hit, detect_results.splinters, results
 end
 
--- Lines 1068-1119
+-- Lines 1072-1123
 function ExplosionManager:detect_and_give_dmg(params)
 	local user_unit = params.user
 	local owner = params.owner
@@ -772,11 +766,11 @@ function ExplosionManager:detect_and_give_dmg(params)
 	return detect_results.units_hit, detect_results.splinters, results
 end
 
--- Lines 1124-1145
+-- Lines 1128-1149
 function ExplosionManager.sort_units_target_prio(units)
 	table.sort(units, function (unit_a, unit_b)
-		local base_a_ext = unit_a:base()
-		local base_b_ext = unit_b:base()
+		local base_a_ext = alive(unit_a) and unit_a:base()
+		local base_b_ext = alive(unit_b) and unit_b:base()
 
 		if base_a_ext and base_b_ext then
 			local char_a_tweak = base_a_ext._char_tweak or nil

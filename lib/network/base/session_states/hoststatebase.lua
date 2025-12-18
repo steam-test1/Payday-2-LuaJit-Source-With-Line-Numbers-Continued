@@ -61,8 +61,8 @@ function HostStateBase:_is_in_server_state()
 	return managers.network:session() and Network:is_server()
 end
 
--- Lines 111-125
-function HostStateBase:_introduce_new_peer_to_old_peers(data, new_peer, loading, peer_name, character, mask_set, xuid, xnaddr)
+-- Lines 111-139
+function HostStateBase:_introduce_new_peer_to_old_peers(data, new_peer, loading, peer_name, character, xuid, xnaddr)
 	local new_peer_user_id = SystemInfo:platform() == Idstring("WIN32") and new_peer:user_id() or ""
 	local new_peer_id = new_peer:id()
 
@@ -70,7 +70,7 @@ function HostStateBase:_introduce_new_peer_to_old_peers(data, new_peer, loading,
 		if old_pid ~= new_peer_id then
 			if old_peer:handshakes()[new_peer_id] == nil then
 				print("[HostStateBase:_introduce_new_peer_to_old_peers] introducing", new_peer_id, "to", old_pid)
-				old_peer:send("peer_handshake", peer_name, new_peer_id, new_peer_user_id, new_peer:account_type_str(), new_peer:account_id(), new_peer:in_lobby(), loading, false, character, mask_set, xuid, xnaddr)
+				old_peer:send("peer_handshake", peer_name, new_peer_id, new_peer_user_id, new_peer:account_type_str(), new_peer:account_id(), new_peer:in_lobby(), loading, false, character, xuid, xnaddr)
 				old_peer:set_handshake_status(new_peer_id, "asked")
 			else
 				print("[HostStateBase:_introduce_new_peer_to_old_peers] peer already had handshake", new_peer_id, "to", old_pid)
@@ -79,7 +79,7 @@ function HostStateBase:_introduce_new_peer_to_old_peers(data, new_peer, loading,
 	end
 end
 
--- Lines 129-142
+-- Lines 143-157
 function HostStateBase:_introduce_old_peers_to_new_peer(data, new_peer)
 	local new_peer_id = new_peer:id()
 
@@ -96,7 +96,7 @@ function HostStateBase:_introduce_old_peers_to_new_peer(data, new_peer)
 	end
 end
 
--- Lines 146-156
+-- Lines 161-171
 function HostStateBase:_chk_mutual_connection_established(data, peer, introduced_peer_id)
 	local introduced_peer = data.peers[introduced_peer_id]
 
@@ -111,7 +111,7 @@ function HostStateBase:_chk_mutual_connection_established(data, peer, introduced
 	return false
 end
 
--- Lines 160-180
+-- Lines 175-195
 function HostStateBase:on_handshake_confirmation(data, peer, introduced_peer_id)
 	cat_print("multiplayer_base", "[HostStateBase:on_handshake_confirmation]", inspect(peer), peer:id(), introduced_peer_id)
 
@@ -135,7 +135,7 @@ function HostStateBase:on_handshake_confirmation(data, peer, introduced_peer_id)
 	data.session:check_start_game_intro()
 end
 
--- Lines 184-190
+-- Lines 199-205
 function HostStateBase:_is_kicked(data, peer_name, peer_rpc)
 	local ident = SystemInfo:platform() == Idstring("WIN32") and peer_rpc:ip_at_index(0) or peer_name
 
@@ -144,7 +144,7 @@ function HostStateBase:_is_kicked(data, peer_name, peer_rpc)
 	end
 end
 
--- Lines 195-201
+-- Lines 210-216
 function HostStateBase:_is_banned(peer_name, account_id)
 	local identifier = SystemInfo:platform() == Idstring("WIN32") and account_id or peer_name
 
@@ -153,22 +153,22 @@ function HostStateBase:_is_banned(peer_name, account_id)
 	end
 end
 
--- Lines 206-212
+-- Lines 221-236
 function HostStateBase:on_peer_finished_loading(data, peer)
 	print("[HostStateBase:on_peer_finished_loading]", inspect(peer))
 
 	if not next(peer:handshakes()) then
-		self:_introduce_new_peer_to_old_peers(data, peer, false, peer:name(), peer:character(), "remove", peer:xuid(), peer:xnaddr())
+		self:_introduce_new_peer_to_old_peers(data, peer, false, peer:name(), peer:character(), peer:xuid(), peer:xnaddr())
 		self:_introduce_old_peers_to_new_peer(data, peer)
 	end
 end
 
--- Lines 216-218
+-- Lines 240-242
 function HostStateBase:on_load_level(data)
 	data.wants_to_load_level = true
 end
 
--- Lines 222-224
+-- Lines 246-248
 function HostStateBase:is_joinable(data)
 	return false
 end

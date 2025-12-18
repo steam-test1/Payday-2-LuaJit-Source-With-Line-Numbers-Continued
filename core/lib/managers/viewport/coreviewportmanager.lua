@@ -398,7 +398,7 @@ function ViewportManager:set_fullscreen(fullscreen)
 	end
 end
 
--- Lines 355-361
+-- Lines 373-379
 function ViewportManager:set_aspect_ratio(aspect_ratio)
 	if RenderSettings.aspect_ratio ~= aspect_ratio or self._render_settings_change_map and self._render_settings_change_map.aspect_ratio ~= aspect_ratio then
 		self._render_settings_change_map = self._render_settings_change_map or {}
@@ -407,7 +407,7 @@ function ViewportManager:set_aspect_ratio(aspect_ratio)
 	end
 end
 
--- Lines 363-369
+-- Lines 381-387
 function ViewportManager:set_vsync(vsync)
 	if RenderSettings.v_sync ~= vsync or self._render_settings_change_map and self._render_settings_change_map.v_sync ~= vsync then
 		self._render_settings_change_map = self._render_settings_change_map or {}
@@ -416,7 +416,7 @@ function ViewportManager:set_vsync(vsync)
 	end
 end
 
--- Lines 371-376
+-- Lines 389-394
 function ViewportManager:set_adapter_index(adapter_index)
 	if RenderSettings.adapter_index ~= adapter_index or self._render_settings_change_map and self._render_settings_change_map.adapter_index ~= adapter_index then
 		self._render_settings_change_map = self._render_settings_change_map or {}
@@ -424,7 +424,7 @@ function ViewportManager:set_adapter_index(adapter_index)
 	end
 end
 
--- Lines 378-389
+-- Lines 396-407
 function ViewportManager:reset_viewport_settings()
 	Application:reset_render_settings({
 		"adapter_index",
@@ -439,12 +439,12 @@ function ViewportManager:reset_viewport_settings()
 	self:resolution_changed()
 end
 
--- Lines 393-395
+-- Lines 411-413
 function ViewportManager:aspect_ratio()
 	return self._aspect_ratio
 end
 
--- Lines 397-399
+-- Lines 415-417
 function ViewportManager:set_aspect_ratio2(aspect_ratio)
 	self._aspect_ratio = aspect_ratio
 end

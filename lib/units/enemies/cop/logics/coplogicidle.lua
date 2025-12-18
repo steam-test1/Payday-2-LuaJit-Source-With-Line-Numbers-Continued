@@ -1028,7 +1028,7 @@ function CopLogicIdle._nav_point_pos(nav_point)
 	return nav_point.x and nav_point or nav_point:script_data().element:value("position")
 end
 
--- Lines 1013-1106
+-- Lines 1013-1147
 function CopLogicIdle._chk_relocate(data)
 	if data.objective and data.objective.type == "follow" then
 		if data.is_converted then
@@ -1043,22 +1043,43 @@ function CopLogicIdle._chk_relocate(data)
 			return
 		end
 
-		if data.is_tied and data.objective.lose_track_dis and data.objective.lose_track_dis * data.objective.lose_track_dis < mvector3.distance_sq(data.m_pos, data.objective.follow_unit:movement():m_newest_pos()) then
-			data.brain:set_objective(nil)
+		local follow_unit = data.objective.follow_unit
+		local follow_tracker = follow_unit:movement():nav_tracker()
+		local follow_pos = follow_tracker:lost() and follow_tracker:field_position() or follow_unit:movement():m_newest_pos()
 
-			return true
+		if data.is_tied then
+			local distance_to_follow_unit = mvector3.distance_sq(data.m_pos, follow_pos)
+			local lose_track_dis_sq = data.objective.lose_track_dis or 100000000
+
+			if distance_to_follow_unit > lose_track_dis_sq then
+				data.objective.in_place = nil
+
+				data.brain:set_objective(nil)
+
+				return true
+			end
+
+			local follow_distance = data.objective.distance or 22500
+
+			if distance_to_follow_unit > follow_distance and not data.unit:anim_data().move then
+				data.objective.in_place = nil
+
+				data.logic._exit(data.unit, "travel")
+
+				return true
+			end
 		end
 
-		local relocate = nil
-		local follow_unit = data.objective.follow_unit
 		local advance_pos = follow_unit:brain() and follow_unit:brain():is_advancing()
-		local follow_unit_pos = advance_pos or follow_unit:movement():m_newest_pos()
+		local follow_unit_pos = advance_pos or follow_pos
 
-		if data.objective.relocated_to and mvector3.distance_sq(data.objective.relocated_to, follow_unit_pos) > 1 then
+		if data.objective.relocated_to and mvector3.distance_sq(data.objective.relocated_to, follow_unit_pos) <= 1 then
 			return
 		end
 
-		if data.objective.distance and data.objective.distance < mvector3.distance(data.m_pos, follow_unit_pos) then
+		local relocate = nil
+
+		if data.objective.distance and data.objective.distance < mvector3.distance_sq(data.m_pos, follow_unit_pos) then
 			relocate = true
 		end
 
@@ -1137,7 +1158,7 @@ function CopLogicIdle._chk_relocate(data)
 	end
 end
 
--- Lines 1110-1129
+-- Lines 1151-1170
 function CopLogicIdle._chk_exit_non_walkable_area(data)
 	local my_data = data.internal_data
 
@@ -1164,19 +1185,19 @@ function CopLogicIdle._chk_exit_non_walkable_area(data)
 	end
 end
 
--- Lines 1133-1137
+-- Lines 1174-1178
 function CopLogicIdle._get_all_paths(data)
 	return {
 		stare_path = data.internal_data.stare_path
 	}
 end
 
--- Lines 1141-1143
+-- Lines 1182-1184
 function CopLogicIdle._set_verified_paths(data, verified_paths)
 	data.internal_data.stare_path = verified_paths.stare_path
 end
 
--- Lines 1147-1200
+-- Lines 1188-1241
 function CopLogicIdle._chk_focus_on_attention_object(data, my_data)
 	local current_attention = data.attention_obj
 
@@ -1235,7 +1256,7 @@ function CopLogicIdle._chk_focus_on_attention_object(data, my_data)
 	return true
 end
 
--- Lines 1204-1218
+-- Lines 1245-1259
 function CopLogicIdle._chk_turn_needed(data, my_data, my_pos, look_pos)
 	local fwd = data.unit:movement():m_fwd()
 	local target_vec = look_pos - my_pos
@@ -1252,7 +1273,7 @@ function CopLogicIdle._chk_turn_needed(data, my_data, my_pos, look_pos)
 	return err_to_correct
 end
 
--- Lines 1222-1482
+-- Lines 1263-1523
 function CopLogicIdle._get_priority_attention(data, attention_objects, reaction_func)
 	reaction_func = reaction_func or CopLogicIdle._chk_reaction_to_attention_object
 	local best_target, best_target_priority_slot, best_target_priority, best_target_reaction = nil
@@ -1454,7 +1475,7 @@ function CopLogicIdle._get_priority_attention(data, attention_objects, reaction_
 	return best_target, best_target_priority_slot, best_target_reaction
 end
 
--- Lines 1486-1523
+-- Lines 1527-1564
 function CopLogicIdle._upd_curious_reaction(data)
 	local my_data = data.internal_data
 	local unit = data.unit
@@ -1469,7 +1490,7 @@ function CopLogicIdle._upd_curious_reaction(data)
 		CopLogicBase._set_attention(data, attention_obj)
 	end
 
-	-- Lines 1504-1506
+	-- Lines 1545-1547
 	local function _get_spin_to_att_obj()
 		return (attention_obj.m_pos - data.m_pos):to_polar_with_reference(data.unit:movement():m_fwd(), math.UP).spin
 	end
@@ -1495,7 +1516,7 @@ function CopLogicIdle._upd_curious_reaction(data)
 	end
 end
 
--- Lines 1527-1538
+-- Lines 1568-1579
 function CopLogicIdle._turn_by_spin(data, my_data, spin)
 	local new_action_data = {
 		body_part = 2,
@@ -1510,7 +1531,7 @@ function CopLogicIdle._turn_by_spin(data, my_data, spin)
 	end
 end
 
--- Lines 1542-1561
+-- Lines 1583-1602
 function CopLogicIdle._chk_objective_needs_travel(data, new_objective)
 	if not new_objective.nav_seg and new_objective.type ~= "follow" then
 		return
@@ -1533,7 +1554,7 @@ function CopLogicIdle._chk_objective_needs_travel(data, new_objective)
 	return true
 end
 
--- Lines 1565-1618
+-- Lines 1606-1659
 function CopLogicIdle._upd_stance_and_pose(data, my_data, objective)
 	if data.unit:movement():chk_action_forbidden("walk") then
 		return
@@ -1595,7 +1616,7 @@ function CopLogicIdle._upd_stance_and_pose(data, my_data, objective)
 	end
 end
 
--- Lines 1622-1642
+-- Lines 1663-1683
 function CopLogicIdle._perform_objective_action(data, my_data, objective)
 	if objective and not my_data.action_started and (data.unit:anim_data().act_idle or not data.unit:movement():chk_action_forbidden("action")) then
 		if objective.action then
@@ -1620,7 +1641,7 @@ function CopLogicIdle._perform_objective_action(data, my_data, objective)
 	end
 end
 
--- Lines 1646-1669
+-- Lines 1687-1710
 function CopLogicIdle._upd_stop_old_action(data, my_data, objective)
 	if data.unit:anim_data().to_idle then
 		return
@@ -1657,7 +1678,7 @@ function CopLogicIdle._upd_stop_old_action(data, my_data, objective)
 	CopLogicIdle._chk_has_old_action(data, my_data)
 end
 
--- Lines 1673-1679
+-- Lines 1714-1720
 function CopLogicIdle._chk_has_old_action(data, my_data)
 	local anim_data = data.unit:anim_data()
 	my_data.has_old_action = anim_data.to_idle or anim_data.act
@@ -1665,7 +1686,7 @@ function CopLogicIdle._chk_has_old_action(data, my_data)
 	my_data.advancing = lower_body_action and lower_body_action:type() == "walk" and lower_body_action
 end
 
--- Lines 1683-1685
+-- Lines 1724-1726
 function CopLogicIdle._start_idle_action_from_act(data)
 	data.unit:brain():action_request({
 		variant = "idle",

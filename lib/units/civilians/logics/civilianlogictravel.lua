@@ -114,14 +114,15 @@ function CivilianLogicTravel.exit(data, new_logic_name, enter_params)
 end
 
 local tmp_vec1 = Vector3()
+local tmp_vec2 = Vector3()
 
--- Lines 114-148
+-- Lines 115-177
 function CivilianLogicTravel._optimize_path(path)
 	if #path <= 2 then
 		return path
 	end
 
-	-- Lines 119-125
+	-- Lines 125-131
 	local function remove_duplicates(path)
 		for i = #path, 2, -1 do
 			if path[i] == path[i - 1] then
@@ -137,17 +138,24 @@ function CivilianLogicTravel._optimize_path(path)
 	}
 	local i = 1
 	local count = 1
+	local up = math.UP * 4
 
 	while i < #path do
-		local pos = path[i]
+		local pos = path[i] + up
 		local next_index = i + 1
 
 		for j = i + 1, #path do
+			local pos_to = path[j] + up
+
 			if not managers.navigation:raycast({
 				pos_from = pos,
-				pos_to = path[j]
+				pos_to = pos_to
 			}) then
-				next_index = j
+				local ray_hit = World:raycast("ray", pos, pos_to, "slot_mask", managers.slot:get_mask("statics"), "sphere_cast_radius", 8)
+
+				if not ray_hit then
+					next_index = j
+				end
 			end
 		end
 
@@ -158,10 +166,18 @@ function CivilianLogicTravel._optimize_path(path)
 
 	remove_duplicates(opt_path)
 
+	if #opt_path >= 2 then
+		local normal = tmp_vec1
+		local padding = math.random(75, 110)
+
+		mvector3.direction(normal, opt_path[#opt_path - 1], opt_path[#opt_path])
+		mvector3.subtract(opt_path[#opt_path], normal * padding)
+	end
+
 	return opt_path
 end
 
--- Lines 152-241
+-- Lines 181-298
 function CivilianLogicTravel.update(data)
 	local my_data = data.internal_data
 	local unit = data.unit
@@ -171,14 +187,12 @@ function CivilianLogicTravel.update(data)
 	if my_data.has_old_action then
 		CivilianLogicTravel._upd_stop_old_action(data, my_data)
 	elseif my_data.warp_pos then
-		local action_desc = {
+		if unit:movement():action_request({
 			body_part = 1,
 			type = "warp",
 			position = mvector3.copy(objective.pos),
 			rotation = objective.rot
-		}
-
-		if unit:movement():action_request(action_desc) then
+		}) then
 			CivilianLogicTravel._on_destination_reached(data)
 		end
 	elseif my_data.processing_advance_path or my_data.processing_coarse_path then
@@ -207,7 +221,7 @@ function CivilianLogicTravel.update(data)
 			end_rot = end_rot
 		}
 		my_data.starting_advance_action = true
-		my_data.advancing = data.unit:brain():action_request(new_action_data)
+		my_data.advancing = unit:brain():action_request(new_action_data)
 		my_data.starting_advance_action = false
 
 		if my_data.advancing then
@@ -216,7 +230,19 @@ function CivilianLogicTravel.update(data)
 			data.brain:rem_pos_rsrv("path")
 		end
 	elseif objective then
-		if my_data.coarse_path then
+		if not my_data.coarse_path then
+			local nav_seg = nil
+
+			if objective.follow_unit then
+				nav_seg = objective.follow_unit:movement():nav_tracker():nav_segment()
+			else
+				nav_seg = objective.nav_seg
+			end
+
+			if unit:brain():search_for_coarse_path(my_data.coarse_path_search_id, nav_seg) then
+				my_data.processing_coarse_path = true
+			end
+		else
 			local coarse_path = my_data.coarse_path
 			local cur_index = my_data.coarse_path_index
 			local total_nav_points = #coarse_path
@@ -237,26 +263,17 @@ function CivilianLogicTravel.update(data)
 				local to_pos = nil
 
 				if cur_index == total_nav_points - 1 then
-					to_pos = CivilianLogicTravel._determine_exact_destination(data, objective)
+					local end_pos = CivilianLogicTravel._determine_exact_destination(data, objective)
+					to_pos = end_pos
 				else
 					to_pos = coarse_path[cur_index + 1][2]
 				end
 
-				my_data.processing_advance_path = true
+				if to_pos then
+					my_data.processing_advance_path = true
 
-				unit:brain():search_for_path(my_data.advance_path_search_id, to_pos)
-			end
-		else
-			local nav_seg = nil
-
-			if objective.follow_unit then
-				nav_seg = objective.follow_unit:movement():nav_tracker():nav_segment()
-			else
-				nav_seg = objective.nav_seg
-			end
-
-			if unit:brain():search_for_coarse_path(my_data.coarse_path_search_id, nav_seg) then
-				my_data.processing_coarse_path = true
+					unit:brain():search_for_path(my_data.advance_path_search_id, to_pos)
+				end
 			end
 		end
 	else
@@ -264,7 +281,7 @@ function CivilianLogicTravel.update(data)
 	end
 end
 
--- Lines 245-267
+-- Lines 302-334
 function CivilianLogicTravel._on_destination_reached(data)
 	local objective = data.objective
 	objective.in_place = true
@@ -294,7 +311,7 @@ function CivilianLogicTravel._on_destination_reached(data)
 	data.logic.on_new_objective(data)
 end
 
--- Lines 271-287
+-- Lines 338-358
 function CivilianLogicTravel.on_intimidated(data, amount, aggressor_unit)
 	if not CivilianLogicIdle.is_obstructed(data, aggressor_unit) then
 		return
@@ -315,31 +332,33 @@ function CivilianLogicTravel.on_intimidated(data, amount, aggressor_unit)
 	data.unit:brain():set_objective(new_objective)
 end
 
--- Lines 291-308
+-- Lines 362-389
 function CivilianLogicTravel._determine_exact_destination(data, objective)
 	if objective.pos then
 		return objective.pos
-	elseif objective.type == "follow" then
-		local follow_pos, follow_nav_seg = nil
-		local follow_unit_objective = objective.follow_unit:brain() and objective.follow_unit:brain():objective()
-		follow_pos = objective.follow_unit:movement():nav_tracker():field_position()
-		follow_nav_seg = objective.follow_unit:movement():nav_tracker():nav_segment()
-		local distance = objective.distance and math.lerp(objective.distance * 0.5, objective.distance * 0.9, math.random()) or 700
-		local to_pos = CopLogicTravel._get_pos_on_wall(follow_pos, distance)
+	end
+
+	if objective.type == "follow" and alive(objective.follow_unit) then
+		local follow_tracker = objective.follow_unit:movement():nav_tracker()
+		local follow_pos = follow_tracker:field_position()
+		local to_tracker = managers.navigation:create_nav_tracker(follow_pos)
+		local to_pos = to_tracker:field_position()
+
+		managers.navigation:destroy_nav_tracker(to_tracker)
 
 		return to_pos
-	else
-		return CopLogicTravel._get_pos_on_wall(managers.navigation._nav_segments[objective.nav_seg].pos, 700)
 	end
+
+	return CopLogicTravel._get_pos_on_wall(managers.navigation._nav_segments[objective.nav_seg].pos, 700)
 end
 
--- Lines 312-315
+-- Lines 393-396
 function CivilianLogicTravel._chk_has_old_action(data, my_data)
 	local anim_data = data.unit:anim_data()
 	my_data.has_old_action = anim_data.to_idle or anim_data.act and anim_data.needs_idle
 end
 
--- Lines 319-326
+-- Lines 400-407
 function CivilianLogicTravel._upd_stop_old_action(data, my_data, objective)
 	if not data.unit:anim_data().to_idle then
 		if not data.unit:movement():chk_action_forbidden("idle") and data.unit:anim_data().act and data.unit:anim_data().needs_idle then
@@ -350,7 +369,7 @@ function CivilianLogicTravel._upd_stop_old_action(data, my_data, objective)
 	end
 end
 
--- Lines 330-336
+-- Lines 411-419
 function CivilianLogicTravel.is_available_for_assignment(data, objective)
 	if objective and objective.forced then
 		return true

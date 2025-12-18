@@ -1325,7 +1325,7 @@ function HUDAssaultCorner:_update_feedback_alpha(t, dt)
 	managers.platform:set_feedback_color(color:with_alpha(alpha))
 end
 
--- Lines 1058-1067
+-- Lines 1058-1065
 function HUDAssaultCorner:_animate_wave_started(panel, assault_hud)
 	local wave_text = panel:child("num_waves")
 	local bg = panel:child("bg")
@@ -1335,7 +1335,7 @@ function HUDAssaultCorner:_animate_wave_started(panel, assault_hud)
 	bg:animate(callback(nil, _G, "HUDBGBox_animate_bg_attention"), {})
 end
 
--- Lines 1069-1082
+-- Lines 1067-1078
 function HUDAssaultCorner:_animate_wave_completed(panel, assault_hud)
 	local wave_text = panel:child("num_waves")
 	local bg = panel:child("bg")
@@ -1348,45 +1348,48 @@ function HUDAssaultCorner:_animate_wave_completed(panel, assault_hud)
 	assault_hud:_close_assault_box()
 end
 
--- Lines 1084-1090
+-- Lines 1080-1091
 function HUDAssaultCorner:get_completed_waves_string()
+	local current_wave = managers.network:session() and managers.network:session():is_host() and managers.groupai:state():get_assault_number()
 	local macro = {
-		current = managers.network:session():is_host() and managers.groupai:state():get_assault_number() or self._wave_number,
+		current = current_wave or self._wave_number,
 		max = self._max_waves or 0
 	}
 
 	return managers.localization:to_upper_text("hud_assault_waves", macro)
 end
 
--- Lines 1093-1098
+-- Lines 1094-1104
 function HUDAssaultCorner:wave_popup_string_start()
+	local current_wave = managers.network:session() and managers.network:session():is_host() and managers.groupai:state():get_assault_number()
 	local macro = {
-		current = managers.network:session():is_host() and managers.groupai:state():get_assault_number() or self._wave_number
+		current = current_wave or self._wave_number
 	}
 
 	return managers.localization:to_upper_text("hud_skirmish_wave_start", macro)
 end
 
--- Lines 1100-1105
+-- Lines 1106-1116
 function HUDAssaultCorner:wave_popup_string_end()
+	local current_wave = managers.network:session() and managers.network:session():is_host() and managers.groupai:state():get_assault_number()
 	local macro = {
-		current = managers.network:session():is_host() and managers.groupai:state():get_assault_number() or self._wave_number
+		current = current_wave or self._wave_number
 	}
 
 	return managers.localization:to_upper_text("hud_skirmish_wave_end", macro)
 end
 
--- Lines 1112-1114
+-- Lines 1123-1125
 function HUDAssaultCorner:_popup_wave_started()
 	self:_popup_wave(self:wave_popup_string_start(), self._assault_color)
 end
 
--- Lines 1116-1118
+-- Lines 1127-1129
 function HUDAssaultCorner:_popup_wave_finished()
 	self:_popup_wave(self:wave_popup_string_end(), self._assault_survived_color)
 end
 
--- Lines 1120-1167
+-- Lines 1131-1178
 function HUDAssaultCorner:_popup_wave(text, color)
 	local popup_panel = self._hud_panel:panel({
 		w = 250,
@@ -1421,7 +1424,7 @@ function HUDAssaultCorner:_popup_wave(text, color)
 		color = color
 	})
 
-	-- Lines 1146-1164
+	-- Lines 1157-1175
 	local function animate_popup(panel)
 		local cx = panel:center_x()
 

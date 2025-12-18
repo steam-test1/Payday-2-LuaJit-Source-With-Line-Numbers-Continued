@@ -252,18 +252,12 @@ function table.get_key(map, wanted_key_value)
 	return nil
 end
 
--- Lines 232-239
+-- Lines 232-242
 function table.has(v, k)
-	for key, _ in pairs(v) do
-		if key == k then
-			return true
-		end
-	end
-
-	return false
+	return not not v[k]
 end
 
--- Lines 241-247
+-- Lines 244-250
 function table.size(v)
 	local i = 0
 
@@ -274,7 +268,7 @@ function table.size(v)
 	return i
 end
 
--- Lines 249-255
+-- Lines 252-258
 function table.count(v, func)
 	local i = 0
 
@@ -287,24 +281,24 @@ function table.count(v, func)
 	return i
 end
 
--- Lines 257-261
+-- Lines 260-264
 function table.crop(t, size)
 	while t[size + 1] do
 		table.remove(t, size + 1)
 	end
 end
 
--- Lines 263-265
+-- Lines 266-268
 function table.empty(v)
 	return not next(v)
 end
 
--- Lines 268-270
+-- Lines 271-273
 function table.random(t)
 	return t[math.random(#t)]
 end
 
--- Lines 273-284
+-- Lines 276-287
 function table.random_key(t)
 	if not next(t) then
 		return
@@ -320,11 +314,11 @@ function table.random_key(t)
 	return key
 end
 
--- Lines 286-317
+-- Lines 289-320
 function table.concat_map(map, concat_values, none_string, wrap, sep, last_sep)
 	local count = 0
 
-	-- Lines 288-288
+	-- Lines 291-291
 	local function func()
 		return none_string
 	end
@@ -343,7 +337,7 @@ function table.concat_map(map, concat_values, none_string, wrap, sep, last_sep)
 			append_string = tostring(key)
 		end
 
-		-- Lines 304-312
+		-- Lines 307-315
 		function func(count, first)
 			if count == 1 then
 				return wrap .. append_string .. wrap
@@ -360,7 +354,7 @@ function table.concat_map(map, concat_values, none_string, wrap, sep, last_sep)
 	return func(count, true)
 end
 
--- Lines 319-332
+-- Lines 322-335
 function table.ordering(prioritized_order_list)
 	return function (a, b)
 		local a_index = table.get_vector_index(prioritized_order_list, a)
@@ -376,7 +370,7 @@ function table.ordering(prioritized_order_list)
 	end
 end
 
--- Lines 334-341
+-- Lines 337-344
 function table.sorted_copy(t, predicate)
 	local sorted_copy = {}
 
@@ -389,7 +383,7 @@ function table.sorted_copy(t, predicate)
 	return sorted_copy
 end
 
--- Lines 343-357
+-- Lines 346-360
 function table.shuffled_copy(t)
 	if #t == 0 then
 		return {}
@@ -407,7 +401,7 @@ function table.shuffled_copy(t)
 	return shuffled_copy
 end
 
--- Lines 359-366
+-- Lines 362-369
 function table.shuffle(t)
 	for i = 1, #t - 1 do
 		local swap_index = math.random(i, #t)
@@ -417,7 +411,7 @@ function table.shuffle(t)
 	end
 end
 
--- Lines 368-374
+-- Lines 371-377
 function table.find_value(t, func)
 	for k, value in ipairs(t) do
 		if func(value) then
@@ -426,7 +420,7 @@ function table.find_value(t, func)
 	end
 end
 
--- Lines 376-384
+-- Lines 379-387
 function table.find_all_values(t, func)
 	local matches = {}
 
@@ -439,7 +433,7 @@ function table.find_all_values(t, func)
 	return matches
 end
 
--- Lines 386-393
+-- Lines 389-396
 function table.true_for_all(t, predicate)
 	for key, value in pairs(t) do
 		if not predicate(value, key) then
@@ -450,7 +444,7 @@ function table.true_for_all(t, predicate)
 	return true
 end
 
--- Lines 395-403
+-- Lines 398-406
 function table.filter(t, func)
 	local res = {}
 
@@ -463,7 +457,7 @@ function table.filter(t, func)
 	return res
 end
 
--- Lines 405-413
+-- Lines 408-416
 function table.filter_list(t, func)
 	local res = {}
 
@@ -476,7 +470,7 @@ function table.filter_list(t, func)
 	return res
 end
 
--- Lines 418-424
+-- Lines 421-427
 function table.collect(t, func)
 	local result = {}
 
@@ -487,7 +481,7 @@ function table.collect(t, func)
 	return result
 end
 
--- Lines 429-435
+-- Lines 432-438
 function table.inject(t, initial, func)
 	local result = initial
 
@@ -498,7 +492,7 @@ function table.inject(t, initial, func)
 	return result
 end
 
--- Lines 437-451
+-- Lines 440-454
 function table.insert_sorted(t, item, comparator_func)
 	if item == nil then
 		return
@@ -518,14 +512,14 @@ function table.insert_sorted(t, item, comparator_func)
 	table.insert(t, index, item)
 end
 
--- Lines 453-457
+-- Lines 456-460
 function table.for_each_value(t, func)
 	for _, value in ipairs(t) do
 		func(value)
 	end
 end
 
--- Lines 459-468
+-- Lines 462-471
 function table.remove_condition(t, func)
 	local i = 1
 
@@ -538,7 +532,7 @@ function table.remove_condition(t, func)
 	end
 end
 
--- Lines 470-476
+-- Lines 473-479
 function table.range(s, e)
 	local range = {}
 
@@ -549,7 +543,7 @@ function table.range(s, e)
 	return range
 end
 
--- Lines 478-485
+-- Lines 481-488
 function table.list_reverse(list)
 	local copy = {}
 	local size = #list
@@ -561,7 +555,7 @@ function table.list_reverse(list)
 	return copy
 end
 
--- Lines 487-496
+-- Lines 490-499
 function table.reverse_ipairs(t)
 	local i = #t + 1
 
@@ -576,7 +570,7 @@ function table.reverse_ipairs(t)
 	end
 end
 
--- Lines 507-528
+-- Lines 510-531
 function table.unpack_sparse(sparse_list)
 	table.__unpack_sparse_implementations = table.__unpack_sparse_implementations or {}
 	local count = 0
@@ -600,19 +594,19 @@ function table.unpack_sparse(sparse_list)
 	return func(sparse_list)
 end
 
--- Lines 530-532
+-- Lines 533-535
 function table.unpack_map(map)
 	return unpack(table.map_to_list(map))
 end
 
--- Lines 535-537
+-- Lines 538-540
 function table.set(...)
 	return table.list_to_set({
 		...
 	})
 end
 
--- Lines 539-545
+-- Lines 542-548
 function table.list_to_set(list)
 	local rtn = {}
 
@@ -623,7 +617,7 @@ function table.list_to_set(list)
 	return rtn
 end
 
--- Lines 547-554
+-- Lines 550-557
 function table.map_to_list(map)
 	local list = {}
 
@@ -635,7 +629,7 @@ function table.map_to_list(map)
 	return list
 end
 
--- Lines 556-564
+-- Lines 559-567
 function table.map_keys(map, sort_func)
 	local keys = {}
 
@@ -648,7 +642,7 @@ function table.map_keys(map, sort_func)
 	return keys
 end
 
--- Lines 566-577
+-- Lines 569-580
 function table.map_values(map, sort_func)
 	local values = {}
 
@@ -663,7 +657,7 @@ function table.map_values(map, sort_func)
 	return values
 end
 
--- Lines 579-588
+-- Lines 582-591
 function table.remap(map, remap_func)
 	local result = {}
 
@@ -675,7 +669,7 @@ function table.remap(map, remap_func)
 	return result
 end
 
--- Lines 593-601
+-- Lines 596-604
 function table.list_add(...)
 	local result = {}
 
@@ -690,7 +684,7 @@ function table.list_add(...)
 	return result
 end
 
--- Lines 608-623
+-- Lines 611-626
 function table.list_union(...)
 	local unique = {}
 
@@ -711,7 +705,7 @@ function table.list_union(...)
 	return result
 end
 
--- Lines 625-635
+-- Lines 628-638
 function table.is_list_value_union(list1, list2)
 	for _, value1 in ipairs(list1) do
 		for _, value2 in ipairs(list2) do
@@ -724,7 +718,7 @@ function table.is_list_value_union(list1, list2)
 	return false
 end
 
--- Lines 640-646
+-- Lines 643-649
 function table.list_append(t, ...)
 	for _, list_table in ipairs({
 		...
@@ -735,7 +729,7 @@ function table.list_append(t, ...)
 	end
 end
 
--- Lines 651-658
+-- Lines 654-661
 function table.map_append(t, ...)
 	for _, list_table in ipairs({
 		...
@@ -748,28 +742,46 @@ function table.map_append(t, ...)
 	return t
 end
 
--- Lines 664-681
-function table.print_data(data, t)
-	if type(data) == "table" then
-		t = t or ""
+local __print_data_do_not_read = {
+	__module__ = true
+}
 
-		for k, v in pairs(data) do
-			if type(v) ~= "userdata" then
-				CoreDebug.cat_debug("debug", t .. tostring(k) .. "=" .. tostring(v))
-			else
-				CoreDebug.cat_debug("debug", t .. tostring(k) .. "=" .. CoreClass.type_name(v))
-			end
+-- Lines 672-704
+function table.print_data(data, depth_limit, t)
+	depth_limit = depth_limit or 10
 
-			if type(v) == "table" then
-				table.print_data(v, t .. "\t")
+	if depth_limit > 0 then
+		if type(data) == "table" then
+			t = t or ""
+
+			for k, v in pairs(data) do
+				local k_str = tostring(k)
+
+				if __print_data_do_not_read[k_str] then
+					CoreDebug.cat_debug("debug", t .. k_str .. " ERR: Do not read")
+				else
+					local v_type = type(v)
+
+					if v_type ~= "userdata" then
+						CoreDebug.cat_debug("debug", t .. k_str .. "=" .. tostring(v))
+					else
+						CoreDebug.cat_debug("debug", t .. k_str .. "=" .. CoreClass.type_name(v))
+					end
+
+					if v_type == "table" then
+						table.print_data(v, depth_limit - 1, t .. "\t")
+					end
+				end
 			end
+		else
+			CoreDebug.cat_debug("debug", CoreClass.type_name(data), tostring(data))
 		end
 	else
-		CoreDebug.cat_debug("debug", CoreClass.type_name(data), tostring(data))
+		CoreDebug.cat_debug("debug", t .. "ERR: Dug too deep")
 	end
 end
 
--- Lines 684-692
+-- Lines 707-715
 function table.lower_bound(t, target, func)
 	func = func or function (a, b)
 		return a < b
@@ -782,7 +794,7 @@ function table.lower_bound(t, target, func)
 	end
 end
 
--- Lines 697-705
+-- Lines 720-728
 function table.upper_bound(t, target, func)
 	func = func or function (a, b)
 		return a < b
@@ -798,7 +810,7 @@ end
 if Application:ews_enabled() then
 	local __lua_representation, __write_lua_representation_to_file = nil
 
-	-- Lines 716-725
+	-- Lines 739-748
 	function __lua_representation(value)
 		local t = type(value)
 
@@ -811,7 +823,7 @@ if Application:ews_enabled() then
 		end
 	end
 
-	-- Lines 727-746
+	-- Lines 750-769
 	function __write_lua_representation_to_file(value, file, indentation)
 		indentation = indentation or 1
 		local t = type(value)
@@ -836,7 +848,7 @@ if Application:ews_enabled() then
 		end
 	end
 
-	-- Lines 754-760
+	-- Lines 777-783
 	function write_lua_representation_to_path(value, path)
 		assert(type(path) == "string", "Invalid path argument. Expected string.")
 
@@ -847,7 +859,7 @@ if Application:ews_enabled() then
 		file:close()
 	end
 
-	-- Lines 762-770
+	-- Lines 785-793
 	function read_lua_representation_from_path(path)
 		assert(type(path) == "string", "Invalid path argument. Expected string.")
 
@@ -862,7 +874,7 @@ end
 
 local default_unpack = default_unpack or unpack
 
--- Lines 778-785
+-- Lines 801-808
 function _G.unpack(t, i, n)
 	if i == nil and n == nil then
 		return default_unpack(t, 1, table.maxn(t))

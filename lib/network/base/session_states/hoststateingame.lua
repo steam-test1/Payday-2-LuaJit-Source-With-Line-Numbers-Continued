@@ -8,7 +8,7 @@ function HostStateInGame:enter(data, enter_params)
 	self._new_peers = {}
 end
 
--- Lines 13-278
+-- Lines 13-277
 function HostStateInGame:on_join_request_received(data, peer_name, peer_account_type_str, peer_account_id, is_invite, client_preferred_character, xuid, peer_level, peer_rank, peer_stinger_index, join_attempt_identifier, sender)
 	local peer_id = sender:ip_at_index(0)
 	local my_user_id = data.local_peer:user_id() or ""
@@ -179,7 +179,7 @@ function HostStateInGame:on_join_request_received(data, peer_name, peer_account_
 	new_peer:send("request_join_auth", HostNetworkSession.JOIN_REPLY.OK, ticket)
 end
 
--- Lines 280-360
+-- Lines 279-359
 function HostStateInGame:on_join_auth_received(data, auth_ticket, sender)
 	print("[HostStateInGame:on_join_auth_received] auth ticket received")
 
@@ -243,9 +243,9 @@ function HostStateInGame:on_join_auth_received(data, auth_ticket, sender)
 	self._new_peers[new_peer_id] = true
 end
 
--- Lines 364-381
+-- Lines 363-389
 function HostStateInGame:on_peer_finished_loading(data, peer)
-	self:_introduce_new_peer_to_old_peers(data, peer, false, peer:name(), peer:character(), "remove", peer:xuid(), peer:xnaddr())
+	self:_introduce_new_peer_to_old_peers(data, peer, false, peer:name(), peer:character(), peer:xuid(), peer:xnaddr())
 	self:_introduce_old_peers_to_new_peer(data, peer)
 
 	if data.game_started then
@@ -261,7 +261,7 @@ function HostStateInGame:on_peer_finished_loading(data, peer)
 	end
 end
 
--- Lines 385-387
+-- Lines 393-395
 function HostStateInGame:is_joinable(data)
 	return not data.wants_to_load_level
 end

@@ -49,7 +49,7 @@ function PlayerEquipmentVR:valid_look_at_placement(equipment_data)
 	return ray
 end
 
--- Lines 48-102
+-- Lines 51-105
 function PlayerEquipmentVR:valid_shape_placement(equipment_id, equipment_data)
 	local active_hand = self._unit:hand():get_active_hand("deployable") or self._unit:hand():get_active_hand("weapon")
 
@@ -111,7 +111,7 @@ function PlayerEquipmentVR:valid_shape_placement(equipment_id, equipment_data)
 	return valid and ray
 end
 
--- Lines 104-137
+-- Lines 108-141
 function PlayerEquipment:throw_projectile()
 	local active_hand = self._unit:hand():get_active_hand("throwable") or self._unit:hand():get_active_hand("weapon")
 
@@ -147,7 +147,7 @@ function PlayerEquipment:throw_projectile()
 	managers.player:on_throw_grenade()
 end
 
--- Lines 139-161
+-- Lines 143-165
 function PlayerEquipment:throw_grenade()
 	local active_hand = self._unit:hand():get_active_hand("throwable") or self._unit:hand():get_active_hand("weapon")
 

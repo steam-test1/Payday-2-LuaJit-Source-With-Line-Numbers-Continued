@@ -1987,19 +1987,21 @@ function CopActionAct:save(save_data)
 	end
 end
 
--- Lines 2214-2216
+-- Lines 2215-2226
 function CopActionAct:need_upd()
-	return (self._waiting_full_blend or self._action_desc.clamp_to_graph and not self._ext_anim.can_freeze or self._look_trans or self._ik_type and self._attention and self._attention.unit) and true or false
+	local need_upd = self._waiting_full_blend or self._expired or self._action_desc.clamp_to_graph and not self._ext_anim.can_freeze or self._look_trans or self._ik_type and self._attention and self._attention.unit
+
+	return need_upd and true or false
 end
 
--- Lines 2220-2223
+-- Lines 2230-2233
 function CopActionAct:chk_block(action_type, t)
 	local unblock_t = self._blocks[action_type]
 
 	return unblock_t and (unblock_t == -1 or t < unblock_t)
 end
 
--- Lines 2227-2236
+-- Lines 2237-2246
 function CopActionAct:_create_blocks_table(block_desc)
 	local blocks = self._blocks or {}
 
@@ -2014,7 +2016,7 @@ function CopActionAct:_create_blocks_table(block_desc)
 	self._blocks = blocks
 end
 
--- Lines 2240-2253
+-- Lines 2250-2263
 function CopActionAct:_get_act_index(anim_name)
 	local cat_offset = 0
 
@@ -2035,7 +2037,7 @@ function CopActionAct:_get_act_index(anim_name)
 	return 1
 end
 
--- Lines 2257-2266
+-- Lines 2267-2276
 function CopActionAct:_get_act_name_from_index(index)
 	for _, category_name in ipairs(self._ACT_CATEGORY_INDEX) do
 		local category = self._act_redirects[category_name]
@@ -2056,7 +2058,7 @@ CopActionAct._to_exit_redirects = table.list_to_set({
 	"idle"
 })
 
--- Lines 2283-2378
+-- Lines 2293-2388
 function CopActionAct:_play_anim()
 	local is_upper_body = self._body_part == 3
 
@@ -2143,7 +2145,7 @@ function CopActionAct:_play_anim()
 	return true
 end
 
--- Lines 2382-2404
+-- Lines 2392-2414
 function CopActionAct:_sync_anim_play()
 	if Network:is_server() then
 		local action_index = self:_get_act_index(self._action_desc.variant)
@@ -2172,12 +2174,12 @@ function CopActionAct:_sync_anim_play()
 	end
 end
 
--- Lines 2408-2410
+-- Lines 2418-2420
 function CopActionAct:_set_updator(func_name)
 	self.update = func_name and self[func_name] or nil
 end
 
--- Lines 2414-2421
+-- Lines 2424-2431
 function CopActionAct:anim_act_clbk(trigger)
 	if trigger == "fire_blank" then
 		local weapon_unit = self._unit:inventory():equipped_unit()

@@ -9,7 +9,7 @@ function BoxGuiObject:init(panel, config)
 	self:create_sides(panel, config)
 end
 
--- Lines 12-37
+-- Lines 12-46
 function BoxGuiObject:create_sides(panel, config)
 	if not alive(panel) then
 		Application:error("[BoxGuiObject:create_sides] Failed creating BoxGui. Parent panel not alive!")
@@ -45,7 +45,7 @@ function BoxGuiObject:create_sides(panel, config)
 	self:_create_side(self._panel, "bottom", bottom_side, config.texture, config.one_two_align)
 end
 
--- Lines 39-169
+-- Lines 48-190
 function BoxGuiObject:_create_side(panel, side, type, texture, one_two_align)
 	local ids_side = Idstring(side)
 	local ids_left = Idstring("left")
@@ -184,42 +184,42 @@ function BoxGuiObject:_create_side(panel, side, type, texture, one_two_align)
 	return side_panel
 end
 
--- Lines 171-174
+-- Lines 192-195
 function BoxGuiObject:hide()
 	self._panel:hide()
 end
 
--- Lines 176-179
+-- Lines 197-200
 function BoxGuiObject:show()
 	self._panel:show()
 end
 
--- Lines 181-184
+-- Lines 202-205
 function BoxGuiObject:set_visible(visible)
 	self._panel:set_visible(visible)
 end
 
--- Lines 186-188
+-- Lines 207-209
 function BoxGuiObject:visible()
 	return self._panel:visible()
 end
 
--- Lines 190-192
+-- Lines 211-213
 function BoxGuiObject:set_layer(layer)
 	self._panel:set_layer(layer)
 end
 
--- Lines 194-196
+-- Lines 215-217
 function BoxGuiObject:size()
 	return self._panel:size()
 end
 
--- Lines 198-200
+-- Lines 219-221
 function BoxGuiObject:alive()
 	return alive(self._panel)
 end
 
--- Lines 202-212
+-- Lines 223-233
 function BoxGuiObject:inside(x, y, side)
 	if not self:alive() then
 		return false
@@ -232,7 +232,7 @@ function BoxGuiObject:inside(x, y, side)
 	end
 end
 
--- Lines 214-219
+-- Lines 235-240
 function BoxGuiObject:set_aligns(halign, valign)
 	for i, d in pairs(self._panel:children()) do
 		d:set_valign(valign)
@@ -240,7 +240,7 @@ function BoxGuiObject:set_aligns(halign, valign)
 	end
 end
 
--- Lines 221-229
+-- Lines 242-250
 function BoxGuiObject:set_clipping(clip, rec_panel)
 	for i, d in pairs(rec_panel and rec_panel:children() or self._panel:children()) do
 		if d.set_rotation then
@@ -251,12 +251,12 @@ function BoxGuiObject:set_clipping(clip, rec_panel)
 	end
 end
 
--- Lines 231-233
+-- Lines 252-254
 function BoxGuiObject:color()
 	return self._color
 end
 
--- Lines 235-244
+-- Lines 256-265
 function BoxGuiObject:set_color(color, rec_panel)
 	self._color = color
 
@@ -269,12 +269,12 @@ function BoxGuiObject:set_color(color, rec_panel)
 	end
 end
 
--- Lines 246-248
+-- Lines 267-269
 function BoxGuiObject:blend_mode()
 	return self._blend_mode
 end
 
--- Lines 250-259
+-- Lines 271-280
 function BoxGuiObject:set_blend_mode(blend_mode, rec_panel)
 	self._blend_mode = blend_mode
 
@@ -287,12 +287,12 @@ function BoxGuiObject:set_blend_mode(blend_mode, rec_panel)
 	end
 end
 
--- Lines 261-263
+-- Lines 282-284
 function BoxGuiObject:render_template()
 	return self._render_template
 end
 
--- Lines 265-275
+-- Lines 286-296
 function BoxGuiObject:set_render_template(render_template, rec_panel)
 	self._render_template = render_template
 	local render_template_ids = Idstring(render_template)
@@ -306,7 +306,7 @@ function BoxGuiObject:set_render_template(render_template, rec_panel)
 	end
 end
 
--- Lines 277-281
+-- Lines 298-302
 function BoxGuiObject:close()
 	if alive(self._panel) and alive(self._panel:parent()) then
 		self._panel:parent():remove(self._panel)

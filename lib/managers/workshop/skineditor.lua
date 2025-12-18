@@ -496,7 +496,7 @@ function SkinEditor:get_texture_list(skin, path)
 	return texture_list
 end
 
--- Lines 431-437
+-- Lines 437-443
 function SkinEditor:get_texture_list_by_type(skin, tex_type)
 	if not tex_type or not self:has_texture_folders(skin) then
 		Application:error("[SkinEditor:get_texture_list_by_type] called without a type")
@@ -507,7 +507,7 @@ function SkinEditor:get_texture_list_by_type(skin, tex_type)
 	return self:get_texture_list(skin, self:get_texture_path_by_type(skin, tex_type))
 end
 
--- Lines 439-471
+-- Lines 445-477
 function SkinEditor:load_textures(skin, path_or_tex_type)
 	if not path_or_tex_type and self:has_texture_folders(skin) then
 		self:_load_textures_by_types(skin)
@@ -542,14 +542,14 @@ function SkinEditor:load_textures(skin, path_or_tex_type)
 	end
 end
 
--- Lines 473-477
+-- Lines 479-483
 function SkinEditor:_load_textures_by_types(skin)
 	for _, tex_type in ipairs(self:get_texture_types()) do
 		self:load_textures(skin, tex_type)
 	end
 end
 
--- Lines 479-486
+-- Lines 485-492
 function SkinEditor:get_texture_path_by_type(skin, tex_type)
 	if not tex_type then
 		Application:error("[SkinEditor:get_texture_path_by_type] called without a type")
@@ -560,7 +560,7 @@ function SkinEditor:get_texture_path_by_type(skin, tex_type)
 	return Application:nice_path(skin:path() .. "/" .. tex_type, false)
 end
 
--- Lines 488-496
+-- Lines 494-502
 function SkinEditor:get_texture_string(skin, texture_name, texture_type)
 	if self:has_texture_folders(skin) and texture_type then
 		return string.lower(WorkshopManager.PATH .. string.match(skin:path(), "/(.*)/$") .. "/" .. texture_type .. "/" .. texture_name)
@@ -569,12 +569,12 @@ function SkinEditor:get_texture_string(skin, texture_name, texture_type)
 	end
 end
 
--- Lines 498-500
+-- Lines 504-506
 function SkinEditor:get_texture_idstring(skin, texture_name, texture_type)
 	return Idstring(self:get_texture_string(skin, texture_name, texture_type))
 end
 
--- Lines 502-513
+-- Lines 508-519
 function SkinEditor:check_texture_db(texture, silent)
 	if not DB:has(Idstring("texture"), Idstring(texture)) then
 		Application:error("Texture is not in DB: " .. texture)
@@ -585,7 +585,7 @@ function SkinEditor:check_texture_db(texture, silent)
 	return true
 end
 
--- Lines 515-521
+-- Lines 521-527
 function SkinEditor:check_texture_disk(texture)
 	if not SystemFS:exists(texture) then
 		Application:error("Texture does not exist on disk: " .. texture)
@@ -596,12 +596,12 @@ function SkinEditor:check_texture_disk(texture)
 	return true
 end
 
--- Lines 523-525
+-- Lines 529-531
 function SkinEditor:check_texture(texture)
 	return self:check_texture_db(texture) and self:check_texture_disk(texture)
 end
 
--- Lines 527-545
+-- Lines 533-551
 function SkinEditor:get_screenshot_name()
 	local skin = self:get_current_skin()
 	local path = self:get_screenshot_path(skin)
@@ -621,7 +621,7 @@ function SkinEditor:get_screenshot_name()
 	return path .. "/" .. name
 end
 
--- Lines 547-570
+-- Lines 553-576
 function SkinEditor:apply_changes(cosmetics_data)
 	local skin = self:get_current_skin()
 
@@ -653,7 +653,7 @@ function SkinEditor:apply_changes(cosmetics_data)
 	end
 end
 
--- Lines 572-587
+-- Lines 578-593
 function SkinEditor:remove_texture_by_name(skin, texture_name)
 	local original = deep_clone(skin:config().data)
 	local to_process = {
@@ -675,7 +675,7 @@ function SkinEditor:remove_texture_by_name(skin, texture_name)
 	end
 end
 
--- Lines 590-596
+-- Lines 596-602
 function SkinEditor:get_screenshot_rect()
 	local gui_rect = managers.gui_data:full_16_9_size()
 	local x = 0
@@ -687,19 +687,19 @@ function SkinEditor:get_screenshot_rect()
 	return x, y, w, h
 end
 
--- Lines 598-601
+-- Lines 604-607
 function SkinEditor:has_screenshots(skin)
 	local path = self:get_screenshot_path(skin)
 
 	return SystemFS:exists(path) and #SystemFS:list(path) > 0
 end
 
--- Lines 603-605
+-- Lines 609-611
 function SkinEditor:get_screenshot_path(skin)
 	return Application:nice_path(skin:path(), true) .. "screenshots"
 end
 
--- Lines 607-617
+-- Lines 613-623
 function SkinEditor:get_screenshot_list()
 	local skin = self:get_current_skin()
 
@@ -715,7 +715,7 @@ function SkinEditor:get_screenshot_list()
 	return screenshots
 end
 
--- Lines 619-636
+-- Lines 625-642
 function SkinEditor:get_all_applied_textures(skin)
 	local textures = {}
 	local to_process = {
@@ -742,7 +742,7 @@ function SkinEditor:get_all_applied_textures(skin)
 	return textures
 end
 
--- Lines 638-654
+-- Lines 644-660
 function SkinEditor:remove_literal_paths(skin)
 	local original = deep_clone(skin:config().data)
 	local to_process = {
@@ -764,7 +764,7 @@ function SkinEditor:remove_literal_paths(skin)
 	return original
 end
 
--- Lines 656-675
+-- Lines 662-681
 function SkinEditor:add_literal_paths(skin)
 	local add_type = self:has_texture_folders(skin)
 	local to_process = {
@@ -794,7 +794,7 @@ function SkinEditor:add_literal_paths(skin)
 	end
 end
 
--- Lines 677-679
+-- Lines 683-685
 function SkinEditor:get_texture_types()
 	return {
 		"base_gradient",
@@ -804,7 +804,7 @@ function SkinEditor:get_texture_types()
 	}
 end
 
--- Lines 681-693
+-- Lines 687-699
 function SkinEditor:setup_texture_folders(skin)
 	local texture_types = self:get_texture_types()
 
@@ -819,7 +819,7 @@ function SkinEditor:setup_texture_folders(skin)
 	end
 end
 
--- Lines 695-708
+-- Lines 701-714
 function SkinEditor:has_texture_folders(skin)
 	local has_folders = true
 	local texture_types = self:get_texture_types()
@@ -837,7 +837,7 @@ function SkinEditor:has_texture_folders(skin)
 	return has_folders
 end
 
--- Lines 710-719
+-- Lines 716-725
 function SkinEditor:clear_current_skin()
 	local skin = self:get_current_skin()
 	skin:config().data = {
@@ -849,7 +849,7 @@ function SkinEditor:clear_current_skin()
 	self:reload_current_skin()
 end
 
--- Lines 721-765
+-- Lines 727-775
 function SkinEditor:get_current_weapon_tags()
 	local tags = {}
 
@@ -898,7 +898,7 @@ function SkinEditor:get_current_weapon_tags()
 	return tags
 end
 
--- Lines 814-822
+-- Lines 824-832
 function SkinEditor:get_excluded_weapons()
 	return {
 		"akm_gold",
@@ -909,7 +909,7 @@ function SkinEditor:get_excluded_weapons()
 	}
 end
 
--- Lines 824-833
+-- Lines 834-843
 function SkinEditor:get_excluded_type_categories()
 	return {
 		"ammo",

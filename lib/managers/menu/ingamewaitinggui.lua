@@ -596,7 +596,7 @@ function IngameWaitingGui:create_empty(panel)
 	empty_bitmap:set_center_x(panel:center_x())
 end
 
--- Lines 460-562
+-- Lines 460-581
 function IngameWaitingGui:create_weapon(weapon, panel)
 	local w = panel:w()
 	local h = panel:h()
@@ -727,13 +727,13 @@ function IngameWaitingGui:create_weapon(weapon, panel)
 	end
 end
 
--- Lines 564-568
+-- Lines 583-587
 function IngameWaitingGui:dummy_trigger()
 	local btn = self._current_btn.button
 	local _ = btn and btn:trigger()
 end
 
--- Lines 570-583
+-- Lines 589-602
 function IngameWaitingGui:dummy_set_highlight(highlight)
 	if self._highlighted == highlight then
 		return
@@ -752,7 +752,7 @@ function IngameWaitingGui:dummy_set_highlight(highlight)
 	btn:set_highlighted(highlight)
 end
 
--- Lines 585-594
+-- Lines 604-613
 function IngameWaitingGui:move_left()
 	if not self._highlighted then
 		return
@@ -765,7 +765,7 @@ function IngameWaitingGui:move_left()
 	end
 end
 
--- Lines 596-606
+-- Lines 615-625
 function IngameWaitingGui:move_right()
 	if not self._highlighted then
 		return
@@ -778,7 +778,7 @@ function IngameWaitingGui:move_right()
 	end
 end
 
--- Lines 608-615
+-- Lines 627-634
 function IngameWaitingGui:prev_page()
 	local page = self:calc_prev()
 
@@ -793,7 +793,7 @@ end
 
 IngameWaitingGui.previous_page = IngameWaitingGui.prev_page
 
--- Lines 619-626
+-- Lines 638-645
 function IngameWaitingGui:next_page()
 	local page = self:calc_next()
 
@@ -806,7 +806,7 @@ function IngameWaitingGui:next_page()
 	return false
 end
 
--- Lines 628-657
+-- Lines 647-676
 function IngameWaitingGui:mouse_moved(o, x, y)
 	if not self._content_panel:visible() then
 		return
@@ -840,7 +840,7 @@ function IngameWaitingGui:mouse_moved(o, x, y)
 	end
 end
 
--- Lines 659-666
+-- Lines 678-685
 function IngameWaitingGui:special_btn_pressed(button)
 	print(button)
 
@@ -851,7 +851,7 @@ function IngameWaitingGui:special_btn_pressed(button)
 	end
 end
 
--- Lines 668-686
+-- Lines 687-705
 function IngameWaitingGui:mouse_pressed(button, x, y)
 	if not self._content_panel:visible() or button ~= Idstring("0") then
 		return
@@ -873,7 +873,7 @@ function IngameWaitingGui:mouse_pressed(button, x, y)
 	local t = self._prev_arrow:panel():inside(x, y) and self:prev_page()
 end
 
--- Lines 688-698
+-- Lines 707-717
 function IngameWaitingGui:set_current_button(index)
 	index = math.clamp(1, index or 1, #self._buttons)
 	local current = self._current_btn.button
@@ -888,7 +888,7 @@ end
 
 IngameWaitingButton = IngameWaitingButton or class()
 
--- Lines 704-716
+-- Lines 723-735
 function IngameWaitingButton:init(parent_panel, text, binding, callback)
 	self._panel = parent_panel:panel()
 	self._callback = callback
@@ -906,19 +906,19 @@ function IngameWaitingButton:init(parent_panel, text, binding, callback)
 	return self._panel
 end
 
--- Lines 718-721
+-- Lines 737-740
 function IngameWaitingButton:set_highlighted(highlighted)
 	self._highlighted = highlighted
 
 	self._text:set_color(highlighted and font_color_highlighted or font_color_rest)
 end
 
--- Lines 723-725
+-- Lines 742-744
 function IngameWaitingButton:panel()
 	return self._panel
 end
 
--- Lines 727-731
+-- Lines 746-750
 function IngameWaitingButton:trigger()
 	if self._callback then
 		self._callback()

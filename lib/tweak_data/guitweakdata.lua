@@ -1,6 +1,6 @@
 GuiTweakData = GuiTweakData or class()
 
--- Lines 3-2235
+-- Lines 3-2256
 function GuiTweakData:init(tweak_data)
 	local is_win_32 = SystemInfo:platform() == Idstring("WIN32")
 	local is_nextgen = SystemInfo:platform() == Idstring("PS4") or SystemInfo:platform() == Idstring("XB1")
@@ -5002,26 +5002,27 @@ function GuiTweakData:init(tweak_data)
 		print("Generating new spawn points for crimenet")
 	end
 
-	local wts = {}
-	local dlc_1_folder = "units/pd2_dlc1/weapons/wpn_effects_textures/"
-	local butch_folder = "units/pd2_dlc_butcher_mods/weapons/wpn_effects_textures/"
-	wts.color_indexes = {
-		{
-			color = "red"
-		},
-		{
-			color = "blue",
-			dlc = "gage_pack_jobs"
-		},
-		{
-			color = "green",
-			dlc = "gage_pack_jobs"
-		},
-		{
-			color = "yellow",
-			dlc = "gage_pack_jobs"
+	local wts = {
+		color_indexes = {
+			{
+				color = "red"
+			},
+			{
+				color = "blue",
+				dlc = "gage_pack_jobs"
+			},
+			{
+				color = "green",
+				dlc = "gage_pack_jobs"
+			},
+			{
+				color = "yellow",
+				dlc = "gage_pack_jobs"
+			}
 		}
 	}
+	local dlc_1_folder = "units/pd2_dlc1/weapons/wpn_effects_textures/"
+	local butch_folder = "units/pd2_dlc_butcher_mods/weapons/wpn_effects_textures/"
 	wts.types = {
 		sight = {
 			{
@@ -5214,6 +5215,18 @@ function GuiTweakData:init(tweak_data)
 		limit = 5
 	}
 
+	table.insert(self.new_heists, {
+		name_id = "menu_nh_xm25_01",
+		texture_path = "guis/dlcs/xm25/textures/pd2/new_heists/xm25_01",
+		epic_url = "https://pd2.link/XM25Merch",
+		url = "https://pd2.link/XM25Merch"
+	})
+	table.insert(self.new_heists, {
+		name_id = "menu_nh_xm25_02",
+		texture_path = "guis/dlcs/xm25/textures/pd2/new_heists/xm25_02",
+		epic_url = "https://pd2.link/XM25TeddyMoo",
+		url = "https://pd2.link/XM25TeddyMoo"
+	})
 	table.insert(self.new_heists, {
 		name_id = "menu_nh_pda10_04",
 		texture_path = "guis/dlcs/pda10/textures/pd2/new_heists/pda10_04",
@@ -5770,7 +5783,7 @@ function GuiTweakData:init(tweak_data)
 	})
 end
 
--- Lines 2237-2256
+-- Lines 2258-2277
 function GuiTweakData:_create_location_bounding_boxes()
 	for _, location in ipairs(self.crime_net.locations) do
 		local params = location[1]
@@ -5798,7 +5811,7 @@ function GuiTweakData:_create_location_bounding_boxes()
 	end
 end
 
--- Lines 2258-2326
+-- Lines 2279-2347
 function GuiTweakData:_create_location_spawning_dots()
 	local map_w = 2048
 	local map_h = 1024
@@ -5876,15 +5889,15 @@ function GuiTweakData:_create_location_spawning_dots()
 	self.crime_net.locations = new_locations
 end
 
--- Lines 2328-2330
+-- Lines 2349-2351
 function GuiTweakData:create_narrative_locations(locations)
 end
 
--- Lines 2332-2341
+-- Lines 2353-2362
 function GuiTweakData:print_locations()
 end
 
--- Lines 2343-2377
+-- Lines 2364-2398
 function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	skipnewlines = skipnewlines or false
 	depth = depth or 0
@@ -5923,7 +5936,7 @@ function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	return tmp
 end
 
--- Lines 2379-2504
+-- Lines 2400-2525
 function GuiTweakData:tradable_inventory_sort_func(index)
 	if type(index) == "string" then
 		index = self:tradable_inventory_sort_index(index)
@@ -6046,12 +6059,12 @@ function GuiTweakData:tradable_inventory_sort_func(index)
 	return nil
 end
 
--- Lines 2506-2508
+-- Lines 2527-2529
 function GuiTweakData:tradable_inventory_sort_name(index)
 	return self.tradable_inventory_sort_list[index] or "none"
 end
 
--- Lines 2510-2517
+-- Lines 2531-2538
 function GuiTweakData:tradable_inventory_sort_index(name)
 	for index, n in ipairs(self.tradable_inventory_sort_list) do
 		if n == name then
@@ -6062,7 +6075,7 @@ function GuiTweakData:tradable_inventory_sort_index(name)
 	return 0
 end
 
--- Lines 2519-2539
+-- Lines 2540-2560
 function GuiTweakData:get_locked_sort_number(dlc, ...)
 	local dlc_data = dlc and Global.dlc_manager.all_dlc_data[dlc]
 	local is_dlc_locked = dlc and not managers.dlc:is_dlc_unlocked(dlc) or false

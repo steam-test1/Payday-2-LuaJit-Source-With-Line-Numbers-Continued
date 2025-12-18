@@ -239,7 +239,7 @@ function HuskCopBrain:update(unit, t, dt)
 	end
 end
 
--- Lines 274-308
+-- Lines 274-330
 function HuskCopBrain:sync_net_event(event_id)
 	if self._dead then
 		return
@@ -269,9 +269,14 @@ function HuskCopBrain:sync_net_event(event_id)
 		self._unit:inventory():destroy_all_items()
 		self._unit:base():set_slot(self._unit, 22)
 	elseif event_id == self._NET_EVENTS.surrender_cop_untied then
+		self._surrendered = false
 		self._is_hostage = false
 
-		self._unit:base():set_slot(self._unit, 22)
+		if self._converted then
+			self._unit:base():set_slot(self._unit, 16)
+		else
+			self._unit:base():set_slot(self._unit, 12)
+		end
 	elseif event_id == self._NET_EVENTS.surrender_civilian_untied then
 		self._surrendered = false
 		self._is_hostage = false
@@ -280,7 +285,7 @@ function HuskCopBrain:sync_net_event(event_id)
 	end
 end
 
--- Lines 310-326
+-- Lines 332-348
 function HuskCopBrain:enable_weapon_laser()
 	self._add_laser_t = nil
 	self._weapon_laser_on = true
@@ -295,7 +300,7 @@ function HuskCopBrain:enable_weapon_laser()
 	self._unit:set_extension_update_enabled(Idstring("brain"), false)
 end
 
--- Lines 328-345
+-- Lines 350-367
 function HuskCopBrain:disable_weapon_laser()
 	self._add_laser_t = nil
 	self._weapon_laser_on = nil
@@ -310,7 +315,7 @@ function HuskCopBrain:disable_weapon_laser()
 	self._unit:set_extension_update_enabled(Idstring("brain"), false)
 end
 
--- Lines 349-362
+-- Lines 371-384
 function HuskCopBrain:pre_destroy()
 	self._unit:movement():synch_attention()
 

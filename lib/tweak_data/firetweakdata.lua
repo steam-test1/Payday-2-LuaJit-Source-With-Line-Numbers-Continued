@@ -156,7 +156,7 @@ function FireTweakData:_init_dot_entries(...)
 	self:_init_dot_entries_fire(entries, ...)
 end
 
--- Lines 176-370
+-- Lines 176-356
 function FireTweakData:_init_dot_entries_fire(entries)
 	local fire_entries = {}
 	entries.fire = fire_entries
@@ -273,7 +273,7 @@ function FireTweakData:_init_dot_entries_fire(entries)
 	}
 end
 
--- Lines 372-392
+-- Lines 358-378
 function FireTweakData:_process_dot_entries()
 	for variant, dot_tweaks in pairs(self.dot_entries) do
 		local default_entry = dot_tweaks["default_" .. variant]
@@ -296,7 +296,7 @@ function FireTweakData:_process_dot_entries()
 	end
 end
 
--- Lines 396-404
+-- Lines 382-390
 function FireTweakData:has_dot(tweak_name)
 	for variant, dot_entries in pairs(self.dot_entries) do
 		if dot_entries[tweak_name] then

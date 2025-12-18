@@ -112,42 +112,50 @@ function SpawnCivilianUnitElement:_build_panel(panel, panel_sizer)
 	}, tweak_data.levels:get_team_names_indexed()), "Select the character's team.")
 end
 
--- Lines 94-99
+-- Lines 94-103
 function SpawnCivilianUnitElement:_load_pickup()
 	if self._hed.force_pickup ~= "none" then
-		local unit_name = tweak_data.pickups[self._hed.force_pickup].unit
+		local pickup_tweak = tweak_data.pickups[self._hed.force_pickup]
 
-		CoreUnit.editor_load_unit(unit_name)
-	end
-end
+		if pickup_tweak then
+			local unit_name = tweak_data.pickups[self._hed.force_pickup].unit
 
--- Lines 101-113
-function SpawnCivilianUnitElement:add_to_mission_package()
-	if self._hed.force_pickup ~= "none" then
-		local unit_name = tweak_data.pickups[self._hed.force_pickup].unit
-
-		managers.editor:add_to_world_package({
-			category = "units",
-			name = unit_name:s(),
-			continent = self._unit:unit_data().continent
-		})
-
-		local sequence_files = {}
-
-		CoreEditorUtils.get_sequence_files_by_unit_name(unit_name, sequence_files)
-
-		for _, file in ipairs(sequence_files) do
-			managers.editor:add_to_world_package({
-				init = true,
-				category = "script_data",
-				name = file:s() .. ".sequence_manager",
-				continent = self._unit:unit_data().continent
-			})
+			CoreUnit.editor_load_unit(unit_name)
 		end
 	end
 end
 
--- Lines 115-121
+-- Lines 105-132
+function SpawnCivilianUnitElement:add_to_mission_package()
+	if self._hed.force_pickup ~= "none" then
+		local pickup_tweak = tweak_data.pickups[self._hed.force_pickup]
+
+		if pickup_tweak then
+			local unit_name = tweak_data.pickups[self._hed.force_pickup].unit
+
+			managers.editor:add_to_world_package({
+				category = "units",
+				name = unit_name:s(),
+				continent = self._unit:unit_data().continent
+			})
+
+			local sequence_files = {}
+
+			CoreEditorUtils.get_sequence_files_by_unit_name(unit_name, sequence_files)
+
+			for _, file in ipairs(sequence_files) do
+				managers.editor:add_to_world_package({
+					init = true,
+					category = "script_data",
+					name = file:s() .. ".sequence_manager",
+					continent = self._unit:unit_data().continent
+				})
+			end
+		end
+	end
+end
+
+-- Lines 134-140
 function SpawnCivilianUnitElement:_resolve_team(unit)
 	if self._hed.team == "default" then
 		return tweak_data.levels:get_default_team_ID("non_combatant")
@@ -156,7 +164,7 @@ function SpawnCivilianUnitElement:_resolve_team(unit)
 	end
 end
 
--- Lines 123-126
+-- Lines 142-145
 function SpawnCivilianUnitElement:destroy(...)
 	SpawnCivilianUnitElement.super.destroy(self, ...)
 	self:stop_test_element()

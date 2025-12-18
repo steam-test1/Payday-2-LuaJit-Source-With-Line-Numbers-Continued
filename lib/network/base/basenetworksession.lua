@@ -36,7 +36,7 @@ function BaseNetworkSession:init()
 	self._dropin_complete_event_manager_id = EventManager:register_listener(Idstring("net_save_received"), callback(self, self, "on_peer_save_received"))
 end
 
--- Lines 47-56
+-- Lines 47-69
 function BaseNetworkSession:create_local_peer(load_outfit)
 	local my_name = managers.network.matchmake:username()
 	local my_user_id = managers.network.matchmake:userid()
@@ -49,14 +49,14 @@ function BaseNetworkSession:create_local_peer(load_outfit)
 	end
 end
 
--- Lines 60-63
+-- Lines 73-76
 function BaseNetworkSession:register_local_peer(id)
 	self._local_peer:set_id(id)
 
 	self._peers_all[id] = self._local_peer
 end
 
--- Lines 67-112
+-- Lines 80-125
 function BaseNetworkSession:load(data)
 	for peer_id, peer_data in pairs(data.peers) do
 		self._peers[peer_id] = NetworkPeer:new()
@@ -105,7 +105,7 @@ function BaseNetworkSession:load(data)
 	end
 end
 
--- Lines 116-158
+-- Lines 129-171
 function BaseNetworkSession:save(data)
 	if self._server_peer then
 		data.server_peer = self._server_peer:id()
@@ -155,27 +155,27 @@ function BaseNetworkSession:save(data)
 	data.load_counter = self._load_counter
 end
 
--- Lines 162-164
+-- Lines 175-177
 function BaseNetworkSession:server_peer()
 	return self._server_peer
 end
 
--- Lines 168-170
+-- Lines 181-183
 function BaseNetworkSession:peer(peer_id)
 	return self._peers_all[peer_id]
 end
 
--- Lines 174-176
+-- Lines 187-189
 function BaseNetworkSession:peers()
 	return self._peers
 end
 
--- Lines 180-182
+-- Lines 193-195
 function BaseNetworkSession:all_peers()
 	return self._peers_all
 end
 
--- Lines 186-192
+-- Lines 199-205
 function BaseNetworkSession:peer_by_ip(ip)
 	for peer_id, peer in pairs(self._peers_all) do
 		if peer:ip() == ip then
@@ -184,7 +184,7 @@ function BaseNetworkSession:peer_by_ip(ip)
 	end
 end
 
--- Lines 197-203
+-- Lines 210-216
 function BaseNetworkSession:peer_by_name(name)
 	for peer_id, peer in pairs(self._peers) do
 		if peer:name() == name then
@@ -193,7 +193,7 @@ function BaseNetworkSession:peer_by_name(name)
 	end
 end
 
--- Lines 207-213
+-- Lines 220-226
 function BaseNetworkSession:peer_by_user_id(user_id)
 	for peer_id, peer in pairs(self._peers_all) do
 		if peer:user_id() == user_id then
@@ -202,7 +202,7 @@ function BaseNetworkSession:peer_by_user_id(user_id)
 	end
 end
 
--- Lines 217-223
+-- Lines 230-236
 function BaseNetworkSession:peer_by_account_id(account_id)
 	for peer_id, peer in pairs(self._peers_all) do
 		if peer:account_id() == account_id then
@@ -211,7 +211,7 @@ function BaseNetworkSession:peer_by_account_id(account_id)
 	end
 end
 
--- Lines 227-235
+-- Lines 240-248
 function BaseNetworkSession:peer_by_unit(unit)
 	local wanted_key = unit:key()
 
@@ -224,7 +224,7 @@ function BaseNetworkSession:peer_by_unit(unit)
 	end
 end
 
--- Lines 239-246
+-- Lines 252-259
 function BaseNetworkSession:peer_by_unit_key(wanted_key)
 	for _, peer in pairs(self._peers_all) do
 		local test_unit = peer:unit()
@@ -235,12 +235,12 @@ function BaseNetworkSession:peer_by_unit_key(wanted_key)
 	end
 end
 
--- Lines 250-260
+-- Lines 263-273
 function BaseNetworkSession:amount_of_players()
 	return table.size(self._peers_all)
 end
 
--- Lines 264-274
+-- Lines 277-287
 function BaseNetworkSession:amount_of_alive_players()
 	local count = 0
 
@@ -253,17 +253,17 @@ function BaseNetworkSession:amount_of_alive_players()
 	return count
 end
 
--- Lines 278-280
+-- Lines 291-293
 function BaseNetworkSession:local_peer()
 	return self._local_peer
 end
 
--- Lines 284-286
+-- Lines 297-299
 function BaseNetworkSession:is_kicked(peer_name)
 	return self._kicked_list[peer_name]
 end
 
--- Lines 290-322
+-- Lines 303-335
 function BaseNetworkSession:add_peer(name, rpc, in_lobby, loading, synched, id, character, user_id, account_type_str, account_id, xuid, xnaddr)
 	print("[BaseNetworkSession:add_peer]", name, rpc, in_lobby, loading, synched, id, character, user_id, account_type_str, account_id, xuid, xnaddr)
 
@@ -300,7 +300,7 @@ function BaseNetworkSession:add_peer(name, rpc, in_lobby, loading, synched, id, 
 	return id, peer
 end
 
--- Lines 326-365
+-- Lines 339-378
 function BaseNetworkSession:remove_peer(peer, peer_id, reason)
 	print("[BaseNetworkSession:remove_peer]", inspect(peer), peer_id, reason)
 	Application:stack_dump()
@@ -337,7 +337,7 @@ function BaseNetworkSession:remove_peer(peer, peer_id, reason)
 	end
 end
 
--- Lines 367-516
+-- Lines 380-529
 function BaseNetworkSession:_on_peer_removed(peer, peer_id, reason)
 	if managers.player then
 		managers.player:peer_dropped_out(peer)
@@ -506,7 +506,7 @@ function BaseNetworkSession:_on_peer_removed(peer, peer_id, reason)
 	end
 end
 
--- Lines 520-523
+-- Lines 533-536
 function BaseNetworkSession:_soft_remove_peer(peer)
 	self._soft_remove_peers = self._soft_remove_peers or {}
 	self._soft_remove_peers[peer:rpc():ip_at_index(0)] = {
@@ -515,14 +515,14 @@ function BaseNetworkSession:_soft_remove_peer(peer)
 	}
 end
 
--- Lines 527-531
+-- Lines 540-544
 function BaseNetworkSession:on_peer_left_lobby(peer)
 	if peer:id() == 1 and self:is_client() and self._cb_find_game then
 		self:on_join_request_timed_out()
 	end
 end
 
--- Lines 535-555
+-- Lines 548-568
 function BaseNetworkSession:on_peer_left(peer, peer_id)
 	cat_print("multiplayer_base", "[BaseNetworkSession:on_peer_left] Peer Left", peer_id, peer:name(), peer:ip())
 	Application:stack_dump()
@@ -547,7 +547,7 @@ function BaseNetworkSession:on_peer_left(peer, peer_id)
 	end
 end
 
--- Lines 559-591
+-- Lines 572-604
 function BaseNetworkSession:on_peer_lost(peer, peer_id)
 	cat_print("multiplayer_base", "[BaseNetworkSession:on_peer_lost] Peer Lost", peer_id, peer:name(), peer:ip())
 	Application:stack_dump()
@@ -584,7 +584,7 @@ function BaseNetworkSession:on_peer_lost(peer, peer_id)
 	end
 end
 
--- Lines 595-648
+-- Lines 608-661
 function BaseNetworkSession:on_peer_kicked(peer, peer_id, message_id)
 	if peer ~= self._local_peer then
 		if message_id == 0 or message_id == 6 then
@@ -638,19 +638,19 @@ function BaseNetworkSession:on_peer_kicked(peer, peer_id, message_id)
 	end
 end
 
--- Lines 652-654
+-- Lines 665-667
 function BaseNetworkSession:_local_peer_in_lobby()
 	return self._local_peer:in_lobby() and game_state_machine:current_state_name() ~= "ingame_lobby_menu"
 end
 
--- Lines 658-662
+-- Lines 671-675
 function BaseNetworkSession:update_skip_one()
 	self.update = nil
 	local wall_time = TimerManager:wall():time()
 	self._timeout_chk_t = wall_time + self.TIMEOUT_CHK_INTERVAL
 end
 
--- Lines 666-685
+-- Lines 679-698
 function BaseNetworkSession:update()
 	local wall_time = TimerManager:wall():time()
 
@@ -672,18 +672,18 @@ function BaseNetworkSession:update()
 	self:send_windistrib_p2p_msgs(wall_time)
 end
 
--- Lines 689-690
+-- Lines 702-703
 function BaseNetworkSession:end_update()
 end
 
--- Lines 694-698
+-- Lines 707-711
 function BaseNetworkSession:send_to_peers(...)
 	for peer_id, peer in pairs(self._peers) do
 		peer:send(...)
 	end
 end
 
--- Lines 702-708
+-- Lines 715-721
 function BaseNetworkSession:send_to_peers_ip_verified(...)
 	for peer_id, peer in pairs(self._peers) do
 		if peer:ip_verified() then
@@ -692,7 +692,7 @@ function BaseNetworkSession:send_to_peers_ip_verified(...)
 	end
 end
 
--- Lines 712-718
+-- Lines 725-731
 function BaseNetworkSession:send_to_peers_except(id, ...)
 	for peer_id, peer in pairs(self._peers) do
 		if peer_id ~= id then
@@ -701,14 +701,14 @@ function BaseNetworkSession:send_to_peers_except(id, ...)
 	end
 end
 
--- Lines 722-726
+-- Lines 735-739
 function BaseNetworkSession:send_to_peers_synched(...)
 	for peer_id, peer in pairs(self._peers) do
 		peer:send_queued_sync(...)
 	end
 end
 
--- Lines 730-736
+-- Lines 743-749
 function BaseNetworkSession:send_to_peers_synched_except(id, ...)
 	for peer_id, peer in pairs(self._peers) do
 		if peer_id ~= id then
@@ -717,14 +717,14 @@ function BaseNetworkSession:send_to_peers_synched_except(id, ...)
 	end
 end
 
--- Lines 740-744
+-- Lines 753-757
 function BaseNetworkSession:send_to_peers_loaded(...)
 	for peer_id, peer in pairs(self._peers) do
 		peer:send_after_load(...)
 	end
 end
 
--- Lines 748-754
+-- Lines 761-767
 function BaseNetworkSession:send_to_peers_loaded_except(id, ...)
 	for peer_id, peer in pairs(self._peers) do
 		if peer_id ~= id then
@@ -733,22 +733,22 @@ function BaseNetworkSession:send_to_peers_loaded_except(id, ...)
 	end
 end
 
--- Lines 758-760
+-- Lines 771-773
 function BaseNetworkSession:send_to_peer(peer, ...)
 	peer:send(...)
 end
 
--- Lines 764-766
+-- Lines 777-779
 function BaseNetworkSession:send_to_peer_synched(peer, ...)
 	peer:send_queued_sync(...)
 end
 
--- Lines 770-772
+-- Lines 783-785
 function BaseNetworkSession:has_recieved_ok_to_load_level()
 	return self._recieved_ok_to_load_level
 end
 
--- Lines 774-782
+-- Lines 787-795
 function BaseNetworkSession:_load_level(...)
 	self._local_peer:set_loading(true)
 	Network:set_multiplayer(true)
@@ -757,7 +757,7 @@ function BaseNetworkSession:_load_level(...)
 	self._load_wait_timeout_t = TimerManager:wall():time() + self._LOAD_WAIT_TIME
 end
 
--- Lines 784-793
+-- Lines 797-806
 function BaseNetworkSession:_load_lobby(...)
 	managers.menu:on_leave_active_job()
 	self._local_peer:set_loading(true)
@@ -767,14 +767,14 @@ function BaseNetworkSession:_load_lobby(...)
 	self._load_wait_timeout_t = TimerManager:wall():time() + self._LOAD_WAIT_TIME
 end
 
--- Lines 797-801
+-- Lines 810-814
 function BaseNetworkSession:debug_list_peers()
 	for i, peer in pairs(self._peers) do
 		cat_print("multiplayer_base", "Peer", i, peer:connection_info())
 	end
 end
 
--- Lines 805-849
+-- Lines 818-862
 function BaseNetworkSession:clbk_network_send(target_rpc, post_send)
 	local target_ip = target_rpc:ip_at_index(0)
 
@@ -829,7 +829,7 @@ function BaseNetworkSession:clbk_network_send(target_rpc, post_send)
 	end
 end
 
--- Lines 853-871
+-- Lines 866-884
 function BaseNetworkSession:is_ready_to_close()
 	for peer_id, peer in pairs(self._peers) do
 		if peer:has_queued_rpcs() then
@@ -850,12 +850,12 @@ function BaseNetworkSession:is_ready_to_close()
 	return true
 end
 
--- Lines 875-877
+-- Lines 888-890
 function BaseNetworkSession:closing()
 	return self._closing
 end
 
--- Lines 881-888
+-- Lines 894-901
 function BaseNetworkSession:prepare_to_close(skip_destroy_matchmaking)
 	print("[BaseNetworkSession:prepare_to_close]")
 
@@ -868,7 +868,7 @@ function BaseNetworkSession:prepare_to_close(skip_destroy_matchmaking)
 	Network:set_disconnected()
 end
 
--- Lines 892-905
+-- Lines 905-918
 function BaseNetworkSession:set_peer_loading_state(peer, state, load_counter)
 	print("[BaseNetworkSession:set_peer_loading_state]", peer:id(), state)
 
@@ -886,7 +886,7 @@ function BaseNetworkSession:set_peer_loading_state(peer, state, load_counter)
 	end
 end
 
--- Lines 909-944
+-- Lines 922-957
 function BaseNetworkSession:upd_trash_connections(wall_t)
 	if self._trash_connections then
 		for ip, info in pairs(self._trash_connections) do
@@ -932,7 +932,7 @@ function BaseNetworkSession:upd_trash_connections(wall_t)
 	end
 end
 
--- Lines 948-955
+-- Lines 961-968
 function BaseNetworkSession:add_connection_to_trash(rpc)
 	local wanted_ip = rpc:ip_at_index(0)
 	self._trash_connections = self._trash_connections or {}
@@ -947,7 +947,7 @@ function BaseNetworkSession:add_connection_to_trash(rpc)
 	end
 end
 
--- Lines 959-970
+-- Lines 972-983
 function BaseNetworkSession:remove_connection_from_trash(rpc)
 	local wanted_ip = rpc:ip_at_index(0)
 
@@ -964,7 +964,7 @@ function BaseNetworkSession:remove_connection_from_trash(rpc)
 	end
 end
 
--- Lines 974-981
+-- Lines 987-994
 function BaseNetworkSession:remove_connection_from_soft_remove_peers(rpc)
 	if self._soft_remove_peers and self._soft_remove_peers[rpc:ip_at_index(0)] then
 		self._soft_remove_peers[rpc:ip_at_index(0)] = nil
@@ -975,7 +975,7 @@ function BaseNetworkSession:remove_connection_from_soft_remove_peers(rpc)
 	end
 end
 
--- Lines 985-992
+-- Lines 998-1005
 function BaseNetworkSession:chk_send_local_player_ready()
 	local state = self._local_peer:waiting_for_player_ready()
 
@@ -986,7 +986,7 @@ function BaseNetworkSession:chk_send_local_player_ready()
 	end
 end
 
--- Lines 996-1007
+-- Lines 1009-1020
 function BaseNetworkSession:destroy()
 	for _, peer in pairs(self._peers) do
 		peer:end_ticket_session()
@@ -1002,7 +1002,7 @@ function BaseNetworkSession:destroy()
 	end
 end
 
--- Lines 1011-1019
+-- Lines 1024-1032
 function BaseNetworkSession:_flush_soft_remove_peers()
 	if self._soft_remove_peers then
 		for ip, peer_remove_info in pairs(self._soft_remove_peers) do
@@ -1014,7 +1014,7 @@ function BaseNetworkSession:_flush_soft_remove_peers()
 	self._soft_remove_peers = nil
 end
 
--- Lines 1023-1043
+-- Lines 1036-1056
 function BaseNetworkSession:on_load_complete(simulation)
 	print("[BaseNetworkSession:on_load_complete]")
 
@@ -1037,7 +1037,7 @@ function BaseNetworkSession:on_load_complete(simulation)
 	end
 end
 
--- Lines 1045-1055
+-- Lines 1058-1068
 function BaseNetworkSession:psn_disconnected()
 	if Global.game_settings.single_player then
 		return
@@ -1050,7 +1050,7 @@ function BaseNetworkSession:psn_disconnected()
 	managers.network.voice_chat:destroy_voice(true)
 end
 
--- Lines 1057-1067
+-- Lines 1070-1080
 function BaseNetworkSession:steam_disconnected()
 	if Global.game_settings.single_player then
 		return
@@ -1063,7 +1063,7 @@ function BaseNetworkSession:steam_disconnected()
 	managers.network.voice_chat:destroy_voice(true)
 end
 
--- Lines 1069-1079
+-- Lines 1082-1092
 function BaseNetworkSession:xbox_disconnected()
 	if Global.game_settings.single_player then
 		return
@@ -1076,7 +1076,7 @@ function BaseNetworkSession:xbox_disconnected()
 	managers.network.voice_chat:destroy_voice(true)
 end
 
--- Lines 1081-1087
+-- Lines 1094-1100
 function BaseNetworkSession:ps4_disconnect(connected)
 	managers.network.matchmake:psn_disconnected()
 
@@ -1085,7 +1085,7 @@ function BaseNetworkSession:ps4_disconnect(connected)
 	end
 end
 
--- Lines 1089-1113
+-- Lines 1102-1126
 function BaseNetworkSession:ps3_disconnect(connected)
 	print("BaseNetworkSession ps3_disconnect", connected)
 
@@ -1102,7 +1102,7 @@ function BaseNetworkSession:ps3_disconnect(connected)
 	end
 end
 
--- Lines 1117-1149
+-- Lines 1130-1162
 function BaseNetworkSession:on_windistrib_p2p_ping(sender_rpc)
 	local user_id = sender_rpc:ip_at_index(0)
 	local peer = self:peer_by_user_id(user_id)
@@ -1138,7 +1138,7 @@ function BaseNetworkSession:on_windistrib_p2p_ping(sender_rpc)
 	self:chk_send_connection_established(nil, user_id)
 end
 
--- Lines 1153-1224
+-- Lines 1166-1237
 function BaseNetworkSession:chk_send_connection_established(name, user_id, peer)
 	if SystemInfo:platform() == Idstring("PS3") or SystemInfo:platform() == Idstring("PS4") then
 		peer = self:peer_by_name(name)
@@ -1221,7 +1221,7 @@ function BaseNetworkSession:chk_send_connection_established(name, user_id, peer)
 	end
 end
 
--- Lines 1228-1243
+-- Lines 1241-1256
 function BaseNetworkSession:send_windistrib_p2p_msgs(wall_t)
 	if SystemInfo:platform() ~= self._ids_WIN32 then
 		return
@@ -1235,7 +1235,7 @@ function BaseNetworkSession:send_windistrib_p2p_msgs(wall_t)
 	end
 end
 
--- Lines 1247-1268
+-- Lines 1260-1281
 function BaseNetworkSession:resolve_new_peer_rpc(new_peer, incomming_rpc)
 	if SystemInfo:platform() ~= self._ids_WIN32 then
 		return incomming_rpc
@@ -1267,7 +1267,7 @@ function BaseNetworkSession:resolve_new_peer_rpc(new_peer, incomming_rpc)
 	end
 end
 
--- Lines 1272-1279
+-- Lines 1285-1292
 function BaseNetworkSession:are_peers_done_streaming()
 	for peer_id, peer in pairs(self._peers) do
 		if peer:synched() and not peer:is_streaming_complete() then
@@ -1278,7 +1278,7 @@ function BaseNetworkSession:are_peers_done_streaming()
 	return true
 end
 
--- Lines 1283-1294
+-- Lines 1296-1307
 function BaseNetworkSession:peer_streaming_status()
 	local status = 100
 	local peer_name = nil
@@ -1295,7 +1295,7 @@ function BaseNetworkSession:peer_streaming_status()
 	return peer_name, status
 end
 
--- Lines 1298-1311
+-- Lines 1311-1324
 function BaseNetworkSession:are_all_peer_assets_loaded()
 	if not self._local_peer:is_outfit_loaded() then
 		return false
@@ -1312,7 +1312,7 @@ function BaseNetworkSession:are_all_peer_assets_loaded()
 	return true
 end
 
--- Lines 1315-1330
+-- Lines 1328-1343
 function BaseNetworkSession:_get_peer_outfit_versions_str()
 	local outfit_versions_str = ""
 
@@ -1333,24 +1333,24 @@ function BaseNetworkSession:_get_peer_outfit_versions_str()
 	return outfit_versions_str
 end
 
--- Lines 1334-1336
+-- Lines 1347-1349
 function BaseNetworkSession:on_peer_outfit_loaded(peer)
 	print("[BaseNetworkSession:on_peer_outfit_loaded]", inspect(peer))
 end
 
--- Lines 1340-1344
+-- Lines 1353-1357
 function BaseNetworkSession:set_packet_throttling_enabled(state)
 	for peer_id, peer in pairs(self._peers) do
 		peer:set_throttling_enabled(state)
 	end
 end
 
--- Lines 1348-1350
+-- Lines 1361-1363
 function BaseNetworkSession:load_counter()
 	return self._load_counter
 end
 
--- Lines 1354-1362
+-- Lines 1367-1375
 function BaseNetworkSession:check_send_outfit(peer)
 	if managers.blackmarket:signature() then
 		if peer then
@@ -1361,7 +1361,7 @@ function BaseNetworkSession:check_send_outfit(peer)
 	end
 end
 
--- Lines 1366-1378
+-- Lines 1379-1391
 function BaseNetworkSession:on_network_stopped()
 	for k = 1, tweak_data.max_players do
 		self:on_drop_in_pause_request_received(k, nil, false)
@@ -1378,7 +1378,7 @@ function BaseNetworkSession:on_network_stopped()
 	end
 end
 
--- Lines 1382-1390
+-- Lines 1395-1403
 function BaseNetworkSession:on_peer_entered_lobby(peer)
 	peer:set_in_lobby(true)
 
@@ -1389,7 +1389,7 @@ function BaseNetworkSession:on_peer_entered_lobby(peer)
 	managers.network:dispatch_event("session_peer_entered_lobby", peer)
 end
 
--- Lines 1394-1404
+-- Lines 1407-1417
 function BaseNetworkSession:on_entered_lobby()
 	local id = self._local_peer:id()
 
@@ -1403,7 +1403,7 @@ function BaseNetworkSession:on_entered_lobby()
 	cat_print("multiplayer_base", "BaseNetworkSession:on_entered_lobby", self._local_peer, id)
 end
 
--- Lines 1408-1450
+-- Lines 1421-1463
 function BaseNetworkSession:check_peer_preferred_character(preferred_character)
 	local free_characters = clone(CriminalsManager.character_names())
 
@@ -1443,7 +1443,7 @@ function BaseNetworkSession:check_peer_preferred_character(preferred_character)
 	return character
 end
 
--- Lines 1455-1462
+-- Lines 1468-1475
 function BaseNetworkSession:_has_client(peer)
 	for i = 0, Network:clients():num_peers() - 1 do
 		if Network:clients():ip_at_index(i) == peer:ip() then
@@ -1454,7 +1454,7 @@ function BaseNetworkSession:_has_client(peer)
 	return false
 end
 
--- Lines 1466-1497
+-- Lines 1479-1510
 function BaseNetworkSession:on_peer_loading(peer, state)
 	cat_print("multiplayer_base", "[BaseNetworkSession:on_peer_loading]", inspect(peer), state)
 
@@ -1492,7 +1492,7 @@ function BaseNetworkSession:on_peer_loading(peer, state)
 	end
 end
 
--- Lines 1501-1507
+-- Lines 1514-1520
 function BaseNetworkSession:spawn_member_by_id(peer_id, spawn_point_id, is_drop_in)
 	local peer = self:peer(peer_id)
 
@@ -1503,7 +1503,7 @@ function BaseNetworkSession:spawn_member_by_id(peer_id, spawn_point_id, is_drop_
 	end
 end
 
--- Lines 1511-1555
+-- Lines 1524-1568
 function BaseNetworkSession:spawn_players(is_drop_in)
 	if not managers.network:has_spawn_points() then
 		return
@@ -1546,7 +1546,7 @@ function BaseNetworkSession:spawn_players(is_drop_in)
 	managers.groupai:state():fill_criminal_team_with_AI(is_drop_in)
 end
 
--- Lines 1557-1565
+-- Lines 1570-1578
 function BaseNetworkSession:_get_next_spawn_point_id()
 	local id = self._spawn_point_beanbag[self._next_i_spawn_point]
 
@@ -1559,7 +1559,7 @@ function BaseNetworkSession:_get_next_spawn_point_id()
 	return id
 end
 
--- Lines 1567-1582
+-- Lines 1580-1595
 function BaseNetworkSession:_create_spawn_point_beanbag()
 	local spawn_points = managers.network._spawn_points
 	local spawn_point_ids = {}
@@ -1583,14 +1583,14 @@ function BaseNetworkSession:_create_spawn_point_beanbag()
 	self._next_i_spawn_point = 1
 end
 
--- Lines 1586-1589
+-- Lines 1599-1602
 function BaseNetworkSession:get_next_spawn_point()
 	local id = self:_get_next_spawn_point_id()
 
 	return managers.network:spawn_point(id)
 end
 
--- Lines 1593-1614
+-- Lines 1606-1627
 function BaseNetworkSession:on_peer_sync_complete(peer, peer_id)
 	if not self._local_peer then
 		return
@@ -1614,7 +1614,7 @@ function BaseNetworkSession:on_peer_sync_complete(peer, peer_id)
 	managers.network:dispatch_event("session_peer_sync_complete", peer)
 end
 
--- Lines 1618-1634
+-- Lines 1631-1647
 function BaseNetworkSession:on_streaming_progress_received(peer, progress)
 	if not peer:synched() then
 		return
@@ -1635,7 +1635,7 @@ function BaseNetworkSession:on_streaming_progress_received(peer, progress)
 	end
 end
 
--- Lines 1638-1653
+-- Lines 1651-1666
 function BaseNetworkSession:on_dropin_progress_received(dropin_peer_id, progress_percentage)
 	local peer = self:peer(dropin_peer_id)
 
@@ -1656,7 +1656,7 @@ function BaseNetworkSession:on_dropin_progress_received(dropin_peer_id, progress
 	end
 end
 
--- Lines 1658-1670
+-- Lines 1671-1683
 function BaseNetworkSession:on_set_member_ready(peer_id, ready, state_changed, from_network)
 	print("[BaseNetworkSession:on_set_member_ready]", peer_id, ready, state_changed)
 
@@ -1672,7 +1672,7 @@ function BaseNetworkSession:on_set_member_ready(peer_id, ready, state_changed, f
 	end
 end
 
--- Lines 1675-1700
+-- Lines 1688-1713
 function BaseNetworkSession:check_start_game_intro(skip_streamer_check)
 	if not self:chk_all_handshakes_complete() then
 		return
@@ -1701,7 +1701,7 @@ function BaseNetworkSession:check_start_game_intro(skip_streamer_check)
 	end
 end
 
--- Lines 1704-1717
+-- Lines 1717-1730
 function BaseNetworkSession:_update_peer_ready_gui(peer)
 	if not peer:synched() or not peer:is_streaming_complete() then
 		return
@@ -1718,7 +1718,7 @@ function BaseNetworkSession:_update_peer_ready_gui(peer)
 	end
 end
 
--- Lines 1721-1770
+-- Lines 1734-1783
 function BaseNetworkSession:on_drop_in_pause_request_received(peer_id, nickname, state)
 	print("[BaseNetworkSession:on_drop_in_pause_request_received]", peer_id, nickname, state)
 
@@ -1771,7 +1771,7 @@ function BaseNetworkSession:on_drop_in_pause_request_received(peer_id, nickname,
 	end
 end
 
--- Lines 1783-1879
+-- Lines 1796-1892
 function BaseNetworkSession:on_statistics_recieved(peer_id, peer_kills, peer_specials_kills, peer_head_shots, accuracy, downs)
 	local peer = self:peer(peer_id)
 

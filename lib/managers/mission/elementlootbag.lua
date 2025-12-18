@@ -9,11 +9,39 @@ function ElementLootBag:init(...)
 	self._triggers = {}
 end
 
--- Lines 11-13
+-- Lines 11-37
+function ElementLootBag:on_script_activated()
+	if not Network:is_server() then
+		return
+	end
+
+	if self._values.zipline_unit_id then
+		local unit = nil
+
+		if Application:editor() then
+			unit = managers.editor:unit_with_id(self._values.zipline_unit_id)
+		else
+			unit = managers.worlddefinition:get_unit_on_load(self._values.zipline_unit_id, callback(self, self, "load_unit"))
+		end
+
+		if alive(unit) and unit:zipline() and unit:zipline():is_usage_type_bag() then
+			self._zipline_unit = unit
+		end
+	end
+end
+
+-- Lines 39-51
+function ElementLootBag:load_unit(unit)
+	if alive(unit) and unit:zipline() and unit:zipline():is_usage_type_bag() then
+		self._zipline_unit = unit
+	end
+end
+
+-- Lines 53-55
 function ElementLootBag:client_on_executed(...)
 end
 
--- Lines 15-55
+-- Lines 57-92
 function ElementLootBag:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -21,16 +49,15 @@ function ElementLootBag:on_executed(instigator)
 
 	local unit = nil
 	local pos, rot = self:get_orientation()
+	local dir = self._values.push_multiplier and self._values.spawn_dir * self._values.push_multiplier or Vector3(0, 0, 0)
 
 	if self._values.carry_id ~= "none" then
-		local dir = self._values.push_multiplier and self._values.spawn_dir * self._values.push_multiplier or Vector3(0, 0, 0)
-		unit = managers.player:server_drop_carry(self._values.carry_id, 1, true, false, 1, pos, rot, dir, 0, nil, nil)
+		unit = managers.player:server_drop_carry(self._values.carry_id, 1, true, false, 1, pos, rot, dir, 0, self._zipline_unit, nil)
 	elseif self._values.from_respawn then
 		local loot = managers.loot:get_respawn()
 
 		if loot then
-			local dir = self._values.push_multiplier and self._values.spawn_dir * self._values.push_multiplier or Vector3(0, 0, 0)
-			unit = managers.player:server_drop_carry(loot.carry_id, loot.multiplier, true, false, 1, pos, rot, dir, 0, nil, nil)
+			unit = managers.player:server_drop_carry(loot.carry_id, loot.multiplier, true, false, 1, pos, rot, dir, 0, self._zipline_unit, nil)
 		else
 			print("NO MORE LOOT TO RESPAWN")
 		end
@@ -38,8 +65,7 @@ function ElementLootBag:on_executed(instigator)
 		local loot = managers.loot:get_distribute()
 
 		if loot then
-			local dir = self._values.push_multiplier and self._values.spawn_dir * self._values.push_multiplier or Vector3(0, 0, 0)
-			unit = managers.player:server_drop_carry(loot.carry_id, loot.multiplier, true, false, 1, pos, rot, dir, 0, nil, nil)
+			unit = managers.player:server_drop_carry(loot.carry_id, loot.multiplier, true, false, 1, pos, rot, dir, 0, self._zipline_unit, nil)
 		else
 			print("NO MORE LOOT TO DISTRIBUTE")
 		end
@@ -53,7 +79,7 @@ function ElementLootBag:on_executed(instigator)
 	ElementLootBag.super.on_executed(self, instigator)
 end
 
--- Lines 57-61
+-- Lines 94-98
 function ElementLootBag:add_trigger(id, type, callback)
 	self._triggers[type] = self._triggers[type] or {}
 	self._triggers[type][id] = {
@@ -61,7 +87,7 @@ function ElementLootBag:add_trigger(id, type, callback)
 	}
 end
 
--- Lines 63-73
+-- Lines 100-110
 function ElementLootBag:_check_triggers(type, instigator)
 	if not self._triggers[type] then
 		return
@@ -72,19 +98,19 @@ function ElementLootBag:_check_triggers(type, instigator)
 	end
 end
 
--- Lines 75-78
+-- Lines 112-115
 function ElementLootBag:trigger(type, instigator)
 	self:_check_triggers(type, instigator)
 end
 
 ElementLootBagTrigger = ElementLootBagTrigger or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines 90-92
+-- Lines 127-129
 function ElementLootBagTrigger:init(...)
 	ElementLootBagTrigger.super.init(self, ...)
 end
 
--- Lines 94-99
+-- Lines 131-136
 function ElementLootBagTrigger:on_script_activated()
 	for _, id in ipairs(self._values.elements) do
 		local element = self:get_mission_element(id)
@@ -93,11 +119,11 @@ function ElementLootBagTrigger:on_script_activated()
 	end
 end
 
--- Lines 101-103
+-- Lines 138-140
 function ElementLootBagTrigger:client_on_executed(...)
 end
 
--- Lines 105-113
+-- Lines 142-150
 function ElementLootBagTrigger:on_executed(instigator)
 	if not self._values.enabled then
 		return

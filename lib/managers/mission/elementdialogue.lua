@@ -71,7 +71,7 @@ function ElementDialogue:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines 48-79
+-- Lines 48-89
 function ElementDialogue:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -84,12 +84,12 @@ function ElementDialogue:on_executed(instigator)
 	end
 
 	if self._values.dialogue ~= "none" then
+		local done_cbk = self._values.execute_on_executed_when_done and callback(self, self, "_done_callback", instigator) or nil
+
 		if self:_can_play() then
 			if self._values.force_quit_current then
 				managers.dialog:quit_dialog()
 			end
-
-			local done_cbk = self._values.execute_on_executed_when_done and callback(self, self, "_done_callback", instigator) or nil
 
 			managers.dialog:queue_dialog(self._values.dialogue, {
 				case = managers.criminals:character_name_by_unit(instigator),
@@ -98,14 +98,8 @@ function ElementDialogue:on_executed(instigator)
 				skip_idle_check = Application:editor(),
 				on_unit = self._values.use_instigator and instigator
 			})
-		else
-			print("[ElementDialogue] Skipping muted dialogue: ", self._values.dialogue)
-
-			local done_cbk = self._values.execute_on_executed_when_done and callback(self, self, "_done_callback", instigator) or nil
-
-			if done_cbk then
-				done_cbk()
-			end
+		elseif done_cbk then
+			done_cbk()
 		end
 	elseif Application:editor() then
 		managers.editor:output_warning("Dialogue not specified in element " .. self._editor_name .. ".", nil, true)
@@ -114,12 +108,12 @@ function ElementDialogue:on_executed(instigator)
 	ElementDialogue.super.on_executed(self, instigator, nil, self._values.execute_on_executed_when_done)
 end
 
--- Lines 81-83
+-- Lines 91-93
 function ElementDialogue:_done_callback(instigator, reason)
 	ElementDialogue.super._trigger_execute_on_executed(self, instigator)
 end
 
--- Lines 85-107
+-- Lines 95-119
 function ElementDialogue:_can_play()
 	if managers.user:get_setting("mute_heist_vo") and not self._values.can_not_be_muted then
 		local dialog_str = string.lower(self._values.dialogue)
@@ -138,13 +132,13 @@ function ElementDialogue:_can_play()
 	end
 end
 
--- Lines 109-113
+-- Lines 121-125
 function ElementDialogue:save(data)
 	data.save_me = true
 	data.enabled = self._values.enabled
 end
 
--- Lines 115-124
+-- Lines 127-136
 function ElementDialogue:load(data)
 	self:set_enabled(data.enabled)
 end

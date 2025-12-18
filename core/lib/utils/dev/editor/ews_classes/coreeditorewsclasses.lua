@@ -1752,7 +1752,7 @@ end
 
 ReplaceUnit = ReplaceUnit or class(CoreEditorEwsDialog)
 
--- Lines 1657-1744
+-- Lines 1657-1748
 function ReplaceUnit:init(name, types)
 	CoreEditorEwsDialog.init(self, nil, name, "", Vector3(300, 150, 0), Vector3(900, 500, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER")
 	self:create_panel("VERTICAL")
@@ -1841,6 +1841,11 @@ function ReplaceUnit:init(name, types)
 	end
 
 	local btn_sizer = EWS:BoxSizer("HORIZONTAL")
+	self._remember_cb = EWS:CheckBox(self._panel, "Remember choice", "", "ALIGN_RIGHT")
+
+	self._remember_cb:set_value(false)
+	btn_sizer:add(self._remember_cb, 0, 5, "TOP,RIGHT")
+
 	local ok_btn = EWS:Button(self._panel, "OK", "_ok_dialog", "BU_EXACTFIT,NO_BORDER")
 
 	ok_btn:connect("EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "close_replace_unit"), {
@@ -1859,7 +1864,19 @@ function ReplaceUnit:init(name, types)
 	self:show_modal()
 end
 
--- Lines 1746-1759
+-- Lines 1750-1755
+function ReplaceUnit:show_modal()
+	if not self._remember_replace_choice then
+		self._dialog:show_modal()
+	end
+end
+
+-- Lines 1757-1759
+function ReplaceUnit:reset()
+	self._remember_replace_choice = nil
+end
+
+-- Lines 1761-1774
 function ReplaceUnit:replace_unit_name(units)
 	for _, units_list in ipairs(self._all_unit_lists) do
 		if units_list ~= units then
@@ -1878,7 +1895,7 @@ function ReplaceUnit:replace_unit_name(units)
 	end
 end
 
--- Lines 1761-1772
+-- Lines 1776-1787
 function ReplaceUnit:update_filter(data)
 	local filter = data.filter:get_value()
 
@@ -1894,14 +1911,15 @@ function ReplaceUnit:update_filter(data)
 	data.units:thaw()
 end
 
--- Lines 1774-1777
+-- Lines 1789-1793
 function ReplaceUnit:close_replace_unit(data)
 	self._made_replace_choice = data.value
+	self._remember_replace_choice = self._remember_cb:get_value()
 
 	self:end_modal()
 end
 
--- Lines 1779-1784
+-- Lines 1795-1800
 function ReplaceUnit:result()
 	if self._made_replace_choice and self._replace_unit_name then
 		return self._replace_unit_name
@@ -1912,7 +1930,7 @@ end
 
 LayerReplaceUnit = LayerReplaceUnit or class(CoreEditorEwsDialog)
 
--- Lines 1791-1842
+-- Lines 1807-1858
 function LayerReplaceUnit:init(layer)
 	CoreEditorEwsDialog.init(self, nil, "Replace Units", "", Vector3(525, 200, 0), Vector3(270, 400, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,STAY_ON_TOP")
 	self:create_panel("VERTICAL")
@@ -1977,7 +1995,7 @@ function LayerReplaceUnit:init(layer)
 	self:set_visible(true)
 end
 
--- Lines 1844-1851
+-- Lines 1860-1867
 function LayerReplaceUnit:_all_unit_names(layer)
 	local names = {}
 
@@ -1990,7 +2008,7 @@ function LayerReplaceUnit:_all_unit_names(layer)
 	return names
 end
 
--- Lines 1853-1862
+-- Lines 1869-1878
 function LayerReplaceUnit:replace_unit(data)
 	if self._layer:selected_unit() and data then
 		local units = data.units
@@ -2004,7 +2022,7 @@ function LayerReplaceUnit:replace_unit(data)
 	end
 end
 
--- Lines 1864-1879
+-- Lines 1880-1895
 function LayerReplaceUnit:_current_unit_names()
 	local current_names = {}
 
@@ -2025,14 +2043,14 @@ function LayerReplaceUnit:_current_unit_names()
 	return names
 end
 
--- Lines 1881-1884
+-- Lines 1897-1900
 function LayerReplaceUnit:on_only_list_used_units(data)
 	self._only_list_used_units = data.cb:get_value()
 
 	self:update_list()
 end
 
--- Lines 1886-1905
+-- Lines 1902-1921
 function LayerReplaceUnit:update_list(current)
 	self._units:freeze()
 
@@ -2059,13 +2077,13 @@ function LayerReplaceUnit:update_list(current)
 	self._units:thaw()
 end
 
--- Lines 1907-1910
+-- Lines 1923-1926
 function LayerReplaceUnit:set_visible(visible)
 	CoreEditorEwsDialog.set_visible(self, visible)
 	self:update_list()
 end
 
--- Lines 1912-1929
+-- Lines 1928-1945
 function LayerReplaceUnit:spawned_unit(unit)
 	if self._only_list_used_units then
 		for name, _ in pairs(self._current) do
@@ -2090,7 +2108,7 @@ function LayerReplaceUnit:spawned_unit(unit)
 	end
 end
 
--- Lines 1931-1944
+-- Lines 1947-1960
 function LayerReplaceUnit:deleted_unit(unit)
 	if self._only_list_used_units then
 		for name, _ in pairs(self._current) do
@@ -2109,109 +2127,98 @@ function LayerReplaceUnit:deleted_unit(unit)
 	end
 end
 
--- Lines 1946-1948
+-- Lines 1962-1964
 function LayerReplaceUnit:reset()
 	self:update_list()
 end
 
-MoveTransformTypeIn = MoveTransformTypeIn or class(CoreEditorEwsDialog)
+UnitTransformDialog = UnitTransformDialog or class(CoreEditorEwsDialog)
 
--- Lines 1955-1981
-function MoveTransformTypeIn:init()
-	CoreEditorEwsDialog.init(self, nil, "Move transform type-in", "", Vector3(761, 67, 0), Vector3(264, 111, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,STAY_ON_TOP")
-	self:create_panel("HORIZONTAL")
+-- Lines 1972-2035
+function UnitTransformDialog:init()
+	CoreEditorEwsDialog.init(self, nil, "Unit Transform", "", Vector3(761, 67, 0), Vector3(500, 195, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER")
+	self._dialog:set_min_size(Vector3(480, 195, 0))
+	self:create_panel("VERTICAL")
 
 	self._min = -100000000
 	self._max = 100000000
-	local world_sizer = EWS:StaticBoxSizer(self._panel, "VERTICAL", "Absolut:World")
-	self._ax = self:_create_ctrl("X:", "x", 0, "absolut", world_sizer)
-	self._ay = self:_create_ctrl("Y:", "y", 0, "absolut", world_sizer)
-	self._az = self:_create_ctrl("Z:", "z", 0, "absolut", world_sizer)
+	local position_sizer = EWS:StaticBoxSizer(self._panel, "HORIZONTAL", "Position")
+	self._ax = self:_create_ctrl_position("X", "x", 0, position_sizer)
+	self._ay = self:_create_ctrl_position("Y", "y", 0, position_sizer)
+	self._az = self:_create_ctrl_position("Z", "z", 0, position_sizer)
+	local actions_toolbar = EWS:ToolBar(self._panel, "", "TB_FLAT,TB_NODIVIDER")
 
-	self._panel_sizer:add(world_sizer, 1, 0, "EXPAND")
+	actions_toolbar:add_tool("COPY_POSITION", "Copy position", CoreEws.image_path("toolbar\\copy_16x16.png"))
+	actions_toolbar:connect("COPY_POSITION", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_copy_position"), nil)
+	actions_toolbar:add_tool("PASTE_POSITION", "Paste position", CoreEws.image_path("toolbar\\paste_16x16.png"))
+	actions_toolbar:connect("PASTE_POSITION", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_paste_position"), nil)
+	actions_toolbar:realize()
+	position_sizer:add(actions_toolbar, 0, 1, "EXPAND,LEFT")
+	self._panel_sizer:add(position_sizer, 0, 1, "EXPAND")
 
-	local offset_sizer = EWS:StaticBoxSizer(self._panel, "VERTICAL", "Offset")
-	self._ox = self:_create_ctrl("X:", "x", 0, "offset", offset_sizer)
-	self._oy = self:_create_ctrl("Y:", "y", 0, "offset", offset_sizer)
-	self._oz = self:_create_ctrl("Z:", "z", 0, "offset", offset_sizer)
+	local rotation_sizer = EWS:StaticBoxSizer(self._panel, "HORIZONTAL", "Rotation")
+	self._rx = self:_create_ctrl_rotation("Yaw", "x", 0, rotation_sizer)
+	self._ry = self:_create_ctrl_rotation("Pitch", "y", 0, rotation_sizer)
+	self._rz = self:_create_ctrl_rotation("Roll", "z", 0, rotation_sizer)
+	local actions_toolbar = EWS:ToolBar(self._panel, "", "TB_FLAT,TB_NODIVIDER")
 
-	self._panel_sizer:add(offset_sizer, 1, 0, "EXPAND")
-	self._dialog_sizer:add(self._panel, 1, 0, "EXPAND")
+	actions_toolbar:add_tool("COPY_ROTATION", "Copy rotation", CoreEws.image_path("toolbar\\copy_16x16.png"))
+	actions_toolbar:connect("COPY_ROTATION", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_copy_rotation"), nil)
+	actions_toolbar:add_tool("PASTE_ROTATION", "Paste rotation", CoreEws.image_path("toolbar\\paste_16x16.png"))
+	actions_toolbar:connect("PASTE_ROTATION", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_paste_rotation"), nil)
+	actions_toolbar:realize()
+	rotation_sizer:add(actions_toolbar, 0, 1, "EXPAND,LEFT")
+	self._panel_sizer:add(rotation_sizer, 0, 1, "EXPAND")
+	self._dialog_sizer:add(self._panel, 1, 5, "EXPAND,ALL")
 	self._panel:set_enabled(false)
 end
 
--- Lines 1983-2016
-function MoveTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
-	local ctrl_sizer = EWS:BoxSizer("HORIZONTAL")
-
-	ctrl_sizer:add(EWS:StaticText(self._panel, name, "", "ALIGN_LEFT"), 0, 0, "EXPAND")
-
+-- Lines 2037-2059
+function UnitTransformDialog:_create_ctrl_position(name, coor, value, sizer)
+	local ctrl_sizer = EWS:BoxSizer("VERTICAL")
 	local ctrl = EWS:TextCtrl(self._panel, value, "", "TE_PROCESS_ENTER")
 
-	ctrl:set_tool_tip("Type in " .. type .. " " .. coor .. "-coordinate in meters")
-	ctrl:set_min_size(Vector3(-1, 10, 0))
+	ctrl:set_tool_tip(name .. " Absolute")
 	ctrl:connect("EVT_CHAR", callback(nil, _G, "verify_number"), ctrl)
-
-	if type == "offset" then
-		ctrl:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_offset"), {
-			ctrl = ctrl,
-			coor = coor
-		})
-		ctrl:connect("EVT_KILL_FOCUS", callback(self, self, "update_offset"), {
-			ctrl = ctrl,
-			coor = coor
-		})
-	else
-		ctrl:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_absolut"), {
-			ctrl = ctrl,
-			coor = coor
-		})
-		ctrl:connect("EVT_KILL_FOCUS", callback(self, self, "update_absolut"), {
-			ctrl = ctrl,
-			coor = coor
-		})
-	end
-
+	ctrl:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_absolut_position"), {
+		ctrl = ctrl,
+		coor = coor
+	})
+	ctrl:connect("EVT_KILL_FOCUS", callback(self, self, "update_absolut_position"), {
+		ctrl = ctrl,
+		coor = coor
+	})
 	ctrl_sizer:add(ctrl, 1, 0, "EXPAND")
 
-	local spin = EWS:SpinButton(self._panel, "", "SP_VERTICAL")
+	local offset = EWS:TextCtrl(self._panel, value, "", "TE_PROCESS_ENTER")
 
-	spin:set_min_size(Vector3(-1, 10, 0))
-
-	local c = ctrl
-
-	if type == "offset" then
-		c = self["_a" .. coor]
-	end
-
-	spin:connect("EVT_SCROLL_LINEUP", callback(self, self, "update_spin"), {
-		step = 0.1,
-		ctrl = c,
+	offset:set_tool_tip(name .. " Offset")
+	offset:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_offset_position"), {
+		ctrl = offset,
 		coor = coor
 	})
-	spin:connect("EVT_SCROLL_LINEDOWN", callback(self, self, "update_spin"), {
-		step = -0.1,
-		ctrl = c,
+	offset:connect("EVT_KILL_FOCUS", callback(self, self, "update_offset_position"), {
+		ctrl = offset,
 		coor = coor
 	})
-	ctrl_sizer:add(spin, 0, 0, "EXPAND")
-	sizer:add(ctrl_sizer, 1, 10, "EXPAND,LEFT,RIGHT")
+	ctrl_sizer:add(offset, 0, 0, "EXPAND")
+	sizer:add(ctrl_sizer, 1, 0, "EXPAND,LEFT,RIGHT")
 
 	return ctrl
 end
 
--- Lines 2018-2024
-function MoveTransformTypeIn:update_spin(data)
+-- Lines 2061-2067
+function UnitTransformDialog:update_spin_position(data)
 	if not tonumber(data.ctrl:get_value()) then
 		data.ctrl:set_value(0)
 	end
 
-	data.ctrl:set_value(string.format("%.2f", data.ctrl:get_value() + data.step))
-	self:update_absolut(data)
+	data.ctrl:set_value(string.format("%.3f", data.ctrl:get_value() + data.step))
+	self:update_absolut_position(data)
 end
 
--- Lines 2026-2040
-function MoveTransformTypeIn:update_absolut(data)
+-- Lines 2069-2083
+function UnitTransformDialog:update_absolut_position(data)
 	local value = tonumber(data.ctrl:get_value()) or 0
 
 	if self._min == value then
@@ -2224,23 +2231,29 @@ function MoveTransformTypeIn:update_absolut(data)
 		local pos = self._unit:position()
 		pos = pos["with_" .. data.coor](pos, value)
 
-		data.ctrl:change_value(string.format("%.2f", value / 100))
+		data.ctrl:change_value(string.format("%.3f", value / 100))
 		data.ctrl:set_selection(-1, -1)
 		managers.editor:set_selected_units_position(pos)
 	end
 end
 
--- Lines 2042-2059
-function MoveTransformTypeIn:update_offset(data, event)
+-- Lines 2085-2106
+function UnitTransformDialog:update_offset_position(data, event)
 	local value = tonumber(data.ctrl:get_value()) or 0
 
 	if alive(self._unit) then
-		local local_rot = managers.editor:is_coordinate_system("Local")
 		local pos = self._unit:position()
-		local rot = Rotation()
+		local rot = nil
+		local coor_sys = managers.editor:coordinate_system()
 
-		if local_rot then
+		if coor_sys == "Local" then
 			rot = self._unit:rotation()
+		elseif coor_sys == "Anchor" then
+			rot = Rotation()
+		elseif coor_sys == "Camera" then
+			rot = managers.editor:camera():rotation()
+		else
+			rot = Rotation()
 		end
 
 		value = value * 100
@@ -2252,130 +2265,52 @@ function MoveTransformTypeIn:update_offset(data, event)
 	end
 end
 
--- Lines 2061-2064
-function MoveTransformTypeIn:set_unit(unit)
-	self._unit = unit
-
-	self._panel:set_enabled(alive(self._unit))
-end
-
--- Lines 2066-2079
-function MoveTransformTypeIn:update(t, dt)
-	if alive(self._unit) then
-		local pos = self._unit:position()
-
-		if not self._ax:in_focus() then
-			self._ax:change_value(string.format("%.2f", pos.x / 100))
-		end
-
-		if not self._ay:in_focus() then
-			self._ay:change_value(string.format("%.2f", pos.y / 100))
-		end
-
-		if not self._az:in_focus() then
-			self._az:change_value(string.format("%.2f", pos.z / 100))
-		end
-	end
-end
-
-RotateTransformTypeIn = RotateTransformTypeIn or class(CoreEditorEwsDialog)
-
--- Lines 2086-2112
-function RotateTransformTypeIn:init()
-	CoreEditorEwsDialog.init(self, nil, "Rotate transform type-in", "", Vector3(761, 180, 0), Vector3(264, 111, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,STAY_ON_TOP")
-	self:create_panel("HORIZONTAL")
-
-	self._min = -100000000
-	self._max = 100000000
-	local world_sizer = EWS:StaticBoxSizer(self._panel, "VERTICAL", "Absolut:World")
-	self._ax = self:_create_ctrl("X:", "x", 0, "absolut", world_sizer)
-	self._ay = self:_create_ctrl("Y:", "y", 0, "absolut", world_sizer)
-	self._az = self:_create_ctrl("Z:", "z", 0, "absolut", world_sizer)
-
-	self._panel_sizer:add(world_sizer, 1, 0, "EXPAND")
-
-	local offset_sizer = EWS:StaticBoxSizer(self._panel, "VERTICAL", "Offset")
-	self._ox = self:_create_ctrl("X:", "x", 0, "offset", offset_sizer)
-	self._oy = self:_create_ctrl("Y:", "y", 0, "offset", offset_sizer)
-	self._oz = self:_create_ctrl("Z:", "z", 0, "offset", offset_sizer)
-
-	self._panel_sizer:add(offset_sizer, 1, 0, "EXPAND")
-	self._dialog_sizer:add(self._panel, 1, 0, "EXPAND")
-	self._panel:set_enabled(false)
-end
-
--- Lines 2114-2147
-function RotateTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
-	local ctrl_sizer = EWS:BoxSizer("HORIZONTAL")
-
-	ctrl_sizer:add(EWS:StaticText(self._panel, name, "", "ALIGN_LEFT"), 0, 0, "EXPAND")
-
+-- Lines 2108-2130
+function UnitTransformDialog:_create_ctrl_rotation(name, coor, value, sizer)
+	local ctrl_sizer = EWS:BoxSizer("VERTICAL")
 	local ctrl = EWS:TextCtrl(self._panel, value, "", "TE_PROCESS_ENTER")
 
-	ctrl:set_tool_tip("Type in " .. type .. " " .. coor .. "-rotation in degrees")
-	ctrl:set_min_size(Vector3(-1, 10, 0))
+	ctrl:set_tool_tip(name .. " Absolute")
 	ctrl:connect("EVT_CHAR", callback(nil, _G, "verify_number"), ctrl)
-
-	if type == "offset" then
-		ctrl:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_offset"), {
-			ctrl = ctrl,
-			coor = coor
-		})
-		ctrl:connect("EVT_KILL_FOCUS", callback(self, self, "update_offset"), {
-			ctrl = ctrl,
-			coor = coor
-		})
-	else
-		ctrl:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_absolut"), {
-			ctrl = ctrl,
-			coor = coor
-		})
-		ctrl:connect("EVT_KILL_FOCUS", callback(self, self, "update_absolut"), {
-			ctrl = ctrl,
-			coor = coor
-		})
-	end
-
+	ctrl:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_absolut_rotation"), {
+		ctrl = ctrl,
+		coor = coor
+	})
+	ctrl:connect("EVT_KILL_FOCUS", callback(self, self, "update_absolut_rotation"), {
+		ctrl = ctrl,
+		coor = coor
+	})
 	ctrl_sizer:add(ctrl, 1, 0, "EXPAND")
 
-	local spin = EWS:SpinButton(self._panel, "", "SP_VERTICAL")
+	local offset = EWS:TextCtrl(self._panel, value, "", "TE_PROCESS_ENTER")
 
-	spin:set_min_size(Vector3(-1, 10, 0))
-
-	local c = ctrl
-
-	if type == "offset" then
-		c = self["_a" .. coor]
-	end
-
-	spin:connect("EVT_SCROLL_LINEUP", callback(self, self, "update_spin"), {
-		step = 0.1,
-		ctrl = c,
+	offset:set_tool_tip(name .. " Offset")
+	offset:connect("EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_offset_rotation"), {
+		ctrl = offset,
 		coor = coor
 	})
-	spin:connect("EVT_SCROLL_LINEDOWN", callback(self, self, "update_spin"), {
-		step = -0.1,
-		ctrl = c,
+	offset:connect("EVT_KILL_FOCUS", callback(self, self, "update_offset_rotation"), {
+		ctrl = offset,
 		coor = coor
 	})
-	ctrl_sizer:add(spin, 0, 0, "EXPAND")
-	sizer:add(ctrl_sizer, 1, 10, "EXPAND,LEFT,RIGHT")
+	ctrl_sizer:add(offset, 0, 0, "EXPAND")
+	sizer:add(ctrl_sizer, 1, 0, "EXPAND,LEFT,RIGHT")
 
 	return ctrl
 end
 
--- Lines 2149-2155
-function RotateTransformTypeIn:update_spin(data)
+-- Lines 2132-2138
+function UnitTransformDialog:update_spin_rotation(data)
 	if not tonumber(data.ctrl:get_value()) then
 		data.ctrl:set_value(0)
 	end
 
-	data.ctrl:set_value(string.format("%.2f", data.ctrl:get_value() + data.step))
-	self:update_absolut(data)
+	data.ctrl:set_value(string.format("%.3f", data.ctrl:get_value() + data.step))
+	self:update_absolut_rotation(data)
 end
 
--- Lines 2157-2178
-function RotateTransformTypeIn:update_absolut(data)
+-- Lines 2140-2161
+function UnitTransformDialog:update_absolut_rotation(data)
 	local value = tonumber(data.ctrl:get_value()) or 0
 
 	if self._min == value then
@@ -2393,26 +2328,32 @@ function RotateTransformTypeIn:update_absolut(data)
 			rot = Rotation(rot:yaw(), rot:pitch(), value)
 		end
 
-		data.ctrl:change_value(string.format("%.2f", value))
+		data.ctrl:change_value(string.format("%.3f", value))
 		data.ctrl:set_selection(-1, -1)
 		managers.editor:set_selected_units_rotation(rot * self._unit:rotation():inverse())
 	end
 end
 
--- Lines 2180-2197
-function RotateTransformTypeIn:update_offset(data, event)
+-- Lines 2163-2185
+function UnitTransformDialog:update_offset_rotation(data, event)
 	local value = tonumber(data.ctrl:get_value()) or 0
 
 	if alive(self._unit) then
-		local local_rot = managers.editor:is_coordinate_system("Local")
-		local rot = Rotation()
-		local rot_axis = rot[data.coor](rot)
-		local u_rot = self._unit:rotation()
+		local rot = nil
+		local coor_sys = managers.editor:coordinate_system()
 
-		if local_rot then
-			rot_axis = u_rot[data.coor](u_rot)
+		if coor_sys == "Local" then
+			rot = self._unit:rotation()
+		elseif coor_sys == "Anchor" then
+			rot = Rotation()
+		elseif coor_sys == "Camera" then
+			rot = managers.editor:camera():rotation()
+		else
+			rot = Rotation()
 		end
 
+		local rot_axis = rot[data.coor](rot)
+		local u_rot = self._unit:rotation()
 		rot = Rotation(rot_axis, value)
 
 		managers.editor:set_selected_units_rotation(rot)
@@ -2421,35 +2362,86 @@ function RotateTransformTypeIn:update_offset(data, event)
 	end
 end
 
--- Lines 2199-2202
-function RotateTransformTypeIn:set_unit(unit)
+-- Lines 2188-2192
+function UnitTransformDialog:on_copy_position()
+	if alive(self._unit) then
+		self._clipboard_position = self._unit:position()
+	end
+end
+
+-- Lines 2194-2203
+function UnitTransformDialog:on_paste_position()
+	if alive(self._unit) and self._clipboard_position then
+		local pos = self._clipboard_position
+
+		managers.editor:set_selected_units_position(pos)
+		self._ax:change_value(string.format("%.3f", pos.x / 100))
+		self._ay:change_value(string.format("%.3f", pos.y / 100))
+		self._az:change_value(string.format("%.3f", pos.z / 100))
+	end
+end
+
+-- Lines 2205-2209
+function UnitTransformDialog:on_copy_rotation()
+	if alive(self._unit) then
+		self._clipboard_rotation = self._unit:rotation()
+	end
+end
+
+-- Lines 2211-2221
+function UnitTransformDialog:on_paste_rotation()
+	if alive(self._unit) and self._clipboard_rotation then
+		local rot = self._clipboard_rotation
+
+		managers.editor:set_selected_units_rotation(rot * self._unit:rotation():inverse())
+		self._rx:change_value(string.format("%.3f", rot:yaw()))
+		self._ry:change_value(string.format("%.3f", rot:pitch()))
+		self._rz:change_value(string.format("%.3f", rot:roll()))
+	end
+end
+
+-- Lines 2223-2226
+function UnitTransformDialog:set_unit(unit)
 	self._unit = unit
 
 	self._panel:set_enabled(alive(self._unit))
 end
 
--- Lines 2204-2217
-function RotateTransformTypeIn:update(t, dt)
+-- Lines 2228-2257
+function UnitTransformDialog:update(t, dt)
 	if alive(self._unit) then
+		local pos = self._unit:position()
 		local rot = self._unit:rotation()
 
 		if not self._ax:in_focus() then
-			self._ax:change_value(string.format("%.2f", rot:yaw()))
+			self._ax:change_value(string.format("%.3f", pos.x / 100))
 		end
 
 		if not self._ay:in_focus() then
-			self._ay:change_value(string.format("%.2f", rot:pitch()))
+			self._ay:change_value(string.format("%.3f", pos.y / 100))
 		end
 
 		if not self._az:in_focus() then
-			self._az:change_value(string.format("%.2f", rot:roll()))
+			self._az:change_value(string.format("%.3f", pos.z / 100))
+		end
+
+		if not self._rx:in_focus() then
+			self._rx:change_value(string.format("%.3f", rot:yaw()))
+		end
+
+		if not self._ry:in_focus() then
+			self._ry:change_value(string.format("%.3f", rot:pitch()))
+		end
+
+		if not self._rz:in_focus() then
+			self._rz:change_value(string.format("%.3f", rot:roll()))
 		end
 	end
 end
 
 CameraTransformTypeIn = CameraTransformTypeIn or class(CoreEditorEwsDialog)
 
--- Lines 2224-2263
+-- Lines 2264-2303
 function CameraTransformTypeIn:init()
 	CoreEditorEwsDialog.init(self, nil, "Camera transform type-in", "", Vector3(761, 180, 0), Vector3(264, 146, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,STAY_ON_TOP")
 	self:create_panel("VERTICAL")
@@ -2483,7 +2475,7 @@ function CameraTransformTypeIn:init()
 	self._panel:set_enabled(true)
 end
 
--- Lines 2265-2278
+-- Lines 2305-2318
 function CameraTransformTypeIn:_create_fov_ctrl(sizer)
 	local ctrl_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -2501,7 +2493,7 @@ function CameraTransformTypeIn:_create_fov_ctrl(sizer)
 	return ctrl
 end
 
--- Lines 2280-2293
+-- Lines 2320-2333
 function CameraTransformTypeIn:_create_far_range_ctrl(sizer)
 	local ctrl_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -2519,7 +2511,7 @@ function CameraTransformTypeIn:_create_far_range_ctrl(sizer)
 	return ctrl
 end
 
--- Lines 2295-2326
+-- Lines 2335-2366
 function CameraTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 	local ctrl_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -2583,7 +2575,7 @@ function CameraTransformTypeIn:_create_ctrl(name, coor, value, type, sizer)
 	return ctrl
 end
 
--- Lines 2328-2334
+-- Lines 2368-2374
 function CameraTransformTypeIn:update_position_spin(data)
 	if not tonumber(data.ctrl:get_value()) then
 		data.ctrl:set_value(0)
@@ -2593,7 +2585,7 @@ function CameraTransformTypeIn:update_position_spin(data)
 	self:update_position(data)
 end
 
--- Lines 2336-2342
+-- Lines 2376-2382
 function CameraTransformTypeIn:update_rotation_spin(data)
 	if not tonumber(data.ctrl:get_value()) then
 		data.ctrl:set_value(0)
@@ -2603,7 +2595,7 @@ function CameraTransformTypeIn:update_rotation_spin(data)
 	self:update_rotation(data)
 end
 
--- Lines 2344-2356
+-- Lines 2384-2396
 function CameraTransformTypeIn:update_position(data)
 	local value = tonumber(data.ctrl:get_value()) or 0
 
@@ -2619,7 +2611,7 @@ function CameraTransformTypeIn:update_position(data)
 	managers.editor:set_camera(pos, managers.editor:camera_rotation())
 end
 
--- Lines 2358-2376
+-- Lines 2398-2416
 function CameraTransformTypeIn:update_rotation(data)
 	local value = tonumber(data.ctrl:get_value()) or 0
 
@@ -2642,7 +2634,7 @@ function CameraTransformTypeIn:update_rotation(data)
 	managers.editor:set_camera(managers.editor:camera_position(), rot)
 end
 
--- Lines 2378-2385
+-- Lines 2418-2425
 function CameraTransformTypeIn:update_fov()
 	local value = tonumber(self._fov:get_value()) or managers.editor:camera_fov()
 	value = math.clamp(value, 1, 170)
@@ -2652,7 +2644,7 @@ function CameraTransformTypeIn:update_fov()
 	managers.editor:set_default_camera_fov(value)
 end
 
--- Lines 2387-2395
+-- Lines 2427-2435
 function CameraTransformTypeIn:update_far_range()
 	local value = tonumber(self._far_range:get_value()) or managers.editor:camera_far_range() / 100
 
@@ -2667,7 +2659,7 @@ function CameraTransformTypeIn:update_far_range()
 	managers.editor:set_camera_far_range(value)
 end
 
--- Lines 2397-2429
+-- Lines 2437-2469
 function CameraTransformTypeIn:update(t, dt)
 	local pos = managers.editor:camera_position()
 
@@ -2708,7 +2700,7 @@ end
 
 EditControllerBindings = EditControllerBindings or class(CoreEditorEwsDialog)
 
--- Lines 2435-2478
+-- Lines 2475-2518
 function EditControllerBindings:init(...)
 	CoreEditorEwsDialog.init(self, nil, "Controller bindings", "", Vector3(300, 150, 0), Vector3(350, 500, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,STAY_ON_TOP", ...)
 	self:create_panel("VERTICAL")
@@ -2748,7 +2740,7 @@ function EditControllerBindings:init(...)
 	self._dialog:set_visible(true)
 end
 
--- Lines 2480-2490
+-- Lines 2520-2530
 function EditControllerBindings:add_list(list)
 	local names = {}
 
@@ -2767,7 +2759,7 @@ end
 
 MissionGraph = MissionGraph or class(CoreEditorEwsDialog)
 
--- Lines 2496-2551
+-- Lines 2536-2591
 function MissionGraph:init(...)
 	CoreEditorEwsDialog.init(self, nil, "Mission Graph", "", Vector3(100, 100, 0), Vector3(800, 600, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,,MINIMIZE_BOX,MAXIMIZE_BOX,STAY_ON_TOP", ...)
 	self:create_panel("VERTICAL")
@@ -2802,7 +2794,7 @@ function MissionGraph:init(...)
 	self._dialog:set_visible(true)
 end
 
--- Lines 2553-2557
+-- Lines 2593-2597
 function MissionGraph:update(t, dt)
 	self._graph_view:update_graph(dt)
 	self._graph:notify_views()
@@ -2810,7 +2802,7 @@ end
 
 WorldEditorNews = WorldEditorNews or class(CoreEditorEwsDialog)
 
--- Lines 2563-2599
+-- Lines 2603-2639
 function WorldEditorNews:init()
 	CoreEditorEwsDialog.init(self, nil, "World editor news", "", Vector3(270, 130, 0), Vector3(560, 620, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER,STAY_ON_TOP")
 
@@ -2843,7 +2835,7 @@ function WorldEditorNews:init()
 	self._dialog:set_visible(true)
 end
 
--- Lines 2601-2607
+-- Lines 2641-2647
 function WorldEditorNews:set_visible(visible)
 	if visible then
 		self._cancel_btn:set_caption(self._captions[math.random(#self._captions)])
@@ -2853,14 +2845,14 @@ function WorldEditorNews:set_visible(visible)
 	CoreEditorEwsDialog.set_visible(self, visible)
 end
 
--- Lines 2609-2611
+-- Lines 2649-2651
 function WorldEditorNews:version()
 	return self._text:get_last_position()
 end
 
 UnitDuality = UnitDuality or class(CoreEditorEwsDialog)
 
--- Lines 2617-2632
+-- Lines 2657-2672
 function UnitDuality:create_panel(orientation)
 	self._scrolled_window = EWS:ScrolledWindow(self._dialog, "", "VSCROLL")
 
@@ -2878,7 +2870,7 @@ function UnitDuality:create_panel(orientation)
 	self._panel:set_sizer(self._panel_sizer)
 end
 
--- Lines 2634-2686
+-- Lines 2674-2726
 function UnitDuality:init(collisions, pos)
 	pos = pos or Vector3(120, 130, 0)
 
@@ -2933,7 +2925,7 @@ function UnitDuality:init(collisions, pos)
 	self._dialog:set_visible(true)
 end
 
--- Lines 2688-2730
+-- Lines 2728-2770
 function UnitDuality:build_collision(collision)
 	local u1 = collision.u1
 	local u2 = collision.u2
@@ -2992,7 +2984,7 @@ function UnitDuality:build_collision(collision)
 	return panel
 end
 
--- Lines 2732-2740
+-- Lines 2772-2780
 function UnitDuality:goto(collision)
 	local u1 = collision.u1
 	local u2 = collision.u2
@@ -3005,7 +2997,7 @@ function UnitDuality:goto(collision)
 	managers.editor:center_view_on_unit(u1)
 end
 
--- Lines 2742-2748
+-- Lines 2782-2788
 function UnitDuality:delete_unit(data)
 	if alive(data.unit) then
 		managers.editor:delete_unit(data.unit)
@@ -3015,14 +3007,14 @@ function UnitDuality:delete_unit(data)
 	data.panel:set_enabled(false)
 end
 
--- Lines 2750-2752
+-- Lines 2790-2792
 function UnitDuality:on_check_again()
 	managers.editor:on_check_duality()
 end
 
 BrushLayerDebug = BrushLayerDebug or class(CoreEditorEwsDialog)
 
--- Lines 2760-2811
+-- Lines 2800-2851
 function BrushLayerDebug:init(...)
 	CoreEditorEwsDialog.init(self, nil, "Brush layer debug", "", Vector3(300, 150, 0), Vector3(600, 400, 0), "DEFAULT_DIALOG_STYLE,RESIZE_BORDER", ...)
 	self:create_panel("VERTICAL")
@@ -3078,12 +3070,12 @@ function BrushLayerDebug:init(...)
 	self:fill_unit_list()
 end
 
--- Lines 2813-2815
+-- Lines 2853-2855
 function BrushLayerDebug:_toolbar_toggle(params, event)
 	self[params.value] = params.toolbar:tool_state(event:get_id())
 end
 
--- Lines 2817-2824
+-- Lines 2857-2864
 function BrushLayerDebug:_on_gui_delete()
 	local current_data = self:_current_data()
 
@@ -3095,7 +3087,7 @@ function BrushLayerDebug:_on_gui_delete()
 	end
 end
 
--- Lines 2826-2831
+-- Lines 2866-2871
 function BrushLayerDebug:_on_gui_help()
 	local text = "Since brush units are not always visible, this dialog shows actual amount of units in the level."
 	text = text .. "\n\nSorting can be done by clicking the column namnes."
@@ -3104,7 +3096,7 @@ function BrushLayerDebug:_on_gui_help()
 	EWS:message_box(self._panel, text, "Help", "OK", Vector3())
 end
 
--- Lines 2834-2848
+-- Lines 2874-2888
 function BrushLayerDebug:fill_unit_list()
 	self:freeze()
 	self._unit_list:delete_all_items()
@@ -3125,14 +3117,14 @@ function BrushLayerDebug:fill_unit_list()
 	self:thaw()
 end
 
--- Lines 2850-2854
+-- Lines 2890-2894
 function BrushLayerDebug:_autosize_columns(list)
 	for i = 0, list:column_count() - 1 do
 		list:autosize_column(i)
 	end
 end
 
--- Lines 2856-2861
+-- Lines 2896-2901
 function BrushLayerDebug:key_cancel(ctrlr, event)
 	event:skip()
 
@@ -3141,7 +3133,7 @@ function BrushLayerDebug:key_cancel(ctrlr, event)
 	end
 end
 
--- Lines 2863-2870
+-- Lines 2903-2910
 function BrushLayerDebug:_on_select_unit()
 	local current_data = self:_current_data()
 
@@ -3150,19 +3142,19 @@ function BrushLayerDebug:_on_select_unit()
 	end
 end
 
--- Lines 2872-2875
+-- Lines 2912-2915
 function BrushLayerDebug:column_click_list(...)
 	self._list = self._unit_list
 
 	UnitList.column_click_list(self, ...)
 end
 
--- Lines 2877-2879
+-- Lines 2917-2919
 function BrushLayerDebug:_right_clicked(list)
 	local item_data = self:_selected_list_data(list)
 end
 
--- Lines 2881-2887
+-- Lines 2921-2927
 function BrushLayerDebug:_current_data()
 	local index = self._unit_list:selected_item()
 
@@ -3173,7 +3165,7 @@ function BrushLayerDebug:_current_data()
 	return self._unit_list:get_item_data_ref(index)
 end
 
--- Lines 2889-2895
+-- Lines 2929-2935
 function BrushLayerDebug:_selected_list_data(list)
 	local index = list:selected_item()
 
@@ -3184,16 +3176,16 @@ function BrushLayerDebug:_selected_list_data(list)
 	return list:get_item_data_ref(index)
 end
 
--- Lines 2897-2899
+-- Lines 2937-2939
 function BrushLayerDebug:reset()
 end
 
--- Lines 2901-2903
+-- Lines 2941-2943
 function BrushLayerDebug:freeze()
 	self._unit_list:freeze()
 end
 
--- Lines 2905-2907
+-- Lines 2945-2947
 function BrushLayerDebug:thaw()
 	self._unit_list:thaw()
 end

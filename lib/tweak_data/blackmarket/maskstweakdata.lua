@@ -2,7 +2,7 @@ local is_nextgen_console = SystemInfo:platform() == Idstring("PS4") or SystemInf
 local allow_halloween_lootdrop = is_nextgen_console
 allow_halloween_lootdrop = true
 
--- Lines 10-10580
+-- Lines 10-10575
 function BlackMarketTweakData:_init_masks(tweak_data)
 	self.masks = {
 		character_locked = {}
@@ -1786,34 +1786,30 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 		texture_bundle_folder = "pd2_hw_boxing",
 		sort_number = 10
 	}
-
-	if SystemInfo:distribution() == Idstring("STEAM") then
-		self.masks.area51 = {
-			unit = "units/pd2_dlc_alienware/masks/area51/msk_area51",
-			name_id = "bm_msk_area51",
-			texture_bundle_folder = "alienware_alpha",
-			pcs = {},
-			value = 0,
-			dlc = "alienware_alpha",
-			type = "helmet",
-			sort_number = 5
-		}
-		self.masks.alien_helmet = {
-			unit = "units/pd2_dlc_alienware/masks/alien_helmet/msk_alien_helmet",
-			name_id = "bm_msk_alien_helmet",
-			texture_bundle_folder = "alienware_alpha",
-			pcs = {},
-			value = 0,
-			dlc = "alienware_alpha",
-			type = "helmet",
-			default_blueprint = {
-				materials = "gunmetal",
-				textures = "no_color_full_material"
-			},
-			sort_number = 5
-		}
-	end
-
+	self.masks.area51 = {
+		unit = "units/pd2_dlc_alienware/masks/area51/msk_area51",
+		name_id = "bm_msk_area51",
+		texture_bundle_folder = "alienware_alpha",
+		pcs = {},
+		value = 0,
+		dlc = "alienware_alpha",
+		type = "helmet",
+		sort_number = 5
+	}
+	self.masks.alien_helmet = {
+		unit = "units/pd2_dlc_alienware/masks/alien_helmet/msk_alien_helmet",
+		name_id = "bm_msk_alien_helmet",
+		texture_bundle_folder = "alienware_alpha",
+		pcs = {},
+		value = 0,
+		dlc = "alienware_alpha",
+		type = "helmet",
+		default_blueprint = {
+			materials = "gunmetal",
+			textures = "no_color_full_material"
+		},
+		sort_number = 5
+	}
 	self.masks.infamy_lurker = {
 		unit = "units/pd2_dlc_infamy/masks/msk_infamy_lurker/msk_infamy_lurker",
 		name_id = "bm_msk_infamy_lurker",

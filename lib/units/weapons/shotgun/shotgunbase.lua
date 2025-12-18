@@ -91,7 +91,7 @@ local mvec_ax = Vector3()
 local mvec_ay = Vector3()
 local mvec_spread_direction = Vector3()
 
--- Lines 154-529
+-- Lines 154-528
 function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul)
 	if self:gadget_overrides_weapon_functions() then
 		return self:gadget_function_override("_fire_raycast", self, user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul)
@@ -105,14 +105,16 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 	local all_hits_lookup = {}
 	local alert_rays_lookup = alert_rays and {}
 
-	-- Lines 171-251
+	-- Lines 171-250
 	local function on_hit(ray_hits)
 		for _, hit in ipairs(ray_hits) do
 			local unit_key = hit.unit:key()
 			local char_dmg_ext = hit.unit:character_damage()
 
 			if not char_dmg_ext then
-				if not hit.unit:in_slot(self.shield_mask) then
+				local base_ext = hit.unit:base()
+
+				if not hit.unit:in_slot(self.shield_mask) or not base_ext then
 					all_hits[#all_hits + 1] = hit
 
 					if alert_rays then
@@ -126,19 +128,15 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 						alert_rays_lookup[unit_key] = #alert_rays + 1
 						alert_rays[#alert_rays + 1] = hit
 					end
-				else
-					local base_ext = hit.unit:base()
+				elseif base_ext and base_ext.chk_body_hit_priority and base_ext:chk_body_hit_priority(all_hits[all_hits_lookup[unit_key]].body, hit.body) then
+					hit_effects[#hit_effects + 1] = all_hits[all_hits_lookup[unit_key]]
+					all_hits[all_hits_lookup[unit_key]] = hit
 
-					if base_ext and base_ext.chk_body_hit_priority and base_ext:chk_body_hit_priority(all_hits[all_hits_lookup[unit_key]].body, hit.body) then
-						hit_effects[#hit_effects + 1] = all_hits[all_hits_lookup[unit_key]]
-						all_hits[all_hits_lookup[unit_key]] = hit
-
-						if alert_rays then
-							alert_rays[alert_rays_lookup[unit_key]] = hit
-						end
-					else
-						hit_effects[#hit_effects + 1] = hit
+					if alert_rays then
+						alert_rays[alert_rays_lookup[unit_key]] = hit
 					end
+				else
+					hit_effects[#hit_effects + 1] = hit
 				end
 			elseif not all_hits_lookup[unit_key] then
 				all_hits_lookup[unit_key] = #all_hits + 1
@@ -242,7 +240,7 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 		end
 	end
 
-	-- Lines 384-386
+	-- Lines 383-385
 	local function sort_f(a, b)
 		return a.distance < b.distance
 	end
@@ -349,7 +347,7 @@ function ShotgunBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoo
 	return result
 end
 
--- Lines 533-577
+-- Lines 532-576
 function ShotgunBase:_check_one_shot_shotgun_achievements(kill_data)
 	if not tweak_data.achievement or not tweak_data.achievement.shotgun_single_shot_kills then
 		return
@@ -405,7 +403,7 @@ end
 
 SaigaShotgun = SaigaShotgun or class(ShotgunBase)
 
--- Lines 583-586
+-- Lines 582-585
 function SaigaShotgun:init(...)
 	SaigaShotgun.super.init(self, ...)
 
@@ -414,7 +412,7 @@ end
 
 InstantElectricBulletBase = InstantElectricBulletBase or class(InstantBulletBase)
 
--- Lines 596-611
+-- Lines 595-610
 function InstantElectricBulletBase:give_impact_damage(col_ray, weapon_unit, user_unit, damage, armor_piercing)
 	local hit_unit = col_ray.unit
 	local action_data = {
