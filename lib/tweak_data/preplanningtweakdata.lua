@@ -51,7 +51,7 @@ function PrePlanningTweakData:get_type_texture_rect(num)
 	}
 end
 
--- Lines 36-2222
+-- Lines 36-2305
 function PrePlanningTweakData:init(tweak_data)
 	self:_create_locations(tweak_data)
 
@@ -2223,7 +2223,7 @@ function PrePlanningTweakData:init(tweak_data)
 	}
 end
 
--- Lines 2224-3684
+-- Lines 2307-3858
 function PrePlanningTweakData:_create_locations(tweak_data)
 	self.upgrade_locks = {
 		"none",
@@ -4108,7 +4108,7 @@ function PrePlanningTweakData:_create_locations(tweak_data)
 			map_size = 1,
 			map_x = 0,
 			x1 = -11500,
-			map_y = 45,
+			map_y = 0,
 			name_id = "menu_pp_trai_bpr_loc_a",
 			y2 = 12500,
 			y1 = -3500,
@@ -4120,9 +4120,9 @@ function PrePlanningTweakData:_create_locations(tweak_data)
 		default_plans = {},
 		start_location = {
 			group = "a",
-			zoom = 1,
-			x = 512,
-			y = 512
+			zoom = 0.8,
+			x = 1024,
+			y = 1024
 		}
 	}
 	self.locations.corp = {
@@ -4261,7 +4261,7 @@ function PrePlanningTweakData:_create_locations(tweak_data)
 	}
 end
 
--- Lines 3686-3688
+-- Lines 3860-3862
 function PrePlanningTweakData:get_level_data(level_id)
 	return self.locations[level_id] or {}
 end

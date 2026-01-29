@@ -138,7 +138,7 @@ function CoreUnitSequenceTriggerUnitElement:update_editing()
 	end
 end
 
--- Lines 118-136
+-- Lines 118-125
 function CoreUnitSequenceTriggerUnitElement:select_unit()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -151,15 +151,25 @@ function CoreUnitSequenceTriggerUnitElement:select_unit()
 	end
 end
 
--- Lines 138-148
+-- Lines 127-145
 function CoreUnitSequenceTriggerUnitElement:_check_add_unit(unit)
 	local sequences = managers.sequence:get_sequence_list(unit:name())
 
 	if #sequences > 0 then
+		local default_sequence = "none"
+
+		for _, seqid in ipairs(sequences) do
+			if seqid == "interact" then
+				default_sequence = seqid
+
+				break
+			end
+		end
+
 		self._sequence_units[unit:unit_data().unit_id] = unit
 		local sequence_list_data = {
-			sequence = "none",
-			unit_id = unit:unit_data().unit_id
+			unit_id = unit:unit_data().unit_id,
+			sequence = default_sequence
 		}
 
 		table.insert(self._hed.sequence_list, sequence_list_data)
@@ -167,14 +177,14 @@ function CoreUnitSequenceTriggerUnitElement:_check_add_unit(unit)
 	end
 end
 
--- Lines 150-152
+-- Lines 147-149
 function CoreUnitSequenceTriggerUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "select_unit"))
 end
 
--- Lines 154-168
+-- Lines 151-165
 function CoreUnitSequenceTriggerUnitElement:select_unit_list_btn()
-	-- Lines 155-162
+	-- Lines 152-159
 	local function f(unit)
 		if not managers.editor:layer("Statics"):category_map()[unit:type():s()] then
 			return false
@@ -192,7 +202,7 @@ function CoreUnitSequenceTriggerUnitElement:select_unit_list_btn()
 	end
 end
 
--- Lines 170-197
+-- Lines 167-194
 function CoreUnitSequenceTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_check_alive_units()
 	self:_create_panel()
@@ -220,7 +230,7 @@ function CoreUnitSequenceTriggerUnitElement:_build_panel(panel, panel_sizer)
 	end
 end
 
--- Lines 199-217
+-- Lines 196-214
 function CoreUnitSequenceTriggerUnitElement:_remove_by_unit_id(unit_id)
 	local remove_entries = {}
 
@@ -243,7 +253,7 @@ function CoreUnitSequenceTriggerUnitElement:_remove_by_unit_id(unit_id)
 	self:_remove_from_sequence_list(unit_id)
 end
 
--- Lines 219-242
+-- Lines 216-239
 function CoreUnitSequenceTriggerUnitElement:remove_entry(id)
 	local unit_id = self._guis[id].unit_id
 
@@ -271,7 +281,7 @@ function CoreUnitSequenceTriggerUnitElement:remove_entry(id)
 	self._sequence_units[unit_id] = nil
 end
 
--- Lines 244-250
+-- Lines 241-247
 function CoreUnitSequenceTriggerUnitElement:_remove_from_sequence_list(unit_id)
 	for i, entry in pairs(clone(self._hed.sequence_list)) do
 		if type(entry) == "table" and entry.unit_id == unit_id or entry == unit_id then
@@ -280,7 +290,7 @@ function CoreUnitSequenceTriggerUnitElement:_remove_from_sequence_list(unit_id)
 	end
 end
 
--- Lines 252-297
+-- Lines 249-294
 function CoreUnitSequenceTriggerUnitElement:_add_unit(unit, sequences, sequence_list_data)
 	local panel = self._panel
 	local panel_sizer = self._panel_sizer
@@ -330,7 +340,7 @@ function CoreUnitSequenceTriggerUnitElement:_add_unit(unit, sequences, sequence_
 	panel:layout()
 end
 
--- Lines 299-307
+-- Lines 296-304
 function CoreUnitSequenceTriggerUnitElement:set_sequence_data(guis_id)
 	local sequence = self._guis[guis_id].sequence:get_value()
 

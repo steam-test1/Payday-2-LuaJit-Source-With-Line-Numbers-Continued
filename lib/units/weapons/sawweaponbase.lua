@@ -26,35 +26,35 @@ function SawWeaponBase:init(unit)
 	self._saw_through_shields = managers.player:has_category_upgrade("saw", "ignore_shields")
 end
 
--- Lines 33-36
+-- Lines 33-37
 function SawWeaponBase:change_fire_object(new_obj)
 	SawWeaponBase.super.change_fire_object(self, new_obj)
 
 	self._active_effect_table.parent = new_obj
 end
 
--- Lines 38-40
+-- Lines 39-41
 function SawWeaponBase:start_shooting(...)
 	SawWeaponBase.super.start_shooting(self, ...)
 end
 
--- Lines 42-46
+-- Lines 43-47
 function SawWeaponBase:stop_shooting(...)
 	self:_stop_sawing_effect()
 	SawWeaponBase.super.stop_shooting(self, ...)
 end
 
--- Lines 48-50
+-- Lines 49-51
 function SawWeaponBase:_play_sound_sawing()
 	self:play_sound("Play_saw_handheld_grind_generic")
 end
 
--- Lines 52-54
+-- Lines 53-55
 function SawWeaponBase:_play_sound_idle()
 	self:play_sound("Play_saw_handheld_loop_idle")
 end
 
--- Lines 56-61
+-- Lines 57-64
 function SawWeaponBase:_start_sawing_effect()
 	if not self._active_effect then
 		self:_play_sound_sawing()
@@ -63,7 +63,7 @@ function SawWeaponBase:_start_sawing_effect()
 	end
 end
 
--- Lines 63-69
+-- Lines 66-74
 function SawWeaponBase:_stop_sawing_effect()
 	if self._active_effect then
 		self:_play_sound_idle()
@@ -73,7 +73,7 @@ function SawWeaponBase:_stop_sawing_effect()
 	end
 end
 
--- Lines 71-82
+-- Lines 76-87
 function SawWeaponBase:setup(setup_data)
 	SawWeaponBase.super.setup(self, setup_data)
 
@@ -83,7 +83,7 @@ function SawWeaponBase:setup(setup_data)
 	self._hit_alert_size = tweak_data.weapon.stats.alert_size[alert_size_index]
 end
 
--- Lines 84-152
+-- Lines 89-166
 function SawWeaponBase:fire(from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, target_unit)
 	if self:get_ammo_remaining_in_clip() == 0 then
 		return
@@ -140,9 +140,9 @@ function SawWeaponBase:fire(from_pos, direction, dmg_mul, shoot_player, spread_m
 	return ray_res
 end
 
--- Lines 154-161
-local function ray_table_contains(table, unit)
-	for i, hit in pairs(table) do
+-- Lines 168-176
+local function ray_table_contains(tbl, unit)
+	for _, hit in pairs(tbl) do
 		if hit.unit == unit then
 			return true
 		end
@@ -151,9 +151,9 @@ local function ray_table_contains(table, unit)
 	return false
 end
 
--- Lines 163-174
-local function ray_copy(table, ray)
-	for i, hit in pairs(table) do
+-- Lines 178-190
+local function ray_copy(tbl, ray)
+	for _, hit in pairs(tbl) do
 		if hit.unit == ray.unit then
 			hit.body = ray.body
 			hit.distance = ray.distance
@@ -166,7 +166,7 @@ local function ray_copy(table, ray)
 	end
 end
 
--- Lines 176-178
+-- Lines 192-194
 function SawWeaponBase:third_person_important()
 	return true
 end
@@ -174,7 +174,7 @@ end
 local mvec_to = Vector3()
 local mvec_spread_direction = Vector3()
 
--- Lines 182-234
+-- Lines 199-276
 function SawWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul)
 	local result = {}
 	local hit_unit = nil
@@ -206,7 +206,7 @@ function SawWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, sh
 			end
 		end
 
-		for i, hit in pairs(hits) do
+		for _, hit in pairs(hits) do
 			hit_unit = SawHit:on_collision(hit, self._unit, user_unit, damage, direction)
 		end
 
@@ -238,14 +238,14 @@ function SawWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, sh
 	return result, valid_hit
 end
 
--- Lines 252-254
+-- Lines 294-296
 function SawWeaponBase:can_reload()
 	return self:clip_empty() and SawWeaponBase.super.can_reload(self)
 end
 
 SawHit = SawHit or class(InstantBulletBase)
 
--- Lines 264-308
+-- Lines 306-350
 function SawHit:on_collision(col_ray, weapon_unit, user_unit, damage)
 	local hit_unit = col_ray.unit
 	local base_ext = hit_unit:base()
@@ -271,7 +271,7 @@ function SawHit:on_collision(col_ray, weapon_unit, user_unit, damage)
 	return result
 end
 
--- Lines 311-317
+-- Lines 353-359
 function SawHit:play_impact_sound_and_effects(weapon_unit, col_ray)
 	managers.game_play_central:play_impact_sound_and_effects({
 		decal = "saw",

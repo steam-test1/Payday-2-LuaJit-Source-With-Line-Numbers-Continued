@@ -9,7 +9,7 @@ function ManageSpawnedUnits:init(unit)
 	unit:set_extension_update_enabled(Idstring("spawn_manager"), false)
 end
 
--- Lines 101-158
+-- Lines 80-137
 function ManageSpawnedUnits:spawn_unit(unit_id, align_obj_name, unit)
 	local align_obj = self._unit:get_object(Idstring(align_obj_name))
 	local spawn_unit = nil
@@ -59,12 +59,12 @@ function ManageSpawnedUnits:spawn_unit(unit_id, align_obj_name, unit)
 	end
 end
 
--- Lines 160-162
+-- Lines 139-141
 function ManageSpawnedUnits:spawned_units()
 	return self._spawned_units
 end
 
--- Lines 181-221
+-- Lines 160-200
 function ManageSpawnedUnits:spawn_and_link_unit(joint_table, unit_id, unit)
 	if self._spawned_units[unit_id] then
 		return
@@ -120,12 +120,12 @@ function ManageSpawnedUnits:spawn_and_link_unit(joint_table, unit_id, unit)
 	end
 end
 
--- Lines 223-225
+-- Lines 202-204
 function ManageSpawnedUnits:linked_units()
 	return self._sync_spawn_and_link
 end
 
--- Lines 238-255
+-- Lines 217-234
 function ManageSpawnedUnits:spawn_run_sequence(unit_id, sequence_name)
 	local entry = self._spawned_units[unit_id]
 
@@ -146,7 +146,7 @@ function ManageSpawnedUnits:spawn_run_sequence(unit_id, sequence_name)
 	self:_spawn_run_sequence(unit_id, sequence_name)
 end
 
--- Lines 277-326
+-- Lines 256-305
 function ManageSpawnedUnits:local_push_child_unit(unit_id, mass, pow, vec3_a, vec3_b)
 	if not unit_id then
 		Application:error("param1", "nil:\n", self._spawned_units[unit_id].unit:name())
@@ -208,7 +208,7 @@ function ManageSpawnedUnits:local_push_child_unit(unit_id, mass, pow, vec3_a, ve
 	end
 end
 
--- Lines 336-351
+-- Lines 315-330
 function ManageSpawnedUnits:remove_unit(unit_id)
 	local entry = self._spawned_units[unit_id]
 
@@ -225,7 +225,7 @@ function ManageSpawnedUnits:remove_unit(unit_id)
 	self._spawned_units[unit_id] = nil
 end
 
--- Lines 359-376
+-- Lines 338-355
 function ManageSpawnedUnits:destroy(unit)
 	local allowed_to_delete = Network:is_server()
 
@@ -244,7 +244,7 @@ function ManageSpawnedUnits:destroy(unit)
 	self._spawned_units = {}
 end
 
--- Lines 380-394
+-- Lines 359-373
 function ManageSpawnedUnits:on_post_detached_from_network()
 	if self._sync_spawn_and_link then
 		local spawned_units = self._spawned_units
@@ -259,7 +259,7 @@ function ManageSpawnedUnits:on_post_detached_from_network()
 	end
 end
 
--- Lines 398-420
+-- Lines 377-399
 function ManageSpawnedUnits:save(data)
 	if not alive(self._unit) or self._unit:id() == -1 or self.local_only then
 		data.managed_spawned_units = nil
@@ -288,7 +288,7 @@ function ManageSpawnedUnits:save(data)
 	end
 end
 
--- Lines 424-441
+-- Lines 403-420
 function ManageSpawnedUnits:load(data)
 	if not data.managed_spawned_units then
 		return
@@ -308,7 +308,7 @@ function ManageSpawnedUnits:load(data)
 	end
 end
 
--- Lines 445-467
+-- Lines 424-446
 function ManageSpawnedUnits:_clbk_drop_in_sync(data)
 	if not alive(self._unit) or self._unit:id() == -1 then
 		return
@@ -333,7 +333,7 @@ function ManageSpawnedUnits:_clbk_drop_in_sync(data)
 	end
 end
 
--- Lines 471-494
+-- Lines 450-473
 function ManageSpawnedUnits:_spawn_run_sequence(unit_id, sequence_name)
 	local entry = self._spawned_units[unit_id]
 
@@ -365,7 +365,7 @@ end
 local empty_vec = Vector3()
 local empty_rot = Rotation()
 
--- Lines 500-518
+-- Lines 479-497
 function ManageSpawnedUnits:_link_joints(unit_id, joint_table)
 	local ids, parent_object, child_object = nil
 	local parent_unit = self._unit
@@ -386,7 +386,7 @@ function ManageSpawnedUnits:_link_joints(unit_id, joint_table)
 	parent_unit:set_moving()
 end
 
--- Lines 521-530
+-- Lines 500-509
 function ManageSpawnedUnits:get_unit(unit_id)
 	local entry = self._spawned_units[unit_id]
 
@@ -401,7 +401,7 @@ function ManageSpawnedUnits:get_unit(unit_id)
 	return entry.unit
 end
 
--- Lines 533-549
+-- Lines 512-528
 function ManageSpawnedUnits:set_visibility_state(state)
 	self._visibility_state = state
 

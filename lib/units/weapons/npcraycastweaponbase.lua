@@ -453,7 +453,7 @@ function NPCRaycastWeaponBase:_cleanup_smoke_shot()
 	end
 end
 
--- Lines 468-476
+-- Lines 468-478
 function NPCRaycastWeaponBase:_spawn_trail_effect(direction, col_ray)
 	self._obj_fire:m_position(self._trail_effect_table.position)
 	mvector3.set(self._trail_effect_table.normal, direction)
@@ -465,17 +465,17 @@ function NPCRaycastWeaponBase:_spawn_trail_effect(direction, col_ray)
 	end
 end
 
--- Lines 480-482
+-- Lines 482-484
 function NPCRaycastWeaponBase:has_flashlight_on()
 	return self._flashlight_data and self._flashlight_data.on and true or false
 end
 
--- Lines 484-486
+-- Lines 486-488
 function NPCRaycastWeaponBase:flashlight_data()
 	return self._flashlight_data
 end
 
--- Lines 488-506
+-- Lines 490-508
 function NPCRaycastWeaponBase:flashlight_state_changed()
 	if not self._flashlight_data then
 		return
@@ -498,7 +498,7 @@ function NPCRaycastWeaponBase:flashlight_state_changed()
 	end
 end
 
--- Lines 508-524
+-- Lines 510-526
 function NPCRaycastWeaponBase:set_flashlight_enabled(enabled)
 	if not self._flashlight_data then
 		return
@@ -519,7 +519,7 @@ function NPCRaycastWeaponBase:set_flashlight_enabled(enabled)
 	end
 end
 
--- Lines 526-538
+-- Lines 528-540
 function NPCRaycastWeaponBase:set_flashlight_light_lod_enabled(enabled)
 	if not self._flashlight_data then
 		return
@@ -534,26 +534,41 @@ function NPCRaycastWeaponBase:set_flashlight_light_lod_enabled(enabled)
 	end
 end
 
--- Lines 540-561
+-- Lines 543-575
 function NPCRaycastWeaponBase:set_laser_enabled(state)
 	if state then
 		if alive(self._laser_unit) then
 			return
 		end
 
+		local level_data = managers.job:current_level_data()
+		local max_distance = level_data and level_data.sniper_laser_distance or 10000
+
+		if max_distance <= 0 then
+			return
+		end
+
+		local spawn_prop = Idstring(self.laser_acc_unit or "units/payday2/weapons/wpn_npc_upg_fl_ass_smg_sho_peqbox/wpn_npc_upg_fl_ass_smg_sho_peqbox")
 		local spawn_rot = self._obj_fire:rotation()
 		local spawn_pos = self._obj_fire:position()
-		spawn_pos = spawn_pos - spawn_rot:y() * 8 + spawn_rot:z() * 2 - spawn_rot:x() * 1.5
-		self._laser_unit = World:spawn_unit(Idstring("units/payday2/weapons/wpn_npc_upg_fl_ass_smg_sho_peqbox/wpn_npc_upg_fl_ass_smg_sho_peqbox"), spawn_pos, spawn_rot)
+		spawn_pos = self.get_laser_attachment_offset(spawn_pos, spawn_rot)
+		self._laser_unit = World:spawn_unit(spawn_prop, spawn_pos, spawn_rot)
 
 		self._unit:link(self._obj_fire:name(), self._laser_unit)
 		self._laser_unit:base():set_npc()
 		self._laser_unit:base():set_on()
 		self._laser_unit:base():set_color_by_theme("cop_sniper")
-		self._laser_unit:base():set_max_distace(10000)
+		self._laser_unit:base():set_max_distace(max_distance)
 	elseif alive(self._laser_unit) then
 		self._laser_unit:set_slot(0)
 
 		self._laser_unit = nil
 	end
+end
+
+-- Lines 579-583
+function NPCRaycastWeaponBase.get_laser_attachment_offset(spawn_pos, spawn_rot)
+	spawn_pos = spawn_pos - spawn_rot:y() * 8 + spawn_rot:z() * 2 - spawn_rot:x() * 1.5
+
+	return spawn_pos
 end

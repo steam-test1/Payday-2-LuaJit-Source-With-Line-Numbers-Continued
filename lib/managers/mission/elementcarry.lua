@@ -7,7 +7,7 @@ function ElementCarry:init(...)
 	ElementCarry.super.init(self, ...)
 end
 
--- Lines 9-85
+-- Lines 9-166
 function ElementCarry:on_executed(instigator)
 	if not self._values.enabled or not alive(instigator) then
 		return
@@ -92,7 +92,7 @@ function ElementCarry:on_executed(instigator)
 	end
 end
 
--- Lines 87-89
+-- Lines 168-170
 function ElementCarry:client_on_executed(...)
 	self:on_executed(...)
 end

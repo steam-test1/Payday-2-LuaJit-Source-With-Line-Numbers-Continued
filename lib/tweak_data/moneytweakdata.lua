@@ -41,7 +41,7 @@ function MoneyTweakData._create_value_table(min, max, table_size, round, curve)
 	return t
 end
 
--- Lines 29-1012
+-- Lines 29-1011
 function MoneyTweakData:init(tweak_data)
 	local difficulty = Global.game_settings and Global.game_settings.difficulty or "normal"
 	local difficulty_index = tweak_data:difficulty_to_index(difficulty)
@@ -390,7 +390,7 @@ function MoneyTweakData:init(tweak_data)
 		color_value = self._create_value_table(smallest_mask_part_cost * 0.3, biggest_mask_part_cost, 10, true, 1)
 	}
 
-	-- Lines 552-552
+	-- Lines 551-551
 	local function millions(value)
 		return value * 1000000
 	end

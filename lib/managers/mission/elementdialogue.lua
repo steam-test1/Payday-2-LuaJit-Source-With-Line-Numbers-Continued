@@ -49,15 +49,23 @@ ElementDialogue.MutedDialogs = {
 	"snp_",
 	"play_snp_",
 	"com_",
-	"play_com_"
+	"play_com_",
+	"gem_",
+	"play_gem_",
+	"kee_",
+	"play_kee_",
+	"mch_",
+	"play_mch_",
+	"cha_",
+	"play_cha_"
 }
 
--- Lines 33-35
+-- Lines 37-39
 function ElementDialogue:init(...)
 	ElementDialogue.super.init(self, ...)
 end
 
--- Lines 37-42
+-- Lines 41-46
 function ElementDialogue:on_script_activated()
 	if Network:is_server() then
 		self._mission_script:add_save_state_cb(self._id)
@@ -66,12 +74,12 @@ function ElementDialogue:on_script_activated()
 	ElementDialogue.super.on_script_activated(self)
 end
 
--- Lines 44-46
+-- Lines 48-50
 function ElementDialogue:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines 48-89
+-- Lines 52-93
 function ElementDialogue:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -108,12 +116,12 @@ function ElementDialogue:on_executed(instigator)
 	ElementDialogue.super.on_executed(self, instigator, nil, self._values.execute_on_executed_when_done)
 end
 
--- Lines 91-93
+-- Lines 95-97
 function ElementDialogue:_done_callback(instigator, reason)
 	ElementDialogue.super._trigger_execute_on_executed(self, instigator)
 end
 
--- Lines 95-119
+-- Lines 99-123
 function ElementDialogue:_can_play()
 	if managers.user:get_setting("mute_heist_vo") and not self._values.can_not_be_muted then
 		local dialog_str = string.lower(self._values.dialogue)
@@ -132,13 +140,13 @@ function ElementDialogue:_can_play()
 	end
 end
 
--- Lines 121-125
+-- Lines 125-129
 function ElementDialogue:save(data)
 	data.save_me = true
 	data.enabled = self._values.enabled
 end
 
--- Lines 127-136
+-- Lines 131-140
 function ElementDialogue:load(data)
 	self:set_enabled(data.enabled)
 end

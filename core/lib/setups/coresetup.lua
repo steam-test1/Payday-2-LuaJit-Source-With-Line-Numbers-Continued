@@ -447,7 +447,7 @@ function CoreSetup:__render()
 	self:render()
 end
 
--- Lines 628-682
+-- Lines 628-689
 function CoreSetup:__end_frame(t, dt)
 	self:end_frame(t, dt)
 	managers.viewport:end_frame(t, dt)
@@ -470,6 +470,7 @@ function CoreSetup:__end_frame(t, dt)
 		end
 
 		World:unload_all_units()
+		Application:resource_soft_reset()
 
 		if managers.menu_scene then
 			managers.menu_scene:unload()
@@ -504,21 +505,21 @@ function CoreSetup:__end_frame(t, dt)
 	end
 end
 
--- Lines 684-687
+-- Lines 691-694
 function CoreSetup:__loading_update(t, dt)
 	self._session:update(t, dt)
 	self:loading_update()
 end
 
--- Lines 689-690
+-- Lines 696-697
 function CoreSetup:__animations_reloaded()
 end
 
--- Lines 692-693
+-- Lines 699-700
 function CoreSetup:__script_reloaded()
 end
 
--- Lines 695-700
+-- Lines 702-707
 function CoreSetup:__entering_window(user_data, event_object)
 	if Global.frame:is_active() then
 		Global.application_window:set_focus()
@@ -526,26 +527,26 @@ function CoreSetup:__entering_window(user_data, event_object)
 	end
 end
 
--- Lines 702-706
+-- Lines 709-713
 function CoreSetup:__leaving_window(user_data, event_object)
 	if not managers.editor or managers.editor._in_mixed_input_mode then
 		Input:keyboard():unacquire()
 	end
 end
 
--- Lines 708-712
+-- Lines 715-719
 function CoreSetup:__kill_focus(user_data, event_object)
 	if managers.editor and not managers.editor:in_mixed_input_mode() and not Global.running_simulation then
 		managers.editor:set_in_mixed_input_mode(true)
 	end
 end
 
--- Lines 714-716
+-- Lines 721-723
 function CoreSetup:__save(data)
 	self:save(data)
 end
 
--- Lines 718-720
+-- Lines 725-727
 function CoreSetup:__load(data)
 	self:load(data)
 end
@@ -554,7 +555,7 @@ core:module("CoreSetup")
 
 CoreSetup = _CoreSetup
 
--- Lines 730-768
+-- Lines 737-775
 function CoreSetup:make_entrypoint()
 	if not _G.CoreSetup.__entrypoint_is_setup then
 		assert(rawget(_G, "pre_init") == nil)

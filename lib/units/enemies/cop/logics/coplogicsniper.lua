@@ -9,7 +9,7 @@ CopLogicSniper.on_alert = CopLogicIdle.on_alert
 CopLogicSniper.on_intimidated = CopLogicIdle.on_intimidated
 CopLogicSniper.on_new_objective = CopLogicIdle.on_new_objective
 
--- Lines 19-79
+-- Lines 19-83
 function CopLogicSniper.enter(data, new_logic_name, enter_params)
 	CopLogicBase.enter(data, new_logic_name, enter_params)
 
@@ -54,7 +54,7 @@ function CopLogicSniper.enter(data, new_logic_name, enter_params)
 	local key_str = tostring(data.unit:key())
 	my_data.detection_task_key = "CopLogicSniper._upd_enemy_detection" .. key_str
 
-	CopLogicBase.queue_task(my_data, my_data.detection_task_key, CopLogicSniper._upd_enemy_detection, data)
+	CopLogicBase.queue_task(my_data, my_data.detection_task_key, CopLogicSniper._upd_enemy_detection, data, data.t)
 
 	if objective then
 		my_data.wanted_stance = objective.stance
@@ -68,6 +68,7 @@ function CopLogicSniper.enter(data, new_logic_name, enter_params)
 		return
 	end
 
+	CopLogicIdle._chk_has_old_action(data, my_data)
 	data.unit:brain():set_attention_settings({
 		cbt = true
 	})
@@ -82,9 +83,11 @@ function CopLogicSniper.enter(data, new_logic_name, enter_params)
 		data.unit:base():prevent_main_bones_disabling(true)
 		managers.network:session():send_to_peers_synched("sync_unit_event_id_16", data.unit, "brain", HuskCopBrain._NET_EVENTS.weapon_laser_on)
 	end
+
+	data.unit:brain():set_update_enabled_state(true)
 end
 
--- Lines 83-110
+-- Lines 87-114
 function CopLogicSniper.exit(data, new_logic_name, enter_params)
 	CopLogicBase.exit(data, new_logic_name, enter_params)
 
@@ -111,8 +114,29 @@ function CopLogicSniper.exit(data, new_logic_name, enter_params)
 	end
 end
 
--- Lines 114-159
+-- Lines 119-127
+function CopLogicSniper.update(data)
+	local my_data = data.internal_data
+
+	if my_data.has_old_action then
+		CopLogicAttack._upd_stop_old_action(data, my_data)
+	end
+
+	data.unit:brain():set_update_enabled_state(false)
+end
+
+-- Lines 131-187
 function CopLogicSniper._upd_enemy_detection(data)
+	local my_data = data.internal_data
+
+	if my_data.has_old_action then
+		CopLogicAttack._upd_stop_old_action(data, my_data)
+
+		if my_data.has_old_action then
+			return
+		end
+	end
+
 	managers.groupai:state():on_unit_detection_updated(data.unit)
 
 	data.t = TimerManager:game():time()
@@ -156,7 +180,7 @@ function CopLogicSniper._upd_enemy_detection(data)
 	CopLogicBase._report_detections(data.detected_attention_objects)
 end
 
--- Lines 163-168
+-- Lines 191-196
 function CopLogicSniper._chk_stand_visibility(my_pos, target_pos, slotmask)
 	mvector3.set(tmp_vec1, my_pos)
 	mvector3.set_z(tmp_vec1, my_pos.z + 150)
@@ -166,7 +190,7 @@ function CopLogicSniper._chk_stand_visibility(my_pos, target_pos, slotmask)
 	return ray
 end
 
--- Lines 172-177
+-- Lines 200-205
 function CopLogicSniper._chk_crouch_visibility(my_pos, target_pos, slotmask)
 	mvector3.set(tmp_vec1, my_pos)
 	mvector3.set_z(tmp_vec1, my_pos.z + 50)
@@ -176,7 +200,7 @@ function CopLogicSniper._chk_crouch_visibility(my_pos, target_pos, slotmask)
 	return ray
 end
 
--- Lines 181-199
+-- Lines 209-227
 function CopLogicSniper.action_complete_clbk(data, action)
 	local action_type = action:type()
 	local my_data = data.internal_data
@@ -196,7 +220,7 @@ function CopLogicSniper.action_complete_clbk(data, action)
 	end
 end
 
--- Lines 203-322
+-- Lines 231-350
 function CopLogicSniper._upd_aim(data, my_data)
 	local shoot, aim = nil
 	local focus_enemy = data.attention_obj
@@ -330,7 +354,7 @@ function CopLogicSniper._upd_aim(data, my_data)
 	CopLogicAttack.aim_allow_fire(shoot, aim, data, my_data)
 end
 
--- Lines 326-352
+-- Lines 354-380
 function CopLogicSniper._chk_reaction_to_attention_object(data, attention_data, stationary)
 	local record = attention_data.criminal_record
 
@@ -358,7 +382,7 @@ function CopLogicSniper._chk_reaction_to_attention_object(data, attention_data, 
 	return math.min(attention_data.settings.reaction, AIAttentionObject.REACT_COMBAT)
 end
 
--- Lines 356-358
+-- Lines 384-386
 function CopLogicSniper.should_duck_on_alert(data, alert_data)
 	return data.internal_data.attitude == "avoid" and CopLogicBase.should_duck_on_alert(data, alert_data)
 end

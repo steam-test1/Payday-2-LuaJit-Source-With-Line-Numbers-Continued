@@ -1,6 +1,6 @@
 NarrativeTweakData = NarrativeTweakData or class()
 
--- Lines 3-4715
+-- Lines 3-4753
 function NarrativeTweakData:init(tweak_data)
 	self.STARS = {
 		{
@@ -390,7 +390,8 @@ function NarrativeTweakData:init(tweak_data)
 		description_id = "heist_contact_hoxton_description",
 		package = "packages/contact_hoxton",
 		assets_gui = Idstring("guis/mission_briefing/preload_contact_hoxton"),
-		hidden = true
+		hidden = true,
+		ignore_heat = true
 	}
 	self.contacts.the_continental = {
 		name_id = "heist_contact_continental",
@@ -7883,7 +7884,7 @@ function NarrativeTweakData:init(tweak_data)
 	end
 end
 
--- Lines 4719-4734
+-- Lines 4757-4772
 function NarrativeTweakData:set_job_wrappers()
 	for _, job_id in ipairs(self._jobs_index) do
 		local job_wrapper = self.jobs[job_id].job_wrapper
@@ -7902,22 +7903,22 @@ function NarrativeTweakData:set_job_wrappers()
 	end
 end
 
--- Lines 4736-4738
+-- Lines 4774-4776
 function NarrativeTweakData:has_job_wrapper(job_id)
 	return self.jobs[job_id] and not not self.jobs[job_id].job_wrapper
 end
 
--- Lines 4740-4742
+-- Lines 4778-4780
 function NarrativeTweakData:is_wrapped_to_job(job_id)
 	return self.jobs[job_id] and not not self.jobs[job_id].wrapped_to_job
 end
 
--- Lines 4746-4748
+-- Lines 4784-4786
 function NarrativeTweakData:get_jobs_index()
 	return self._jobs_index
 end
 
--- Lines 4752-4759
+-- Lines 4790-4797
 function NarrativeTweakData:get_index_from_job_id(job_id)
 	for index, entry_name in ipairs(self._jobs_index) do
 		if entry_name == job_id then
@@ -7928,12 +7929,12 @@ function NarrativeTweakData:get_index_from_job_id(job_id)
 	return 0
 end
 
--- Lines 4763-4765
+-- Lines 4801-4803
 function NarrativeTweakData:get_job_name_from_index(index)
 	return self._jobs_index[index]
 end
 
--- Lines 4769-4785
+-- Lines 4807-4823
 function NarrativeTweakData:job_data(job_id, unique_to_job)
 	if not job_id or not self.jobs[job_id] then
 		return
@@ -7950,7 +7951,7 @@ function NarrativeTweakData:job_data(job_id, unique_to_job)
 	return self.jobs[job_id]
 end
 
--- Lines 4787-4797
+-- Lines 4825-4835
 function NarrativeTweakData:job_chain(job_id)
 	if not job_id or not self.jobs[job_id] then
 		return {}
@@ -7963,7 +7964,7 @@ function NarrativeTweakData:job_chain(job_id)
 	return self.jobs[job_id].chain or {}
 end
 
--- Lines 4801-4852
+-- Lines 4839-4890
 function NarrativeTweakData:create_job_name(job_id, skip_professional)
 	local color_ranges = {}
 	local job_tweak = self:job_data(job_id)
@@ -8020,7 +8021,7 @@ function NarrativeTweakData:create_job_name(job_id, skip_professional)
 	return text_id, color_ranges
 end
 
--- Lines 4856-4868
+-- Lines 4894-4906
 function NarrativeTweakData:test_contract_packages()
 	for i, job_id in ipairs(self._jobs_index) do
 		local package = self.jobs[job_id] and self.jobs[job_id].package
@@ -8037,7 +8038,7 @@ function NarrativeTweakData:test_contract_packages()
 	end
 end
 
--- Lines 4873-4880
+-- Lines 4911-4918
 function NarrativeTweakData:get_jcs_from_stars(stars, infamy)
 	if type(stars) ~= "number" then
 		return {}
@@ -8048,7 +8049,7 @@ function NarrativeTweakData:get_jcs_from_stars(stars, infamy)
 	return (infamy and self.INFAMY_STARS[stars] or self.STARS[stars] or {}).jcs or {}
 end
 
--- Lines 4885-4900
+-- Lines 4923-4938
 function NarrativeTweakData:is_job_locked(job_id)
 	return false
 end

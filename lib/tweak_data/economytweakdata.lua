@@ -2,7 +2,7 @@ require("lib/tweak_data/GeneratedMarketLinkTweakData")
 
 EconomyTweakData = EconomyTweakData or class()
 
--- Lines 7-2212
+-- Lines 7-2360
 function EconomyTweakData:init(tweak_data)
 	self.safes = {}
 	self.drills = {}
@@ -172,14 +172,14 @@ function EconomyTweakData:init(tweak_data)
 	}
 	self.contents.overkill_01_legendary = {
 		def_id = 10002,
+		rarity = "legendary",
 		contains = {
 			weapon_skins = {
 				"flamethrower_mk2_fire",
 				"rpg7_boom",
 				"m134_bulletstorm"
 			}
-		},
-		rarity = "legendary"
+		}
 	}
 	self.contents.event_01 = {
 		def_id = 10003,
@@ -208,12 +208,12 @@ function EconomyTweakData:init(tweak_data)
 	}
 	self.contents.event_01_legendary = {
 		def_id = 10004,
+		rarity = "legendary",
 		contains = {
 			weapon_skins = {
 				"deagle_bling"
 			}
-		},
-		rarity = "legendary"
+		}
 	}
 	self.contents.weapon_01 = {
 		def_id = 10005,
@@ -242,6 +242,7 @@ function EconomyTweakData:init(tweak_data)
 	}
 	self.contents.event_red = {
 		def_id = 10006,
+		type = "limited",
 		contains = {
 			weapon_skins = {
 				"p90_golddigger",
@@ -258,8 +259,7 @@ function EconomyTweakData:init(tweak_data)
 			contents = {
 				"event_01_legendary"
 			}
-		},
-		type = "limited"
+		}
 	}
 	self.contents.event_dinner = {
 		def_id = 10007,
@@ -658,21 +658,21 @@ function EconomyTweakData:init(tweak_data)
 	}
 	self.contents.lones_01_legendary = {
 		def_id = 10029,
+		rarity = "legendary",
 		contains = {
 			weapon_skins = {
 				"serbu_lones"
 			}
-		},
-		rarity = "legendary"
+		}
 	}
 	self.contents.lones_01_legendary_02 = {
 		def_id = 10030,
+		rarity = "legendary",
 		contains = {
 			weapon_skins = {
 				"new_m14_lones"
 			}
-		},
-		rarity = "legendary"
+		}
 	}
 	self.contents.smosh_01 = {
 		def_id = 10031,
@@ -701,12 +701,12 @@ function EconomyTweakData:init(tweak_data)
 	}
 	self.contents.smosh_01_legendary = {
 		def_id = 10032,
+		rarity = "legendary",
 		contains = {
 			weapon_skins = {
 				"new_raging_bull_smosh"
 			}
-		},
-		rarity = "legendary"
+		}
 	}
 	self.bundles.smosh_01 = {
 		def_id = 30001,
@@ -1016,12 +1016,12 @@ function EconomyTweakData:init(tweak_data)
 	}
 	self.contents.wwt_01_legendary = {
 		def_id = 10046,
+		rarity = "legendary",
 		contains = {
 			weapon_skins = {
 				"colt_1911_wwt"
 			}
-		},
-		rarity = "legendary"
+		}
 	}
 	self.contents.skf_01 = {
 		def_id = 10047,
@@ -1050,12 +1050,12 @@ function EconomyTweakData:init(tweak_data)
 	}
 	self.contents.skf_01_legendary = {
 		def_id = 10048,
+		rarity = "legendary",
 		contains = {
 			weapon_skins = {
 				"mac10_skf"
 			}
-		},
-		rarity = "legendary"
+		}
 	}
 	self.bundles.skf_01 = {
 		def_id = 30004,
@@ -1185,12 +1185,12 @@ function EconomyTweakData:init(tweak_data)
 	}
 	self.contents.dss_01_legendary = {
 		def_id = 10053,
+		rarity = "legendary",
 		contains = {
 			weapon_skins = {
 				"shrew_dss"
 			}
-		},
-		rarity = "legendary"
+		}
 	}
 	self.contents.cat_01 = {
 		def_id = 10054,
@@ -1219,12 +1219,12 @@ function EconomyTweakData:init(tweak_data)
 	}
 	self.contents.cat_01_legendary = {
 		def_id = 10055,
+		rarity = "legendary",
 		contains = {
 			weapon_skins = {
 				"p226_cat"
 			}
-		},
-		rarity = "legendary"
+		}
 	}
 	self.bundles.cat_01 = {
 		def_id = 30007,
@@ -1262,12 +1262,12 @@ function EconomyTweakData:init(tweak_data)
 	}
 	self.contents.ait_01_legendary = {
 		def_id = 10057,
+		rarity = "legendary",
 		contains = {
 			weapon_skins = {
 				"scar_ait"
 			}
-		},
-		rarity = "legendary"
+		}
 	}
 	self.bundles.ait_01 = {
 		def_id = 30008,
@@ -1305,12 +1305,12 @@ function EconomyTweakData:init(tweak_data)
 	}
 	self.contents.nin_01_legendary = {
 		def_id = 10059,
+		rarity = "legendary",
 		contains = {
 			weapon_skins = {
 				"saw_nin"
 			}
-		},
-		rarity = "legendary"
+		}
 	}
 	self.bundles.nin_01 = {
 		def_id = 30009,
@@ -1986,7 +1986,7 @@ function EconomyTweakData:init(tweak_data)
 	self:_init_rarity_contents(tweak_data)
 end
 
--- Lines 2214-2234
+-- Lines 2362-2382
 function EconomyTweakData:_add_content(data, content, tweaks)
 	for category, items in pairs(content.contains) do
 		for _, entry in pairs(items) do
@@ -2009,7 +2009,7 @@ function EconomyTweakData:_add_content(data, content, tweaks)
 	end
 end
 
--- Lines 2236-2332
+-- Lines 2384-2480
 function EconomyTweakData:_init_ip_content(tweak_data)
 	self.safes.wac_01.ip_content = true
 	self.safes.surf_01.ip_content = true
@@ -2019,7 +2019,7 @@ function EconomyTweakData:_init_ip_content(tweak_data)
 	local weapon_skins_tweak = tweak_data.blackmarket.weapon_skins
 	local add_ip_content = nil
 
-	-- Lines 2249-2266
+	-- Lines 2397-2414
 	function add_ip_content(content)
 		content.ip_content = true
 
@@ -2046,7 +2046,7 @@ function EconomyTweakData:_init_ip_content(tweak_data)
 
 	local weapon_id, weapon_tweak, should_hide_unavailable = nil
 
-	-- Lines 2278-2323
+	-- Lines 2426-2471
 	local function set_marketable_weapon_skins(data)
 		local weapon_skins = data.contains.weapon_skins
 
@@ -2089,7 +2089,7 @@ function EconomyTweakData:_init_ip_content(tweak_data)
 	end
 end
 
--- Lines 2334-2387
+-- Lines 2482-2535
 function EconomyTweakData:_init_rarity_contents(tweak_data)
 	local weapon_skin_tweak = tweak_data.blackmarket.weapon_skins
 	local armor_skin_tweak = self.armor_skins
@@ -2149,7 +2149,7 @@ function EconomyTweakData:_init_rarity_contents(tweak_data)
 	end
 end
 
--- Lines 2397-2406
+-- Lines 2545-2554
 function EconomyTweakData:get_entry_from_index(category, index)
 	for entry, data in pairs(self[category] or {}) do
 		if not data.index then
@@ -2162,12 +2162,12 @@ function EconomyTweakData:get_entry_from_index(category, index)
 	end
 end
 
--- Lines 2408-2410
+-- Lines 2556-2558
 function EconomyTweakData:get_index_from_entry(category, entry)
 	return self[category] and self[category][entry] and self[category][entry].index
 end
 
--- Lines 2412-2427
+-- Lines 2560-2575
 function EconomyTweakData:get_bonus_icons(entry)
 	local bonus_data = self.bonuses[entry]
 	local bonuses = {}
@@ -2187,7 +2187,7 @@ end
 
 EconomyTweakData.market_link_search = "https://steamcommunity.com/market/search?appid=218620&q="
 
--- Lines 2430-2450
+-- Lines 2578-2598
 function EconomyTweakData:create_weapon_skin_market_search_url(weapon_id, cosmetic_id)
 	local market_link = self.market_links.weapon_skins[cosmetic_id]
 
@@ -2208,7 +2208,7 @@ function EconomyTweakData:create_weapon_skin_market_search_url(weapon_id, cosmet
 	return nil
 end
 
--- Lines 2453-2469
+-- Lines 2601-2617
 function EconomyTweakData:create_armor_skin_market_search_url(cosmetic_id)
 	local market_link = self.market_links.armor_skins[cosmetic_id]
 
@@ -2227,22 +2227,22 @@ function EconomyTweakData:create_armor_skin_market_search_url(cosmetic_id)
 	return nil
 end
 
--- Lines 2472-2474
+-- Lines 2620-2622
 function EconomyTweakData:create_market_link_url(category, entry)
 	return self[category] and self[category][entry] and self[category][entry].market_link
 end
 
--- Lines 2476-2478
+-- Lines 2624-2626
 function EconomyTweakData:create_buy_tradable_url(def_id, quantity)
 	return "https://store.steampowered.com/buyitem/218620/" .. tostring(def_id) .. "/"
 end
 
--- Lines 2480-2482
+-- Lines 2628-2630
 function EconomyTweakData:create_sell_tradable_url(steam_id, instance_id)
 	return "https://steamcommunity.com/profiles/" .. tostring(steam_id) .. "/inventory/?sellOnLoad=1#218620_2_" .. tostring(instance_id)
 end
 
--- Lines 2484-2514
+-- Lines 2632-2662
 function EconomyTweakData:get_bonuses_by_safe(safe)
 	local safe_tweak = self.contents[safe]
 	local ids = deep_clone(safe_tweak.contains.weapon_skins)

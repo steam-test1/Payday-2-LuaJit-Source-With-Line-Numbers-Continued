@@ -15,7 +15,7 @@ function WaypointExt:destroy()
 	self:remove_waypoint()
 end
 
--- Lines 28-68
+-- Lines 28-71
 function WaypointExt:add_waypoint(icon_name, pos_z_offset, pos_locator, map_icon, show_on_hud)
 	if self._is_active then
 		self:remove_waypoint()
@@ -54,7 +54,7 @@ function WaypointExt:add_waypoint(icon_name, pos_z_offset, pos_locator, map_icon
 	self._is_active = true
 end
 
--- Lines 70-80
+-- Lines 73-83
 function WaypointExt:remove_waypoint()
 	if self._icon_id then
 		managers.hud:remove_waypoint(self._icon_id)
@@ -69,7 +69,7 @@ function WaypointExt:remove_waypoint()
 	self._is_active = false
 end
 
--- Lines 82-91
+-- Lines 85-94
 function WaypointExt:update(t, dt)
 	if self._icon_pos then
 		local position = self._pos_locator and self._unit:get_object(Idstring(self._pos_locator)):position() or self._unit:position()
@@ -83,7 +83,7 @@ function WaypointExt:update(t, dt)
 	end
 end
 
--- Lines 93-102
+-- Lines 96-105
 function WaypointExt:save(save_data)
 	save_data.Waypoint = {
 		active = self._is_active,
@@ -95,7 +95,7 @@ function WaypointExt:save(save_data)
 	}
 end
 
--- Lines 104-117
+-- Lines 107-120
 function WaypointExt:load(save_data)
 	if save_data.Waypoint then
 		if save_data.Waypoint.active and not self._is_active then

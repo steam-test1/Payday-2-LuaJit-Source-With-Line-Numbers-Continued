@@ -76,11 +76,13 @@ function InventoryDescription._add_line_break(ingame_format)
 	return ingame_format and "\n" or "\\n"
 end
 
--- Lines 68-82
-function InventoryDescription._create_list(list, ingame_format)
+-- Lines 68-84
+function InventoryDescription._create_list(list, ingame_format, dont_sort)
 	local list_text = ""
 
-	table.sort(list)
+	if not dont_sort then
+		table.sort(list)
+	end
 
 	for i, text in ipairs(list) do
 		list_text = ingame_format and list_text .. (i > 1 and ", " or "") .. text or list_text .. "[*]" .. text
@@ -94,7 +96,7 @@ local func_color_text = InventoryDescription._add_color_to_text
 local func_add_lb = InventoryDescription._add_line_break
 local func_create_list = InventoryDescription._create_list
 
--- Lines 91-152
+-- Lines 93-154
 function InventoryDescription.create_description_safe(safe_entry, ingame_format)
 	local safe_td = tweak_data.economy.safes[safe_entry]
 
@@ -123,7 +125,7 @@ function InventoryDescription.create_description_safe(safe_entry, ingame_format)
 
 	local x_td, y_td, xr_td, yr_td = nil
 
-	-- Lines 113-124
+	-- Lines 115-126
 	local function sort_func(x, y)
 		x_td = (tweak_data.economy[x.category] or tweak_data.blackmarket[x.category])[x.entry]
 		y_td = (tweak_data.economy[y.category] or tweak_data.blackmarket[y.category])[y.entry]
@@ -165,7 +167,7 @@ function InventoryDescription.create_description_safe(safe_entry, ingame_format)
 	return text
 end
 
--- Lines 156-290
+-- Lines 158-334
 function InventoryDescription.create_description_item(item, tweak, colors, ingame_format)
 	local desc = ""
 	color_ranges = {}
@@ -227,10 +229,10 @@ function InventoryDescription.create_description_item(item, tweak, colors, ingam
 		local formatted_text = managers.localization:text(tweak.name_id .. "_desc")
 
 		if not ingame_format then
+			formatted_text = string.gsub(formatted_text, "\n", "\\n")
 			formatted_text = string.gsub(formatted_text, "\"", "'")
 		end
 
-		formatted_text = string.gsub(formatted_text, "\n", "\\n")
 		local desc_string = func_color_text(formatted_text, color_default, ingame_format)
 		desc = desc .. func_add_lb(ingame_format) .. func_add_lb(ingame_format) .. desc_string
 	end
@@ -278,18 +280,37 @@ function InventoryDescription.create_description_item(item, tweak, colors, ingam
 
 	if tweak.default_blueprint then
 		local mods_title = func_color_text(managers.localization:text("steam_inventory_mods_included"), color_mods_title, ingame_format)
-		local list = {}
+		local default_parts = {}
+		local special_parts = {}
 
 		for _, blueprint in pairs(tweak.default_blueprint) do
 			local blueprint_tweak = tweak_data.blackmarket.weapon_mods[blueprint]
 
-			if blueprint_tweak and blueprint_tweak.pcs then
-				table.insert(list, managers.localization:text(blueprint_tweak.name_id))
+			if blueprint_tweak and blueprint_tweak.pcs and blueprint_tweak.name_id then
+				table.insert(default_parts, managers.localization:text(blueprint_tweak.name_id))
+			end
+
+			table.sort(default_parts)
+		end
+
+		if tweak.special_blueprint then
+			for weapon_id, data in pairs(tweak.special_blueprint) do
+				for _, blueprint in pairs(data) do
+					local blueprint_tweak = tweak_data.blackmarket.weapon_mods[blueprint]
+
+					if blueprint_tweak and blueprint_tweak.pcs and blueprint_tweak.name_id then
+						table.insert(special_parts, managers.localization:text(blueprint_tweak.name_id) .. "*")
+					end
+
+					table.sort(special_parts)
+				end
 			end
 		end
 
-		if #list > 0 then
-			local mods_string = (ingame_format and "\n" or "") .. func_color_text(func_create_list(list, ingame_format), color_mods, ingame_format)
+		table.list_append(default_parts, special_parts)
+
+		if #default_parts > 0 then
+			local mods_string = (ingame_format and "\n" or "") .. func_color_text(func_create_list(default_parts, ingame_format, true), color_mods, ingame_format)
 			desc = desc .. func_add_lb(ingame_format) .. func_add_lb(ingame_format) .. mods_title .. mods_string
 		end
 	end
@@ -347,7 +368,7 @@ table.insert(WeaponDescription._stats_shown, {
 	name = "reload"
 })
 
--- Lines 302-321
+-- Lines 346-365
 function WeaponDescription.get_bonus_stats(cosmetic_id, weapon_id, bonus)
 	local base_stats = WeaponDescription._get_base_stats(weapon_id)
 	local mod_stats = WeaponDescription._get_mods_stats(weapon_id, base_stats, {}, bonus)
@@ -369,7 +390,7 @@ function WeaponDescription.get_bonus_stats(cosmetic_id, weapon_id, bonus)
 	return stats
 end
 
--- Lines 323-383
+-- Lines 367-427
 function WeaponDescription.get_weapon_ammo_info(weapon_id, extra_ammo, total_ammo_mod)
 	local weapon_tweak_data = tweak_data.weapon[weapon_id]
 	local ammo_max_multiplier = managers.player:upgrade_value("player", "extra_ammo_multiplier", 1)
@@ -390,9 +411,9 @@ function WeaponDescription.get_weapon_ammo_info(weapon_id, extra_ammo, total_amm
 		ammo_max_multiplier = ammo_max_multiplier * managers.player:body_armor_value("skill_ammo_mul", nil, 1)
 	end
 
-	-- Lines 341-367
+	-- Lines 385-411
 	local function get_ammo_max_per_clip(weapon_id)
-		-- Lines 342-352
+		-- Lines 386-396
 		local function upgrade_blocked(category, upgrade)
 			if not weapon_tweak_data.upgrade_blocks then
 				return false
@@ -437,7 +458,7 @@ function WeaponDescription.get_weapon_ammo_info(weapon_id, extra_ammo, total_amm
 	return ammo_max_per_clip, ammo_max, ammo_data
 end
 
--- Lines 385-536
+-- Lines 429-580
 function WeaponDescription._get_skill_stats(name, category, slot, base_stats, mods_stats, silencer, single_mod, auto_mod, blueprint)
 	local skill_stats = {}
 	local tweak_stats = tweak_data.weapon.stats
@@ -597,7 +618,7 @@ function WeaponDescription._get_skill_stats(name, category, slot, base_stats, mo
 	return skill_stats
 end
 
--- Lines 538-699
+-- Lines 582-743
 function WeaponDescription._get_mods_stats(name, base_stats, equipped_mods, bonus_stats)
 	local mods_stats = {}
 	local weapon_tweak = tweak_data.weapon[name]
@@ -763,7 +784,7 @@ function WeaponDescription._get_mods_stats(name, base_stats, equipped_mods, bonu
 	return mods_stats
 end
 
--- Lines 701-791
+-- Lines 745-835
 function WeaponDescription._get_base_stats(name)
 	local base_stats = {}
 	local index = nil
@@ -856,7 +877,7 @@ function WeaponDescription._get_base_stats(name)
 	return base_stats
 end
 
--- Lines 793-837
+-- Lines 837-881
 function WeaponDescription._get_stats(name, category, slot, blueprint)
 	local equipped_mods = nil
 	local silencer = false
@@ -900,7 +921,7 @@ function WeaponDescription._get_stats(name, category, slot, blueprint)
 	return base_stats, mods_stats, skill_stats
 end
 
--- Lines 839-858
+-- Lines 883-902
 function WeaponDescription.get_stats_for_mod(mod_name, weapon_name, category, slot)
 	local equipped_mods = nil
 	local blueprint = managers.blackmarket:get_weapon_blueprint(category, slot)
@@ -921,7 +942,7 @@ function WeaponDescription.get_stats_for_mod(mod_name, weapon_name, category, sl
 	return WeaponDescription._get_weapon_mod_stats(mod_name, weapon_name, base_stats, mods_stats, equipped_mods)
 end
 
--- Lines 860-1026
+-- Lines 904-1070
 function WeaponDescription._get_weapon_mod_stats(mod_name, weapon_name, base_stats, mods_stats, equipped_mods)
 	local tweak_stats = tweak_data.weapon.stats
 	local tweak_factory = tweak_data.weapon.factory.parts

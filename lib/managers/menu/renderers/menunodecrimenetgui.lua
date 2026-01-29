@@ -119,7 +119,7 @@ end
 
 MenuNodeCrimenetFiltersGui = MenuNodeCrimenetFiltersGui or class(MenuNodeGui)
 
--- Lines 136-151
+-- Lines 110-125
 function MenuNodeCrimenetFiltersGui:init(node, layer, parameters)
 	parameters.font = tweak_data.menu.pd2_small_font
 	parameters.font_size = tweak_data.menu.pd2_small_font_size
@@ -134,12 +134,12 @@ function MenuNodeCrimenetFiltersGui:init(node, layer, parameters)
 	MenuNodeCrimenetFiltersGui.super.init(self, node, layer, parameters)
 end
 
--- Lines 153-156
+-- Lines 127-130
 function MenuNodeCrimenetFiltersGui:close(...)
 	MenuNodeCrimenetFiltersGui.super.close(self, ...)
 end
 
--- Lines 158-232
+-- Lines 132-206
 function MenuNodeCrimenetFiltersGui:_setup_item_panel(safe_rect, res)
 	MenuNodeCrimenetFiltersGui.super._setup_item_panel(self, safe_rect, res)
 
@@ -227,7 +227,7 @@ function MenuNodeCrimenetFiltersGui:_setup_item_panel(safe_rect, res)
 	self:_set_topic_position()
 end
 
--- Lines 234-243
+-- Lines 208-217
 function MenuNodeCrimenetFiltersGui:_setup_item_panel_parent(safe_rect, shape)
 	shape = shape or {}
 	shape.x = shape.x or safe_rect.x
@@ -238,12 +238,12 @@ function MenuNodeCrimenetFiltersGui:_setup_item_panel_parent(safe_rect, shape)
 	MenuNodeCrimenetFiltersGui.super._setup_item_panel_parent(self, safe_rect, shape)
 end
 
--- Lines 245-247
+-- Lines 219-221
 function MenuNodeCrimenetFiltersGui:_setup_item_rows(node)
 	MenuNodeCrimenetFiltersGui.super._setup_item_rows(self, node)
 end
 
--- Lines 249-258
+-- Lines 223-232
 function MenuNodeCrimenetFiltersGui:reload_item(item)
 	MenuNodeCrimenetFiltersGui.super.reload_item(self, item)
 
@@ -255,7 +255,7 @@ function MenuNodeCrimenetFiltersGui:reload_item(item)
 	end
 end
 
--- Lines 260-268
+-- Lines 234-242
 function MenuNodeCrimenetFiltersGui:_align_marker(row_item)
 	MenuNodeCrimenetFiltersGui.super._align_marker(self, row_item)
 
@@ -268,14 +268,14 @@ function MenuNodeCrimenetFiltersGui:_align_marker(row_item)
 	self._marker_data.marker:set_world_right(self.item_panel:world_right())
 end
 
--- Lines 270-272
+-- Lines 244-246
 function MenuNodeCrimenetFiltersGui:_highlight_row_item(row_item, mouse_over)
 	MenuNodeCrimenetFiltersGui.super._highlight_row_item(self, row_item, mouse_over)
 end
 
 MenuNodeCrimenetSpecialGui = MenuNodeCrimenetSpecialGui or class(MenuNodeCrimenetFiltersGui)
 
--- Lines 299-315
+-- Lines 273-289
 function MenuNodeCrimenetSpecialGui:_setup_item_panel(safe_rect, res)
 	MenuNodeCrimenetSpecialGui.super._setup_item_panel(self, safe_rect, res)
 
@@ -304,7 +304,7 @@ function MenuNodeCrimenetSpecialGui:_setup_item_panel(safe_rect, res)
 	end
 end
 
--- Lines 317-323
+-- Lines 291-297
 function MenuNodeCrimenetSpecialGui:previous_page()
 	local item = self.node:item("contact_filter")
 
@@ -314,7 +314,7 @@ function MenuNodeCrimenetSpecialGui:previous_page()
 	end
 end
 
--- Lines 325-331
+-- Lines 299-305
 function MenuNodeCrimenetSpecialGui:next_page()
 	local item = self.node:item("contact_filter")
 
@@ -324,12 +324,12 @@ function MenuNodeCrimenetSpecialGui:next_page()
 	end
 end
 
--- Lines 333-335
+-- Lines 307-309
 function MenuNodeCrimenetSpecialGui:input_focus()
 	return false
 end
 
--- Lines 337-344
+-- Lines 311-318
 function MenuNodeCrimenetSpecialGui:close()
 	MenuNodeCrimenetSpecialGui.super.close(self)
 
@@ -345,7 +345,7 @@ MenuNodeCrimenetSmartMatchmakingGui.title_id = "menu_cn_smart_matchmaking_title"
 MenuNodeCrimenetCasinoGui = MenuNodeCrimenetCasinoGui or class(MenuNodeGui)
 MenuNodeCrimenetCasinoGui.PRECISION = "%.1f"
 
--- Lines 497-510
+-- Lines 471-484
 function MenuNodeCrimenetCasinoGui:init(node, layer, parameters)
 	parameters.font = tweak_data.menu.pd2_small_font
 	parameters.font_size = tweak_data.menu.pd2_small_font_size
@@ -360,7 +360,7 @@ function MenuNodeCrimenetCasinoGui:init(node, layer, parameters)
 	self:_setup_layout()
 end
 
--- Lines 512-519
+-- Lines 486-493
 function MenuNodeCrimenetCasinoGui:_setup_item_panel(safe_rect, res)
 	MenuNodeCrimenetCasinoGui.super._setup_item_panel(self, safe_rect, res)
 
@@ -370,7 +370,7 @@ function MenuNodeCrimenetCasinoGui:_setup_item_panel(safe_rect, res)
 	self.item_panel:set_bottom(self.item_panel:parent():h() - space_y - tweak_data.menu.pd2_large_font_size)
 end
 
--- Lines 521-529
+-- Lines 495-503
 function MenuNodeCrimenetCasinoGui:_get_sizes(safe_width, safe_height)
 	local space_x = safe_width * 0.05
 	local space_y = safe_width * 0.05
@@ -381,7 +381,7 @@ function MenuNodeCrimenetCasinoGui:_get_sizes(safe_width, safe_height)
 	return width, height, space_x, space_y, start_x
 end
 
--- Lines 531-583
+-- Lines 505-557
 function MenuNodeCrimenetCasinoGui:_set_cards(amount, card)
 	local texture, rect, coords = tweak_data.hud_icons:get_icon_data(card or "downcard_overkill_deck")
 	local offset = 20
@@ -433,7 +433,7 @@ function MenuNodeCrimenetCasinoGui:_set_cards(amount, card)
 	end
 end
 
--- Lines 585-593
+-- Lines 559-567
 function MenuNodeCrimenetCasinoGui:flipcard(bitmap)
 	local start_w = bitmap:w()
 	local cx, cy = bitmap:center()
@@ -444,14 +444,14 @@ function MenuNodeCrimenetCasinoGui:flipcard(bitmap)
 	end)
 end
 
--- Lines 595-598
+-- Lines 569-572
 function MenuNodeCrimenetCasinoGui:_round_value(value)
 	local mult = 10
 
 	return math.floor(value * mult + 0.5) / mult
 end
 
--- Lines 600-848
+-- Lines 574-822
 function MenuNodeCrimenetCasinoGui:_setup_layout()
 	local parent_layer = managers.menu:active_menu().renderer:selected_node():layer()
 	self._panel = self.ws:panel():panel({
@@ -918,7 +918,7 @@ function MenuNodeCrimenetCasinoGui:_setup_layout()
 	self:set_update_values(preferred_card, secured_cards, increase_infamous, false, false)
 end
 
--- Lines 850-943
+-- Lines 824-917
 function MenuNodeCrimenetCasinoGui:set_update_values(preferred_card, secured_cards, increase_infamous, infamous_enabled, safecards_enabled)
 	local breakdown_titles = managers.localization:to_upper_text("menu_casino_cost_fee") .. ":"
 	local breakdown_costs = managers.experience:cash_string(managers.money:get_cost_of_casino_entrance())
@@ -1014,7 +1014,7 @@ function MenuNodeCrimenetCasinoGui:set_update_values(preferred_card, secured_car
 	end
 end
 
--- Lines 945-947
+-- Lines 919-921
 function MenuNodeCrimenetCasinoGui:set_offshore_text()
 	self._offshore_text:set_text(managers.localization:to_upper_text("menu_offshore_account") .. ": " .. managers.experience:cash_string(managers.money:offshore()))
 end
@@ -1048,7 +1048,7 @@ MenuNodeCrimenetContactInfoGui.FILE_ICONS = {
 	}
 }
 
--- Lines 966-995
+-- Lines 940-969
 function MenuNodeCrimenetContactInfoGui:init(node, layer, parameters)
 	parameters.font = tweak_data.menu.pd2_small_font
 	parameters.font_size = tweak_data.menu.pd2_small_font_size
@@ -1078,7 +1078,7 @@ function MenuNodeCrimenetContactInfoGui:init(node, layer, parameters)
 	end
 end
 
--- Lines 997-1008
+-- Lines 971-982
 function MenuNodeCrimenetContactInfoGui:_setup_item_panel_parent(safe_rect, shape)
 	local x = safe_rect.x + safe_rect.width / 2 - self.WIDTH / 2 + self.PADDING
 	local y = safe_rect.y + safe_rect.height / 2 - self.HEIGHT / 2 + self.PADDING
@@ -1091,7 +1091,7 @@ function MenuNodeCrimenetContactInfoGui:_setup_item_panel_parent(safe_rect, shap
 	MenuNodeCrimenetContactInfoGui.super._setup_item_panel_parent(self, safe_rect, shape)
 end
 
--- Lines 1010-1047
+-- Lines 984-1021
 function MenuNodeCrimenetContactInfoGui:set_contact_info(id, name, files, override_file, sub_text)
 	self._files = files
 	local files_menu = self._files_menu
@@ -1142,7 +1142,7 @@ function MenuNodeCrimenetContactInfoGui:set_contact_info(id, name, files, overri
 	round_gui_object(self._panel)
 end
 
--- Lines 1049-1059
+-- Lines 1023-1033
 function MenuNodeCrimenetContactInfoGui:set_empty()
 	local video_panel = self._panel:child("video_panel")
 
@@ -1159,7 +1159,7 @@ function MenuNodeCrimenetContactInfoGui:set_empty()
 	contact_desc_text:set_text("")
 end
 
--- Lines 1061-1076
+-- Lines 1035-1050
 function MenuNodeCrimenetContactInfoGui:set_file(index)
 	self:set_empty()
 
@@ -1183,7 +1183,7 @@ function MenuNodeCrimenetContactInfoGui:set_file(index)
 	self:_set_file()
 end
 
--- Lines 1078-1128
+-- Lines 1052-1102
 function MenuNodeCrimenetContactInfoGui:_set_file()
 	local file = self._files[self._current_file]
 	local desc_id = file.desc_localized
@@ -1248,7 +1248,7 @@ function MenuNodeCrimenetContactInfoGui:_set_file()
 	end
 end
 
--- Lines 1130-1149
+-- Lines 1104-1123
 function MenuNodeCrimenetContactInfoGui:is_file_locked(lock_callback)
 	if not lock_callback then
 		return
@@ -1273,7 +1273,7 @@ function MenuNodeCrimenetContactInfoGui:is_file_locked(lock_callback)
 	return false
 end
 
--- Lines 1151-1175
+-- Lines 1125-1149
 function MenuNodeCrimenetContactInfoGui:change_file(diff)
 	if not self._files or #self._files <= 1 then
 		return
@@ -1302,12 +1302,12 @@ function MenuNodeCrimenetContactInfoGui:change_file(diff)
 	end
 end
 
--- Lines 1177-1179
+-- Lines 1151-1153
 function MenuNodeCrimenetContactInfoGui:get_contact_info()
 	return self._current_contact_info or ""
 end
 
--- Lines 1181-1215
+-- Lines 1155-1189
 function MenuNodeCrimenetContactInfoGui:mouse_moved(o, x, y)
 	local files_menu = self._files_menu
 	local is_inside = false
@@ -1348,7 +1348,7 @@ function MenuNodeCrimenetContactInfoGui:mouse_moved(o, x, y)
 	return is_inside, self._file_pressed and (self._file_pressed == is_inside and "link" or "arrow") or is_inside and not is_locked and "link" or "arrow"
 end
 
--- Lines 1217-1236
+-- Lines 1191-1210
 function MenuNodeCrimenetContactInfoGui:mouse_pressed(button, x, y)
 	local files_menu = self._files_menu
 
@@ -1373,7 +1373,7 @@ function MenuNodeCrimenetContactInfoGui:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines 1238-1250
+-- Lines 1212-1224
 function MenuNodeCrimenetContactInfoGui:mouse_released(button, x, y)
 	if self._file_pressed and self._file_pressed ~= self._current_file then
 		local files_menu = self._files_menu
@@ -1391,28 +1391,28 @@ function MenuNodeCrimenetContactInfoGui:mouse_released(button, x, y)
 	self._file_pressed = false
 end
 
--- Lines 1252-1254
+-- Lines 1226-1228
 function MenuNodeCrimenetContactInfoGui:previous_page()
 	self:change_file(-1)
 end
 
--- Lines 1256-1258
+-- Lines 1230-1232
 function MenuNodeCrimenetContactInfoGui:next_page()
 	self:change_file(1)
 end
 
--- Lines 1260-1262
+-- Lines 1234-1236
 function MenuNodeCrimenetContactInfoGui:input_focus()
 	return false
 end
 
--- Lines 1264-1269
+-- Lines 1238-1243
 function MenuNodeCrimenetContactInfoGui:_setup_item_panel(safe_rect, res)
 	MenuNodeCrimenetContactInfoGui.super._setup_item_panel(self, safe_rect, res)
 	self:_setup_menu()
 end
 
--- Lines 1271-1323
+-- Lines 1245-1297
 function MenuNodeCrimenetContactInfoGui:_setup_menu()
 	if not self._init_finish then
 		return
@@ -1472,7 +1472,7 @@ function MenuNodeCrimenetContactInfoGui:_setup_menu()
 	self._list_arrows.down:set_width(self._item_panel_parent:w())
 end
 
--- Lines 1325-1330
+-- Lines 1299-1304
 function MenuNodeCrimenetContactInfoGui:_fade_row_item(row_item)
 	MenuNodeCrimenetContactInfoGui.super._fade_row_item(self, row_item)
 
@@ -1481,7 +1481,7 @@ function MenuNodeCrimenetContactInfoGui:_fade_row_item(row_item)
 	end
 end
 
--- Lines 1332-1337
+-- Lines 1306-1311
 function MenuNodeCrimenetContactInfoGui:_highlight_row_item(row_item, mouse_over)
 	MenuNodeCrimenetContactInfoGui.super._highlight_row_item(self, row_item, mouse_over)
 
@@ -1490,7 +1490,7 @@ function MenuNodeCrimenetContactInfoGui:_highlight_row_item(row_item, mouse_over
 	end
 end
 
--- Lines 1339-1350
+-- Lines 1313-1324
 function MenuNodeCrimenetContactInfoGui:refresh_gui(node)
 	self:update_item_icon_visibility()
 
@@ -1507,7 +1507,7 @@ function MenuNodeCrimenetContactInfoGui:refresh_gui(node)
 	end
 end
 
--- Lines 1352-1431
+-- Lines 1326-1405
 function MenuNodeCrimenetContactInfoGui:_setup_layout()
 	local safe_rect = managers.gui_data:scaled_size()
 	local mc_full_ws = managers.menu_component:fullscreen_ws()
@@ -1534,7 +1534,7 @@ function MenuNodeCrimenetContactInfoGui:_setup_layout()
 		h = self._fullscreen_panel:h()
 	})
 
-	-- Lines 1370-1373
+	-- Lines 1344-1347
 	local function func(o)
 		local start_blur = 0
 
@@ -1659,7 +1659,7 @@ function MenuNodeCrimenetContactInfoGui:_setup_layout()
 	self:_setup_menu()
 end
 
--- Lines 1433-1453
+-- Lines 1407-1427
 function MenuNodeCrimenetContactInfoGui:gui_node_custom(row_item)
 	row_item.gui_panel = self._item_panel_parent:panel({
 		w = 3,
@@ -1690,7 +1690,7 @@ function MenuNodeCrimenetContactInfoGui:gui_node_custom(row_item)
 	self._back_row_item = row_item
 end
 
--- Lines 1455-1479
+-- Lines 1429-1453
 function MenuNodeCrimenetContactInfoGui:_align_marker(row_item)
 	MenuNodeCrimenetContactInfoGui.super._align_marker(self, row_item)
 
@@ -1710,7 +1710,7 @@ function MenuNodeCrimenetContactInfoGui:_align_marker(row_item)
 	end
 end
 
--- Lines 1482-1498
+-- Lines 1456-1472
 function MenuNodeCrimenetContactInfoGui:close()
 	self._fullscreen_panel:parent():remove(self._fullscreen_panel)
 
@@ -1737,7 +1737,7 @@ MenuNodeCrimenetContactShortGui.HEIGHT = 250
 MenuNodeCrimenetContactShortGui.MENU_WIDTH = 220
 MenuNodeCrimenetContactShortGui.PADDING = 10
 
--- Lines 1510-1533
+-- Lines 1484-1507
 function MenuNodeCrimenetContactShortGui:init(node, layer, parameters)
 	parameters.font = tweak_data.menu.pd2_small_font
 	parameters.font_size = tweak_data.menu.pd2_small_font_size
@@ -1762,7 +1762,7 @@ function MenuNodeCrimenetContactShortGui:init(node, layer, parameters)
 	end
 end
 
--- Lines 1535-1546
+-- Lines 1509-1520
 function MenuNodeCrimenetContactShortGui:_setup_item_panel_parent(safe_rect, shape)
 	local x = safe_rect.x + safe_rect.width / 2 - self.WIDTH / 2 + self.PADDING
 	local y = safe_rect.y + safe_rect.height / 2 - self.HEIGHT / 2 + self.PADDING
@@ -1775,7 +1775,7 @@ function MenuNodeCrimenetContactShortGui:_setup_item_panel_parent(safe_rect, sha
 	MenuNodeCrimenetContactShortGui.super._setup_item_panel_parent(self, safe_rect, shape)
 end
 
--- Lines 1548-1580
+-- Lines 1522-1554
 function MenuNodeCrimenetContactShortGui:set_contact_info(id, name, files, override_file, sub_text)
 	self._files = files
 	local files_menu = self._files_menu
@@ -1822,7 +1822,7 @@ function MenuNodeCrimenetContactShortGui:set_contact_info(id, name, files, overr
 	self._current_contact_info = id
 end
 
--- Lines 1582-1615
+-- Lines 1556-1589
 function MenuNodeCrimenetContactShortGui:mouse_moved(o, x, y)
 	local files_menu = self._files_menu
 	local is_inside = false
@@ -1863,7 +1863,7 @@ function MenuNodeCrimenetContactShortGui:mouse_moved(o, x, y)
 	return is_inside, self._file_pressed and (self._file_pressed == is_inside and "link" or "arrow") or is_inside and not is_locked and "link" or "arrow"
 end
 
--- Lines 1617-1628
+-- Lines 1591-1602
 function MenuNodeCrimenetContactShortGui:mouse_pressed(button, x, y)
 	local files_menu = self._files_menu
 
@@ -1880,7 +1880,7 @@ function MenuNodeCrimenetContactShortGui:mouse_pressed(button, x, y)
 	self._file_pressed = false
 end
 
--- Lines 1630-1642
+-- Lines 1604-1616
 function MenuNodeCrimenetContactShortGui:mouse_released(button, x, y)
 	if self._file_pressed and self._file_pressed ~= self._current_file then
 		local files_menu = self._files_menu
@@ -1898,26 +1898,26 @@ function MenuNodeCrimenetContactShortGui:mouse_released(button, x, y)
 	self._file_pressed = false
 end
 
--- Lines 1644-1645
+-- Lines 1618-1619
 function MenuNodeCrimenetContactShortGui:previous_page()
 end
 
--- Lines 1647-1648
+-- Lines 1621-1622
 function MenuNodeCrimenetContactShortGui:next_page()
 end
 
--- Lines 1650-1652
+-- Lines 1624-1626
 function MenuNodeCrimenetContactShortGui:input_focus()
 	return false
 end
 
--- Lines 1654-1659
+-- Lines 1628-1633
 function MenuNodeCrimenetContactShortGui:_setup_item_panel(safe_rect, res)
 	MenuNodeCrimenetContactShortGui.super._setup_item_panel(self, safe_rect, res)
 	self:_setup_menu()
 end
 
--- Lines 1661-1715
+-- Lines 1635-1689
 function MenuNodeCrimenetContactShortGui:_setup_menu()
 	if not self._init_finish then
 		return
@@ -1981,7 +1981,7 @@ function MenuNodeCrimenetContactShortGui:_setup_menu()
 	round_gui_object(self.item_panel)
 end
 
--- Lines 1717-1722
+-- Lines 1691-1696
 function MenuNodeCrimenetContactShortGui:_fade_row_item(row_item)
 	MenuNodeCrimenetContactShortGui.super._fade_row_item(self, row_item)
 
@@ -1990,7 +1990,7 @@ function MenuNodeCrimenetContactShortGui:_fade_row_item(row_item)
 	end
 end
 
--- Lines 1724-1729
+-- Lines 1698-1703
 function MenuNodeCrimenetContactShortGui:_highlight_row_item(row_item, mouse_over)
 	MenuNodeCrimenetContactShortGui.super._highlight_row_item(self, row_item, mouse_over)
 
@@ -1999,7 +1999,7 @@ function MenuNodeCrimenetContactShortGui:_highlight_row_item(row_item, mouse_ove
 	end
 end
 
--- Lines 1731-1742
+-- Lines 1705-1717
 function MenuNodeCrimenetContactShortGui:refresh_gui(node)
 	self:update_item_icon_visibility()
 
@@ -2016,7 +2016,7 @@ function MenuNodeCrimenetContactShortGui:refresh_gui(node)
 	end
 end
 
--- Lines 1744-1852
+-- Lines 1719-1827
 function MenuNodeCrimenetContactShortGui:_setup_layout()
 	local safe_rect = managers.gui_data:scaled_size()
 	local mc_full_ws = managers.menu_component:fullscreen_ws()
@@ -2043,7 +2043,7 @@ function MenuNodeCrimenetContactShortGui:_setup_layout()
 		h = self._fullscreen_panel:h()
 	})
 
-	-- Lines 1761-1764
+	-- Lines 1736-1739
 	local function func(o)
 		local start_blur = 0
 
@@ -2262,7 +2262,7 @@ function MenuNodeCrimenetContactShortGui:_setup_layout()
 	round_gui_object(panel)
 end
 
--- Lines 1854-1874
+-- Lines 1829-1849
 function MenuNodeCrimenetContactShortGui:gui_node_custom(row_item)
 	row_item.gui_panel = self._item_panel_parent:panel({
 		w = 3,
@@ -2293,7 +2293,7 @@ function MenuNodeCrimenetContactShortGui:gui_node_custom(row_item)
 	self._back_row_item = row_item
 end
 
--- Lines 1876-1896
+-- Lines 1851-1871
 function MenuNodeCrimenetContactShortGui:_align_marker(row_item)
 	MenuNodeCrimenetContactShortGui.super._align_marker(self, row_item)
 
@@ -2313,7 +2313,7 @@ function MenuNodeCrimenetContactShortGui:_align_marker(row_item)
 	end
 end
 
--- Lines 1899-1914
+-- Lines 1874-1889
 function MenuNodeCrimenetContactShortGui:close()
 	self._fullscreen_panel:parent():remove(self._fullscreen_panel)
 
@@ -2338,7 +2338,7 @@ MenuNodeCrimenetContactChillGui.HEIGHT = 250
 MenuNodeCrimenetContactChillGui.MENU_WIDTH = 220
 MenuNodeCrimenetContactChillGui.PADDING = 10
 
--- Lines 1927-1950
+-- Lines 1902-1925
 function MenuNodeCrimenetContactChillGui:init(node, layer, parameters)
 	parameters.font = tweak_data.menu.pd2_small_font
 	parameters.font_size = tweak_data.menu.pd2_small_font_size
@@ -2363,7 +2363,7 @@ function MenuNodeCrimenetContactChillGui:init(node, layer, parameters)
 	end
 end
 
--- Lines 1952-1963
+-- Lines 1927-1938
 function MenuNodeCrimenetContactChillGui:_setup_item_panel_parent(safe_rect, shape)
 	local x = safe_rect.x + safe_rect.width / 2 - self.WIDTH / 2 + self.PADDING
 	local y = safe_rect.y + safe_rect.height / 2 - self.HEIGHT / 2 + self.PADDING
@@ -2376,7 +2376,7 @@ function MenuNodeCrimenetContactChillGui:_setup_item_panel_parent(safe_rect, sha
 	MenuNodeCrimenetContactChillGui.super._setup_item_panel_parent(self, safe_rect, shape)
 end
 
--- Lines 1965-1997
+-- Lines 1940-1972
 function MenuNodeCrimenetContactChillGui:set_contact_info(id, name, files, override_file, sub_text)
 	self._files = files
 	local files_menu = self._files_menu
@@ -2423,7 +2423,7 @@ function MenuNodeCrimenetContactChillGui:set_contact_info(id, name, files, overr
 	self._current_contact_info = id
 end
 
--- Lines 1999-2032
+-- Lines 1974-2007
 function MenuNodeCrimenetContactChillGui:mouse_moved(o, x, y)
 	local files_menu = self._files_menu
 	local is_inside = false
@@ -2464,7 +2464,7 @@ function MenuNodeCrimenetContactChillGui:mouse_moved(o, x, y)
 	return is_inside, self._file_pressed and (self._file_pressed == is_inside and "link" or "arrow") or is_inside and not is_locked and "link" or "arrow"
 end
 
--- Lines 2034-2045
+-- Lines 2009-2020
 function MenuNodeCrimenetContactChillGui:mouse_pressed(button, x, y)
 	local files_menu = self._files_menu
 
@@ -2481,7 +2481,7 @@ function MenuNodeCrimenetContactChillGui:mouse_pressed(button, x, y)
 	self._file_pressed = false
 end
 
--- Lines 2047-2059
+-- Lines 2022-2034
 function MenuNodeCrimenetContactChillGui:mouse_released(button, x, y)
 	if self._file_pressed and self._file_pressed ~= self._current_file then
 		local files_menu = self._files_menu
@@ -2499,28 +2499,28 @@ function MenuNodeCrimenetContactChillGui:mouse_released(button, x, y)
 	self._file_pressed = false
 end
 
--- Lines 2061-2063
+-- Lines 2036-2038
 function MenuNodeCrimenetContactChillGui:previous_page()
 	self:change_file(-1)
 end
 
--- Lines 2065-2067
+-- Lines 2040-2042
 function MenuNodeCrimenetContactChillGui:next_page()
 	self:change_file(1)
 end
 
--- Lines 2069-2071
+-- Lines 2044-2046
 function MenuNodeCrimenetContactChillGui:input_focus()
 	return false
 end
 
--- Lines 2073-2078
+-- Lines 2048-2053
 function MenuNodeCrimenetContactChillGui:_setup_item_panel(safe_rect, res)
 	MenuNodeCrimenetContactChillGui.super._setup_item_panel(self, safe_rect, res)
 	self:_setup_menu()
 end
 
--- Lines 2080-2093
+-- Lines 2055-2068
 function MenuNodeCrimenetContactChillGui:_setup_menu()
 	if not self._init_finish then
 		return
@@ -2539,27 +2539,27 @@ function MenuNodeCrimenetContactChillGui:_setup_menu()
 	self.item_panel:set_righttop(self._item_panel_parent:w(), self.PADDING + y_offs)
 end
 
--- Lines 2095-2097
+-- Lines 2070-2072
 function MenuNodeCrimenetContactChillGui:set_difficulty(difficulty)
 	self._difficulty = difficulty
 end
 
--- Lines 2099-2101
+-- Lines 2074-2076
 function MenuNodeCrimenetContactChillGui:get_difficulty()
 	return self._difficulty or "normal"
 end
 
--- Lines 2103-2105
+-- Lines 2078-2080
 function MenuNodeCrimenetContactChillGui:set_one_down(one_down)
 	self._one_down = one_down
 end
 
--- Lines 2107-2109
+-- Lines 2082-2084
 function MenuNodeCrimenetContactChillGui:get_one_down()
 	return self._one_down or false
 end
 
--- Lines 2111-2116
+-- Lines 2086-2091
 function MenuNodeCrimenetContactChillGui:_fade_row_item(row_item)
 	MenuNodeCrimenetContactChillGui.super._fade_row_item(self, row_item)
 
@@ -2568,7 +2568,7 @@ function MenuNodeCrimenetContactChillGui:_fade_row_item(row_item)
 	end
 end
 
--- Lines 2118-2123
+-- Lines 2093-2098
 function MenuNodeCrimenetContactChillGui:_highlight_row_item(row_item, mouse_over)
 	MenuNodeCrimenetContactChillGui.super._highlight_row_item(self, row_item, mouse_over)
 
@@ -2577,7 +2577,7 @@ function MenuNodeCrimenetContactChillGui:_highlight_row_item(row_item, mouse_ove
 	end
 end
 
--- Lines 2125-2136
+-- Lines 2100-2111
 function MenuNodeCrimenetContactChillGui:refresh_gui(node)
 	self:update_item_icon_visibility()
 
@@ -2594,7 +2594,7 @@ function MenuNodeCrimenetContactChillGui:refresh_gui(node)
 	end
 end
 
--- Lines 2138-2247
+-- Lines 2113-2222
 function MenuNodeCrimenetContactChillGui:_setup_layout()
 	local safe_rect = managers.gui_data:scaled_size()
 	local mc_full_ws = managers.menu_component:fullscreen_ws()
@@ -2621,7 +2621,7 @@ function MenuNodeCrimenetContactChillGui:_setup_layout()
 		h = self._fullscreen_panel:h()
 	})
 
-	-- Lines 2155-2158
+	-- Lines 2130-2133
 	local function func(o)
 		local start_blur = 0
 
@@ -2840,7 +2840,7 @@ function MenuNodeCrimenetContactChillGui:_setup_layout()
 	round_gui_object(panel)
 end
 
--- Lines 2249-2254
+-- Lines 2224-2229
 function MenuNodeCrimenetContactChillGui:remove_blur()
 	if self._fullscreen_panel then
 		self._fullscreen_panel:parent():remove(self._fullscreen_panel)
@@ -2849,7 +2849,7 @@ function MenuNodeCrimenetContactChillGui:remove_blur()
 	end
 end
 
--- Lines 2256-2268
+-- Lines 2231-2243
 function MenuNodeCrimenetContactChillGui:close()
 	self:remove_blur()
 
@@ -2875,7 +2875,7 @@ MenuNodeCrimenetGageAssignmentGui.PADDING = 10
 MenuNodeCrimenetGageAssignmentGui.CODEX_TEXT_ID = "menu_gage_assignment_title"
 MenuNodeCrimenetGageAssignmentGui.SOUND_SOURCE_NAME = "MenuNodeCrimenetGageAssignmentGui"
 
--- Lines 2281-2466
+-- Lines 2256-2441
 function MenuNodeCrimenetGageAssignmentGui:set_contact_info(id, name, files, override_file)
 	self:unretrieve_textures()
 
@@ -3156,7 +3156,7 @@ function MenuNodeCrimenetGageAssignmentGui:set_contact_info(id, name, files, ove
 	round_gui_object(self._info_panel)
 end
 
--- Lines 2468-2556
+-- Lines 2443-2531
 function MenuNodeCrimenetGageAssignmentGui:create_insigna(panel, assignment)
 	local assignment_insignia = panel:panel({
 		w = panel:w(),
@@ -3242,7 +3242,7 @@ function MenuNodeCrimenetGageAssignmentGui:create_insigna(panel, assignment)
 	end
 end
 
--- Lines 2558-2610
+-- Lines 2533-2585
 function MenuNodeCrimenetGageAssignmentGui:populate_item_panel(item_panel, item_data)
 	local global_value, category, item_id = unpack(item_data)
 
@@ -3322,7 +3322,7 @@ function MenuNodeCrimenetGageAssignmentGui:populate_item_panel(item_panel, item_
 	end
 end
 
--- Lines 2612-2619
+-- Lines 2587-2594
 function MenuNodeCrimenetGageAssignmentGui:unretrieve_textures()
 	if self._requested_textures then
 		for i, data in pairs(self._requested_textures) do
@@ -3333,7 +3333,7 @@ function MenuNodeCrimenetGageAssignmentGui:unretrieve_textures()
 	self._requested_textures = nil
 end
 
--- Lines 2621-2660
+-- Lines 2596-2635
 function MenuNodeCrimenetGageAssignmentGui:texture_done_clbk(params, texture_ids)
 	local panel = params[1]
 	local is_pattern = params[2]
@@ -3378,7 +3378,7 @@ function MenuNodeCrimenetGageAssignmentGui:texture_done_clbk(params, texture_ids
 	image:set_center(panel:w() * 0.5, panel:h() * 0.5)
 end
 
--- Lines 2662-2710
+-- Lines 2637-2685
 function MenuNodeCrimenetGageAssignmentGui:_setup_layout()
 	local safe_rect = managers.gui_data:scaled_size()
 	local mc_full_ws = managers.menu_component:fullscreen_ws()
@@ -3462,7 +3462,7 @@ function MenuNodeCrimenetGageAssignmentGui:_setup_layout()
 	round_gui_object(panel)
 end
 
--- Lines 2712-2719
+-- Lines 2687-2694
 function MenuNodeCrimenetGageAssignmentGui:_setup_blur()
 	local blur = self._fullscreen_panel:bitmap({
 		texture = "guis/textures/test_blur_df",
@@ -3471,7 +3471,7 @@ function MenuNodeCrimenetGageAssignmentGui:_setup_blur()
 		h = self._fullscreen_panel:h()
 	})
 
-	-- Lines 2714-2717
+	-- Lines 2689-2692
 	local function func(o)
 		local start_blur = 0
 
@@ -3483,16 +3483,16 @@ function MenuNodeCrimenetGageAssignmentGui:_setup_blur()
 	blur:animate(func)
 end
 
--- Lines 2721-2723
+-- Lines 2696-2698
 function MenuNodeCrimenetGageAssignmentGui:_set_panel_position(panel)
 	self._panel:set_center(panel:w() / 2, panel:h() / 2)
 end
 
--- Lines 2725-2726
+-- Lines 2700-2701
 function MenuNodeCrimenetGageAssignmentGui:set_file(index)
 end
 
--- Lines 2728-2731
+-- Lines 2703-2706
 function MenuNodeCrimenetGageAssignmentGui:close()
 	self:unretrieve_textures()
 	MenuNodeCrimenetGageAssignmentGui.super.close(self)
@@ -3506,7 +3506,7 @@ MenuNodeCrimenetChallengeGui.PADDING = 10
 MenuNodeCrimenetChallengeGui.CODEX_TEXT_ID = "menu_cn_challenge_title"
 MenuNodeCrimenetChallengeGui.SOUND_SOURCE_NAME = "MenuNodeCrimenetChallengeGui"
 
--- Lines 2743-2751
+-- Lines 2718-2726
 function MenuNodeCrimenetChallengeGui:init(node, layer, parameters)
 	MenuNodeCrimenetChallengeGui.super.init(self, node, layer, parameters)
 
@@ -3528,7 +3528,7 @@ function MenuNodeCrimenetChallengeGui:init(node, layer, parameters)
 	self._file_alphas = self._file_alphas_all
 end
 
--- Lines 2753-2769
+-- Lines 2728-2744
 function MenuNodeCrimenetChallengeGui:_create_timestamp_string_extended(timestamp)
 	local minutes = 59 - tonumber(Application:date("%M"))
 	local seconds = 59 - tonumber(Application:date("%S"))
@@ -3554,7 +3554,7 @@ function MenuNodeCrimenetChallengeGui:_create_timestamp_string_extended(timestam
 	return expire_string
 end
 
--- Lines 2771-2968
+-- Lines 2746-2943
 function MenuNodeCrimenetChallengeGui:set_contact_info(id, name, files, override_file)
 	self:unretrieve_textures()
 
@@ -3847,7 +3847,7 @@ function MenuNodeCrimenetChallengeGui:set_contact_info(id, name, files, override
 	self._current_challenge = challenge
 end
 
--- Lines 2970-2991
+-- Lines 2945-2966
 function MenuNodeCrimenetChallengeGui:update(t, dt)
 	MenuNodeCrimenetChallengeGui.super.update(self, t, dt)
 
@@ -3866,7 +3866,7 @@ function MenuNodeCrimenetChallengeGui:update(t, dt)
 	end
 end
 
--- Lines 2994-3081
+-- Lines 2969-3056
 function MenuNodeCrimenetChallengeGui:create_reward(panel, reward, challenge)
 	local texture, texture_path, texture_rect = nil
 	local is_pattern = false
@@ -3938,7 +3938,7 @@ function MenuNodeCrimenetChallengeGui:create_reward(panel, reward, challenge)
 
 		glow:set_center(reward_panel:center())
 
-		-- Lines 3058-3063
+		-- Lines 3033-3038
 		local function glow_anim(o)
 			local dt = nil
 
@@ -3990,7 +3990,7 @@ function MenuNodeCrimenetChallengeGui:create_reward(panel, reward, challenge)
 	})
 end
 
--- Lines 3083-3089
+-- Lines 3058-3064
 function MenuNodeCrimenetChallengeGui:_highlight_row_item(row_item, mouse_over)
 	MenuNodeCrimenetChallengeGui.super._highlight_row_item(self, row_item, mouse_over)
 
@@ -3999,12 +3999,12 @@ function MenuNodeCrimenetChallengeGui:_highlight_row_item(row_item, mouse_over)
 	self:_set_file()
 end
 
--- Lines 3091-3093
+-- Lines 3066-3068
 function MenuNodeCrimenetChallengeGui:set_file(index)
 	MenuNodeCrimenetChallengeGui.super.super.set_file(self, index)
 end
 
--- Lines 3095-3106
+-- Lines 3070-3081
 function MenuNodeCrimenetChallengeGui:_set_file()
 	local files_menu = self._files_menu
 
@@ -4020,17 +4020,17 @@ function MenuNodeCrimenetChallengeGui:_set_file()
 	end
 end
 
--- Lines 3108-3109
+-- Lines 3083-3084
 function MenuNodeCrimenetChallengeGui:set_empty()
 end
 
--- Lines 3111-3114
+-- Lines 3086-3089
 function MenuNodeCrimenetChallengeGui:close()
 	MenuNodeCrimenetChallengeGui.super.close(self)
 	MenuCallbackHandler:save_progress()
 end
 
--- Lines 3130-3196
+-- Lines 3105-3171
 function MenuNodeCrimenetChallengeGui:mouse_moved(o, x, y)
 	if not self._info_panel:inside(x, y) then
 		return
@@ -4109,7 +4109,7 @@ function MenuNodeCrimenetChallengeGui:mouse_moved(o, x, y)
 	return is_inside, self._file_pressed and (self._file_pressed == is_inside and not is_locked and "link" or "arrow") or is_inside and not is_locked and "link" or "arrow"
 end
 
--- Lines 3198-3211
+-- Lines 3173-3186
 function MenuNodeCrimenetChallengeGui:mouse_pressed(button, x, y)
 	local files_menu = self._files_menu
 
@@ -4129,7 +4129,7 @@ function MenuNodeCrimenetChallengeGui:mouse_pressed(button, x, y)
 	self._file_pressed = false
 end
 
--- Lines 3213-3240
+-- Lines 3188-3215
 function MenuNodeCrimenetChallengeGui:mouse_released(button, x, y)
 	if self._file_pressed and self._file_pressed == self._current_file then
 		local files_menu = self._files_menu
@@ -4165,7 +4165,7 @@ function MenuNodeCrimenetChallengeGui:mouse_released(button, x, y)
 	self._file_pressed = false
 end
 
--- Lines 3242-3251
+-- Lines 3217-3226
 function MenuNodeCrimenetChallengeGui:claim_reward(index)
 	local reward = managers.challenge:on_give_reward(self._current_contact_info, nil, index)
 
@@ -4178,14 +4178,14 @@ function MenuNodeCrimenetChallengeGui:claim_reward(index)
 	end
 end
 
--- Lines 3253-3257
+-- Lines 3228-3232
 function MenuNodeCrimenetChallengeGui:special_btn_pressed(button)
 	if button == Idstring("menu_challenge_claim") then
 		self:claim_reward(self._current_file)
 	end
 end
 
--- Lines 3259-3319
+-- Lines 3234-3294
 function MenuNodeCrimenetChallengeGui:refresh_gui(node)
 	if not self._init_finish then
 		return
@@ -4255,7 +4255,7 @@ function MenuNodeCrimenetChallengeGui:refresh_gui(node)
 	managers.menu_component:disable_crimenet()
 end
 
--- Lines 3321-3341
+-- Lines 3296-3316
 function MenuNodeCrimenetChallengeGui:_align_marker(row_item)
 	MenuNodeCrimenetChallengeGui.super._align_marker(self, row_item)
 
@@ -4275,7 +4275,7 @@ function MenuNodeCrimenetChallengeGui:_align_marker(row_item)
 	end
 end
 
--- Lines 3343-3372
+-- Lines 3318-3347
 function MenuNodeCrimenetChallengeGui:_clear_gui()
 	local to = #self.row_items
 
@@ -4312,7 +4312,7 @@ function MenuNodeCrimenetChallengeGui:_clear_gui()
 	self.row_items = {}
 end
 
--- Lines 3374-3385
+-- Lines 3349-3360
 function MenuNodeCrimenetChallengeGui:_setup_item_panel_parent(safe_rect, shape)
 	local x = safe_rect.x + safe_rect.width / 2 - self.WIDTH / 2 + self.PADDING
 	local y = safe_rect.y + safe_rect.height / 2 - self.HEIGHT / 2 + self.PADDING
@@ -4325,7 +4325,7 @@ function MenuNodeCrimenetChallengeGui:_setup_item_panel_parent(safe_rect, shape)
 	MenuNodeCrimenetChallengeGui.super._setup_item_panel_parent(self, safe_rect, shape)
 end
 
--- Lines 3387-3441
+-- Lines 3362-3416
 function MenuNodeCrimenetChallengeGui:_setup_menu()
 	if not self._init_finish then
 		return
@@ -4388,7 +4388,7 @@ end
 
 MenuNodeChooseWeaponRewardGui = MenuNodeChooseWeaponRewardGui or class(MenuNodeCrimenetFiltersGui)
 
--- Lines 3585-3609
+-- Lines 3560-3584
 function MenuNodeChooseWeaponRewardGui:init(node, layer, parameters)
 	parameters.font = tweak_data.menu.pd2_small_font
 	parameters.font_size = tweak_data.menu.pd2_small_font_size
@@ -4421,7 +4421,7 @@ function MenuNodeChooseWeaponRewardGui:init(node, layer, parameters)
 	title_text:set_bottom(self.box_panel:top())
 end
 
--- Lines 3611-3703
+-- Lines 3586-3678
 function MenuNodeChooseWeaponRewardGui:_setup_item_panel(safe_rect, res)
 	MenuNodeChooseWeaponRewardGui.super._setup_item_panel(self, safe_rect, res)
 
@@ -4543,7 +4543,7 @@ function MenuNodeChooseWeaponRewardGui:_setup_item_panel(safe_rect, res)
 	make_fine_text(self._owned_text)
 end
 
--- Lines 3705-3712
+-- Lines 3680-3687
 function MenuNodeChooseWeaponRewardGui:_reposition_items(highlighted_row_item)
 	MenuNodeChooseWeaponRewardGui.super._reposition_items(self, highlighted_row_item)
 
@@ -4555,7 +4555,7 @@ end
 
 MenuNodeChooseWeaponCosmeticGui = MenuNodeChooseWeaponCosmeticGui or class(MenuNodeCrimenetFiltersGui)
 
--- Lines 3715-3739
+-- Lines 3690-3714
 function MenuNodeChooseWeaponCosmeticGui:init(node, layer, parameters)
 	parameters.font = tweak_data.menu.pd2_small_font
 	parameters.font_size = tweak_data.menu.pd2_small_font_size
@@ -4570,7 +4570,7 @@ function MenuNodeChooseWeaponCosmeticGui:init(node, layer, parameters)
 	MenuNodeChooseWeaponCosmeticGui.super.init(self, node, layer, parameters)
 end
 
--- Lines 3741-3866
+-- Lines 3716-3841
 function MenuNodeChooseWeaponCosmeticGui:_setup_item_panel(safe_rect, res)
 	MenuNodeChooseWeaponCosmeticGui.super._setup_item_panel(self, safe_rect, res)
 
@@ -4663,7 +4663,7 @@ function MenuNodeChooseWeaponCosmeticGui:_setup_item_panel(safe_rect, res)
 	blur:set_top(self.box_panel:top())
 	blur:set_left(self.box_panel:left())
 
-	-- Lines 3818-3821
+	-- Lines 3793-3796
 	local function func(o)
 		local start_blur = 0
 
@@ -4699,7 +4699,7 @@ function MenuNodeChooseWeaponCosmeticGui:_setup_item_panel(safe_rect, res)
 	self:_set_topic_position()
 end
 
--- Lines 3868-3875
+-- Lines 3843-3850
 function MenuNodeChooseWeaponCosmeticGui:_reposition_items(highlighted_row_item)
 	MenuNodeChooseWeaponCosmeticGui.super._reposition_items(self, highlighted_row_item)
 
@@ -4709,7 +4709,7 @@ function MenuNodeChooseWeaponCosmeticGui:_reposition_items(highlighted_row_item)
 	end
 end
 
--- Lines 3877-3880
+-- Lines 3852-3855
 function MenuNodeChooseWeaponCosmeticGui:close(...)
 	MenuNodeEconomySafe.super.close(self, ...)
 	managers.environment_controller:set_dof_distance(10, false)
@@ -4717,7 +4717,7 @@ end
 
 MenuNodeQuickplayGui = MenuNodeQuickplayGui or class(MenuNodeCrimenetFiltersGui)
 
--- Lines 3883-3898
+-- Lines 3858-3873
 function MenuNodeQuickplayGui:init(node, layer, parameters)
 	MenuNodeQuickplayGui.super.init(self, node, layer, parameters)
 	managers.menu_component:disable_crimenet()
@@ -4740,7 +4740,7 @@ function MenuNodeQuickplayGui:init(node, layer, parameters)
 		h = self._fullscreen_panel:h()
 	})
 
-	-- Lines 3893-3896
+	-- Lines 3868-3871
 	local function func(o)
 		local start_blur = 0
 
@@ -4752,7 +4752,7 @@ function MenuNodeQuickplayGui:init(node, layer, parameters)
 	blur:animate(func)
 end
 
--- Lines 3900-3906
+-- Lines 3875-3881
 function MenuNodeQuickplayGui:close(...)
 	self._fullscreen_panel:parent():remove(self._fullscreen_panel)
 
@@ -4764,14 +4764,14 @@ end
 
 MenuNodeDOFGui = MenuNodeDOFGui or class(MenuNodeGui)
 
--- Lines 3909-3914
+-- Lines 3884-3889
 function MenuNodeDOFGui:init(...)
 	MenuNodeDOFGui.super.init(self, ...)
 	managers.environment_controller:set_dof_setting("standard")
 	managers.environment_controller:set_dof_distance(100, true)
 end
 
--- Lines 3915-3918
+-- Lines 3890-3893
 function MenuNodeDOFGui:close(...)
 	MenuNodeDOFGui.super.close(self, ...)
 	managers.environment_controller:set_dof_distance(10, false)
@@ -4779,7 +4779,7 @@ end
 
 MenuNodeOpenContainerGui = MenuNodeOpenContainerGui or class(MenuNodeBaseGui)
 
--- Lines 3923-3936
+-- Lines 3898-3910
 function MenuNodeOpenContainerGui:init(node, layer, parameters)
 	parameters.font = tweak_data.menu.pd2_small_font
 	parameters.font_size = tweak_data.menu.pd2_small_font_size
@@ -4794,13 +4794,13 @@ function MenuNodeOpenContainerGui:init(node, layer, parameters)
 	MenuNodeOpenContainerGui.super.init(self, node, layer, parameters)
 end
 
--- Lines 3938-3941
+-- Lines 3912-3916
 function MenuNodeOpenContainerGui:refresh_gui(...)
 	MenuNodeOpenContainerGui.super.refresh_gui(self, ...)
 	self:setup(true)
 end
 
--- Lines 3943-4277
+-- Lines 3918-4288
 function MenuNodeOpenContainerGui:setup(half_fade)
 	local container_data = self.node:parameters().container_data
 
@@ -5066,18 +5066,31 @@ function MenuNodeOpenContainerGui:setup(half_fade)
 
 	local contents = {}
 
-	for category, content_data in pairs(content_td.contains) do
-		for _, entry in ipairs(content_data) do
-			table.insert(contents, {
-				category = category,
-				entry = entry
-			})
+	-- Lines 4113-4134
+	local function insert_skins(list, container)
+		for category, content_data in pairs(container) do
+			for _, entry in ipairs(content_data) do
+				if category == "contents" then
+					local contents_data = tweak_data.economy.contents[entry]
+
+					if contents_data.contains then
+						insert_skins(list, contents_data.contains)
+					end
+				else
+					table.insert(list, {
+						category = category,
+						entry = entry
+					})
+				end
+			end
 		end
 	end
 
+	insert_skins(contents, content_td.contains)
+
 	local x_td, y_td, x_rtd, y_rtd = nil
 
-	-- Lines 4145-4157
+	-- Lines 4142-4154
 	local function sort_func(x, y)
 		x_td = (x.category == "weapon_skins" and tweak_data.blackmarket.weapon_skins or tweak_data.economy[x.category])[x.entry]
 		y_td = (y.category == "weapon_skins" and tweak_data.blackmarket.weapon_skins or tweak_data.economy[y.category])[y.entry]
@@ -5109,9 +5122,8 @@ function MenuNodeOpenContainerGui:setup(half_fade)
 
 	for i, content in ipairs(contents) do
 		local is_weapon_skin = content.category == "weapon_skins"
-		local show_skins = is_weapon_skin
 		local is_armor_skin = content.category == "armor_skins"
-		show_skins = show_skins or is_armor_skin
+		local show_skins = is_weapon_skin or is_armor_skin
 		c_td = (content.category == "weapon_skins" and tweak_data.blackmarket.weapon_skins or tweak_data.economy[content.category])[content.entry]
 		new_content = content_panel:panel({
 			layer = 1,
@@ -5269,7 +5281,7 @@ function MenuNodeOpenContainerGui:setup(half_fade)
 	})
 end
 
--- Lines 4279-4340
+-- Lines 4290-4372
 function MenuNodeOpenContainerGui:update_info(button)
 	if button == self._selected_button then
 		return
@@ -5355,7 +5367,7 @@ function MenuNodeOpenContainerGui:update_info(button)
 	self:update_legends(button)
 end
 
--- Lines 4342-4382
+-- Lines 4374-4414
 function MenuNodeOpenContainerGui:update_legends(button)
 	self._legend_panel:clear()
 
@@ -5430,7 +5442,7 @@ function MenuNodeOpenContainerGui:update_legends(button)
 	end
 end
 
--- Lines 4384-4390
+-- Lines 4416-4422
 function MenuNodeOpenContainerGui:weapon_cosmetics_callback(button, data)
 	if button == Idstring("1") then
 		managers.blackmarket:view_weapon_platform_with_cosmetics(data.weapon_id, {
@@ -5450,7 +5462,7 @@ function MenuNodeOpenContainerGui:weapon_cosmetics_callback(button, data)
 	end
 end
 
--- Lines 4392-4397
+-- Lines 4424-4429
 function MenuNodeOpenContainerGui:armor_cosmetics_callback(button, data)
 	if button == Idstring("1") then
 		-- Nothing
@@ -5459,7 +5471,7 @@ function MenuNodeOpenContainerGui:armor_cosmetics_callback(button, data)
 	end
 end
 
--- Lines 4399-4408
+-- Lines 4431-4440
 function MenuNodeOpenContainerGui:prev_container()
 	local data = self.node:parameters().container_data
 	local market_bundle = data.active_market_bundle - 1
@@ -5471,7 +5483,7 @@ function MenuNodeOpenContainerGui:prev_container()
 	self:open_container(market_bundle)
 end
 
--- Lines 4410-4415
+-- Lines 4442-4447
 function MenuNodeOpenContainerGui:next_container()
 	local data = self.node:parameters().container_data
 	local market_bundle = data.active_market_bundle % data.num_bundles + 1
@@ -5479,7 +5491,7 @@ function MenuNodeOpenContainerGui:next_container()
 	self:open_container(market_bundle)
 end
 
--- Lines 4417-4434
+-- Lines 4449-4466
 function MenuNodeOpenContainerGui:open_container(market_bundle)
 	local data = self.node:parameters().container_data
 	local active_bundle = data.market_bundles[market_bundle]
@@ -5499,7 +5511,7 @@ function MenuNodeOpenContainerGui:open_container(market_bundle)
 	end
 end
 
--- Lines 4436-4442
+-- Lines 4468-4474
 function MenuNodeOpenContainerGui:previous_page()
 	local data = self.node:parameters().container_data
 
@@ -5509,7 +5521,7 @@ function MenuNodeOpenContainerGui:previous_page()
 	end
 end
 
--- Lines 4444-4450
+-- Lines 4476-4482
 function MenuNodeOpenContainerGui:next_page()
 	local data = self.node:parameters().container_data
 
@@ -5519,13 +5531,13 @@ function MenuNodeOpenContainerGui:next_page()
 	end
 end
 
--- Lines 4452-4455
+-- Lines 4484-4487
 function MenuNodeOpenContainerGui:set_visible(visible)
 	MenuNodeOpenContainerGui.super.set_visible(self, visible)
 	self._fullscreen_panel:set_visible(visible)
 end
 
--- Lines 4457-4464
+-- Lines 4489-4496
 function MenuNodeOpenContainerGui:_setup_item_panel(...)
 	MenuNodeOpenContainerGui.super._setup_item_panel(self, ...)
 
@@ -5536,7 +5548,7 @@ function MenuNodeOpenContainerGui:_setup_item_panel(...)
 	end
 end
 
--- Lines 4466-4476
+-- Lines 4498-4508
 function MenuNodeOpenContainerGui:close()
 	MenuNodeOpenContainerGui.super.close(self)
 
@@ -5553,7 +5565,7 @@ end
 
 MenuNodeContainerPreviewGui = MenuNodeContainerPreviewGui or class(MenuNodeGui)
 
--- Lines 4479-4507
+-- Lines 4511-4539
 function MenuNodeContainerPreviewGui:init(node, layer, parameters)
 	MenuNodeContainerPreviewGui.super.init(self, node, layer, parameters)
 
@@ -5595,7 +5607,7 @@ function MenuNodeContainerPreviewGui:init(node, layer, parameters)
 	end
 end
 
--- Lines 4509-4512
+-- Lines 4541-4544
 function MenuNodeContainerPreviewGui:close(...)
 	MenuNodeContainerPreviewGui.super.close(self, ...)
 	managers.menu_component:show_blackmarket_gui()

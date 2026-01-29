@@ -5,7 +5,7 @@ function LootManager:init()
 	self:_setup()
 end
 
--- Lines 8-28
+-- Lines 8-31
 function LootManager:_setup()
 	Global.loot_manager = Global.loot_manager or {
 		secured = {},
@@ -26,25 +26,25 @@ function LootManager:_setup()
 	self._respawns = {}
 end
 
--- Lines 30-32
+-- Lines 33-35
 function LootManager:clear()
 	Global.loot_manager = nil
 end
 
--- Lines 34-37
+-- Lines 37-40
 function LootManager:reset()
 	Global.loot_manager = nil
 
 	self:_setup()
 end
 
--- Lines 39-42
+-- Lines 42-45
 function LootManager:on_simulation_ended()
 	self._respawns = {}
 	self._global.mandatory_bags = {}
 end
 
--- Lines 44-47
+-- Lines 47-50
 function LootManager:add_trigger(id, type, amount, callback)
 	self._triggers[type] = self._triggers[type] or {}
 	self._triggers[type][id] = {
@@ -53,7 +53,7 @@ function LootManager:add_trigger(id, type, amount, callback)
 	}
 end
 
--- Lines 49-73
+-- Lines 52-76
 function LootManager:_check_triggers(type)
 	if not self._triggers[type] then
 		return
@@ -82,34 +82,34 @@ function LootManager:_check_triggers(type)
 	end
 end
 
--- Lines 75-77
+-- Lines 78-80
 function LootManager:on_retry_job_stage()
 	self._global.secured = self._initial_loot
 end
 
--- Lines 79-81
+-- Lines 82-84
 function LootManager:get_secured()
 	return table.remove(self._global.secured, 1)
 end
 
--- Lines 83-86
+-- Lines 86-89
 function LootManager:get_secured_random()
 	local entry = math.random(#self._global.secured)
 
 	return table.remove(self._global.secured, entry)
 end
 
--- Lines 88-90
+-- Lines 91-93
 function LootManager:get_distribute()
 	return table.remove(self._distribution_loot, 1)
 end
 
--- Lines 92-94
+-- Lines 95-97
 function LootManager:get_respawn()
 	return table.remove(self._respawns, 1)
 end
 
--- Lines 96-98
+-- Lines 99-101
 function LootManager:add_to_respawn(carry_id, multiplier)
 	table.insert(self._respawns, {
 		carry_id = carry_id,
@@ -117,7 +117,7 @@ function LootManager:add_to_respawn(carry_id, multiplier)
 	})
 end
 
--- Lines 100-110
+-- Lines 103-113
 function LootManager:_repossess_bags_for_distribution()
 	local small_loot = {}
 	local distribute = self._distribution_loot
@@ -131,12 +131,12 @@ function LootManager:_repossess_bags_for_distribution()
 	self._global.secured = small_loot
 end
 
--- Lines 112-114
+-- Lines 115-117
 function LootManager:on_job_deactivated()
 	self:clear()
 end
 
--- Lines 116-122
+-- Lines 119-125
 function LootManager:secure(carry_id, multiplier_level, silent, peer_id)
 	if Network:is_server() then
 		self:server_secure_loot(carry_id, multiplier_level, silent, peer_id)
@@ -145,13 +145,13 @@ function LootManager:secure(carry_id, multiplier_level, silent, peer_id)
 	end
 end
 
--- Lines 124-128
+-- Lines 127-132
 function LootManager:server_secure_loot(carry_id, multiplier_level, silent, peer_id)
 	managers.network:session():send_to_peers_synched("sync_secure_loot", carry_id, multiplier_level, silent, peer_id)
 	self:sync_secure_loot(carry_id, multiplier_level, silent, peer_id)
 end
 
--- Lines 130-152
+-- Lines 134-156
 function LootManager:sync_secure_loot(carry_id, multiplier_level, silent, peer_id)
 	if peer_id == 0 then
 		peer_id = nil
@@ -179,7 +179,7 @@ function LootManager:sync_secure_loot(carry_id, multiplier_level, silent, peer_i
 	self:check_achievements(carry_id, multiplier)
 end
 
--- Lines 154-190
+-- Lines 375-411
 function LootManager:_count_achievement_secured(achievement, secured_data)
 	local amount = 0
 	local total_amount = 0
@@ -223,14 +223,14 @@ function LootManager:_count_achievement_secured(achievement, secured_data)
 	return total_amount, amount, value
 end
 
--- Lines 192-197
+-- Lines 413-418
 function LootManager:_check_secured(achievement, secured_data)
 	local total_amount, amount, value = self:_count_achievement_secured(achievement, secured_data)
 
 	return secured_data.total_amount and secured_data.total_amount <= total_amount or secured_data.amount and secured_data.amount <= amount or secured_data.value and secured_data.value <= value
 end
 
--- Lines 199-284
+-- Lines 420-505
 function LootManager:check_achievements(carry_id, multiplier)
 	local real_total_value = self:get_real_total_value()
 	local memory, total_memory_value, all_pass, total_value_pass, jobs_pass, levels_pass, difficulties_pass, total_time_pass, no_assets_pass, no_deployable_pass, secured_pass, is_dropin_pass, bag_with_value_pass = nil
@@ -310,30 +310,30 @@ function LootManager:check_achievements(carry_id, multiplier)
 	end
 end
 
--- Lines 286-288
+-- Lines 507-509
 function LootManager:secure_small_loot(type, multiplier_level, peer_id)
 	self:secure(type, multiplier_level, nil, peer_id)
 end
 
--- Lines 290-292
+-- Lines 511-513
 function LootManager:show_small_loot_taken_hint(type, multiplier)
 	managers.hint:show_hint("grabbed_small_loot", 2, nil, {
 		MONEY = managers.experience:cash_string(self:get_real_value(type, multiplier))
 	})
 end
 
--- Lines 296-299
+-- Lines 517-520
 function LootManager:set_mandatory_bags_data(carry_id, amount)
 	self._global.mandatory_bags.carry_id = carry_id
 	self._global.mandatory_bags.amount = amount
 end
 
--- Lines 301-303
+-- Lines 522-524
 function LootManager:get_mandatory_bags_data()
 	return self._global.mandatory_bags
 end
 
--- Lines 305-312
+-- Lines 526-533
 function LootManager:check_secured_mandatory_bags()
 	if not self._global.mandatory_bags.amount or self._global.mandatory_bags.amount == 0 then
 		return true
@@ -344,7 +344,7 @@ function LootManager:check_secured_mandatory_bags()
 	return self._global.mandatory_bags.amount <= amount
 end
 
--- Lines 314-331
+-- Lines 535-552
 function LootManager:get_secured_mandatory_bags_amount(is_vehicle)
 	local mandatory_bags_amount = self._global.mandatory_bags.amount or 0
 
@@ -364,7 +364,7 @@ function LootManager:get_secured_mandatory_bags_amount(is_vehicle)
 	return amount
 end
 
--- Lines 333-350
+-- Lines 554-571
 function LootManager:get_secured_bonus_bags_amount(is_vehicle)
 	local mandatory_bags_amount = self._global.mandatory_bags.amount or 0
 	local secured_mandatory_bags_amount = self:get_secured_mandatory_bags_amount()
@@ -383,7 +383,7 @@ function LootManager:get_secured_bonus_bags_amount(is_vehicle)
 	return amount
 end
 
--- Lines 352-361
+-- Lines 573-582
 function LootManager:get_secured_bags_amount(is_vehicle)
 	local amount = 0
 
@@ -396,7 +396,7 @@ function LootManager:get_secured_bags_amount(is_vehicle)
 	return amount
 end
 
--- Lines 363-381
+-- Lines 584-602
 function LootManager:get_secured_bonus_bags_value(level_id, is_vehicle)
 	local mandatory_bags_amount = self._global.mandatory_bags.amount or 0
 	local amount_bags = tweak_data.levels[level_id] and tweak_data.levels[level_id].max_bags or 20
@@ -417,7 +417,7 @@ function LootManager:get_secured_bonus_bags_value(level_id, is_vehicle)
 	return value
 end
 
--- Lines 383-397
+-- Lines 604-618
 function LootManager:get_secured_mandatory_bags_value(is_vehicle)
 	local mandatory_bags_amount = self._global.mandatory_bags.amount or 0
 	local value = 0
@@ -432,7 +432,7 @@ function LootManager:get_secured_mandatory_bags_value(is_vehicle)
 	return value
 end
 
--- Lines 399-418
+-- Lines 620-639
 function LootManager:is_bonus_bag(carry_id, is_vehicle)
 	if self._global.mandatory_bags.carry_id ~= "none" and carry_id and carry_id ~= self._global.mandatory_bags.carry_id then
 		return true
@@ -453,7 +453,7 @@ function LootManager:is_bonus_bag(carry_id, is_vehicle)
 	return false
 end
 
--- Lines 422-433
+-- Lines 643-654
 function LootManager:get_real_value(carry_id, multiplier)
 	local mul_value = 1
 
@@ -467,7 +467,7 @@ function LootManager:get_real_value(carry_id, multiplier)
 	return managers.money:get_bag_value(carry_id, multiplier) * mul_value
 end
 
--- Lines 438-444
+-- Lines 659-665
 function LootManager:get_real_total_value()
 	local value = 0
 
@@ -478,7 +478,7 @@ function LootManager:get_real_total_value()
 	return value
 end
 
--- Lines 447-462
+-- Lines 668-683
 function LootManager:get_real_total_loot_value()
 	local value = 0
 	local loot_value = nil
@@ -500,7 +500,7 @@ function LootManager:get_real_total_loot_value()
 	return value
 end
 
--- Lines 465-480
+-- Lines 686-701
 function LootManager:get_real_total_small_loot_value()
 	local value = 0
 	local loot_value = nil
@@ -522,7 +522,7 @@ function LootManager:get_real_total_small_loot_value()
 	return value
 end
 
--- Lines 483-490
+-- Lines 704-711
 function LootManager:set_postponed_small_loot()
 	self._global.postponed_small_loot = {}
 
@@ -533,7 +533,7 @@ function LootManager:set_postponed_small_loot()
 	end
 end
 
--- Lines 492-503
+-- Lines 713-724
 function LootManager:get_real_total_postponed_small_loot_value()
 	if not self._global.postponed_small_loot then
 		return 0
@@ -548,12 +548,12 @@ function LootManager:get_real_total_postponed_small_loot_value()
 	return value
 end
 
--- Lines 505-507
+-- Lines 726-728
 function LootManager:clear_postponed_small_loot()
 	self._global.postponed_small_loot = nil
 end
 
--- Lines 511-519
+-- Lines 732-740
 function LootManager:total_value_by_carry_id(carry_id)
 	local value = 0
 
@@ -566,7 +566,7 @@ function LootManager:total_value_by_carry_id(carry_id)
 	return value
 end
 
--- Lines 521-529
+-- Lines 742-750
 function LootManager:total_small_loot_value()
 	local value = 0
 
@@ -579,7 +579,7 @@ function LootManager:total_small_loot_value()
 	return value
 end
 
--- Lines 531-544
+-- Lines 752-765
 function LootManager:total_value_by_type(type)
 	if not tweak_data.carry.types[type] then
 		Application:error("Carry type", type, "doesn't exists!")
@@ -598,7 +598,7 @@ function LootManager:total_value_by_type(type)
 	return value
 end
 
--- Lines 548-554
+-- Lines 769-775
 function LootManager:get_loot_stinger()
 	local job_tweak = tweak_data.narrative.jobs[managers.job:current_real_job_id()]
 
@@ -609,7 +609,7 @@ function LootManager:get_loot_stinger()
 	return "stinger_objectivecomplete"
 end
 
--- Lines 556-574
+-- Lines 777-795
 function LootManager:_present(carry_id, multiplier)
 	local real_value = 0
 	local is_small_loot = not not tweak_data.carry.small_loot[carry_id]
@@ -638,12 +638,12 @@ function LootManager:_present(carry_id, multiplier)
 	})
 end
 
--- Lines 579-581
+-- Lines 800-816
 function LootManager:sync_save(data)
 	data.LootManager = clone(self._global)
 end
 
--- Lines 584-593
+-- Lines 819-838
 function LootManager:sync_load(data)
 	self._global = data.LootManager
 	Global.loot_manager = self._global

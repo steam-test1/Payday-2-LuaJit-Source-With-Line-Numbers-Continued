@@ -44,7 +44,7 @@ function ElementPlayerState:on_executed(instigator, alternative, skip_execute_on
 	ElementPlayerState.super.on_executed(self, self._unit or instigator, alternative, skip_execute_on_executed, sync_id_from)
 end
 
--- Lines 61-86
+-- Lines 61-89
 function ElementPlayerState:set_state(instigator)
 	local state = self._values.state
 	local player_unit = managers.player:player_unit()
@@ -59,7 +59,7 @@ function ElementPlayerState:set_state(instigator)
 		end
 	end
 
-	if (not self._values.use_instigator or instigator == player_unit) and (not requires_alive_player or alive(player_unit)) then
+	if (not self._values.use_instigator or instigator and player_unit and instigator == player_unit) and (not requires_alive_player or alive(player_unit)) then
 		if self._values.state ~= "none" then
 			managers.player:set_player_state(state)
 		elseif Application:editor() then
@@ -70,26 +70,26 @@ end
 
 ElementPlayerStateTrigger = ElementPlayerStateTrigger or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines 92-94
+-- Lines 95-97
 function ElementPlayerStateTrigger:init(...)
 	ElementPlayerStateTrigger.super.init(self, ...)
 end
 
--- Lines 96-98
+-- Lines 99-101
 function ElementPlayerStateTrigger:on_script_activated()
 	managers.player:add_listener(self._id, {
 		self._values.state
 	}, callback(self, self, Network:is_client() and "send_to_host" or "on_executed"))
 end
 
--- Lines 100-104
+-- Lines 103-107
 function ElementPlayerStateTrigger:send_to_host(instigator)
 	if instigator then
 		managers.network:session():send_to_host("to_server_mission_element_trigger", self._id, instigator)
 	end
 end
 
--- Lines 106-112
+-- Lines 109-115
 function ElementPlayerStateTrigger:on_executed(instigator)
 	if not self._values.enabled then
 		return

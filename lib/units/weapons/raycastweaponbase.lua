@@ -3492,18 +3492,30 @@ end
 
 ConcussiveInstantBulletBase = ConcussiveInstantBulletBase or class(InstantBulletBase)
 
--- Lines 4023-4064
+-- Lines 4025-4108
 function ConcussiveInstantBulletBase:give_impact_damage(col_ray, weapon_unit, user_unit, damage, ...)
 	if col_ray.unit:character_damage().on_concussion then
 		local conc_tweak = alive(weapon_unit) and weapon_unit:base().concussion_tweak and weapon_unit:base():concussion_tweak()
 		local conc_mul = conc_tweak and conc_tweak.mul or tweak_data.character.concussion_multiplier
 		local sound_tweak = conc_tweak and conc_tweak.sound_duration
 		local sound_eff_mul = sound_tweak and sound_tweak.mul or 0.3
+		local falloff_mul = 1
+		local conc_distance = conc_tweak and conc_tweak.distance_max or 1500
+		local ray_distance = mvector3.distance(weapon_unit:position(), col_ray.unit:movement():m_head_pos())
+		falloff_mul = math.min(conc_mul * conc_distance / ray_distance, conc_tweak.mul_max or 1)
 
-		managers.environment_controller:set_concussion_grenade(col_ray.unit:movement():m_head_pos(), true, 0, 0, conc_mul, true, true)
-		col_ray.unit:character_damage():on_concussion(sound_eff_mul, false, sound_tweak)
+		if falloff_mul > 0 then
+			sound_eff_mul = sound_eff_mul * falloff_mul
+			conc_mul = conc_mul * falloff_mul
+			local temp_pos = Vector3(0, 0, 0)
+
+			mvector3.set(temp_pos, col_ray.unit:movement():m_head_pos())
+			mvector3.set_z(temp_pos, temp_pos.z + 300 - conc_mul)
+			managers.environment_controller:set_concussion_grenade(temp_pos, false, 0, 0, conc_mul, true, true)
+			col_ray.unit:character_damage():on_concussion(sound_eff_mul, false, sound_tweak)
+		end
 	elseif Network:is_server() and col_ray.unit:character_damage().stun_hit then
-		-- Lines 4035-4049
+		-- Lines 4072-4092
 		local function can_stun(hit_unit)
 			local brain_ext = hit_unit:brain()
 

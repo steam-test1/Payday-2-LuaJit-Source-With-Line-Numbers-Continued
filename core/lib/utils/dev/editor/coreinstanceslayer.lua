@@ -1354,7 +1354,7 @@ function InstancesLayer:set_instance_visible(instance_name, visible)
 	end
 end
 
--- Lines 1275-1283
+-- Lines 1275-1295
 function InstancesLayer:_create_overlay_gui()
 	if self._workspace then
 		Overlay:newgui():destroy_workspace(self._workspace)
@@ -1364,15 +1364,22 @@ function InstancesLayer:_create_overlay_gui()
 
 	self._workspace:hide()
 
+	self._colors = {}
+
+	for i = 0, 100 do
+		table.insert(self._colors, math.rand_color(0.4, 0.6))
+	end
+
+	local height = 10
 	self._gui_panel = self._workspace:panel():panel({
 		halign = "scale",
 		valign = "scale",
-		h = 16,
-		y = self._workspace:panel():h() - 16
+		y = self._workspace:panel():h() - height,
+		h = height
 	})
 end
 
--- Lines 1285-1314
+-- Lines 1297-1334
 function InstancesLayer:_update_overlay_gui()
 	self._gui_panel:clear()
 	self._gui_panel:rect({
@@ -1381,41 +1388,38 @@ function InstancesLayer:_update_overlay_gui()
 		color = Color.black
 	})
 
-	if #self._selected_instances > 0 then
-		for idx, instance_data in ipairs(self._selected_instances) do
-			local tot_w = self._workspace:panel():w()
-			local tot_indices = 70000
-			local start_indices, end_indices = managers.world_instance:get_used_indices(managers.editor:current_continent():name())
+	local instance_data = self._selected_instance and self._selected_instance:data()
+	local tot_w = self._workspace:panel():w()
+	local tot_indices = 70000
+	local start_indices, end_indices = managers.world_instance:get_used_indices(managers.editor:current_continent():name())
 
-			for i, start_index in ipairs(start_indices) do
-				local x = start_index * tot_w / tot_indices
-				local w = end_indices[i] * tot_w / tot_indices - x
+	for i, start_index in ipairs(start_indices) do
+		local x = start_index * tot_w / tot_indices
+		local w = end_indices[i] * tot_w / tot_indices - x
 
-				self._gui_panel:rect({
-					layer = 2,
-					x = x,
-					w = w,
-					color = Color.green
-				})
-			end
+		self._gui_panel:rect({
+			layer = 2,
+			x = math.max(x, 1),
+			w = math.max(w, 1),
+			color = self._colors[i % #self._colors]
+		})
+	end
 
-			if instance_data.data then
-				local x = instance_data.data.start_index * tot_w / tot_indices
-				local w = instance_data.data.index_size * tot_w / tot_indices
-				local col = idx == 1 and Color.blue or Color.yellow
+	if instance_data then
+		local x = instance_data.start_index * tot_w / tot_indices
+		local w = instance_data.index_size * tot_w / tot_indices
 
-				self._gui_panel:rect({
-					layer = 3,
-					x = x,
-					w = w,
-					color = col
-				})
-			end
-		end
+		self._gui_panel:rect({
+			layer = 3,
+			x = math.max(x, 1),
+			w = math.max(w, 1),
+			h = self._gui_panel:h() / 4,
+			color = Color.white
+		})
 	end
 end
 
--- Lines 1340-1354
+-- Lines 1360-1374
 function InstancesLayer:on_simulation_started()
 	self._stashed_instance_units = {}
 
@@ -1434,7 +1438,7 @@ function InstancesLayer:on_simulation_started()
 	end
 end
 
--- Lines 1356-1361
+-- Lines 1376-1381
 function InstancesLayer:update_unit_settings(...)
 	InstancesLayer.super.update_unit_settings(self, ...)
 
@@ -1443,7 +1447,7 @@ function InstancesLayer:update_unit_settings(...)
 	end
 end
 
--- Lines 1363-1368
+-- Lines 1383-1388
 function InstancesLayer:activate()
 	InstancesLayer.super.activate(self)
 
@@ -1452,7 +1456,7 @@ function InstancesLayer:activate()
 	end
 end
 
--- Lines 1370-1376
+-- Lines 1390-1396
 function InstancesLayer:deactivate()
 	self._stashed_instance_units = {}
 
@@ -1463,7 +1467,7 @@ function InstancesLayer:deactivate()
 	end
 end
 
--- Lines 1378-1383
+-- Lines 1398-1403
 function InstancesLayer:add_triggers()
 	local vc = self._editor_data.virtual_controller
 
@@ -1471,12 +1475,12 @@ function InstancesLayer:add_triggers()
 	InstancesLayer.super.add_triggers(self)
 end
 
--- Lines 1385-1387
+-- Lines 1405-1407
 function InstancesLayer:selected_amount_string()
 	return string.format("Selected %s: %i", self._save_name, #self._selected_instances)
 end
 
--- Lines 1389-1401
+-- Lines 1409-1421
 function InstancesLayer:clear()
 	self._stashed_instance_units = {}
 	self._selected_instance = nil
@@ -1490,50 +1494,50 @@ end
 
 Reference = Reference or class()
 
--- Lines 1404-1407
+-- Lines 1424-1427
 function Reference:init(pos, rot)
 	self._pos = pos
 	self._rot = rot
 end
 
--- Lines 1408-1410
+-- Lines 1428-1430
 function Reference:position()
 	return self._pos
 end
 
--- Lines 1411-1413
+-- Lines 1431-1433
 function Reference:rotation()
 	return self._rot
 end
 
 Instance = Instance or class()
 
--- Lines 1416-1418
+-- Lines 1436-1438
 function Instance:init(data)
 	self._data = data
 end
 
--- Lines 1419-1421
+-- Lines 1439-1441
 function Instance:name()
 	return self._data.name
 end
 
--- Lines 1422-1424
+-- Lines 1442-1444
 function Instance:alive()
 	return true
 end
 
--- Lines 1425-1427
+-- Lines 1445-1447
 function Instance:data()
 	return self._data
 end
 
--- Lines 1428-1430
+-- Lines 1448-1450
 function Instance:position()
 	return self._data.position or Vector3()
 end
 
--- Lines 1431-1433
+-- Lines 1451-1453
 function Instance:rotation()
 	return self._data.rotation or Rotation()
 end

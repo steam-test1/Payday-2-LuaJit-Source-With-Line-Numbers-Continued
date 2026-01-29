@@ -1503,7 +1503,7 @@ function Layer:create_unit(name, pos, rot, to_continent_name, prefered_id)
 	return unit
 end
 
--- Lines 1401-1503
+-- Lines 1401-1505
 function Layer:check_unit_dependencies(unit_name)
 	-- Lines 1402-1404
 	local function remove_whitespace(str)
@@ -1616,12 +1616,14 @@ function Layer:check_unit_dependencies(unit_name)
 
 	for key, value in pairs(depended_effects) do
 		if value == false then
-			error("Missing effect dependency " .. key .. " on unit " .. unit_name:s() .. ".unit")
+			EWS:message_box(Global.frame_panel, "Missing effect dependency:\n" .. key .. "\nIn unit:\n" .. unit_name:s() .. ".unit\n\nFix this dependency issue before using this unit!", "Continent", "OK,ICON_QUESTION", Vector3(-1, -1, 0))
+
+			return
 		end
 	end
 end
 
--- Lines 1508-1541
+-- Lines 1510-1543
 function Layer:do_spawn_unit(name, pos, rot, to_continent_name, prevent_undo, prefered_id)
 	if Application:editor() and name:s() ~= "" then
 		self:check_unit_dependencies(name)
@@ -1654,7 +1656,7 @@ function Layer:do_spawn_unit(name, pos, rot, to_continent_name, prevent_undo, pr
 	end
 end
 
--- Lines 1544-1557
+-- Lines 1546-1559
 function Layer:remove_unit(unit)
 	table.delete(self._selected_units, unit)
 	self:remove_highlighted_unit(unit)
@@ -1670,7 +1672,7 @@ function Layer:remove_unit(unit)
 	World:delete_unit(unit)
 end
 
--- Lines 1559-1567
+-- Lines 1561-1569
 function Layer:delete_unit(unit, prevent_undo)
 	local command = CoreEditorCommand.DeleteStaticUnitCommand:new(self)
 
@@ -1681,11 +1683,11 @@ function Layer:delete_unit(unit, prevent_undo)
 	end
 end
 
--- Lines 1570-1571
+-- Lines 1572-1573
 function Layer:_on_unit_created(unit)
 end
 
--- Lines 1574-1581
+-- Lines 1576-1583
 function Layer:show_replace_units()
 	if self:ctrl() or self:shift() or self:alt() then
 		return
@@ -1696,7 +1698,7 @@ function Layer:show_replace_units()
 	end
 end
 
--- Lines 1584-1595
+-- Lines 1586-1597
 function Layer:get_created_unit_by_pattern(patterns)
 	local units = {}
 
@@ -1711,7 +1713,7 @@ function Layer:get_created_unit_by_pattern(patterns)
 	return units
 end
 
--- Lines 1597-1608
+-- Lines 1599-1610
 function Layer:add_triggers()
 	local vc = self._editor_data.virtual_controller
 
@@ -1725,31 +1727,31 @@ function Layer:add_triggers()
 	vc:add_trigger(Idstring("center_view_on_selected_unit"), callback(self, self, "on_center_view_on_selected_unit"))
 end
 
--- Lines 1610-1612
+-- Lines 1612-1614
 function Layer:clear_triggers()
 	self._editor_data.virtual_controller:clear_triggers()
 end
 
--- Lines 1614-1616
+-- Lines 1616-1618
 function Layer:get_help(text)
 	return text .. "No help Available"
 end
 
--- Lines 1618-1620
+-- Lines 1620-1622
 function Layer:clone()
 	cat_debug("editor", "No clone implemented in current layer")
 end
 
--- Lines 1622-1623
+-- Lines 1624-1625
 function Layer:_cloning_done()
 end
 
--- Lines 1626-1628
+-- Lines 1628-1630
 function Layer:on_center_view_on_selected_unit()
 	managers.editor:center_view_on_unit(self:selected_unit())
 end
 
--- Lines 1630-1646
+-- Lines 1632-1648
 function Layer:on_clone_edited_values()
 	if self:ctrl() then
 		return
@@ -1770,7 +1772,7 @@ function Layer:on_clone_edited_values()
 	end
 end
 
--- Lines 1649-1726
+-- Lines 1651-1728
 function Layer:clone_edited_values(unit, source)
 	if unit:name() ~= source:name() then
 		return
@@ -1861,7 +1863,7 @@ function Layer:clone_edited_values(unit, source)
 	end
 end
 
--- Lines 1729-1735
+-- Lines 1731-1737
 function Layer:_continent_locked(unit)
 	local continent = unit:unit_data().continent
 
@@ -1872,7 +1874,7 @@ function Layer:_continent_locked(unit)
 	return unit:unit_data().continent:value("locked")
 end
 
--- Lines 1738-1746
+-- Lines 1740-1748
 function Layer:set_enabled(enabled)
 	self._layer_enabled = enabled
 
@@ -1885,22 +1887,22 @@ function Layer:set_enabled(enabled)
 	return true
 end
 
--- Lines 1749-1751
+-- Lines 1751-1753
 function Layer:hide_all()
 	self:_hide_units(self._created_units, true)
 end
 
--- Lines 1754-1756
+-- Lines 1756-1758
 function Layer:unhide_all()
 	self:_hide_units(self._created_units, false)
 end
 
--- Lines 1759-1761
+-- Lines 1761-1763
 function Layer:on_hide_selected()
 	self:_hide_units(_G.clone(self:selected_units()), true)
 end
 
--- Lines 1764-1768
+-- Lines 1766-1770
 function Layer:_hide_units(units, hide)
 	local hide_command = CoreEditorCommand.HideUnitsCommand:new(self)
 
@@ -1908,7 +1910,7 @@ function Layer:_hide_units(units, hide)
 	managers.editor:register_undo_command(hide_command)
 end
 
--- Lines 1770-1786
+-- Lines 1772-1788
 function Layer:clear()
 	for _, unit in ipairs(self._created_units) do
 		if alive(unit) then
@@ -1930,7 +1932,7 @@ function Layer:clear()
 	end
 end
 
--- Lines 1789-1801
+-- Lines 1791-1803
 function Layer:set_unit_name(units)
 	local i = units:selected_item()
 
@@ -1950,7 +1952,7 @@ function Layer:set_unit_name(units)
 	end
 end
 
--- Lines 1804-1811
+-- Lines 1806-1813
 function Layer:get_real_name(name)
 	local fs = " %*"
 
@@ -1962,52 +1964,52 @@ function Layer:get_real_name(name)
 	return name
 end
 
--- Lines 1812-1814
+-- Lines 1814-1816
 function Layer:condition()
 	return managers.editor:conditions() or self._using_widget
 end
 
--- Lines 1815-1817
+-- Lines 1817-1819
 function Layer:grab()
 	return self._grab
 end
 
--- Lines 1818-1819
+-- Lines 1820-1821
 function Layer:create_marker()
 end
 
--- Lines 1820-1821
+-- Lines 1822-1823
 function Layer:use_marker()
 end
 
--- Lines 1824-1825
+-- Lines 1826-1827
 function Layer:on_continent_changed()
 end
 
--- Lines 1828-1829
+-- Lines 1830-1831
 function Layer:set_unit_rotations(rot, finalize)
 end
 
--- Lines 1832-1833
+-- Lines 1834-1835
 function Layer:set_unit_positions(pos, finalize)
 end
 
--- Lines 1837-1838
+-- Lines 1839-1840
 function Layer:_add_project_save_data(data)
 end
 
--- Lines 1842-1843
+-- Lines 1844-1845
 function Layer:_add_project_unit_save_data(unit, data)
 end
 
--- Lines 1845-1847
+-- Lines 1847-1849
 function Layer:selected_amount_string()
 	return "Selected " .. self._save_name .. ": " .. #self._selected_units
 end
 
 local idstring_wpn = Idstring("wpn")
 
--- Lines 1850-1870
+-- Lines 1852-1872
 function Layer:save()
 	for _, unit in ipairs(self._created_units) do
 		local unit_data = unit:unit_data()
@@ -2035,7 +2037,7 @@ function Layer:save()
 	end
 end
 
--- Lines 1872-1922
+-- Lines 1874-1924
 function Layer:test_spawn(type)
 	local pos = Vector3()
 	local rot = Rotation()
@@ -2093,17 +2095,17 @@ function Layer:test_spawn(type)
 	print("DONE")
 end
 
--- Lines 1924-1926
+-- Lines 1926-1928
 function Layer:shift()
 	return CoreInput.shift()
 end
 
--- Lines 1927-1929
+-- Lines 1929-1931
 function Layer:ctrl()
 	return CoreInput.ctrl()
 end
 
--- Lines 1930-1932
+-- Lines 1932-1934
 function Layer:alt()
 	return CoreInput.alt()
 end

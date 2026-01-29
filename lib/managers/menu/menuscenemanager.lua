@@ -4642,7 +4642,7 @@ function MenuSceneManager:start_open_economy_safe()
 	return false
 end
 
--- Lines 4616-4658
+-- Lines 4616-4634
 function MenuSceneManager:_load_economy_safe(safe_entry, ready_clbk)
 	self:_destroy_economy_safe()
 
@@ -4675,7 +4675,7 @@ function MenuSceneManager:_load_economy_safe(safe_entry, ready_clbk)
 	managers.blackmarket:load_economy_safe(safe_entry, self._safe_scene_data)
 end
 
--- Lines 4660-4665
+-- Lines 4636-4641
 function MenuSceneManager:_clbk_safe_unit_loaded(safe_data_param)
 	print("A: SAFE LOADED", Application:time())
 
@@ -4684,7 +4684,7 @@ function MenuSceneManager:_clbk_safe_unit_loaded(safe_data_param)
 	self:_check_safe_data_ready()
 end
 
--- Lines 4667-4672
+-- Lines 4643-4648
 function MenuSceneManager:_clbk_drill_unit_loaded(drill_data_param)
 	print("A: DRILL LOADED", Application:time())
 
@@ -4693,7 +4693,7 @@ function MenuSceneManager:_clbk_drill_unit_loaded(drill_data_param)
 	self:_check_safe_data_ready()
 end
 
--- Lines 4674-4678
+-- Lines 4650-4654
 function MenuSceneManager:_clbk_saferoom_unit_loaded(saferoom_data)
 	print("A: SAFEROOM LOADED", Application:time())
 
@@ -4702,10 +4702,8 @@ function MenuSceneManager:_clbk_saferoom_unit_loaded(saferoom_data)
 	self:_check_safe_data_ready()
 end
 
--- Lines 4680-4698
+-- Lines 4656-4670
 function MenuSceneManager:_check_safe_data_loaded()
-	print(inspect(self._safe_scene_data))
-
 	if not self._safe_scene_data.drill_data.ready then
 		return false
 	end
@@ -4721,14 +4719,14 @@ function MenuSceneManager:_check_safe_data_loaded()
 	return true
 end
 
--- Lines 4700-4704
+-- Lines 4672-4678
 function MenuSceneManager:_check_safe_data_ready()
 	if self:_check_safe_data_loaded() and self._safe_scene_data.ready_clbk then
 		self._safe_scene_data.ready_clbk()
 	end
 end
 
--- Lines 4707-4714
+-- Lines 4681-4688
 function MenuSceneManager:_calc_angles()
 	local cx = 200
 	local cy = 100
@@ -4739,12 +4737,12 @@ function MenuSceneManager:_calc_angles()
 	return math.rad(spin), math.rad(tilt)
 end
 
--- Lines 4716-4718
+-- Lines 4690-4692
 function MenuSceneManager:_scene_offset_from_camera()
 	return Vector3(0, 600, -80)
 end
 
--- Lines 4720-4729
+-- Lines 4694-4702
 function MenuSceneManager:_create_economy_safe_scene()
 	local pos = self._scene_templates.safe.camera_pos + self:_scene_offset_from_camera()
 	self._economy_safe = World:spawn_unit(self._safe_scene_data.safe_data.safe_name, pos)
@@ -4754,14 +4752,14 @@ function MenuSceneManager:_create_economy_safe_scene()
 	self:_start_safe_drill_sequence()
 end
 
--- Lines 4733-4743
+-- Lines 4706-4716
 function MenuSceneManager:_safe_result_recieved(error, items_new, items_removed)
 	local load_start_time = Application:time()
 	local result = items_new[1]
 
 	print("B: RESULT RECIEVED", result.weapon_skin, Application:time())
 
-	-- Lines 4737-4741
+	-- Lines 4710-4714
 	local function ready_clbk()
 		local min_time_left = math.max(3 - (Application:time() - load_start_time), 0)
 
@@ -4772,7 +4770,7 @@ function MenuSceneManager:_safe_result_recieved(error, items_new, items_removed)
 	self:load_safe_result_content(result, ready_clbk)
 end
 
--- Lines 4746-4811
+-- Lines 4719-4782
 function MenuSceneManager:load_safe_result_content(result, ready_clbk)
 	local item_data = (tweak_data.economy[result.category] or tweak_data.blackmarket[result.category])[result.entry]
 	self._safe_result_content_data = {
@@ -4828,7 +4826,7 @@ function MenuSceneManager:load_safe_result_content(result, ready_clbk)
 	end
 end
 
--- Lines 4813-4817
+-- Lines 4784-4788
 function MenuSceneManager:_set_safe_result_ready_flag(flag)
 	print("B: RESULT CONTENT LOADED", Application:time(), flag)
 
@@ -4837,7 +4835,7 @@ function MenuSceneManager:_set_safe_result_ready_flag(flag)
 	self:_check_safe_result_content_loaded()
 end
 
--- Lines 4819-4825
+-- Lines 4790-4796
 function MenuSceneManager:_safe_result_parts_loaded(part, blueprint)
 	print("B: RESULT WEAPON PARTS LOADED", Application:time())
 
@@ -4847,7 +4845,7 @@ function MenuSceneManager:_safe_result_parts_loaded(part, blueprint)
 	self:_check_safe_result_content_loaded()
 end
 
--- Lines 4827-4832
+-- Lines 4798-4803
 function MenuSceneManager:_safe_open_minimum_time()
 	print("B: SAFE OPEN MINIMUM TIME", Application:time())
 
@@ -4856,7 +4854,7 @@ function MenuSceneManager:_safe_open_minimum_time()
 	self:_check_safe_result_content_loaded()
 end
 
--- Lines 4834-4846
+-- Lines 4805-4817
 function MenuSceneManager:_check_safe_result_content_loaded()
 	for flag, ready in pairs(self._safe_result_content_data.ready_flags) do
 		if not ready then
@@ -4871,7 +4869,7 @@ function MenuSceneManager:_check_safe_result_content_loaded()
 	end
 end
 
--- Lines 4850-4858
+-- Lines 4821-4829
 function MenuSceneManager:create_safe_content(created_clbk)
 	if self._safe_shake_transition then
 		self._safe_shake_transition.target_speed = 0.5
@@ -4883,12 +4881,12 @@ function MenuSceneManager:create_safe_content(created_clbk)
 	self._economy_safe:damage():add_trigger_callback("create_safe_result", callback(self, self, "_create_safe_result_trigger", created_clbk))
 end
 
--- Lines 4860-4862
+-- Lines 4831-4833
 function MenuSceneManager:_create_safe_result_trigger(created_clbk)
 	self:add_callback(callback(self, self, "_create_safe_result", created_clbk), 0.1, nil)
 end
 
--- Lines 4864-4910
+-- Lines 4835-4881
 function MenuSceneManager:_create_safe_result(created_clbk)
 	if self._safe_scene_destroyed then
 		return
@@ -4940,7 +4938,7 @@ function MenuSceneManager:_create_safe_result(created_clbk)
 	managers.menu:set_cash_safe_scene_done(true)
 end
 
--- Lines 4912-4917
+-- Lines 4883-4888
 function MenuSceneManager:_start_safe_explosion_blur()
 	self._safe_explosion_blur = {
 		max_value = Vector3(0, 1, 4),
@@ -4949,22 +4947,22 @@ function MenuSceneManager:_start_safe_explosion_blur()
 	}
 end
 
--- Lines 4919-4921
+-- Lines 4890-4892
 function MenuSceneManager:_start_safe_drill_sequence()
 	self._economy_drill:damage():run_sequence_simple("anim_start_drilling")
 end
 
--- Lines 4923-4925
+-- Lines 4894-4896
 function MenuSceneManager:_push_through_safe_drill_sequence()
 	self._economy_drill:damage():run_sequence_simple("anim_push_through")
 end
 
--- Lines 4927-4929
+-- Lines 4898-4900
 function MenuSceneManager:_done_safe_drill_sequence()
 	self._economy_drill:damage():run_sequence_simple("anim_fall_off")
 end
 
--- Lines 4931-4936
+-- Lines 4902-4907
 function MenuSceneManager:_open_safe_sequence()
 	local rarity = self._safe_result_content_data.item_data.rarity
 
@@ -4975,7 +4973,7 @@ function MenuSceneManager:_open_safe_sequence()
 	self._economy_safe:damage():run_sequence_simple(sequence)
 end
 
--- Lines 4938-4973
+-- Lines 4909-4944
 function MenuSceneManager:_destroy_economy_safe()
 	if alive(self._economy_safe) then
 		local old_name = self._economy_safe:name()
@@ -5020,77 +5018,77 @@ function MenuSceneManager:_destroy_economy_safe()
 	managers.blackmarket:release_preloaded_category("economy_safe")
 end
 
--- Lines 4975-4985
+-- Lines 4946-4956
 function MenuSceneManager:set_blackmarket_tradable_loaded()
 end
 
--- Lines 4987-4989
+-- Lines 4958-4960
 function MenuSceneManager:get_character_unit()
 	return self._character_unit
 end
 
--- Lines 4991-4993
+-- Lines 4962-4964
 function MenuSceneManager:is_character_posing()
 	return self._use_character_grab or self._use_character_grab2
 end
 
--- Lines 4995-4997
+-- Lines 4966-4968
 function MenuSceneManager:is_gun_interactable()
 	return self._use_item_grab
 end
 
--- Lines 5001-5004
+-- Lines 4972-4975
 function MenuSceneManager:preview_character_skin(skin_id, unit, clbks)
 	unit = unit or self._character_unit
 
 	self:set_character_armor_skin(skin_id, unit)
 end
 
--- Lines 5006-5008
+-- Lines 4977-4979
 function MenuSceneManager:get_character_armor_skin(unit)
 	return (unit or self._character_unit):base():armor_skin_id()
 end
 
--- Lines 5013-5016
+-- Lines 4984-4987
 function MenuSceneManager:preview_player_style(player_style, material_variation, unit, clbks)
 	unit = unit or self._character_unit
 
 	self:set_character_player_style(player_style, material_variation or managers.blackmarket:get_suit_variation(player_style), unit)
 end
 
--- Lines 5018-5020
+-- Lines 4989-4991
 function MenuSceneManager:get_player_style(unit)
 	return (unit or self._character_unit):base():player_style()
 end
 
--- Lines 5022-5024
+-- Lines 4993-4995
 function MenuSceneManager:get_suit_variation(unit)
 	return (unit or self._character_unit):base():suit_variation()
 end
 
--- Lines 5028-5031
+-- Lines 4999-5002
 function MenuSceneManager:preview_gloves(glove_id, unit, clbks)
 	unit = unit or self._character_unit
 
 	self:set_character_gloves(glove_id, unit)
 end
 
--- Lines 5033-5035
+-- Lines 5004-5006
 function MenuSceneManager:get_glove_id(unit)
 	return (unit or self._character_unit):base():glove_id()
 end
 
--- Lines 5042-5044
+-- Lines 5013-5015
 function MenuSceneManager:get_character_name(unit)
 	return (unit or self._character_unit):base():character_name()
 end
 
--- Lines 5046-5048
+-- Lines 5017-5019
 function MenuSceneManager:get_character_armor(unit)
 	return (unit or self._character_unit):base():armor_id()
 end
 
--- Lines 5050-5054
+-- Lines 5021-5025
 function MenuSceneManager:destroy()
 	if self._vp then
 		self._vp:destroy()

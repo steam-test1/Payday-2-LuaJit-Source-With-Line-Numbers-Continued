@@ -2123,7 +2123,7 @@ function CustomSafehouseTweakData:_init_map(tweak_data)
 	}
 end
 
--- Lines 2227-2317
+-- Lines 2227-2362
 function CustomSafehouseTweakData:_init_uno()
 	self.uno_achievements_pool = {
 		"armored_1",
@@ -2183,6 +2183,22 @@ function CustomSafehouseTweakData:_init_uno()
 		"uno_8",
 		"uno_9",
 		"wwh_9"
+	}
+	self.uno_achievements_pool_ip = {
+		berry = {
+			"berry_2",
+			"jerry_4"
+		},
+		mad = {
+			"cac_13"
+		},
+		spa = {
+			"fish_5",
+			"spa_5"
+		},
+		rvd = {
+			"rvd_11"
+		}
 	}
 	self.uno_notes = "07729e9e9633c57e"
 	self.uno_door_riddles = {
