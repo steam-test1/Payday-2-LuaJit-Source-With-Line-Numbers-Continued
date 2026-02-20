@@ -676,8 +676,10 @@ function NetworkAccountSTEAM:_chk_inventory_outfit_refresh()
 	self:_inventory_outfit_refresh()
 end
 
--- Lines 766-772
+-- Lines 766-774
 function NetworkAccountSTEAM:inventory_outfit_verify(steam_id, outfit_data, outfit_callback)
+	print("[NetworkAccountSTEAM:inventory_outfit_verify]", steam_id, "/", outfit_data, "/", outfit_callback)
+
 	if outfit_data == "" then
 		return outfit_callback and outfit_callback(nil, false, {})
 	end
@@ -685,12 +687,12 @@ function NetworkAccountSTEAM:inventory_outfit_verify(steam_id, outfit_data, outf
 	Steam:inventory_signature_verify(steam_id, outfit_data, outfit_callback)
 end
 
--- Lines 774-776
+-- Lines 776-778
 function NetworkAccountSTEAM:inventory_outfit_signature()
 	return self._outfit_signature
 end
 
--- Lines 778-796
+-- Lines 780-798
 function NetworkAccountSTEAM:_on_item_converted(error, items_new, items_removed)
 	if not error then
 		managers.blackmarket:tradable_exchange(items_new, items_removed)
@@ -712,7 +714,7 @@ function NetworkAccountSTEAM:_on_item_converted(error, items_new, items_removed)
 	end
 end
 
--- Lines 798-827
+-- Lines 800-829
 function NetworkAccountSTEAM:inventory_repair_list(list)
 	if list then
 		self._inventory_is_converting_items = 0
@@ -749,7 +751,7 @@ function NetworkAccountSTEAM:inventory_repair_list(list)
 	end
 end
 
--- Lines 829-851
+-- Lines 831-853
 function NetworkAccountSTEAM:_clbk_inventory_load(error, list)
 	print("[NetworkAccountSTEAM:_clbk_inventory_load]", "error: ", error, "list: ", list)
 
@@ -774,7 +776,7 @@ function NetworkAccountSTEAM:_clbk_inventory_load(error, list)
 	end
 end
 
--- Lines 853-870
+-- Lines 855-872
 function NetworkAccountSTEAM:_clbk_tradable_outfit_data(error, outfit_signature)
 	print("[NetworkAccountSTEAM:_clbk_tradable_outfit_data] error: ", error, ", self._outfit_signature: ", self._outfit_signature, "\n outfit_signature: ", outfit_signature, "\n")
 
@@ -795,7 +797,7 @@ function NetworkAccountSTEAM:_clbk_tradable_outfit_data(error, outfit_signature)
 	end
 end
 
--- Lines 873-893
+-- Lines 875-895
 function NetworkAccountSTEAM:_on_drill_converted(data, error, items_new, items_removed)
 	local drills_to_convert, instance_id = unpack(data)
 	drills_to_convert[instance_id] = nil
@@ -819,7 +821,7 @@ function NetworkAccountSTEAM:_on_drill_converted(data, error, items_new, items_r
 	end
 end
 
--- Lines 895-927
+-- Lines 897-929
 function NetworkAccountSTEAM:convert_drills_to_safes(list)
 	if not list then
 		return
@@ -857,7 +859,7 @@ function NetworkAccountSTEAM:convert_drills_to_safes(list)
 	end
 end
 
--- Lines 930-1049
+-- Lines 932-1051
 function NetworkAccountSTEAM.output_global_stats(file)
 	local num_days = 100
 	local sa = Steam:sa_handler()
@@ -871,7 +873,7 @@ function NetworkAccountSTEAM.output_global_stats(file)
 	invalid[51] = 1
 	invalid[57] = 1
 
-	-- Lines 946-968
+	-- Lines 948-970
 	local function get_lvl_stat(diff, heist, stat, i)
 		if i == 0 then
 			local st = NetworkAccountSTEAM.lb_levels[heist] .. ", " .. NetworkAccountSTEAM.lb_diffs[diff] .. " - "
@@ -896,7 +898,7 @@ function NetworkAccountSTEAM.output_global_stats(file)
 		return num
 	end
 
-	-- Lines 971-993
+	-- Lines 973-995
 	local function get_weapon_stat(weapon, stat, i)
 		if i == 0 then
 			local st = weapon .. " - "

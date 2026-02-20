@@ -2,7 +2,7 @@ local is_nextgen_console = SystemInfo:platform() == Idstring("PS4") or SystemInf
 local allow_halloween_lootdrop = is_nextgen_console
 allow_halloween_lootdrop = true
 
--- Lines 10-10575
+-- Lines 10-10574
 function BlackMarketTweakData:_init_masks(tweak_data)
 	self.masks = {
 		character_locked = {}
@@ -2113,6 +2113,15 @@ function BlackMarketTweakData:_init_masks(tweak_data)
 		dlc = "hlm2_deluxe",
 		value = 0,
 		type = "helmet"
+	}
+	self.masks.mega_richard_returns = {
+		unit = "units/pd2_dlc_hotline2/masks/mega_richard_returns/msk_mega_richard_returns",
+		texture_bundle_folder = "hlm2",
+		dlc = "hlm2_deluxe",
+		type = "helmet",
+		name_id = "bm_msk_mega_richard_returns",
+		value = 0,
+		pcs = {}
 	}
 	self.masks.simpson = {
 		unit = "units/pd2_dlc_cage/masks/simpson/msk_simpson",

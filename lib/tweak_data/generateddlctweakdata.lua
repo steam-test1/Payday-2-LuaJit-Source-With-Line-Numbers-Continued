@@ -1,4 +1,4 @@
--- Lines 3-1494
+-- Lines 3-1519
 function DLCTweakData:init_generated()
 	self.a10th_bundle = {
 		free = true,
@@ -557,6 +557,12 @@ function DLCTweakData:init_generated()
 			amount = 1
 		}
 	}
+	self.fun_bundle = {
+		free = true,
+		content = {}
+	}
+	self.fun_bundle.content.loot_global_value = "fun"
+	self.fun_bundle.content.loot_drops = {}
 	self.gdtp_bundle = {
 		dlc = "has_gdtp",
 		content = {}
@@ -798,6 +804,12 @@ function DLCTweakData:init_generated()
 			amount = 1
 		}
 	}
+	self.lic_bundle = {
+		free = true,
+		content = {}
+	}
+	self.lic_bundle.content.loot_global_value = "lic"
+	self.lic_bundle.content.loot_drops = {}
 	self.lrfo_bundle = {
 		dlc = "has_lrfo",
 		content = {}

@@ -769,7 +769,7 @@ function HUDLootScreenSkirmish:close()
 	self._backdrop = nil
 end
 
--- Lines 763-965
+-- Lines 763-966
 function HUDLootScreenSkirmish:_add_item_textures(lootdrop_data, panel)
 	local category = lootdrop_data.type_items
 	local item_id = lootdrop_data.item_entry
@@ -1017,7 +1017,7 @@ function HUDLootScreenSkirmish:_add_item_textures(lootdrop_data, panel)
 	end
 end
 
--- Lines 967-987
+-- Lines 968-988
 function HUDLootScreenSkirmish:_texture_loaded_clbk(params, texture_idstring)
 	local is_pattern = params.is_pattern
 	local panel = params.panel

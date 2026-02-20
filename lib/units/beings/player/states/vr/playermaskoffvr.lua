@@ -3,7 +3,7 @@ local __enter_default = PlayerMaskOff._enter
 local __exit_default = PlayerMaskOff.exit
 local __check_use_item_default = PlayerMaskOff._check_use_item
 
--- Lines 8-79
+-- Lines 8-47
 function PlayerMaskOffVR:_enter(enter_data)
 	__enter_default(self, enter_data)
 
@@ -21,42 +21,10 @@ function PlayerMaskOffVR:_enter(enter_data)
 	end
 
 	self._mask_unit = World:spawn_unit(Idstring(mask_unit_name), Vector3(0, 0, 0), Rotation(0, 0, 0))
-	local glass_id_string = Idstring("glass")
-	local mtr_hair_solid_id_string = Idstring("mtr_hair_solid")
-	local mtr_hair_effect_id_string = Idstring("mtr_hair_effect")
-	local mtr_bloom_glow_id_string = Idstring("mtr_bloom_glow")
-	local glow_id_strings = {}
-
-	for i = 1, 5 do
-		glow_id_strings[Idstring("glow" .. tostring(i)):key()] = true
-	end
-
-	local sweep_id_strings = {}
-
-	for i = 1, 5 do
-		sweep_id_strings[Idstring("sweep" .. tostring(i)):key()] = true
-	end
-
-	for _, material in ipairs(self._mask_unit:get_objects_by_type(Idstring("material"))) do
-		if material:name() == glass_id_string then
-			material:set_render_template(Idstring("opacity:CUBE_ENVIRONMENT_MAPPING:CUBE_FRESNEL:DIFFUSE_TEXTURE:FPS"))
-		elseif material:name() == mtr_hair_solid_id_string then
-			-- Nothing
-		elseif material:name() == mtr_hair_effect_id_string then
-			-- Nothing
-		elseif material:name() == mtr_bloom_glow_id_string then
-			material:set_render_template(Idstring("generic:DEPTH_SCALING:DIFFUSE_TEXTURE:SELF_ILLUMINATION:SELF_ILLUMINATION_BLOOM"))
-		elseif glow_id_strings[material:name():key()] then
-			material:set_render_template(Idstring("effect:BLEND_ADD:DIFFUSE0_TEXTURE"))
-		elseif sweep_id_strings[material:name():key()] then
-			material:set_render_template(Idstring("effect:BLEND_ADD:DIFFUSE0_TEXTURE:DIFFUSE0_THRESHOLD_SWEEP"))
-		else
-			material:set_render_template(Idstring("solid_mask:DEPTH_SCALING"))
-		end
-	end
 
 	if blueprint then
-		self._mask_unit:base():apply_blueprint(blueprint)
+		self._mask_unit:base():swap_to_fps()
+		self._mask_unit:base():apply_blueprint(blueprint, nil)
 	end
 
 	self._mask_unit:set_timer(managers.player:player_timer())
@@ -79,7 +47,7 @@ function PlayerMaskOffVR:_enter(enter_data)
 	managers.hud:belt():set_visible(false)
 end
 
--- Lines 81-103
+-- Lines 49-71
 function PlayerMaskOffVR:exit(state_data, new_state_name)
 	if alive(self._mask_unit) then
 		for _, linked_unit in ipairs(self._mask_unit:children()) do
@@ -106,7 +74,7 @@ function PlayerMaskOffVR:exit(state_data, new_state_name)
 	return exit_data
 end
 
--- Lines 107-129
+-- Lines 75-97
 function PlayerMaskOffVR:_check_use_item(t, input)
 	if input.btn_use_item_press then
 		local action_forbidden = self._use_item_expire_t or self:_changing_weapon() or self:_interacting()
@@ -137,23 +105,23 @@ end
 
 local __start_action_state_standard = PlayerMaskOff._start_action_state_standard
 
--- Lines 132-136
+-- Lines 100-104
 function PlayerMaskOffVR:_start_action_state_standard(...)
 	managers.hud:link_interaction_hud(self._unit:hand():mask_hand_unit())
 	__start_action_state_standard(self, ...)
 end
 
--- Lines 138-140
+-- Lines 106-108
 function PlayerMaskOffVR:_can_run()
 	return false
 end
 
--- Lines 142-144
+-- Lines 110-112
 function PlayerMaskOffVR:_can_jump()
 	return false
 end
 
--- Lines 146-148
+-- Lines 114-116
 function PlayerMaskOffVR:_can_duck()
 	return false
 end

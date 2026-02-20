@@ -2394,6 +2394,16 @@ Play the full version soon to get your full PAYDAY!]],
 		dynamite = {
 			fire = false
 		},
+		sticky_grenade = {
+			explosion = false
+		},
+		wpn_gre_electric = {
+			explosion = false,
+			tase = false
+		},
+		poison_gas_grenade = {
+			explosion = false
+		},
 		launcher_frag_arbiter = {
 			explosion = false,
 			fire = false
@@ -2402,9 +2412,9 @@ Play the full version soon to get your full PAYDAY!]],
 			explosion = false,
 			fire = false
 		},
-		wpn_gre_electric = {
+		launcher_frag_china = {
 			explosion = false,
-			tase = false
+			fire = false
 		},
 		launcher_electric = {
 			explosion = false,
@@ -2425,21 +2435,6 @@ Play the full version soon to get your full PAYDAY!]],
 		launcher_electric_arbiter = {
 			explosion = false,
 			tase = false
-		},
-		underbarrel_electric = {
-			explosion = false,
-			tase = false
-		},
-		underbarrel_electric_groza = {
-			explosion = false,
-			tase = false
-		},
-		underbarrel_m203_groza = {
-			explosion = false,
-			tase = false
-		},
-		poison_gas_grenade = {
-			explosion = false
 		},
 		launcher_poison = {
 			explosion = false
@@ -2480,8 +2475,17 @@ Play the full version soon to get your full PAYDAY!]],
 			explosion = false,
 			tase = false
 		},
-		sticky_grenade = {
-			explosion = false
+		underbarrel_electric = {
+			explosion = false,
+			tase = false
+		},
+		underbarrel_electric_groza = {
+			explosion = false,
+			tase = false
+		},
+		underbarrel_m203_groza = {
+			explosion = false,
+			tase = false
 		}
 	}
 	self.projectiles = {
@@ -3092,25 +3096,35 @@ Play the full version soon to get your full PAYDAY!]],
 	self:digest_tweak_data()
 end
 
--- Lines 2885-2918
+-- Lines 2885-2911
 function TweakData:load_movie_list()
-	local CONFIG_PATH = "gamedata/movie_theater"
-	local FILE_EXTENSION = "movie_theater"
-	self.movies = {}
-	local movie_data = PackageManager:xml_data(FILE_EXTENSION:id(), CONFIG_PATH:id())
+	self.movies = {
+		{
+			type = "movie_theater_type_cinematic",
+			title = "Somewhere in Mexico",
+			duration = "02:15",
+			file = "movies/the_end"
+		}
+	}
+	local has_all_movies = MenuCallbackHandler:has_all_movies()
 
-	if movie_data then
-		for i = 0, movie_data:num_children() - 1 do
-			local item = movie_data:child(i):parameter_map()
-
-			if (not item.visible_callback or callback(MenuCallbackHandler, MenuCallbackHandler, item.visible_callback)()) and item.file and DB:has(Idstring("movie"), item.file) then
-				table.insert(self.movies, item)
-			end
-		end
+	if has_all_movies then
+		table.insert(self.movies, {
+			type = "movie_theater_type_cinematic",
+			title = "Offshore Payday",
+			duration = "07:32",
+			file = "movies/offshore1"
+		})
+		table.insert(self.movies, {
+			type = "movie_theater_type_cinematic",
+			title = "Rumors and Stories",
+			duration = "05:20",
+			file = "movies/offshore2"
+		})
 	end
 end
 
--- Lines 2923-3029
+-- Lines 2916-3022
 function TweakData:init_screen_colors()
 	self.screen_colors = {
 		text = Color(255, 255, 255, 255) / 255,
@@ -3196,7 +3210,7 @@ function TweakData:init_screen_colors()
 	end
 end
 
--- Lines 3032-3063
+-- Lines 3025-3056
 function TweakData:init_accessibility_colors()
 	self.accessibility_colors = {
 		dot = {}
@@ -3228,14 +3242,14 @@ function TweakData:init_accessibility_colors()
 	self.accessibility_colors.screenflash.blurzone.gray_dark = Color(0.19607843137254902, 0.19607843137254902, 0.19607843137254902)
 end
 
--- Lines 3068-3146
+-- Lines 3061-3139
 function TweakData:free_dlc_list()
 	local free_dlcs = {}
 
 	return free_dlcs
 end
 
--- Lines 3156-3164
+-- Lines 3149-3157
 function TweakData:_execute_reload_clbks()
 	if self._reload_clbks then
 		for key, clbk_data in pairs(self._reload_clbks) do
@@ -3246,7 +3260,7 @@ function TweakData:_execute_reload_clbks()
 	end
 end
 
--- Lines 3168-3171
+-- Lines 3161-3164
 function TweakData:add_reload_callback(object, func)
 	self._reload_clbks = self._reload_clbks or {}
 
@@ -3256,7 +3270,7 @@ function TweakData:add_reload_callback(object, func)
 	})
 end
 
--- Lines 3175-3184
+-- Lines 3168-3177
 function TweakData:remove_reload_callback(object)
 	if self._reload_clbks then
 		for i, k in ipairs(self._reload_clbks) do
@@ -3269,7 +3283,7 @@ function TweakData:remove_reload_callback(object)
 	end
 end
 
--- Lines 3188-3364
+-- Lines 3181-3357
 function TweakData:set_scale()
 	local lang_key = SystemInfo:language():key()
 	local lang_mods = {
@@ -3458,7 +3472,7 @@ function TweakData:set_scale()
 	}
 end
 
--- Lines 3366-3545
+-- Lines 3359-3538
 function TweakData:set_menu_scale()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -3572,7 +3586,7 @@ function TweakData:set_menu_scale()
 	}
 end
 
--- Lines 3547-3627
+-- Lines 3540-3620
 function TweakData:set_hud_values()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -3651,7 +3665,7 @@ function TweakData:set_hud_values()
 	}
 end
 
--- Lines 3630-3634
+-- Lines 3623-3627
 function TweakData:resolution_changed()
 	self:set_scale()
 	self:set_menu_scale()
@@ -3669,7 +3683,7 @@ if (not tweak_data or tweak_data.RELOAD) and managers.dlc then
 	end
 end
 
--- Lines 3651-3866
+-- Lines 3644-3859
 function TweakData:get_controller_help_coords()
 	if managers.controller:get_default_wrapper_type() == "pc" or managers.controller:get_default_wrapper_type() == "steam" then
 		return false

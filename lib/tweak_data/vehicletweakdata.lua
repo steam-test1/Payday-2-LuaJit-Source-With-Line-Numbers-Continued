@@ -1,6 +1,6 @@
 VehicleTweakData = VehicleTweakData or class()
 
--- Lines 6-55
+-- Lines 71-120
 function VehicleTweakData:init(tweak_data)
 	self:_init_data_falcogini()
 	self:_init_data_muscle()
@@ -16,7 +16,7 @@ function VehicleTweakData:init(tweak_data)
 	self:_init_data_golfcart()
 end
 
--- Lines 64-123
+-- Lines 129-188
 function VehicleTweakData:_init_data_falcogini()
 	self.falcogini = {
 		name_id = "vhl_falcogini_name",
@@ -76,7 +76,7 @@ function VehicleTweakData:_init_data_falcogini()
 	}
 end
 
--- Lines 126-188
+-- Lines 191-257
 function VehicleTweakData:_init_data_muscle()
 	self.muscle = {
 		name_id = "vhl_longfellow_name",
@@ -154,7 +154,7 @@ function VehicleTweakData:_init_data_muscle()
 	}
 end
 
--- Lines 191-251
+-- Lines 260-320
 function VehicleTweakData:_init_data_forklift()
 	self.forklift = {
 		name_id = "vhl_forklift_name",
@@ -214,7 +214,7 @@ function VehicleTweakData:_init_data_forklift()
 	self.forklift_3.max_loot_bags = 0
 end
 
--- Lines 254-311
+-- Lines 323-380
 function VehicleTweakData:_init_data_forklift_2()
 	self.forklift_2 = {
 		name_id = "vhl_forklift_name",
@@ -265,7 +265,7 @@ function VehicleTweakData:_init_data_forklift_2()
 	}
 end
 
--- Lines 314-375
+-- Lines 383-447
 function VehicleTweakData:_init_data_box_truck_1()
 	self.box_truck_1 = {
 		name_id = "vhl_truck_name",
@@ -339,7 +339,7 @@ function VehicleTweakData:_init_data_box_truck_1()
 	}
 end
 
--- Lines 562-618
+-- Lines 634-690
 function VehicleTweakData:_init_data_mower_1()
 	self.mower_1 = {
 		name_id = "vhl_lawn_mower_name",
@@ -390,7 +390,7 @@ function VehicleTweakData:_init_data_mower_1()
 	}
 end
 
--- Lines 624-706
+-- Lines 696-778
 function VehicleTweakData:_init_data_boat_rib_1()
 	self.boat_rib_1 = {
 		name_id = "vhl_rib_boat_name",
@@ -462,7 +462,7 @@ function VehicleTweakData:_init_data_boat_rib_1()
 	}
 end
 
--- Lines 712-800
+-- Lines 784-872
 function VehicleTweakData:_init_data_blackhawk_1()
 	self.blackhawk_1 = {
 		name_id = "vhl_blackhawk_name",
@@ -540,7 +540,7 @@ function VehicleTweakData:_init_data_blackhawk_1()
 	self.blackhawk_2.name_id = nil
 end
 
--- Lines 805-870
+-- Lines 877-942
 function VehicleTweakData:_init_data_bike_1()
 	self.bike_1 = {
 		name_id = "vhl_bike_name",
@@ -594,7 +594,7 @@ function VehicleTweakData:_init_data_bike_1()
 	}
 end
 
--- Lines 872-937
+-- Lines 944-1009
 function VehicleTweakData:_init_data_bike_2()
 	self.bike_2 = {
 		name_id = "vhl_rust_bike_name",
@@ -648,7 +648,7 @@ function VehicleTweakData:_init_data_bike_2()
 	}
 end
 
--- Lines 941-1022
+-- Lines 1013-1094
 function VehicleTweakData:_init_data_wanker()
 	self.wanker = {
 		hud_label_offset = 150,
@@ -723,7 +723,7 @@ function VehicleTweakData:_init_data_wanker()
 	}
 end
 
--- Lines 1026-1083
+-- Lines 1098-1155
 function VehicleTweakData:_init_data_golfcart()
 	self.golfcart = {
 		name_id = "vhl_golfcart_name",

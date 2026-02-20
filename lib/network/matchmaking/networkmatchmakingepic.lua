@@ -1001,15 +1001,17 @@ function NetworkMatchMakingEPIC:no_mod_string()
 	return "7d66a433be3a1fe2"
 end
 
--- Lines 1118-1143
+-- Lines 1118-1147
 function NetworkMatchMakingEPIC:build_mods_list()
 	if MenuCallbackHandler:is_modded_client() then
-		local mods = nil
-		mods = MenuCallbackHandler:build_mods_list()
+		local mods = MenuCallbackHandler:build_mods_list()
 		local mods_str = ""
 
 		for _, data in ipairs(mods) do
-			mods_str = mods_str .. string.format("%s|%s|", unpack(data))
+			local name, id = unpack(data)
+			name = string.gsub(name, "|", "_")
+			id = string.gsub(id, "|", "_")
+			mods_str = mods_str .. string.format("%s|%s|", name, id)
 		end
 
 		return mods_str
@@ -1018,7 +1020,7 @@ function NetworkMatchMakingEPIC:build_mods_list()
 	end
 end
 
--- Lines 1145-1151
+-- Lines 1149-1155
 function NetworkMatchMakingEPIC:get_modded_lobby_filter()
 	if MenuCallbackHandler:is_modded_client() or Global.game_settings.search_modded_lobbies then
 		return false
@@ -1027,7 +1029,7 @@ function NetworkMatchMakingEPIC:get_modded_lobby_filter()
 	end
 end
 
--- Lines 1153-1159
+-- Lines 1157-1163
 function NetworkMatchMakingEPIC:get_allow_mods_setting()
 	if MenuCallbackHandler:is_modded_client() then
 		return 1
@@ -1036,7 +1038,7 @@ function NetworkMatchMakingEPIC:get_allow_mods_setting()
 	end
 end
 
--- Lines 1161-1167
+-- Lines 1165-1171
 function NetworkMatchMakingEPIC:get_allow_mods_filter()
 	if MenuCallbackHandler:is_modded_client() then
 		return true, 1, "equal"
@@ -1045,7 +1047,7 @@ function NetworkMatchMakingEPIC:get_allow_mods_filter()
 	end
 end
 
--- Lines 1181-1239
+-- Lines 1185-1243
 function NetworkMatchMakingEPIC:set_attributes(settings)
 	if not self.lobby_handler then
 		return
@@ -1094,7 +1096,7 @@ function NetworkMatchMakingEPIC:set_attributes(settings)
 	self.lobby_handler:set_lobby_type(permissions[settings.numbers[3]])
 end
 
--- Lines 1241-1253
+-- Lines 1245-1257
 function NetworkMatchMakingEPIC:_lobby_to_numbers(lobby)
 	return {
 		tonumber(lobby:key_value("level")) + 1000 * tonumber(lobby:key_value("job_id")),
@@ -1110,7 +1112,7 @@ function NetworkMatchMakingEPIC:_lobby_to_numbers(lobby)
 	}
 end
 
--- Lines 1255-1260
+-- Lines 1259-1264
 function NetworkMatchMakingEPIC:get_lobby_type()
 	if not self.lobby_handler then
 		return "unknown"
@@ -1119,7 +1121,7 @@ function NetworkMatchMakingEPIC:get_lobby_type()
 	return self.lobby_handler:lobby_type()
 end
 
--- Lines 1262-1272
+-- Lines 1266-1276
 function NetworkMatchMakingEPIC:from_host_lobby_re_opened(status)
 	print("[NetworkMatchMakingEPIC::from_host_lobby_re_opened]", self._try_re_enter_lobby, status)
 
@@ -1134,17 +1136,17 @@ function NetworkMatchMakingEPIC:from_host_lobby_re_opened(status)
 	end
 end
 
--- Lines 1275-1277
+-- Lines 1279-1281
 function NetworkMatchMakingEPIC:set_login_time(login_time)
 	self._login_time = login_time
 end
 
--- Lines 1279-1281
+-- Lines 1283-1285
 function NetworkMatchMakingEPIC:login_time()
 	return self._login_time or self:server_time()
 end
 
--- Lines 1284-1287
+-- Lines 1288-1291
 function NetworkMatchMakingEPIC:server_time()
 	return os.time()
 end

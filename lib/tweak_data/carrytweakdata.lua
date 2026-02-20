@@ -1,6 +1,6 @@
 CarryTweakData = CarryTweakData or class()
 
--- Lines 3-1391
+-- Lines 3-1481
 function CarryTweakData:init(tweak_data)
 	self.value_multiplier = tweak_data.money_manager.bag_value_multiplier
 	self.dye = {
@@ -1060,6 +1060,7 @@ function CarryTweakData:init(tweak_data)
 		bag_value = "turret_part",
 		unit = "units/pd2_dlc_ranc/pickups/ranc_pku_turretbag/turret_bag",
 		visual_unit_name = "units/pd2_dlc_ranc/pickups/ranc_pku_turretbag/npc_ranc_turret_bag",
+		skip_exit_secure = true,
 		AI_carry = {
 			SO_category = "enemies"
 		}
@@ -1140,7 +1141,7 @@ function CarryTweakData:init(tweak_data)
 	}
 end
 
--- Lines 1407-1421
+-- Lines 1497-1511
 function CarryTweakData:get_carry_ids()
 	local t = {}
 
@@ -1155,7 +1156,7 @@ function CarryTweakData:get_carry_ids()
 	return t
 end
 
--- Lines 1423-1433
+-- Lines 1513-1523
 function CarryTweakData:get_carry_ids_lookup_for_area_trigger()
 	local lookup_table = {}
 
@@ -1168,7 +1169,7 @@ function CarryTweakData:get_carry_ids_lookup_for_area_trigger()
 	return lookup_table
 end
 
--- Lines 1436-1444
+-- Lines 1526-1534
 function CarryTweakData:get_zipline_offset(carry_id)
 	local unit_name = tweak_data.carry[carry_id].unit or "units/payday2/pickups/gen_pku_lootbag/gen_pku_lootbag"
 

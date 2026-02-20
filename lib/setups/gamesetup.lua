@@ -657,7 +657,7 @@ function GameSetup:init_finalize()
 	managers.custom_safehouse:init_finalize()
 end
 
--- Lines 802-846
+-- Lines 802-848
 function GameSetup:update(t, dt)
 	Setup.update(self, t, dt)
 	managers.interaction:update(t, dt)
@@ -683,11 +683,9 @@ function GameSetup:update(t, dt)
 	if script_data.level_script and script_data.level_script.update then
 		script_data.level_script:update(t, dt)
 	end
-
-	self:_update_debug_input()
 end
 
--- Lines 848-858
+-- Lines 850-862
 function GameSetup:paused_update(t, dt)
 	Setup.paused_update(self, t, dt)
 	managers.groupai:paused_update(t, dt)
@@ -695,11 +693,9 @@ function GameSetup:paused_update(t, dt)
 	if script_data.level_script and script_data.level_script.paused_update then
 		script_data.level_script:paused_update(t, dt)
 	end
-
-	self:_update_debug_input()
 end
 
--- Lines 860-876
+-- Lines 864-880
 function GameSetup:destroy()
 	Setup.destroy(self)
 
@@ -713,13 +709,13 @@ function GameSetup:destroy()
 	managers.network.account:set_playing(false)
 end
 
--- Lines 878-883
+-- Lines 882-887
 function GameSetup:end_update(t, dt)
 	Setup.end_update(self, t, dt)
 	managers.game_play_central:end_update(t, dt)
 end
 
--- Lines 885-918
+-- Lines 889-922
 function GameSetup:save(data)
 	Setup.save(self, data)
 	managers.game_play_central:save(data)
@@ -746,7 +742,7 @@ function GameSetup:save(data)
 	managers.worlddefinition:sync_save(data)
 end
 
--- Lines 920-954
+-- Lines 924-958
 function GameSetup:load(data)
 	Setup.load(self, data)
 	managers.game_play_central:load(data)
@@ -772,10 +768,6 @@ function GameSetup:load(data)
 	managers.skirmish:sync_load(data)
 	managers.mutators:sync_load(data)
 	managers.worlddefinition:sync_load(data)
-end
-
--- Lines 957-988
-function GameSetup:_update_debug_input()
 end
 
 return GameSetup

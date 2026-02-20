@@ -136,7 +136,7 @@ function MultiProfileManager:load_current()
 	end
 end
 
--- Lines 147-154
+-- Lines 147-155
 function MultiProfileManager:profile_name(index)
 	local profile = self:profile(index)
 
@@ -144,20 +144,27 @@ function MultiProfileManager:profile_name(index)
 		return "Error"
 	end
 
-	return profile.name or "Profile " .. index
+	return profile.name or managers.localization:text("menu_multi_profile_switch_default", {
+		PROFILE = index
+	})
 end
 
--- Lines 156-158
+-- Lines 157-159
 function MultiProfileManager:current_profile_name()
 	return self:profile_name(self._global._current_profile)
 end
 
--- Lines 160-162
+-- Lines 161-163
+function MultiProfileManager:current_profile_index()
+	return self._global._current_profile
+end
+
+-- Lines 165-167
 function MultiProfileManager:profile_count()
 	return math.max(#self._global._profiles, 1)
 end
 
--- Lines 164-177
+-- Lines 169-182
 function MultiProfileManager:set_current_profile(index)
 	if index < 0 or self:profile_count() < index then
 		return
@@ -175,43 +182,70 @@ function MultiProfileManager:set_current_profile(index)
 	print("[MultiProfileManager:set_current_profile] current profile:", self._global._current_profile)
 end
 
--- Lines 179-181
+-- Lines 184-186
 function MultiProfileManager:current_profile()
 	return self:profile(self._global._current_profile)
 end
 
--- Lines 183-185
+-- Lines 188-190
 function MultiProfileManager:profile(index)
 	return self._global._profiles[index]
 end
 
--- Lines 187-191
+-- Lines 192-196
 function MultiProfileManager:_add_profile(profile, index)
 	index = index or #self._global._profiles + 1
 	self._global._profiles[index] = profile
 end
 
--- Lines 193-195
+-- Lines 198-200
 function MultiProfileManager:next_profile()
 	self:set_current_profile(self._global._current_profile + 1)
 end
 
--- Lines 197-199
+-- Lines 202-204
 function MultiProfileManager:previous_profile()
 	self:set_current_profile(self._global._current_profile - 1)
 end
 
--- Lines 201-203
+-- Lines 206-208
 function MultiProfileManager:has_next()
 	return self._global._current_profile < self:profile_count()
 end
 
--- Lines 205-207
+-- Lines 210-212
 function MultiProfileManager:has_previous()
 	return self._global._current_profile > 1
 end
 
--- Lines 209-258
+-- Lines 216-241
+function MultiProfileManager:move_profile(old_index, new_index)
+	local profile = self:profile(old_index)
+
+	if not profile then
+		return
+	end
+
+	table.remove(self._global._profiles, old_index)
+	table.insert(self._global._profiles, new_index, profile)
+
+	local current_index = self._global._current_profile
+	local change_start = math.min(old_index, new_index)
+	local change_end = math.max(old_index, new_index)
+
+	if current_index == old_index then
+		self._global._current_profile = new_index
+
+		self:save_current()
+	elseif change_start <= current_index and current_index <= change_end then
+		local index_change = old_index < new_index and -1 or 1
+		self._global._current_profile = self._global._current_profile + index_change
+
+		self:save_current()
+	end
+end
+
+-- Lines 245-294
 function MultiProfileManager:open_quick_select()
 	local dialog_data = {
 		title = "",
@@ -269,7 +303,7 @@ function MultiProfileManager:open_quick_select()
 	managers.system_menu:show_buttons(dialog_data)
 end
 
--- Lines 260-267
+-- Lines 296-303
 function MultiProfileManager:save(data)
 	local save_data = deep_clone(self._global._profiles)
 	save_data.current_profile = self._global._current_profile
@@ -277,7 +311,7 @@ function MultiProfileManager:save(data)
 	data.multi_profile = save_data
 end
 
--- Lines 269-284
+-- Lines 305-320
 function MultiProfileManager:load(data)
 	if data.multi_profile then
 		if not data.multi_profile.SKILL_SWITCH_SWITCHED then
@@ -296,7 +330,7 @@ function MultiProfileManager:load(data)
 	self:_check_amount()
 end
 
--- Lines 286-298
+-- Lines 322-334
 function MultiProfileManager:reset()
 	local name = nil
 	local current_profile = self._global._current_profile
@@ -313,14 +347,14 @@ function MultiProfileManager:reset()
 	self._global._current_profile = current_profile
 end
 
--- Lines 300-304
+-- Lines 336-340
 function MultiProfileManager:infamy_reset()
 	for idx, profile in pairs(self._global._profiles) do
 		profile.skillset = 1
 	end
 end
 
--- Lines 306-326
+-- Lines 342-362
 function MultiProfileManager:_check_amount()
 	local wanted_amount = 30
 

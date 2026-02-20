@@ -1,17 +1,30 @@
 local is_nextgen_console = SystemInfo:platform() == Idstring("PS4") or SystemInfo:platform() == Idstring("XB1")
 
--- Lines 3-2519
+-- Lines 19-4093
 function BlackMarketTweakData:_init_textures(tweak_data)
 	self.textures = {
 		no_color_no_material = {}
 	}
-	self.textures.no_color_no_material.name_id = "bm_txt_no_color_no_material"
+	self.textures.no_color_no_material.name_id = "bm_txt_lic_no_color_full_material"
 	self.textures.no_color_no_material.texture = "units/payday2/masks/shared_textures/patterns/pattern_no_color_no_material_df"
 	self.textures.no_color_no_material.value = 0
+	self.textures.no_color_no_material.unlimited = true
+	self.textures.no_color_no_material.overwrites = {
+		color_b = true,
+		materials = true,
+		color_a = true,
+		color_c = true
+	}
 	self.textures.no_color_full_material = {
 		name_id = "bm_txt_no_color_full_material",
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_no_color_full_material_df",
-		value = 1
+		value = 1,
+		unlimited = true,
+		overwrites = {
+			color_b = true,
+			color_c = true,
+			color_a = true
+		}
 	}
 	self.textures.big_skull = {
 		name_id = "bm_txt_big_skull",
@@ -44,7 +57,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_zebra_df",
-		value = 3
+		value = 3,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.overkill = {
 		name_id = "bm_txt_overkill",
@@ -56,7 +72,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_overkill_df",
 		infamous = true,
-		value = 10
+		value = 10,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.spawn = {
 		name_id = "bm_txt_spawn",
@@ -68,7 +87,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_spawn_df",
 		infamous = true,
-		value = 4
+		value = 4,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.marv = {
 		name_id = "bm_txt_marv",
@@ -79,7 +101,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_marv_df",
-		value = 5
+		value = 5,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.starbreeze = {
 		name_id = "bm_txt_starbreeze",
@@ -113,7 +138,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_flames_df",
-		value = 6
+		value = 6,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.tribal = {
 		name_id = "bm_txt_tribal",
@@ -124,7 +152,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_tribal_df",
-		value = 7
+		value = 7,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.skull = {
 		name_id = "bm_txt_skull",
@@ -135,7 +166,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_skull_df",
-		value = 8
+		value = 8,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.arrow = {
 		name_id = "bm_txt_arrow",
@@ -146,7 +180,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_arrow_df",
-		value = 3
+		value = 3,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.usa = {
 		name_id = "bm_txt_usa",
@@ -157,7 +194,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_usa_df",
-		value = 5
+		value = 5,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.unionjack = {
 		name_id = "bm_txt_unionjack",
@@ -168,7 +208,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_unionjack_df",
-		value = 6
+		value = 6,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.fleur = {
 		name_id = "bm_txt_fleur",
@@ -179,7 +222,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_fleur_df",
-		value = 7
+		value = 7,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.hearts = {
 		name_id = "bm_txt_hearts",
@@ -190,7 +236,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_hearts_df",
-		value = 4
+		value = 4,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.electric = {
 		name_id = "bm_txt_electric",
@@ -202,7 +251,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_electric_df",
 		value = 3,
-		infamous = true
+		infamous = true,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.puzzle = {
 		name_id = "bm_txt_puzzle",
@@ -213,7 +265,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_puzzle_df",
-		value = 5
+		value = 5,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.swe_camo = {
 		name_id = "bm_txt_swe_camo",
@@ -224,7 +279,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_swe_camo_df",
-		value = 6
+		value = 6,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.japan = {
 		name_id = "bm_txt_japan",
@@ -235,7 +293,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_japan_df",
-		value = 7
+		value = 7,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.celtic1 = {
 		name_id = "bm_txt_celtic1",
@@ -246,7 +307,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_celtic1_df",
-		value = 3
+		value = 3,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.dragon_full = {
 		name_id = "bm_txt_dragon_full",
@@ -258,7 +322,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_dragon_full_df",
 		infamous = true,
-		value = 9
+		value = 9,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.dragon_split = {
 		name_id = "bm_txt_dragon_split",
@@ -269,7 +336,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_dragon_split_df",
-		value = 5
+		value = 5,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.horizon_circle = {
 		name_id = "bm_txt_horizon_circle",
@@ -280,7 +350,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_horizon_circle_df",
-		value = 4
+		value = 4,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.tribal2 = {
 		name_id = "bm_txt_tribal2",
@@ -291,7 +364,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_tribal2_df",
-		value = 8
+		value = 8,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.vertical = {
 		name_id = "bm_txt_vertical",
@@ -302,7 +378,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_vertical_df",
-		value = 4
+		value = 4,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.celtic2 = {
 		name_id = "bm_txt_celtic2",
@@ -313,7 +392,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_celtic2_df",
-		value = 2
+		value = 2,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.beast = {
 		name_id = "bm_txt_beast",
@@ -324,7 +406,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_beast_df",
-		value = 3
+		value = 3,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.headshot = {
 		name_id = "bm_txt_headshot",
@@ -335,7 +420,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_headshot_df",
-		value = 5
+		value = 5,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.circuit = {
 		name_id = "bm_txt_circuit",
@@ -346,7 +434,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_circuit_df",
-		value = 3
+		value = 3,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.paint1 = {
 		name_id = "bm_txt_paint1",
@@ -357,7 +448,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_paint1_df",
-		value = 2
+		value = 2,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.chains = {
 		name_id = "bm_txt_chains",
@@ -368,7 +462,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_chains_df",
-		value = 4
+		value = 4,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.yinyang = {
 		name_id = "bm_txt_yinyang",
@@ -379,7 +476,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_yinyang_df",
-		value = 6
+		value = 6,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.rorschach = {
 		name_id = "bm_txt_rorschach",
@@ -391,7 +491,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_rorschach_df",
 		infamous = true,
-		value = 6
+		value = 6,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.zipper = {
 		name_id = "bm_txt_zipper",
@@ -402,7 +505,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_zipper_df",
-		value = 2
+		value = 2,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.daniel = {
 		name_id = "bm_txt_daniel",
@@ -413,7 +519,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_daniel_df",
-		value = 2
+		value = 2,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.ouroboros = {
 		name_id = "bm_txt_ouroboros",
@@ -424,7 +533,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_ouroboros_df",
-		value = 7
+		value = 7,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.ouro = {
 		name_id = "bm_txt_ouro",
@@ -435,7 +547,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_ouro_df",
-		value = 5
+		value = 5,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.cat = {
 		name_id = "bm_txt_cat",
@@ -447,7 +562,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_cat_df",
 		infamous = true,
-		value = 6
+		value = 6,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.clown = {
 		name_id = "bm_txt_clown",
@@ -458,7 +576,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_clown_df",
-		value = 2
+		value = 2,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.paint2 = {
 		name_id = "bm_txt_paint2",
@@ -469,7 +590,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_paint2_df",
-		value = 2
+		value = 2,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.spider = {
 		name_id = "bm_txt_spider",
@@ -480,7 +604,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_spider_df",
-		value = 7
+		value = 7,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.target = {
 		name_id = "bm_txt_target",
@@ -502,7 +629,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_illuminati_df",
-		value = 7
+		value = 7,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.hypnotic = {
 		name_id = "bm_txt_hypnotic",
@@ -513,7 +643,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_hypnotic_df",
-		value = 3
+		value = 3,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.hexagon = {
 		name_id = "bm_txt_hexagon",
@@ -524,7 +657,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_hexagon_df",
-		value = 4
+		value = 4,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.messatsu = {
 		name_id = "bm_txt_messatsu",
@@ -535,7 +671,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_messatsu_df",
-		value = 2
+		value = 2,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.shazam = {
 		name_id = "bm_txt_shazam",
@@ -546,7 +685,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_shazam_df",
-		value = 2
+		value = 2,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.emblem1 = {
 		name_id = "bm_txt_emblem1",
@@ -557,7 +699,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_emblem1_df",
-		value = 1
+		value = 1,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.emblem2 = {
 		name_id = "bm_txt_emblem2",
@@ -568,7 +713,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_emblem2_df",
-		value = 2
+		value = 2,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.emblem3 = {
 		name_id = "bm_txt_emblem3",
@@ -579,7 +727,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_emblem3_df",
-		value = 3
+		value = 3,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.swirl = {
 		name_id = "bm_txt_swirl",
@@ -590,7 +741,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_swirl_df",
-		value = 4
+		value = 4,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.kabuki1 = {
 		name_id = "bm_txt_kabuki1",
@@ -601,7 +755,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_kabuki1_df",
-		value = 5
+		value = 5,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.ultimaterobber = {
 		name_id = "bm_txt_ultimaterobber",
@@ -613,7 +770,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_ultimaterobber_df",
 		infamous = true,
-		value = 6
+		value = 6,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.nuclear = {
 		name_id = "bm_txt_nuclear",
@@ -624,7 +784,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_nuclear_df",
-		value = 7
+		value = 7,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.gearhead = {
 		name_id = "bm_txt_gearhead",
@@ -635,7 +798,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_gearhead_df",
-		value = 6
+		value = 6,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.atom = {
 		name_id = "bm_txt_atom",
@@ -646,7 +812,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_atom_df",
-		value = 5
+		value = 5,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.hand = {
 		name_id = "bm_txt_hand",
@@ -657,7 +826,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_hand_df",
-		value = 4
+		value = 4,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.scars = {
 		name_id = "bm_txt_scars",
@@ -668,7 +840,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_scars_df",
-		value = 3
+		value = 3,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.pirate = {
 		name_id = "bm_txt_pirate",
@@ -679,7 +854,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_pirate_df",
-		value = 2
+		value = 2,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.foot = {
 		name_id = "bm_txt_foot",
@@ -690,7 +868,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_foot_df",
-		value = 7
+		value = 7,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.star = {
 		name_id = "bm_txt_star",
@@ -701,7 +882,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_star_df",
-		value = 8
+		value = 8,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.portal = {
 		name_id = "bm_txt_portal",
@@ -712,7 +896,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_portal_df",
-		value = 6
+		value = 6,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.aperture = {
 		name_id = "bm_txt_aperture",
@@ -723,7 +910,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_aperture_df",
-		value = 5
+		value = 5,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.girlsandboys = {
 		name_id = "bm_txt_girlsandboys",
@@ -734,7 +924,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_girlsandboys_df",
-		value = 4
+		value = 4,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.loverboy = {
 		name_id = "bm_txt_loverboy",
@@ -745,7 +938,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_loverboy_df",
-		value = 3
+		value = 3,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.cogs = {
 		name_id = "bm_txt_cogs",
@@ -756,7 +952,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_cogs_df",
-		value = 4
+		value = 4,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.ace = {
 		name_id = "bm_txt_ace",
@@ -779,7 +978,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_compass_df",
-		value = 2
+		value = 2,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.fan = {
 		name_id = "bm_txt_fan",
@@ -791,7 +993,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		},
 		dlc = "preorder",
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_fan_df",
-		value = 1
+		value = 1,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.pd2 = {
 		name_id = "bm_txt_pd2",
@@ -802,7 +1007,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_pd2_df",
-		value = 4
+		value = 4,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.fingerprint = {
 		name_id = "bm_txt_fingerprint",
@@ -814,7 +1022,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_fingerprint_df",
 		infamous = true,
-		value = 3
+		value = 3,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.biohazard = {
 		name_id = "bm_txt_biohazard",
@@ -825,7 +1036,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_biohazard_df",
-		value = 2
+		value = 2,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.tf2 = {
 		name_id = "bm_txt_tf2",
@@ -836,7 +1050,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_tf2_df",
-		value = 3
+		value = 3,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.cake = {
 		name_id = "bm_txt_cake",
@@ -847,7 +1064,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_cake_df",
-		value = 4
+		value = 4,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.companioncube = {
 		name_id = "bm_txt_companioncube",
@@ -858,7 +1078,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_companioncube_df",
-		value = 6
+		value = 6,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.two = {
 		name_id = "bm_txt_two",
@@ -869,7 +1092,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_two_df",
-		value = 5
+		value = 5,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.striped = {
 		name_id = "bm_txt_striped",
@@ -880,7 +1106,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_striped_df",
-		value = 3
+		value = 3,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.solidfirst = {
 		name_id = "bm_txt_solidfirst",
@@ -892,7 +1121,12 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_solidfirst_df",
 		infamous = true,
-		value = 6
+		value = 6,
+		overwrites = {
+			color_b = true,
+			color_c = true,
+			materials = true
+		}
 	}
 	self.textures.solidsecond = {
 		name_id = "bm_txt_solidsecond",
@@ -904,7 +1138,12 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_solidsecond_df",
 		infamous = true,
-		value = 6
+		value = 6,
+		overwrites = {
+			materials = true,
+			color_c = true,
+			color_a = true
+		}
 	}
 	self.textures.mantis = {
 		name_id = "bm_txt_mantis",
@@ -915,7 +1154,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_mantis_df",
-		value = 7
+		value = 7,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.bite = {
 		name_id = "bm_txt_bite",
@@ -926,7 +1168,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_bite_df",
-		value = 3
+		value = 3,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.wtf = {
 		name_id = "bm_txt_wtf",
@@ -937,7 +1182,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_wtf_df",
-		value = 4
+		value = 4,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.bloodsucker = {
 		name_id = "bm_txt_bloodsucker",
@@ -948,7 +1196,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_bloodsucker_df",
-		value = 2
+		value = 2,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.hawk = {
 		name_id = "bm_txt_hawk",
@@ -959,7 +1210,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_hawk_df",
-		value = 4
+		value = 4,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.magnet = {
 		name_id = "bm_txt_magnet",
@@ -970,7 +1224,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_magnet_df",
-		value = 2
+		value = 2,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.diamond = {
 		name_id = "bm_txt_diamond",
@@ -981,7 +1238,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_diamond_df",
-		value = 3
+		value = 3,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.luchador = {
 		name_id = "bm_txt_luchador",
@@ -1025,7 +1285,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_sidestripe_df",
-		value = 5
+		value = 5,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.gradient = {
 		name_id = "bm_txt_gradient",
@@ -1036,7 +1299,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_gradient_df",
-		value = 4
+		value = 4,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.spikes = {
 		name_id = "bm_txt_spikes",
@@ -1047,7 +1313,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_spikes_df",
-		value = 3
+		value = 3,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.barbarian = {
 		name_id = "bm_txt_barbarian",
@@ -1058,7 +1327,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_barbarian_df",
-		value = 2
+		value = 2,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.reaper = {
 		name_id = "bm_txt_reaper",
@@ -1080,7 +1352,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_whiner_df",
-		value = 3
+		value = 3,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.emblem4 = {
 		name_id = "bm_txt_emblem4",
@@ -1091,7 +1366,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_emblem4_df",
-		value = 2
+		value = 2,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.daft_heart = {
 		name_id = "bm_txt_daft_heart",
@@ -1102,7 +1380,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_daft_heart_df",
-		value = 3
+		value = 3,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.anarchy = {
 		name_id = "bm_txt_anarchy",
@@ -1113,7 +1394,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_anarchy_df",
-		value = 4
+		value = 4,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.molecule = {
 		name_id = "bm_txt_molecule",
@@ -1124,7 +1408,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_molecule_df",
-		value = 3
+		value = 3,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.fleur2 = {
 		name_id = "bm_txt_fleur2",
@@ -1136,7 +1423,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_fleur2_df",
 		infamous = true,
-		value = 3
+		value = 3,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.trekronor = {
 		name_id = "bm_txt_trekronor",
@@ -1147,7 +1437,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_trekronor_df",
-		value = 2
+		value = 2,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.raster = {
 		name_id = "bm_txt_raster",
@@ -1158,7 +1451,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_raster_df",
-		value = 1
+		value = 1,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.flag = {
 		name_id = "bm_txt_flag",
@@ -1169,7 +1465,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_flag_df",
-		value = 4
+		value = 4,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.cracker = {
 		name_id = "bm_txt_cracker",
@@ -1191,7 +1490,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_hellish_df",
-		value = 4
+		value = 4,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.poison = {
 		name_id = "bm_txt_poison",
@@ -1202,7 +1504,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_poison_df",
-		value = 4
+		value = 4,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.yggdrasil = {
 		name_id = "bm_txt_yggdrasil",
@@ -1213,152 +1518,101 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/payday2/masks/shared_textures/patterns/pattern_yggdrasil_df",
-		value = 4
+		value = 4,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.pumpgrin = {
-		name_id = "bm_txt_pumpgrin"
+		name_id = "bm_txt_pumpgrin",
+		pcs = {
+			10,
+			20,
+			30,
+			40
+		},
+		texture = "units/payday2/masks/shared_textures/patterns/pattern_pumpgrin_df",
+		global_value = "halloween",
+		value = 5,
+		overwrites = {
+			color_c = true
+		}
 	}
-
-	if is_nextgen_console then
-		self.textures.pumpgrin.pcs = {
-			10,
-			20,
-			30,
-			40
-		}
-	else
-		self.textures.pumpgrin.pcs = {
-			10,
-			20,
-			30,
-			40
-		}
-		self.textures.pumpgrin.weight = 3
-	end
-
-	self.textures.pumpgrin.texture = "units/payday2/masks/shared_textures/patterns/pattern_pumpgrin_df"
-	self.textures.pumpgrin.global_value = "halloween"
-	self.textures.pumpgrin.value = 5
 	self.textures.shout = {
-		name_id = "bm_txt_shout"
+		name_id = "bm_txt_shout",
+		pcs = {
+			10,
+			20,
+			30,
+			40
+		},
+		texture = "units/payday2/masks/shared_textures/patterns/pattern_shout_df",
+		global_value = "halloween",
+		value = 5,
+		overwrites = {
+			color_c = true
+		}
 	}
-
-	if is_nextgen_console then
-		self.textures.shout.pcs = {
-			10,
-			20,
-			30,
-			40
-		}
-	else
-		self.textures.shout.pcs = {
-			10,
-			20,
-			30,
-			40
-		}
-		self.textures.shout.weight = 3
-	end
-
-	self.textures.shout.texture = "units/payday2/masks/shared_textures/patterns/pattern_shout_df"
-	self.textures.shout.global_value = "halloween"
-	self.textures.shout.value = 5
 	self.textures.webbed = {
-		name_id = "bm_txt_webbed"
+		name_id = "bm_txt_webbed",
+		pcs = {
+			10,
+			20,
+			30,
+			40
+		},
+		texture = "units/payday2/masks/shared_textures/patterns/pattern_webbed_df",
+		global_value = "halloween",
+		value = 5,
+		overwrites = {
+			color_c = true
+		}
 	}
-
-	if is_nextgen_console then
-		self.textures.webbed.pcs = {
-			10,
-			20,
-			30,
-			40
-		}
-	else
-		self.textures.webbed.pcs = {
-			10,
-			20,
-			30,
-			40
-		}
-		self.textures.webbed.weight = 3
-	end
-
-	self.textures.webbed.texture = "units/payday2/masks/shared_textures/patterns/pattern_webbed_df"
-	self.textures.webbed.global_value = "halloween"
-	self.textures.webbed.value = 5
 	self.textures.hannibalistic = {
-		name_id = "bm_txt_hannibalistic"
+		name_id = "bm_txt_hannibalistic",
+		pcs = {
+			10,
+			20,
+			30,
+			40
+		},
+		texture = "units/payday2/masks/shared_textures/patterns/pattern_hannibalistic_df",
+		global_value = "halloween",
+		value = 5,
+		overwrites = {
+			color_c = true
+		}
 	}
-
-	if is_nextgen_console then
-		self.textures.hannibalistic.pcs = {
-			10,
-			20,
-			30,
-			40
-		}
-	else
-		self.textures.hannibalistic.pcs = {
-			10,
-			20,
-			30,
-			40
-		}
-		self.textures.hannibalistic.weight = 3
-	end
-
-	self.textures.hannibalistic.texture = "units/payday2/masks/shared_textures/patterns/pattern_hannibalistic_df"
-	self.textures.hannibalistic.global_value = "halloween"
-	self.textures.hannibalistic.value = 5
 	self.textures.stitches = {
-		name_id = "bm_txt_stitches"
+		name_id = "bm_txt_stitches",
+		pcs = {
+			10,
+			20,
+			30,
+			40
+		},
+		texture = "units/payday2/masks/shared_textures/patterns/pattern_stitches_df",
+		global_value = "halloween",
+		value = 4,
+		overwrites = {
+			color_c = true
+		}
 	}
-
-	if is_nextgen_console then
-		self.textures.stitches.pcs = {
-			10,
-			20,
-			30,
-			40
-		}
-	else
-		self.textures.stitches.pcs = {
-			10,
-			20,
-			30,
-			40
-		}
-		self.textures.stitches.weight = 3
-	end
-
-	self.textures.stitches.texture = "units/payday2/masks/shared_textures/patterns/pattern_stitches_df"
-	self.textures.stitches.global_value = "halloween"
-	self.textures.stitches.value = 4
 	self.textures.doomweaver = {
-		name_id = "bm_txt_doomweaver"
+		name_id = "bm_txt_doomweaver",
+		pcs = {
+			10,
+			20,
+			30,
+			40
+		},
+		texture = "units/payday2/masks/shared_textures/patterns/pattern_doomweaver_df",
+		global_value = "halloween",
+		value = 4,
+		overwrites = {
+			color_c = true
+		}
 	}
-
-	if is_nextgen_console then
-		self.textures.doomweaver.pcs = {
-			10,
-			20,
-			30,
-			40
-		}
-	else
-		self.textures.doomweaver.pcs = {
-			10,
-			20,
-			30,
-			40
-		}
-		self.textures.doomweaver.weight = 3
-	end
-
-	self.textures.doomweaver.texture = "units/payday2/masks/shared_textures/patterns/pattern_doomweaver_df"
-	self.textures.doomweaver.global_value = "halloween"
-	self.textures.doomweaver.value = 4
 	self.textures.racestripes = {
 		name_id = "bm_txt_racestripes",
 		pcs = {
@@ -1369,7 +1623,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		},
 		texture = "units/pd2_dlc1/masks/patterns/pattern_racestripes_df",
 		value = 4,
-		dlc = "armored_transport"
+		dlc = "armored_transport",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.americaneagle = {
 		name_id = "bm_txt_americaneagle",
@@ -1381,7 +1638,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		},
 		texture = "units/pd2_dlc1/masks/patterns/pattern_americaneagle_df",
 		value = 4,
-		dlc = "armored_transport"
+		dlc = "armored_transport",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.stars = {
 		name_id = "bm_txt_stars",
@@ -1393,7 +1653,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		},
 		texture = "units/pd2_dlc1/masks/patterns/pattern_stars_df",
 		value = 4,
-		dlc = "armored_transport"
+		dlc = "armored_transport",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.forestcamo = {
 		name_id = "bm_txt_forestcamo",
@@ -1405,7 +1668,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		},
 		texture = "units/pd2_dlc1/masks/patterns/pattern_forestcamo_df",
 		value = 4,
-		dlc = "armored_transport"
+		dlc = "armored_transport",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.army = {
 		name_id = "bm_txt_army",
@@ -1417,7 +1683,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		},
 		texture = "units/pd2_dlc_dec5/masks/patterns/pattern_army_df",
 		value = 4,
-		dlc = "gage_pack"
+		dlc = "gage_pack",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.commando = {
 		name_id = "bm_txt_commando",
@@ -1429,7 +1698,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		},
 		texture = "units/pd2_dlc_dec5/masks/patterns/pattern_commando_df",
 		value = 4,
-		dlc = "gage_pack"
+		dlc = "gage_pack",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.hunter = {
 		name_id = "bm_txt_hunter",
@@ -1441,7 +1713,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		},
 		texture = "units/pd2_dlc_dec5/masks/patterns/pattern_hunter_df",
 		value = 4,
-		dlc = "gage_pack"
+		dlc = "gage_pack",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.digitalcamo = {
 		name_id = "bm_txt_digitalcamo",
@@ -1453,7 +1728,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		},
 		texture = "units/pd2_dlc_dec5/masks/patterns/pattern_digitalcamo_df",
 		value = 4,
-		dlc = "gage_pack"
+		dlc = "gage_pack",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.ribcage = {
 		name_id = "bm_txt_ribcage",
@@ -1461,7 +1739,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		texture = "units/pd2_dlc_infamy/masks/patterns/pattern_ribcage_df",
 		value = 0,
 		global_value = "infamy",
-		infamy_lock = "infamy_ghost"
+		infamy_lock = "infamy_ghost",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.toto = {
 		name_id = "bm_txt_toto",
@@ -1469,7 +1750,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		texture = "units/pd2_dlc_infamy/masks/patterns/pattern_toto_df",
 		value = 0,
 		global_value = "infamy",
-		infamy_lock = "infamy_technician"
+		infamy_lock = "infamy_technician",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.imperial = {
 		name_id = "bm_txt_imperial",
@@ -1477,7 +1761,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		texture = "units/pd2_dlc_infamy/masks/patterns/pattern_imperial_df",
 		value = 0,
 		global_value = "infamy",
-		infamy_lock = "infamy_mastermind"
+		infamy_lock = "infamy_mastermind",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.fatman = {
 		name_id = "bm_txt_fatman",
@@ -1485,7 +1772,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		texture = "units/pd2_dlc_infamy/masks/patterns/pattern_fatman_df",
 		value = 0,
 		global_value = "infamy",
-		infamy_lock = "infamy_enforcer"
+		infamy_lock = "infamy_enforcer",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.digital = {
 		name_id = "bm_txt_digital",
@@ -1493,7 +1783,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		texture = "units/pd2_dlc_infamy/masks/patterns/pattern_digital_df",
 		value = 0,
 		global_value = "infamy",
-		infamy_lock = "infamy_maskpack_daft"
+		infamy_lock = "infamy_maskpack_daft",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.evileye = {
 		name_id = "bm_txt_evileye",
@@ -1501,7 +1794,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		texture = "units/pd2_dlc_infamy/masks/patterns/pattern_evileye_df",
 		value = 0,
 		global_value = "infamy",
-		infamy_lock = "infamy_maskpack_hood"
+		infamy_lock = "infamy_maskpack_hood",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.exmachina = {
 		name_id = "bm_txt_exmachina",
@@ -1509,7 +1805,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		texture = "units/pd2_dlc_infamy/masks/patterns/pattern_exmachina_df",
 		value = 0,
 		global_value = "infamy",
-		infamy_lock = "infamy_maskpack_destroyer"
+		infamy_lock = "infamy_maskpack_destroyer",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.hellsanchor = {
 		name_id = "bm_txt_hellsanchor",
@@ -1517,7 +1816,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		texture = "units/pd2_dlc_infamy/masks/patterns/pattern_hellsanchor_df",
 		value = 0,
 		global_value = "infamy",
-		infamy_lock = "infamy_maskpack_lurker"
+		infamy_lock = "infamy_maskpack_lurker",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.monstervisor = {
 		name_id = "bm_txt_monstervisor",
@@ -1525,7 +1827,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		texture = "units/pd2_dlc_infamy/masks/patterns/pattern_monstervisor_df",
 		value = 0,
 		global_value = "infamy",
-		infamy_lock = "infamy_maskpack_ranger"
+		infamy_lock = "infamy_maskpack_ranger",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.pain = {
 		name_id = "bm_txt_pain",
@@ -1541,7 +1846,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		texture = "units/pd2_dlc_infamy/masks/patterns/pattern_spook_df",
 		value = 0,
 		global_value = "infamy",
-		infamy_lock = "infamy_maskpack_pain"
+		infamy_lock = "infamy_maskpack_pain",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.steampunk = {
 		name_id = "bm_txt_steampunk",
@@ -1561,7 +1869,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		},
 		texture = "units/pd2_dlc_gage_lmg/masks/patterns/styx_df",
 		value = 4,
-		dlc = "gage_pack_lmg"
+		dlc = "gage_pack_lmg",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.fingerpaint = {
 		name_id = "bm_txt_fingerpaint",
@@ -1573,7 +1884,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		},
 		texture = "units/pd2_dlc_gage_lmg/masks/patterns/fingerpaint_df",
 		value = 4,
-		dlc = "gage_pack_lmg"
+		dlc = "gage_pack_lmg",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.fighter = {
 		name_id = "bm_txt_fighter",
@@ -1585,7 +1899,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		},
 		texture = "units/pd2_dlc_gage_lmg/masks/patterns/fighter_df",
 		value = 4,
-		dlc = "gage_pack_lmg"
+		dlc = "gage_pack_lmg",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.warrior = {
 		name_id = "bm_txt_warrior",
@@ -1597,35 +1914,50 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		},
 		texture = "units/pd2_dlc_gage_lmg/masks/patterns/warrior_df",
 		value = 4,
-		dlc = "gage_pack_lmg"
+		dlc = "gage_pack_lmg",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.bugger = {
 		name_id = "bm_txt_bugger",
 		pcs = {},
 		texture = "units/pd2_dlc_gage_snp/patterns/pattern_bugger_df",
 		value = 0,
-		dlc = "gage_pack_snp"
+		dlc = "gage_pack_snp",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.spidereyes = {
 		name_id = "bm_txt_spidereyes",
 		pcs = {},
 		texture = "units/pd2_dlc_gage_snp/patterns/pattern_spidereyes_df",
 		value = 0,
-		dlc = "gage_pack_snp"
+		dlc = "gage_pack_snp",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.venomous = {
 		name_id = "bm_txt_venomous",
 		pcs = {},
 		texture = "units/pd2_dlc_gage_snp/patterns/pattern_venomous_df",
 		value = 0,
-		dlc = "gage_pack_snp"
+		dlc = "gage_pack_snp",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.wingsofdeath = {
 		name_id = "bm_txt_wingsofdeath",
 		pcs = {},
 		texture = "units/pd2_dlc_gage_snp/patterns/pattern_wingsofdeath_df",
 		value = 0,
-		dlc = "gage_pack_snp"
+		dlc = "gage_pack_snp",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.deathcube = {
 		name_id = "bm_txt_deathcube",
@@ -1633,7 +1965,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		texture = "units/pd2_poetry_winners/patterns/pattern_deathcube_df",
 		value = 0,
 		dlc = "poetry_soundtrack",
-		global_value = "poetry_soundtrack"
+		global_value = "poetry_soundtrack",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.tcn = {
 		name_id = "bm_txt_tcn",
@@ -1641,7 +1976,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		texture = "units/pd2_poetry_winners/patterns/pattern_tcn_df",
 		value = 0,
 		dlc = "poetry_soundtrack",
-		global_value = "poetry_soundtrack"
+		global_value = "poetry_soundtrack",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.tribalstroke = {
 		name_id = "bm_txt_tribalstroke",
@@ -1649,7 +1987,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		texture = "units/pd2_poetry_winners/patterns/pattern_tribalstroke_df",
 		value = 0,
 		dlc = "poetry_soundtrack",
-		global_value = "poetry_soundtrack"
+		global_value = "poetry_soundtrack",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.kraken = {
 		name_id = "bm_txt_kraken",
@@ -1657,21 +1998,30 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		texture = "units/pd2_poetry_winners/patterns/pattern_kraken_df",
 		value = 0,
 		dlc = "poetry_soundtrack",
-		global_value = "poetry_soundtrack"
+		global_value = "poetry_soundtrack",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.roman = {
 		name_id = "bm_txt_roman",
 		pcs = {},
 		texture = "units/pd2_dlc_big/masks/patterns/pattern_roman_df",
 		value = 0,
-		dlc = "big_bank"
+		dlc = "big_bank",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.wargod = {
 		name_id = "bm_txt_wargod",
 		pcs = {},
 		texture = "units/pd2_dlc_big/masks/patterns/pattern_wargod_df",
 		value = 0,
-		dlc = "big_bank"
+		dlc = "big_bank",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.spartan = {
 		name_id = "bm_txt_spartan",
@@ -1685,63 +2035,90 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		pcs = {},
 		texture = "units/pd2_dlc_big/masks/patterns/pattern_ruler_df",
 		value = 0,
-		dlc = "big_bank"
+		dlc = "big_bank",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.banana = {
 		name_id = "bm_txt_banana",
 		pcs = {},
 		texture = "units/pd2_dlc_gage_shot/patterns/pattern_banana_df",
 		value = 0,
-		dlc = "gage_pack_shotgun"
+		dlc = "gage_pack_shotgun",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.chief = {
 		name_id = "bm_txt_chief",
 		pcs = {},
 		texture = "units/pd2_dlc_gage_shot/patterns/pattern_chief_df",
 		value = 0,
-		dlc = "gage_pack_shotgun"
+		dlc = "gage_pack_shotgun",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.monkeyskull = {
 		name_id = "bm_txt_monkeyskull",
 		pcs = {},
 		texture = "units/pd2_dlc_gage_shot/patterns/pattern_monkeyskull_df",
 		value = 0,
-		dlc = "gage_pack_shotgun"
+		dlc = "gage_pack_shotgun",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.terror = {
 		name_id = "bm_txt_terror",
 		pcs = {},
 		texture = "units/pd2_dlc_gage_shot/patterns/pattern_terror_df",
 		value = 0,
-		dlc = "gage_pack_shotgun"
+		dlc = "gage_pack_shotgun",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.muerte = {
 		name_id = "bm_txt_muerte",
 		pcs = {},
 		texture = "units/pd2_dlc_gage_assault/masks/patterns/pattern_muerte_df",
 		value = 0,
-		dlc = "gage_pack_assault"
+		dlc = "gage_pack_assault",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.emperor = {
 		name_id = "bm_txt_emperor",
 		pcs = {},
 		texture = "units/pd2_dlc_gage_assault/masks/patterns/pattern_emperor_df",
 		value = 0,
-		dlc = "gage_pack_assault"
+		dlc = "gage_pack_assault",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.vicious = {
 		name_id = "bm_txt_vicious",
 		pcs = {},
 		texture = "units/pd2_dlc_gage_assault/masks/patterns/pattern_vicious_df",
 		value = 0,
-		dlc = "gage_pack_assault"
+		dlc = "gage_pack_assault",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.death = {
 		name_id = "bm_txt_death",
 		pcs = {},
 		texture = "units/pd2_dlc_gage_assault/masks/patterns/pattern_death_df",
 		value = 0,
-		dlc = "gage_pack_assault"
+		dlc = "gage_pack_assault",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.doodles = {
 		name_id = "bm_txt_doodles",
@@ -1749,7 +2126,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		texture = "units/pd2_dlc_miami/masks/patterns/pattern_doodles_df",
 		value = 0,
 		dlc = "hl_miami",
-		texture_bundle_folder = "hl_miami"
+		texture_bundle_folder = "hl_miami",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.hiptobepolygon = {
 		name_id = "bm_txt_hiptobepolygon",
@@ -1757,7 +2137,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		texture = "units/pd2_dlc_miami/masks/patterns/pattern_hiptobepolygon_df",
 		value = 0,
 		dlc = "hl_miami",
-		texture_bundle_folder = "hl_miami"
+		texture_bundle_folder = "hl_miami",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.palmtrees = {
 		name_id = "bm_txt_palmtrees",
@@ -1765,7 +2148,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		texture = "units/pd2_dlc_miami/masks/patterns/pattern_palmtrees_df",
 		value = 0,
 		dlc = "hl_miami",
-		texture_bundle_folder = "hl_miami"
+		texture_bundle_folder = "hl_miami",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.bsomebody = {
 		name_id = "bm_txt_bsomebody",
@@ -1773,7 +2159,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		texture = "units/pd2_dlc_miami/masks/patterns/pattern_bsomebody_df",
 		value = 0,
 		dlc = "hl_miami",
-		texture_bundle_folder = "hl_miami"
+		texture_bundle_folder = "hl_miami",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.hotline = {
 		name_id = "bm_txt_hotline",
@@ -1781,7 +2170,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		texture = "units/pd2_dlc_miami/masks/patterns/pattern_hotline_df",
 		value = 0,
 		dlc = "hlm_game",
-		texture_bundle_folder = "hl_miami"
+		texture_bundle_folder = "hl_miami",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.leopard = {
 		name_id = "bm_txt_leopard",
@@ -1789,7 +2181,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		texture = "units/pd2_dlc_miami/masks/patterns/pattern_leopard_df",
 		value = 0,
 		dlc = "hlm_game",
-		texture_bundle_folder = "hl_miami"
+		texture_bundle_folder = "hl_miami",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.shutupandbleed = {
 		name_id = "bm_txt_shutupandbleed",
@@ -1797,7 +2192,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		texture = "units/pd2_dlc_miami/masks/patterns/pattern_shutupandbleed_df",
 		value = 0,
 		dlc = "hlm_game",
-		texture_bundle_folder = "hl_miami"
+		texture_bundle_folder = "hl_miami",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.uglyrug = {
 		name_id = "bm_txt_uglyrug",
@@ -1805,7 +2203,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		texture = "units/pd2_dlc_miami/masks/patterns/pattern_uglyrug_df",
 		value = 0,
 		dlc = "hlm_game",
-		texture_bundle_folder = "hl_miami"
+		texture_bundle_folder = "hl_miami",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.captainwar = {
 		name_id = "bm_txt_captainwar",
@@ -1819,21 +2220,30 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		pcs = {},
 		texture = "units/pd2_dlc_gage_historical/patterns/pattern_dazzle_df",
 		value = 0,
-		dlc = "gage_pack_historical"
+		dlc = "gage_pack_historical",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.deathdealer = {
 		name_id = "bm_txt_deathdealer",
 		pcs = {},
 		texture = "units/pd2_dlc_gage_historical/patterns/pattern_deathdealer_df",
 		value = 0,
-		dlc = "gage_pack_historical"
+		dlc = "gage_pack_historical",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.filthythirteen = {
 		name_id = "bm_txt_filthythirteen",
 		pcs = {},
 		texture = "units/pd2_dlc_gage_historical/patterns/pattern_filthythirteen_df",
 		value = 0,
-		dlc = "gage_pack_historical"
+		dlc = "gage_pack_historical",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.hawkhelm = {
 		name_id = "bm_txt_hawkhelm",
@@ -1847,14 +2257,20 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		pcs = {},
 		texture = "units/pd2_indiana/patterns/pattern_hieroglyphs_df",
 		value = 0,
-		dlc = "hope_diamond"
+		dlc = "hope_diamond",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.horus = {
 		name_id = "bm_txt_horus",
 		pcs = {},
 		texture = "units/pd2_indiana/patterns/pattern_horus_df",
 		value = 0,
-		dlc = "hope_diamond"
+		dlc = "hope_diamond",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.runes = {
 		name_id = "bm_txt_runes",
@@ -1964,56 +2380,80 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		pcs = {},
 		texture = "units/pd2_dlc_west/masks/patterns/pattern_coyote_df",
 		dlc = "west",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.native = {
 		name_id = "bm_txt_native",
 		pcs = {},
 		texture = "units/pd2_dlc_west/masks/patterns/pattern_native_df",
 		dlc = "west",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.pattern = {
 		name_id = "bm_txt_pattern",
 		pcs = {},
 		texture = "units/pd2_dlc_west/masks/patterns/pattern_pattern_df",
 		dlc = "west",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.totem = {
 		name_id = "bm_txt_totem",
 		pcs = {},
 		texture = "units/pd2_dlc_west/masks/patterns/pattern_totem_df",
 		dlc = "west",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.soundwave = {
 		name_id = "bm_txt_soundwave",
 		pcs = {},
 		texture = "units/pd2_dlc_arena/masks/patterns/pattern_soundwave_df",
 		dlc = "arena",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.circle_raster = {
 		name_id = "bm_txt_circle_raster",
 		pcs = {},
 		texture = "units/pd2_dlc_arena/masks/patterns/pattern_circle_raster_df",
 		dlc = "arena",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.arena_logo = {
 		name_id = "bm_txt_arena_logo",
 		pcs = {},
 		texture = "units/pd2_dlc_arena/masks/patterns/pattern_arena_logo_df",
 		dlc = "arena",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.smoke = {
 		name_id = "bm_txt_smoke",
 		pcs = {},
 		texture = "units/pd2_dlc_arena/masks/patterns/pattern_smoke_df",
 		dlc = "arena",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.dices = {
 		name_id = "bm_txt_dices",
@@ -2021,7 +2461,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		texture = "units/pd2_dlc_casino/masks/patterns/pattern_dices_df",
 		value = 0,
 		dlc = "kenaz",
-		texture_bundle_folder = "kenaz"
+		texture_bundle_folder = "kenaz",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.royale = {
 		name_id = "bm_txt_royale",
@@ -2029,7 +2472,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		texture = "units/pd2_dlc_casino/masks/patterns/pattern_royale_df",
 		value = 0,
 		dlc = "kenaz",
-		texture_bundle_folder = "kenaz"
+		texture_bundle_folder = "kenaz",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.cards = {
 		name_id = "bm_txt_cards",
@@ -2037,7 +2483,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		texture = "units/pd2_dlc_casino/masks/patterns/pattern_cards_df",
 		value = 0,
 		dlc = "kenaz",
-		texture_bundle_folder = "kenaz"
+		texture_bundle_folder = "kenaz",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.chips = {
 		name_id = "bm_txt_chips",
@@ -2045,14 +2494,20 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		texture = "units/pd2_dlc_casino/masks/patterns/pattern_chips_df",
 		value = 0,
 		dlc = "kenaz",
-		texture_bundle_folder = "kenaz"
+		texture_bundle_folder = "kenaz",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.starvr = {
 		name_id = "bm_txt_starvr",
 		pcs = {},
 		texture = "units/pd2_dlc_humble_summer15/masks/patterns/pattern_starvr_df",
 		value = 0,
-		infamous = true
+		infamous = true,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.youkai = {
 		name_id = "bm_txt_youkai",
@@ -2068,7 +2523,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		texture = "units/pd2_dlc_turtles/masks/patterns/pattern_origami_df",
 		value = 0,
 		dlc = "turtles",
-		texture_bundle_folder = "turtles"
+		texture_bundle_folder = "turtles",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.oni = {
 		name_id = "bm_txt_oni",
@@ -2076,7 +2534,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		texture = "units/pd2_dlc_turtles/masks/patterns/pattern_oni_df",
 		value = 0,
 		dlc = "turtles",
-		texture_bundle_folder = "turtles"
+		texture_bundle_folder = "turtles",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.koi = {
 		name_id = "bm_txt_koi",
@@ -2084,311 +2545,450 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		texture = "units/pd2_dlc_turtles/masks/patterns/pattern_koi_df",
 		value = 0,
 		dlc = "turtles",
-		texture_bundle_folder = "turtles"
+		texture_bundle_folder = "turtles",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.agatha = {
 		name_id = "bm_txt_agatha",
 		pcs = {},
 		texture = "units/pd2_dlc_steel/masks/patterns/pattern_agatha_df",
 		value = 0,
-		dlc = "steel"
+		dlc = "steel",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.checkered_out = {
 		name_id = "bm_txt_checkered_out",
 		pcs = {},
 		texture = "units/pd2_dlc_steel/masks/patterns/pattern_checkered_out_df",
 		value = 0,
-		dlc = "steel"
+		dlc = "steel",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.mason = {
 		name_id = "bm_txt_mason",
 		pcs = {},
 		texture = "units/pd2_dlc_steel/masks/patterns/pattern_mason_df",
 		value = 0,
-		dlc = "steel"
+		dlc = "steel",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.med_pat = {
 		name_id = "bm_txt_med_pat",
 		pcs = {},
 		texture = "units/pd2_dlc_steel/masks/patterns/pattern_med_patt_df",
 		value = 0,
-		dlc = "steel"
+		dlc = "steel",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.sunavatar = {
 		name_id = "bm_txt_sunavatar",
 		pcs = {},
 		texture = "units/pd2_dlc_jerry/masks/patterns/pattern_sunavatar_df",
 		dlc = "berry",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.tribalface = {
 		name_id = "bm_txt_tribalface",
 		pcs = {},
 		texture = "units/pd2_dlc_jerry/masks/patterns/pattern_tribalface_df",
 		dlc = "berry",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.tribalwave = {
 		name_id = "bm_txt_tribalwave",
 		pcs = {},
 		texture = "units/pd2_dlc_jerry/masks/patterns/pattern_tribalwave_df",
 		dlc = "berry",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.ornamentalcrown = {
 		name_id = "bm_txt_ornamentalcrown",
 		pcs = {},
 		texture = "units/pd2_dlc_jerry/masks/patterns/pattern_ornamentalcrown_df",
 		dlc = "berry",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.giraffe = {
 		name_id = "bm_txt_giraffe",
 		pcs = {},
 		texture = "units/pd2_dlc_peta/masks/patterns/pattern_giraffe_df",
 		value = 0,
-		dlc = "peta"
+		dlc = "peta",
+		overwrites = {
+			color_b = true,
+			color_c = true
+		}
 	}
 	self.textures.illumigoati = {
 		name_id = "bm_txt_illumigoati",
 		pcs = {},
 		texture = "units/pd2_dlc_peta/masks/patterns/pattern_illumigoati_df",
 		value = 0,
-		dlc = "peta"
+		dlc = "peta",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.goatface = {
 		name_id = "bm_txt_goatface",
 		pcs = {},
 		texture = "units/pd2_dlc_peta/masks/patterns/pattern_goatface_df",
 		value = 0,
-		dlc = "peta"
+		dlc = "peta",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.fur = {
 		name_id = "bm_txt_fur",
 		pcs = {},
 		texture = "units/pd2_dlc_peta/masks/patterns/pattern_fur_df",
 		value = 0,
-		dlc = "peta"
+		dlc = "peta",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.fenris = {
 		name_id = "bm_txt_fenris",
 		pcs = {},
 		texture = "units/pd2_dlc_lupus/patterns/pattern_fenris_df",
 		value = 0,
-		dlc = "pal"
+		dlc = "pal",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.kurbits = {
 		name_id = "bm_txt_kurbits",
 		pcs = {},
 		texture = "units/pd2_dlc_lupus/patterns/pattern_kurbits_df",
 		value = 0,
-		dlc = "pal"
+		dlc = "pal",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.split = {
 		name_id = "bm_txt_split",
 		pcs = {},
 		texture = "units/pd2_dlc_lupus/patterns/pattern_split_df",
 		value = 0,
-		dlc = "pal"
+		dlc = "pal",
+		overwrites = {
+			color_b = true,
+			color_c = true
+		}
 	}
 	self.textures.luse = {
 		name_id = "bm_txt_luse",
 		pcs = {},
 		texture = "units/pd2_dlc_lupus/patterns/pattern_luse_df",
 		value = 0,
-		dlc = "pal"
+		dlc = "pal",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.jimmy_phoenix = {
 		name_id = "bm_txt_jimmy_phoenix",
 		pcs = {},
 		texture = "units/pd2_dlc_mad/masks/patterns/pattern_jimmy_phoenix_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.hexagons = {
 		name_id = "bm_txt_hexagons",
 		pcs = {},
 		texture = "units/pd2_dlc_mad/masks/patterns/pattern_hexagons_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.squares = {
 		name_id = "bm_txt_squares",
 		pcs = {},
 		texture = "units/pd2_dlc_mad/masks/patterns/pattern_squares_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.rebel = {
 		name_id = "bm_txt_rebel",
 		pcs = {},
 		texture = "units/pd2_dlc_mad/masks/patterns/pattern_rebel_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.biker_face = {
 		name_id = "bm_txt_biker_face",
 		pcs = {},
 		texture = "units/pd2_dlc_born/masks/patterns/pattern_bikerface_df",
 		value = 0,
-		dlc = "born"
+		dlc = "born",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.skull_engine = {
 		name_id = "bm_txt_skull_engine",
 		pcs = {},
 		texture = "units/pd2_dlc_born/masks/patterns/pattern_skullengine_df",
 		value = 0,
-		dlc = "born"
+		dlc = "born",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.skull_wing = {
 		name_id = "bm_txt_skull_wing",
 		pcs = {},
 		texture = "units/pd2_dlc_born/masks/patterns/pattern_skullwings_df",
 		value = 0,
-		dlc = "born"
+		dlc = "born",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.tire_fire = {
 		name_id = "bm_txt_tire_fire",
 		pcs = {},
 		texture = "units/pd2_dlc_born/masks/patterns/pattern_tirefire_df",
 		value = 0,
-		dlc = "born"
+		dlc = "born",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.oneshot = {
 		name_id = "bm_txt_oneshot",
 		pcs = {},
 		texture = "units/pd2_dlc_pim/masks/patterns/pattern_oneshot_df",
 		value = 0,
-		dlc = "pim"
+		dlc = "pim",
+		overwrites = {
+			color_b = true,
+			color_c = true
+		}
 	}
 	self.textures.daisy = {
 		name_id = "bm_txt_daisy",
 		pcs = {},
 		texture = "units/pd2_dlc_pim/masks/patterns/pattern_daisy_df",
 		value = 0,
-		dlc = "pim"
+		dlc = "pim",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.warface = {
 		name_id = "bm_txt_warface",
 		pcs = {},
 		texture = "units/pd2_dlc_pim/masks/patterns/pattern_warface_df",
 		value = 0,
-		dlc = "pim"
+		dlc = "pim",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.piety = {
 		name_id = "bm_txt_piety",
 		pcs = {},
 		texture = "units/pd2_dlc_pim/masks/patterns/pattern_piety_df",
 		value = 0,
-		dlc = "pim"
+		dlc = "pim",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.facepaint = {
 		name_id = "bm_txt_facepaint",
 		pcs = {},
 		texture = "units/pd2_dlc_tng/masks/patterns/pattern_facepaint_df",
 		value = 0,
-		dlc = "tango"
+		dlc = "tango",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.stripes = {
 		name_id = "bm_txt_eye_stripes",
 		pcs = {},
 		texture = "units/pd2_dlc_tng/masks/patterns/pattern_stripes_df",
 		value = 0,
-		dlc = "tango"
+		dlc = "tango",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.sight = {
 		name_id = "bm_txt_sight",
 		pcs = {},
 		texture = "units/pd2_dlc_tng/masks/patterns/pattern_sight_df",
 		value = 0,
-		dlc = "tango"
+		dlc = "tango",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.bullets = {
 		name_id = "bm_txt_bullets",
 		pcs = {},
 		texture = "units/pd2_dlc_tng/masks/patterns/pattern_bullets_df",
 		value = 0,
-		dlc = "tango"
+		dlc = "tango",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.liberty_flame = {
 		name_id = "bm_txt_liberty_flame",
 		pcs = {},
 		texture = "units/pd2_dlc_friend/masks/patterns/pattern_liberty_flame_df",
 		value = 0,
-		dlc = "friend"
+		dlc = "friend",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.diablada = {
 		name_id = "bm_txt_diablada",
 		pcs = {},
 		texture = "units/pd2_dlc_friend/masks/patterns/pattern_diablada_df",
 		value = 0,
-		dlc = "friend"
+		dlc = "friend",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.scar_mask = {
 		name_id = "bm_txt_scar_mask",
 		pcs = {},
 		texture = "units/pd2_dlc_friend/masks/patterns/pattern_scar_mask_df",
 		value = 0,
-		dlc = "friend"
+		dlc = "friend",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.my_little = {
 		name_id = "bm_txt_pattern_my_little_df",
 		pcs = {},
 		texture = "units/pd2_dlc_friend/masks/patterns/pattern_my_little_df",
 		value = 0,
-		dlc = "friend"
+		dlc = "friend",
+		overwrites = {
+			color_b = true,
+			color_c = true
+		}
 	}
 	self.textures.continental = {
 		name_id = "bm_txt_continental",
 		pcs = {},
 		texture = "units/pd2_dlc_spa/masks/patterns/pattern_continental_df",
 		value = 0,
-		dlc = "spa"
+		dlc = "spa",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.hotel_pattern = {
 		name_id = "bm_txt_hotel_pattern",
 		pcs = {},
 		texture = "units/pd2_dlc_spa/masks/patterns/pattern_hotel_pattern_df",
 		value = 0,
-		dlc = "spa"
+		dlc = "spa",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.baba_yaga = {
 		name_id = "bm_txt_baba_yaga",
 		pcs = {},
 		texture = "units/pd2_dlc_spa/masks/patterns/pattern_baba_yaga_df",
 		value = 0,
-		dlc = "spa"
+		dlc = "spa",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.hood_stripes = {
 		name_id = "bm_txt_hood_stripes",
 		pcs = {},
 		texture = "units/pd2_dlc_spa/masks/patterns/pattern_hood_stripes_df",
 		value = 0,
-		dlc = "spa"
+		dlc = "spa",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.red_star = {
 		name_id = "bm_txt_red_star",
 		pcs = {},
 		texture = "units/pd2_dlc_grv/masks/patterns/pattern_red_star_df",
 		value = 0,
-		dlc = "grv"
+		dlc = "grv",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.bear_fight = {
 		name_id = "bm_txt_bear_fight",
 		pcs = {},
 		texture = "units/pd2_dlc_grv/masks/patterns/pattern_bear_fight_df",
 		value = 0,
-		dlc = "grv"
+		dlc = "grv",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.prison_statement = {
 		name_id = "bm_txt_prison_statement",
 		pcs = {},
 		texture = "units/pd2_dlc_grv/masks/patterns/pattern_prison_statement_df",
 		value = 0,
-		dlc = "grv"
+		dlc = "grv",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.russian_gamble = {
 		name_id = "bm_txt_russian_gamble",
 		pcs = {},
 		texture = "units/pd2_dlc_grv/masks/patterns/pattern_russian_gamble_df",
 		value = 0,
-		dlc = "grv"
+		dlc = "grv",
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.hands_batman = {
 		name_id = "bm_txt_hands_batman",
@@ -2399,7 +2999,11 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_hands_batman_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_b = true,
+			color_c = true
+		}
 	}
 	self.textures.hands_ok = {
 		name_id = "bm_txt_hands_ok",
@@ -2410,7 +3014,11 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_hands_ok_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_b = true,
+			color_c = true
+		}
 	}
 	self.textures.hands_peace = {
 		name_id = "bm_txt_hands_peace",
@@ -2421,7 +3029,11 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_hands_peace_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_b = true,
+			color_c = true
+		}
 	}
 	self.textures.hands_loser = {
 		name_id = "bm_txt_hands_loser",
@@ -2432,7 +3044,11 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_hands_loser_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_b = true,
+			color_c = true
+		}
 	}
 	self.textures.hands_shutup = {
 		name_id = "bm_txt_hands_shutup",
@@ -2443,7 +3059,11 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_hands_shutup_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_b = true,
+			color_c = true
+		}
 	}
 	self.textures.hands_pans = {
 		name_id = "bm_txt_hands_pans",
@@ -2454,7 +3074,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_hands_pans_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.clowns_qc = {
 		name_id = "bm_txt_clowns_qc",
@@ -2465,7 +3088,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_clowns_qc_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.clowns_ahe = {
 		name_id = "bm_txt_clowns_ahe",
@@ -2476,7 +3102,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_clowns_ahe_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.clowns_hoc = {
 		name_id = "bm_txt_clowns_hoc",
@@ -2487,7 +3116,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_clowns_hoc_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.clowns_in = {
 		name_id = "bm_txt_clowns_in",
@@ -2498,7 +3130,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_clowns_in_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.clowns_it = {
 		name_id = "bm_txt_clowns_it",
@@ -2509,7 +3144,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_clowns_it_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.barf = {
 		name_id = "bm_txt_barf",
@@ -2520,7 +3158,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_barf_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.basketball = {
 		name_id = "bm_txt_basketball",
@@ -2531,7 +3172,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_basketball_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.crashdummy = {
 		name_id = "bm_txt_crashdummy",
@@ -2542,7 +3186,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_crashdummy_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.friedegg = {
 		name_id = "bm_txt_friedegg",
@@ -2553,7 +3200,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_friedegg_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.phantom = {
 		name_id = "bm_txt_phantom",
@@ -2564,7 +3214,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_phantom_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.facepaint_cupcake = {
 		name_id = "bm_txt_facepaint_cupcake",
@@ -2575,7 +3228,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_facepaint_cupcake_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.facepaint_flowers = {
 		name_id = "bm_txt_facepaint_flowers",
@@ -2586,7 +3242,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_facepaint_flowers_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.facepaint_football = {
 		name_id = "bm_txt_facepaint_football",
@@ -2597,7 +3256,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_facepaint_football_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.facepaint_rainbow = {
 		name_id = "bm_txt_facepaint_rainbow",
@@ -2608,7 +3270,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_facepaint_rainbow_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.facepaint_skull = {
 		name_id = "bm_txt_facepaint_skull",
@@ -2619,7 +3284,11 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_facepaint_skull_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_b = true,
+			color_c = true
+		}
 	}
 	self.textures.heraldry_ord_fess = {
 		name_id = "bm_txt_heraldry_ord_fess",
@@ -2630,7 +3299,11 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_heraldry_ord_fess_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_b = true,
+			color_c = true
+		}
 	}
 	self.textures.heraldry_ord_pale = {
 		name_id = "bm_txt_heraldry_ord_pale",
@@ -2641,7 +3314,11 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_heraldry_ord_pale_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_b = true,
+			color_c = true
+		}
 	}
 	self.textures.heraldry_ord_pall = {
 		name_id = "bm_txt_heraldry_ord_pall",
@@ -2652,7 +3329,11 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_heraldry_ord_pall_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_b = true,
+			color_c = true
+		}
 	}
 	self.textures.heraldry_ord_saltire = {
 		name_id = "bm_txt_heraldry_ord_saltire",
@@ -2663,7 +3344,11 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_heraldry_ord_saltire_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_b = true,
+			color_c = true
+		}
 	}
 	self.textures.heraldry_ord_cross = {
 		name_id = "bm_txt_heraldry_ord_cross",
@@ -2674,7 +3359,11 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_heraldry_ord_cross_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_b = true,
+			color_c = true
+		}
 	}
 	self.textures.heraldry_ord_chevron = {
 		name_id = "bm_txt_heraldry_ord_chevron",
@@ -2685,7 +3374,11 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_heraldry_ord_chevron_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_b = true,
+			color_c = true
+		}
 	}
 	self.textures.heraldry_ord_bend = {
 		name_id = "bm_txt_heraldry_ord_bend",
@@ -2696,7 +3389,11 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_heraldry_ord_bend_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_b = true,
+			color_c = true
+		}
 	}
 	self.textures.heraldry_div_tiercedpall = {
 		name_id = "bm_txt_heraldry_div_tiercedpall",
@@ -2718,7 +3415,11 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_heraldry_div_quarterly_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_b = true,
+			color_c = true
+		}
 	}
 	self.textures.heraldry_div_persaltire = {
 		name_id = "bm_txt_heraldry_div_persaltire",
@@ -2729,7 +3430,11 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_heraldry_div_persaltire_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_b = true,
+			color_c = true
+		}
 	}
 	self.textures.heraldry_div_perpale = {
 		name_id = "bm_txt_heraldry_div_perpale",
@@ -2740,7 +3445,11 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_heraldry_div_perpale_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_b = true,
+			color_c = true
+		}
 	}
 	self.textures.heraldry_div_perfess = {
 		name_id = "bm_txt_heraldry_div_perfess",
@@ -2751,7 +3460,11 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_heraldry_div_perfess_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_b = true,
+			color_c = true
+		}
 	}
 	self.textures.heraldry_div_perchevron = {
 		name_id = "bm_txt_heraldry_div_perchevron",
@@ -2762,7 +3475,11 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_heraldry_div_perchevron_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_b = true,
+			color_c = true
+		}
 	}
 	self.textures.heraldry_div_perbend = {
 		name_id = "bm_txt_heraldry_div_perbend",
@@ -2773,7 +3490,11 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_heraldry_div_perbend_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_b = true,
+			color_c = true
+		}
 	}
 	self.textures.heraldry_geo_paly = {
 		name_id = "bm_txt_heraldry_geo_paly",
@@ -2784,7 +3505,11 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_heraldry_geo_paly_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_b = true,
+			color_c = true
+		}
 	}
 	self.textures.heraldry_geo_lozengy = {
 		name_id = "bm_txt_heraldry_geo_lozengy",
@@ -2795,7 +3520,11 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_heraldry_geo_lozengy_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_b = true,
+			color_c = true
+		}
 	}
 	self.textures.heraldry_geo_gyronny = {
 		name_id = "bm_txt_heraldry_geo_gyronny",
@@ -2806,7 +3535,11 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_heraldry_geo_gyronny_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_b = true,
+			color_c = true
+		}
 	}
 	self.textures.heraldry_geo_fusil = {
 		name_id = "bm_txt_heraldry_geo_fusil",
@@ -2817,7 +3550,11 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_heraldry_geo_fusil_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_b = true,
+			color_c = true
+		}
 	}
 	self.textures.heraldry_geo_checky = {
 		name_id = "bm_txt_heraldry_geo_checky",
@@ -2828,7 +3565,11 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_heraldry_geo_checky_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_b = true,
+			color_c = true
+		}
 	}
 	self.textures.heraldry_geo_bendy = {
 		name_id = "bm_txt_heraldry_geo_bendy",
@@ -2839,7 +3580,11 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_heraldry_geo_bendy_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_b = true,
+			color_c = true
+		}
 	}
 	self.textures.heraldry_geo_barrypale = {
 		name_id = "bm_txt_heraldry_geo_barrypale",
@@ -2850,7 +3595,11 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_heraldry_geo_barrypale_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_b = true,
+			color_c = true
+		}
 	}
 	self.textures.heraldry_geo_barry = {
 		name_id = "bm_txt_heraldry_geo_barry",
@@ -2861,7 +3610,11 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_heraldry_geo_barry_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_b = true,
+			color_c = true
+		}
 	}
 	self.textures.warpaint_freedom = {
 		name_id = "bm_txt_warpaint_freedom",
@@ -2872,7 +3625,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_warpaint_freedom_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.warpaint_half_hawk = {
 		name_id = "bm_txt_warpaint_half_hawk",
@@ -2883,7 +3639,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_warpaint_half_hawk_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.warpaint_crow_beak = {
 		name_id = "bm_txt_warpaint_crow_beak",
@@ -2894,7 +3653,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_warpaint_crow_beak_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.warpaint_cross_marking = {
 		name_id = "bm_txt_pattern_warpaint_cross_marking",
@@ -2905,7 +3667,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_warpaint_cross_marking_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.warpaint_darkness_eyes = {
 		name_id = "bm_txt_pattern_warpaint_darkness_eyes",
@@ -2916,13 +3681,21 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_warpaint_darkness_eyes_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_b = true,
+			color_c = true
+		}
 	}
 	self.textures.pizzaface = {
 		name_id = "bm_txt_pattern_pizzaface",
 		pcs = {},
 		texture = "units/pd2_dlc_pmp/masks/patterns/pattern_pizzaface_df",
 		value = 0
+	}
+	self.textures.warpaint_freedom.overwrites = {
+		color_b = true,
+		color_c = true
 	}
 	self.textures.predator_billy = {
 		name_id = "bm_txt_predator_billy",
@@ -2933,7 +3706,11 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_skm/masks/patterns/pattern_predator_billy_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_a = true,
+			color_c = true
+		}
 	}
 	self.textures.predator_blain = {
 		name_id = "bm_txt_predator_blain",
@@ -2944,7 +3721,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_skm/masks/patterns/pattern_predator_blain_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.predator_dillan = {
 		name_id = "bm_txt_predator_dillan",
@@ -2955,7 +3735,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_skm/masks/patterns/pattern_predator_dillan_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.predator_dutch = {
 		name_id = "bm_txt_predator_dutch",
@@ -2966,7 +3749,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_skm/masks/patterns/pattern_predator_dutch_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.predator_hawkins = {
 		name_id = "bm_txt_predator_hawkins",
@@ -2977,7 +3763,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_skm/masks/patterns/pattern_predator_hawkins_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.predator_mac = {
 		name_id = "bm_txt_predator_mac",
@@ -2988,7 +3777,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_skm/masks/patterns/pattern_predator_mac_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.predator_poncho = {
 		name_id = "bm_txt_predator_poncho",
@@ -2999,7 +3791,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_skm/masks/patterns/pattern_predator_poncho_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.ransom_1mdollars = {
 		name_id = "bm_txt_ransom_1mdollars",
@@ -3010,7 +3805,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_skm/masks/patterns/pattern_ransom_1mdollars_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.ransom_bangbang = {
 		name_id = "bm_txt_ransom_bangbang",
@@ -3021,7 +3819,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_skm/masks/patterns/pattern_ransom_bangbang_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.ransom_cashking = {
 		name_id = "bm_txt_ransom_cashking",
@@ -3032,7 +3833,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_skm/masks/patterns/pattern_ransom_cashking_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.ransom_diepig = {
 		name_id = "bm_txt_ransom_diepig",
@@ -3043,7 +3847,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_skm/masks/patterns/pattern_ransom_diepig_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.ransom_gameover = {
 		name_id = "bm_txt_ransom_gameover",
@@ -3054,7 +3861,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_skm/masks/patterns/pattern_ransom_gameover_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.ransom_pledge = {
 		name_id = "bm_txt_ransom_pledge",
@@ -3065,7 +3875,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_skm/masks/patterns/pattern_ransom_pledge_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.shades_3d = {
 		name_id = "bm_txt_shades_3d",
@@ -3076,7 +3889,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_skm/masks/patterns/pattern_shades_3d_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.shades_80s = {
 		name_id = "bm_txt_shades_80s",
@@ -3087,7 +3903,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_skm/masks/patterns/pattern_shades_80s_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.shades_band = {
 		name_id = "bm_txt_shades_band",
@@ -3098,7 +3917,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_skm/masks/patterns/pattern_shades_band_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.shades_punk = {
 		name_id = "bm_txt_shades_punk",
@@ -3109,7 +3931,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_skm/masks/patterns/pattern_shades_punk_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.shades_shutter = {
 		name_id = "bm_txt_shades_shutter",
@@ -3120,7 +3945,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_skm/masks/patterns/pattern_shades_shutter_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.shades_sport = {
 		name_id = "bm_txt_shades_sport",
@@ -3131,7 +3959,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_skm/masks/patterns/pattern_shades_sport_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.wavewarning = {
 		name_id = "bm_txt_wavewarning",
@@ -3142,7 +3973,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_skm/masks/patterns/pattern_wavewarning_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.barbedwire = {
 		name_id = "bm_txt_barbedwire",
@@ -3153,7 +3987,11 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_skm/masks/patterns/pattern_barbedwire_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_b = true,
+			color_c = true
+		}
 	}
 	self.textures.bloodhand = {
 		name_id = "bm_txt_bloodhand",
@@ -3164,7 +4002,11 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_skm/masks/patterns/pattern_bloodhand_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_b = true,
+			color_c = true
+		}
 	}
 	self.textures.catface = {
 		name_id = "bm_txt_catface",
@@ -3175,7 +4017,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_skm/masks/patterns/pattern_catface_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.clutter = {
 		name_id = "bm_txt_clutter",
@@ -3186,7 +4031,11 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_skm/masks/patterns/pattern_clutter_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_a = true,
+			color_c = true
+		}
 	}
 	self.textures.facecollage = {
 		name_id = "bm_txt_facecollage",
@@ -3197,7 +4046,11 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_skm/masks/patterns/pattern_facecollage_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_b = true,
+			color_c = true
+		}
 	}
 	self.textures.facename = {
 		name_id = "bm_txt_facename",
@@ -3208,7 +4061,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_skm/masks/patterns/pattern_facename_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.frankenstein = {
 		name_id = "bm_txt_frankenstein",
@@ -3219,7 +4075,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_skm/masks/patterns/pattern_frankenstein_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.hostage = {
 		name_id = "bm_txt_hostage",
@@ -3230,7 +4089,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_skm/masks/patterns/pattern_hostage_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.knife = {
 		name_id = "bm_txt_knife",
@@ -3241,7 +4103,11 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_skm/masks/patterns/pattern_knife_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_a = true,
+			color_c = true
+		}
 	}
 	self.textures.lovehate = {
 		name_id = "bm_txt_lovehate",
@@ -3252,7 +4118,10 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_skm/masks/patterns/pattern_lovehate_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_c = true
+		}
 	}
 	self.textures.skullshape = {
 		name_id = "bm_txt_skullshape",
@@ -3263,7 +4132,11 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_skm/masks/patterns/pattern_skullshape_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_a = true,
+			color_c = true
+		}
 	}
 	self.textures.splat = {
 		name_id = "bm_txt_splat",
@@ -3274,7 +4147,91 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 			40
 		},
 		texture = "units/pd2_dlc_skm/masks/patterns/pattern_splat_df",
-		value = 0
+		value = 0,
+		overwrites = {
+			color_b = true,
+			color_c = true
+		}
+	}
+	self.textures.stg_logo = {
+		name_id = "bm_txt_stg_logo",
+		texture = "units/pd2_dlc_lic/masks/patterns/pattern_stg_logo_df",
+		pcs = {
+			10,
+			20,
+			30,
+			40
+		},
+		value = 2
+	}
+	self.textures.beaver = {
+		name_id = "bm_txt_beaver",
+		texture = "units/pd2_dlc_lic/masks/patterns/pattern_beaver_df",
+		pcs = {
+			10,
+			20,
+			30,
+			40
+		},
+		value = 2
+	}
+	self.textures.half_coat_1 = {
+		name_id = "bm_txt_half_coat_1",
+		texture = "units/pd2_dlc_lic/masks/patterns/pattern_half_coat_1_df",
+		pcs = {
+			10,
+			20,
+			30,
+			40
+		},
+		value = 2,
+		overwrites = {
+			color_c = true
+		}
+	}
+	self.textures.badlove = {
+		name_id = "bm_txt_badlove",
+		texture = "units/pd2_dlc_lic/masks/patterns/pattern_badlove_df",
+		pcs = {
+			10,
+			20,
+			30,
+			40
+		},
+		value = 2,
+		overwrites = {
+			color_c = true
+		}
+	}
+	self.textures.reject = {
+		name_id = "bm_txt_reject",
+		texture = "units/pd2_dlc_lic/masks/patterns/pattern_reject_df",
+		pcs = {
+			10,
+			20,
+			30,
+			40
+		},
+		value = 2,
+		overwrites = {
+			color_b = true,
+			color_c = true
+		}
+	}
+	self.textures.loopy = {
+		name_id = "bm_txt_loopy",
+		texture = "units/pd2_dlc_lic/masks/patterns/pattern_loopy_df",
+		pcs = {
+			10,
+			20,
+			30,
+			40
+		},
+		value = 2,
+		overwrites = {
+			color_b = true,
+			color_c = true
+		}
 	}
 	local free_dlcs = tweak_data:free_dlc_list()
 

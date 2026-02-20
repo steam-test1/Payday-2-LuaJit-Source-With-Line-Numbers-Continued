@@ -565,7 +565,7 @@ function LootDropManager:make_drop(return_data)
 	self:_make_drop(false, true, nil, return_data)
 end
 
--- Lines 549-906
+-- Lines 549-786
 function LootDropManager:_make_drop(debug, add_to_inventory, debug_stars, return_data)
 	local human_players = managers.network:session() and managers.network:session():amount_of_alive_players() or 1
 	local all_humans = human_players == 4
@@ -781,7 +781,7 @@ function LootDropManager:_make_drop(debug, add_to_inventory, debug_stars, return
 	end
 end
 
--- Lines 908-920
+-- Lines 788-800
 function LootDropManager:_get_type_items(normalized_chance, debug)
 	local seed = math.rand(1)
 
@@ -808,14 +808,14 @@ function LootDropManager:_get_type_items(normalized_chance, debug)
 	return next(normalized_chance)
 end
 
--- Lines 922-925
+-- Lines 802-805
 function LootDropManager:reset()
 	Global.lootdrop_manager = nil
 
 	self:_setup()
 end
 
--- Lines 927-974
+-- Lines 807-854
 function LootDropManager:can_drop_weapon_mods()
 	local plvl = managers.experience:current_level()
 	local dropable_items = {}
@@ -867,32 +867,30 @@ function LootDropManager:can_drop_weapon_mods()
 	return #dropable_items > 0
 end
 
--- Lines 976-983
+-- Lines 856-872
 function LootDropManager:specific_fake_loot_pc(preferred)
 	local to_drop = {
 		cash = 3,
-		materials = 5,
+		textures = 7,
 		xp = 4,
 		weapon_mods = 2,
-		colors = 6,
-		masks = 1,
-		textures = 7
+		materials = 9,
+		masks = 1
 	}
 
 	return to_drop[preferred] or 1
 end
 
--- Lines 985-1014
+-- Lines 874-911
 function LootDropManager:new_fake_loot_pc(debug_pc, skip_mods)
 	local sum = 0
 	local to_drop = {
 		cash = 3,
-		materials = 5,
+		textures = 7,
 		xp = 4,
 		weapon_mods = 2,
-		colors = 6,
-		masks = 1,
-		textures = 7
+		materials = 9,
+		masks = 1
 	}
 
 	for skip, value in pairs(skip_mods) do
@@ -920,15 +918,13 @@ function LootDropManager:new_fake_loot_pc(debug_pc, skip_mods)
 	return 1
 end
 
--- Lines 1042-1059
+-- Lines 913-935
 function LootDropManager:debug_check_items(check_type)
 	local t = {}
 
 	for type, data in pairs(tweak_data.blackmarket) do
 		if not check_type or type == check_type then
 			for id, item_data in pairs(data) do
-				print("id", id)
-
 				if not item_data.pc and not item_data.pcs then
 					print("Item", id, "of type", type, "hasn't been assigned a pay class")
 					table.insert(t, id)
@@ -943,7 +939,7 @@ function LootDropManager:debug_check_items(check_type)
 	return t
 end
 
--- Lines 1061-1089
+-- Lines 937-965
 function LootDropManager:debug_loot_aquire_method(type)
 	local no_pcs = managers.lootdrop:debug_check_items(type)
 	local t = {
@@ -988,7 +984,7 @@ function LootDropManager:debug_loot_aquire_method(type)
 	return t
 end
 
--- Lines 1091-1111
+-- Lines 967-987
 function LootDropManager:debug_print_pc_items(check_type)
 	for type, data in pairs(tweak_data.blackmarket) do
 		if not check_type or type == check_type then
@@ -1012,17 +1008,17 @@ function LootDropManager:debug_print_pc_items(check_type)
 	end
 end
 
--- Lines 1114-1116
+-- Lines 990-992
 function LootDropManager:save(data)
 	data.LootDropManager = self._global
 end
 
--- Lines 1119-1121
+-- Lines 995-997
 function LootDropManager:load(data)
 	self._global = data.LootDropManager
 end
 
--- Lines 1124-1148
+-- Lines 1000-1024
 function LootDropManager:get_amount_mass_drop(data)
 	if not data then
 		return 0
@@ -1049,7 +1045,7 @@ function LootDropManager:get_amount_mass_drop(data)
 	return num_rewards
 end
 
--- Lines 1150-1180
+-- Lines 1026-1056
 function LootDropManager:set_mass_drop(data)
 	if not data or data.coroutine then
 		return false
@@ -1081,7 +1077,7 @@ function LootDropManager:set_mass_drop(data)
 	return true
 end
 
--- Lines 1182-1211
+-- Lines 1058-1087
 function LootDropManager:fetch_mass_lootdrops(data)
 	if data and data.coroutine then
 		local status = coroutine.status(data.coroutine)

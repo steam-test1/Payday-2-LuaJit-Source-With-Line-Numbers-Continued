@@ -1116,15 +1116,17 @@ function NetworkMatchMakingSTEAM:server_state_name()
 	return tweak_data:index_to_server_state(self._lobby_attributes.state)
 end
 
--- Lines 1265-1290
+-- Lines 1265-1294
 function NetworkMatchMakingSTEAM:build_mods_list()
 	if MenuCallbackHandler:is_modded_client() then
-		local mods = nil
-		mods = MenuCallbackHandler:build_mods_list()
+		local mods = MenuCallbackHandler:build_mods_list()
 		local mods_str = ""
 
 		for _, data in ipairs(mods) do
-			mods_str = mods_str .. string.format("%s|%s|", unpack(data))
+			local name, id = unpack(data)
+			name = string.gsub(name, "|", "_")
+			id = string.gsub(id, "|", "_")
+			mods_str = mods_str .. string.format("%s|%s|", name, id)
 		end
 
 		return mods_str
@@ -1133,7 +1135,7 @@ function NetworkMatchMakingSTEAM:build_mods_list()
 	end
 end
 
--- Lines 1292-1300
+-- Lines 1296-1304
 function NetworkMatchMakingSTEAM:get_modded_lobby_filter()
 	if MenuCallbackHandler:is_modded_client() then
 		return 0, "equalto_or_greater_than"
@@ -1145,7 +1147,7 @@ function NetworkMatchMakingSTEAM:get_modded_lobby_filter()
 	end
 end
 
--- Lines 1302-1308
+-- Lines 1306-1312
 function NetworkMatchMakingSTEAM:get_allow_mods_setting()
 	if MenuCallbackHandler:is_modded_client() then
 		return 1
@@ -1154,7 +1156,7 @@ function NetworkMatchMakingSTEAM:get_allow_mods_setting()
 	end
 end
 
--- Lines 1310-1316
+-- Lines 1314-1320
 function NetworkMatchMakingSTEAM:get_allow_mods_filter()
 	if MenuCallbackHandler:is_modded_client() then
 		return 1, "equal"
@@ -1163,7 +1165,7 @@ function NetworkMatchMakingSTEAM:get_allow_mods_filter()
 	end
 end
 
--- Lines 1330-1385
+-- Lines 1334-1389
 function NetworkMatchMakingSTEAM:set_attributes(settings)
 	if not self.lobby_handler then
 		return
@@ -1210,7 +1212,7 @@ function NetworkMatchMakingSTEAM:set_attributes(settings)
 	self.lobby_handler:set_lobby_type(permissions[settings.numbers[3]])
 end
 
--- Lines 1387-1399
+-- Lines 1391-1403
 function NetworkMatchMakingSTEAM:_lobby_to_numbers(lobby)
 	return {
 		tonumber(lobby:key_value("level")) + 1000 * tonumber(lobby:key_value("job_id")),
@@ -1226,7 +1228,7 @@ function NetworkMatchMakingSTEAM:_lobby_to_numbers(lobby)
 	}
 end
 
--- Lines 1401-1411
+-- Lines 1405-1415
 function NetworkMatchMakingSTEAM:from_host_lobby_re_opened(status)
 	print("[NetworkMatchMakingSTEAM::from_host_lobby_re_opened]", self._try_re_enter_lobby, status)
 
@@ -1241,7 +1243,7 @@ function NetworkMatchMakingSTEAM:from_host_lobby_re_opened(status)
 	end
 end
 
--- Lines 1413-1418
+-- Lines 1417-1422
 function NetworkMatchMakingSTEAM:get_lobby_type()
 	if not self.lobby_handler then
 		return "unknown"
@@ -1250,17 +1252,17 @@ function NetworkMatchMakingSTEAM:get_lobby_type()
 	return self.lobby_handler:lobby_type()
 end
 
--- Lines 1421-1423
+-- Lines 1425-1427
 function NetworkMatchMakingSTEAM:set_login_time(login_time)
 	self._login_time = login_time
 end
 
--- Lines 1425-1427
+-- Lines 1429-1431
 function NetworkMatchMakingSTEAM:login_time()
 	return self._login_time or self:server_time()
 end
 
--- Lines 1430-1433
+-- Lines 1434-1437
 function NetworkMatchMakingSTEAM:server_time()
 	return Steam:server_time()
 end

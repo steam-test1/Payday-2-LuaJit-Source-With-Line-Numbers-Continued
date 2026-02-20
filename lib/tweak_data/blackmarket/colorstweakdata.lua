@@ -1,4 +1,4 @@
--- Lines 1-2060
+-- Lines 1-2065
 function BlackMarketTweakData:_init_colors(tweak_data)
 	self.colors = {}
 	local white = Color.white
@@ -4371,4 +4371,21 @@ function BlackMarketTweakData:_init_colors(tweak_data)
 		name_id = "bm_clr_nothing",
 		value = 0
 	}
+
+	for id, item in pairs(self.mask_colors) do
+		if id ~= "nothing" then
+			item.convert_to_material = item.convert_to_material or "solid_flat_" .. id
+			item.inaccessible = true
+			item.pcs = {}
+			item.value = 0
+		end
+	end
+
+	for id, item in pairs(self.colors) do
+		if id ~= "nothing" then
+			item.inaccessible = true
+			item.pcs = {}
+			item.value = 0
+		end
+	end
 end

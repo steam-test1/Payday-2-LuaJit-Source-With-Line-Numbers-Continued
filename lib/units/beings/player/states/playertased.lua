@@ -115,7 +115,7 @@ function PlayerTased:exit(state_data, enter_data)
 	managers.environment_controller:set_taser_value(1)
 	self._camera_unit:base():break_recoil()
 	managers.rumble:stop(self._rumble_electrified)
-	self._unit:camera():play_redirect(Idstring("idle"))
+	self._ext_camera:play_redirect(Idstring("idle"))
 
 	self._tase_ended = nil
 	self._countering_tase = nil
@@ -212,7 +212,7 @@ function PlayerTased:_check_action_shock(t, input)
 			end
 
 			self._camera_unit:base():recoil_kick(-5, 5, -5, 5)
-			self._unit:camera():play_redirect(self:get_animation("tased_boost"))
+			self._ext_camera:play_redirect(self:get_animation("tased_boost"))
 		end
 	elseif self._recoil_t then
 		if not self._resist_tase then
@@ -397,16 +397,16 @@ function PlayerTased:_start_action_tased(t, non_lethal)
 	self:_interupt_action_running(t)
 	self:_stance_entered()
 	self:_update_crosshair_offset()
-	self._unit:camera():play_redirect(self:get_animation("tased"))
+	self._ext_camera:play_redirect(self:get_animation("tased"))
 	managers.hint:show_hint(non_lethal and "hint_been_electrocuted" or "hint_been_tasered")
 end
 
 -- Lines 445-449
-function PlayerTased:_start_action_counter_tase(t, prime_target)
+function PlayerTased:_start_action_counter_tase()
 	self._countering_tase = true
 	self._counter_taser_unit = prime_target.unit
 
-	self._unit:camera():play_redirect(self:get_animation("tased_counter"))
+	self._ext_camera:play_redirect(self:get_animation("tased_counter"))
 end
 
 -- Lines 453-480
@@ -480,7 +480,7 @@ function PlayerTased:on_tase_ended()
 	self._taser_unit = nil
 end
 
--- Lines 520-544
+-- Lines 520-545
 function PlayerTased:_on_tased_event(taser_unit, tased_unit)
 	if self._unit == tased_unit then
 		self._taser_unit = taser_unit
@@ -509,7 +509,7 @@ function PlayerTased:_on_tased_event(taser_unit, tased_unit)
 
 			managers.player:add_coroutine("escape_tase", PlayerAction.EscapeTase, managers.player, managers.hud, TimerManager:game():time() + target_time)
 
-			-- Lines 538-540
+			-- Lines 539-541
 			local function clbk()
 				self:give_shock_to_taser_no_damage()
 			end
@@ -519,7 +519,7 @@ function PlayerTased:_on_tased_event(taser_unit, tased_unit)
 	end
 end
 
--- Lines 548-555
+-- Lines 549-556
 function PlayerTased:give_shock_to_taser()
 	if not alive(self._counter_taser_unit) then
 		return
@@ -530,7 +530,7 @@ function PlayerTased:give_shock_to_taser()
 	self:_give_shock_to_taser(self._counter_taser_unit)
 end
 
--- Lines 557-571
+-- Lines 558-572
 function PlayerTased:_give_shock_to_taser(taser_unit)
 	return
 
@@ -549,7 +549,7 @@ function PlayerTased:_give_shock_to_taser(taser_unit)
 	taser_unit:character_damage():damage_melee(action_data)
 end
 
--- Lines 575-605
+-- Lines 576-610
 function PlayerTased:give_shock_to_taser_no_damage()
 	local taser_unit = self._taser_unit
 	local char_dmg_ext = alive(taser_unit) and taser_unit:character_damage()
@@ -558,6 +558,7 @@ function PlayerTased:give_shock_to_taser_no_damage()
 		return
 	end
 
+	self._countering_tase = true
 	local pos = mvector3.copy(taser_unit:movement():m_head_pos())
 	local damage_info = {
 		damage = 0,
@@ -581,9 +582,11 @@ function PlayerTased:give_shock_to_taser_no_damage()
 	if sound_ext then
 		sound_ext:play("tase_counter_attack", nil, true)
 	end
+
+	self._ext_camera:play_redirect(self:get_animation("tased_counter"))
 end
 
--- Lines 607-644
+-- Lines 612-649
 function PlayerTased:_on_malfunction_to_taser_event()
 	local taser_unit = self._taser_unit
 	local char_dmg_ext = alive(taser_unit) and taser_unit:character_damage()
