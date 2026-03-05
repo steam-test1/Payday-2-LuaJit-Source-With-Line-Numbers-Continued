@@ -108,7 +108,7 @@ function SyncManager:handle_synced_weapon_blueprint(unit_id, data_string)
 	end
 end
 
--- Lines 102-121
+-- Lines 102-117
 function SyncManager:add_synced_mask_blueprint(unit_id, mask_id, blueprint)
 	local blueprint_string = string.format("%s %s %s %s-%s-%s", tostring(mask_id), tostring(blueprint.material.id), tostring(blueprint.pattern.id), tostring(blueprint.color_a.id), tostring(blueprint.color_b.id), tostring(blueprint.color_c.id))
 
@@ -116,7 +116,7 @@ function SyncManager:add_synced_mask_blueprint(unit_id, mask_id, blueprint)
 	print("[SyncManager] added synced mask: ", unit_id, blueprint_string)
 end
 
--- Lines 123-129
+-- Lines 119-125
 function SyncManager:handle_synced_mask_blueprint(unit_id, data_string)
 	local unit_element = self:get_managed_unit(unit_id)
 
@@ -127,7 +127,7 @@ function SyncManager:handle_synced_mask_blueprint(unit_id, data_string)
 	end
 end
 
--- Lines 131-157
+-- Lines 127-142
 function SyncManager:_get_mask_id_and_blueprint(data_string)
 	local data = string.split(data_string or "", " ")
 	local mask_id = data[1]
@@ -153,7 +153,7 @@ function SyncManager:_get_mask_id_and_blueprint(data_string)
 	return mask_id, blueprint
 end
 
--- Lines 162-166
+-- Lines 147-151
 function SyncManager:add_synced_offshore_gui(unit_id, visibility, displayed_cash)
 	local blueprint = string.format("%s %s", tostring(visibility), tostring(displayed_cash))
 
@@ -161,7 +161,7 @@ function SyncManager:add_synced_offshore_gui(unit_id, visibility, displayed_cash
 	print("[SyncManager] added synced offshore: ", unit_id, blueprint)
 end
 
--- Lines 168-175
+-- Lines 153-160
 function SyncManager:handle_synced_offshore_gui(unit_id, data_string)
 	local data = string.split(data_string, " ")
 	local unit_element = self:get_managed_unit(unit_id)
@@ -172,7 +172,7 @@ function SyncManager:handle_synced_offshore_gui(unit_id, data_string)
 	end
 end
 
--- Lines 180-184
+-- Lines 165-169
 function SyncManager:add_synced_vault_cash(unit_id, tier)
 	local blueprint = string.format("%s", tostring(tier))
 
@@ -180,7 +180,7 @@ function SyncManager:add_synced_vault_cash(unit_id, tier)
 	print("[SyncManager] added synced vault: ", unit_id, blueprint)
 end
 
--- Lines 186-192
+-- Lines 171-177
 function SyncManager:handle_synced_vault_cash(unit_id, data_string)
 	local target_tier = tonumber(data_string)
 	local unit_element = self:get_managed_unit(unit_id)

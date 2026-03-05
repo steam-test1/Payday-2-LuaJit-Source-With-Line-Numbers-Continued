@@ -218,7 +218,7 @@ function MultiProfileManager:has_previous()
 	return self._global._current_profile > 1
 end
 
--- Lines 216-241
+-- Lines 214-239
 function MultiProfileManager:move_profile(old_index, new_index)
 	local profile = self:profile(old_index)
 
@@ -245,7 +245,7 @@ function MultiProfileManager:move_profile(old_index, new_index)
 	end
 end
 
--- Lines 245-294
+-- Lines 241-290
 function MultiProfileManager:open_quick_select()
 	local dialog_data = {
 		title = "",
@@ -303,7 +303,7 @@ function MultiProfileManager:open_quick_select()
 	managers.system_menu:show_buttons(dialog_data)
 end
 
--- Lines 296-303
+-- Lines 292-299
 function MultiProfileManager:save(data)
 	local save_data = deep_clone(self._global._profiles)
 	save_data.current_profile = self._global._current_profile
@@ -311,7 +311,7 @@ function MultiProfileManager:save(data)
 	data.multi_profile = save_data
 end
 
--- Lines 305-320
+-- Lines 301-316
 function MultiProfileManager:load(data)
 	if data.multi_profile then
 		if not data.multi_profile.SKILL_SWITCH_SWITCHED then
@@ -330,7 +330,7 @@ function MultiProfileManager:load(data)
 	self:_check_amount()
 end
 
--- Lines 322-334
+-- Lines 318-330
 function MultiProfileManager:reset()
 	local name = nil
 	local current_profile = self._global._current_profile
@@ -347,14 +347,14 @@ function MultiProfileManager:reset()
 	self._global._current_profile = current_profile
 end
 
--- Lines 336-340
+-- Lines 332-336
 function MultiProfileManager:infamy_reset()
 	for idx, profile in pairs(self._global._profiles) do
 		profile.skillset = 1
 	end
 end
 
--- Lines 342-362
+-- Lines 338-358
 function MultiProfileManager:_check_amount()
 	local wanted_amount = 30
 

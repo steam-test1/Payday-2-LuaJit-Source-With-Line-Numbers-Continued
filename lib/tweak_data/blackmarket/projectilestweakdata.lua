@@ -3,7 +3,7 @@ function BlackMarketTweakData:_init_bullets(tweak_data)
 	self.bullets = {}
 end
 
--- Lines 32-1024
+-- Lines 32-1037
 function BlackMarketTweakData:_init_projectiles(tweak_data)
 	self.projectiles = {
 		frag = {}
@@ -815,12 +815,12 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 	self:_add_desc_from_name_macro(self.projectiles)
 end
 
--- Lines 1026-1028
+-- Lines 1039-1041
 function BlackMarketTweakData:get_projectiles_index()
 	return self._projectiles_index
 end
 
--- Lines 1030-1037
+-- Lines 1043-1050
 function BlackMarketTweakData:get_index_from_projectile_id(projectile_id)
 	for index, entry_name in ipairs(self._projectiles_index) do
 		if entry_name == projectile_id then
@@ -831,7 +831,7 @@ function BlackMarketTweakData:get_index_from_projectile_id(projectile_id)
 	return 0
 end
 
--- Lines 1039-1041
+-- Lines 1052-1054
 function BlackMarketTweakData:get_projectile_name_from_index(index)
 	return self._projectiles_index[index]
 end

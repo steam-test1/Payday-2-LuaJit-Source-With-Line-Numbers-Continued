@@ -1,4 +1,4 @@
--- Lines 1-814
+-- Lines 1-812
 function WINDLCManager:init_dlc_data()
 	Global.dlc_manager.all_dlc_data.full_game = {
 		app_id = "218620",

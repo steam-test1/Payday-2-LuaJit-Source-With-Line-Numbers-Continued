@@ -17,7 +17,7 @@ ZipLine.NET_EVENTS = {
 ZipLine.DEBUG = false
 ZipLine.ziplines = ZipLine.ziplines or {}
 
--- Lines 24-32
+-- Lines 22-30
 function ZipLine.set_debug(state)
 	state = state or false
 	ZipLine.DEBUG = state
@@ -29,7 +29,7 @@ end
 
 local IDS_ROPE = Idstring("rope")
 
--- Lines 36-79
+-- Lines 34-77
 function ZipLine:init(unit)
 	self._unit = unit
 	self._rope_obj = unit:get_object(IDS_ROPE)
@@ -69,7 +69,7 @@ function ZipLine:init(unit)
 	table.insert(ZipLine.ziplines, unit)
 end
 
--- Lines 81-88
+-- Lines 79-86
 function ZipLine:update(unit, t, dt)
 	self:_update_sled(t, dt)
 	self:_update_sounds(t, dt)
@@ -82,7 +82,7 @@ end
 local mvec1 = Vector3()
 local mvec2 = Vector3()
 
--- Lines 92-157
+-- Lines 90-155
 function ZipLine:_update_sled(t, dt)
 	local current_time = self._current_time
 
@@ -145,7 +145,7 @@ function ZipLine:_update_sled(t, dt)
 	end
 end
 
--- Lines 159-183
+-- Lines 157-181
 function ZipLine:_update_sounds(t, dt)
 	if self._current_time ~= 0 and not self._running then
 		self._sound_data = {
@@ -179,7 +179,7 @@ function ZipLine:_update_sounds(t, dt)
 	end
 end
 
--- Lines 185-207
+-- Lines 183-205
 function ZipLine:_check_dirty()
 	if not self._dirty then
 		return
@@ -206,7 +206,7 @@ function ZipLine:_check_dirty()
 	})
 end
 
--- Lines 209-218
+-- Lines 207-216
 function ZipLine:_update_sled_object()
 	if self._sled_data.object then
 		self._sled_data.object:set_position(self._sled_data.pos)
@@ -219,7 +219,7 @@ function ZipLine:_update_sled_object()
 	end
 end
 
--- Lines 220-228
+-- Lines 218-226
 function ZipLine:_check_interaction_active_state()
 	if not self._enabled then
 		self._unit:interaction():set_active(false)
@@ -230,7 +230,7 @@ function ZipLine:_check_interaction_active_state()
 	self._unit:interaction():set_active(not self:is_interact_blocked())
 end
 
--- Lines 230-244
+-- Lines 228-242
 function ZipLine:is_interact_blocked()
 	if self._booked_by_peer_id then
 		return true
@@ -247,7 +247,7 @@ function ZipLine:is_interact_blocked()
 	return self._current_time ~= 0 or alive(self:user_unit())
 end
 
--- Lines 246-300
+-- Lines 244-296
 function ZipLine:on_interacted(unit)
 	if self:is_interact_blocked() then
 		return
@@ -302,7 +302,7 @@ function ZipLine:on_interacted(unit)
 	end
 end
 
--- Lines 302-307
+-- Lines 298-303
 function ZipLine:_client_request_attach_bag(player)
 	self._request_unit = player
 
@@ -310,7 +310,7 @@ function ZipLine:_client_request_attach_bag(player)
 	managers.network:session():send_to_host("sync_unit_event_id_16", self._unit, "zipline", self.NET_EVENTS.request_attach_bag)
 end
 
--- Lines 309-318
+-- Lines 305-314
 function ZipLine:_attach_bag_response(granted)
 	if alive(self._request_unit) then
 		self._request_unit:movement():set_carry_restriction(false)
@@ -323,14 +323,14 @@ function ZipLine:_attach_bag_response(granted)
 	self._request_unit = nil
 end
 
--- Lines 320-323
+-- Lines 316-319
 function ZipLine:_client_request_access(unit)
 	self._request_unit = unit
 
 	managers.network:session():send_to_host("sync_unit_event_id_16", self._unit, "zipline", self.NET_EVENTS.request_access)
 end
 
--- Lines 325-338
+-- Lines 321-334
 function ZipLine:set_user(unit)
 	local old_unit = self._user_unit
 	self._user_unit = unit
@@ -347,7 +347,7 @@ function ZipLine:set_user(unit)
 	self:_check_interaction_active_state()
 end
 
--- Lines 340-359
+-- Lines 336-355
 function ZipLine:sync_set_user(unit)
 	self._booked_by_peer_id = nil
 	local old_unit = self._user_unit
@@ -366,7 +366,7 @@ function ZipLine:sync_set_user(unit)
 	self:_check_interaction_active_state()
 end
 
--- Lines 361-370
+-- Lines 357-366
 function ZipLine:sync_remove_user()
 	if alive(self._user_unit) then
 		self:run_sequence("on_person_exit_zipline", self._user_unit)
@@ -379,17 +379,17 @@ function ZipLine:sync_remove_user()
 	self:_check_interaction_active_state()
 end
 
--- Lines 372-374
+-- Lines 368-370
 function ZipLine:user_unit()
 	return self._user_unit
 end
 
--- Lines 376-378
+-- Lines 372-374
 function ZipLine:is_valid()
 	return self._start_pos and self._end_pos and true
 end
 
--- Lines 380-386
+-- Lines 376-382
 function ZipLine:set_speed(speed)
 	if not speed then
 		return
@@ -400,22 +400,22 @@ function ZipLine:set_speed(speed)
 	self:_update_total_time()
 end
 
--- Lines 388-390
+-- Lines 384-386
 function ZipLine:speed()
 	return self._speed
 end
 
--- Lines 392-394
+-- Lines 388-390
 function ZipLine:set_ai_ignores_bag(ai_ignores_bag)
 	self._ai_ignores_bag = ai_ignores_bag
 end
 
--- Lines 396-398
+-- Lines 392-394
 function ZipLine:ai_ignores_bag()
 	return self._ai_ignores_bag
 end
 
--- Lines 400-406
+-- Lines 396-402
 function ZipLine:set_slack(slack)
 	if not slack then
 		return
@@ -426,37 +426,37 @@ function ZipLine:set_slack(slack)
 	self:_update_pos_data()
 end
 
--- Lines 408-410
+-- Lines 404-406
 function ZipLine:slack()
 	return self._slack
 end
 
--- Lines 412-414
+-- Lines 408-410
 function ZipLine:set_total_time(total_time)
 	self._total_time = total_time
 end
 
--- Lines 416-418
+-- Lines 412-414
 function ZipLine:total_time()
 	return self._total_time
 end
 
--- Lines 420-422
+-- Lines 416-418
 function ZipLine:_update_total_time()
 	self:set_total_time((self:start_pos() - self:end_pos()):length() / self._speed)
 end
 
--- Lines 424-426
+-- Lines 420-422
 function ZipLine:start_pos()
 	return self._start_pos
 end
 
--- Lines 428-430
+-- Lines 424-426
 function ZipLine:end_pos()
 	return self._end_pos
 end
 
--- Lines 432-436
+-- Lines 428-432
 function ZipLine:set_start_pos(pos)
 	self._start_pos = pos
 
@@ -464,7 +464,7 @@ function ZipLine:set_start_pos(pos)
 	self:_update_total_time()
 end
 
--- Lines 438-442
+-- Lines 434-438
 function ZipLine:set_end_pos(pos)
 	self._end_pos = pos
 
@@ -472,12 +472,12 @@ function ZipLine:set_end_pos(pos)
 	self:_update_total_time()
 end
 
--- Lines 444-446
+-- Lines 440-442
 function ZipLine:set_end_pos_by_line(pos)
 	self:set_end_pos(pos - self._line_data.offset)
 end
 
--- Lines 448-467
+-- Lines 444-463
 function ZipLine:_update_pos_data()
 	if not self:is_valid() then
 		return
@@ -499,7 +499,7 @@ function ZipLine:_update_pos_data()
 	self._dirty = true
 end
 
--- Lines 469-481
+-- Lines 465-477
 function ZipLine:set_enabled(enabled)
 	enabled = enabled or false
 
@@ -513,7 +513,7 @@ function ZipLine:set_enabled(enabled)
 	self:_check_interaction_active_state()
 end
 
--- Lines 483-508
+-- Lines 479-496
 function ZipLine:set_usage_type(usage_type)
 	if not usage_type then
 		return
@@ -529,37 +529,37 @@ function ZipLine:set_usage_type(usage_type)
 	self._unit:interaction():set_tweak_data(self:is_usage_type_bag() and "bag_zipline" or "player_zipline")
 end
 
--- Lines 510-512
+-- Lines 498-500
 function ZipLine:usage_type()
 	return self._usage_type
 end
 
--- Lines 514-516
+-- Lines 502-504
 function ZipLine:is_usage_type_person()
 	return self._usage_type == "person"
 end
 
--- Lines 518-520
+-- Lines 506-508
 function ZipLine:is_usage_type_bag()
 	return self._usage_type == "bag"
 end
 
--- Lines 523-525
+-- Lines 510-512
 function ZipLine:is_usage_type_both()
 	return self._usage_type == "both"
 end
 
--- Lines 528-530
+-- Lines 514-516
 function ZipLine:current_time()
 	return self._current_time
 end
 
--- Lines 532-534
+-- Lines 518-520
 function ZipLine:pos_at_current_time()
 	return self:pos_at_time(self._current_time)
 end
 
--- Lines 536-549
+-- Lines 522-535
 function ZipLine:_update_and_get_pos_at_time(time, func)
 	self._current_time = time
 	self._dirty = true
@@ -573,12 +573,12 @@ function ZipLine:_update_and_get_pos_at_time(time, func)
 	return pos
 end
 
--- Lines 551-553
+-- Lines 537-539
 function ZipLine:update_and_get_pos_at_time(time)
 	return self:_update_and_get_pos_at_time(time, self.pos_at_time)
 end
 
--- Lines 555-557
+-- Lines 541-543
 function ZipLine:update_and_get_pos_at_time_linear(time)
 	return self:_update_and_get_pos_at_time(time, self.pos_at_time_linear)
 end
@@ -596,7 +596,7 @@ local slack_bezier_points = {
 	0
 }
 
--- Lines 561-572
+-- Lines 547-558
 function ZipLine:pos_at_time(time)
 	local bezier_value = math.bezier(ease_bezier_points, time)
 	local pos = math.lerp(self._start_pos, self._end_pos, bezier_value)
@@ -608,7 +608,7 @@ function ZipLine:pos_at_time(time)
 	return pos
 end
 
--- Lines 574-580
+-- Lines 560-566
 function ZipLine:pos_at_time_linear(time)
 	local pos = math.lerp(self._start_pos, self._end_pos, time)
 	local slack_bezier = math.bezier(slack_bezier_points, time)
@@ -619,7 +619,7 @@ function ZipLine:pos_at_time_linear(time)
 	return pos
 end
 
--- Lines 582-591
+-- Lines 568-577
 function ZipLine:speed_at_time(time, step)
 	step = step or 0.01
 	local pos1 = self:pos_at_time(time)
@@ -629,12 +629,12 @@ function ZipLine:speed_at_time(time, step)
 	return dist
 end
 
--- Lines 593-595
+-- Lines 579-581
 function ZipLine:current_direction()
 	return self._line_data.current_dir
 end
 
--- Lines 599-649
+-- Lines 585-635
 function ZipLine:sync_net_event(event_id, peer)
 	local net_events = self.NET_EVENTS
 
@@ -695,12 +695,12 @@ function ZipLine:sync_net_event(event_id, peer)
 	end
 end
 
--- Lines 651-653
+-- Lines 637-639
 function ZipLine:_send_net_event(event_id)
 	managers.network:session():send_to_peers_synched("sync_unit_event_id_16", self._unit, "zipline", event_id)
 end
 
--- Lines 657-688
+-- Lines 643-674
 function ZipLine:attach_bag(bag)
 	self._booked_bag_peer_id = nil
 	local body = bag:body("hinge_body_1") or bag:body(0)
@@ -732,7 +732,7 @@ function ZipLine:attach_bag(bag)
 	self:run_sequence("on_attached_bag", self._attached_bag)
 end
 
--- Lines 690-711
+-- Lines 676-697
 function ZipLine:release_bag()
 	local body = self._attached_bag:body("hinge_body_1") or self._attached_bag:body(0)
 
@@ -754,7 +754,7 @@ function ZipLine:release_bag()
 	self._attached_bag = nil
 end
 
--- Lines 715-719
+-- Lines 701-705
 function ZipLine:run_sequence(sequence_name, user_unit)
 	if self._unit:damage():has_sequence(sequence_name) then
 		self._unit:damage():run_sequence_simple(sequence_name, {
@@ -763,17 +763,17 @@ function ZipLine:run_sequence(sequence_name, user_unit)
 	end
 end
 
--- Lines 723-725
+-- Lines 709-711
 function ZipLine:destroy(unit)
 	table.delete(ZipLine.ziplines, self._unit)
 end
 
--- Lines 727-729
+-- Lines 713-715
 function ZipLine:set_debug_state(state)
 	self._debug = state
 end
 
--- Lines 731-749
+-- Lines 717-735
 function ZipLine:debug_draw(t, dt)
 	if not self:is_valid() then
 		return
@@ -795,7 +795,7 @@ function ZipLine:debug_draw(t, dt)
 	brush:sphere(pos, 10)
 end
 
--- Lines 751-762
+-- Lines 737-748
 function ZipLine:save(data)
 	local state = {
 		enabled = self._enabled,
@@ -808,7 +808,7 @@ function ZipLine:save(data)
 	data.ZipLine = state
 end
 
--- Lines 764-776
+-- Lines 750-762
 function ZipLine:load(data)
 	local state = data.ZipLine
 

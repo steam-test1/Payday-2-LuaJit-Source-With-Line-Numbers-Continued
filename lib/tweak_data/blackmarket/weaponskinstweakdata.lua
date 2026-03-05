@@ -1,6 +1,6 @@
 require("lib/tweak_data/blackmarket/WeaponColorTemplates")
 
--- Lines 343-40897
+-- Lines 343-39947
 function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins = {
 		serbu_woodland = {}
@@ -38972,7 +38972,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self:_setup_weapon_color_skins(tweak_data)
 end
 
--- Lines 40900-40994
+-- Lines 39950-40044
 function BlackMarketTweakData:populate_weapon_color_skin(weapon_color_data, variation_data, weapon_id)
 	local weapon_color_skin_template = self.weapon_color_templates.color_skin
 	weapon_color_data.base_gradient = variation_data[weapon_color_skin_template.base_gradient]
@@ -39063,7 +39063,7 @@ function BlackMarketTweakData:populate_weapon_color_skin(weapon_color_data, vari
 	end
 end
 
--- Lines 40997-41023
+-- Lines 40047-40073
 function BlackMarketTweakData:create_new_color_skin(name, data, color_skin_data)
 	data.name_id = "bm_wskn_" .. name
 	data.rarity = "common"
@@ -39088,12 +39088,12 @@ function BlackMarketTweakData:create_new_color_skin(name, data, color_skin_data)
 	table.insert(self.weapon_colors, name)
 end
 
--- Lines 41025-41027
+-- Lines 40075-40077
 function BlackMarketTweakData:get_weapon_color_index_string(color_index)
 	return "menu_weapon_color_index_" .. tostring(color_index)
 end
 
--- Lines 41029-44078
+-- Lines 40079-43128
 function BlackMarketTweakData:_setup_weapon_color_skins(tweak_data)
 	self.weapon_color_templates = WeaponColorTemplates.setup_weapon_color_templates(tweak_data)
 	self.weapon_color_pattern_scales = {

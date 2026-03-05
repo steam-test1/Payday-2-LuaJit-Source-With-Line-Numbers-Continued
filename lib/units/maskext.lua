@@ -25,7 +25,7 @@ local MATCAP_MODE_TILE = 0
 local MATCAP_MODE_MATCAP = 1
 local MATCAP_MODE_STRIP = 2
 
--- Lines 45-62
+-- Lines 39-52
 function MaskExt:init(unit)
 	self._unit = unit
 	self._textures = {}
@@ -36,7 +36,7 @@ function MaskExt:init(unit)
 	unit:set_extension_update_enabled(IDS_BASE, false)
 end
 
--- Lines 79-111
+-- Lines 66-98
 function MaskExt:_init_tintable_materials()
 	local tmp_mat_tintables_a = self.mat_tintables_a and string.split(self.mat_tintables_a, ";") or false
 
@@ -65,7 +65,7 @@ function MaskExt:_init_tintable_materials()
 	end
 end
 
--- Lines 116-166
+-- Lines 102-152
 function MaskExt:swap_to_fps()
 	local glass_id_string = Idstring("glass")
 	local mtr_hair_solid_id_string = Idstring("mtr_hair_solid")
@@ -73,6 +73,7 @@ function MaskExt:swap_to_fps()
 	local mtr_bloom_glow_id_string = Idstring("mtr_bloom_glow")
 	local mtr_opacity = Idstring("mtr_opacity")
 	local mtr_feathers = Idstring("mtr_feathers")
+	local mat_shadow = Idstring("mat_shadow")
 	local glow_id_strings = {}
 	local sweep_id_strings = {}
 	local glow_tint_stat_id_strings = {}
@@ -91,6 +92,9 @@ function MaskExt:swap_to_fps()
 				-- Nothing
 			elseif material:name() == glass_id_string then
 				material:set_render_template(Idstring("opacity:CUBE_ENVIRONMENT_MAPPING:CUBE_FRESNEL:DIFFUSE_TEXTURE:FPS"))
+			elseif material:name() == mat_shadow then
+				print("[MASK]  SHADOW MATERIAL")
+				material:set_render_template(Idstring("effect:DIFFUSE0_TEXTURE:FPS:INTERSECTION_FADEOUT"))
 			elseif material:name() == mtr_bloom_glow_id_string then
 				material:set_render_template(Idstring("generic:DEPTH_SCALING:DIFFUSE_TEXTURE:SELF_ILLUMINATION:SELF_ILLUMINATION_BLOOM"))
 			elseif glow_id_strings[material:name():key()] then
@@ -106,7 +110,7 @@ function MaskExt:swap_to_fps()
 	end
 end
 
--- Lines 169-437
+-- Lines 155-391
 function MaskExt:apply_blueprint(blueprint, async_clbk)
 	if not blueprint then
 		Application:error("[MaskExt:apply_blueprint] NO BLUEPRINT GIVEN!!")
@@ -238,11 +242,10 @@ function MaskExt:apply_blueprint(blueprint, async_clbk)
 	self._material_amount = material_data.material_amount or MATCAP_MODE_MATCAP
 	self._material_amounts = Vector3(color_a_data and color_a_data.material_amount or MATCAP_MODE_MATCAP, color_b_data and color_b_data.material_amount or MATCAP_MODE_MATCAP, color_c_data and color_c_data.material_amount or MATCAP_MODE_MATCAP)
 
-	if (not blueprint.color_a or blueprint.color_a.id ~= "nothing") and self._mat_tintables_a then
+	if (not blueprint.color_a or blueprint.color_a.id ~= "nothing") and self._mat_tintables_a and not color_a_data.does_not_apply_color then
 		for mat_name, value_id in pairs(self._mat_tintables_a) do
 			local material = self._unit:material(Idstring(mat_name))
 
-			print("[MaskExt] Setting A:", value_id, self._tint_color_a)
 			material:set_variable(Idstring(value_id), self._tint_color_a)
 		end
 	elseif self._mat_tintables_a_default then
@@ -254,11 +257,10 @@ function MaskExt:apply_blueprint(blueprint, async_clbk)
 		end
 	end
 
-	if (not blueprint.color_b or blueprint.color_b.id ~= "nothing") and self._mat_tintables_b then
+	if (not blueprint.color_b or blueprint.color_b.id ~= "nothing") and self._mat_tintables_b and not color_b_data.does_not_apply_color then
 		for mat_name, value_id in pairs(self._mat_tintables_b) do
 			local material = self._unit:material(Idstring(mat_name))
 
-			print("[MaskExt] Setting B:", value_id, self._tint_color_b)
 			material:set_variable(Idstring(value_id), self._tint_color_b)
 		end
 	elseif self._mat_tintables_b_default then
@@ -293,7 +295,7 @@ function MaskExt:apply_blueprint(blueprint, async_clbk)
 	end
 end
 
--- Lines 440-467
+-- Lines 394-419
 function MaskExt:_apply_mask_textures(texture_data)
 	texture_data.ready = texture_data.ready and texture_data.ready + 1 or 1
 
@@ -306,7 +308,7 @@ function MaskExt:_apply_mask_textures(texture_data)
 	end
 end
 
--- Lines 470-485
+-- Lines 422-435
 function MaskExt:_apply_mask_variables()
 	for _, material in ipairs(self._materials_mat3 or {}) do
 		material:set_variable(IDS_MATERIAL_AMOUNT, self._material_amount or 1)
@@ -320,7 +322,7 @@ function MaskExt:_apply_mask_variables()
 	end
 end
 
--- Lines 488-504
+-- Lines 438-454
 function MaskExt:clbk_texture_loaded(async_clbk, tex_name)
 	if not alive(self._unit) then
 		return
@@ -335,7 +337,7 @@ function MaskExt:clbk_texture_loaded(async_clbk, tex_name)
 	self:_chk_load_complete(async_clbk)
 end
 
--- Lines 507-529
+-- Lines 457-477
 function MaskExt:_chk_load_complete(async_clbk)
 	if self._requesting then
 		return
@@ -355,7 +357,7 @@ function MaskExt:_chk_load_complete(async_clbk)
 	async_clbk()
 end
 
--- Lines 532-542
+-- Lines 480-490
 function MaskExt:destroy(unit)
 	for tex_id, texture_data in pairs(self._textures) do
 		if not texture_data.ready or texture_data.ready <= 0 then

@@ -484,7 +484,7 @@ function ExplosionManager:_detect_hits(params)
 	return results
 end
 
--- Lines 867-977
+-- Lines 867-973
 function ExplosionManager:_damage_characters(detect_results, params, variant, damage_func_name)
 	local user_unit = params.user
 	local owner = params.owner
@@ -601,7 +601,7 @@ function ExplosionManager:_damage_characters(detect_results, params, variant, da
 	return results
 end
 
--- Lines 979-999
+-- Lines 975-995
 function ExplosionManager:_damage_bodies(detect_results, params)
 	local user_unit = params.user
 	local hit_pos = params.hit_pos
@@ -625,7 +625,7 @@ function ExplosionManager:_damage_bodies(detect_results, params)
 	end
 end
 
--- Lines 1001-1034
+-- Lines 997-1030
 function ExplosionManager:detect_and_tase(params)
 	local user_unit = params.user
 	local owner = params.owner
@@ -664,7 +664,7 @@ function ExplosionManager:detect_and_tase(params)
 	return detect_results.units_hit, detect_results.splinters, results
 end
 
--- Lines 1037-1069
+-- Lines 1033-1065
 function ExplosionManager:detect_and_stun(params)
 	local user_unit = params.user
 	local owner = params.owner
@@ -702,7 +702,7 @@ function ExplosionManager:detect_and_stun(params)
 	return detect_results.units_hit, detect_results.splinters, results
 end
 
--- Lines 1072-1123
+-- Lines 1068-1119
 function ExplosionManager:detect_and_give_dmg(params)
 	local user_unit = params.user
 	local owner = params.owner
@@ -766,7 +766,7 @@ function ExplosionManager:detect_and_give_dmg(params)
 	return detect_results.units_hit, detect_results.splinters, results
 end
 
--- Lines 1128-1149
+-- Lines 1123-1144
 function ExplosionManager.sort_units_target_prio(units)
 	table.sort(units, function (unit_a, unit_b)
 		local base_a_ext = alive(unit_a) and unit_a:base()

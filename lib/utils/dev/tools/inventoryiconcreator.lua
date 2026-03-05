@@ -2177,7 +2177,7 @@ end
 function InventoryIconCreator:_set_weapon_pattern_scales()
 end
 
--- Lines 1940-1992
+-- Lines 1940-1987
 function InventoryIconCreator:_create_masks_page(notebook)
 	local panel = EWS:Panel(notebook, "", "TAB_TRAVERSAL")
 	local panel_sizer = EWS:BoxSizer("VERTICAL")
@@ -2241,7 +2241,7 @@ function InventoryIconCreator:_create_masks_page(notebook)
 	return panel
 end
 
--- Lines 1994-2024
+-- Lines 1989-2019
 function InventoryIconCreator:_add_mask_ctrlr(panel, sizer, name, options, value)
 	local combobox_params = {
 		sizer_proportions = 1,
@@ -2275,7 +2275,7 @@ function InventoryIconCreator:_add_mask_ctrlr(panel, sizer, name, options, value
 	return ctrlr
 end
 
--- Lines 2026-2056
+-- Lines 2021-2044
 function InventoryIconCreator:_update_mask_combobox_text(params)
 	local name = params.name
 	local value = params.ctrlr:get_value()
@@ -2302,7 +2302,7 @@ function InventoryIconCreator:_update_mask_combobox_text(params)
 	end
 end
 
--- Lines 2060-2085
+-- Lines 2048-2073
 function InventoryIconCreator:_create_melee_page(notebook)
 	local panel = EWS:Panel(notebook, "", "TAB_TRAVERSAL")
 	local panel_sizer = EWS:BoxSizer("VERTICAL")
@@ -2337,7 +2337,7 @@ function InventoryIconCreator:_create_melee_page(notebook)
 	return panel
 end
 
--- Lines 2087-2111
+-- Lines 2075-2099
 function InventoryIconCreator:_add_melee_ctrlr(panel, sizer, name, options, value)
 	local combobox_params = {
 		sizer_proportions = 1,
@@ -2371,7 +2371,7 @@ function InventoryIconCreator:_add_melee_ctrlr(panel, sizer, name, options, valu
 	return ctrlr
 end
 
--- Lines 2113-2126
+-- Lines 2101-2114
 function InventoryIconCreator:_update_melee_combobox_text(params)
 	local name = params.name
 	local value = params.ctrlr:get_value()
@@ -2388,7 +2388,7 @@ function InventoryIconCreator:_update_melee_combobox_text(params)
 	end
 end
 
--- Lines 2130-2155
+-- Lines 2118-2143
 function InventoryIconCreator:_create_throwable_page(notebook)
 	local panel = EWS:Panel(notebook, "", "TAB_TRAVERSAL")
 	local panel_sizer = EWS:BoxSizer("VERTICAL")
@@ -2423,7 +2423,7 @@ function InventoryIconCreator:_create_throwable_page(notebook)
 	return panel
 end
 
--- Lines 2158-2182
+-- Lines 2146-2170
 function InventoryIconCreator:_add_throwable_ctrlr(panel, sizer, name, options, value)
 	local combobox_params = {
 		sizer_proportions = 1,
@@ -2457,7 +2457,7 @@ function InventoryIconCreator:_add_throwable_ctrlr(panel, sizer, name, options, 
 	return ctrlr
 end
 
--- Lines 2184-2198
+-- Lines 2172-2186
 function InventoryIconCreator:_update_throwable_combobox_text(params)
 	local name = params.name
 	local value = params.ctrlr:get_value()
@@ -2476,7 +2476,7 @@ function InventoryIconCreator:_update_throwable_combobox_text(params)
 	end
 end
 
--- Lines 2201-2227
+-- Lines 2189-2215
 function InventoryIconCreator:_create_character_page(notebook)
 	local panel = EWS:Panel(notebook, "", "TAB_TRAVERSAL")
 	local panel_sizer = EWS:BoxSizer("VERTICAL")
@@ -2511,7 +2511,7 @@ function InventoryIconCreator:_create_character_page(notebook)
 	return panel
 end
 
--- Lines 2229-2253
+-- Lines 2217-2241
 function InventoryIconCreator:_add_character_ctrlr(panel, sizer, name, options, value)
 	local combobox_params = {
 		sizer_proportions = 1,
@@ -2545,7 +2545,7 @@ function InventoryIconCreator:_add_character_ctrlr(panel, sizer, name, options, 
 	return ctrlr
 end
 
--- Lines 2255-2272
+-- Lines 2243-2260
 function InventoryIconCreator:_update_character_combobox_text(params)
 	local name = params.name
 	local value = params.ctrlr:get_value()
@@ -2565,7 +2565,7 @@ function InventoryIconCreator:_update_character_combobox_text(params)
 	end
 end
 
--- Lines 2275-2304
+-- Lines 2263-2292
 function InventoryIconCreator:_create_player_style_page(notebook)
 	local panel = EWS:Panel(notebook, "", "TAB_TRAVERSAL")
 	local panel_sizer = EWS:BoxSizer("VERTICAL")
@@ -2605,7 +2605,7 @@ function InventoryIconCreator:_create_player_style_page(notebook)
 	return panel
 end
 
--- Lines 2306-2330
+-- Lines 2294-2318
 function InventoryIconCreator:_add_player_style_ctrlr(panel, sizer, name, options, value)
 	local combobox_params = {
 		sizer_proportions = 1,
@@ -2639,7 +2639,7 @@ function InventoryIconCreator:_add_player_style_ctrlr(panel, sizer, name, option
 	return ctrlr
 end
 
--- Lines 2332-2374
+-- Lines 2320-2362
 function InventoryIconCreator:_update_player_style_combobox_text(params)
 	local name = params.name
 	local value = params.ctrlr:get_value()
@@ -2682,7 +2682,7 @@ function InventoryIconCreator:_update_player_style_combobox_text(params)
 	end
 end
 
--- Lines 2377-2404
+-- Lines 2365-2392
 function InventoryIconCreator:_create_gloves_page(notebook)
 	local panel = EWS:Panel(notebook, "", "TAB_TRAVERSAL")
 	local panel_sizer = EWS:BoxSizer("VERTICAL")
@@ -2718,7 +2718,7 @@ function InventoryIconCreator:_create_gloves_page(notebook)
 	return panel
 end
 
--- Lines 2406-2430
+-- Lines 2394-2418
 function InventoryIconCreator:_add_gloves_ctrlr(panel, sizer, name, options, value)
 	local combobox_params = {
 		sizer_proportions = 1,
@@ -2752,7 +2752,7 @@ function InventoryIconCreator:_add_gloves_ctrlr(panel, sizer, name, options, val
 	return ctrlr
 end
 
--- Lines 2432-2452
+-- Lines 2420-2440
 function InventoryIconCreator:_update_gloves_combobox_text(params)
 	local name = params.name
 	local value = params.ctrlr:get_value()
@@ -2774,7 +2774,7 @@ function InventoryIconCreator:_update_gloves_combobox_text(params)
 	end
 end
 
--- Lines 2455-2561
+-- Lines 2443-2549
 function InventoryIconCreator:_create_poser_page(notebook)
 	local panel = EWS:Panel(notebook, "", "TAB_TRAVERSAL")
 	local panel_sizer = EWS:BoxSizer("VERTICAL")
@@ -2846,7 +2846,7 @@ function InventoryIconCreator:_create_poser_page(notebook)
 	return panel
 end
 
--- Lines 2563-2572
+-- Lines 2551-2560
 function InventoryIconCreator:_add_poser_collapse_box(panel, sizer, name)
 	local collapse_box = CoreEWS:CollapseBox(panel, "VERTICAL", name, nil, false, "NO_BORDER")
 
@@ -2860,7 +2860,7 @@ function InventoryIconCreator:_add_poser_collapse_box(panel, sizer, name)
 	return collapse_box, lower_panel, box_sizer
 end
 
--- Lines 2574-2609
+-- Lines 2562-2597
 function InventoryIconCreator:_add_poser_combo_ctrl(panel, sizer, name, options, value)
 	local combobox_params = {
 		sizer_proportions = 1,
@@ -2894,7 +2894,7 @@ function InventoryIconCreator:_add_poser_combo_ctrl(panel, sizer, name, options,
 	return ctrlr
 end
 
--- Lines 2611-2630
+-- Lines 2599-2618
 function InventoryIconCreator:_add_poser_slider_ctrl(panel, sizer, name, min, max, value)
 	local slider_params = {
 		name_proportions = 1,
@@ -2917,7 +2917,7 @@ function InventoryIconCreator:_add_poser_slider_ctrl(panel, sizer, name, min, ma
 	return slider_params.slider_ctrlr
 end
 
--- Lines 2632-2715
+-- Lines 2620-2694
 function InventoryIconCreator:_update_poser_combobox_text(params)
 	local name = params.name
 	local value = params.ctrlr:get_value()
@@ -2979,18 +2979,18 @@ function InventoryIconCreator:_update_poser_combobox_text(params)
 	end
 end
 
--- Lines 2717-2719
+-- Lines 2696-2698
 function InventoryIconCreator:_dummy()
 end
 
--- Lines 2721-2724
+-- Lines 2700-2703
 function InventoryIconCreator:_set_weapon_skin_poser()
 	local weapon_color = self._ctrlrs.poser.weapon_color
 
 	weapon_color:set_value("none")
 end
 
--- Lines 2726-2736
+-- Lines 2705-2715
 function InventoryIconCreator:_update_weapon_skins_poser()
 	local weapon_skin = self._ctrlrs.poser.weapon_skin
 
@@ -3003,14 +3003,14 @@ function InventoryIconCreator:_update_weapon_skins_poser()
 	weapon_skin:set_value("none")
 end
 
--- Lines 2739-2742
+-- Lines 2718-2721
 function InventoryIconCreator:_set_weapon_color_poser()
 	local weapon_skin = self._ctrlrs.poser.weapon_skin
 
 	weapon_skin:set_value("none")
 end
 
--- Lines 2747-2757
+-- Lines 2726-2736
 function InventoryIconCreator:close_ews()
 	if alive(self._weapon_mods_panel) then
 		self._weapon_mods_panel:destroy()

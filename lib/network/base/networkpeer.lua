@@ -241,7 +241,7 @@ function NetworkPeer:verify_outfit()
 	end
 end
 
--- Lines 260-422
+-- Lines 260-417
 function NetworkPeer:_verify_outfit_data()
 	if not managers.network:session() or managers.network:session():local_peer():id() == self._id then
 		print("[NetworkPeer] Cannot verify myself or anyone without a session. Session exists:", not not managers.network:session())
@@ -319,7 +319,7 @@ function NetworkPeer:_verify_outfit_data()
 	return nil
 end
 
--- Lines 428-442
+-- Lines 423-437
 function NetworkPeer:_verify_cheated_outfit(item_type, item_id, result)
 	self._cheated_items = self._cheated_items or {}
 	local item = tostring(item_type) .. "_" .. tostring(item_id)
@@ -335,7 +335,7 @@ function NetworkPeer:_verify_cheated_outfit(item_type, item_id, result)
 	return result
 end
 
--- Lines 449-492
+-- Lines 444-487
 function NetworkPeer:_verify_content(item_type, item_id)
 	if SystemInfo:platform() ~= Idstring("WIN32") then
 		return true
@@ -369,7 +369,7 @@ function NetworkPeer:_verify_content(item_type, item_id)
 	return self:_verify_item_data(item_data)
 end
 
--- Lines 495-520
+-- Lines 490-515
 function NetworkPeer:_verify_item_data(item_data)
 	local dlc_list = {}
 
@@ -390,7 +390,7 @@ function NetworkPeer:_verify_item_data(item_data)
 	return true
 end
 
--- Lines 524-561
+-- Lines 519-556
 function NetworkPeer:verify_grenade(value)
 	local grenade_id = self:grenade_id()
 	local tweak_entry = grenade_id and tweak_data.blackmarket.projectiles[grenade_id]
@@ -419,7 +419,7 @@ function NetworkPeer:verify_grenade(value)
 	return true
 end
 
--- Lines 565-593
+-- Lines 560-588
 function NetworkPeer:verify_bag(carry_id, pickup)
 	if pickup then
 		if not self._carry_id then
@@ -450,7 +450,7 @@ function NetworkPeer:verify_bag(carry_id, pickup)
 	return false
 end
 
--- Lines 597-624
+-- Lines 592-619
 function NetworkPeer:verify_deployable(id)
 	local max_amount = tweak_data.equipments.max_amount[id]
 
@@ -482,12 +482,12 @@ function NetworkPeer:verify_deployable(id)
 	return false
 end
 
--- Lines 628-630
+-- Lines 623-625
 function NetworkPeer:is_cheater()
 	return self._cheater
 end
 
--- Lines 634-656
+-- Lines 629-651
 function NetworkPeer:mark_cheater(reason, auto_kick)
 	if Application:editor() or SystemInfo:platform() ~= Idstring("WIN32") then
 		return
@@ -506,7 +506,7 @@ function NetworkPeer:mark_cheater(reason, auto_kick)
 	end
 end
 
--- Lines 662-708
+-- Lines 657-703
 function NetworkPeer:tradable_verify_outfit(signature)
 	if self._wait_for_verify_tradable_outfit then
 		return
@@ -522,7 +522,7 @@ function NetworkPeer:tradable_verify_outfit(signature)
 	end
 end
 
--- Lines 711-810
+-- Lines 706-805
 function NetworkPeer:on_verify_tradable_outfit(outfit_version, error, list)
 	self._wait_for_verify_tradable_outfit = nil
 
@@ -552,7 +552,7 @@ function NetworkPeer:on_verify_tradable_outfit(outfit_version, error, list)
 	end
 end
 
--- Lines 814-862
+-- Lines 809-857
 function NetworkPeer:tradable_verification_failed(group, outfit)
 	if not group or group == "primary_skin" then
 		outfit.primary.cosmetics = nil
@@ -591,7 +591,7 @@ function NetworkPeer:tradable_verification_failed(group, outfit)
 	end
 end
 
--- Lines 866-944
+-- Lines 861-939
 function NetworkPeer:load(data)
 	print("[NetworkPeer:load] data:", inspect(data))
 
@@ -667,7 +667,7 @@ function NetworkPeer:load(data)
 	self._expected_dropin_pause_confirmations = data.expected_dropin_pause_confirmations
 end
 
--- Lines 948-986
+-- Lines 943-981
 function NetworkPeer:save(data)
 	print("[NetworkPeer:save] ID:", self._id)
 
@@ -709,72 +709,72 @@ function NetworkPeer:save(data)
 	print("[NetworkPeer:save]", inspect(data))
 end
 
--- Lines 990-990
+-- Lines 985-985
 function NetworkPeer:name()
 	return self._name
 end
 
--- Lines 994-994
+-- Lines 989-989
 function NetworkPeer:ip()
 	return self._ip
 end
 
--- Lines 1002-1002
+-- Lines 997-997
 function NetworkPeer:id()
 	return self._id
 end
 
--- Lines 1006-1006
+-- Lines 1001-1001
 function NetworkPeer:rpc()
 	return self._rpc
 end
 
--- Lines 1010-1022
+-- Lines 1005-1017
 function NetworkPeer:connection_info()
 	return self._name, self._id, self._user_id or "", self._account_type_str, self._account_id, self._in_lobby, self._loading, self._synced, self._character, self._xuid, self._xnaddr
 end
 
--- Lines 1026-1026
+-- Lines 1021-1021
 function NetworkPeer:synched()
 	return self._synced
 end
 
--- Lines 1030-1030
+-- Lines 1025-1025
 function NetworkPeer:loading()
 	return self._loading
 end
 
--- Lines 1034-1034
+-- Lines 1029-1029
 function NetworkPeer:loaded()
 	return self._loaded
 end
 
--- Lines 1038-1038
+-- Lines 1033-1033
 function NetworkPeer:in_lobby()
 	return self._in_lobby
 end
 
--- Lines 1042-1042
+-- Lines 1037-1037
 function NetworkPeer:character()
 	return self._character
 end
 
--- Lines 1046-1046
+-- Lines 1041-1041
 function NetworkPeer:used_deployable()
 	return self._used_deployable
 end
 
--- Lines 1050-1050
+-- Lines 1045-1045
 function NetworkPeer:outfit_signature()
 	return self._signature
 end
 
--- Lines 1054-1054
+-- Lines 1049-1049
 function NetworkPeer:set_used_deployable(used)
 	self._used_deployable = used
 end
 
--- Lines 1057-1062
+-- Lines 1052-1057
 function NetworkPeer:qos()
 	if not self._rpc then
 		return
@@ -783,47 +783,47 @@ function NetworkPeer:qos()
 	return Network:qos(self._rpc)
 end
 
--- Lines 1066-1068
+-- Lines 1061-1063
 function NetworkPeer:set_used_cable_ties(used_cable_ties)
 	self._used_cable_ties = used_cable_ties
 end
 
--- Lines 1070-1072
+-- Lines 1065-1067
 function NetworkPeer:on_used_cable_tie()
 	self._used_cable_ties = (self._used_cable_ties or 0) + 1
 end
 
--- Lines 1074-1076
+-- Lines 1069-1071
 function NetworkPeer:used_cable_ties()
 	return self._used_cable_ties
 end
 
--- Lines 1080-1082
+-- Lines 1075-1077
 function NetworkPeer:set_used_body_bags(used_body_bags)
 	self._used_body_bags = used_body_bags
 end
 
--- Lines 1084-1086
+-- Lines 1079-1081
 function NetworkPeer:on_used_body_bags()
 	self._used_body_bags = (self._used_body_bags or 0) + 1
 end
 
--- Lines 1088-1090
+-- Lines 1083-1085
 function NetworkPeer:used_body_bags()
 	return self._used_body_bags or 0
 end
 
--- Lines 1094-1094
+-- Lines 1089-1089
 function NetworkPeer:waiting_for_player_ready()
 	return self._waiting_for_player_ready
 end
 
--- Lines 1098-1100
+-- Lines 1093-1095
 function NetworkPeer:ip_verified()
 	return self._ip_verified
 end
 
--- Lines 1104-1133
+-- Lines 1099-1128
 function NetworkPeer:set_ip_verified(state)
 	cat_print("multiplayer_base", "NetworkPeer:set_ip_verified", state, self._name, self._id)
 
@@ -849,7 +849,7 @@ function NetworkPeer:set_ip_verified(state)
 	end
 end
 
--- Lines 1137-1167
+-- Lines 1132-1162
 function NetworkPeer:set_loading(state)
 	cat_print("multiplayer_base", "[NetworkPeer:set_loading]", state, "was loading", self._loading, "id", self._id)
 
@@ -882,12 +882,12 @@ function NetworkPeer:set_loading(state)
 	end
 end
 
--- Lines 1171-1173
+-- Lines 1166-1168
 function NetworkPeer:set_loaded(state)
 	self._loaded = state
 end
 
--- Lines 1177-1186
+-- Lines 1172-1181
 function NetworkPeer:set_synched(state)
 	if state and self.chk_timeout == self.pre_handshake_chk_timeout then
 		self._default_timeout_check_reset = TimerManager:wall():time() + NetworkPeer.PRE_HANDSHAKE_CHK_TIME
@@ -902,22 +902,22 @@ function NetworkPeer:set_synched(state)
 	self:_chk_flush_msg_queues()
 end
 
--- Lines 1190-1192
+-- Lines 1185-1187
 function NetworkPeer:on_sync_start()
 	self._syncing = true
 end
 
--- Lines 1196-1198
+-- Lines 1191-1193
 function NetworkPeer:set_entering_lobby(state)
 	self._entering_lobby = state
 end
 
--- Lines 1202-1204
+-- Lines 1197-1199
 function NetworkPeer:entering_lobby()
 	return self._entering_lobby
 end
 
--- Lines 1208-1226
+-- Lines 1203-1221
 function NetworkPeer:set_in_lobby(state)
 	cat_print("multiplayer_base", "NetworkPeer:set_in_lobby", state, self._id)
 
@@ -933,19 +933,19 @@ function NetworkPeer:set_in_lobby(state)
 	self:_chk_flush_msg_queues()
 end
 
--- Lines 1231-1233
+-- Lines 1226-1228
 function NetworkPeer:set_in_lobby_soft(state)
 	self._in_lobby = state
 end
 
--- Lines 1238-1241
+-- Lines 1233-1236
 function NetworkPeer:set_synched_soft(state)
 	self._synced = state
 
 	self:_chk_flush_msg_queues()
 end
 
--- Lines 1245-1249
+-- Lines 1240-1244
 function NetworkPeer:set_character(character)
 	self._character = character
 
@@ -953,14 +953,14 @@ function NetworkPeer:set_character(character)
 	self:verify_character()
 end
 
--- Lines 1253-1256
+-- Lines 1248-1251
 function NetworkPeer:set_waiting_for_player_ready(state)
 	cat_print("multiplayer_base", "NetworkPeer:waiting_for_player_ready", state, self._id)
 
 	self._waiting_for_player_ready = state
 end
 
--- Lines 1260-1268
+-- Lines 1255-1263
 function NetworkPeer:set_statistics(total_kills, total_specials_kills, total_head_shots, accuracy, downs)
 	self._statistics = {
 		total_kills = total_kills,
@@ -971,17 +971,17 @@ function NetworkPeer:set_statistics(total_kills, total_specials_kills, total_hea
 	}
 end
 
--- Lines 1270-1272
+-- Lines 1265-1267
 function NetworkPeer:statistics()
 	return self._statistics
 end
 
--- Lines 1274-1276
+-- Lines 1269-1271
 function NetworkPeer:has_statistics()
 	return self._statistics and true or false
 end
 
--- Lines 1280-1312
+-- Lines 1275-1307
 function NetworkPeer:send(func_name, ...)
 	if not self._ip_verified then
 		debug_pause("[NetworkPeer:send] ip unverified:", func_name, ...)
@@ -1011,7 +1011,7 @@ function NetworkPeer:send(func_name, ...)
 	end
 end
 
--- Lines 1316-1330
+-- Lines 1311-1325
 function NetworkPeer:_send_queued(queue_name, func_name, ...)
 	if self._msg_queues and self._msg_queues[queue_name] then
 		self:_push_to_queue(queue_name, func_name, ...)
@@ -1028,12 +1028,12 @@ function NetworkPeer:_send_queued(queue_name, func_name, ...)
 	end
 end
 
--- Lines 1334-1336
+-- Lines 1329-1331
 function NetworkPeer:send_after_load(...)
 	self:_send_queued("load", ...)
 end
 
--- Lines 1340-1350
+-- Lines 1335-1345
 function NetworkPeer:send_queued_sync(...)
 	if not self._ip_verified then
 		Application:error("[NetworkPeer:send_queued_sync] ip unverified:", ...)
@@ -1046,7 +1046,7 @@ function NetworkPeer:send_queued_sync(...)
 	end
 end
 
--- Lines 1354-1370
+-- Lines 1349-1365
 function NetworkPeer:_chk_flush_msg_queues()
 	if not self._msg_queues or not self._ip_verified then
 		return
@@ -1065,7 +1065,7 @@ function NetworkPeer:_chk_flush_msg_queues()
 	end
 end
 
--- Lines 1374-1384
+-- Lines 1369-1379
 function NetworkPeer:chk_enable_queue()
 	if not self._loaded then
 		self._msg_queues = self._msg_queues or {}
@@ -1078,14 +1078,14 @@ function NetworkPeer:chk_enable_queue()
 	end
 end
 
--- Lines 1388-1390
+-- Lines 1383-1385
 function NetworkPeer:_push_to_queue(queue_name, ...)
 	table.insert(self._msg_queues[queue_name], {
 		...
 	})
 end
 
--- Lines 1394-1425
+-- Lines 1389-1420
 function NetworkPeer:_clean_queue()
 	if not self._msg_queues then
 		return
@@ -1122,7 +1122,7 @@ function NetworkPeer:_clean_queue()
 	end
 end
 
--- Lines 1429-1464
+-- Lines 1424-1459
 function NetworkPeer:_flush_queue(queue_name)
 	if not self._ip_verified then
 		error("[NetworkPeer:_flush_queue] ip unverified:", queue_name)
@@ -1162,7 +1162,7 @@ function NetworkPeer:_flush_queue(queue_name)
 	end
 end
 
--- Lines 1468-1482
+-- Lines 1463-1477
 function NetworkPeer:chk_timeout(timeout)
 	if not self._ip_verified then
 		return
@@ -1180,7 +1180,7 @@ function NetworkPeer:chk_timeout(timeout)
 	end
 end
 
--- Lines 1486-1492
+-- Lines 1481-1487
 function NetworkPeer:pre_handshake_chk_timeout()
 	local wall_t = TimerManager:wall():time()
 
@@ -1190,7 +1190,7 @@ function NetworkPeer:pre_handshake_chk_timeout()
 	end
 end
 
--- Lines 1496-1503
+-- Lines 1491-1498
 function NetworkPeer:on_lost()
 	self._in_lobby = false
 	self._loading = false
@@ -1199,17 +1199,17 @@ function NetworkPeer:on_lost()
 	self._msg_queue = nil
 end
 
--- Lines 1507-1509
+-- Lines 1502-1504
 function NetworkPeer:_ping_timedout()
 	managers.network:session():on_peer_kicked(self, self._id, 1)
 end
 
--- Lines 1513-1515
+-- Lines 1508-1510
 function NetworkPeer:set_ip(my_ip)
 	self._ip = my_ip
 end
 
--- Lines 1519-1531
+-- Lines 1514-1526
 function NetworkPeer:set_id(my_id)
 	self._id = my_id
 
@@ -1220,17 +1220,17 @@ function NetworkPeer:set_id(my_id)
 	end
 end
 
--- Lines 1535-1537
+-- Lines 1530-1532
 function NetworkPeer:set_name(name)
 	self._name = name
 end
 
--- Lines 1541-1543
+-- Lines 1536-1538
 function NetworkPeer:set_name_drop_in(name)
 	self._name_drop_in = name
 end
 
--- Lines 1547-1560
+-- Lines 1542-1555
 function NetworkPeer:destroy()
 	local _ = managers.wait and managers.wait:remove_waiting(self:id())
 
@@ -1247,12 +1247,12 @@ function NetworkPeer:destroy()
 	self:_unload_outfit()
 end
 
--- Lines 1564-1566
+-- Lines 1559-1561
 function NetworkPeer:on_send()
 	self:flush_overwriteable_msgs()
 end
 
--- Lines 1570-1606
+-- Lines 1565-1601
 function NetworkPeer:flush_overwriteable_msgs()
 	local overwriteable_queue = self._overwriteable_queue
 
@@ -1294,7 +1294,7 @@ function NetworkPeer:flush_overwriteable_msgs()
 	self._overwriteable_queue = {}
 end
 
--- Lines 1610-1621
+-- Lines 1605-1616
 function NetworkPeer:set_expecting_drop_in_pause_confirmation(dropin_peer_id, state)
 	print(" [NetworkPeer:set_expecting_drop_in_pause_confirmation] peer", self._id, "dropin_peer", dropin_peer_id, "state", state)
 
@@ -1310,42 +1310,42 @@ function NetworkPeer:set_expecting_drop_in_pause_confirmation(dropin_peer_id, st
 	end
 end
 
--- Lines 1626-1628
+-- Lines 1621-1623
 function NetworkPeer:is_expecting_pause_confirmation(dropin_peer_id)
 	return self._expected_dropin_pause_confirmations and self._expected_dropin_pause_confirmations[dropin_peer_id]
 end
 
--- Lines 1632-1634
+-- Lines 1627-1629
 function NetworkPeer:expected_dropin_pause_confirmations()
 	return self._expected_dropin_pause_confirmations
 end
 
--- Lines 1638-1640
+-- Lines 1633-1635
 function NetworkPeer:set_expecting_pause_sequence(state)
 	self._expecting_pause_sequence = state
 end
 
--- Lines 1644-1646
+-- Lines 1639-1641
 function NetworkPeer:expecting_pause_sequence()
 	return self._expecting_pause_sequence
 end
 
--- Lines 1650-1652
+-- Lines 1645-1647
 function NetworkPeer:set_expecting_dropin(state)
 	self._expecting_dropin = state
 end
 
--- Lines 1656-1658
+-- Lines 1651-1653
 function NetworkPeer:expecting_dropin()
 	return self._expecting_dropin
 end
 
--- Lines 1662-1664
+-- Lines 1657-1659
 function NetworkPeer:creation_t()
 	return self._creation_t
 end
 
--- Lines 1668-1673
+-- Lines 1663-1668
 function NetworkPeer:set_level(level)
 	self._level = level
 
@@ -1354,12 +1354,12 @@ function NetworkPeer:set_level(level)
 	end
 end
 
--- Lines 1677-1679
+-- Lines 1672-1674
 function NetworkPeer:level()
 	return self._level
 end
 
--- Lines 1683-1688
+-- Lines 1678-1683
 function NetworkPeer:set_rank(rank)
 	self._rank = rank
 
@@ -1368,28 +1368,28 @@ function NetworkPeer:set_rank(rank)
 	end
 end
 
--- Lines 1692-1694
+-- Lines 1687-1689
 function NetworkPeer:rank()
 	return self._rank
 end
 
--- Lines 1698-1700
+-- Lines 1693-1695
 function NetworkPeer:set_join_stinger_index(stinger_index)
 	self._stinger_index = stinger_index
 end
 
--- Lines 1704-1706
+-- Lines 1699-1701
 function NetworkPeer:join_stinger_index()
 	return self._stinger_index
 end
 
--- Lines 1710-1713
+-- Lines 1705-1708
 function NetworkPeer:set_profile(level, rank)
 	self._profile.level = level
 	self._profile.rank = rank
 end
 
--- Lines 1717-1751
+-- Lines 1712-1746
 function NetworkPeer:set_outfit_string(outfit_string, outfit_version, outfit_signature)
 	print("[NetworkPeer:set_outfit_string] ID", self._id, outfit_string, outfit_version)
 
@@ -1425,7 +1425,7 @@ function NetworkPeer:set_outfit_string(outfit_string, outfit_version, outfit_sig
 	return self._profile.outfit_string, self._outfit_version, self._signature
 end
 
--- Lines 1755-1760
+-- Lines 1750-1755
 function NetworkPeer:profile(data)
 	if data then
 		return self._profile[data]
@@ -1434,12 +1434,12 @@ function NetworkPeer:profile(data)
 	return self._profile
 end
 
--- Lines 1762-1767
+-- Lines 1757-1762
 function NetworkPeer:character_id()
 	return managers.blackmarket:get_character_id_by_character_name(self:character())
 end
 
--- Lines 1769-1773
+-- Lines 1764-1768
 function NetworkPeer:mask_id()
 	local outfit_string = self:profile("outfit_string")
 	local data = string.split(outfit_string, " ")
@@ -1447,14 +1447,14 @@ function NetworkPeer:mask_id()
 	return data[managers.blackmarket:outfit_string_index("mask")]
 end
 
--- Lines 1775-1779
+-- Lines 1770-1774
 function NetworkPeer:mask_blueprint()
 	local outfit_string = self:profile("outfit_string")
 
 	return managers.blackmarket:mask_blueprint_from_outfit_string(outfit_string)
 end
 
--- Lines 1781-1788
+-- Lines 1776-1783
 function NetworkPeer:armor_id(get_current)
 	local outfit_string = self:profile("outfit_string")
 	local data = string.split(outfit_string, " ")
@@ -1464,7 +1464,7 @@ function NetworkPeer:armor_id(get_current)
 	return get_current and armor_data[3] or armor_data[2] or armor_data[1]
 end
 
--- Lines 1790-1794
+-- Lines 1785-1789
 function NetworkPeer:melee_id()
 	local outfit_string = self:profile("outfit_string")
 	local data = string.split(outfit_string, " ")
@@ -1472,7 +1472,7 @@ function NetworkPeer:melee_id()
 	return data[managers.blackmarket:outfit_string_index("melee_weapon")]
 end
 
--- Lines 1796-1800
+-- Lines 1791-1795
 function NetworkPeer:grenade_id()
 	local outfit_string = self:profile("outfit_string")
 	local data = string.split(outfit_string, " ")
@@ -1480,7 +1480,7 @@ function NetworkPeer:grenade_id()
 	return data[managers.blackmarket:outfit_string_index("grenade")]
 end
 
--- Lines 1802-1806
+-- Lines 1797-1801
 function NetworkPeer:skills()
 	local outfit_string = self:profile("outfit_string")
 	local data = string.split(outfit_string, " ")
@@ -1488,54 +1488,54 @@ function NetworkPeer:skills()
 	return data[managers.blackmarket:outfit_string_index("skills")]
 end
 
--- Lines 1808-1810
+-- Lines 1803-1805
 function NetworkPeer:unpacked_skills()
 	return managers.skilltree:unpack_from_string(self:skills())
 end
 
--- Lines 1813-1816
+-- Lines 1808-1811
 function NetworkPeer:armor_skin_id()
 	local outfit_string = self:profile("outfit_string")
 
 	return managers.blackmarket:unpack_outfit_from_string(outfit_string).armor_skin
 end
 
--- Lines 1820-1823
+-- Lines 1815-1818
 function NetworkPeer:player_style()
 	local outfit_string = self:profile("outfit_string")
 
 	return managers.blackmarket:unpack_outfit_from_string(outfit_string).player_style
 end
 
--- Lines 1824-1827
+-- Lines 1819-1822
 function NetworkPeer:suit_variation()
 	local outfit_string = self:profile("outfit_string")
 
 	return managers.blackmarket:unpack_outfit_from_string(outfit_string).suit_variation
 end
 
--- Lines 1831-1834
+-- Lines 1826-1829
 function NetworkPeer:glove_id()
 	local outfit_string = self:profile("outfit_string")
 
 	return managers.blackmarket:unpack_outfit_from_string(outfit_string).glove_id
 end
 
--- Lines 1837-1840
+-- Lines 1832-1835
 function NetworkPeer:has_blackmarket_outfit()
 	local outfit_string = self:profile("outfit_string")
 
 	return not not outfit_string
 end
 
--- Lines 1842-1845
+-- Lines 1837-1840
 function NetworkPeer:blackmarket_outfit()
 	local outfit_string = self:profile("outfit_string")
 
 	return managers.blackmarket:unpack_outfit_from_string(outfit_string)
 end
 
--- Lines 1852-1856
+-- Lines 1847-1851
 function NetworkPeer:set_handshake_status(introduced_peer_id, status)
 	print("[NetworkPeer:set_handshake_status]", self._id, introduced_peer_id, status)
 	Application:stack_dump()
@@ -1543,12 +1543,12 @@ function NetworkPeer:set_handshake_status(introduced_peer_id, status)
 	self._handshakes[introduced_peer_id] = status
 end
 
--- Lines 1860-1862
+-- Lines 1855-1857
 function NetworkPeer:handshakes()
 	return self._handshakes
 end
 
--- Lines 1866-1883
+-- Lines 1861-1878
 function NetworkPeer:has_queued_rpcs()
 	if not self._msg_queues then
 		return
@@ -1571,32 +1571,32 @@ function NetworkPeer:has_queued_rpcs()
 	end
 end
 
--- Lines 1887-1889
+-- Lines 1882-1884
 function NetworkPeer:set_xuid(xuid)
 	self._xuid = xuid
 end
 
--- Lines 1891-1893
+-- Lines 1886-1888
 function NetworkPeer:xuid()
 	return self._xuid
 end
 
--- Lines 1895-1897
+-- Lines 1890-1892
 function NetworkPeer:set_xnaddr(xnaddr)
 	self._xnaddr = xnaddr
 end
 
--- Lines 1899-1901
+-- Lines 1894-1896
 function NetworkPeer:xnaddr()
 	return self._xnaddr
 end
 
--- Lines 1905-1907
+-- Lines 1900-1902
 function NetworkPeer:user_id()
 	return self._user_id
 end
 
--- Lines 1911-1918
+-- Lines 1906-1913
 function NetworkPeer:account_type_str_from_type(account_type)
 	for _, account_type_str in pairs({
 		"STEAM",
@@ -1610,92 +1610,92 @@ function NetworkPeer:account_type_str_from_type(account_type)
 	return "None"
 end
 
--- Lines 1923-1925
+-- Lines 1918-1920
 function NetworkPeer:account_type()
 	return Idstring(self._account_type_str)
 end
 
--- Lines 1929-1931
+-- Lines 1924-1926
 function NetworkPeer:account_type_str()
 	return self._account_type_str
 end
 
--- Lines 1935-1937
+-- Lines 1930-1932
 function NetworkPeer:account_id()
 	return self._account_id
 end
 
--- Lines 1941-1943
+-- Lines 1936-1938
 function NetworkPeer:is_host()
 	return self._id == 1
 end
 
--- Lines 1947-1949
+-- Lines 1942-1944
 function NetworkPeer:next_windistrib_p2p_send_t()
 	return self._next_windistrib_p2p_send_t
 end
 
--- Lines 1953-1955
+-- Lines 1948-1950
 function NetworkPeer:set_next_windistrib_p2p_send_t(t)
 	self._next_windistrib_p2p_send_t = t
 end
 
--- Lines 1959-1961
+-- Lines 1954-1956
 function NetworkPeer:set_force_open_lobby_state(state)
 	self._force_open_lobby = state or nil
 end
 
--- Lines 1965-1967
+-- Lines 1960-1962
 function NetworkPeer:force_open_lobby_state()
 	return self._force_open_lobby
 end
 
--- Lines 1971-1973
+-- Lines 1966-1968
 function NetworkPeer:set_join_attempt_identifier(identifier)
 	self._join_attempt_identifier = identifier
 end
 
--- Lines 1977-1979
+-- Lines 1972-1974
 function NetworkPeer:join_attempt_identifier()
 	return self._join_attempt_identifier
 end
 
--- Lines 1983-1985
+-- Lines 1978-1980
 function NetworkPeer:set_muted(mute_flag)
 	self._muted = mute_flag
 end
 
--- Lines 1989-1991
+-- Lines 1984-1986
 function NetworkPeer:is_muted()
 	return self._muted
 end
 
--- Lines 1995-1997
+-- Lines 1990-1992
 function NetworkPeer:set_streaming_status(status)
 	self._streaming_status = status
 end
 
--- Lines 2001-2003
+-- Lines 1996-1998
 function NetworkPeer:is_streaming_complete()
 	return self._streaming_status == 100
 end
 
--- Lines 2007-2009
+-- Lines 2002-2004
 function NetworkPeer:streaming_status()
 	return self._streaming_status
 end
 
--- Lines 2013-2015
+-- Lines 2008-2010
 function NetworkPeer:is_outfit_loaded()
 	return not self._loading_outfit_assets and self._profile.outfit_string ~= ""
 end
 
--- Lines 2019-2021
+-- Lines 2014-2016
 function NetworkPeer:is_loading_outfit_assets()
 	return self._loading_outfit_assets
 end
 
--- Lines 2025-2040
+-- Lines 2020-2035
 function NetworkPeer:_unload_outfit()
 	for asset_id, asset_data in pairs(self._outfit_assets.unit) do
 		managers.dyn_resource:unload(ids_unit, asset_data.name, DynamicResourceManager.DYN_RESOURCES_PACKAGE, false)
@@ -1711,12 +1711,12 @@ function NetworkPeer:_unload_outfit()
 	}
 end
 
--- Lines 2047-2049
+-- Lines 2042-2044
 function NetworkPeer:force_reload_outfit()
 	self:_reload_outfit()
 end
 
--- Lines 2053-2224
+-- Lines 2048-2219
 function NetworkPeer:_reload_outfit()
 	if self._profile.outfit_string == "" then
 		return
@@ -1903,7 +1903,7 @@ function NetworkPeer:_reload_outfit()
 	end
 end
 
--- Lines 2228-2243
+-- Lines 2223-2238
 function NetworkPeer:clbk_outfit_asset_loaded(outfit_assets, status, asset_type, asset_name)
 	if not self._loading_outfit_assets or self._outfit_assets ~= outfit_assets then
 		return
@@ -1920,7 +1920,7 @@ function NetworkPeer:clbk_outfit_asset_loaded(outfit_assets, status, asset_type,
 	end
 end
 
--- Lines 2247-2262
+-- Lines 2242-2257
 function NetworkPeer:clbk_outfit_texture_loaded(outfit_assets, tex_name)
 	if not self._loading_outfit_assets or self._outfit_assets ~= outfit_assets then
 		return
@@ -1937,7 +1937,7 @@ function NetworkPeer:clbk_outfit_texture_loaded(outfit_assets, tex_name)
 	end
 end
 
--- Lines 2266-2297
+-- Lines 2261-2292
 function NetworkPeer:_chk_outfit_loading_complete()
 	if not self._loading_outfit_assets or not self._all_outfit_load_requests_sent then
 		return
@@ -1969,7 +1969,7 @@ function NetworkPeer:_chk_outfit_loading_complete()
 	end
 end
 
--- Lines 2301-2309
+-- Lines 2296-2304
 function NetworkPeer:add_outfit_loaded_clbk(clbk)
 	if self:is_outfit_loaded() then
 		clbk()
@@ -1982,17 +1982,17 @@ function NetworkPeer:add_outfit_loaded_clbk(clbk)
 	table.insert(self._outfit_loaded_clbks, clbk)
 end
 
--- Lines 2313-2315
+-- Lines 2308-2310
 function NetworkPeer:set_other_peer_outfit_loaded_status(status)
 	self._other_peer_outfits_loaded = status
 end
 
--- Lines 2319-2321
+-- Lines 2314-2316
 function NetworkPeer:other_peer_outfit_loaded_status()
 	return self._other_peer_outfits_loaded
 end
 
--- Lines 2325-2332
+-- Lines 2320-2327
 function NetworkPeer:_increment_outfit_version()
 	if self._outfit_version == 100 then
 		self._outfit_version = 1
@@ -2003,29 +2003,29 @@ function NetworkPeer:_increment_outfit_version()
 	return self._outfit_version
 end
 
--- Lines 2336-2338
+-- Lines 2331-2333
 function NetworkPeer:outfit_version()
 	return self._outfit_version
 end
 
--- Lines 2342-2346
+-- Lines 2337-2341
 function NetworkPeer:set_throttling_enabled(state)
 	if self._rpc then
 		Network:set_throttling_disabled(self._rpc, not state)
 	end
 end
 
--- Lines 2350-2352
+-- Lines 2345-2347
 function NetworkPeer:drop_in_progress()
 	return self._dropin_progress
 end
 
--- Lines 2356-2358
+-- Lines 2351-2353
 function NetworkPeer:set_drop_in_progress(dropin_progress)
 	self._dropin_progress = dropin_progress
 end
 
--- Lines 2363-2401
+-- Lines 2358-2396
 function NetworkPeer:sync_lobby_data(peer)
 	print("[NetworkPeer:sync_lobby_data] to", peer:id())
 
@@ -2056,7 +2056,7 @@ function NetworkPeer:sync_lobby_data(peer)
 	self:sync_is_vr(peer)
 end
 
--- Lines 2406-2447
+-- Lines 2401-2442
 function NetworkPeer:sync_data(peer)
 	print("[NetworkPeer:sync_data] to", peer:id())
 
@@ -2083,18 +2083,18 @@ function NetworkPeer:sync_data(peer)
 	end
 end
 
--- Lines 2451-2453
+-- Lines 2446-2448
 function NetworkPeer:unit()
 	return self._unit
 end
 
--- Lines 2457-2460
+-- Lines 2452-2455
 function NetworkPeer:make_waiting()
 	managers.wait:add_waiting(self._id)
 	self:send_queued_sync("set_waiting")
 end
 
--- Lines 2464-2584
+-- Lines 2459-2579
 function NetworkPeer:spawn_unit(spawn_point_id, is_drop_in, spawn_as)
 	if self._unit then
 		return
@@ -2194,7 +2194,7 @@ function NetworkPeer:spawn_unit(spawn_point_id, is_drop_in, spawn_as)
 	return unit
 end
 
--- Lines 2586-2610
+-- Lines 2581-2605
 function NetworkPeer:_get_old_entry()
 	local peer_ident = SystemInfo:platform() == Idstring("WIN32") and self:user_id() or self:name()
 	local old_plr_entry = managers.network:session()._old_players[peer_ident]
@@ -2219,12 +2219,12 @@ function NetworkPeer:_get_old_entry()
 	return member_downed, member_dead, health, used_deployable, used_cable_ties, used_body_bags, hostages_killed, respawn_penalty, old_plr_entry
 end
 
--- Lines 2614-2616
+-- Lines 2609-2611
 function NetworkPeer:spawn_unit_called()
 	return self._spawn_unit_called
 end
 
--- Lines 2620-2655
+-- Lines 2615-2650
 function NetworkPeer:set_unit(unit, character_name, team_id, visual_seed)
 	local is_new_unit = unit and (not self._unit or self._unit:key() ~= unit:key())
 	self._unit = unit
@@ -2265,7 +2265,7 @@ function NetworkPeer:set_unit(unit, character_name, team_id, visual_seed)
 	end
 end
 
--- Lines 2659-2691
+-- Lines 2654-2686
 function NetworkPeer:update_character_visual_state(visual_state)
 	if managers.criminals and alive(self._unit) then
 		local is_local_peer = self._id == managers.network:session():local_peer():id()
@@ -2285,7 +2285,7 @@ function NetworkPeer:update_character_visual_state(visual_state)
 	end
 end
 
--- Lines 2693-2709
+-- Lines 2688-2704
 function NetworkPeer:unit_delete()
 	if managers.criminals then
 		managers.criminals:remove_character_by_peer_id(self._id)
@@ -2307,7 +2307,7 @@ function NetworkPeer:unit_delete()
 	self._unit = nil
 end
 
--- Lines 2713-2733
+-- Lines 2708-2728
 function NetworkPeer:_update_equipped_armor()
 	if not alive(self._unit) then
 		return
@@ -2324,7 +2324,7 @@ function NetworkPeer:_update_equipped_armor()
 	end
 end
 
--- Lines 2735-2741
+-- Lines 2730-2736
 function NetworkPeer:update_concealment()
 	if not alive(self._unit) then
 		return
@@ -2333,17 +2333,17 @@ function NetworkPeer:update_concealment()
 	self._unit:base():update_concealment()
 end
 
--- Lines 2745-2747
+-- Lines 2740-2742
 function NetworkPeer:set_is_dropin(is_dropin)
 	self._is_dropin = is_dropin
 end
 
--- Lines 2749-2751
+-- Lines 2744-2746
 function NetworkPeer:is_dropin()
 	return self._is_dropin
 end
 
--- Lines 2756-2772
+-- Lines 2751-2767
 function NetworkPeer:register_mod(id, friendly)
 	for _, mod in ipairs(self._mods) do
 		if mod.id == id then
@@ -2359,17 +2359,17 @@ function NetworkPeer:register_mod(id, friendly)
 	})
 end
 
--- Lines 2774-2776
+-- Lines 2769-2771
 function NetworkPeer:is_modded()
 	return #self._mods > 0
 end
 
--- Lines 2778-2780
+-- Lines 2773-2775
 function NetworkPeer:synced_mods()
 	return self._mods
 end
 
--- Lines 2782-2804
+-- Lines 2777-2799
 function NetworkPeer:sync_mods(to_peer)
 	local mods = nil
 	mods = MenuCallbackHandler:build_mods_list()
@@ -2383,7 +2383,7 @@ function NetworkPeer:sync_mods(to_peer)
 	end
 end
 
--- Lines 2808-2820
+-- Lines 2803-2815
 function NetworkPeer:sync_is_vr(to_peer)
 	if _G.IS_VR then
 		if self == managers.network:session():local_peer() then
@@ -2398,17 +2398,17 @@ function NetworkPeer:sync_is_vr(to_peer)
 	end
 end
 
--- Lines 2822-2824
+-- Lines 2817-2819
 function NetworkPeer:set_is_vr()
 	self._is_vr = true
 end
 
--- Lines 2826-2828
+-- Lines 2821-2823
 function NetworkPeer:is_vr()
 	return self._is_vr
 end
 
--- Lines 2846-2850
+-- Lines 2841-2845
 function NetworkPeer:overlay_inspect()
 	if self._account_type_str == "STEAM" then
 		return managers.network.account:overlay_activate("url", tweak_data.gui.fbi_files_webpage .. "/suspect/" .. self:account_id() .. "/")

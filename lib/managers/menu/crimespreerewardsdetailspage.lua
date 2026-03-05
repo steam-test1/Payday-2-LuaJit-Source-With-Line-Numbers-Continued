@@ -204,7 +204,7 @@ end
 
 -- Lines 206-233
 function CrimeSpreeRewardsDetailsPage:_create_card(panel, icon, scale, layer, rotation, wiggle_x, wiggle_y)
-	local texture, rect, coords = tweak_data.hud_icons:get_icon_data(icon or "downcard_overkill_deck")
+	local texture, rect, coords = tweak_data.hud_icons:get_icon_data(icon or tweak_data.lootdrop.type_to_card_fallback)
 	local upcard = panel:bitmap({
 		name = "upcard",
 		halign = "scale",

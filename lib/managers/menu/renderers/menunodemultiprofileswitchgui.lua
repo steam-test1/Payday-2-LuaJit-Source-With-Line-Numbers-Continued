@@ -12,7 +12,7 @@ MenuNodeMultiProfileSwitchGui.PREVIEW_BOX_PADDING = 6
 MenuNodeMultiProfileSwitchGui.PERK_DECK_X = 0.7
 local IDS_1 = Idstring("1")
 
--- Lines 22-37
+-- Lines 20-35
 function MenuNodeMultiProfileSwitchGui:init(node, layer, parameters)
 	parameters.font = tweak_data.menu.pd2_small_font
 	parameters.font_size = tweak_data.menu.pd2_small_font_size
@@ -30,7 +30,7 @@ function MenuNodeMultiProfileSwitchGui:init(node, layer, parameters)
 	MenuNodeMultiProfileSwitchGui.super.init(self, node, layer, parameters)
 end
 
--- Lines 39-60
+-- Lines 37-58
 function MenuNodeMultiProfileSwitchGui:_setup_panels(node)
 	MenuNodeMultiProfileSwitchGui.super._setup_panels(self, node)
 
@@ -54,7 +54,7 @@ function MenuNodeMultiProfileSwitchGui:_setup_panels(node)
 	})
 end
 
--- Lines 62-70
+-- Lines 60-68
 function MenuNodeMultiProfileSwitchGui:setup()
 	MenuNodeMultiProfileSwitchGui.super.setup(self)
 	managers.menu_component:disable_inventory_gui()
@@ -62,7 +62,7 @@ function MenuNodeMultiProfileSwitchGui:setup()
 	managers.menu_component:post_event("menu_enter")
 end
 
--- Lines 72-83
+-- Lines 70-81
 function MenuNodeMultiProfileSwitchGui:_setup_item_panel_parent(safe_rect, shape)
 	local x = safe_rect.x + safe_rect.width / 2 - self.WIDTH / 2 + self.PADDING
 	local y = safe_rect.y + safe_rect.height / 2 - self.HEIGHT / 2
@@ -75,7 +75,7 @@ function MenuNodeMultiProfileSwitchGui:_setup_item_panel_parent(safe_rect, shape
 	MenuNodeMultiProfileSwitchGui.super._setup_item_panel_parent(self, safe_rect, shape)
 end
 
--- Lines 85-148
+-- Lines 83-146
 function MenuNodeMultiProfileSwitchGui:_setup_item_panel(safe_rect, res)
 	MenuNodeMultiProfileSwitchGui.super._setup_item_panel(self, safe_rect, res)
 	self.item_panel:set_w(self.MENU_WIDTH)
@@ -146,7 +146,7 @@ function MenuNodeMultiProfileSwitchGui:_setup_item_panel(safe_rect, res)
 	self:_layout_preview()
 end
 
--- Lines 150-252
+-- Lines 148-250
 function MenuNodeMultiProfileSwitchGui:_create_legends(node)
 	local safe_rect_pixels = self:_scaled_size()
 
@@ -247,7 +247,7 @@ function MenuNodeMultiProfileSwitchGui:_create_legends(node)
 	end
 end
 
--- Lines 254-261
+-- Lines 252-259
 function MenuNodeMultiProfileSwitchGui:_layout_legends(...)
 	self._legends_panel:set_size(self.WIDTH, self.HEIGHT)
 
@@ -257,7 +257,7 @@ function MenuNodeMultiProfileSwitchGui:_layout_legends(...)
 	end
 end
 
--- Lines 263-317
+-- Lines 261-315
 function MenuNodeMultiProfileSwitchGui:_update_legends(row_item)
 	local show_move = row_item.name and not row_item.item:parameters().previous_node
 	local show_select = not self._moving_profile
@@ -313,7 +313,7 @@ function MenuNodeMultiProfileSwitchGui:_update_legends(row_item)
 	end
 end
 
--- Lines 319-440
+-- Lines 317-438
 function MenuNodeMultiProfileSwitchGui:_layout_preview()
 	local ws_panel = self.ws:panel()
 	local box_padding = self.PREVIEW_BOX_PADDING
@@ -462,7 +462,7 @@ function MenuNodeMultiProfileSwitchGui:_layout_preview()
 	})
 end
 
--- Lines 442-486
+-- Lines 440-484
 function MenuNodeMultiProfileSwitchGui:_create_menu_item(row_item)
 	MenuNodeMultiProfileSwitchGui.super._create_menu_item(self, row_item)
 
@@ -504,7 +504,7 @@ function MenuNodeMultiProfileSwitchGui:_create_menu_item(row_item)
 	end
 end
 
--- Lines 488-500
+-- Lines 486-498
 function MenuNodeMultiProfileSwitchGui:_clear_gui()
 	for _, row_item in ipairs(self.row_items) do
 		if alive(row_item.perk_deck_gui) then
@@ -519,7 +519,7 @@ function MenuNodeMultiProfileSwitchGui:_clear_gui()
 	MenuNodeMultiProfileSwitchGui.super._clear_gui(self)
 end
 
--- Lines 502-521
+-- Lines 500-519
 function MenuNodeMultiProfileSwitchGui:_highlight_row_item(row_item, mouse_over)
 	self._selected_item = row_item.name and not row_item.item:parameters().previous_node and row_item or nil
 
@@ -538,7 +538,7 @@ function MenuNodeMultiProfileSwitchGui:_highlight_row_item(row_item, mouse_over)
 	end
 end
 
--- Lines 523-529
+-- Lines 521-527
 function MenuNodeMultiProfileSwitchGui:_fade_row_item(row_item)
 	MenuNodeMultiProfileSwitchGui.super._fade_row_item(self, row_item)
 
@@ -547,7 +547,7 @@ function MenuNodeMultiProfileSwitchGui:_fade_row_item(row_item)
 	end
 end
 
--- Lines 531-540
+-- Lines 529-538
 function MenuNodeMultiProfileSwitchGui:_set_item_positions()
 	MenuNodeMultiProfileSwitchGui.super._set_item_positions(self)
 
@@ -559,7 +559,7 @@ function MenuNodeMultiProfileSwitchGui:_set_item_positions()
 	end
 end
 
--- Lines 542-556
+-- Lines 540-554
 function MenuNodeMultiProfileSwitchGui:reload_item(item)
 	MenuNodeMultiProfileSwitchGui.super.reload_item(self, item)
 
@@ -576,7 +576,7 @@ function MenuNodeMultiProfileSwitchGui:reload_item(item)
 	end
 end
 
--- Lines 558-566
+-- Lines 556-564
 function MenuNodeMultiProfileSwitchGui:_reload_item(item)
 	MenuNodeMultiProfileSwitchGui.super._reload_item(self, item)
 
@@ -587,7 +587,7 @@ function MenuNodeMultiProfileSwitchGui:_reload_item(item)
 	end
 end
 
--- Lines 569-592
+-- Lines 567-590
 function MenuNodeMultiProfileSwitchGui:gui_node_custom(row_item)
 	row_item.gui_panel = self._item_panel_parent:panel({
 		w = 3,
@@ -612,7 +612,7 @@ function MenuNodeMultiProfileSwitchGui:gui_node_custom(row_item)
 	self._back_row_item = row_item
 end
 
--- Lines 594-612
+-- Lines 592-610
 function MenuNodeMultiProfileSwitchGui:_align_marker(row_item)
 	MenuNodeMultiProfileSwitchGui.super._align_marker(self, row_item)
 
@@ -632,7 +632,7 @@ function MenuNodeMultiProfileSwitchGui:_align_marker(row_item)
 	self._marker_data.marker:set_world_right(self.item_panel:world_right())
 end
 
--- Lines 614-713
+-- Lines 612-711
 function MenuNodeMultiProfileSwitchGui:_create_preview_box(parent, params)
 	if not params then
 		return
@@ -733,7 +733,7 @@ function MenuNodeMultiProfileSwitchGui:_create_preview_box(parent, params)
 	return box
 end
 
--- Lines 715-855
+-- Lines 713-853
 function MenuNodeMultiProfileSwitchGui:_create_skills_box(parent)
 	local padding = self.PREVIEW_BOX_PADDING
 	local inner_panel = parent:panel({
@@ -896,7 +896,7 @@ function MenuNodeMultiProfileSwitchGui:_create_skills_box(parent)
 	}
 end
 
--- Lines 857-1025
+-- Lines 855-1023
 function MenuNodeMultiProfileSwitchGui:_update_preview_box(box, params)
 	if not box then
 		return
@@ -1047,7 +1047,7 @@ function MenuNodeMultiProfileSwitchGui:_update_preview_box(box, params)
 	end
 end
 
--- Lines 1027-1056
+-- Lines 1025-1054
 function MenuNodeMultiProfileSwitchGui:_animate_scroll_text(text)
 	local w = text:parent():w()
 	local speed = 60
@@ -1075,7 +1075,7 @@ function MenuNodeMultiProfileSwitchGui:_animate_scroll_text(text)
 	end
 end
 
--- Lines 1058-1088
+-- Lines 1056-1086
 function MenuNodeMultiProfileSwitchGui:_update_profile_preview(profile_index, profile)
 	profile = profile or {}
 	local profile_name = utf8.to_upper(managers.multi_profile:profile_name(profile_index))
@@ -1104,7 +1104,7 @@ function MenuNodeMultiProfileSwitchGui:_update_profile_preview(profile_index, pr
 	self:_update_skills_preview(skillset, perk_deck)
 end
 
--- Lines 1090-1131
+-- Lines 1088-1129
 function MenuNodeMultiProfileSwitchGui:_update_weapon_preview(box_id, weapon_slot, weapon_category)
 	local preview_box = self._preview_boxes[box_id]
 
@@ -1148,7 +1148,7 @@ function MenuNodeMultiProfileSwitchGui:_update_weapon_preview(box_id, weapon_slo
 	})
 end
 
--- Lines 1133-1155
+-- Lines 1131-1153
 function MenuNodeMultiProfileSwitchGui:_update_melee_preview(melee_id)
 	local preview_box = self._preview_boxes.melee
 
@@ -1175,7 +1175,7 @@ function MenuNodeMultiProfileSwitchGui:_update_melee_preview(melee_id)
 	})
 end
 
--- Lines 1157-1177
+-- Lines 1155-1175
 function MenuNodeMultiProfileSwitchGui:_update_armor_preview(armor_level)
 	local preview_box = self._preview_boxes.armor
 
@@ -1200,7 +1200,7 @@ function MenuNodeMultiProfileSwitchGui:_update_armor_preview(armor_level)
 	})
 end
 
--- Lines 1179-1209
+-- Lines 1177-1207
 function MenuNodeMultiProfileSwitchGui:_update_deployable_preview(primary_id, secondary_id)
 	local preview_box = self._preview_boxes.deployable
 
@@ -1233,7 +1233,7 @@ function MenuNodeMultiProfileSwitchGui:_update_deployable_preview(primary_id, se
 	})
 end
 
--- Lines 1211-1231
+-- Lines 1209-1229
 function MenuNodeMultiProfileSwitchGui:_update_throwable_preview(throwable_id)
 	local preview_box = self._preview_boxes.throwable
 
@@ -1258,7 +1258,7 @@ function MenuNodeMultiProfileSwitchGui:_update_throwable_preview(throwable_id)
 	})
 end
 
--- Lines 1233-1279
+-- Lines 1231-1277
 function MenuNodeMultiProfileSwitchGui:_update_skills_preview(skill_switch, perk_deck)
 	local preview_box = self._preview_boxes.skillset
 
@@ -1310,7 +1310,7 @@ function MenuNodeMultiProfileSwitchGui:_update_skills_preview(skill_switch, perk
 	self:_update_perk_deck_preview(perk_deck)
 end
 
--- Lines 1281-1318
+-- Lines 1279-1316
 function MenuNodeMultiProfileSwitchGui:_update_perk_deck_preview(perk_deck)
 	local preview_box = self._preview_boxes.perk_deck
 
@@ -1351,12 +1351,12 @@ function MenuNodeMultiProfileSwitchGui:_update_perk_deck_preview(perk_deck)
 	preview_box.text:set_center_y(preview_box.panel:h() / 2)
 end
 
--- Lines 1320-1322
+-- Lines 1318-1320
 function MenuNodeMultiProfileSwitchGui:is_moving_profile()
 	return self._moving_profile
 end
 
--- Lines 1324-1336
+-- Lines 1322-1334
 function MenuNodeMultiProfileSwitchGui:_start_profile_move()
 	if self._moving_profile or not self._selected_item then
 		return
@@ -1371,7 +1371,7 @@ function MenuNodeMultiProfileSwitchGui:_start_profile_move()
 	managers.menu_component:post_event("menu_enter")
 end
 
--- Lines 1338-1353
+-- Lines 1336-1351
 function MenuNodeMultiProfileSwitchGui:_finish_profile_move()
 	if not self._moving_profile or not self._selected_item then
 		return
@@ -1390,7 +1390,7 @@ function MenuNodeMultiProfileSwitchGui:_finish_profile_move()
 	MenuCallbackHandler:refresh_node()
 end
 
--- Lines 1355-1365
+-- Lines 1353-1363
 function MenuNodeMultiProfileSwitchGui:close()
 	managers.menu_component:enable_inventory_gui()
 	managers.menu_component:show_mission_briefing_gui()
@@ -1404,7 +1404,7 @@ function MenuNodeMultiProfileSwitchGui:close()
 	MenuNodeMultiProfileSwitchGui.super.close(self)
 end
 
--- Lines 1367-1381
+-- Lines 1365-1379
 function MenuNodeMultiProfileSwitchGui:mouse_pressed(button, x, y)
 	if self.item_panel:inside(x, y) and button == IDS_1 and self._selected_item and self._selected_item.name and not self._selected_item.item:parameters().previous_node then
 		if self._moving_profile then
@@ -1415,7 +1415,7 @@ function MenuNodeMultiProfileSwitchGui:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines 1383-1400
+-- Lines 1381-1398
 function MenuNodeMultiProfileSwitchGui:special_btn_pressed(button)
 	if managers.menu:is_pc_controller() then
 		return

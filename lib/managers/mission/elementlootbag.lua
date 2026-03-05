@@ -9,7 +9,7 @@ function ElementLootBag:init(...)
 	self._triggers = {}
 end
 
--- Lines 11-37
+-- Lines 11-33
 function ElementLootBag:on_script_activated()
 	if not Network:is_server() then
 		return
@@ -30,18 +30,18 @@ function ElementLootBag:on_script_activated()
 	end
 end
 
--- Lines 39-51
+-- Lines 35-43
 function ElementLootBag:load_unit(unit)
 	if alive(unit) and unit:zipline() and (unit:zipline():is_usage_type_bag() or ray.unit:zipline():is_usage_type_both()) then
 		self._zipline_unit = unit
 	end
 end
 
--- Lines 53-55
+-- Lines 45-47
 function ElementLootBag:client_on_executed(...)
 end
 
--- Lines 57-92
+-- Lines 49-84
 function ElementLootBag:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -79,7 +79,7 @@ function ElementLootBag:on_executed(instigator)
 	ElementLootBag.super.on_executed(self, instigator)
 end
 
--- Lines 94-98
+-- Lines 86-90
 function ElementLootBag:add_trigger(id, type, callback)
 	self._triggers[type] = self._triggers[type] or {}
 	self._triggers[type][id] = {
@@ -87,7 +87,7 @@ function ElementLootBag:add_trigger(id, type, callback)
 	}
 end
 
--- Lines 100-110
+-- Lines 92-102
 function ElementLootBag:_check_triggers(type, instigator)
 	if not self._triggers[type] then
 		return
@@ -98,19 +98,19 @@ function ElementLootBag:_check_triggers(type, instigator)
 	end
 end
 
--- Lines 112-115
+-- Lines 104-107
 function ElementLootBag:trigger(type, instigator)
 	self:_check_triggers(type, instigator)
 end
 
 ElementLootBagTrigger = ElementLootBagTrigger or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines 127-129
+-- Lines 119-121
 function ElementLootBagTrigger:init(...)
 	ElementLootBagTrigger.super.init(self, ...)
 end
 
--- Lines 131-136
+-- Lines 123-128
 function ElementLootBagTrigger:on_script_activated()
 	for _, id in ipairs(self._values.elements) do
 		local element = self:get_mission_element(id)
@@ -119,11 +119,11 @@ function ElementLootBagTrigger:on_script_activated()
 	end
 end
 
--- Lines 138-140
+-- Lines 130-132
 function ElementLootBagTrigger:client_on_executed(...)
 end
 
--- Lines 142-150
+-- Lines 134-142
 function ElementLootBagTrigger:on_executed(instigator)
 	if not self._values.enabled then
 		return

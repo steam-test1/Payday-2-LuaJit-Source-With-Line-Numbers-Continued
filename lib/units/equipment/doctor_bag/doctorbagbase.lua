@@ -1,11 +1,11 @@
 DoctorBagBase = DoctorBagBase or class(UnitBase)
 DoctorBagBase.amount_upgrade_lvl_shift = 2
 DoctorBagBase.damage_reduce_lvl_shift = 4
+local IDS_MEDIC_BAG = Idstring("units/payday2/equipment/gen_equipment_medicbag/gen_equipment_medicbag")
 
--- Lines 5-15
+-- Lines 12-20
 function DoctorBagBase.spawn(pos, rot, bits, peer_id)
-	local unit_name = "units/payday2/equipment/gen_equipment_medicbag/gen_equipment_medicbag"
-	local unit = World:spawn_unit(Idstring(unit_name), pos, rot)
+	local unit = World:spawn_unit(IDS_MEDIC_BAG, pos, rot)
 
 	managers.network:session():send_to_peers_synched("sync_equipment_setup", unit, bits, peer_id or 0)
 	unit:base():setup(bits)
@@ -13,7 +13,7 @@ function DoctorBagBase.spawn(pos, rot, bits, peer_id)
 	return unit
 end
 
--- Lines 20-23
+-- Lines 24-30
 function DoctorBagBase:set_server_information(peer_id)
 	self._server_information = {
 		owner_peer_id = peer_id
@@ -22,12 +22,17 @@ function DoctorBagBase:set_server_information(peer_id)
 	managers.network:session():peer(peer_id):set_used_deployable(true)
 end
 
--- Lines 26-28
+-- Lines 34-36
 function DoctorBagBase:server_information()
 	return self._server_information
 end
 
--- Lines 32-47
+-- Lines 40-42
+function DoctorBagBase:get_name_id()
+	return "doctor_bag"
+end
+
+-- Lines 46-63
 function DoctorBagBase:init(unit)
 	UnitBase.init(self, unit, false)
 
@@ -47,12 +52,7 @@ function DoctorBagBase:init(unit)
 	self._damage_reduction_upgrade = false
 end
 
--- Lines 49-51
-function DoctorBagBase:get_name_id()
-	return "doctor_bag"
-end
-
--- Lines 55-62
+-- Lines 67-75
 function DoctorBagBase:_clbk_validate()
 	self._validate_clbk_id = nil
 
@@ -63,7 +63,7 @@ function DoctorBagBase:_clbk_validate()
 	end
 end
 
--- Lines 66-75
+-- Lines 79-89
 function DoctorBagBase:sync_setup(bits, peer_id)
 	if self._validate_clbk_id then
 		managers.enemy:remove_delayed_clbk(self._validate_clbk_id)
@@ -75,11 +75,12 @@ function DoctorBagBase:sync_setup(bits, peer_id)
 	self:setup(bits)
 end
 
--- Lines 79-108
+-- Lines 93-134
 function DoctorBagBase:setup(bits)
 	local amount_upgrade_lvl, dmg_reduction_lvl = self:_get_upgrade_levels(bits)
 	self._damage_reduction_upgrade = dmg_reduction_lvl ~= 0
-	self._amount = tweak_data.upgrades.doctor_bag_base + managers.player:upgrade_value_by_level("doctor_bag", "amount_increase", amount_upgrade_lvl)
+	local doctor_bag_amount_increase = managers.player:upgrade_value_by_level("doctor_bag", "amount_increase", amount_upgrade_lvl)
+	self._amount = tweak_data.upgrades.doctor_bag_base + doctor_bag_amount_increase
 
 	self:_set_visual_stage()
 
@@ -102,12 +103,12 @@ function DoctorBagBase:setup(bits)
 	end
 end
 
--- Lines 110-112
+-- Lines 138-140
 function DoctorBagBase:update(unit, t, dt)
 	self:_check_body()
 end
 
--- Lines 115-143
+-- Lines 144-169
 function DoctorBagBase:_check_body()
 	if self._is_dynamic then
 		return
@@ -134,7 +135,7 @@ function DoctorBagBase:_check_body()
 	self._attached_data.index = (self._attached_data.index < self._attached_data.max_index and self._attached_data.index or 0) + 1
 end
 
--- Lines 147-152
+-- Lines 173-179
 function DoctorBagBase:server_set_dynamic()
 	self:_set_dynamic()
 
@@ -143,19 +144,19 @@ function DoctorBagBase:server_set_dynamic()
 	end
 end
 
--- Lines 154-157
+-- Lines 183-186
 function DoctorBagBase:sync_net_event(event_id)
 	self:_set_dynamic()
 end
 
--- Lines 159-162
+-- Lines 190-193
 function DoctorBagBase:_set_dynamic()
 	self._is_dynamic = true
 
 	self._unit:body("dynamic"):set_enabled(true)
 end
 
--- Lines 166-194
+-- Lines 197-223
 function DoctorBagBase:take(unit)
 	if self._empty then
 		return
@@ -182,31 +183,7 @@ function DoctorBagBase:take(unit)
 	return taken > 0
 end
 
--- Lines 196-204
-function DoctorBagBase:_set_visual_stage()
-	local percentage = self._amount / self._max_amount
-
-	if self._unit:damage() then
-		local state = "state_" .. math.ceil(percentage * 4)
-
-		if self._unit:damage():has_sequence(state) then
-			self._unit:damage():run_sequence_simple(state)
-		end
-	end
-end
-
--- Lines 207-214
-function DoctorBagBase:sync_taken(amount)
-	self._amount = self._amount - amount
-
-	if self._amount <= 0 then
-		self:_set_empty()
-	else
-		self:_set_visual_stage()
-	end
-end
-
--- Lines 216-228
+-- Lines 228-242
 function DoctorBagBase:_take(unit)
 	local taken = 1
 	self._amount = self._amount - taken
@@ -222,7 +199,31 @@ function DoctorBagBase:_take(unit)
 	return taken
 end
 
--- Lines 230-249
+-- Lines 246-254
+function DoctorBagBase:_set_visual_stage()
+	local percentage = self._amount / self._max_amount
+
+	if self._unit:damage() then
+		local state = "state_" .. math.ceil(percentage * 4)
+
+		if self._unit:damage():has_sequence(state) then
+			self._unit:damage():run_sequence_simple(state)
+		end
+	end
+end
+
+-- Lines 258-266
+function DoctorBagBase:sync_taken(amount)
+	self._amount = self._amount - amount
+
+	if self._amount <= 0 then
+		self:_set_empty()
+	else
+		self:_set_visual_stage()
+	end
+end
+
+-- Lines 270-291
 function DoctorBagBase:_set_empty()
 	self._empty = true
 	local unit = self._unit
@@ -242,7 +243,7 @@ function DoctorBagBase:_set_empty()
 	end
 end
 
--- Lines 251-256
+-- Lines 295-300
 function DoctorBagBase:_get_upgrade_levels(bits)
 	local dmg_reduction = Bitwise:rshift(bits, DoctorBagBase.damage_reduce_lvl_shift)
 	local amount_lvl = Bitwise:rshift(bits, DoctorBagBase.amount_upgrade_lvl_shift) % 2^DoctorBagBase.amount_upgrade_lvl_shift
@@ -250,7 +251,7 @@ function DoctorBagBase:_get_upgrade_levels(bits)
 	return amount_lvl, dmg_reduction
 end
 
--- Lines 260-265
+-- Lines 304-309
 function DoctorBagBase:save(data)
 	local state = {
 		amount = self._amount,
@@ -259,7 +260,7 @@ function DoctorBagBase:save(data)
 	data.DoctorBagBase = state
 end
 
--- Lines 267-277
+-- Lines 311-321
 function DoctorBagBase:load(data)
 	local state = data.DoctorBagBase
 	self._amount = state.amount
@@ -273,7 +274,7 @@ function DoctorBagBase:load(data)
 	self._was_dropin = true
 end
 
--- Lines 281-286
+-- Lines 325-330
 function DoctorBagBase:destroy()
 	if self._validate_clbk_id then
 		managers.enemy:remove_delayed_clbk(self._validate_clbk_id)
@@ -284,7 +285,7 @@ end
 
 CustomDoctorBagBase = CustomDoctorBagBase or class(DoctorBagBase)
 
--- Lines 291-301
+-- Lines 335-345
 function CustomDoctorBagBase:init(unit)
 	CustomDoctorBagBase.super.init(self, unit)
 
@@ -299,7 +300,7 @@ function CustomDoctorBagBase:init(unit)
 	self:setup(self.upgrade_lvl or 0)
 end
 
--- Lines 303-311
+-- Lines 347-355
 function CustomDoctorBagBase:_set_empty()
 	self._empty = true
 

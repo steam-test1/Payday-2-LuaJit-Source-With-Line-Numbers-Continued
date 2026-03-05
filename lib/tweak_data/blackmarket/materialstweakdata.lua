@@ -1,4 +1,4 @@
--- Lines 1-2792
+-- Lines 1-2789
 function BlackMarketTweakData:_init_materials(tweak_data)
 	local C_HI = 0.8
 	local C_MD = 0.4
@@ -32,6 +32,7 @@ function BlackMarketTweakData:_init_materials(tweak_data)
 	self.materials.strip_paint.value = 0
 	self.materials.strip_paint.color = color_generic_white
 	self.materials.strip_paint.texture_bundle_folder = "lic"
+	self.materials.strip_paint.does_not_apply_color = true
 	self.materials.strip_paint.unlimited = true
 	self.materials.nothing = {
 		name_id = "bm_mtl_nothing",

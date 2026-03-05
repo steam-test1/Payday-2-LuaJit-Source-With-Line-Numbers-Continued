@@ -867,7 +867,7 @@ function LootDropManager:can_drop_weapon_mods()
 	return #dropable_items > 0
 end
 
--- Lines 856-872
+-- Lines 856-867
 function LootDropManager:specific_fake_loot_pc(preferred)
 	local to_drop = {
 		cash = 3,
@@ -881,7 +881,7 @@ function LootDropManager:specific_fake_loot_pc(preferred)
 	return to_drop[preferred] or 1
 end
 
--- Lines 874-911
+-- Lines 869-901
 function LootDropManager:new_fake_loot_pc(debug_pc, skip_mods)
 	local sum = 0
 	local to_drop = {
@@ -918,7 +918,7 @@ function LootDropManager:new_fake_loot_pc(debug_pc, skip_mods)
 	return 1
 end
 
--- Lines 913-935
+-- Lines 903-925
 function LootDropManager:debug_check_items(check_type)
 	local t = {}
 
@@ -939,7 +939,7 @@ function LootDropManager:debug_check_items(check_type)
 	return t
 end
 
--- Lines 937-965
+-- Lines 927-955
 function LootDropManager:debug_loot_aquire_method(type)
 	local no_pcs = managers.lootdrop:debug_check_items(type)
 	local t = {
@@ -984,7 +984,7 @@ function LootDropManager:debug_loot_aquire_method(type)
 	return t
 end
 
--- Lines 967-987
+-- Lines 957-977
 function LootDropManager:debug_print_pc_items(check_type)
 	for type, data in pairs(tweak_data.blackmarket) do
 		if not check_type or type == check_type then
@@ -1008,17 +1008,17 @@ function LootDropManager:debug_print_pc_items(check_type)
 	end
 end
 
--- Lines 990-992
+-- Lines 980-982
 function LootDropManager:save(data)
 	data.LootDropManager = self._global
 end
 
--- Lines 995-997
+-- Lines 985-987
 function LootDropManager:load(data)
 	self._global = data.LootDropManager
 end
 
--- Lines 1000-1024
+-- Lines 990-1014
 function LootDropManager:get_amount_mass_drop(data)
 	if not data then
 		return 0
@@ -1045,7 +1045,7 @@ function LootDropManager:get_amount_mass_drop(data)
 	return num_rewards
 end
 
--- Lines 1026-1056
+-- Lines 1016-1046
 function LootDropManager:set_mass_drop(data)
 	if not data or data.coroutine then
 		return false
@@ -1077,7 +1077,7 @@ function LootDropManager:set_mass_drop(data)
 	return true
 end
 
--- Lines 1058-1087
+-- Lines 1048-1077
 function LootDropManager:fetch_mass_lootdrops(data)
 	if data and data.coroutine then
 		local status = coroutine.status(data.coroutine)

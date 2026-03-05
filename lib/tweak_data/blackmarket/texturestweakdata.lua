@@ -1,11 +1,12 @@
 local is_nextgen_console = SystemInfo:platform() == Idstring("PS4") or SystemInfo:platform() == Idstring("XB1")
 
--- Lines 19-4093
+-- Lines 19-3486
 function BlackMarketTweakData:_init_textures(tweak_data)
 	self.textures = {
 		no_color_no_material = {}
 	}
 	self.textures.no_color_no_material.name_id = "bm_txt_lic_no_color_full_material"
+	self.textures.no_color_no_material.name_id = "bm_txt_no_color_no_material"
 	self.textures.no_color_no_material.texture = "units/payday2/masks/shared_textures/patterns/pattern_no_color_no_material_df"
 	self.textures.no_color_no_material.value = 0
 	self.textures.no_color_no_material.unlimited = true
@@ -1761,10 +1762,7 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		texture = "units/pd2_dlc_infamy/masks/patterns/pattern_imperial_df",
 		value = 0,
 		global_value = "infamy",
-		infamy_lock = "infamy_mastermind",
-		overwrites = {
-			color_c = true
-		}
+		infamy_lock = "infamy_mastermind"
 	}
 	self.textures.fatman = {
 		name_id = "bm_txt_fatman",
@@ -3989,7 +3987,7 @@ function BlackMarketTweakData:_init_textures(tweak_data)
 		texture = "units/pd2_dlc_skm/masks/patterns/pattern_barbedwire_df",
 		value = 0,
 		overwrites = {
-			color_b = true,
+			color_a = true,
 			color_c = true
 		}
 	}

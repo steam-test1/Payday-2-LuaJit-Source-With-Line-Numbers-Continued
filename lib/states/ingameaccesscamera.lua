@@ -12,7 +12,7 @@ function IngameAccessCamera:init(game_state_machine)
 	IngameAccessCamera.super.init(self, "ingame_access_camera", game_state_machine)
 end
 
--- Lines 19-43
+-- Lines 19-39
 function IngameAccessCamera:_setup_controller()
 	self._controller = managers.controller:create_controller("ingame_access_camera", managers.controller:get_default_wrapper_index(), false)
 	self._leave_cb = callback(self, self, "cb_leave")
@@ -33,7 +33,7 @@ function IngameAccessCamera:_setup_controller()
 	managers.controller:set_ingame_mode("access_camera")
 end
 
--- Lines 47-67
+-- Lines 43-60
 function IngameAccessCamera:_clear_controller()
 	if self._controller then
 		if _G.IS_VR then
@@ -52,19 +52,19 @@ function IngameAccessCamera:_clear_controller()
 	end
 end
 
--- Lines 69-73
+-- Lines 62-66
 function IngameAccessCamera:set_controller_enabled(enabled)
 	if self._controller then
 		self._controller:set_enabled(enabled)
 	end
 end
 
--- Lines 75-77
+-- Lines 68-70
 function IngameAccessCamera:cb_leave()
 	game_state_machine:change_state_by_name(self._old_state)
 end
 
--- Lines 80-86
+-- Lines 73-81
 function IngameAccessCamera:cb_leave_vr()
 	local active_menu = managers.menu:active_menu()
 
@@ -75,7 +75,7 @@ function IngameAccessCamera:cb_leave_vr()
 	game_state_machine:change_state_by_name(self._old_state)
 end
 
--- Lines 89-117
+-- Lines 84-101
 function IngameAccessCamera:_get_cameras()
 	self._cameras = {}
 
@@ -92,7 +92,7 @@ function IngameAccessCamera:_get_cameras()
 	end
 end
 
--- Lines 119-128
+-- Lines 103-113
 function IngameAccessCamera:_next_index()
 	self._camera_data.index = self._camera_data.index + 1
 
@@ -105,7 +105,7 @@ function IngameAccessCamera:_next_index()
 	end
 end
 
--- Lines 130-139
+-- Lines 115-125
 function IngameAccessCamera:_prev_index()
 	self._camera_data.index = self._camera_data.index - 1
 
@@ -118,7 +118,7 @@ function IngameAccessCamera:_prev_index()
 	end
 end
 
--- Lines 141-148
+-- Lines 127-134
 function IngameAccessCamera:_prev_camera()
 	if self._no_feeds then
 		return
@@ -128,7 +128,7 @@ function IngameAccessCamera:_prev_camera()
 	self:_show_camera()
 end
 
--- Lines 150-157
+-- Lines 136-143
 function IngameAccessCamera:_next_camera()
 	if self._no_feeds then
 		return
@@ -138,14 +138,14 @@ function IngameAccessCamera:_next_camera()
 	self:_show_camera()
 end
 
--- Lines 159-162
+-- Lines 168-172
 function IngameAccessCamera:on_destroyed()
 	local access_camera = self._cameras[self._camera_data.index].access_camera
 
 	managers.hud:set_access_camera_destroyed(access_camera:value("destroyed"))
 end
 
--- Lines 164-199
+-- Lines 174-208
 function IngameAccessCamera:_show_camera()
 	self._sound_source:post_event("camera_monitor_change")
 
@@ -181,7 +181,7 @@ function IngameAccessCamera:_show_camera()
 	}))
 end
 
--- Lines 201-325
+-- Lines 210-327
 function IngameAccessCamera:update(t, dt)
 	if _G.IS_VR then
 		local active_menu = managers.menu:active_menu()
@@ -289,7 +289,7 @@ function IngameAccessCamera:update(t, dt)
 	managers.hud:access_camera_track_max_amount(amount)
 end
 
--- Lines 327-333
+-- Lines 329-335
 function IngameAccessCamera:update_player_stamina(t, dt)
 	local player = managers.player:player_unit()
 
@@ -298,12 +298,12 @@ function IngameAccessCamera:update_player_stamina(t, dt)
 	end
 end
 
--- Lines 335-337
+-- Lines 337-339
 function IngameAccessCamera:_player_damage(info)
 	self:cb_leave()
 end
 
--- Lines 339-396
+-- Lines 344-417
 function IngameAccessCamera:at_enter(old_state, ...)
 	local player = managers.player:player_unit()
 
@@ -359,7 +359,7 @@ function IngameAccessCamera:at_enter(old_state, ...)
 	end
 end
 
--- Lines 398-410
+-- Lines 419-431
 function IngameAccessCamera:_any_enabled_cameras()
 	if not self._cameras or #self._cameras == 0 then
 		return false
@@ -374,7 +374,7 @@ function IngameAccessCamera:_any_enabled_cameras()
 	return false
 end
 
--- Lines 412-438
+-- Lines 433-444
 function IngameAccessCamera:on_camera_access_changed(camera_unit)
 	local access_camera = self._camera_data.index and self._cameras[self._camera_data.index] and self._cameras[self._camera_data.index].access_camera
 	self._no_feeds = not self:_any_enabled_cameras()
@@ -388,7 +388,7 @@ function IngameAccessCamera:on_camera_access_changed(camera_unit)
 	end
 end
 
--- Lines 440-478
+-- Lines 446-483
 function IngameAccessCamera:at_exit()
 	self._sound_source:post_event("camera_monitor_leave")
 	managers.environment_controller:set_default_color_grading(self._saved_default_color_grading)
@@ -416,17 +416,17 @@ function IngameAccessCamera:at_exit()
 	end
 end
 
--- Lines 480-482
+-- Lines 485-487
 function IngameAccessCamera:on_server_left()
 	IngameCleanState.on_server_left(self)
 end
 
--- Lines 484-486
+-- Lines 489-491
 function IngameAccessCamera:on_kicked()
 	IngameCleanState.on_kicked(self)
 end
 
--- Lines 488-490
+-- Lines 493-495
 function IngameAccessCamera:on_disconnected()
 	IngameCleanState.on_disconnected(self)
 end

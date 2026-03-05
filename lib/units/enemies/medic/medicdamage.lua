@@ -69,7 +69,7 @@ function MedicDamage:verify_heal_requesting_unit(requesting_unit)
 	return true
 end
 
--- Lines 106-126
+-- Lines 106-124
 function MedicDamage:is_available_for_healing(requesting_unit)
 	if self._unit:anim_data().act then
 		return false
@@ -90,7 +90,7 @@ function MedicDamage:is_available_for_healing(requesting_unit)
 	return true
 end
 
--- Lines 129-155
+-- Lines 127-153
 function MedicDamage:heal_unit(unit)
 	self._heal_cooldown_t = TimerManager:game():time() + self._heal_cooldown
 
@@ -113,7 +113,7 @@ function MedicDamage:heal_unit(unit)
 	return true
 end
 
--- Lines 157-163
+-- Lines 155-161
 function MedicDamage:heal_unit_external(unit, skip_verification)
 	if not skip_verification and not self:verify_heal_requesting_unit(unit) then
 		return false
@@ -122,7 +122,7 @@ function MedicDamage:heal_unit_external(unit, skip_verification)
 	return unit:character_damage():do_medic_heal_and_action(true)
 end
 
--- Lines 165-201
+-- Lines 163-199
 function MedicDamage:sync_heal_action()
 	self._heal_cooldown_t = TimerManager:game():time() + self._heal_cooldown
 	local action_data = nil
@@ -158,7 +158,7 @@ function MedicDamage:sync_heal_action()
 	end
 end
 
--- Lines 203-209
+-- Lines 201-207
 function MedicDamage:check_medic_heal(...)
 	if self._healed then
 		return false
@@ -167,7 +167,7 @@ function MedicDamage:check_medic_heal(...)
 	return MedicDamage.super.check_medic_heal(self, ...)
 end
 
--- Lines 211-217
+-- Lines 209-215
 function MedicDamage:do_medic_heal_and_action(...)
 	if self._healed then
 		return false
@@ -176,13 +176,13 @@ function MedicDamage:do_medic_heal_and_action(...)
 	return MedicDamage.super.do_medic_heal_and_action(self, ...)
 end
 
--- Lines 219-223
+-- Lines 217-221
 function MedicDamage:die(...)
 	MedicDamage.super.die(self, ...)
 	self:_unregister_healing()
 end
 
--- Lines 225-229
+-- Lines 223-227
 function MedicDamage:destroy(...)
 	MedicDamage.super.destroy(self, ...)
 	self:_unregister_healing()

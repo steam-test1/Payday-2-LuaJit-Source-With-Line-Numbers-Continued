@@ -412,7 +412,7 @@ end
 
 InstantElectricBulletBase = InstantElectricBulletBase or class(InstantBulletBase)
 
--- Lines 595-610
+-- Lines 595-617
 function InstantElectricBulletBase:give_impact_damage(col_ray, weapon_unit, user_unit, damage, armor_piercing)
 	local hit_unit = col_ray.unit
 	local action_data = {

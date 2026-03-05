@@ -265,7 +265,7 @@ function MovieTheaterGui:mouse_clicked(o, button, x, y)
 	return MovieTheaterGui.super.mouse_clicked(self, o, button, x, y)
 end
 
--- Lines 211-251
+-- Lines 211-257
 function MovieTheaterGui:play_movie(item, blockingtag)
 	if alive(self._video_gui) then
 		self:reset_video()
@@ -310,7 +310,7 @@ function MovieTheaterGui:play_movie(item, blockingtag)
 	self._node:parameters().block_back = (blockingtag or "block_back") == "block_back"
 end
 
--- Lines 253-267
+-- Lines 259-273
 function MovieTheaterGui:reset_video()
 	if alive(self._video_gui) then
 		self._video_gui:stop()

@@ -5525,7 +5525,7 @@ function PlayerInventoryGui:_move(dir, box)
 	end
 end
 
--- Lines 4001-4009
+-- Lines 4001-4007
 function PlayerInventoryGui:move_left()
 	if not self._enabled then
 		return false
@@ -5534,7 +5534,7 @@ function PlayerInventoryGui:move_left()
 	self:_move("left")
 end
 
--- Lines 4011-4019
+-- Lines 4009-4015
 function PlayerInventoryGui:move_right()
 	if not self._enabled then
 		return false
@@ -5543,7 +5543,7 @@ function PlayerInventoryGui:move_right()
 	self:_move("right")
 end
 
--- Lines 4021-4029
+-- Lines 4017-4023
 function PlayerInventoryGui:move_up()
 	if not self._enabled then
 		return false
@@ -5552,7 +5552,7 @@ function PlayerInventoryGui:move_up()
 	self:_move("up")
 end
 
--- Lines 4031-4039
+-- Lines 4025-4031
 function PlayerInventoryGui:move_down()
 	if not self._enabled then
 		return false
@@ -5561,7 +5561,7 @@ function PlayerInventoryGui:move_down()
 	self:_move("down")
 end
 
--- Lines 4041-4046
+-- Lines 4033-4038
 function PlayerInventoryGui:next_page()
 	local box = self:_get_selected_box()
 
@@ -5570,7 +5570,7 @@ function PlayerInventoryGui:next_page()
 	end
 end
 
--- Lines 4048-4053
+-- Lines 4040-4045
 function PlayerInventoryGui:previous_page()
 	local box = self:_get_selected_box()
 
@@ -5579,7 +5579,7 @@ function PlayerInventoryGui:previous_page()
 	end
 end
 
--- Lines 4055-4098
+-- Lines 4047-4086
 function PlayerInventoryGui:special_btn_pressed(button)
 	if not self._enabled then
 		return false
@@ -5621,7 +5621,7 @@ function PlayerInventoryGui:special_btn_pressed(button)
 	end
 end
 
--- Lines 4100-4111
+-- Lines 4088-4097
 function PlayerInventoryGui:confirm_pressed()
 	if not self._enabled then
 		return false
@@ -5634,7 +5634,7 @@ function PlayerInventoryGui:confirm_pressed()
 	end
 end
 
--- Lines 4115-4123
+-- Lines 4101-4107
 function PlayerInventoryGui:input_focus()
 	if not self._enabled then
 		return false
@@ -5643,7 +5643,7 @@ function PlayerInventoryGui:input_focus()
 	return self._panel:visible() and self._input_focus
 end
 
--- Lines 4127-4215
+-- Lines 4111-4197
 function PlayerInventoryGui:mouse_moved(o, x, y)
 	if managers.menu_scene and managers.menu_scene:input_focus() then
 		return false
@@ -5734,7 +5734,7 @@ function PlayerInventoryGui:mouse_moved(o, x, y)
 	return used, pointer
 end
 
--- Lines 4217-4273
+-- Lines 4199-4253
 function PlayerInventoryGui:mouse_pressed(button, x, y)
 	if managers.menu_scene and managers.menu_scene:input_focus() then
 		return false
@@ -5790,7 +5790,7 @@ function PlayerInventoryGui:mouse_pressed(button, x, y)
 	self._multi_profile_item:mouse_pressed(button, x, y)
 end
 
--- Lines 4277-4290
+-- Lines 4257-4270
 function PlayerInventoryGui:unretrieve_box_textures(box)
 	local object = nil
 
@@ -5812,17 +5812,17 @@ function PlayerInventoryGui:unretrieve_box_textures(box)
 	end
 end
 
--- Lines 4294-4296
+-- Lines 4272-4274
 function PlayerInventoryGui:enable()
 	self._enabled = true
 end
 
--- Lines 4298-4300
+-- Lines 4276-4278
 function PlayerInventoryGui:disable()
 	self._enabled = false
 end
 
--- Lines 4304-4328
+-- Lines 4280-4304
 function PlayerInventoryGui:close()
 	for _, box in ipairs(self._boxes) do
 		self:unretrieve_box_textures(box)
@@ -5852,12 +5852,12 @@ function PlayerInventoryGui:close()
 	self._boxes_by_name = {}
 end
 
--- Lines 4330-4336
+-- Lines 4306-4312
 function PlayerInventoryGui:_should_show_description()
 	return IS_WIN_32
 end
 
--- Lines 4343-4400
+-- Lines 4319-4376
 function PlayerInventoryGui:create_text_button(params)
 	local left = params.left or params.x
 	local right = params.right
@@ -5946,7 +5946,7 @@ function PlayerInventoryGui:create_text_button(params)
 	return button_panel
 end
 
--- Lines 4402-4425
+-- Lines 4378-4401
 function PlayerInventoryGui:refresh_text_button(button_panel, params)
 	local refresh_button, refresh_index = nil
 
@@ -5975,7 +5975,7 @@ function PlayerInventoryGui:refresh_text_button(button_panel, params)
 	return button_panel
 end
 
--- Lines 4427-4557
+-- Lines 4403-4533
 function PlayerInventoryGui:_get_mods_stats(name, base_stats, equipped_mods, bonus_stats)
 	local mods_stats = {}
 	local modifier_stats = tweak_data.weapon[name].stats_modifiers
@@ -6109,7 +6109,7 @@ function PlayerInventoryGui:_get_mods_stats(name, base_stats, equipped_mods, bon
 	return mods_stats
 end
 
--- Lines 4560-4675
+-- Lines 4536-4651
 function PlayerInventoryGui:_get_melee_weapon_stats(name)
 	local base_stats = {}
 	local mods_stats = {}
@@ -6257,7 +6257,7 @@ function PlayerInventoryGui:_get_melee_weapon_stats(name)
 	return base_stats, mods_stats, skill_stats
 end
 
--- Lines 4677-4780
+-- Lines 4653-4756
 function PlayerInventoryGui:_get_armor_stats(name)
 	local base_stats = {}
 	local mods_stats = {}

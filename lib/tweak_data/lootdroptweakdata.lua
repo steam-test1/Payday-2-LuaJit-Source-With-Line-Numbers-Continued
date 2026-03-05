@@ -2,8 +2,10 @@ LootDropTweakData = LootDropTweakData or class()
 
 require("lib/tweak_data/GeneratedLootDropTweakData")
 
--- Lines 5-2549
+-- Lines 5-2528
 function LootDropTweakData:init(tweak_data)
+	self:_init_card_types()
+
 	self.PC_STEP = 10
 	self.no_drop = {
 		BASE = 35,
@@ -1994,7 +1996,32 @@ function LootDropTweakData:init(tweak_data)
 	self:_create_global_value_list_map()
 end
 
--- Lines 2551-2556
+-- Lines 2533-2567
+function LootDropTweakData:_init_card_types()
+	self.type_to_card_fallback = "upcard_random"
+	self.type_to_card = {
+		weapon_mods = "upcard_weapon",
+		materials = "upcard_material",
+		cash = "upcard_cash",
+		armor_skins = "upcard_cosmetic",
+		masks = "upcard_mask",
+		xp = "upcard_xp",
+		textures = "upcard_pattern",
+		weapon_skins = "upcard_cosmetic",
+		weapon_bonus = "upcard_weapon_bonus"
+	}
+	self.card_fakes = {
+		"masks",
+		"weapon_mods",
+		"cash",
+		"xp",
+		"materials",
+		"textures",
+		"weapon_bonus"
+	}
+end
+
+-- Lines 2569-2574
 function LootDropTweakData:_create_global_value_list_map()
 	self.global_value_list_map = {}
 

@@ -10,7 +10,7 @@ function ElementAccessCamera:init(...)
 	self._triggers = {}
 end
 
--- Lines 12-29
+-- Lines 12-36
 function ElementAccessCamera:on_script_activated()
 	if self._values.camera_u_id then
 		local id = self._values.camera_u_id
@@ -34,18 +34,18 @@ function ElementAccessCamera:on_script_activated()
 	self._mission_script:add_save_state_cb(self._id)
 end
 
--- Lines 31-36
+-- Lines 38-43
 function ElementAccessCamera:_load_unit(unit)
 	unit:base():set_access_camera_mission_element(self)
 
 	self._camera_unit = unit
 end
 
--- Lines 38-40
+-- Lines 45-47
 function ElementAccessCamera:client_on_executed(...)
 end
 
--- Lines 42-48
+-- Lines 49-55
 function ElementAccessCamera:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -54,14 +54,14 @@ function ElementAccessCamera:on_executed(instigator)
 	ElementAccessCamera.super.on_executed(self, instigator)
 end
 
--- Lines 50-54
+-- Lines 57-61
 function ElementAccessCamera:access_camera_operation_destroy()
 	self._values.destroyed = true
 
 	self:check_triggers("destroyed")
 end
 
--- Lines 56-60
+-- Lines 63-67
 function ElementAccessCamera:add_trigger(id, type, callback)
 	self._triggers[type] = self._triggers[type] or {}
 	self._triggers[type][id] = {
@@ -69,14 +69,14 @@ function ElementAccessCamera:add_trigger(id, type, callback)
 	}
 end
 
--- Lines 62-66
+-- Lines 69-73
 function ElementAccessCamera:remove_trigger(id, type)
 	if self._triggers[type] then
 		self._triggers[type][id] = nil
 	end
 end
 
--- Lines 68-74
+-- Lines 75-81
 function ElementAccessCamera:trigger_accessed(instigator)
 	if Network:is_client() then
 		managers.network:session():send_to_host("to_server_access_camera_trigger", self._id, "accessed", instigator)
@@ -85,7 +85,7 @@ function ElementAccessCamera:trigger_accessed(instigator)
 	end
 end
 
--- Lines 76-85
+-- Lines 83-92
 function ElementAccessCamera:check_triggers(type, instigator)
 	if not self._triggers[type] then
 		return
@@ -96,7 +96,7 @@ function ElementAccessCamera:check_triggers(type, instigator)
 	end
 end
 
--- Lines 87-96
+-- Lines 94-103
 function ElementAccessCamera:enabled(...)
 	if alive(self._camera_unit) then
 		if self._camera_unit:base() and self._camera_unit:base().is_security_camera and self._camera_unit:base().access_enabled then
@@ -109,12 +109,12 @@ function ElementAccessCamera:enabled(...)
 	return ElementAccessCamera.super.enabled(self, ...)
 end
 
--- Lines 98-100
+-- Lines 105-107
 function ElementAccessCamera:has_camera_unit()
 	return alive(self._camera_unit) and true or false
 end
 
--- Lines 102-107
+-- Lines 109-114
 function ElementAccessCamera:camera_unit()
 	if alive(self._camera_unit) then
 		return self._camera_unit
@@ -123,7 +123,7 @@ function ElementAccessCamera:camera_unit()
 	return nil
 end
 
--- Lines 109-114
+-- Lines 116-121
 function ElementAccessCamera:camera_position()
 	if alive(self._camera_unit) then
 		return self._camera_unit:get_object(Idstring("CameraLens")):position()
@@ -132,17 +132,17 @@ function ElementAccessCamera:camera_position()
 	return self:value("position")
 end
 
--- Lines 116-118
+-- Lines 123-125
 function ElementAccessCamera:camera_rotation()
 	return self:value("rotation")
 end
 
--- Lines 120-122
+-- Lines 127-129
 function ElementAccessCamera:is_moving()
 	return alive(self._camera_unit) and self._camera_unit:base() and self._camera_unit:base().update_position
 end
 
--- Lines 124-137
+-- Lines 131-144
 function ElementAccessCamera:m_camera_rotation(m_rot)
 	if not m_rot then
 		return self:camera_rotation()
@@ -160,7 +160,7 @@ function ElementAccessCamera:m_camera_rotation(m_rot)
 	return m_rot
 end
 
--- Lines 139-150
+-- Lines 146-157
 function ElementAccessCamera:m_camera_position(m_vec)
 	if not m_vec then
 		return self:camera_position()
@@ -177,13 +177,13 @@ function ElementAccessCamera:m_camera_position(m_vec)
 	return m_vec
 end
 
--- Lines 153-156
+-- Lines 160-163
 function ElementAccessCamera:save(data)
 	data.enabled = self._values.enabled
 	data.destroyed = self._values.destroyed
 end
 
--- Lines 158-164
+-- Lines 165-171
 function ElementAccessCamera:load(data)
 	self:set_enabled(data.enabled)
 
@@ -196,17 +196,17 @@ end
 
 ElementAccessCameraOperator = ElementAccessCameraOperator or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines 170-172
+-- Lines 177-179
 function ElementAccessCameraOperator:init(...)
 	ElementAccessCameraOperator.super.init(self, ...)
 end
 
--- Lines 174-176
+-- Lines 181-183
 function ElementAccessCameraOperator:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines 178-193
+-- Lines 185-200
 function ElementAccessCameraOperator:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -225,12 +225,12 @@ end
 
 ElementAccessCameraTrigger = ElementAccessCameraTrigger or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines 199-201
+-- Lines 206-208
 function ElementAccessCameraTrigger:init(...)
 	ElementAccessCameraTrigger.super.init(self, ...)
 end
 
--- Lines 203-208
+-- Lines 210-215
 function ElementAccessCameraTrigger:on_script_activated()
 	for _, id in ipairs(self._values.elements) do
 		local element = self:get_mission_element(id)
@@ -239,11 +239,11 @@ function ElementAccessCameraTrigger:on_script_activated()
 	end
 end
 
--- Lines 210-212
+-- Lines 217-219
 function ElementAccessCameraTrigger:client_on_executed(...)
 end
 
--- Lines 214-220
+-- Lines 221-227
 function ElementAccessCameraTrigger:on_executed(instigator)
 	if not self._values.enabled then
 		return

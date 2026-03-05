@@ -2846,7 +2846,7 @@ function InstantBulletBase:play_impact_sound_and_effects(weapon_unit, col_ray, n
 	managers.game_play_central:play_impact_sound_and_effects(self:_get_sound_and_effects_params(weapon_unit, col_ray, no_sound))
 end
 
--- Lines 3197-3212
+-- Lines 3197-3220
 function InstantBulletBase:give_impact_damage(col_ray, weapon_unit, user_unit, damage, armor_piercing, shield_knock, knock_down, stagger, variant)
 	local action_data = {
 		variant = variant or "bullet",
@@ -2856,7 +2856,7 @@ function InstantBulletBase:give_impact_damage(col_ray, weapon_unit, user_unit, d
 		col_ray = col_ray,
 		armor_piercing = armor_piercing,
 		shield_knock = shield_knock,
-		origin = user_unit:position(),
+		origin = alive(user_unit) and user_unit:position() or Vector3(),
 		knock_down = knock_down,
 		stagger = stagger
 	}
@@ -2865,7 +2865,7 @@ function InstantBulletBase:give_impact_damage(col_ray, weapon_unit, user_unit, d
 	return defense_data
 end
 
--- Lines 3216-3225
+-- Lines 3224-3233
 function InstantBulletBase._get_vector_sync_yaw_pitch(dir, yaw_resolution, pitch_resolution)
 	mrotation.set_look_at(tmp_rot1, dir, math.UP)
 
@@ -2897,22 +2897,22 @@ InstantExplosiveBulletBase.EFFECT_PARAMS = {
 	idstr_effect = Idstring("")
 }
 
--- Lines 3248-3250
+-- Lines 3256-3258
 function InstantExplosiveBulletBase:bullet_slotmask()
 	return managers.slot:get_mask("bullet_impact_targets")
 end
 
--- Lines 3252-3254
+-- Lines 3260-3262
 function InstantExplosiveBulletBase:blank_slotmask()
 	return managers.slot:get_mask("bullet_blank_impact_targets")
 end
 
--- Lines 3256-3258
+-- Lines 3264-3266
 function InstantExplosiveBulletBase:play_impact_sound_and_effects(weapon_unit, col_ray)
 	managers.game_play_central:play_impact_sound_and_effects(self:_get_sound_and_effects_params(weapon_unit, col_ray, false))
 end
 
--- Lines 3260-3303
+-- Lines 3268-3314
 function InstantExplosiveBulletBase:on_collision(col_ray, weapon_unit, user_unit, damage, blank, no_sound)
 	local hit_unit = col_ray.unit
 	user_unit = alive(user_unit) and user_unit or nil
@@ -2949,7 +2949,7 @@ function InstantExplosiveBulletBase:on_collision(col_ray, weapon_unit, user_unit
 	return nil
 end
 
--- Lines 3305-3364
+-- Lines 3316-3379
 function InstantExplosiveBulletBase:on_collision_server(position, normal, damage, user_unit, weapon_unit, owner_peer_id, owner_selection_index)
 	local slot_mask = managers.slot:get_mask("explosion_targets")
 
@@ -3015,7 +3015,7 @@ function InstantExplosiveBulletBase:on_collision_server(position, normal, damage
 	end
 end
 
--- Lines 3366-3369
+-- Lines 3381-3384
 function InstantExplosiveBulletBase:on_collision_client(position, normal, damage, user_unit)
 	managers.explosion:give_local_player_dmg(position, self.RANGE, damage * self.PLAYER_DMG_MUL)
 	managers.explosion:explode_on_client(position, normal, user_unit, damage, self.RANGE, self.CURVE_POW, self.EFFECT_PARAMS)
@@ -3037,12 +3037,12 @@ FlameBulletBase.EFFECT_PARAMS = {
 FlameBulletBase.VARIANT = "fire"
 FlameBulletBase.DOT_DATA_NAME = "default_fire"
 
--- Lines 3534-3536
+-- Lines 3545-3547
 function FlameBulletBase:bullet_slotmask()
 	return managers.slot:get_mask("bullet_impact_targets_no_shields")
 end
 
--- Lines 3538-3678
+-- Lines 3549-3689
 function FlameBulletBase:on_collision(col_ray, weapon_unit, user_unit, damage, blank, no_sound)
 	local hit_unit = col_ray.unit
 	user_unit = alive(user_unit) and user_unit or nil
@@ -3162,7 +3162,7 @@ function FlameBulletBase:on_collision(col_ray, weapon_unit, user_unit, damage, b
 	return result
 end
 
--- Lines 3680-3708
+-- Lines 3691-3719
 function FlameBulletBase:give_fire_damage(col_ray, weapon_unit, user_unit, damage, armor_piercing, shield_knock, knock_down, stagger, variant)
 	local action_data = {
 		variant = variant or self.VARIANT,
@@ -3192,7 +3192,7 @@ function FlameBulletBase:give_fire_damage(col_ray, weapon_unit, user_unit, damag
 	return defense_data
 end
 
--- Lines 3710-3816
+-- Lines 3721-3827
 function FlameBulletBase:start_dot_damage(col_ray, weapon_unit, dot_data, weapon_id, user_unit, defense_data)
 	local target_unit = col_ray.unit
 
@@ -3300,7 +3300,7 @@ function FlameBulletBase:start_dot_damage(col_ray, weapon_unit, dot_data, weapon
 	end
 end
 
--- Lines 3818-3834
+-- Lines 3829-3845
 function FlameBulletBase:give_damage_dot(col_ray, weapon_unit, attacker_unit, damage, hurt_animation, weapon_id, variant)
 	local action_data = {
 		variant = variant or self.VARIANT,
@@ -3320,11 +3320,11 @@ function FlameBulletBase:give_damage_dot(col_ray, weapon_unit, attacker_unit, da
 	return defense_data
 end
 
--- Lines 3836-3838
+-- Lines 3847-3849
 function FlameBulletBase:play_impact_sound_and_effects(weapon_unit, col_ray, no_sound)
 end
 
--- Lines 3840-3854
+-- Lines 3851-3865
 function FlameBulletBase:on_hit_player(col_ray, weapon_unit, user_unit, damage)
 	col_ray.unit = managers.player:player_unit()
 	local action_data = {
@@ -3343,7 +3343,7 @@ end
 DragonBreathBulletBase = DragonBreathBulletBase or class(InstantBulletBase)
 DragonBreathBulletBase.id = "dragons_breath"
 
--- Lines 3862-3877
+-- Lines 3873-3896
 function DragonBreathBulletBase:give_impact_damage(col_ray, weapon_unit, user_unit, damage, armor_piercing, shield_knock, knock_down, stagger, variant)
 	local action_data = {
 		variant = variant or "bullet",
@@ -3353,7 +3353,7 @@ function DragonBreathBulletBase:give_impact_damage(col_ray, weapon_unit, user_un
 		col_ray = col_ray,
 		armor_piercing = armor_piercing,
 		shield_knock = shield_knock,
-		origin = user_unit:position(),
+		origin = alive(user_unit) and user_unit:position() or Vector3(),
 		knock_down = knock_down,
 		stagger = stagger
 	}
@@ -3365,7 +3365,7 @@ end
 DOTBulletBase = DOTBulletBase or class(InstantBulletBase)
 DOTBulletBase.DOT_DATA_NAME = "weapon_dotbulletbase"
 
--- Lines 3885-3905
+-- Lines 3904-3924
 function DOTBulletBase:on_collision(col_ray, weapon_unit, user_unit, damage, blank)
 	local result = DOTBulletBase.super.on_collision(self, col_ray, weapon_unit, user_unit, damage, blank, self.NO_BULLET_INPACT_SOUND)
 
@@ -3386,7 +3386,7 @@ function DOTBulletBase:on_collision(col_ray, weapon_unit, user_unit, damage, bla
 	return result
 end
 
--- Lines 3907-3922
+-- Lines 3926-3941
 function DOTBulletBase:_dot_data_by_weapon(weapon_unit)
 	local weap_base = alive(weapon_unit) and weapon_unit:base()
 	local ammo_data = weap_base.ammo_data and weap_base:ammo_data()
@@ -3404,7 +3404,7 @@ function DOTBulletBase:_dot_data_by_weapon(weapon_unit)
 	return nil
 end
 
--- Lines 3925-3959
+-- Lines 3944-3978
 function DOTBulletBase:start_dot_damage(col_ray, weapon_unit, dot_data, weapon_id, user_unit)
 	if not alive(col_ray.unit) then
 		return
@@ -3437,7 +3437,7 @@ function DOTBulletBase:start_dot_damage(col_ray, weapon_unit, dot_data, weapon_i
 	managers.dot:add_doted_enemy(data)
 end
 
--- Lines 3961-3977
+-- Lines 3980-4001
 function DOTBulletBase:give_damage_dot(col_ray, weapon_unit, attacker_unit, damage, hurt_animation, weapon_id, variant)
 	local action_data = {
 		variant = variant or self.VARIANT,
@@ -3463,7 +3463,7 @@ PoisonBulletBase.VARIANT = "poison"
 ProjectilesPoisonBulletBase = ProjectilesPoisonBulletBase or class(PoisonBulletBase)
 ProjectilesPoisonBulletBase.NO_BULLET_INPACT_SOUND = true
 
--- Lines 3986-4019
+-- Lines 4010-4043
 function ProjectilesPoisonBulletBase:on_collision(col_ray, weapon_unit, user_unit, damage, blank)
 	local result = DOTBulletBase.super.on_collision(self, col_ray, weapon_unit, user_unit, damage, blank, self.NO_BULLET_INPACT_SOUND)
 
@@ -3492,7 +3492,7 @@ end
 
 ConcussiveInstantBulletBase = ConcussiveInstantBulletBase or class(InstantBulletBase)
 
--- Lines 4025-4108
+-- Lines 4049-4121
 function ConcussiveInstantBulletBase:give_impact_damage(col_ray, weapon_unit, user_unit, damage, ...)
 	if col_ray.unit:character_damage().on_concussion then
 		local conc_tweak = alive(weapon_unit) and weapon_unit:base().concussion_tweak and weapon_unit:base():concussion_tweak()
@@ -3515,7 +3515,7 @@ function ConcussiveInstantBulletBase:give_impact_damage(col_ray, weapon_unit, us
 			col_ray.unit:character_damage():on_concussion(sound_eff_mul, false, sound_tweak)
 		end
 	elseif Network:is_server() and col_ray.unit:character_damage().stun_hit then
-		-- Lines 4072-4092
+		-- Lines 4085-4105
 		local function can_stun(hit_unit)
 			local brain_ext = hit_unit:brain()
 
@@ -3556,7 +3556,7 @@ InstantSnowballBase.RANGE = tweak_data.projectiles.xmas_snowball.range
 InstantSnowballBase.ALERT_RADIUS = tweak_data.projectiles.xmas_snowball.alert_radius
 InstantSnowballBase.EFFECT_PARAMS = {
 	on_unit = true,
-	sound_muffle_effect = true,
+	sound_muffle_effect = false,
 	effect = tweak_data.projectiles.xmas_snowball.effect_name,
 	sound_event = tweak_data.projectiles.xmas_snowball.sound_event,
 	feedback_range = tweak_data.projectiles.xmas_snowball.feedback_range,

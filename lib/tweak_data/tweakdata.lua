@@ -200,7 +200,7 @@ function TweakData:_set_multiplayer()
 	self.player:_set_multiplayer()
 end
 
--- Lines 193-214
+-- Lines 193-207
 function TweakData:set_difficulty()
 	if not Global.game_settings then
 		return
@@ -225,7 +225,7 @@ function TweakData:set_difficulty()
 	end
 end
 
--- Lines 216-235
+-- Lines 209-228
 function TweakData:_set_easy()
 	self.player:_set_easy()
 	self.character:_set_easy()
@@ -240,7 +240,7 @@ function TweakData:_set_easy()
 	self.experience_manager.total_objectives_finished = 750
 end
 
--- Lines 237-256
+-- Lines 230-249
 function TweakData:_set_normal()
 	self.player:_set_normal()
 	self.character:_set_normal()
@@ -255,7 +255,7 @@ function TweakData:_set_normal()
 	self.experience_manager.total_objectives_finished = 1000
 end
 
--- Lines 258-277
+-- Lines 251-270
 function TweakData:_set_hard()
 	self.player:_set_hard()
 	self.character:_set_hard()
@@ -270,7 +270,7 @@ function TweakData:_set_hard()
 	self.experience_manager.total_objectives_finished = 1500
 end
 
--- Lines 279-298
+-- Lines 272-291
 function TweakData:_set_overkill()
 	self.player:_set_overkill()
 	self.character:_set_overkill()
@@ -285,7 +285,7 @@ function TweakData:_set_overkill()
 	self.experience_manager.total_objectives_finished = 3000
 end
 
--- Lines 300-319
+-- Lines 293-312
 function TweakData:_set_overkill_145()
 	self.player:_set_overkill_145()
 	self.character:_set_overkill_145()
@@ -300,7 +300,7 @@ function TweakData:_set_overkill_145()
 	self.experience_manager.total_objectives_finished = 3000
 end
 
--- Lines 321-340
+-- Lines 314-333
 function TweakData:_set_easy_wish()
 	self.player:_set_easy_wish()
 	self.character:_set_easy_wish()
@@ -315,7 +315,7 @@ function TweakData:_set_easy_wish()
 	self.experience_manager.total_objectives_finished = 3000
 end
 
--- Lines 342-361
+-- Lines 335-354
 function TweakData:_set_overkill_290()
 	self.player:_set_overkill_290()
 	self.character:_set_overkill_290()
@@ -330,7 +330,7 @@ function TweakData:_set_overkill_290()
 	self.experience_manager.total_objectives_finished = 3000
 end
 
--- Lines 363-382
+-- Lines 356-375
 function TweakData:_set_sm_wish()
 	self.player:_set_sm_wish()
 	self.character:_set_sm_wish()
@@ -345,37 +345,37 @@ function TweakData:_set_sm_wish()
 	self.experience_manager.total_objectives_finished = 3000
 end
 
--- Lines 384-386
+-- Lines 377-379
 function TweakData:difficulty_to_index(difficulty)
 	return table.index_of(self.difficulties, difficulty)
 end
 
--- Lines 388-390
+-- Lines 381-383
 function TweakData:index_to_difficulty(index)
 	return self.difficulties[index]
 end
 
--- Lines 392-394
+-- Lines 385-387
 function TweakData:permission_to_index(permission)
 	return table.index_of(self.permissions, permission)
 end
 
--- Lines 396-398
+-- Lines 389-391
 function TweakData:index_to_permission(index)
 	return self.permissions[index]
 end
 
--- Lines 400-402
+-- Lines 393-395
 function TweakData:server_state_to_index(state)
 	return table.index_of(self.server_states, state)
 end
 
--- Lines 404-406
+-- Lines 397-399
 function TweakData:index_to_server_state(index)
 	return self.server_states[index]
 end
 
--- Lines 409-418
+-- Lines 402-411
 function TweakData:menu_sync_state_to_index(state)
 	if not state then
 		return false
@@ -388,12 +388,12 @@ function TweakData:menu_sync_state_to_index(state)
 	end
 end
 
--- Lines 419-421
+-- Lines 412-414
 function TweakData:index_to_menu_sync_state(index)
 	return self.menu_sync_states[index]
 end
 
--- Lines 423-2881
+-- Lines 416-2878
 function TweakData:init()
 	self.max_players = 4
 	self.difficulties = {
@@ -3096,7 +3096,7 @@ Play the full version soon to get your full PAYDAY!]],
 	self:digest_tweak_data()
 end
 
--- Lines 2885-2911
+-- Lines 2882-2908
 function TweakData:load_movie_list()
 	self.movies = {
 		{
@@ -3124,7 +3124,7 @@ function TweakData:load_movie_list()
 	end
 end
 
--- Lines 2916-3022
+-- Lines 2913-3019
 function TweakData:init_screen_colors()
 	self.screen_colors = {
 		text = Color(255, 255, 255, 255) / 255,
@@ -3210,7 +3210,7 @@ function TweakData:init_screen_colors()
 	end
 end
 
--- Lines 3025-3056
+-- Lines 3022-3053
 function TweakData:init_accessibility_colors()
 	self.accessibility_colors = {
 		dot = {}
@@ -3242,14 +3242,14 @@ function TweakData:init_accessibility_colors()
 	self.accessibility_colors.screenflash.blurzone.gray_dark = Color(0.19607843137254902, 0.19607843137254902, 0.19607843137254902)
 end
 
--- Lines 3061-3139
+-- Lines 3058-3136
 function TweakData:free_dlc_list()
 	local free_dlcs = {}
 
 	return free_dlcs
 end
 
--- Lines 3149-3157
+-- Lines 3146-3154
 function TweakData:_execute_reload_clbks()
 	if self._reload_clbks then
 		for key, clbk_data in pairs(self._reload_clbks) do
@@ -3260,7 +3260,7 @@ function TweakData:_execute_reload_clbks()
 	end
 end
 
--- Lines 3161-3164
+-- Lines 3158-3161
 function TweakData:add_reload_callback(object, func)
 	self._reload_clbks = self._reload_clbks or {}
 
@@ -3270,7 +3270,7 @@ function TweakData:add_reload_callback(object, func)
 	})
 end
 
--- Lines 3168-3177
+-- Lines 3165-3174
 function TweakData:remove_reload_callback(object)
 	if self._reload_clbks then
 		for i, k in ipairs(self._reload_clbks) do
@@ -3283,7 +3283,7 @@ function TweakData:remove_reload_callback(object)
 	end
 end
 
--- Lines 3181-3357
+-- Lines 3178-3354
 function TweakData:set_scale()
 	local lang_key = SystemInfo:language():key()
 	local lang_mods = {
@@ -3472,7 +3472,7 @@ function TweakData:set_scale()
 	}
 end
 
--- Lines 3359-3538
+-- Lines 3356-3535
 function TweakData:set_menu_scale()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -3586,7 +3586,7 @@ function TweakData:set_menu_scale()
 	}
 end
 
--- Lines 3540-3620
+-- Lines 3537-3617
 function TweakData:set_hud_values()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -3665,7 +3665,7 @@ function TweakData:set_hud_values()
 	}
 end
 
--- Lines 3623-3627
+-- Lines 3673-3677
 function TweakData:resolution_changed()
 	self:set_scale()
 	self:set_menu_scale()
@@ -3683,7 +3683,7 @@ if (not tweak_data or tweak_data.RELOAD) and managers.dlc then
 	end
 end
 
--- Lines 3644-3859
+-- Lines 3694-3909
 function TweakData:get_controller_help_coords()
 	if managers.controller:get_default_wrapper_type() == "pc" or managers.controller:get_default_wrapper_type() == "steam" then
 		return false

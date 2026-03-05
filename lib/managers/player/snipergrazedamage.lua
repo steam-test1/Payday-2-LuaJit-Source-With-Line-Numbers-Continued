@@ -1,6 +1,6 @@
 SniperGrazeDamage = SniperGrazeDamage or {}
 
--- Lines 35-151
+-- Lines 35-149
 function SniperGrazeDamage:on_weapon_fired(weapon_unit, result)
 	if not alive(weapon_unit) or not weapon_unit:base():is_category("snp") or weapon_unit ~= managers.player:equipped_weapon_unit() then
 		return
@@ -79,7 +79,7 @@ function SniperGrazeDamage:on_weapon_fired(weapon_unit, result)
 	end
 end
 
--- Lines 155-176
+-- Lines 152-173
 function SniperGrazeDamage.sort_units_target_prio(rays)
 	table.sort(rays, function (rays_a, rays_b)
 		local base_a_ext = alive(rays_a.unit) and rays_a.unit:base()
