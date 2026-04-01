@@ -12,17 +12,17 @@ HuskCivilianDamage.check_medic_heal = CivilianDamage.check_medic_heal
 HuskCivilianDamage.do_medic_heal = CivilianDamage.do_medic_heal
 HuskCivilianDamage.do_medic_heal_and_action = CivilianDamage.do_medic_heal_and_action
 
--- Lines 26-28
+-- Lines 24-26
 function HuskCivilianDamage:_on_damage_received(damage_info)
 	CivilianDamage._on_damage_received(self, damage_info)
 end
 
--- Lines 32-34
+-- Lines 30-32
 function HuskCivilianDamage:_unregister_from_enemy_manager(damage_info)
 	CivilianDamage._unregister_from_enemy_manager(self, damage_info)
 end
 
--- Lines 38-58
+-- Lines 36-56
 function HuskCivilianDamage:die(attack_data)
 	managers.modifiers:run_func("OnCivilianKilled", self._unit)
 	self:_remove_debug_gui()
@@ -41,7 +41,7 @@ function HuskCivilianDamage:die(attack_data)
 	end
 end
 
--- Lines 62-67
+-- Lines 60-65
 function HuskCivilianDamage:damage_explosion(attack_data)
 	if attack_data.variant == "explosion" then
 		attack_data.damage = 10
@@ -50,7 +50,7 @@ function HuskCivilianDamage:damage_explosion(attack_data)
 	return CopDamage.damage_explosion(self, attack_data)
 end
 
--- Lines 71-76
+-- Lines 69-74
 function HuskCivilianDamage:damage_fire(attack_data)
 	if attack_data.variant == "fire" then
 		attack_data.damage = 10

@@ -1097,7 +1097,7 @@ function HUDTeammate:_create_equipment(panel, icon_name, scale)
 	amount:set_center_y(bg:center_y() + 1)
 end
 
--- Lines 736-823
+-- Lines 740-860
 function HUDTeammate:_create_primary_weapon_firemode()
 	local primary_weapon_panel = self._player_panel:child("weapons_panel"):child("primary_weapon_panel")
 	local weapon_selection_panel = primary_weapon_panel:child("weapon_selection")
@@ -1113,39 +1113,56 @@ function HUDTeammate:_create_primary_weapon_firemode()
 	end
 
 	if self._main_player then
-		local equipped_primary = managers.blackmarket:equipped_primary()
-		local weapon_tweak_data = tweak_data.weapon[equipped_primary.weapon_id]
+		local equipped = managers.blackmarket:equipped_primary()
+		local weapon_tweak_data = tweak_data.weapon[equipped.weapon_id]
 		local fire_mode = weapon_tweak_data.FIRE_MODE
 		local can_toggle_firemode = weapon_tweak_data.CAN_TOGGLE_FIREMODE
 		local toggable_fire_modes = weapon_tweak_data.fire_mode_data and weapon_tweak_data.fire_mode_data.toggable
+		local firemode_single_key = "single"
+		local firemode_auto_key = "auto"
 
 		if toggable_fire_modes then
 			can_toggle_firemode = #toggable_fire_modes > 1
-			local firemode_single_key = toggable_fire_modes[1] or "single"
-			local firemode_auto_key = toggable_fire_modes[2] or "auto"
+			local firemode_single_key = toggable_fire_modes[1] or firemode_single_key
+			local firemode_auto_key = toggable_fire_modes[2] or firemode_auto_key
 			self._firemode_primary_mapping = {
 				[firemode_single_key] = "single",
 				[firemode_auto_key] = "auto"
 			}
 		end
 
-		local locked_to_auto = managers.weapon_factory:has_perk("fire_mode_auto", equipped_primary.factory_id, equipped_primary.blueprint)
-		local locked_to_single = managers.weapon_factory:has_perk("fire_mode_single", equipped_primary.factory_id, equipped_primary.blueprint)
-		locked_to_auto = managers.weapon_factory:has_perk("fire_mode_burst", equipped_primary.factory_id, equipped_primary.blueprint)
-		local single_id = "firemode_single" .. ((not can_toggle_firemode or locked_to_single) and "_locked" or "")
+		local locked_to_auto = managers.weapon_factory:has_perk("fire_mode_auto", equipped.factory_id, equipped.blueprint)
+		local locked_to_burst = managers.weapon_factory:has_perk("fire_mode_burst", equipped.factory_id, equipped.blueprint)
+		local locked_to_single = managers.weapon_factory:has_perk("fire_mode_single", equipped.factory_id, equipped.blueprint)
+
+		if locked_to_auto then
+			fire_mode = "auto"
+		elseif locked_to_burst then
+			fire_mode = "burst"
+		elseif locked_to_single then
+			fire_mode = "single"
+		end
+
+		local locked_mode = not can_toggle_firemode or locked_to_auto or locked_to_burst or locked_to_single
+		local primary_id = locked_mode and fire_mode or firemode_single_key
+		primary_id = "firemode_" .. primary_id .. (locked_mode and "_locked" or "")
+		local secondary_id = locked_mode and fire_mode or firemode_auto_key
+		secondary_id = "firemode_" .. secondary_id .. (locked_mode and "_locked" or "")
 
 		if toggable_fire_modes and can_toggle_firemode then
 			local firemode_single_key = toggable_fire_modes[1] or "single"
 			local firemode_auto_key = toggable_fire_modes[2] or "auto"
-			single_id = string.format("firemode_%s_%s", firemode_single_key, firemode_auto_key)
+			primary_id = string.format("firemode_%s_%s", firemode_single_key, firemode_auto_key)
+			secondary_id = string.format("firemode_%s_%s", firemode_auto_key, firemode_single_key)
 		end
 
 		if weapon_tweak_data.alt_fire_data then
-			single_id = string.format("firemode_%s_%s", fire_mode, "alt")
+			primary_id = string.format("firemode_%s_%s", fire_mode, "alt")
+			secondary_id = string.format("firemode_%s_%s", "alt", fire_mode)
 		end
 
-		local texture, texture_rect = tweak_data.hud_icons:get_icon_data(single_id)
-		local firemode_single = weapon_selection_panel:bitmap({
+		local texture, texture_rect = tweak_data.hud_icons:get_icon_data(primary_id)
+		local firemode_primary = weapon_selection_panel:bitmap({
 			name = "firemode_single",
 			blend_mode = "mul",
 			layer = 1,
@@ -1154,23 +1171,11 @@ function HUDTeammate:_create_primary_weapon_firemode()
 			texture_rect = texture_rect
 		})
 
-		firemode_single:set_bottom(weapon_selection_panel:h() - 2)
-		firemode_single:hide()
+		firemode_primary:set_bottom(weapon_selection_panel:h() - 2)
+		firemode_primary:hide()
 
-		local auto_id = "firemode_auto" .. ((not can_toggle_firemode or locked_to_auto) and "_locked" or "")
-
-		if toggable_fire_modes and can_toggle_firemode then
-			local firemode_single_key = toggable_fire_modes[1] or "single"
-			local firemode_auto_key = toggable_fire_modes[2] or "auto"
-			auto_id = string.format("firemode_%s_%s", firemode_auto_key, firemode_single_key)
-		end
-
-		if weapon_tweak_data.alt_fire_data then
-			auto_id = string.format("firemode_%s_%s", "alt", fire_mode)
-		end
-
-		local texture, texture_rect = tweak_data.hud_icons:get_icon_data(auto_id)
-		local firemode_auto = weapon_selection_panel:bitmap({
+		local texture, texture_rect = tweak_data.hud_icons:get_icon_data(secondary_id)
+		local firemode_secondary = weapon_selection_panel:bitmap({
 			name = "firemode_auto",
 			blend_mode = "mul",
 			layer = 1,
@@ -1179,25 +1184,25 @@ function HUDTeammate:_create_primary_weapon_firemode()
 			texture_rect = texture_rect
 		})
 
-		firemode_auto:set_bottom(weapon_selection_panel:h() - 2)
-		firemode_auto:hide()
+		firemode_secondary:set_bottom(weapon_selection_panel:h() - 2)
+		firemode_secondary:hide()
 
 		if self._firemode_primary_mapping then
 			fire_mode = self._firemode_primary_mapping[fire_mode] or fire_mode
 		end
 
 		if locked_to_single or not locked_to_auto and fire_mode == "single" then
-			firemode_single:show()
+			firemode_primary:show()
 		else
-			firemode_auto:show()
+			firemode_secondary:show()
 		end
 	end
 end
 
--- Lines 825-912
+-- Lines 865-985
 function HUDTeammate:_create_secondary_weapon_firemode()
-	local secondary_weapon_panel = self._player_panel:child("weapons_panel"):child("secondary_weapon_panel")
-	local weapon_selection_panel = secondary_weapon_panel:child("weapon_selection")
+	local source_weapon_panel = self._player_panel:child("weapons_panel"):child("secondary_weapon_panel")
+	local weapon_selection_panel = source_weapon_panel:child("weapon_selection")
 	local old_single = weapon_selection_panel:child("firemode_single")
 	local old_auto = weapon_selection_panel:child("firemode_auto")
 
@@ -1210,39 +1215,56 @@ function HUDTeammate:_create_secondary_weapon_firemode()
 	end
 
 	if self._main_player then
-		local equipped_secondary = managers.blackmarket:equipped_secondary()
-		local weapon_tweak_data = tweak_data.weapon[equipped_secondary.weapon_id]
+		local equipped = managers.blackmarket:equipped_secondary()
+		local weapon_tweak_data = tweak_data.weapon[equipped.weapon_id]
 		local fire_mode = weapon_tweak_data.FIRE_MODE
 		local can_toggle_firemode = weapon_tweak_data.CAN_TOGGLE_FIREMODE
 		local toggable_fire_modes = weapon_tweak_data.fire_mode_data and weapon_tweak_data.fire_mode_data.toggable
+		local firemode_single_key = "single"
+		local firemode_auto_key = "auto"
 
 		if toggable_fire_modes then
 			can_toggle_firemode = #toggable_fire_modes > 1
-			local firemode_single_key = toggable_fire_modes[1] or "single"
-			local firemode_auto_key = toggable_fire_modes[2] or "auto"
+			local firemode_single_key = toggable_fire_modes[1] or firemode_single_key
+			local firemode_auto_key = toggable_fire_modes[2] or firemode_auto_key
 			self._firemode_secondary_mapping = {
 				[firemode_single_key] = "single",
 				[firemode_auto_key] = "auto"
 			}
 		end
 
-		local locked_to_auto = managers.weapon_factory:has_perk("fire_mode_auto", equipped_secondary.factory_id, equipped_secondary.blueprint)
-		local locked_to_single = managers.weapon_factory:has_perk("fire_mode_single", equipped_secondary.factory_id, equipped_secondary.blueprint)
-		locked_to_auto = managers.weapon_factory:has_perk("fire_mode_burst", equipped_secondary.factory_id, equipped_secondary.blueprint)
-		local single_id = "firemode_single" .. ((not can_toggle_firemode or locked_to_single) and "_locked" or "")
+		local locked_to_auto = managers.weapon_factory:has_perk("fire_mode_auto", equipped.factory_id, equipped.blueprint)
+		local locked_to_burst = managers.weapon_factory:has_perk("fire_mode_burst", equipped.factory_id, equipped.blueprint)
+		local locked_to_single = managers.weapon_factory:has_perk("fire_mode_single", equipped.factory_id, equipped.blueprint)
+
+		if locked_to_auto then
+			fire_mode = "auto"
+		elseif locked_to_burst then
+			fire_mode = "burst"
+		elseif locked_to_single then
+			fire_mode = "single"
+		end
+
+		local locked_mode = not can_toggle_firemode or locked_to_auto or locked_to_burst or locked_to_single
+		local primary_id = locked_mode and fire_mode or firemode_single_key
+		primary_id = "firemode_" .. primary_id .. (locked_mode and "_locked" or "")
+		local secondary_id = locked_mode and fire_mode or firemode_auto_key
+		secondary_id = "firemode_" .. secondary_id .. (locked_mode and "_locked" or "")
 
 		if toggable_fire_modes and can_toggle_firemode then
 			local firemode_single_key = toggable_fire_modes[1] or "single"
 			local firemode_auto_key = toggable_fire_modes[2] or "auto"
-			single_id = string.format("firemode_%s_%s", firemode_single_key, firemode_auto_key)
+			primary_id = string.format("firemode_%s_%s", firemode_single_key, firemode_auto_key)
+			secondary_id = string.format("firemode_%s_%s", firemode_auto_key, firemode_single_key)
 		end
 
 		if weapon_tweak_data.alt_fire_data then
-			single_id = string.format("firemode_%s_%s", fire_mode, "alt")
+			primary_id = string.format("firemode_%s_%s", fire_mode, "alt")
+			secondary_id = string.format("firemode_%s_%s", "alt", fire_mode)
 		end
 
-		local texture, texture_rect = tweak_data.hud_icons:get_icon_data(single_id)
-		local firemode_single = weapon_selection_panel:bitmap({
+		local texture, texture_rect = tweak_data.hud_icons:get_icon_data(primary_id)
+		local firemode_primary = weapon_selection_panel:bitmap({
 			name = "firemode_single",
 			blend_mode = "mul",
 			layer = 1,
@@ -1251,23 +1273,11 @@ function HUDTeammate:_create_secondary_weapon_firemode()
 			texture_rect = texture_rect
 		})
 
-		firemode_single:set_bottom(weapon_selection_panel:h() - 2)
-		firemode_single:hide()
+		firemode_primary:set_bottom(weapon_selection_panel:h() - 2)
+		firemode_primary:hide()
 
-		local auto_id = "firemode_auto" .. ((not can_toggle_firemode or locked_to_auto) and "_locked" or "")
-
-		if toggable_fire_modes and can_toggle_firemode then
-			local firemode_single_key = toggable_fire_modes[1] or "single"
-			local firemode_auto_key = toggable_fire_modes[2] or "auto"
-			auto_id = string.format("firemode_%s_%s", firemode_auto_key, firemode_single_key)
-		end
-
-		if weapon_tweak_data.alt_fire_data then
-			auto_id = string.format("firemode_%s_%s", "alt", fire_mode)
-		end
-
-		local texture, texture_rect = tweak_data.hud_icons:get_icon_data(auto_id)
-		local firemode_auto = weapon_selection_panel:bitmap({
+		local texture, texture_rect = tweak_data.hud_icons:get_icon_data(secondary_id)
+		local firemode_secondary = weapon_selection_panel:bitmap({
 			name = "firemode_auto",
 			blend_mode = "mul",
 			layer = 1,
@@ -1276,22 +1286,22 @@ function HUDTeammate:_create_secondary_weapon_firemode()
 			texture_rect = texture_rect
 		})
 
-		firemode_auto:set_bottom(weapon_selection_panel:h() - 2)
-		firemode_auto:hide()
+		firemode_secondary:set_bottom(weapon_selection_panel:h() - 2)
+		firemode_secondary:hide()
 
 		if self._firemode_secondary_mapping then
 			fire_mode = self._firemode_secondary_mapping[fire_mode] or fire_mode
 		end
 
 		if locked_to_single or not locked_to_auto and fire_mode == "single" then
-			firemode_single:show()
+			firemode_primary:show()
 		else
-			firemode_auto:show()
+			firemode_secondary:show()
 		end
 	end
 end
 
--- Lines 914-923
+-- Lines 987-996
 function HUDTeammate:_rec_round_object(object)
 	if object.children then
 		for i, d in ipairs(object:children()) do
@@ -1304,12 +1314,12 @@ function HUDTeammate:_rec_round_object(object)
 	object:set_position(math.round(x), math.round(y))
 end
 
--- Lines 925-927
+-- Lines 998-1000
 function HUDTeammate:panel()
 	return self._panel
 end
 
--- Lines 930-989
+-- Lines 1003-1062
 function HUDTeammate:create_waiting_panel(parent_panel)
 	local PADD = 2
 	local panel = parent_panel:panel()
@@ -1430,7 +1440,7 @@ function HUDTeammate:create_waiting_panel(parent_panel)
 	self._wait_panel = panel
 end
 
--- Lines 991-999
+-- Lines 1064-1072
 local function set_icon_data(image, icon, rect)
 	if rect then
 		image:set_image(icon, unpack(rect))
@@ -1443,7 +1453,7 @@ local function set_icon_data(image, icon, rect)
 	image:set_image(text, unpack(rect))
 end
 
--- Lines 1001-1065
+-- Lines 1074-1138
 function HUDTeammate:set_waiting(waiting, peer)
 	local my_peer = managers.network:session():peer(self._peer_id)
 	peer = peer or my_peer
@@ -1511,12 +1521,12 @@ function HUDTeammate:set_waiting(waiting, peer)
 	end
 end
 
--- Lines 1067-1069
+-- Lines 1140-1142
 function HUDTeammate:is_waiting()
 	return self._wait_panel:visible()
 end
 
--- Lines 1072-1082
+-- Lines 1145-1155
 function HUDTeammate:add_panel()
 	local teammate_panel = self._panel
 
@@ -1525,7 +1535,7 @@ function HUDTeammate:add_panel()
 	end
 end
 
--- Lines 1085-1119
+-- Lines 1158-1192
 function HUDTeammate:remove_panel(weapons_panel)
 	local teammate_panel = self._panel
 
@@ -1562,22 +1572,22 @@ function HUDTeammate:remove_panel(weapons_panel)
 	self._ai = nil
 end
 
--- Lines 1121-1123
+-- Lines 1194-1196
 function HUDTeammate:peer_id()
 	return self._peer_id
 end
 
--- Lines 1125-1127
+-- Lines 1198-1200
 function HUDTeammate:set_peer_id(peer_id)
 	self._peer_id = peer_id
 end
 
--- Lines 1129-1131
+-- Lines 1202-1204
 function HUDTeammate:set_ai(ai)
 	self._ai = ai
 end
 
--- Lines 1133-1142
+-- Lines 1206-1215
 function HUDTeammate:_set_weapon_selected(id, hud_icon)
 	local is_secondary = id == 1
 	local secondary_weapon_panel = self._player_panel:child("weapons_panel"):child("secondary_weapon_panel")
@@ -1587,12 +1597,12 @@ function HUDTeammate:_set_weapon_selected(id, hud_icon)
 	secondary_weapon_panel:set_alpha(is_secondary and 1 or 0.5)
 end
 
--- Lines 1144-1146
+-- Lines 1217-1219
 function HUDTeammate:set_weapon_selected(id, hud_icon)
 	self:_set_weapon_selected(id, hud_icon)
 end
 
--- Lines 1148-1180
+-- Lines 1221-1252
 function HUDTeammate:set_weapon_firemode(id, firemode, ...)
 	local is_secondary = id == 1
 	local secondary_weapon_panel = self._player_panel:child("weapons_panel"):child("secondary_weapon_panel")
@@ -1630,7 +1640,7 @@ function HUDTeammate:set_weapon_firemode(id, firemode, ...)
 	end
 end
 
--- Lines 1182-1223
+-- Lines 1254-1295
 function HUDTeammate:set_ammo_amount_by_type(type, max_clip, current_clip, current_left, max, weapon_panel)
 	local weapon_panel = weapon_panel or self._player_panel:child("weapons_panel"):child(type .. "_weapon_panel")
 
@@ -1668,7 +1678,7 @@ function HUDTeammate:set_ammo_amount_by_type(type, max_clip, current_clip, curre
 	ammo_total:set_font_size(string.len(current_left) < 4 and 24 or 20)
 end
 
--- Lines 1225-1295
+-- Lines 1297-1367
 function HUDTeammate:set_health(data)
 	local prev_data = self._health_data
 	self._health_data = data
@@ -1736,7 +1746,7 @@ function HUDTeammate:set_health(data)
 	end
 end
 
--- Lines 1297-1312
+-- Lines 1369-1384
 function HUDTeammate:set_armor(data)
 	local teammate_panel = self._panel:child("player")
 	self._armor_data = data
@@ -1748,7 +1758,7 @@ function HUDTeammate:set_armor(data)
 	self:update_delayed_damage()
 end
 
--- Lines 1314-1322
+-- Lines 1386-1394
 function HUDTeammate:set_custom_radial(data)
 	local teammate_panel = self._panel:child("player")
 	local radial_health_panel = self._radial_health_panel
@@ -1759,12 +1769,12 @@ function HUDTeammate:set_custom_radial(data)
 	radial_custom:set_visible(red > 0)
 end
 
--- Lines 1325-1327
+-- Lines 1397-1399
 function HUDTeammate:set_alt_ammo(state)
 	self._alt_ammo = state
 end
 
--- Lines 1330-1337
+-- Lines 1402-1409
 function HUDTeammate:_damage_taken()
 	local teammate_panel = self._panel:child("player")
 	local radial_health_panel = self._radial_health_panel
@@ -1774,7 +1784,7 @@ function HUDTeammate:_damage_taken()
 	damage_indicator:animate(callback(self, self, "_animate_damage_taken"))
 end
 
--- Lines 1339-1356
+-- Lines 1411-1428
 function HUDTeammate:_animate_damage_taken(damage_indicator)
 	damage_indicator:set_alpha(1)
 
@@ -1795,7 +1805,7 @@ function HUDTeammate:_animate_damage_taken(damage_indicator)
 	damage_indicator:set_alpha(0)
 end
 
--- Lines 1358-1371
+-- Lines 1430-1443
 function HUDTeammate:set_name(teammate_name)
 	local teammate_panel = self._panel
 	local name = teammate_panel:child("name")
@@ -1811,12 +1821,12 @@ function HUDTeammate:set_name(teammate_name)
 	name_bg:set_w(name:w() + 4)
 end
 
--- Lines 1373-1375
+-- Lines 1445-1447
 function HUDTeammate:set_cheater(state)
 	self._panel:child("name"):set_color(state and tweak_data.screen_colors.pro_color or Color.white)
 end
 
--- Lines 1377-1390
+-- Lines 1449-1462
 function HUDTeammate:set_callsign(id)
 	local teammate_panel = self._panel
 	local callsign = teammate_panel:child("callsign")
@@ -1829,7 +1839,7 @@ function HUDTeammate:set_callsign(id)
 	name:set_color((tweak_data.chat_colors[id] or tweak_data.chat_colors[#tweak_data.chat_colors]):with_alpha(alpha))
 end
 
--- Lines 1392-1404
+-- Lines 1464-1476
 function HUDTeammate:set_cable_tie(data)
 	local teammate_panel = self._panel:child("player")
 	local icon, texture_rect = tweak_data.hud_icons:get_icon_data(data.icon)
@@ -1843,7 +1853,7 @@ function HUDTeammate:set_cable_tie(data)
 	return nil
 end
 
--- Lines 1406-1417
+-- Lines 1478-1489
 function HUDTeammate:set_cable_ties_amount(amount)
 	local color = amount == 0 and Color(0.5, 1, 1, 1) or Color.white
 	local cable_ties_panel = self._player_panel:child("cable_ties_panel")
@@ -1859,7 +1869,7 @@ function HUDTeammate:set_cable_ties_amount(amount)
 	cable_ties_amount:set_visible(true)
 end
 
--- Lines 1419-1429
+-- Lines 1491-1501
 function HUDTeammate:_set_amount_string(text, amount)
 	if not PlayerBase.USE_GRENADES then
 		text:set_text(tostring(amount))
@@ -1874,7 +1884,7 @@ function HUDTeammate:_set_amount_string(text, amount)
 	text:set_range_color(0, gray_length, Color.white:with_alpha(0.5))
 end
 
--- Lines 1431-1455
+-- Lines 1503-1527
 function HUDTeammate:set_state(state)
 	local teammate_panel = self._panel
 	local is_player = state == "player"
@@ -1901,7 +1911,7 @@ function HUDTeammate:set_state(state)
 	end
 end
 
--- Lines 1459-1470
+-- Lines 1531-1542
 function HUDTeammate:set_deployable_equipment(data)
 	local icon, texture_rect = tweak_data.hud_icons:get_icon_data(data.icon)
 	local deployable_equipment_panel = self._player_panel:child("deployable_equipment_panel")
@@ -1914,7 +1924,7 @@ function HUDTeammate:set_deployable_equipment(data)
 	self:set_deployable_equipment_amount(1, data)
 end
 
--- Lines 1472-1481
+-- Lines 1544-1553
 function HUDTeammate:set_deployable_equipment_from_string(data)
 	local icon, texture_rect = tweak_data.hud_icons:get_icon_data(data.icon)
 	local deployable_equipment_panel = self._player_panel:child("deployable_equipment_panel")
@@ -1925,7 +1935,7 @@ function HUDTeammate:set_deployable_equipment_from_string(data)
 	self:set_deployable_equipment_amount_from_string(1, data)
 end
 
--- Lines 1483-1494
+-- Lines 1555-1566
 function HUDTeammate:set_deployable_equipment_amount(index, data)
 	local teammate_panel = self._panel:child("player")
 	local deployable_equipment_panel = self._player_panel:child("deployable_equipment_panel")
@@ -1938,7 +1948,7 @@ function HUDTeammate:set_deployable_equipment_amount(index, data)
 	amount:set_visible(true)
 end
 
--- Lines 1496-1530
+-- Lines 1568-1602
 function HUDTeammate:set_deployable_equipment_amount_from_string(index, data)
 	local teammate_panel = self._panel:child("player")
 	local deployable_equipment_panel = self._player_panel:child("deployable_equipment_panel")
@@ -1982,7 +1992,7 @@ function HUDTeammate:set_deployable_equipment_amount_from_string(index, data)
 	end
 end
 
--- Lines 1532-1547
+-- Lines 1604-1619
 function HUDTeammate:set_grenades(data)
 	if not PlayerBase.USE_GRENADES then
 		return
@@ -2004,7 +2014,7 @@ function HUDTeammate:set_grenades(data)
 	self:set_grenades_amount(data)
 end
 
--- Lines 1549-1553
+-- Lines 1621-1625
 function HUDTeammate:set_ability_icon(icon)
 	local ability_icon = self._radial_health_panel:child("radial_ability"):child("ability_icon")
 	local texture, texture_rect = tweak_data.hud_icons:get_icon_data(icon, {
@@ -2017,7 +2027,7 @@ function HUDTeammate:set_ability_icon(icon)
 	ability_icon:set_image(texture, unpack(texture_rect))
 end
 
--- Lines 1555-1590
+-- Lines 1627-1662
 function HUDTeammate:set_grenade_cooldown(data)
 	if not PlayerBase.USE_GRENADES then
 		return
@@ -2036,7 +2046,7 @@ function HUDTeammate:set_grenade_cooldown(data)
 		return
 	end
 
-	-- Lines 1573-1582
+	-- Lines 1645-1654
 	local function animate_radial(o)
 		repeat
 			local now = managers.game_play_central:get_heist_timer()
@@ -2058,7 +2068,7 @@ function HUDTeammate:set_grenade_cooldown(data)
 	end
 end
 
--- Lines 1592-1630
+-- Lines 1664-1702
 function HUDTeammate:animate_grenade_flash()
 	local teammate_panel = self._panel:child("player")
 	local grenades_panel = self._player_panel:child("grenades_panel")
@@ -2067,7 +2077,7 @@ function HUDTeammate:animate_grenade_flash()
 	local radial_ghost = grenades_panel:child("grenades_radial_ghost")
 	local icon_ghost = grenades_panel:child("grenades_icon_ghost")
 
-	-- Lines 1600-1626
+	-- Lines 1672-1698
 	local function animate_flash()
 		local radial_w, radial_h = radial:size()
 		local radial_x, radial_y = radial:center()
@@ -2099,7 +2109,7 @@ function HUDTeammate:animate_grenade_flash()
 	grenades_panel:animate(animate_flash)
 end
 
--- Lines 1632-1641
+-- Lines 1704-1713
 function HUDTeammate:set_ability_radial(data)
 	local radial_health_panel = self._radial_health_panel
 	local radial_ability_panel = radial_health_panel:child("radial_ability")
@@ -2110,7 +2120,7 @@ function HUDTeammate:set_ability_radial(data)
 	radial_ability_panel:set_visible(progress > 0)
 end
 
--- Lines 1643-1650
+-- Lines 1715-1722
 function HUDTeammate.activate_ability_radial_anim(o, anim_time, progress_start, radial_ability_panel, ability_meter, health_icon)
 	radial_ability_panel:set_visible(true)
 	over(anim_time, function (p)
@@ -2121,7 +2131,7 @@ function HUDTeammate.activate_ability_radial_anim(o, anim_time, progress_start, 
 	radial_ability_panel:set_visible(false)
 end
 
--- Lines 1652-1669
+-- Lines 1724-1741
 function HUDTeammate:activate_ability_radial(time_left, time_total)
 	local radial_health_panel = self._radial_health_panel
 	local radial_ability_panel = radial_health_panel:child("radial_ability")
@@ -2141,7 +2151,7 @@ function HUDTeammate:activate_ability_radial(time_left, time_total)
 	end
 end
 
--- Lines 1672-1679
+-- Lines 1744-1751
 function HUDTeammate:set_delayed_damage(damage)
 	self._delayed_damage = damage
 
@@ -2152,7 +2162,7 @@ function HUDTeammate:set_delayed_damage(damage)
 	end
 end
 
--- Lines 1681-1710
+-- Lines 1753-1782
 function HUDTeammate:update_delayed_damage()
 	local damage = self._delayed_damage or 0
 	local health_panel = self._radial_health_panel
@@ -2179,7 +2189,7 @@ function HUDTeammate:update_delayed_damage()
 	delayed_damage_health:set_color(Color(1, health_damage_ratio, 1 - health_ratio, 0))
 end
 
--- Lines 1713-1727
+-- Lines 1785-1799
 function HUDTeammate:set_grenades_amount(data)
 	if not PlayerBase.USE_GRENADES then
 		return
@@ -2195,7 +2205,7 @@ function HUDTeammate:set_grenades_amount(data)
 	self:_set_amount_string(amount, data.amount)
 end
 
--- Lines 1729-1739
+-- Lines 1801-1811
 function HUDTeammate:set_carry_info(carry_id, value)
 	local carry_panel = self._carry_panel
 
@@ -2211,14 +2221,14 @@ function HUDTeammate:set_carry_info(carry_id, value)
 	bg:set_w(carry_panel:child("bag"):w() + w + 4)
 end
 
--- Lines 1741-1744
+-- Lines 1813-1816
 function HUDTeammate:remove_carry_info()
 	local carry_panel = self._player_panel:child("carry_panel")
 
 	carry_panel:set_visible(false)
 end
 
--- Lines 1749-1764
+-- Lines 1821-1836
 function HUDTeammate:set_revives_amount(revive_amount)
 	if revive_amount then
 		local teammate_panel = self._panel:child("player")
@@ -2236,7 +2246,7 @@ function HUDTeammate:set_revives_amount(revive_amount)
 	end
 end
 
--- Lines 1769-1848
+-- Lines 1841-1920
 function HUDTeammate:add_special_equipment(data)
 	local teammate_panel = self._panel
 	local special_equipment = self._special_equipment
@@ -2313,7 +2323,7 @@ function HUDTeammate:add_special_equipment(data)
 	self:layout_special_equipments()
 end
 
--- Lines 1850-1862
+-- Lines 1922-1934
 function HUDTeammate:remove_special_equipment(equipment)
 	local teammate_panel = self._panel
 	local special_equipment = self._special_equipment
@@ -2330,7 +2340,7 @@ function HUDTeammate:remove_special_equipment(equipment)
 	end
 end
 
--- Lines 1864-1881
+-- Lines 1936-1953
 function HUDTeammate:layout_special_equipments()
 	local teammate_panel = self._panel
 	local special_equipment = self._special_equipment
@@ -2351,7 +2361,7 @@ function HUDTeammate:layout_special_equipments()
 	end
 end
 
--- Lines 1883-1895
+-- Lines 1955-1967
 function HUDTeammate:set_special_equipment_amount(equipment_id, amount)
 	local teammate_panel = self._panel
 	local special_equipment = self._special_equipment
@@ -2367,13 +2377,13 @@ function HUDTeammate:set_special_equipment_amount(equipment_id, amount)
 	end
 end
 
--- Lines 1897-1901
+-- Lines 1969-1973
 function HUDTeammate:clear_special_equipment()
 	self:remove_panel()
 	self:add_panel()
 end
 
--- Lines 1905-1913
+-- Lines 1977-1985
 function HUDTeammate:set_condition(icon_data, text)
 	if icon_data == "mugshot_normal" then
 		self._condition_icon:set_visible(false)
@@ -2386,7 +2396,7 @@ function HUDTeammate:set_condition(icon_data, text)
 	end
 end
 
--- Lines 1917-1943
+-- Lines 1989-2015
 function HUDTeammate:teammate_progress(enabled, tweak_data_id, timer, success)
 	self._player_panel:child("radial_health_panel"):set_alpha(enabled and 0.2 or 1)
 	self._player_panel:child("interact_panel"):stop()
@@ -2422,7 +2432,7 @@ function HUDTeammate:teammate_progress(enabled, tweak_data_id, timer, success)
 	end
 end
 
--- Lines 1947-1955
+-- Lines 2019-2027
 function HUDTeammate:start_timer(time)
 	self._timer_paused = 0
 	self._timer = time
@@ -2434,7 +2444,7 @@ function HUDTeammate:start_timer(time)
 	self._panel:child("condition_timer"):animate(callback(self, self, "_animate_timer"))
 end
 
--- Lines 1957-1962
+-- Lines 2029-2034
 function HUDTeammate:set_pause_timer(pause)
 	if not self._timer_paused then
 		return
@@ -2443,7 +2453,7 @@ function HUDTeammate:set_pause_timer(pause)
 	self._timer_paused = self._timer_paused + (pause and 1 or -1)
 end
 
--- Lines 1964-1970
+-- Lines 2036-2042
 function HUDTeammate:stop_timer()
 	if not alive(self._panel) then
 		return
@@ -2453,12 +2463,12 @@ function HUDTeammate:stop_timer()
 	self._panel:child("condition_timer"):stop()
 end
 
--- Lines 1972-1974
+-- Lines 2044-2046
 function HUDTeammate:is_timer_running()
 	return self._panel:child("condition_timer"):visible()
 end
 
--- Lines 1976-1993
+-- Lines 2048-2065
 function HUDTeammate:_animate_timer()
 	local rounded_timer = math.round(self._timer)
 
@@ -2482,7 +2492,7 @@ function HUDTeammate:_animate_timer()
 	end
 end
 
--- Lines 1995-2016
+-- Lines 2067-2088
 function HUDTeammate:_animate_timer_flash()
 	local t = 0
 	local condition_timer = self._panel:child("condition_timer")
@@ -2501,7 +2511,7 @@ function HUDTeammate:_animate_timer_flash()
 	condition_timer:set_font_size(30)
 end
 
--- Lines 2021-2030
+-- Lines 2093-2102
 function HUDTeammate:set_stored_health_max(stored_health_ratio)
 	local teammate_panel = self._panel:child("player")
 	local radial_health_panel = self._radial_health_panel
@@ -2515,7 +2525,7 @@ function HUDTeammate:set_stored_health_max(stored_health_ratio)
 	end
 end
 
--- Lines 2032-2059
+-- Lines 2104-2131
 function HUDTeammate:set_stored_health(stored_health_ratio)
 	local teammate_panel = self._panel:child("player")
 	local radial_health_panel = self._radial_health_panel
@@ -2546,7 +2556,7 @@ function HUDTeammate:set_stored_health(stored_health_ratio)
 	end
 end
 
--- Lines 2062-2134
+-- Lines 2134-2206
 function HUDTeammate:_animate_update_absorb(o, radial_absorb_shield_name, radial_absorb_health_name, var_name, blink)
 	repeat
 		coroutine.yield()
@@ -2617,12 +2627,12 @@ function HUDTeammate:_animate_update_absorb(o, radial_absorb_shield_name, radial
 	end
 end
 
--- Lines 2136-2138
+-- Lines 2208-2210
 function HUDTeammate:animate_update_absorb_active(o)
 	self:_animate_update_absorb(o, "radial_absorb_shield_active", "radial_absorb_health_active", "_absorb_active_amount", true)
 end
 
--- Lines 2140-2146
+-- Lines 2212-2218
 function HUDTeammate:set_absorb_active(absorb_amount)
 	self._absorb_active_amount = absorb_amount
 
@@ -2631,7 +2641,7 @@ function HUDTeammate:set_absorb_active(absorb_amount)
 	end
 end
 
--- Lines 2148-2170
+-- Lines 2220-2242
 function HUDTeammate:set_info_meter(data)
 	local teammate_panel = self._panel:child("player")
 	local radial_health_panel = self._radial_health_panel
@@ -2659,7 +2669,7 @@ function HUDTeammate:set_info_meter(data)
 	end)
 end
 
--- Lines 2175-2235
+-- Lines 2247-2307
 function HUDTeammate:set_copr_indicator(enabled, static_damage_ratio)
 	local teammate_panel = self._panel:child("player")
 	local radial_health_panel = self._radial_health_panel

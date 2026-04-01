@@ -145,7 +145,7 @@ function IngameAccessCamera:on_destroyed()
 	managers.hud:set_access_camera_destroyed(access_camera:value("destroyed"))
 end
 
--- Lines 174-208
+-- Lines 174-214
 function IngameAccessCamera:_show_camera()
 	self._sound_source:post_event("camera_monitor_change")
 
@@ -181,7 +181,7 @@ function IngameAccessCamera:_show_camera()
 	}))
 end
 
--- Lines 210-327
+-- Lines 216-333
 function IngameAccessCamera:update(t, dt)
 	if _G.IS_VR then
 		local active_menu = managers.menu:active_menu()
@@ -289,7 +289,7 @@ function IngameAccessCamera:update(t, dt)
 	managers.hud:access_camera_track_max_amount(amount)
 end
 
--- Lines 329-335
+-- Lines 335-341
 function IngameAccessCamera:update_player_stamina(t, dt)
 	local player = managers.player:player_unit()
 
@@ -298,12 +298,12 @@ function IngameAccessCamera:update_player_stamina(t, dt)
 	end
 end
 
--- Lines 337-339
+-- Lines 355-357
 function IngameAccessCamera:_player_damage(info)
 	self:cb_leave()
 end
 
--- Lines 344-417
+-- Lines 364-446
 function IngameAccessCamera:at_enter(old_state, ...)
 	local player = managers.player:player_unit()
 
@@ -359,7 +359,7 @@ function IngameAccessCamera:at_enter(old_state, ...)
 	end
 end
 
--- Lines 419-431
+-- Lines 448-460
 function IngameAccessCamera:_any_enabled_cameras()
 	if not self._cameras or #self._cameras == 0 then
 		return false
@@ -374,7 +374,7 @@ function IngameAccessCamera:_any_enabled_cameras()
 	return false
 end
 
--- Lines 433-444
+-- Lines 462-473
 function IngameAccessCamera:on_camera_access_changed(camera_unit)
 	local access_camera = self._camera_data.index and self._cameras[self._camera_data.index] and self._cameras[self._camera_data.index].access_camera
 	self._no_feeds = not self:_any_enabled_cameras()
@@ -388,7 +388,7 @@ function IngameAccessCamera:on_camera_access_changed(camera_unit)
 	end
 end
 
--- Lines 446-483
+-- Lines 475-512
 function IngameAccessCamera:at_exit()
 	self._sound_source:post_event("camera_monitor_leave")
 	managers.environment_controller:set_default_color_grading(self._saved_default_color_grading)
@@ -416,17 +416,17 @@ function IngameAccessCamera:at_exit()
 	end
 end
 
--- Lines 485-487
+-- Lines 514-516
 function IngameAccessCamera:on_server_left()
 	IngameCleanState.on_server_left(self)
 end
 
--- Lines 489-491
+-- Lines 518-520
 function IngameAccessCamera:on_kicked()
 	IngameCleanState.on_kicked(self)
 end
 
--- Lines 493-495
+-- Lines 522-524
 function IngameAccessCamera:on_disconnected()
 	IngameCleanState.on_disconnected(self)
 end

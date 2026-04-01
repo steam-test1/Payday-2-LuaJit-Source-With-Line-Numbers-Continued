@@ -25,10 +25,14 @@ local crew_abilities = {
 	"crew_interact",
 	"crew_inspire",
 	"crew_scavenge",
-	"crew_ai_ap_ammo"
+	"crew_ai_ap_ammo",
+	"crew_ai_cable_ties",
+	"crew_ai_flashbang",
+	"crew_ai_counter_strike",
+	"crew_ai_counter_tase"
 }
 
--- Lines 34-39
+-- Lines 41-46
 local function make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
@@ -36,7 +40,7 @@ local function make_fine_text(text)
 	text:set_position(math.round(text:x()), math.round(text:y()))
 end
 
--- Lines 41-57
+-- Lines 48-64
 local function fit_texture(bitmap, target_w, target_h)
 	local texture_width = bitmap:texture_width()
 	local texture_height = bitmap:texture_height()
@@ -52,7 +56,7 @@ local function fit_texture(bitmap, target_w, target_h)
 	bitmap:set_size(math.round(dw * target_w), math.round(dh * target_h))
 end
 
--- Lines 63-77
+-- Lines 70-84
 local function select_anim(object, size, instant)
 	local current_width = object:w()
 	local current_height = object:h()
@@ -71,7 +75,7 @@ local function select_anim(object, size, instant)
 	end
 end
 
--- Lines 79-93
+-- Lines 86-100
 local function unselect_anim(object, size, instant)
 	local current_width = object:w()
 	local current_height = object:h()
@@ -90,7 +94,7 @@ local function unselect_anim(object, size, instant)
 	end
 end
 
--- Lines 95-108
+-- Lines 102-115
 local function select_anim_text(object, font_size, instant)
 	local current_size = object:font_size()
 	local end_font_size = font_size
@@ -109,7 +113,7 @@ local function select_anim_text(object, font_size, instant)
 	end
 end
 
--- Lines 110-123
+-- Lines 117-130
 local function unselect_anim_text(object, font_size, instant)
 	local current_size = object:font_size()
 	local end_font_size = font_size * 0.8
@@ -128,7 +132,7 @@ local function unselect_anim_text(object, font_size, instant)
 	end
 end
 
--- Lines 125-128
+-- Lines 132-135
 function MenuCallbackHandler:update_crew_loadout(index)
 	managers.menu_scene:set_henchmen_loadout(index)
 	managers.menu_scene:_set_character_equipment()
@@ -136,7 +140,7 @@ end
 
 local saved_characters = nil
 
--- Lines 131-137
+-- Lines 138-144
 function MenuCallbackHandler:reset_crew_outfit()
 	managers.menu_scene:set_henchmen_visible(true)
 
@@ -145,13 +149,13 @@ function MenuCallbackHandler:reset_crew_outfit()
 	end
 end
 
--- Lines 139-142
+-- Lines 146-149
 function MenuCallbackHandler:reset_henchmen_player_override()
 	managers.menu_scene:set_henchmen_player_override(nil)
 	managers.menu_scene:set_character(managers.blackmarket:get_preferred_character())
 end
 
--- Lines 146-156
+-- Lines 153-163
 function CrewManagementGui:reload()
 	local node = self._node
 
@@ -170,7 +174,7 @@ function CrewManagementGui:reload()
 	end)
 end
 
--- Lines 160-399
+-- Lines 167-406
 function CrewManagementGui:init(ws, fullscreen_ws, node)
 	managers.menu_component:close_contract_gui()
 	managers.blackmarket:verfify_crew_loadout()
@@ -226,7 +230,7 @@ function CrewManagementGui:init(ws, fullscreen_ws, node)
 		info_button._select_col = Color.white:with_alpha(0.25)
 		info_button._normal_col = Color.white
 
-		-- Lines 206-208
+		-- Lines 213-215
 		function info_button:_selected_changed(state)
 			info_icon:set_color(state and self._select_col or self._normal_col)
 		end
@@ -356,7 +360,7 @@ function CrewManagementGui:init(ws, fullscreen_ws, node)
 		char_images[1]:size()
 	}
 
-	-- Lines 303-308
+	-- Lines 310-315
 	function char_btn:_selected_changed(state, instant)
 		CrewManagementGuiButton._selected_changed(self, state, instant)
 
@@ -432,7 +436,7 @@ function CrewManagementGui:init(ws, fullscreen_ws, node)
 
 		self._legends = {}
 
-		-- Lines 353-377
+		-- Lines 360-384
 		local function new_legend(name, text_string, hud_icon)
 			local panel = self._legends_panel:panel({
 				visible = false,
@@ -509,14 +513,14 @@ function CrewManagementGui:init(ws, fullscreen_ws, node)
 	back._selected_changed = CrewManagementGuiTextButton._selected_changed
 end
 
--- Lines 401-405
+-- Lines 408-412
 function CrewManagementGui:_setup()
 	if alive(self._panel) then
 		self._panel:parent():remove(self._panel)
 	end
 end
 
--- Lines 407-411
+-- Lines 414-418
 function CrewManagementGui:new_row()
 	self._items = self._items or {
 		self._current_row
@@ -526,7 +530,7 @@ function CrewManagementGui:new_row()
 	table.insert(self._items, self._current_row)
 end
 
--- Lines 413-425
+-- Lines 420-432
 function CrewManagementGui:add_item(item, no_navigation)
 	if no_navigation then
 		table.insert(self._buttons_no_nav, item)
@@ -548,7 +552,7 @@ function CrewManagementGui:add_item(item, no_navigation)
 	}
 end
 
--- Lines 428-453
+-- Lines 435-460
 function CrewManagementGui:_add_bitmap_panel(panel, config, w, h)
 	local rtn = panel:panel({
 		w = self._item_w,
@@ -579,7 +583,7 @@ function CrewManagementGui:_add_bitmap_panel(panel, config, w, h)
 	return rtn, item
 end
 
--- Lines 455-469
+-- Lines 462-476
 function CrewManagementGui:_add_bitmap_panel_row(panel, config, w, h)
 	local rtn = panel:panel({
 		w = w,
@@ -597,7 +601,7 @@ function CrewManagementGui:_add_bitmap_panel_row(panel, config, w, h)
 	return rtn, item
 end
 
--- Lines 471-480
+-- Lines 478-487
 function CrewManagementGui:create_mask_button(panel, index)
 	local loadout = managers.blackmarket:henchman_loadout(index)
 	local texture = managers.blackmarket:get_mask_icon(loadout.mask, managers.menu_scene:get_henchmen_character(index) or managers.blackmarket:preferred_henchmen(index))
@@ -609,7 +613,7 @@ function CrewManagementGui:create_mask_button(panel, index)
 	}, text, cat_text, callback(self, self, "open_mask_category_menu", index), callback(self, self, "previous_mask", index), callback(self, self, "next_mask", index))
 end
 
--- Lines 482-500
+-- Lines 489-507
 function CrewManagementGui:create_weapon_button(panel, index)
 	local loadout = managers.blackmarket:henchman_loadout(index)
 	local data = managers.blackmarket:get_crafted_category_slot("primaries", loadout.primary_slot) or {}
@@ -638,7 +642,7 @@ function CrewManagementGui:create_weapon_button(panel, index)
 	return item
 end
 
--- Lines 502-517
+-- Lines 509-524
 function CrewManagementGui:create_ability_button(panel, index)
 	local loadout = managers.blackmarket:henchman_loadout(index)
 	local data = tweak_data.upgrades.crew_ability_definitions[loadout.ability]
@@ -659,7 +663,7 @@ function CrewManagementGui:create_ability_button(panel, index)
 	}, text, cat_text, callback(self, self, "open_ability_menu", index), callback(self, self, "previous_ability", index), callback(self, self, "next_ability", index))
 end
 
--- Lines 519-534
+-- Lines 526-541
 function CrewManagementGui:create_skill_button(panel, index)
 	local loadout = managers.blackmarket:henchman_loadout(index)
 	local data = tweak_data.upgrades.crew_skill_definitions[loadout.skill]
@@ -683,7 +687,7 @@ function CrewManagementGui:create_skill_button(panel, index)
 	}), callback(self, self, "previous_skill", index), callback(self, self, "next_skill", index))
 end
 
--- Lines 537-558
+-- Lines 544-565
 function CrewManagementGui:create_suit_button(panel, index)
 	local loadout = managers.blackmarket:henchman_loadout(index)
 	local default_player_style = managers.blackmarket:get_default_player_style()
@@ -711,7 +715,7 @@ function CrewManagementGui:create_suit_button(panel, index)
 	} or managers.localization:to_upper_text("menu_default"), text, cat_text, callback(self, self, "open_suit_menu", index), callback(self, self, "previous_suit", index), callback(self, self, "next_suit", index))
 end
 
--- Lines 573-584
+-- Lines 580-591
 function CrewManagementGui:close()
 	if self._panel then
 		self._panel:parent():remove(self._panel)
@@ -724,7 +728,7 @@ function CrewManagementGui:close()
 	managers.menu_scene:set_henchmen_visible(false)
 end
 
--- Lines 586-600
+-- Lines 593-607
 function CrewManagementGui:create_button(panel, string, func)
 	local btn = {
 		panel = panel:panel(),
@@ -744,7 +748,7 @@ function CrewManagementGui:create_button(panel, string, func)
 	return btn
 end
 
--- Lines 604-614
+-- Lines 611-621
 function CrewManagementGui:show_help_dialog()
 	local dialog_data = {
 		title = managers.localization:text("dialog_crew_loadout_help_title"),
@@ -761,7 +765,7 @@ function CrewManagementGui:show_help_dialog()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 616-624
+-- Lines 623-631
 local function adapt_text_width(text_item, target_w)
 	target_w = target_w or text_item:w()
 
@@ -775,7 +779,7 @@ end
 
 CrewManagementGuiButton = CrewManagementGuiButton or class()
 
--- Lines 631-640
+-- Lines 638-647
 function CrewManagementGuiButton:init(parent, func, no_navigation)
 	self._parent = parent
 	self._func = func
@@ -787,7 +791,7 @@ function CrewManagementGuiButton:init(parent, func, no_navigation)
 	self._pos = parent:add_item(self, no_navigation)
 end
 
--- Lines 642-645
+-- Lines 649-652
 function CrewManagementGuiButton:trigger(...)
 	managers.menu_component:post_event("menu_enter")
 
@@ -796,15 +800,15 @@ function CrewManagementGuiButton:trigger(...)
 	end
 end
 
--- Lines 647-648
+-- Lines 654-655
 function CrewManagementGuiButton:previous_page(...)
 end
 
--- Lines 650-651
+-- Lines 657-658
 function CrewManagementGuiButton:next_page(...)
 end
 
--- Lines 652-665
+-- Lines 659-672
 function CrewManagementGuiButton:set_selected(state)
 	if state and not self._enabled and not self._no_navigation then
 		self._parent:select(self._select_instead)
@@ -821,7 +825,7 @@ function CrewManagementGuiButton:set_selected(state)
 	local _ = state and managers.menu_component:post_event("highlight")
 end
 
--- Lines 667-673
+-- Lines 674-680
 function CrewManagementGuiButton:select_instead(item)
 	self._select_instead = item
 
@@ -830,7 +834,7 @@ function CrewManagementGuiButton:select_instead(item)
 	end
 end
 
--- Lines 675-680
+-- Lines 682-687
 function CrewManagementGuiButton:inside(x, y)
 	if self._no_navigation then
 		return self._panel:inside(x, y)
@@ -839,7 +843,7 @@ function CrewManagementGuiButton:inside(x, y)
 	return self._enabled and self._panel and self._panel:inside(x, y)
 end
 
--- Lines 682-690
+-- Lines 689-697
 function CrewManagementGuiButton:set_enabled(state)
 	self._enabled = state
 	local _ = self._item and self._item:set_color(state and Color.white or Color.black)
@@ -849,14 +853,14 @@ function CrewManagementGuiButton:set_enabled(state)
 	end
 end
 
--- Lines 692-694
+-- Lines 699-701
 function CrewManagementGuiButton:_selected_changed(state)
 	local _ = self._select_panel and self._select_panel:set_visible(state)
 end
 
 CrewManagementGuiLoadoutItem = CrewManagementGuiLoadoutItem or class(CrewManagementGuiButton)
 
--- Lines 700-729
+-- Lines 707-736
 function CrewManagementGuiLoadoutItem:init(parent, panel, texture, select_text, unselect_text, func_trigger, func_up, func_down)
 	CrewManagementGuiLoadoutItem.super.init(self, parent, func_trigger)
 
@@ -911,7 +915,7 @@ function CrewManagementGuiLoadoutItem:init(parent, panel, texture, select_text, 
 	self:_selected_changed(false, true)
 end
 
--- Lines 731-737
+-- Lines 738-744
 function CrewManagementGuiLoadoutItem:_selected_changed(state, instant)
 	self._item:animate(state and self._select_anim or self._unselect_anim, self._anim_full_size, instant)
 	self._category_text:set_visible(not state)
@@ -919,7 +923,7 @@ function CrewManagementGuiLoadoutItem:_selected_changed(state, instant)
 	self._select_panel:set_visible(state)
 end
 
--- Lines 739-742
+-- Lines 746-749
 function CrewManagementGuiLoadoutItem:previous_page(...)
 	managers.menu_component:post_event("menu_enter")
 
@@ -928,7 +932,7 @@ function CrewManagementGuiLoadoutItem:previous_page(...)
 	end
 end
 
--- Lines 744-747
+-- Lines 751-754
 function CrewManagementGuiLoadoutItem:next_page(...)
 	managers.menu_component:post_event("menu_enter")
 
@@ -939,7 +943,7 @@ end
 
 CrewManagementGuiTextButton = CrewManagementGuiTextButton or class(CrewManagementGuiButton)
 
--- Lines 753-762
+-- Lines 760-769
 function CrewManagementGuiTextButton:init(parent, panel, text, func)
 	CrewManagementGuiTextButton.super.init(self, parent, func, true)
 
@@ -957,12 +961,12 @@ function CrewManagementGuiTextButton:init(parent, panel, text, func)
 	panel:set_w(self._panel:right())
 end
 
--- Lines 764-766
+-- Lines 771-773
 function CrewManagementGuiTextButton:_selected_changed(state)
 	self._panel:set_color(state and self._select_col or self._normal_col)
 end
 
--- Lines 770-788
+-- Lines 777-795
 function CrewManagementGui:mouse_pressed(button, x, y)
 	if button ~= Idstring("0") then
 		return
@@ -985,35 +989,35 @@ function CrewManagementGui:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines 790-796
+-- Lines 797-803
 function CrewManagementGui:mouse_wheel_up(x, y)
 	if self._selected_btn and self._selected_btn:inside(x, y) then
 		self._selected_btn:previous_page()
 	end
 end
 
--- Lines 798-804
+-- Lines 805-811
 function CrewManagementGui:mouse_wheel_down(x, y)
 	if self._selected_btn and self._selected_btn:inside(x, y) then
 		self._selected_btn:next_page()
 	end
 end
 
--- Lines 806-810
+-- Lines 813-817
 function CrewManagementGui:next_page()
 	if self._selected_btn then
 		self._selected_btn:next_page()
 	end
 end
 
--- Lines 812-816
+-- Lines 819-823
 function CrewManagementGui:previous_page()
 	if self._selected_btn then
 		self._selected_btn:previous_page()
 	end
 end
 
--- Lines 818-836
+-- Lines 825-843
 function CrewManagementGui:mouse_moved(o, x, y)
 	local hover_icon = nil
 
@@ -1038,34 +1042,34 @@ function CrewManagementGui:mouse_moved(o, x, y)
 	end
 end
 
--- Lines 838-842
+-- Lines 845-849
 function CrewManagementGui:special_btn_pressed(button)
 	if Idstring("menu_respec_tree") == button then
 		self:show_help_dialog()
 	end
 end
 
--- Lines 844-846
+-- Lines 851-853
 function CrewManagementGui:move_left()
 	self:move_selection(-1, 0)
 end
 
--- Lines 848-850
+-- Lines 855-857
 function CrewManagementGui:move_right()
 	self:move_selection(1, 0)
 end
 
--- Lines 852-854
+-- Lines 859-861
 function CrewManagementGui:move_up()
 	self:move_selection(0, -1)
 end
 
--- Lines 856-858
+-- Lines 863-865
 function CrewManagementGui:move_down()
 	self:move_selection(0, 1)
 end
 
--- Lines 860-868
+-- Lines 867-875
 function CrewManagementGui:move_selection(dx, dy)
 	if not self._selected_btn then
 		self:select_index(1, 1)
@@ -1078,19 +1082,19 @@ function CrewManagementGui:move_selection(dx, dy)
 	self:select_index(pos[1] + dx, pos[2] + dy)
 end
 
--- Lines 870-874
+-- Lines 877-881
 function CrewManagementGui:confirm_pressed()
 	if self._selected_btn then
 		self._selected_btn:trigger()
 	end
 end
 
--- Lines 876-878
+-- Lines 883-885
 function CrewManagementGui:input_focus()
 	return alive(self._panel) and self._panel:visible() and 1
 end
 
--- Lines 890-897
+-- Lines 897-904
 function CrewManagementGui:select_index(x, y, no_backup)
 	y = self._items and math.clamp(y, 1, #self._items)
 	local item = self._items[y]
@@ -1099,7 +1103,7 @@ function CrewManagementGui:select_index(x, y, no_backup)
 	local _ = item and self:select(item)
 end
 
--- Lines 899-940
+-- Lines 906-947
 function CrewManagementGui:select(btn, no_backup)
 	if btn and btn._no_navigation then
 		print(debug.traceback())
@@ -1152,12 +1156,12 @@ function CrewManagementGui:select(btn, no_backup)
 	end
 end
 
--- Lines 942-944
+-- Lines 949-951
 function CrewManagementGui:open_weapon_menu(params)
 	self:open_weapon_category_menu(unpack(params))
 end
 
--- Lines 947-976
+-- Lines 954-983
 function CrewManagementGui:create_pages(new_node_data, params, identifier, selected_slot, rows, columns, max_pages, name_id)
 	local category = new_node_data.category
 	rows = rows or 3
@@ -1205,7 +1209,7 @@ function CrewManagementGui:create_pages(new_node_data, params, identifier, selec
 	return selected_tab
 end
 
--- Lines 980-1007
+-- Lines 987-1014
 function CrewManagementGui:open_custom_menu(params, category, custom_w, custom_h)
 	local new_node_data = {
 		category = category
@@ -1220,7 +1224,7 @@ function CrewManagementGui:open_custom_menu(params, category, custom_w, custom_h
 		custom_unselect = callback(self, self, "select_" .. category, params)
 	}
 
-	-- Lines 994-1002
+	-- Lines 1001-1009
 	function new_node_data.custom_update_text_info(data, updated_texts, gui)
 		updated_texts[1].text = data.name_localized
 		updated_texts[2].text = managers.localization:text(data.name_id .. "_desc", tweak_data.upgrades.crew_descs[data.name]) or ""
@@ -1244,12 +1248,12 @@ function CrewManagementGui:open_custom_menu(params, category, custom_w, custom_h
 	})
 end
 
--- Lines 1009-1011
+-- Lines 1016-1018
 function CrewManagementGui:open_ability_menu(henchman_index)
 	self:open_custom_menu(henchman_index, "ability")
 end
 
--- Lines 1013-1031
+-- Lines 1020-1038
 function CrewManagementGui:previous_ability(henchman_index)
 	local loadout = managers.blackmarket:henchman_loadout(henchman_index)
 	local ability = loadout.ability
@@ -1272,7 +1276,7 @@ function CrewManagementGui:previous_ability(henchman_index)
 	return self:reload()
 end
 
--- Lines 1033-1051
+-- Lines 1040-1058
 function CrewManagementGui:next_ability(henchman_index)
 	local loadout = managers.blackmarket:henchman_loadout(henchman_index)
 	local ability = loadout.ability
@@ -1295,12 +1299,12 @@ function CrewManagementGui:next_ability(henchman_index)
 	return self:reload()
 end
 
--- Lines 1053-1055
+-- Lines 1060-1062
 function CrewManagementGui:open_skill_menu(params)
 	self:open_custom_menu(params, "skill")
 end
 
--- Lines 1057-1075
+-- Lines 1064-1082
 function CrewManagementGui:previous_skill(henchman_index)
 	local loadout = managers.blackmarket:henchman_loadout(henchman_index)
 	local skill = loadout.skill
@@ -1323,7 +1327,7 @@ function CrewManagementGui:previous_skill(henchman_index)
 	return self:reload()
 end
 
--- Lines 1077-1095
+-- Lines 1084-1102
 function CrewManagementGui:next_skill(henchman_index)
 	local loadout = managers.blackmarket:henchman_loadout(henchman_index)
 	local skill = loadout.skill
@@ -1346,7 +1350,7 @@ function CrewManagementGui:next_skill(henchman_index)
 	return self:reload()
 end
 
--- Lines 1097-1125
+-- Lines 1104-1132
 function CrewManagementGui:open_character_menu(henchman_index)
 	local category = "characters"
 	local new_node_data = {
@@ -1363,7 +1367,7 @@ function CrewManagementGui:open_character_menu(henchman_index)
 		c_clear_slots = callback(self, self, "clear_character_order")
 	}
 
-	-- Lines 1114-1120
+	-- Lines 1121-1127
 	function new_node_data.custom_update_text_info(data, updated_texts, gui)
 		updated_texts[1].text = data.name_localized
 		updated_texts[4].text = managers.localization:text(data.name .. "_desc")
@@ -1383,7 +1387,7 @@ function CrewManagementGui:open_character_menu(henchman_index)
 	})
 end
 
--- Lines 1127-1137
+-- Lines 1134-1144
 function CrewManagementGui:_create_member_loadout_map(member_name)
 	local rtn = {}
 
@@ -1399,7 +1403,7 @@ function CrewManagementGui:_create_member_loadout_map(member_name)
 	return rtn
 end
 
--- Lines 1139-1162
+-- Lines 1146-1169
 function CrewManagementGui:open_weapon_category_menu(category, henchman_index)
 	local loadout = managers.blackmarket:henchman_loadout(henchman_index)
 	local new_node_data = {
@@ -1426,7 +1430,7 @@ function CrewManagementGui:open_weapon_category_menu(category, henchman_index)
 	})
 end
 
--- Lines 1164-1185
+-- Lines 1171-1192
 function CrewManagementGui:previous_weapon_category(henchman_index)
 	local category = "primaries"
 	local loadout = managers.blackmarket:henchman_loadout(henchman_index)
@@ -1453,7 +1457,7 @@ function CrewManagementGui:previous_weapon_category(henchman_index)
 	return self:reload()
 end
 
--- Lines 1187-1208
+-- Lines 1194-1215
 function CrewManagementGui:next_weapon_category(henchman_index)
 	local category = "primaries"
 	local loadout = managers.blackmarket:henchman_loadout(henchman_index)
@@ -1480,7 +1484,7 @@ function CrewManagementGui:next_weapon_category(henchman_index)
 	return self:reload()
 end
 
--- Lines 1210-1232
+-- Lines 1217-1239
 function CrewManagementGui:open_mask_category_menu(henchman_index)
 	local loadout = managers.blackmarket:henchman_loadout(henchman_index)
 	loadout.mask_slot = loadout.mask_slot or 1
@@ -1507,7 +1511,7 @@ function CrewManagementGui:open_mask_category_menu(henchman_index)
 	})
 end
 
--- Lines 1234-1256
+-- Lines 1241-1263
 function CrewManagementGui:previous_mask(henchman_index)
 	local loadout = managers.blackmarket:henchman_loadout(henchman_index)
 	local equipped_slot = loadout.mask_slot or 1
@@ -1538,7 +1542,7 @@ function CrewManagementGui:previous_mask(henchman_index)
 	end
 end
 
--- Lines 1258-1284
+-- Lines 1265-1291
 function CrewManagementGui:next_mask(henchman_index)
 	local loadout = managers.blackmarket:henchman_loadout(henchman_index)
 	local equipped_slot = loadout.mask_slot or 1
@@ -1569,7 +1573,7 @@ function CrewManagementGui:next_mask(henchman_index)
 	end
 end
 
--- Lines 1287-1334
+-- Lines 1294-1341
 function CrewManagementGui:open_suit_menu(henchman_index)
 	local loadout = managers.blackmarket:henchman_loadout(henchman_index)
 	local new_node_data = {
@@ -1612,7 +1616,7 @@ function CrewManagementGui:open_suit_menu(henchman_index)
 	})
 end
 
--- Lines 1336-1351
+-- Lines 1343-1358
 function CrewManagementGui:previous_suit(henchman_index)
 	local loadout = managers.blackmarket:henchman_loadout(henchman_index)
 	local equipped_player_style = loadout.player_style
@@ -1631,7 +1635,7 @@ function CrewManagementGui:previous_suit(henchman_index)
 	end
 end
 
--- Lines 1353-1368
+-- Lines 1360-1375
 function CrewManagementGui:next_suit(henchman_index)
 	local loadout = managers.blackmarket:henchman_loadout(henchman_index)
 	local equipped_player_style = loadout.player_style
@@ -1650,9 +1654,9 @@ function CrewManagementGui:next_suit(henchman_index)
 	end
 end
 
--- Lines 1370-1400
+-- Lines 1377-1407
 function CrewManagementGui:open_suit_customize_menu(henchman_index, data)
-	-- Lines 1371-1394
+	-- Lines 1378-1401
 	local function open_node_clbk()
 		local loadout = managers.blackmarket:henchman_loadout(henchman_index)
 		local new_node_data = {
@@ -1687,7 +1691,7 @@ function CrewManagementGui:open_suit_customize_menu(henchman_index, data)
 	managers.blackmarket:view_player_style(player_style, material_variation, open_node_clbk)
 end
 
--- Lines 1403-1431
+-- Lines 1410-1438
 function CrewManagementGui:populate_primaries(henchman_index, data, gui)
 	gui:populate_weapon_category_new(data)
 
@@ -1719,7 +1723,7 @@ function CrewManagementGui:populate_primaries(henchman_index, data, gui)
 	end
 end
 
--- Lines 1433-1445
+-- Lines 1440-1452
 function CrewManagementGui:populate_buy_weapon(gui, data)
 	gui:populate_buy_weapon(data)
 
@@ -1735,7 +1739,7 @@ function CrewManagementGui:populate_buy_weapon(gui, data)
 	end
 end
 
--- Lines 1447-1463
+-- Lines 1454-1470
 function CrewManagementGui:populate_masks(henchman_index, data, gui)
 	gui:populate_masks_new(data)
 
@@ -1755,19 +1759,19 @@ function CrewManagementGui:populate_masks(henchman_index, data, gui)
 	end
 end
 
--- Lines 1465-1469
+-- Lines 1472-1476
 function CrewManagementGui:populate_skill(params, data, gui)
 	local category, henchman_index = unpack(params)
 
 	self:populate_custom(category, henchman_index, tweak_data.upgrades.crew_skill_definitions, crew_skills, data, gui)
 end
 
--- Lines 1471-1473
+-- Lines 1478-1480
 function CrewManagementGui:populate_ability(henchman_index, data, gui)
 	self:populate_custom("ability", henchman_index, tweak_data.upgrades.crew_ability_definitions, crew_abilities, data, gui)
 end
 
--- Lines 1475-1537
+-- Lines 1482-1544
 function CrewManagementGui:populate_custom(category, henchman_index, tweak, list, data, gui)
 	local loadout = managers.blackmarket:henchman_loadout(henchman_index)
 	local map = self:_create_member_loadout_map(category)
@@ -1831,7 +1835,7 @@ function CrewManagementGui:populate_custom(category, henchman_index, tweak, list
 	end
 end
 
--- Lines 1539-1559
+-- Lines 1546-1566
 function CrewManagementGui:populate_characters(henchman_index, data, gui)
 	gui:populate_characters(data)
 
@@ -1854,7 +1858,7 @@ function CrewManagementGui:populate_characters(henchman_index, data, gui)
 	end
 end
 
--- Lines 1562-1570
+-- Lines 1569-1577
 function CrewManagementGui:populate_suits(henchman_index, data, gui)
 	local loadout = managers.blackmarket:henchman_loadout(henchman_index)
 	data.equipped_player_style = loadout.player_style or managers.blackmarket:get_default_player_style()
@@ -1865,7 +1869,7 @@ function CrewManagementGui:populate_suits(henchman_index, data, gui)
 	data.mannequin_player_style = nil
 end
 
--- Lines 1573-1580
+-- Lines 1580-1587
 function CrewManagementGui:populate_gloves(henchman_index, data, gui)
 	local loadout = managers.blackmarket:henchman_loadout(henchman_index)
 	data.equipped_glove_id = loadout.glove_id or managers.blackmarket:get_default_glove_id()
@@ -1875,7 +1879,7 @@ function CrewManagementGui:populate_gloves(henchman_index, data, gui)
 	data.mannequin_glove_id = nil
 end
 
--- Lines 1583-1588
+-- Lines 1590-1595
 function CrewManagementGui:populate_suit_variations(henchman_index, data, gui)
 	local loadout = managers.blackmarket:henchman_loadout(henchman_index)
 	data.suit_variation = loadout.suit_variation or "default"
@@ -1883,7 +1887,7 @@ function CrewManagementGui:populate_suit_variations(henchman_index, data, gui)
 	gui:populate_suit_variations(data)
 end
 
--- Lines 1591-1609
+-- Lines 1598-1616
 function CrewManagementGui:select_weapon(index, data, gui)
 	print("[CrewManagementGui]:select_weapon", index, data, gui)
 
@@ -1903,14 +1907,14 @@ function CrewManagementGui:select_weapon(index, data, gui)
 	gui:reload()
 end
 
--- Lines 1611-1614
+-- Lines 1618-1621
 function CrewManagementGui:buy_new_weapon(data, gui)
 	data.on_create_func = callback(self, self, "populate_buy_weapon", gui)
 
 	gui:open_weapon_buy_menu(data)
 end
 
--- Lines 1616-1624
+-- Lines 1623-1631
 function CrewManagementGui:select_mask(index, data, gui)
 	print("[CrewManagementGui]:select_mask", index, data, gui)
 
@@ -1921,7 +1925,7 @@ function CrewManagementGui:select_mask(index, data, gui)
 	gui:reload()
 end
 
--- Lines 1626-1628
+-- Lines 1633-1635
 function CrewManagementGui:select_ability(index, data, gui)
 	self:select_skill({
 		"ability",
@@ -1929,7 +1933,7 @@ function CrewManagementGui:select_ability(index, data, gui)
 	}, data, gui)
 end
 
--- Lines 1630-1643
+-- Lines 1637-1650
 function CrewManagementGui:select_skill(params, data, gui)
 	local loadout_name, henchman_index = unpack(params)
 	local map = self:_create_member_loadout_map(loadout_name)
@@ -1943,7 +1947,7 @@ function CrewManagementGui:select_skill(params, data, gui)
 	gui:reload()
 end
 
--- Lines 1645-1661
+-- Lines 1652-1668
 function CrewManagementGui:select_characters(data, gui)
 	local preferred = managers.blackmarket:preferred_henchmen()
 
@@ -1960,7 +1964,7 @@ function CrewManagementGui:select_characters(data, gui)
 	gui:reload()
 end
 
--- Lines 1664-1672
+-- Lines 1671-1679
 function CrewManagementGui:select_player_style(index, data, gui)
 	local loadout = managers.blackmarket:henchman_loadout(index)
 	loadout.player_style = data.name
@@ -1970,7 +1974,7 @@ function CrewManagementGui:select_player_style(index, data, gui)
 	gui:reload()
 end
 
--- Lines 1674-1681
+-- Lines 1681-1688
 function CrewManagementGui:select_suit_variation(index, data, gui)
 	local loadout = managers.blackmarket:henchman_loadout(index)
 	loadout.suit_variation = data.name
@@ -1979,7 +1983,7 @@ function CrewManagementGui:select_suit_variation(index, data, gui)
 	gui:reload()
 end
 
--- Lines 1684-1690
+-- Lines 1691-1697
 function CrewManagementGui:select_glove(index, data, gui)
 	local loadout = managers.blackmarket:henchman_loadout(index)
 	loadout.glove_id = data.name
@@ -1988,7 +1992,7 @@ function CrewManagementGui:select_glove(index, data, gui)
 	gui:reload()
 end
 
--- Lines 1695-1708
+-- Lines 1702-1715
 function CrewManagementGui:clear_character_order(data, gui)
 	local preferred = managers.blackmarket:preferred_henchmen()
 

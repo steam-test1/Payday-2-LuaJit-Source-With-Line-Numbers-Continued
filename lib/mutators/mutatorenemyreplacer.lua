@@ -65,7 +65,7 @@ function MutatorEnemyReplacer:default_override_enemy()
 	return "tank"
 end
 
--- Lines 60-87
+-- Lines 60-85
 function MutatorEnemyReplacer:setup_options_gui(node)
 	local params = {
 		callback = "_update_mutator_value",
@@ -112,12 +112,12 @@ function MutatorEnemyReplacer:setup_options_gui(node)
 	return new_item
 end
 
--- Lines 89-91
+-- Lines 87-89
 function MutatorEnemyReplacer:_update_selected_enemy(item)
 	self:set_value("override_enemy", item:value())
 end
 
--- Lines 93-104
+-- Lines 91-102
 function MutatorEnemyReplacer:reset_to_default()
 	self:clear_values()
 
@@ -130,7 +130,7 @@ function MutatorEnemyReplacer:reset_to_default()
 	end
 end
 
--- Lines 108-128
+-- Lines 106-126
 function MutatorEnemyReplacer:modify_unit_categories(group_ai_tweak, difficulty_index)
 	for key, value in pairs(group_ai_tweak.special_unit_spawn_limits) do
 		if key == self:get_override_enemy() then
@@ -151,7 +151,7 @@ function MutatorEnemyReplacer:modify_unit_categories(group_ai_tweak, difficulty_
 	end
 end
 
--- Lines 130-330
+-- Lines 128-328
 function MutatorEnemyReplacer:_get_unit_group_tank(difficulty_index)
 	if not self._groups.tank then
 		if difficulty_index <= 3 then
@@ -320,7 +320,7 @@ function MutatorEnemyReplacer:_get_unit_group_tank(difficulty_index)
 	return self._groups.tank
 end
 
--- Lines 332-456
+-- Lines 330-454
 function MutatorEnemyReplacer:_get_unit_group_shield(difficulty_index)
 	if not self._groups.shield then
 		if difficulty_index < 4 then
@@ -417,7 +417,7 @@ function MutatorEnemyReplacer:_get_unit_group_shield(difficulty_index)
 	return self._groups.shield
 end
 
--- Lines 458-520
+-- Lines 456-518
 function MutatorEnemyReplacer:_get_unit_group_taser(difficulty_index)
 	if not self._groups.taser then
 		if difficulty_index <= 7 then
@@ -470,7 +470,7 @@ function MutatorEnemyReplacer:_get_unit_group_taser(difficulty_index)
 	return self._groups.taser
 end
 
--- Lines 522-585
+-- Lines 520-583
 function MutatorEnemyReplacer:_get_unit_group_spooc(difficulty_index)
 	if not self._groups.spooc then
 		if difficulty_index <= 7 then
@@ -523,7 +523,7 @@ function MutatorEnemyReplacer:_get_unit_group_spooc(difficulty_index)
 	return self._groups.spooc
 end
 
--- Lines 588-624
+-- Lines 585-621
 function MutatorEnemyReplacer:_get_unit_group_medic(difficulty_index)
 	if not self._groups.medic then
 		self._groups.medic = {
@@ -577,7 +577,7 @@ MutatorMediDozer.icon_coords = {
 	1
 }
 
--- Lines 644-652
+-- Lines 638-646
 function MutatorMediDozer:setup()
 	self._groups = self._groups or {}
 	local difficulty = Global.game_settings and Global.game_settings.difficulty or "normal"
@@ -586,7 +586,7 @@ function MutatorMediDozer:setup()
 	self:modify_unit_categories(tweak_data.group_ai, difficulty_index)
 end
 
--- Lines 656-749
+-- Lines 650-741
 function MutatorMediDozer:modify_unit_categories(group_ai_tweak, difficulty_index)
 	group_ai_tweak.special_unit_spawn_limits = {
 		shield = 0,
@@ -682,7 +682,7 @@ MutatorTitandozers.icon_coords = {
 }
 MutatorTitandozers.load_priority = -10
 
--- Lines 769-777
+-- Lines 760-768
 function MutatorTitandozers:setup()
 	self._groups = self._groups or {}
 	local difficulty = Global.game_settings and Global.game_settings.difficulty or "normal"
@@ -691,7 +691,7 @@ function MutatorTitandozers:setup()
 	self:modify_unit_categories(tweak_data.group_ai, difficulty_index)
 end
 
--- Lines 781-795
+-- Lines 772-786
 function MutatorTitandozers:modify_unit_categories(group_ai_tweak, difficulty_index)
 	group_ai_tweak.special_unit_spawn_limits.tank = math.huge
 	local unit_group = self:_get_unit_group_titandozer(difficulty_index)
@@ -705,7 +705,7 @@ function MutatorTitandozers:modify_unit_categories(group_ai_tweak, difficulty_in
 	end
 end
 
--- Lines 797-828
+-- Lines 788-819
 function MutatorTitandozers:_get_unit_group_titandozer(difficulty_index)
 	if not self._groups.tank then
 		self._groups.tank = {

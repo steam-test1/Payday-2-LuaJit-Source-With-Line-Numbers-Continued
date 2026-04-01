@@ -321,7 +321,7 @@ function IngameLobbyMenuState:_clbk_inventory_reward(error, tradable_list)
 	self:set_lootdrop(drop_category, drop_entry)
 end
 
--- Lines 395-457
+-- Lines 395-452
 function IngameLobbyMenuState:set_lootdrop(drop_category, drop_item_id)
 	if self._mass_drop_data then
 		if drop_item_id ~= nil then
@@ -390,7 +390,7 @@ function IngameLobbyMenuState:set_lootdrop(drop_category, drop_item_id)
 	end
 end
 
--- Lines 459-477
+-- Lines 454-472
 function IngameLobbyMenuState:at_exit()
 	print("[IngameLobbyMenuState:at_exit()]")
 
@@ -402,19 +402,19 @@ function IngameLobbyMenuState:at_exit()
 	managers.menu_component:hide_game_chat_gui()
 end
 
--- Lines 479-483
+-- Lines 474-478
 function IngameLobbyMenuState:on_server_left()
 	Application:debug("IngameLobbyMenuState:on_server_left()")
 	managers.menu_component:set_lootdrop_state("on_server_left")
 end
 
--- Lines 485-489
+-- Lines 480-484
 function IngameLobbyMenuState:on_kicked()
 	Application:debug("IngameLobbyMenuState:on_kicked()")
 	managers.menu_component:set_lootdrop_state("on_kicked")
 end
 
--- Lines 491-495
+-- Lines 486-490
 function IngameLobbyMenuState:on_disconnected()
 	Application:debug("IngameLobbyMenuState:on_disconnected()")
 	managers.menu_component:set_lootdrop_state("on_disconnected")

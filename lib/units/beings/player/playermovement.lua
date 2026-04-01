@@ -1100,7 +1100,7 @@ function PlayerMovement:_change_stamina(value)
 	SoundDevice:set_rtpc("stamina", stamina_breath)
 end
 
--- Lines 1238-1276
+-- Lines 1238-1281
 function PlayerMovement:subtract_stamina(value)
 	if managers.player:has_category_upgrade("player", "stamina_ammo_refill_single") then
 		self._subtracted_stamina_single = (self._subtracted_stamina_single or 0) + math.abs(value)
@@ -1129,7 +1129,7 @@ function PlayerMovement:subtract_stamina(value)
 			for i = 1, 2 do
 				local weapon = self._unit:inventory():unit_by_selection(i):base()
 
-				if weapon:fire_mode() == "auto" then
+				if weapon:fire_mode() == "auto" or weapon:fire_mode() == "burst" then
 					local ammo = math.ceil(weapon:get_ammo_max() * ammo_refill)
 
 					weapon:add_ammo_to_pool(ammo, i)
@@ -1143,74 +1143,74 @@ function PlayerMovement:subtract_stamina(value)
 	self:_change_stamina(-math.abs(value))
 end
 
--- Lines 1278-1280
+-- Lines 1283-1285
 function PlayerMovement:add_stamina(value)
 	self:_change_stamina(math.abs(value) * managers.player:upgrade_value("player", "stamina_regen_multiplier", 1))
 end
 
--- Lines 1282-1284
+-- Lines 1287-1289
 function PlayerMovement:is_above_stamina_threshold()
 	return tweak_data.player.movement_state.stamina.MIN_STAMINA_THRESHOLD < self._stamina
 end
 
--- Lines 1286-1288
+-- Lines 1291-1293
 function PlayerMovement:is_stamina_drained()
 	return self._stamina <= 0
 end
 
--- Lines 1290-1293
+-- Lines 1295-1298
 function PlayerMovement:set_running(running)
 	self._is_running = running
 
 	self:_restart_stamina_regen_timer()
 end
 
--- Lines 1295-1297
+-- Lines 1300-1302
 function PlayerMovement:_restart_stamina_regen_timer()
 	self._regenerate_timer = (tweak_data.player.movement_state.stamina.REGENERATE_TIME or 5) * managers.player:upgrade_value("player", "stamina_regen_timer_multiplier", 1)
 end
 
--- Lines 1299-1301
+-- Lines 1304-1306
 function PlayerMovement:running()
 	return self._is_running
 end
 
--- Lines 1303-1305
+-- Lines 1308-1310
 function PlayerMovement:crouching()
 	return self._state_data.ducking
 end
 
--- Lines 1307-1309
+-- Lines 1312-1314
 function PlayerMovement:in_air()
 	return self._state_data.in_air
 end
 
--- Lines 1311-1313
+-- Lines 1316-1318
 function PlayerMovement:on_ladder()
 	return self._state_data.on_ladder
 end
 
--- Lines 1317-1319
+-- Lines 1322-1324
 function PlayerMovement:on_enter_ladder(ladder_unit)
 	self._ladder_unit = ladder_unit
 end
 
--- Lines 1321-1323
+-- Lines 1326-1328
 function PlayerMovement:on_exit_ladder()
 	self._ladder_unit = nil
 end
 
--- Lines 1325-1327
+-- Lines 1330-1332
 function PlayerMovement:ladder_unit()
 	return self._ladder_unit
 end
 
--- Lines 1331-1333
+-- Lines 1336-1338
 function PlayerMovement:on_enter_zipline(zipline_unit)
 	self._zipline_unit = zipline_unit
 end
 
--- Lines 1335-1340
+-- Lines 1340-1345
 function PlayerMovement:on_exit_zipline()
 	if alive(self._zipline_unit) then
 		self._zipline_unit:zipline():set_user(nil)
@@ -1219,12 +1219,12 @@ function PlayerMovement:on_exit_zipline()
 	self._zipline_unit = nil
 end
 
--- Lines 1342-1344
+-- Lines 1347-1349
 function PlayerMovement:zipline_unit()
 	return self._zipline_unit
 end
 
--- Lines 1351-1355
+-- Lines 1356-1360
 function PlayerMovement:_init_vr()
 	self._orientation_unit = World:spawn_unit(Idstring("units/pd2_dlc_vr/player/vr_orientation"), Vector3(0, 0, 0), Rotation())
 
@@ -1232,7 +1232,7 @@ function PlayerMovement:_init_vr()
 	self:set_orientation_state("none")
 end
 
--- Lines 1360-1377
+-- Lines 1365-1382
 function PlayerMovement:set_orientation_state(state, base_position)
 	if state == "none" then
 		self._orientation_unit:set_visible(false)
@@ -1255,22 +1255,22 @@ function PlayerMovement:set_orientation_state(state, base_position)
 	end
 end
 
--- Lines 1382-1384
+-- Lines 1387-1389
 function PlayerMovement:set_next_reload_speed_multiplier(multiplier)
 	self._next_reload_speed_multiplier = math.max(multiplier, self._next_reload_speed_multiplier or 0)
 end
 
--- Lines 1386-1388
+-- Lines 1391-1393
 function PlayerMovement:next_reload_speed_multiplier()
 	return self._next_reload_speed_multiplier
 end
 
--- Lines 1390-1392
+-- Lines 1395-1397
 function PlayerMovement:reset_next_reload_speed_multiplier()
 	self._next_reload_speed_multiplier = nil
 end
 
--- Lines 1397-1405
+-- Lines 1402-1410
 function PlayerMovement:_update_vr(unit, t, dt)
 	if self._block_input then
 		return
@@ -1283,7 +1283,7 @@ function PlayerMovement:_update_vr(unit, t, dt)
 	mvector3.set(self._hmd_pos, hmd_pos)
 end
 
--- Lines 1409-1415
+-- Lines 1414-1420
 function PlayerMovement:_post_init_vr()
 	self._ghost_position = mvector3.copy(self._m_pos)
 	self._hmd_pos = VRManager:hmd_position()
@@ -1292,28 +1292,28 @@ function PlayerMovement:_post_init_vr()
 	self._unit:hand():post_init()
 end
 
--- Lines 1419-1421
+-- Lines 1424-1426
 function PlayerMovement:hmd_delta()
 	return self._hmd_delta
 end
 
--- Lines 1425-1427
+-- Lines 1430-1432
 function PlayerMovement:hmd_position()
 	return self._hmd_pos
 end
 
--- Lines 1431-1434
+-- Lines 1436-1439
 function PlayerMovement:set_ghost_position(pos, unit_position)
 	mvector3.set(self._ghost_position, pos)
 	self._unit:set_position(unit_position and unit_position or pos)
 end
 
--- Lines 1438-1440
+-- Lines 1443-1445
 function PlayerMovement:ghost_position()
 	return self._ghost_position
 end
 
--- Lines 1444-1450
+-- Lines 1449-1455
 function PlayerMovement:reset_ghost_position()
 	self:set_ghost_position(self._m_pos)
 
@@ -1322,38 +1322,38 @@ function PlayerMovement:reset_ghost_position()
 	end
 end
 
--- Lines 1454-1456
+-- Lines 1459-1461
 function PlayerMovement:warping()
 	return self._state_data.warping
 end
 
--- Lines 1458-1460
+-- Lines 1463-1465
 function PlayerMovement:on_zipline()
 	return self._state_data.on_zipline
 end
 
--- Lines 1462-1464
+-- Lines 1467-1469
 function PlayerMovement:activate_regeneration()
 	self._regenerate_timer = (tweak_data.player.movement_state.stamina.REGENERATE_TIME or 5) * managers.player:upgrade_value("player", "stamina_regen_timer_multiplier", 1)
 end
 
--- Lines 1466-1468
+-- Lines 1471-1473
 function PlayerMovement:stamina()
 	return self._stamina
 end
 
--- Lines 1472-1474
+-- Lines 1477-1479
 function PlayerMovement:set_block_input(block)
 	self._block_input = block
 end
 
--- Lines 1476-1479
+-- Lines 1481-1484
 function PlayerMovement:reset_hmd_position()
 	mvector3.set(self._hmd_pos, VRManager:hmd_position())
 	mvector3.set_zero(self._hmd_delta)
 end
 
--- Lines 1484-1507
+-- Lines 1489-1512
 function PlayerMovement:trigger_teleport(data)
 	if not data.position then
 		Application:error("[PlayerMovement:trigger_teleport] Tried to teleport without position")
@@ -1378,7 +1378,7 @@ function PlayerMovement:trigger_teleport(data)
 	self._unit:base():controller():set_enabled(false)
 end
 
--- Lines 1509-1577
+-- Lines 1514-1582
 function PlayerMovement:update_teleport(t, dt)
 	if not self._teleport_data then
 		return
@@ -1443,16 +1443,16 @@ function PlayerMovement:update_teleport(t, dt)
 	end
 end
 
--- Lines 1579-1581
+-- Lines 1584-1586
 function PlayerMovement:teleporting()
 	return not not self._teleport_data
 end
 
--- Lines 1583-1585
+-- Lines 1588-1590
 function PlayerMovement:has_teleport_data(key)
 	return self._teleport_data and not not self._teleport_data[key]
 end
 
--- Lines 1590-1591
+-- Lines 1595-1596
 function PlayerMovement:on_weapon_add()
 end

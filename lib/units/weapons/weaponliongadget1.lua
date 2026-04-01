@@ -113,7 +113,7 @@ function WeaponLionGadget1:_is_in_blocked_deployable_state()
 	return not managers.player:player_unit():mover():standing() or managers.player:current_state() ~= "standard" and managers.player:current_state() ~= "carry" and managers.player:current_state() ~= "bipod" or managers.player:player_unit():inventory():equipped_unit():base():selection_index() ~= 2 or is_reloading
 end
 
--- Lines 147-187
+-- Lines 147-186
 function WeaponLionGadget1:_is_deployable()
 	if self._is_npc or not self:_get_bipod_obj() then
 		return false
@@ -150,7 +150,7 @@ function WeaponLionGadget1:_is_deployable()
 	return false
 end
 
--- Lines 191-204
+-- Lines 190-203
 function WeaponLionGadget1:get_offsets()
 	if not self:_get_bipod_obj() or not self:_get_bipod_alignment_obj() then
 		return false
@@ -165,7 +165,7 @@ function WeaponLionGadget1:get_offsets()
 	self._bipod_offsets.direction = dir
 end
 
--- Lines 208-319
+-- Lines 207-318
 function WeaponLionGadget1:_shoot_bipod_rays(debug_draw)
 	local mvec1 = Vector3()
 	local mvec2 = Vector3()
@@ -321,7 +321,7 @@ function WeaponLionGadget1:_shoot_bipod_rays(debug_draw)
 	}
 end
 
--- Lines 323-350
+-- Lines 322-349
 function WeaponLionGadget1:check_state()
 	if self._is_npc then
 		return false
@@ -353,7 +353,7 @@ function WeaponLionGadget1:check_state()
 	self._unit:set_extension_update_enabled(Idstring("base"), self._deployed)
 end
 
--- Lines 354-357
+-- Lines 353-356
 function WeaponLionGadget1:destroy(unit)
 	managers.player:unregister_message(Message.OnCashInspectWeapon, self)
 end

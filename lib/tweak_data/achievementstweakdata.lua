@@ -52,7 +52,7 @@ end
 
 AchievementsTweakData = AchievementsTweakData or class()
 
--- Lines 76-3112
+-- Lines 76-3102
 function AchievementsTweakData:init(tweak_data)
 	local normal_and_above = {
 		"normal",
@@ -8709,7 +8709,7 @@ local tracking = {
 	rarely = "rarely"
 }
 
--- Lines 3131-3158
+-- Lines 3121-3148
 local function from_complete_heist_stats_item(self, item)
 	local heists = nil
 
@@ -8720,7 +8720,7 @@ local function from_complete_heist_stats_item(self, item)
 		heists = table.list_copy(self.job_list[item.contact])
 	end
 
-	-- Lines 3140-3151
+	-- Lines 3130-3141
 	local function get_todo()
 		local res = table.list_to_set(heists)
 
@@ -8750,7 +8750,7 @@ local function from_complete_heist_stats_item(self, item)
 	}
 end
 
--- Lines 3160-3165
+-- Lines 3150-3155
 local function from_crimespree_item(item)
 	return {
 		get = function ()
@@ -8763,7 +8763,7 @@ local function from_crimespree_item(item)
 	}
 end
 
--- Lines 3167-3175
+-- Lines 3157-3165
 local function from_level(level)
 	if not level then
 		error()
@@ -8779,7 +8779,7 @@ local function from_level(level)
 	}
 end
 
--- Lines 3177-3185
+-- Lines 3167-3175
 local function from_owned_weapons(num)
 	if not num then
 		error()
@@ -8795,7 +8795,7 @@ local function from_owned_weapons(num)
 	}
 end
 
--- Lines 3187-3198
+-- Lines 3177-3188
 local function from_timed_memory(item, memory_name, count_name)
 	count_name = count_name or "count"
 
@@ -8817,7 +8817,7 @@ local function from_timed_memory(item, memory_name, count_name)
 	}
 end
 
--- Lines 3203-3421
+-- Lines 3193-3411
 function AchievementsTweakData:_init_visual(tweak_data)
 	self.tags = {
 		progress = {
@@ -8976,7 +8976,7 @@ function AchievementsTweakData:_init_visual(tweak_data)
 	end
 end
 
--- Lines 3456-3602
+-- Lines 3446-3592
 function AchievementsTweakData:_init_non_auto_generated(tweak_data)
 	self.visual.bulldog_1.unlock_icons = {
 		{
@@ -9167,7 +9167,7 @@ function AchievementsTweakData:_init_non_auto_generated(tweak_data)
 		max = self.spend_money_to_make_money
 	}
 
-	-- Lines 3580-3580
+	-- Lines 3570-3570
 	local function dummy_progress()
 		return 0
 	end

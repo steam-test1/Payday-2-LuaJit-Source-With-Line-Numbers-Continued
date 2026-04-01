@@ -549,7 +549,7 @@ function PlayerTased:_give_shock_to_taser(taser_unit)
 	taser_unit:character_damage():damage_melee(action_data)
 end
 
--- Lines 576-610
+-- Lines 576-612
 function PlayerTased:give_shock_to_taser_no_damage()
 	local taser_unit = self._taser_unit
 	local char_dmg_ext = alive(taser_unit) and taser_unit:character_damage()
@@ -586,7 +586,7 @@ function PlayerTased:give_shock_to_taser_no_damage()
 	self._ext_camera:play_redirect(self:get_animation("tased_counter"))
 end
 
--- Lines 612-649
+-- Lines 614-651
 function PlayerTased:_on_malfunction_to_taser_event()
 	local taser_unit = self._taser_unit
 	local char_dmg_ext = alive(taser_unit) and taser_unit:character_damage()

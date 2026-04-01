@@ -1053,7 +1053,7 @@ CopActionHurt.idx_to_hurt_type_map = {
 	"healed"
 }
 
--- Lines 899-912
+-- Lines 897-910
 function CopActionHurt.hurt_type_to_idx(hurt_type)
 	local res = nil
 
@@ -1074,7 +1074,7 @@ function CopActionHurt.hurt_type_to_idx(hurt_type)
 	return res
 end
 
--- Lines 914-916
+-- Lines 912-914
 function CopActionHurt.idx_to_hurt_type(idx)
 	return CopActionHurt.idx_to_hurt_type_map[idx]
 end
@@ -1084,12 +1084,12 @@ CopActionHurt.idx_to_death_type_map = {
 	[2.0] = "heavy"
 }
 
--- Lines 925-927
+-- Lines 923-925
 function CopActionHurt.death_type_to_idx(death)
 	return table.index_of(CopActionHurt.idx_to_death_type_map, death)
 end
 
--- Lines 929-931
+-- Lines 927-929
 function CopActionHurt.idx_to_death_type(idx)
 	return CopActionHurt.idx_to_death_type_map[idx]
 end
@@ -1102,12 +1102,12 @@ CopActionHurt.idx_to_type_map = {
 	"death"
 }
 
--- Lines 943-945
+-- Lines 941-943
 function CopActionHurt.type_to_idx(hurt_type)
 	return table.index_of(CopActionHurt.idx_to_type_map, hurt_type)
 end
 
--- Lines 947-949
+-- Lines 945-947
 function CopActionHurt.idx_to_type(idx)
 	return CopActionHurt.idx_to_type_map[idx]
 end
@@ -1119,7 +1119,7 @@ CopActionHurt.idx_to_variant_map = {
 	"other"
 }
 
--- Lines 960-967
+-- Lines 958-965
 function CopActionHurt.variant_to_idx(var)
 	local idx = table.index_of(CopActionHurt.idx_to_variant_map, var)
 
@@ -1130,14 +1130,14 @@ function CopActionHurt.variant_to_idx(var)
 	end
 end
 
--- Lines 969-971
+-- Lines 967-969
 function CopActionHurt.idx_to_variant(idx)
 	return CopActionHurt.idx_to_variant_map[idx]
 end
 
 local tmp_used_flame_objects = nil
 
--- Lines 977-1053
+-- Lines 975-1051
 function CopActionHurt:_start_enemy_fire_effect_on_death(death_variant, fire_variant)
 	if self._burn_death_effects_clbk_id then
 		return
@@ -1210,7 +1210,7 @@ function CopActionHurt:_start_enemy_fire_effect_on_death(death_variant, fire_var
 	managers.enemy:add_delayed_clbk(self._burn_death_effects_clbk_id, callback(self, self, "_remove_burn_death_effects"), TimerManager:game():time() + effect_tbl.duration)
 end
 
--- Lines 1116-1134
+-- Lines 1114-1132
 function CopActionHurt:_remove_burn_death_effects(destroyed)
 	self._burn_death_effects_clbk_id = nil
 
@@ -1232,7 +1232,7 @@ function CopActionHurt:_remove_burn_death_effects(destroyed)
 	end
 end
 
--- Lines 1136-1145
+-- Lines 1134-1143
 function CopActionHurt:_dragons_breath_sparks()
 	local enemy_effect_name = Idstring("effects/payday2/particles/impacts/sparks/dragons_breath_hit_effect")
 	local bone_spine = self._unit:get_object(Idstring("Spine"))
@@ -1245,7 +1245,7 @@ function CopActionHurt:_dragons_breath_sparks()
 	end
 end
 
--- Lines 1149-1215
+-- Lines 1147-1213
 function CopActionHurt:_get_floor_normal(at_pos, fwd, right)
 	local padding_height = 150
 	local center_pos = at_pos + math.UP
@@ -1328,7 +1328,7 @@ function CopActionHurt:_get_floor_normal(at_pos, fwd, right)
 	return ground_normal
 end
 
--- Lines 1219-1274
+-- Lines 1217-1272
 function CopActionHurt:on_exit()
 	if self._shooting_hurt then
 		self._shooting_hurt = false
@@ -1390,7 +1390,7 @@ function CopActionHurt:on_exit()
 	end
 end
 
--- Lines 1278-1324
+-- Lines 1276-1322
 function CopActionHurt:_get_pos_clamped_to_graph(test_head)
 	local tracker = self._ext_movement:nav_tracker()
 	local r = tracker:field_position()
@@ -1442,11 +1442,11 @@ function CopActionHurt:_get_pos_clamped_to_graph(test_head)
 	return new_pos
 end
 
--- Lines 1328-1329
+-- Lines 1326-1327
 function CopActionHurt:_upd_empty(t)
 end
 
--- Lines 1333-1342
+-- Lines 1331-1340
 function CopActionHurt:_upd_sick(t)
 	if not self._sick_time or self._sick_time < t then
 		if self._ext_anim.needs_idle then
@@ -1459,14 +1459,14 @@ function CopActionHurt:_upd_sick(t)
 	end
 end
 
--- Lines 1344-1348
+-- Lines 1342-1346
 function CopActionHurt:_upd_sick_exit(t)
 	if not self._ext_anim.hurt then
 		self._expired = true
 	end
 end
 
--- Lines 1352-1364
+-- Lines 1350-1362
 function CopActionHurt:_upd_tased(t)
 	if not self._tased_time or self._tased_time < t then
 		if self._tased_down_time and t < self._tased_down_time then
@@ -1483,21 +1483,21 @@ function CopActionHurt:_upd_tased(t)
 	end
 end
 
--- Lines 1366-1370
+-- Lines 1364-1368
 function CopActionHurt:_upd_tased_down(t)
 	if not self._tased_down_time or self._tased_down_time < t then
 		self._expired = true
 	end
 end
 
--- Lines 1374-1378
+-- Lines 1372-1376
 function CopActionHurt:_upd_taser_tased(t)
 	if not self._taser_tased_t or self._taser_tased_t < t then
 		self._expired = true
 	end
 end
 
--- Lines 1383-1441
+-- Lines 1381-1439
 function CopActionHurt:_upd_hurt(t)
 	if self._shooting_hurt and not alive(self._weapon_unit) then
 		self._shooting_hurt = false
@@ -1563,7 +1563,7 @@ function CopActionHurt:_upd_hurt(t)
 	end
 end
 
--- Lines 1445-1576
+-- Lines 1443-1577
 function CopActionHurt:_upd_bleedout(t)
 	if self._floor_normal then
 		local normal = nil
@@ -1656,9 +1656,9 @@ function CopActionHurt:_upd_bleedout(t)
 				if self._weapon_unit:base():clip_empty() then
 					local res = CopActionReload._play_bleedout_reload(self)
 				elseif self._common_data.allow_fire then
-					local falloff = CopActionShoot._get_shoot_falloff(self, target_dis, self._falloff)
+					local falloff, i_range = CopActionShoot._get_shoot_falloff(self, target_dis, self._falloff)
 					local spread = self._spread
-					local new_target_pos = self._attention.handler and self._attention.handler:get_attention_m_pos() or CopActionShoot._get_unit_shoot_pos(self, self._attention.unit, t, target_pos, target_dis, self._w_usage_tweak)
+					local new_target_pos = self._attention.handler and self._attention.handler:get_attention_m_pos() or CopActionShoot._get_unit_shoot_pos(self, t, target_pos, target_dis, self._w_usage_tweak, falloff, i_range, autotarget)
 
 					if new_target_pos then
 						target_pos = new_target_pos
@@ -1689,7 +1689,7 @@ function CopActionHurt:_upd_bleedout(t)
 	end
 end
 
--- Lines 1580-1604
+-- Lines 1581-1605
 function CopActionHurt:_upd_ragdolled(t)
 	local dt = TimerManager:game():delta_time()
 
@@ -1718,22 +1718,22 @@ function CopActionHurt:_upd_ragdolled(t)
 	end
 end
 
--- Lines 1608-1610
+-- Lines 1609-1611
 function CopActionHurt:type()
 	return "hurt"
 end
 
--- Lines 1614-1616
+-- Lines 1615-1617
 function CopActionHurt:hurt_type()
 	return self._hurt_type
 end
 
--- Lines 1620-1622
+-- Lines 1621-1623
 function CopActionHurt:expired()
 	return self._expired
 end
 
--- Lines 1626-1638
+-- Lines 1627-1639
 function CopActionHurt:chk_block(action_type, t)
 	if self._hurt_type == "death" then
 		return true
@@ -1748,12 +1748,12 @@ function CopActionHurt:chk_block(action_type, t)
 	end
 end
 
--- Lines 1642-1644
+-- Lines 1643-1645
 function CopActionHurt:on_attention(attention)
 	self._attention = attention
 end
 
--- Lines 1648-1667
+-- Lines 1649-1668
 function CopActionHurt:on_death_exit()
 	if self._shooting_hurt then
 		self._shooting_hurt = false
@@ -1768,7 +1768,7 @@ function CopActionHurt:on_death_exit()
 	end
 end
 
--- Lines 1671-1695
+-- Lines 1672-1696
 function CopActionHurt:on_death_drop(unit, stage)
 	if self._weapon_dropped then
 		return
@@ -1798,12 +1798,12 @@ function CopActionHurt:on_death_drop(unit, stage)
 	end
 end
 
--- Lines 1699-1701
+-- Lines 1700-1702
 function CopActionHurt:body_part()
 	return self._body_part
 end
 
--- Lines 1705-1711
+-- Lines 1706-1712
 function CopActionHurt:need_upd()
 	if self._died then
 		return false
@@ -1812,7 +1812,7 @@ function CopActionHurt:need_upd()
 	end
 end
 
--- Lines 1715-1732
+-- Lines 1716-1733
 function CopActionHurt:on_inventory_event(event)
 	local weapon_unit = self._ext_inventory:equipped_unit()
 
@@ -1833,7 +1833,7 @@ function CopActionHurt:on_inventory_event(event)
 	end
 end
 
--- Lines 1736-1742
+-- Lines 1737-1743
 function CopActionHurt:save(save_data)
 	for i, k in pairs(self._action_desc) do
 		if type_name(k) ~= "Unit" or alive(k) then
@@ -1842,14 +1842,14 @@ function CopActionHurt:save(save_data)
 	end
 end
 
--- Lines 1746-1750
+-- Lines 1747-1751
 function CopActionHurt:_prepare_ragdoll()
 	if self._unit:damage() and self._unit:damage():has_sequence("prepare_ragdoll") then
 		self._unit:damage():run_sequence_simple("prepare_ragdoll")
 	end
 end
 
--- Lines 1752-1804
+-- Lines 1753-1805
 function CopActionHurt:_start_ragdoll(reset_momentum)
 	if self._ragdolled then
 		return true
@@ -1912,7 +1912,7 @@ function CopActionHurt:_start_ragdoll(reset_momentum)
 	end
 end
 
--- Lines 1808-1813
+-- Lines 1809-1814
 function CopActionHurt:force_ragdoll(reset_momentum)
 	if self:_start_ragdoll(reset_momentum) then
 		self.update = self._upd_ragdolled
@@ -1921,7 +1921,7 @@ function CopActionHurt:force_ragdoll(reset_momentum)
 	end
 end
 
--- Lines 1817-1830
+-- Lines 1818-1831
 function CopActionHurt:clbk_body_active_state(tag, unit, body, activated)
 	if self._root_act_tags[tag:key()] then
 		if activated then
@@ -1941,7 +1941,7 @@ end
 
 CopActionHurt._apply_freefall = CopActionWalk._apply_freefall
 
--- Lines 1838-1843
+-- Lines 1839-1844
 function CopActionHurt:_freeze_ragdoll()
 	self._root_act_tags = {}
 
@@ -1950,7 +1950,7 @@ function CopActionHurt:_freeze_ragdoll()
 	end
 end
 
--- Lines 1847-1864
+-- Lines 1848-1865
 function CopActionHurt:clbk_chk_freeze_ragdoll()
 	if not alive(self._unit) then
 		self._ragdoll_freeze_clbk_id = nil
@@ -1974,7 +1974,7 @@ function CopActionHurt:clbk_chk_freeze_ragdoll()
 	end
 end
 
--- Lines 1868-1879
+-- Lines 1869-1880
 function CopActionHurt:clbk_shooting_hurt()
 	self._delayed_shooting_hurt_clbk_id = nil
 
@@ -1989,7 +1989,7 @@ function CopActionHurt:clbk_shooting_hurt()
 	end
 end
 
--- Lines 1883-1902
+-- Lines 1884-1903
 function CopActionHurt:on_destroy()
 	if self._burn_death_effects_clbk_id then
 		managers.enemy:remove_delayed_clbk(self._burn_death_effects_clbk_id)

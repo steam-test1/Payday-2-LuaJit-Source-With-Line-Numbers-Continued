@@ -503,52 +503,57 @@ function GenericDLCManager:has_txt4()
 	return self:is_dlc_unlocked("txt4")
 end
 
--- Lines 584-586
+-- Lines 589-591
 function GenericDLCManager:has_wcc()
 	return self:is_dlc_unlocked("wcc")
 end
 
--- Lines 589-591
+-- Lines 594-596
 function GenericDLCManager:has_wcc_s01()
 	return self:is_dlc_unlocked("wcc_s01")
 end
 
--- Lines 594-596
+-- Lines 599-601
 function GenericDLCManager:has_wcc_s02()
 	return self:is_dlc_unlocked("wcc_s02")
 end
 
--- Lines 599-601
+-- Lines 604-606
 function GenericDLCManager:has_wcs()
 	return self:is_dlc_unlocked("wcs")
 end
 
--- Lines 604-606
+-- Lines 609-611
+function GenericDLCManager:has_wel()
+	return self:is_dlc_unlocked("wel")
+end
+
+-- Lines 614-616
 function GenericDLCManager:has_xm20()
 	return self:is_dlc_unlocked("xm20")
 end
 
--- Lines 609-611
+-- Lines 619-621
 function GenericDLCManager:has_xm21()
 	return self:is_dlc_unlocked("xm21")
 end
 
--- Lines 614-616
+-- Lines 624-626
 function GenericDLCManager:has_xm22()
 	return self:is_dlc_unlocked("xm22")
 end
 
--- Lines 619-621
+-- Lines 629-631
 function GenericDLCManager:has_xm25()
 	return self:is_dlc_unlocked("xm25")
 end
 
--- Lines 624-626
+-- Lines 634-636
 function GenericDLCManager:has_xmn()
 	return self:is_dlc_unlocked("xmn")
 end
 
--- Lines 629-1415
+-- Lines 639-1437
 function WINDLCManager:init_generated()
 	Global.dlc_manager.all_dlc_data.a10th = {
 		app_id = "218620",
@@ -1109,6 +1114,11 @@ function WINDLCManager:init_generated()
 		epic_id = "d8480500d20b4e9480cc921248f34758",
 		no_install = true,
 		webpage = "https://pd2.link/bexwcp1yb"
+	}
+	Global.dlc_manager.all_dlc_data.wel = {
+		app_id = "218620",
+		epic_id = "c9e33efd38a7409e8aeee22f7a6f2e06",
+		no_install = true
 	}
 	Global.dlc_manager.all_dlc_data.xm20 = {
 		app_id = "218620",

@@ -454,7 +454,7 @@ function CrimeSpreeTweakData:init_missions(tweak_data)
 	}
 end
 
--- Lines 875-1231
+-- Lines 875-1225
 function CrimeSpreeTweakData:init_modifiers(tweak_data)
 	local health_increase = 25
 	local damage_increase = 25
@@ -852,7 +852,7 @@ function CrimeSpreeTweakData:init_modifiers(tweak_data)
 	}
 end
 
--- Lines 1233-1241
+-- Lines 1227-1235
 function CrimeSpreeTweakData:get_reward_icon(reward)
 	for _, data in ipairs(self.rewards) do
 		if data.id == reward then
@@ -863,7 +863,7 @@ function CrimeSpreeTweakData:get_reward_icon(reward)
 	return tweak_data.lootdrop.type_to_card_fallback
 end
 
--- Lines 1243-1332
+-- Lines 1237-1326
 function CrimeSpreeTweakData:init_rewards(tweak_data)
 	self.loot_drop_reward_pay_class = 40
 	local offshore_rate = tweak_data.money_manager.offshore_rate
@@ -988,7 +988,7 @@ function CrimeSpreeTweakData:init_rewards(tweak_data)
 	}
 end
 
--- Lines 1334-1524
+-- Lines 1328-1518
 function CrimeSpreeTweakData:init_gage_assets(tweak_data)
 	local asset_cost = 18
 	self.max_assets_unlocked = 4
@@ -1158,7 +1158,7 @@ function CrimeSpreeTweakData:init_gage_assets(tweak_data)
 	}
 end
 
--- Lines 1526-1542
+-- Lines 1520-1536
 function CrimeSpreeTweakData:init_gui(tweak_data)
 	self.gui = {
 		randomize_time = {
@@ -1179,12 +1179,12 @@ function CrimeSpreeTweakData:init_gui(tweak_data)
 	}
 end
 
--- Lines 1544-1552
+-- Lines 1538-1546
 function CrimeSpreeTweakData:get_mission_type_from_index(index)
 	return index
 end
 
--- Lines 1554-1573
+-- Lines 1548-1567
 function CrimeSpreeTweakData:get_index_from_id(level_id)
 	if level_id then
 		for i = 1, 3 do
@@ -1203,7 +1203,7 @@ function CrimeSpreeTweakData:get_index_from_id(level_id)
 	end
 end
 
--- Lines 1575-1589
+-- Lines 1569-1583
 function CrimeSpreeTweakData:get_id_from_index(merged_index)
 	local index_has_data = merged_index > 100
 

@@ -270,7 +270,7 @@ require("lib/units/cameras/CinematicStateCamera")
 
 GameSetup = GameSetup or class(Setup)
 
--- Lines 383-557
+-- Lines 381-555
 function GameSetup:load_packages()
 	Setup.load_packages(self)
 
@@ -311,7 +311,7 @@ function GameSetup:load_packages()
 
 	self._loaded_diff_packages = {}
 
-	-- Lines 427-432
+	-- Lines 425-430
 	local function load_difficulty_package(package_name)
 		if PackageManager:package_exists(package_name) and not PackageManager:loaded(package_name) then
 			table.insert(self._loaded_diff_packages, package_name)
@@ -441,7 +441,7 @@ function GameSetup:load_packages()
 	end
 end
 
--- Lines 559-651
+-- Lines 557-649
 function GameSetup:gather_packages_to_unload()
 	Setup.unload_packages(self)
 
@@ -525,12 +525,12 @@ function GameSetup:gather_packages_to_unload()
 	end
 end
 
--- Lines 653-655
+-- Lines 651-653
 function GameSetup:unload_packages()
 	Setup.unload_packages(self)
 end
 
--- Lines 657-697
+-- Lines 655-695
 function GameSetup:init_managers(managers)
 	Setup.init_managers(self, managers)
 
@@ -564,7 +564,7 @@ function GameSetup:init_managers(managers)
 	end
 end
 
--- Lines 699-748
+-- Lines 697-746
 function GameSetup:init_game()
 	local gsm = Setup.init_game(self)
 
@@ -613,7 +613,7 @@ function GameSetup:init_game()
 	return gsm
 end
 
--- Lines 750-800
+-- Lines 748-798
 function GameSetup:init_finalize()
 	if script_data.level_script and script_data.level_script.post_init then
 		script_data.level_script:post_init()
@@ -657,7 +657,7 @@ function GameSetup:init_finalize()
 	managers.custom_safehouse:init_finalize()
 end
 
--- Lines 802-848
+-- Lines 800-846
 function GameSetup:update(t, dt)
 	Setup.update(self, t, dt)
 	managers.interaction:update(t, dt)
@@ -685,7 +685,7 @@ function GameSetup:update(t, dt)
 	end
 end
 
--- Lines 850-862
+-- Lines 848-860
 function GameSetup:paused_update(t, dt)
 	Setup.paused_update(self, t, dt)
 	managers.groupai:paused_update(t, dt)
@@ -695,7 +695,7 @@ function GameSetup:paused_update(t, dt)
 	end
 end
 
--- Lines 864-880
+-- Lines 862-878
 function GameSetup:destroy()
 	Setup.destroy(self)
 
@@ -709,13 +709,13 @@ function GameSetup:destroy()
 	managers.network.account:set_playing(false)
 end
 
--- Lines 882-887
+-- Lines 880-885
 function GameSetup:end_update(t, dt)
 	Setup.end_update(self, t, dt)
 	managers.game_play_central:end_update(t, dt)
 end
 
--- Lines 889-922
+-- Lines 887-920
 function GameSetup:save(data)
 	Setup.save(self, data)
 	managers.game_play_central:save(data)
@@ -742,7 +742,7 @@ function GameSetup:save(data)
 	managers.worlddefinition:sync_save(data)
 end
 
--- Lines 924-958
+-- Lines 922-956
 function GameSetup:load(data)
 	Setup.load(self, data)
 	managers.game_play_central:load(data)

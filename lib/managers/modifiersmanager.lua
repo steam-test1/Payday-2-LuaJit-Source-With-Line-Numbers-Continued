@@ -50,12 +50,12 @@ require("lib/modifiers/boosts/GageModifierLifeSteal")
 
 ModifiersManager = ModifiersManager or class()
 
--- Lines 62-64
+-- Lines 60-62
 function ModifiersManager:init()
 	self._modifiers = {}
 end
 
--- Lines 66-73
+-- Lines 64-71
 function ModifiersManager:add_modifier(modifier, category)
 	category = category or "common"
 	local category_table = self._modifiers[category] or {}
@@ -64,7 +64,7 @@ function ModifiersManager:add_modifier(modifier, category)
 	table.insert(category_table, modifier)
 end
 
--- Lines 75-88
+-- Lines 73-86
 function ModifiersManager:modify_value(id, value, ...)
 	for _, category in pairs(self._modifiers) do
 		for _, modifier in ipairs(category) do
@@ -81,7 +81,7 @@ function ModifiersManager:modify_value(id, value, ...)
 	return value
 end
 
--- Lines 90-98
+-- Lines 88-96
 function ModifiersManager:run_func(func_name, ...)
 	for _, category in pairs(self._modifiers) do
 		for _, modifier in ipairs(category) do

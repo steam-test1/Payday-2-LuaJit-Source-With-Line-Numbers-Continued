@@ -1,4 +1,4 @@
--- Lines 1-436
+-- Lines 1-444
 function TweakData:_init_pd2()
 	print("TweakData:_init_pd2()")
 
@@ -758,7 +758,7 @@ function TweakData:_init_pd2()
 	self:_setup_scene_pose_items()
 end
 
--- Lines 438-547
+-- Lines 446-555
 function TweakData:_setup_point_of_no_returns()
 	self.point_of_no_returns = {
 		noreturn = {}
@@ -884,7 +884,7 @@ function TweakData:_setup_point_of_no_returns()
 	end
 end
 
--- Lines 549-552
+-- Lines 557-560
 function TweakData:get_scene_pose_items(scene_pose)
 	local items = self.scene_pose_items[scene_pose] or {
 		"primary",
@@ -897,7 +897,7 @@ function TweakData:get_scene_pose_items(scene_pose)
 	}
 end
 
--- Lines 554-585
+-- Lines 562-593
 function TweakData:get_scene_pose(scene, pose_category, ...)
 	local poses = nil
 	local scene_poses = self.scene_poses[scene]
@@ -927,7 +927,7 @@ function TweakData:get_scene_pose(scene, pose_category, ...)
 	return pose, required_poses
 end
 
--- Lines 587-637
+-- Lines 595-645
 function TweakData:_setup_scene_pose_items()
 	self.scene_pose_items = {
 		husk1 = {},
@@ -1001,7 +1001,7 @@ function TweakData:_setup_scene_pose_items()
 	}
 end
 
--- Lines 639-773
+-- Lines 647-799
 function TweakData:_setup_scene_poses()
 	self.scene_poses = {
 		generic = {
@@ -1272,6 +1272,23 @@ function TweakData:_setup_scene_poses()
 		poolrepair = {
 			"pool",
 			"pool"
+		}
+	}
+	self.scene_environments = {
+		standard = {
+			angle = 0,
+			environment = "environments/env_menu/env_menu",
+			color_grading = "color_matrix"
+		},
+		safe = {
+			angle = -135,
+			environment = "environments/pd2_cash/env_cash_01",
+			color_grading = "color_off"
+		},
+		crafting = {
+			angle = -135,
+			environment = "environments/pd2_cash/env_cash_02",
+			color_grading = "color_off"
 		}
 	}
 end

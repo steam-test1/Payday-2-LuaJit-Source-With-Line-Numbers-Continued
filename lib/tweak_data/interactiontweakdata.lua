@@ -1,6 +1,6 @@
 InteractionTweakData = InteractionTweakData or class()
 
--- Lines 4-9081
+-- Lines 4-9194
 function InteractionTweakData:init(tweak_data)
 	self.DEFAULT_INTERACTION_DOT = 0.9
 	self.CULLING_DISTANCE = 2000
@@ -1011,7 +1011,7 @@ function InteractionTweakData:init(tweak_data)
 	self.sentry_gun_revive = {
 		icon = "equipment_ammo_bag",
 		requires_upgrade = {
-			upgrade = "can_revive",
+			upgrade = "can_reload",
 			category = "sentry_gun"
 		},
 		timer = 3.5,

@@ -636,29 +636,31 @@ function CopLogicTravel._get_pos_accross_door(guard_door, nav_seg)
 	managers.navigation:destroy_nav_tracker(door_tracker)
 end
 
--- Lines 637-648
+-- Lines 637-657
 function CopLogicTravel.is_available_for_assignment(data, new_objective)
 	if new_objective and new_objective.forced then
 		return true
-	elseif data.objective and data.objective.type == "act" then
+	end
+
+	if data.objective and data.objective.type == "act" then
 		if (not new_objective or new_objective and new_objective.type == "free") and data.objective.interrupt_dis == -1 then
 			return true
 		end
 
 		return
-	else
-		return CopLogicAttack.is_available_for_assignment(data, new_objective)
 	end
+
+	return CopLogicAttack.is_available_for_assignment(data, new_objective)
 end
 
--- Lines 652-656
+-- Lines 661-665
 function CopLogicTravel.is_advancing(data)
 	if data.internal_data.advancing and data.pos_rsrv.move_dest then
 		return data.pos_rsrv.move_dest.position
 	end
 end
 
--- Lines 660-675
+-- Lines 669-684
 function CopLogicTravel._reserve_pos_along_vec(look_pos, wanted_pos)
 	local step_vec = look_pos - wanted_pos
 	local max_pos_mul = math.floor(mvector3.length(step_vec) / 65)
@@ -678,7 +680,7 @@ function CopLogicTravel._reserve_pos_along_vec(look_pos, wanted_pos)
 	return res_data
 end
 
--- Lines 679-726
+-- Lines 688-735
 function CopLogicTravel._rsrv_pos_along_vec_step_clbk(shait, data, test_pos)
 	local step_mul = data.step_mul
 	local nav_manager = managers.navigation
@@ -733,12 +735,12 @@ function CopLogicTravel._rsrv_pos_along_vec_step_clbk(shait, data, test_pos)
 	return true
 end
 
--- Lines 730-732
+-- Lines 739-741
 function CopLogicTravel._investigate_coarse_path_verify_clbk(shait, nav_seg)
 	return managers.groupai:state():is_nav_seg_safe(nav_seg)
 end
 
--- Lines 736-741
+-- Lines 745-750
 function CopLogicTravel.on_intimidated(data, amount, aggressor_unit)
 	local surrender = CopLogicIdle.on_intimidated(data, amount, aggressor_unit)
 
@@ -747,7 +749,7 @@ function CopLogicTravel.on_intimidated(data, amount, aggressor_unit)
 	end
 end
 
--- Lines 745-776
+-- Lines 754-785
 function CopLogicTravel._chk_request_action_walk_to_advance_pos(data, my_data, speed, end_rot, no_strafe, pose, end_pose)
 	if not data.unit:movement():chk_action_forbidden("walk") or data.unit:anim_data().act_idle then
 		CopLogicAttack._correct_path_start_pos(data, my_data.advance_path)
@@ -779,7 +781,7 @@ function CopLogicTravel._chk_request_action_walk_to_advance_pos(data, my_data, s
 	end
 end
 
--- Lines 780-909
+-- Lines 789-918
 function CopLogicTravel._determine_destination_occupation(data, objective)
 	local occupation = nil
 
@@ -957,7 +959,7 @@ function CopLogicTravel._determine_destination_occupation(data, objective)
 	return occupation
 end
 
--- Lines 913-999
+-- Lines 922-1008
 function CopLogicTravel._get_pos_on_wall(from_pos, max_dist, step_offset, is_recurse)
 	local nav_manager = managers.navigation
 	local nr_rays = 7
@@ -1031,14 +1033,14 @@ function CopLogicTravel._get_pos_on_wall(from_pos, max_dist, step_offset, is_rec
 	return from_pos
 end
 
--- Lines 1003-1010
+-- Lines 1012-1019
 function CopLogicTravel.queue_update(data, my_data, delay)
 	delay = data.important and 0 or delay or 0.3
 
 	CopLogicBase.queue_task(my_data, my_data.upd_task_key, CopLogicTravel.queued_update, data, data.t + delay, data.important and true)
 end
 
--- Lines 1014-1026
+-- Lines 1023-1035
 function CopLogicTravel._try_anounce(data, my_data)
 	local my_pos = data.m_pos
 	local max_dis_sq = 250000
@@ -1056,24 +1058,24 @@ function CopLogicTravel._try_anounce(data, my_data)
 	end
 end
 
--- Lines 1030-1034
+-- Lines 1039-1043
 function CopLogicTravel._get_all_paths(data)
 	return {
 		advance_path = data.internal_data.advance_path
 	}
 end
 
--- Lines 1038-1040
+-- Lines 1047-1049
 function CopLogicTravel._set_verified_paths(data, verified_paths)
 	data.internal_data.advance_path = verified_paths.advance_path
 end
 
--- Lines 1044-1051
+-- Lines 1053-1060
 function CopLogicTravel.chk_should_turn(data, my_data)
 	return not my_data.advancing and not my_data.turning and not my_data.has_old_action and not data.unit:movement():chk_action_forbidden("turn") and (not my_data.coarse_path or my_data.coarse_path_index < #my_data.coarse_path - 1 or not data.objective.rot)
 end
 
--- Lines 1055-1142
+-- Lines 1064-1151
 function CopLogicTravel.complete_coarse_path(data, my_data, coarse_path)
 	local first_seg_id = coarse_path[1][1]
 	local current_seg_id = data.unit:movement():nav_tracker():nav_segment()
@@ -1185,7 +1187,7 @@ function CopLogicTravel.complete_coarse_path(data, my_data, coarse_path)
 	return 1
 end
 
--- Lines 1146-1165
+-- Lines 1155-1174
 function CopLogicTravel._chk_close_to_criminal(data, my_data)
 	if my_data.close_to_criminal == nil then
 		my_data.close_to_criminal = false
@@ -1207,7 +1209,7 @@ function CopLogicTravel._chk_close_to_criminal(data, my_data)
 	return my_data.close_to_criminal
 end
 
--- Lines 1167-1201
+-- Lines 1176-1210
 function CopLogicTravel.chk_group_ready_to_move(data, my_data)
 	local my_objective = data.objective
 
@@ -1244,7 +1246,7 @@ function CopLogicTravel.chk_group_ready_to_move(data, my_data)
 	return true
 end
 
--- Lines 1205-1249
+-- Lines 1214-1258
 function CopLogicTravel.apply_wall_offset_to_cover(data, my_data, cover, wall_fwd_offset)
 	local to_pos_fwd = tmp_vec1
 
@@ -1281,7 +1283,7 @@ function CopLogicTravel.apply_wall_offset_to_cover(data, my_data, cover, wall_fw
 	return collision and ray_params.trace[1] or mvector3.copy(to_pos_bwd)
 end
 
--- Lines 1253-1298
+-- Lines 1262-1307
 function CopLogicTravel._find_cover(data, search_nav_seg, near_pos)
 	local cover = nil
 	local search_area = managers.groupai:state():get_area_from_nav_seg_id(search_nav_seg)
@@ -1322,7 +1324,7 @@ function CopLogicTravel._find_cover(data, search_nav_seg, near_pos)
 	return cover
 end
 
--- Lines 1302-1328
+-- Lines 1311-1337
 function CopLogicTravel._get_allowed_travel_nav_segs(data, my_data, to_pos)
 	local nav_segs = {}
 	local added_segs = {}
@@ -1361,7 +1363,7 @@ function CopLogicTravel._get_allowed_travel_nav_segs(data, my_data, to_pos)
 	return nav_segs
 end
 
--- Lines 1332-1362
+-- Lines 1341-1371
 function CopLogicTravel._check_start_path_ahead(data)
 	local my_data = data.internal_data
 
@@ -1387,7 +1389,7 @@ function CopLogicTravel._check_start_path_ahead(data)
 	data.unit:brain():search_for_path_from_pos(my_data.advance_path_search_id, from_pos, to_pos, prio, nil, nav_segs)
 end
 
--- Lines 1366-1376
+-- Lines 1375-1385
 function CopLogicTravel.get_pathing_prio(data)
 	local prio = nil
 	local objective = data.objective
@@ -1403,7 +1405,7 @@ function CopLogicTravel.get_pathing_prio(data)
 	return prio
 end
 
--- Lines 1380-1458
+-- Lines 1389-1467
 function CopLogicTravel._get_exact_move_pos(data, nav_index)
 	local my_data = data.internal_data
 	local objective = data.objective
@@ -1502,7 +1504,7 @@ function CopLogicTravel._get_exact_move_pos(data, nav_index)
 	return to_pos
 end
 
--- Lines 1462-1484
+-- Lines 1471-1493
 function CopLogicTravel._on_destination_reached(data)
 	local objective = data.objective
 	objective.in_place = true
@@ -1532,7 +1534,7 @@ function CopLogicTravel._on_destination_reached(data)
 	data.logic.on_new_objective(data)
 end
 
--- Lines 1488-1506
+-- Lines 1497-1515
 function CopLogicTravel._chk_start_pathing_to_next_nav_point(data, my_data)
 	if not CopLogicTravel.chk_group_ready_to_move(data, my_data) then
 		return
@@ -1546,7 +1548,7 @@ function CopLogicTravel._chk_start_pathing_to_next_nav_point(data, my_data)
 	data.unit:brain():search_for_path(my_data.advance_path_search_id, to_pos, prio, nil, nav_segs)
 end
 
--- Lines 1510-1525
+-- Lines 1519-1534
 function CopLogicTravel._begin_coarse_pathing(data, my_data)
 	local verify_clbk = nil
 
@@ -1567,7 +1569,7 @@ function CopLogicTravel._begin_coarse_pathing(data, my_data)
 	end
 end
 
--- Lines 1529-1567
+-- Lines 1538-1576
 function CopLogicTravel._chk_begin_advance(data, my_data)
 	if data.unit:movement():chk_action_forbidden("walk") then
 		return
@@ -1606,7 +1608,7 @@ function CopLogicTravel._chk_begin_advance(data, my_data)
 	CopLogicTravel._chk_request_action_walk_to_advance_pos(data, my_data, haste, end_rot, no_strafe, pose, end_pose)
 end
 
--- Lines 1571-1589
+-- Lines 1580-1598
 function CopLogicTravel._chk_stop_for_follow_unit(data, my_data)
 	local objective = data.objective
 

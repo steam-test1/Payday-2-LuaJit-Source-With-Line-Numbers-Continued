@@ -426,7 +426,7 @@ function CivilianLogicSurrender._delayed_intimidate_clbk(ignore_this, params)
 	end
 end
 
--- Lines 414-509
+-- Lines 414-521
 function CivilianLogicSurrender.on_alert(data, alert_data)
 	local alert_type = alert_data[1]
 
@@ -469,6 +469,12 @@ function CivilianLogicSurrender.on_alert(data, alert_data)
 
 	if anim_data.halt or anim_data.react or anim_data.stand then
 		scare_modifier = scare_modifier * 4
+	end
+
+	if data.is_tied then
+		local delta_t = data.t - (my_data.last_upd_t or data.t)
+		my_data.scare_meter = math.max(0, my_data.scare_meter - delta_t)
+		my_data.last_upd_t = data.t
 	end
 
 	my_data.scare_meter = math.min(my_data.scare_max, my_data.scare_meter + scare_modifier)
@@ -520,7 +526,7 @@ function CivilianLogicSurrender.on_alert(data, alert_data)
 	end
 end
 
--- Lines 513-608
+-- Lines 525-620
 function CivilianLogicSurrender._update_enemy_detection(data, my_data)
 	managers.groupai:state():on_unit_detection_updated(data.unit)
 
@@ -601,7 +607,7 @@ function CivilianLogicSurrender._update_enemy_detection(data, my_data)
 	my_data.last_upd_t = t
 end
 
--- Lines 612-618
+-- Lines 624-630
 function CivilianLogicSurrender.is_available_for_assignment(data, objective)
 	if objective and objective.forced then
 		return true

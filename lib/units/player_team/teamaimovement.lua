@@ -115,8 +115,23 @@ function TeamAIMovement:on_cuffed()
 	self._unit:character_damage():on_arrested()
 end
 
--- Lines 123-138
+-- Lines 123-155
 function TeamAIMovement:on_SPOOCed(enemy_unit)
+	local cooldown_id = "crew_ai_counter_strike"
+
+	if managers.player:is_custom_cooldown_not_active("team", cooldown_id) then
+		local cooldown = managers.player:crew_ability_upgrade_value(cooldown_id, tweak_data.upgrades.values.team.crew_ai_counter_strike[1][1])
+
+		managers.player:start_custom_cooldown("team", cooldown_id, cooldown)
+
+		local melee_weapon = self._unit:base():melee_weapon()
+		local is_weapon = melee_weapon == "weapon"
+
+		self:play_redirect(is_weapon and "melee" or "melee_item")
+
+		return "countered"
+	end
+
 	local state = "incapacitated"
 	state = managers.modifiers:modify_value("TeamAIMovement:OnSpooked", state)
 
@@ -129,7 +144,7 @@ function TeamAIMovement:on_SPOOCed(enemy_unit)
 	return true
 end
 
--- Lines 142-147
+-- Lines 159-164
 function TeamAIMovement:is_SPOOC_attack_allowed()
 	if alive(self.vehicle_unit) then
 		return false
@@ -138,34 +153,34 @@ function TeamAIMovement:is_SPOOC_attack_allowed()
 	return true
 end
 
--- Lines 151-155
+-- Lines 168-172
 function TeamAIMovement:on_discovered()
 	if self._cool then
 		self:_switch_to_not_cool()
 	end
 end
 
--- Lines 159-161
+-- Lines 176-178
 function TeamAIMovement:on_tase_ended()
 	self._unit:character_damage():on_tase_ended()
 end
 
--- Lines 165-167
+-- Lines 182-184
 function TeamAIMovement:tased()
 	return self._unit:anim_data().tased
 end
 
--- Lines 171-173
+-- Lines 188-190
 function TeamAIMovement:cool()
 	return self._cool
 end
 
--- Lines 177-179
+-- Lines 194-196
 function TeamAIMovement:downed()
 	return self._unit:interaction()._active
 end
 
--- Lines 183-221
+-- Lines 200-238
 function TeamAIMovement:set_cool(state)
 	state = state and true or false
 
@@ -205,14 +220,14 @@ function TeamAIMovement:set_cool(state)
 	end
 end
 
--- Lines 225-229
+-- Lines 242-246
 function TeamAIMovement:heat_clbk(state)
 	if self._cool and not state then
 		self:_switch_to_not_cool()
 	end
 end
 
--- Lines 233-259
+-- Lines 250-276
 function TeamAIMovement:_switch_to_not_cool(instant)
 	if not Network:is_server() then
 		if instant then
@@ -247,7 +262,7 @@ function TeamAIMovement:_switch_to_not_cool(instant)
 	end
 end
 
--- Lines 263-282
+-- Lines 280-299
 function TeamAIMovement:_switch_to_not_cool_clbk_func()
 	if self._switch_to_not_cool_clbk_id and self._cool then
 		if self._unit:inventory():is_mask_unit_loaded() then
@@ -275,17 +290,17 @@ function TeamAIMovement:_switch_to_not_cool_clbk_func()
 	end
 end
 
--- Lines 286-288
+-- Lines 303-305
 function TeamAIMovement:zipline_unit()
 	return nil
 end
 
--- Lines 290-292
+-- Lines 307-309
 function TeamAIMovement:current_state_name()
 	return nil
 end
 
--- Lines 296-310
+-- Lines 313-327
 function TeamAIMovement:pre_destroy(...)
 	TeamAIMovement.super.pre_destroy(self, ...)
 
@@ -302,7 +317,7 @@ function TeamAIMovement:pre_destroy(...)
 	end
 end
 
--- Lines 314-321
+-- Lines 331-338
 function TeamAIMovement:save(save_data)
 	TeamAIMovement.super.save(self, save_data)
 
@@ -310,7 +325,7 @@ function TeamAIMovement:save(save_data)
 	save_data.movement.should_stay = self._should_stay
 end
 
--- Lines 323-331
+-- Lines 340-348
 function TeamAIMovement:load(load_data)
 	TeamAIMovement.super.load(self, load_data)
 
@@ -319,7 +334,7 @@ function TeamAIMovement:load(load_data)
 	end
 end
 
--- Lines 334-347
+-- Lines 351-364
 function TeamAIMovement:set_should_stay(should_stay)
 	if self._should_stay ~= should_stay then
 		local panel = managers.criminals:character_data_by_unit(self._unit)
@@ -338,7 +353,7 @@ function TeamAIMovement:set_should_stay(should_stay)
 	end
 end
 
--- Lines 351-363
+-- Lines 368-380
 function TeamAIMovement:chk_action_forbidden(action_type)
 	if action_type == "walk" and self._should_stay then
 		if Network:is_server() and self._unit:brain():objective() and (self._unit:brain():objective().type == "revive" or self._unit:brain():objective().forced) then
@@ -351,7 +366,7 @@ function TeamAIMovement:chk_action_forbidden(action_type)
 	return TeamAIMovement.super.chk_action_forbidden(self, action_type)
 end
 
--- Lines 368-399
+-- Lines 385-416
 function TeamAIMovement:update(...)
 	TeamAIMovement.super.update(self, ...)
 

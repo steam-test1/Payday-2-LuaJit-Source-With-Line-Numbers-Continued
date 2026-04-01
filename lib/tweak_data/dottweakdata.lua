@@ -36,7 +36,7 @@ function DOTTweakData:_init_dot_entries_fire(entries, tweak_data)
 	end
 end
 
--- Lines 52-146
+-- Lines 52-149
 function DOTTweakData:_init_dot_entries_poison(entries)
 	local poison_entries = {}
 	entries.poison = poison_entries
@@ -98,7 +98,7 @@ function DOTTweakData:_init_dot_entries_poison(entries)
 	}
 end
 
--- Lines 148-168
+-- Lines 151-171
 function DOTTweakData:_process_dot_entries()
 	for variant, dot_tweaks in pairs(self.dot_entries) do
 		local default_entry = dot_tweaks["default_" .. variant]
@@ -121,7 +121,7 @@ function DOTTweakData:_process_dot_entries()
 	end
 end
 
--- Lines 170-207
+-- Lines 173-210
 function DOTTweakData:_setup_networking()
 	local names_lookup = {}
 	self._idx_to_name = names_lookup
@@ -158,17 +158,17 @@ function DOTTweakData:_setup_networking()
 	end
 end
 
--- Lines 209-211
+-- Lines 212-214
 function DOTTweakData:get_sync_index_from_name(tweak_name)
 	return self._name_to_idx[tweak_name]
 end
 
--- Lines 213-215
+-- Lines 216-218
 function DOTTweakData:get_name_from_sync_index(tweak_idx)
 	return self._idx_to_name[tweak_idx]
 end
 
--- Lines 217-229
+-- Lines 220-232
 function DOTTweakData:get_dot_data(tweak_name)
 	for variant, dot_entries in pairs(self.dot_entries) do
 		if dot_entries[tweak_name] then

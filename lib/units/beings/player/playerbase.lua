@@ -196,7 +196,7 @@ function PlayerBase:set_visible(visible)
 	end
 end
 
--- Lines 199-229
+-- Lines 199-208
 function PlayerBase:_setup_hud()
 	if not managers.hud:exists(self.PLAYER_HUD) then
 		managers.hud:load_hud(self.PLAYER_HUD, false, false, true, {})
@@ -207,11 +207,11 @@ function PlayerBase:_setup_hud()
 	end
 end
 
--- Lines 233-234
+-- Lines 212-213
 function PlayerBase:_equip_default_weapon()
 end
 
--- Lines 238-242
+-- Lines 217-221
 function PlayerBase:_setup_controller()
 	self._controller = managers.controller:create_controller("player_" .. tostring(self._id), nil, false)
 
@@ -219,17 +219,17 @@ function PlayerBase:_setup_controller()
 	managers.controller:set_ingame_mode("main")
 end
 
--- Lines 246-248
+-- Lines 225-227
 function PlayerBase:id()
 	return self._id
 end
 
--- Lines 252-254
+-- Lines 231-233
 function PlayerBase:nick_name()
 	return managers.network:session():local_peer():name()
 end
 
--- Lines 258-271
+-- Lines 237-250
 function PlayerBase:set_controller_enabled(enabled)
 	if not self._controller then
 		return
@@ -248,14 +248,14 @@ function PlayerBase:set_controller_enabled(enabled)
 	end
 end
 
--- Lines 273-275
+-- Lines 252-254
 function PlayerBase:controller()
 	return self._controller
 end
 
 local on_ladder_footstep_material = Idstring("steel")
 
--- Lines 280-312
+-- Lines 259-291
 function PlayerBase:anim_data_clbk_footstep(foot)
 	local obj = self._unit:orientation_object()
 	local proj_dir = math.UP
@@ -272,12 +272,12 @@ function PlayerBase:anim_data_clbk_footstep(foot)
 	self._unit:sound():play_footstep(foot, material_name)
 end
 
--- Lines 316-318
+-- Lines 295-297
 function PlayerBase:get_rumble_position()
 	return self._unit:position() + math.UP * 100
 end
 
--- Lines 322-335
+-- Lines 301-314
 function PlayerBase:replenish()
 	for id, weapon in pairs(self._unit:inventory():available_selections()) do
 		if alive(weapon.unit) then
@@ -289,17 +289,17 @@ function PlayerBase:replenish()
 	self._unit:character_damage():replenish()
 end
 
--- Lines 339-341
+-- Lines 318-320
 function PlayerBase:suspicion_settings()
 	return self._suspicion_settings
 end
 
--- Lines 345-347
+-- Lines 324-326
 function PlayerBase:detection_settings()
 	return self._detection_settings
 end
 
--- Lines 351-365
+-- Lines 330-344
 function PlayerBase:set_suspicion_multiplier(reason, multiplier)
 	self._suspicion_settings.multipliers[reason] = multiplier
 	local buildup_mul = self._suspicion_settings.init_buildup_mul
@@ -317,7 +317,7 @@ function PlayerBase:set_suspicion_multiplier(reason, multiplier)
 	self._suspicion_settings.range_mul = range_mul
 end
 
--- Lines 369-380
+-- Lines 348-359
 function PlayerBase:set_detection_multiplier(reason, multiplier)
 	self._detection_settings.multipliers[reason] = multiplier
 	local delay_mul = self._detection_settings.init_delay_mul
@@ -332,12 +332,12 @@ function PlayerBase:set_detection_multiplier(reason, multiplier)
 	self._detection_settings.range_mul = range_mul
 end
 
--- Lines 384-386
+-- Lines 363-365
 function PlayerBase:arrest_settings()
 	return tweak_data.player.arrest
 end
 
--- Lines 390-397
+-- Lines 369-376
 function PlayerBase:_unregister()
 	if not self._unregistered then
 		self._unit:movement():attention_handler():set_attention(nil)
@@ -347,7 +347,7 @@ function PlayerBase:_unregister()
 	end
 end
 
--- Lines 401-427
+-- Lines 380-406
 function PlayerBase:pre_destroy(unit)
 	self:_unregister()
 	UnitBase.pre_destroy(self, unit)
@@ -380,17 +380,17 @@ function PlayerBase:pre_destroy(unit)
 	unit:character_damage():pre_destroy()
 end
 
--- Lines 435-437
+-- Lines 414-416
 function PlayerBase:upgrade_value(category, upgrade)
 	return managers.player:upgrade_value_nil(category, upgrade)
 end
 
--- Lines 439-441
+-- Lines 418-420
 function PlayerBase:upgrade_level(category, upgrade)
 	return managers.player:upgrade_level_nil(category, upgrade)
 end
 
--- Lines 445-447
+-- Lines 424-426
 function PlayerBase:character_name()
 	return managers.criminals:character_name_by_unit(self._unit)
 end

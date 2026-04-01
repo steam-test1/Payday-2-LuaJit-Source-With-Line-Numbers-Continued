@@ -2,7 +2,7 @@ LootDropTweakData = LootDropTweakData or class()
 
 require("lib/tweak_data/GeneratedLootDropTweakData")
 
--- Lines 5-2528
+-- Lines 5-2556
 function LootDropTweakData:init(tweak_data)
 	self:_init_card_types()
 
@@ -11,7 +11,6 @@ function LootDropTweakData:init(tweak_data)
 		BASE = 35,
 		HUMAN_STEP_MODIFIER = 10
 	}
-	self.joker_chance = 0
 	self.level_limit = 1
 	self.risk_pc_multiplier = {
 		0,
@@ -148,12 +147,13 @@ function LootDropTweakData:init(tweak_data)
 	}
 
 	for i = min, max, 10 do
-		local cash = math.lerp(range.cash[1], range.cash[2], i / max)
-		local weapon_mods = math.lerp(range.weapon_mods[1], range.weapon_mods[2], i / max)
-		local textures = math.lerp(range.textures[1], range.textures[2], i / max)
-		local materials = math.lerp(range.materials[1], range.materials[2], i / max)
-		local masks = math.lerp(range.masks[1], range.masks[2], i / max)
-		local xp = math.lerp(range.xp[1], range.xp[2], i / max)
+		local i_max = i / max
+		local cash = math.lerp(range.cash[1], range.cash[2], i_max)
+		local weapon_mods = math.lerp(range.weapon_mods[1], range.weapon_mods[2], i_max)
+		local textures = math.lerp(range.textures[1], range.textures[2], i_max)
+		local materials = math.lerp(range.materials[1], range.materials[2], i_max)
+		local masks = math.lerp(range.masks[1], range.masks[2], i_max)
+		local xp = math.lerp(range.xp[1], range.xp[2], i_max)
 		self.WEIGHTED_TYPE_CHANCE[i] = {
 			cash = cash,
 			weapon_mods = weapon_mods,
@@ -1996,7 +1996,7 @@ function LootDropTweakData:init(tweak_data)
 	self:_create_global_value_list_map()
 end
 
--- Lines 2533-2567
+-- Lines 2561-2604
 function LootDropTweakData:_init_card_types()
 	self.type_to_card_fallback = "upcard_random"
 	self.type_to_card = {
@@ -2010,6 +2010,14 @@ function LootDropTweakData:_init_card_types()
 		weapon_skins = "upcard_cosmetic",
 		weapon_bonus = "upcard_weapon_bonus"
 	}
+	self.card_to_drop = {
+		cash = 3,
+		materials = 5,
+		xp = 4,
+		weapon_mods = 2,
+		textures = 6,
+		masks = 1
+	}
 	self.card_fakes = {
 		"masks",
 		"weapon_mods",
@@ -2021,7 +2029,7 @@ function LootDropTweakData:_init_card_types()
 	}
 end
 
--- Lines 2569-2574
+-- Lines 2606-2611
 function LootDropTweakData:_create_global_value_list_map()
 	self.global_value_list_map = {}
 

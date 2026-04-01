@@ -1,4 +1,4 @@
--- Lines 5-2511
+-- Lines 5-2551
 function LootDropTweakData:init_generated(tweak_data)
 	self.global_values.a10th = {
 		name_id = "bm_global_value_a10th",
@@ -1678,6 +1678,22 @@ function LootDropTweakData:init_generated(tweak_data)
 		track = true,
 		sort_number = 300,
 		category = "dlc"
+	}
+	self.global_values.wel = {
+		name_id = "bm_global_value_wel",
+		desc_id = "menu_l_global_value_wel",
+		unlock_id = "bm_global_value_wel_unlock",
+		color = tweak_data.screen_colors.dlc_color,
+		dlc = true,
+		free = true,
+		hide_unavailable = false,
+		chance = 1,
+		value_multiplier = 1,
+		durability_multiplier = 1,
+		drops = true,
+		track = true,
+		sort_number = 300,
+		category = "normal"
 	}
 	self.global_values.xm20 = {
 		name_id = "bm_global_value_xm20",

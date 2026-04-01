@@ -424,7 +424,7 @@ function CivilianLogicIdle._upd_detection(data)
 	CopLogicBase.queue_task(my_data, my_data.detection_task_key, CivilianLogicIdle._upd_detection, data, data.t + delay)
 end
 
--- Lines 413-419
+-- Lines 413-420
 function CivilianLogicIdle.is_available_for_assignment(data, objective)
 	if objective and objective.forced then
 		return true
@@ -435,7 +435,7 @@ function CivilianLogicIdle.is_available_for_assignment(data, objective)
 	return (not my_data.acting or data.unit:anim_data().act_idle) and not my_data.exiting and not my_data.delayed_alert_id
 end
 
--- Lines 423-430
+-- Lines 424-431
 function CivilianLogicIdle.anim_clbk(data, info_type)
 	if info_type == "reset_attention" and data.internal_data.idle_attention then
 		data.internal_data.idle_attention = nil
@@ -444,7 +444,7 @@ function CivilianLogicIdle.anim_clbk(data, info_type)
 	end
 end
 
--- Lines 434-452
+-- Lines 435-453
 function CivilianLogicIdle.clbk_action_timeout(ignore_this, data)
 	local my_data = data.internal_data
 
@@ -468,7 +468,7 @@ function CivilianLogicIdle.clbk_action_timeout(ignore_this, data)
 	end
 end
 
--- Lines 472-496
+-- Lines 473-497
 function CivilianLogicIdle.is_obstructed(data, aggressor_unit)
 	if data.unit:movement():chk_action_forbidden("walk") and not data.unit:anim_data().act_idle then
 		return
@@ -497,7 +497,7 @@ function CivilianLogicIdle.is_obstructed(data, aggressor_unit)
 	end
 end
 
--- Lines 500-555
+-- Lines 501-556
 function CivilianLogicIdle._get_priority_attention(data, attention_objects)
 	local best_target, best_target_priority, best_target_reaction = nil
 
@@ -544,7 +544,7 @@ function CivilianLogicIdle._get_priority_attention(data, attention_objects)
 	return best_target, best_target_reaction
 end
 
--- Lines 559-598
+-- Lines 560-599
 function CivilianLogicIdle._set_attention_obj(data, new_att_obj, new_reaction)
 	local old_att_obj = data.attention_obj
 	data.attention_obj = new_att_obj

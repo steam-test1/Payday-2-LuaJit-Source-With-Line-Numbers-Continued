@@ -285,7 +285,7 @@ function ActionSpooc:_strike()
 	self:_set_updator("_upd_strike_first_frame")
 end
 
--- Lines 288-295
+-- Lines 288-294
 function ActionSpooc:_wait()
 	self._end_of_path = true
 
@@ -296,7 +296,7 @@ function ActionSpooc:_wait()
 	end
 end
 
--- Lines 299-341
+-- Lines 298-340
 function ActionSpooc:_upd_strike_first_frame(t)
 	if self._is_local and self:_chk_target_invalid() then
 		if Network:is_server() then
@@ -346,7 +346,7 @@ function ActionSpooc:_upd_strike_first_frame(t)
 	self:_set_updator("_upd_striking")
 end
 
--- Lines 345-389
+-- Lines 344-388
 function ActionSpooc:_upd_chase_path()
 	self._chase_tracker = self._chase_tracker or self._target_unit:movement():nav_tracker()
 	local ray_params = {
@@ -394,7 +394,7 @@ function ActionSpooc:_upd_chase_path()
 	end
 end
 
--- Lines 393-513
+-- Lines 392-512
 function ActionSpooc:_upd_sprint(t)
 	if self._is_local and not self._was_interrupted then
 		if self:_chk_target_invalid() then
@@ -531,7 +531,7 @@ function ActionSpooc:_upd_sprint(t)
 	end
 end
 
--- Lines 517-524
+-- Lines 516-523
 function ActionSpooc:_upd_start_anim_first_frame(t)
 	local pose = self._ext_anim.pose or self._fallback_pose
 	local speed_mul = self._walk_velocity.fwd / self._walk_anim_velocities[pose][self._common_data.stance.name].run.fwd
@@ -540,7 +540,7 @@ function ActionSpooc:_upd_start_anim_first_frame(t)
 	self:_set_updator("_upd_start_anim")
 end
 
--- Lines 528-623
+-- Lines 527-622
 function ActionSpooc:_upd_start_anim(t)
 	if self._is_local and not self._was_interrupted then
 		if self:_chk_target_invalid() then
@@ -656,17 +656,17 @@ function ActionSpooc:_upd_start_anim(t)
 	end
 end
 
--- Lines 627-629
+-- Lines 626-628
 function ActionSpooc:_set_new_pos(dt)
 	CopActionWalk._set_new_pos(self, dt)
 end
 
--- Lines 633-635
+-- Lines 632-634
 function ActionSpooc:type()
 	return "spooc"
 end
 
--- Lines 639-666
+-- Lines 638-665
 function ActionSpooc:get_husk_interrupt_desc()
 	local old_action_desc = {
 		block_type = "walk",
@@ -699,12 +699,12 @@ function ActionSpooc:get_husk_interrupt_desc()
 	return old_action_desc
 end
 
--- Lines 670-672
+-- Lines 669-671
 function ActionSpooc:expired()
 	return self._expired
 end
 
--- Lines 676-683
+-- Lines 675-682
 function ActionSpooc:_expire()
 	self._expired = true
 
@@ -717,7 +717,7 @@ function ActionSpooc:_expire()
 	end
 end
 
--- Lines 687-711
+-- Lines 686-710
 function ActionSpooc:save(save_data)
 	save_data.type = "spooc"
 	save_data.body_part = 1
@@ -746,7 +746,7 @@ function ActionSpooc:save(save_data)
 	save_data.nav_path = sync_path
 end
 
--- Lines 715-793
+-- Lines 714-792
 function ActionSpooc:_nav_chk(t, dt)
 	local path = self._nav_path
 	local old_nav_index = self._nav_index
@@ -833,34 +833,34 @@ function ActionSpooc:_nav_chk(t, dt)
 	self._last_pos = mvector3.copy(new_pos)
 end
 
--- Lines 797-800
+-- Lines 796-799
 function ActionSpooc:_adjust_walk_anim_speed(dt, target_speed)
 	local state = self._machine:segment_state(Idstring("base"))
 
 	self._machine:set_speed(state, target_speed)
 end
 
--- Lines 804-806
+-- Lines 803-805
 function ActionSpooc:_adjust_move_anim(...)
 	return CopActionWalk._adjust_move_anim(self, ...)
 end
 
--- Lines 810-812
+-- Lines 809-811
 function ActionSpooc:_start_move_anim(...)
 	return CopActionWalk._start_move_anim(self, ...)
 end
 
--- Lines 816-818
+-- Lines 815-817
 function ActionSpooc:_stop_walk()
 	return CopActionWalk._stop_walk(self)
 end
 
--- Lines 823-849
+-- Lines 822-848
 function ActionSpooc:_husk_needs_speedup()
 	return false
 end
 
--- Lines 853-865
+-- Lines 852-864
 function ActionSpooc:_upd_wait(t)
 	if self._ext_anim.move then
 		self:_stop_walk()
@@ -877,7 +877,7 @@ function ActionSpooc:_upd_wait(t)
 	end
 end
 
--- Lines 869-925
+-- Lines 868-924
 function ActionSpooc:_upd_striking(t)
 	local target_unit = alive(self._strike_unit) and self._strike_unit or alive(self._target_unit) and self._target_unit
 	local my_pos = CopActionHurt._get_pos_clamped_to_graph(self, false)
@@ -937,7 +937,7 @@ function ActionSpooc:_upd_striking(t)
 	end
 end
 
--- Lines 929-959
+-- Lines 928-958
 function ActionSpooc:sync_stop(pos, stop_nav_index)
 	if self._action_desc.flying_strike then
 		self:_expire()
@@ -970,7 +970,7 @@ function ActionSpooc:sync_stop(pos, stop_nav_index)
 	end
 end
 
--- Lines 963-990
+-- Lines 962-989
 function ActionSpooc:sync_append_nav_point(nav_point)
 	if self._stop_pos and not self._nr_expected_nav_points then
 		return
@@ -1000,7 +1000,7 @@ function ActionSpooc:sync_append_nav_point(nav_point)
 	end
 end
 
--- Lines 994-1018
+-- Lines 993-1017
 function ActionSpooc:sync_strike(pos)
 	if self._stop_pos and not self._nr_expected_nav_points then
 		return
@@ -1028,24 +1028,24 @@ function ActionSpooc:sync_strike(pos)
 	end
 end
 
--- Lines 1022-1024
+-- Lines 1021-1023
 function ActionSpooc:chk_block(action_type, t)
 	return CopActionAct.chk_block(self, action_type, t)
 end
 
--- Lines 1028-1034
+-- Lines 1027-1033
 function ActionSpooc:chk_block_client(action_desc, action_type, t)
 	if CopActionAct.chk_block(self, action_type, t) and (not action_desc or action_desc.body_part ~= 3) then
 		return true
 	end
 end
 
--- Lines 1038-1040
+-- Lines 1037-1039
 function ActionSpooc:need_upd()
 	return true
 end
 
--- Lines 1044-1050
+-- Lines 1043-1049
 function ActionSpooc:_send_nav_point(nav_point)
 	self._ext_network:send("action_spooc_nav_point", nav_point, self._action_id)
 
@@ -1054,12 +1054,12 @@ function ActionSpooc:_send_nav_point(nav_point)
 	end
 end
 
--- Lines 1054-1057
+-- Lines 1053-1056
 function ActionSpooc:_set_updator(name)
 	self.update = self[name]
 end
 
--- Lines 1061-1073
+-- Lines 1060-1072
 function ActionSpooc:on_attention(attention)
 	if self._target_unit and attention and attention.unit and attention.unit:key() == self._target_unit:key() then
 		return
@@ -1072,17 +1072,17 @@ function ActionSpooc:on_attention(attention)
 	self._target_unit = nil
 end
 
--- Lines 1077-1079
+-- Lines 1076-1078
 function ActionSpooc:complete()
 	return self._beating_end_t and self._beating_end_t < TimerManager:game():time() and (not self._action_desc.flying_strike or self._last_vel_z >= 0)
 end
 
--- Lines 1083-1085
+-- Lines 1082-1084
 function ActionSpooc:action_id()
 	return self._action_id
 end
 
--- Lines 1089-1238
+-- Lines 1088-1237
 function ActionSpooc:anim_act_clbk(anim_act)
 	if anim_act == "strike" then
 		local sound_string = "clk_punch_3rd_person_3p"
@@ -1222,7 +1222,7 @@ function ActionSpooc:anim_act_clbk(anim_act)
 	end
 end
 
--- Lines 1242-1282
+-- Lines 1241-1281
 function ActionSpooc.chk_can_start_spooc_sprint(unit, target_unit)
 	local enemy_tracker = target_unit:movement():nav_tracker()
 	local ray_params = {
@@ -1269,7 +1269,7 @@ function ActionSpooc.chk_can_start_spooc_sprint(unit, target_unit)
 	return true
 end
 
--- Lines 1286-1342
+-- Lines 1285-1341
 function ActionSpooc.chk_can_start_flying_strike(unit, target_unit)
 	local target_pos = target_unit:movement():m_pos()
 	local my_pos = unit:movement():m_pos()
@@ -1325,7 +1325,7 @@ function ActionSpooc.chk_can_start_flying_strike(unit, target_unit)
 	return true
 end
 
--- Lines 1346-1397
+-- Lines 1345-1396
 function ActionSpooc:_upd_flying_strike_first_frame(t)
 	local target_pos = nil
 
@@ -1381,7 +1381,7 @@ function ActionSpooc:_upd_flying_strike_first_frame(t)
 	self:_set_updator("_upd_flying_strike")
 end
 
--- Lines 1401-1472
+-- Lines 1400-1471
 function ActionSpooc:_upd_flying_strike(t)
 	if self._ext_anim.act then
 		local strike_data = self._flying_strike_data
@@ -1459,7 +1459,7 @@ function ActionSpooc:_upd_flying_strike(t)
 	end
 end
 
--- Lines 1476-1479
+-- Lines 1475-1478
 function ActionSpooc:_play_strike_camera_shake()
 	local vars = {
 		"melee_hit",
@@ -1469,24 +1469,24 @@ function ActionSpooc:_play_strike_camera_shake()
 	self._strike_unit:camera():play_shaker(vars[math.random(#vars)], 1)
 end
 
--- Lines 1483-1485
+-- Lines 1482-1484
 function ActionSpooc:has_striken()
 	return self._stroke_t and true or false
 end
 
--- Lines 1489-1491
+-- Lines 1488-1490
 function ActionSpooc:is_flying_strike()
 	return self._action_desc.flying_strike
 end
 
--- Lines 1495-1498
+-- Lines 1494-1497
 function ActionSpooc:_use_christmas_sounds()
 	local tweak = managers.job:current_level_data()
 
 	return tweak and tweak.is_christmas_heist
 end
 
--- Lines 1502-1515
+-- Lines 1501-1514
 function ActionSpooc:get_sound_event(sound)
 	local sound_events = self._unit:base():char_tweak().spooc_sound_events
 	local event = sound_events[sound]

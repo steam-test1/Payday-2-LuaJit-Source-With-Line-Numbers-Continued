@@ -722,7 +722,7 @@ function CustomSafehouseTweakData:_progress(progress_id, max_progress, data)
 	return self:_create_objective(data)
 end
 
--- Lines 763-1623
+-- Lines 763-1621
 function CustomSafehouseTweakData:_init_trophies(tweak_data)
 	self.trophies = {}
 
@@ -1536,7 +1536,7 @@ function CustomSafehouseTweakData:_init_trophies(tweak_data)
 	})
 end
 
--- Lines 1625-1632
+-- Lines 1623-1630
 function CustomSafehouseTweakData:get_trophy_data(id)
 	for idx, trophy in ipairs(self.trophies) do
 		if trophy.id == id then
@@ -1547,7 +1547,7 @@ function CustomSafehouseTweakData:get_trophy_data(id)
 	return self:get_daily_data(id)
 end
 
--- Lines 1634-1643
+-- Lines 1632-1641
 function CustomSafehouseTweakData:_verify_unique_heist(trophy_objective)
 	trophy_objective.completed_heists = trophy_objective.completed_heists or {}
 	local job_id = managers.job:current_job_id()
@@ -1561,7 +1561,7 @@ function CustomSafehouseTweakData:_verify_unique_heist(trophy_objective)
 	end
 end
 
--- Lines 1645-1995
+-- Lines 1643-1993
 function CustomSafehouseTweakData:_init_dailies(tweak_data)
 	self.dailies = {}
 
@@ -1889,7 +1889,7 @@ function CustomSafehouseTweakData:_init_dailies(tweak_data)
 	})
 end
 
--- Lines 1997-2003
+-- Lines 1995-2001
 function CustomSafehouseTweakData:get_daily_data(id)
 	for idx, daily in ipairs(self.dailies) do
 		if daily.id == id then
@@ -1898,7 +1898,7 @@ function CustomSafehouseTweakData:get_daily_data(id)
 	end
 end
 
--- Lines 2007-2224
+-- Lines 2005-2222
 function CustomSafehouseTweakData:_init_map(tweak_data)
 	self.map = {
 		size = 2000,
@@ -2123,7 +2123,7 @@ function CustomSafehouseTweakData:_init_map(tweak_data)
 	}
 end
 
--- Lines 2227-2362
+-- Lines 2225-2360
 function CustomSafehouseTweakData:_init_uno()
 	self.uno_achievements_pool = {
 		"armored_1",

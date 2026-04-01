@@ -201,12 +201,12 @@ function HUDAccessCamera:set_camera_name(name)
 	self._hud_panel:child("camera_name"):set_text(utf8.to_upper(name))
 end
 
--- Lines 243-245
+-- Lines 267-269
 function HUDAccessCamera:set_date(date)
 	self._hud_panel:child("date"):set_text(date)
 end
 
--- Lines 247-256
+-- Lines 271-280
 function HUDAccessCamera:_animate_date()
 	while self._active do
 		local dt = coroutine.yield()
@@ -217,7 +217,7 @@ function HUDAccessCamera:_animate_date()
 	end
 end
 
--- Lines 258-267
+-- Lines 282-291
 function HUDAccessCamera:draw_marker(i, pos)
 	self._markers = self._markers or {}
 
@@ -234,7 +234,7 @@ function HUDAccessCamera:draw_marker(i, pos)
 	self._markers[i]:set_center(pos.x, pos.y)
 end
 
--- Lines 269-278
+-- Lines 293-302
 function HUDAccessCamera:max_markers(amount)
 	while amount < #self._markers do
 		local obj = table.remove(self._markers, amount + 1)

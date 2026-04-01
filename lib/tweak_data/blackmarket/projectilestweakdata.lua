@@ -1,9 +1,9 @@
--- Lines 2-30
+-- Lines 2-39
 function BlackMarketTweakData:_init_bullets(tweak_data)
 	self.bullets = {}
 end
 
--- Lines 32-1037
+-- Lines 41-1088
 function BlackMarketTweakData:_init_projectiles(tweak_data)
 	self.projectiles = {
 		frag = {}
@@ -349,7 +349,7 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 		throwable = true,
 		texture_bundle_folder = "born",
 		dlc = "born",
-		max_amount = 3,
+		max_amount = 6,
 		anim_global_param = "projectile_four",
 		throw_allowed_expire_t = 0.15,
 		expire_t = 1.1,
@@ -815,12 +815,12 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 	self:_add_desc_from_name_macro(self.projectiles)
 end
 
--- Lines 1039-1041
+-- Lines 1090-1092
 function BlackMarketTweakData:get_projectiles_index()
 	return self._projectiles_index
 end
 
--- Lines 1043-1050
+-- Lines 1094-1101
 function BlackMarketTweakData:get_index_from_projectile_id(projectile_id)
 	for index, entry_name in ipairs(self._projectiles_index) do
 		if entry_name == projectile_id then
@@ -831,7 +831,7 @@ function BlackMarketTweakData:get_index_from_projectile_id(projectile_id)
 	return 0
 end
 
--- Lines 1052-1054
+-- Lines 1103-1105
 function BlackMarketTweakData:get_projectile_name_from_index(index)
 	return self._projectiles_index[index]
 end

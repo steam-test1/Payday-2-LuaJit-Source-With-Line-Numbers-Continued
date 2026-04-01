@@ -1,6 +1,6 @@
 EquipmentsTweakData = EquipmentsTweakData or class()
 
--- Lines 3-1300
+-- Lines 3-1336
 function EquipmentsTweakData:init()
 	self.sentry_id_strings = {
 		Idstring("units/payday2/equipment/gen_equipment_sentry/gen_equipment_sentry"),
@@ -190,7 +190,7 @@ function EquipmentsTweakData:init()
 		cable_tie = {
 			quantity = 2,
 			text_id = "debug_equipment_cable_tie",
-			max_quantity = 9,
+			max_quantity = 10,
 			icon = "equipment_cable_ties",
 			extra_quantity = {
 				upgrade = "quantity",

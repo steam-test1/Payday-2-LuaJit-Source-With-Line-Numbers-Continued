@@ -458,7 +458,7 @@ function WeaponDescription.get_weapon_ammo_info(weapon_id, extra_ammo, total_amm
 	return ammo_max_per_clip, ammo_max, ammo_data
 end
 
--- Lines 429-580
+-- Lines 429-583
 function WeaponDescription._get_skill_stats(name, category, slot, base_stats, mods_stats, silencer, single_mod, auto_mod, blueprint)
 	local skill_stats = {}
 	local tweak_stats = tweak_data.weapon.stats
@@ -618,7 +618,7 @@ function WeaponDescription._get_skill_stats(name, category, slot, base_stats, mo
 	return skill_stats
 end
 
--- Lines 582-743
+-- Lines 585-746
 function WeaponDescription._get_mods_stats(name, base_stats, equipped_mods, bonus_stats)
 	local mods_stats = {}
 	local weapon_tweak = tweak_data.weapon[name]
@@ -784,7 +784,7 @@ function WeaponDescription._get_mods_stats(name, base_stats, equipped_mods, bonu
 	return mods_stats
 end
 
--- Lines 745-835
+-- Lines 748-838
 function WeaponDescription._get_base_stats(name)
 	local base_stats = {}
 	local index = nil
@@ -877,7 +877,7 @@ function WeaponDescription._get_base_stats(name)
 	return base_stats
 end
 
--- Lines 837-881
+-- Lines 840-885
 function WeaponDescription._get_stats(name, category, slot, blueprint)
 	local equipped_mods = nil
 	local silencer = false
@@ -900,7 +900,7 @@ function WeaponDescription._get_stats(name, category, slot, blueprint)
 		if equipped_mods then
 			silencer = managers.weapon_factory:has_perk("silencer", factory_id, equipped_mods)
 			single_mod = managers.weapon_factory:has_perk("fire_mode_single", factory_id, equipped_mods)
-			auto_mod = managers.weapon_factory:has_perk("fire_mode_auto", factory_id, equipped_mods)
+			auto_mod = managers.weapon_factory:has_perk("fire_mode_auto", factory_id, equipped_mods) or managers.weapon_factory:has_perk("fire_mode_burst", factory_id, equipped_mods)
 		end
 	end
 
@@ -921,7 +921,7 @@ function WeaponDescription._get_stats(name, category, slot, blueprint)
 	return base_stats, mods_stats, skill_stats
 end
 
--- Lines 883-902
+-- Lines 887-906
 function WeaponDescription.get_stats_for_mod(mod_name, weapon_name, category, slot)
 	local equipped_mods = nil
 	local blueprint = managers.blackmarket:get_weapon_blueprint(category, slot)
@@ -942,7 +942,7 @@ function WeaponDescription.get_stats_for_mod(mod_name, weapon_name, category, sl
 	return WeaponDescription._get_weapon_mod_stats(mod_name, weapon_name, base_stats, mods_stats, equipped_mods)
 end
 
--- Lines 904-1070
+-- Lines 908-1074
 function WeaponDescription._get_weapon_mod_stats(mod_name, weapon_name, base_stats, mods_stats, equipped_mods)
 	local tweak_stats = tweak_data.weapon.stats
 	local tweak_factory = tweak_data.weapon.factory.parts

@@ -393,7 +393,7 @@ function TweakData:index_to_menu_sync_state(index)
 	return self.menu_sync_states[index]
 end
 
--- Lines 416-2878
+-- Lines 416-2894
 function TweakData:init()
 	self.max_players = 4
 	self.difficulties = {
@@ -921,10 +921,10 @@ function TweakData:init()
 
 	self:set_menu_scale()
 
-	local orange = Vector3(204, 161, 102) / 255
 	local green = Vector3(194, 252, 151) / 255
-	local brown = Vector3(178, 104, 89) / 255
 	local blue = Vector3(120, 183, 204) / 255
+	local brown = Vector3(178, 104, 89) / 255
+	local orange = Vector3(204, 161, 102) / 255
 	local team_ai = Vector3(0.2, 0.8, 1)
 	self.peer_vector_colors = {
 		green,
@@ -3096,7 +3096,7 @@ Play the full version soon to get your full PAYDAY!]],
 	self:digest_tweak_data()
 end
 
--- Lines 2882-2908
+-- Lines 2898-2924
 function TweakData:load_movie_list()
 	self.movies = {
 		{
@@ -3124,7 +3124,7 @@ function TweakData:load_movie_list()
 	end
 end
 
--- Lines 2913-3019
+-- Lines 2929-3035
 function TweakData:init_screen_colors()
 	self.screen_colors = {
 		text = Color(255, 255, 255, 255) / 255,
@@ -3210,7 +3210,7 @@ function TweakData:init_screen_colors()
 	end
 end
 
--- Lines 3022-3053
+-- Lines 3038-3069
 function TweakData:init_accessibility_colors()
 	self.accessibility_colors = {
 		dot = {}
@@ -3242,14 +3242,14 @@ function TweakData:init_accessibility_colors()
 	self.accessibility_colors.screenflash.blurzone.gray_dark = Color(0.19607843137254902, 0.19607843137254902, 0.19607843137254902)
 end
 
--- Lines 3058-3136
+-- Lines 3074-3152
 function TweakData:free_dlc_list()
 	local free_dlcs = {}
 
 	return free_dlcs
 end
 
--- Lines 3146-3154
+-- Lines 3162-3170
 function TweakData:_execute_reload_clbks()
 	if self._reload_clbks then
 		for key, clbk_data in pairs(self._reload_clbks) do
@@ -3260,7 +3260,7 @@ function TweakData:_execute_reload_clbks()
 	end
 end
 
--- Lines 3158-3161
+-- Lines 3174-3177
 function TweakData:add_reload_callback(object, func)
 	self._reload_clbks = self._reload_clbks or {}
 
@@ -3270,7 +3270,7 @@ function TweakData:add_reload_callback(object, func)
 	})
 end
 
--- Lines 3165-3174
+-- Lines 3181-3190
 function TweakData:remove_reload_callback(object)
 	if self._reload_clbks then
 		for i, k in ipairs(self._reload_clbks) do
@@ -3283,7 +3283,7 @@ function TweakData:remove_reload_callback(object)
 	end
 end
 
--- Lines 3178-3354
+-- Lines 3194-3370
 function TweakData:set_scale()
 	local lang_key = SystemInfo:language():key()
 	local lang_mods = {
@@ -3472,7 +3472,7 @@ function TweakData:set_scale()
 	}
 end
 
--- Lines 3356-3535
+-- Lines 3372-3551
 function TweakData:set_menu_scale()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -3586,7 +3586,7 @@ function TweakData:set_menu_scale()
 	}
 end
 
--- Lines 3537-3617
+-- Lines 3553-3633
 function TweakData:set_hud_values()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -3665,7 +3665,7 @@ function TweakData:set_hud_values()
 	}
 end
 
--- Lines 3673-3677
+-- Lines 3690-3694
 function TweakData:resolution_changed()
 	self:set_scale()
 	self:set_menu_scale()
@@ -3683,7 +3683,7 @@ if (not tweak_data or tweak_data.RELOAD) and managers.dlc then
 	end
 end
 
--- Lines 3694-3909
+-- Lines 3711-3926
 function TweakData:get_controller_help_coords()
 	if managers.controller:get_default_wrapper_type() == "pc" or managers.controller:get_default_wrapper_type() == "steam" then
 		return false

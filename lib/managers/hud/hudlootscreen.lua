@@ -7,7 +7,7 @@ local function peer_id_str(peer_id)
 	return "peer" .. tostring(peer_id)
 end
 
--- Lines 12-141
+-- Lines 12-145
 function HUDLootScreen:init(hud, workspace, saved_lootdrop, saved_selected, saved_chosen, saved_setup)
 	self._backdrop = MenuBackdropGUI:new(workspace)
 
@@ -143,7 +143,7 @@ function HUDLootScreen:init(hud, workspace, saved_lootdrop, saved_selected, save
 	panel:child("card_info"):hide()
 end
 
--- Lines 143-251
+-- Lines 147-251
 function HUDLootScreen:create_peer(peers_panel, peer_id)
 	local massive_font = tweak_data.menu.pd2_massive_font
 	local large_font = tweak_data.menu.pd2_large_font
@@ -360,7 +360,7 @@ function HUDLootScreen:set_num_visible(peers_num)
 	end
 end
 
--- Lines 267-272
+-- Lines 267-271
 function HUDLootScreen:make_fine_text(text)
 	local x, y, w, h = text:text_rect()
 
@@ -368,7 +368,7 @@ function HUDLootScreen:make_fine_text(text)
 	text:set_position(math.round(text:x()), math.round(text:y()))
 end
 
--- Lines 274-293
+-- Lines 273-292
 function HUDLootScreen:create_selected_panel(peer_id)
 	local panel = self._peers_panel:child(peer_id_str(peer_id))
 	local selected_panel = panel:panel({
@@ -399,7 +399,7 @@ function HUDLootScreen:create_selected_panel(peer_id)
 	glow_circle:set_center(selected_panel:w() * 0.5, selected_panel:h() * 0.5)
 	glow_stretch:set_center(selected_panel:w() * 0.5, selected_panel:h() * 0.5)
 
-	-- Lines 284-290
+	-- Lines 283-289
 	local function anim_func(o)
 		while true do
 			over(1, function (p)
@@ -413,7 +413,7 @@ function HUDLootScreen:create_selected_panel(peer_id)
 	return selected_panel
 end
 
--- Lines 295-320
+-- Lines 294-316
 function HUDLootScreen:set_selected(peer_id, selected)
 	local panel = self._peers_panel:child(peer_id_str(peer_id))
 	local selected_panel = panel:child("selected_panel") or self:create_selected_panel(peer_id)
@@ -441,12 +441,12 @@ function HUDLootScreen:set_selected(peer_id, selected)
 	end
 end
 
--- Lines 322-324
+-- Lines 318-320
 function HUDLootScreen:add_callback(key, clbk)
 	self._callback_handler[key] = clbk
 end
 
--- Lines 326-334
+-- Lines 322-330
 function HUDLootScreen:clear_other_peers(peer_id)
 	peer_id = peer_id or self:get_local_peer_id()
 
@@ -457,7 +457,7 @@ function HUDLootScreen:clear_other_peers(peer_id)
 	end
 end
 
--- Lines 336-344
+-- Lines 332-340
 function HUDLootScreen:check_all_ready()
 	local ready = true
 
@@ -470,7 +470,7 @@ function HUDLootScreen:check_all_ready()
 	return ready
 end
 
--- Lines 346-370
+-- Lines 342-367
 function HUDLootScreen:remove_peer(peer_id, reason)
 	Application:debug("HUDLootScreen:remove_peer( peer_id, reason )", peer_id, reason)
 
@@ -500,7 +500,7 @@ function HUDLootScreen:remove_peer(peer_id, reason)
 	}
 end
 
--- Lines 372-395
+-- Lines 369-392
 function HUDLootScreen:hide()
 	if self._active then
 		return
@@ -529,7 +529,7 @@ function HUDLootScreen:hide()
 	end
 end
 
--- Lines 397-433
+-- Lines 394-431
 function HUDLootScreen:show()
 	if not self._video and SystemInfo:platform() ~= Idstring("X360") then
 		local variant = nil
@@ -573,7 +573,7 @@ function HUDLootScreen:show()
 		color = Color.black
 	})
 
-	-- Lines 427-430
+	-- Lines 424-427
 	local function fade_out_anim(o)
 		over(0.5, function (p)
 			o:set_alpha(1 - p)
@@ -585,17 +585,17 @@ function HUDLootScreen:show()
 	managers.menu_component:lootdrop_is_now_active()
 end
 
--- Lines 435-437
+-- Lines 433-435
 function HUDLootScreen:is_active()
 	return self._active
 end
 
--- Lines 439-441
+-- Lines 437-439
 function HUDLootScreen:update_layout()
 	self._backdrop:_set_black_borders()
 end
 
--- Lines 443-533
+-- Lines 441-531
 function HUDLootScreen:make_cards(peer, max_pc, left_card, right_card)
 	if not self:is_active() then
 		self:show()
@@ -663,7 +663,7 @@ function HUDLootScreen:make_cards(peer, max_pc, left_card, right_card)
 		panel:child("card" .. i):show()
 	end
 
-	-- Lines 519-521
+	-- Lines 517-519
 	local function anim_fadein(o)
 		over(1, function (p)
 			o:set_alpha(p)
@@ -689,188 +689,164 @@ function HUDLootScreen:make_cards(peer, max_pc, left_card, right_card)
 	end
 end
 
--- Lines 535-683
+-- Lines 546-692
 function HUDLootScreen:make_lootdrop(lootdrop_data)
 	local peer = lootdrop_data[1]
+	local category = lootdrop_data[3]
+	local item_id = lootdrop_data[4]
 	local peer_id = peer and peer:id() or 1
-	self._peer_data[peer_id].lootdrops = lootdrop_data
-	self._peer_data[peer_id].active = true
-	self._peer_data[peer_id].wait_for_lootdrop = nil
+	local peer_data = self._peer_data[peer_id]
+	peer_data.lootdrops = lootdrop_data
+	peer_data.active = true
+	peer_data.wait_for_lootdrop = nil
 	local panel = self._peers_panel:child(peer_id_str(peer_id))
 	local item_panel = panel:child("item")
-	local item_id = lootdrop_data[4]
-	local category = lootdrop_data[3]
 
 	if category == "weapon_mods" or category == "weapon_bonus" then
 		category = "mods"
 	end
 
-	if category == "colors" then
-		local colors = tweak_data.blackmarket.colors[item_id].colors
-		local bg = item_panel:bitmap({
-			texture = "guis/textures/pd2/blackmarket/icons/colors/color_bg",
-			layer = 1,
-			w = panel:h(),
-			h = panel:h()
-		})
-		local c1 = item_panel:bitmap({
-			texture = "guis/textures/pd2/blackmarket/icons/colors/color_01",
-			layer = 0,
-			w = panel:h(),
-			h = panel:h()
-		})
-		local c2 = item_panel:bitmap({
-			texture = "guis/textures/pd2/blackmarket/icons/colors/color_02",
-			layer = 0,
-			w = panel:h(),
-			h = panel:h()
-		})
+	local texture_loaded_clbk = callback(self, self, "texture_loaded_clbk", {
+		peer_id,
+		category == "textures" and true or false
+	})
+	local texture_path, rarity_path = nil
 
-		c1:set_color(colors[1])
-		c2:set_color(colors[2])
+	if category == "textures" then
+		texture_path = tweak_data.blackmarket.textures[item_id].texture
+
+		if not texture_path then
+			Application:error("Pattern missing", "PEER", peer_id)
+
+			return
+		end
+	elseif category == "cash" then
+		texture_path = "guis/textures/pd2/blackmarket/cash_drop"
+	elseif category == "xp" then
+		texture_path = "guis/textures/pd2/blackmarket/xp_drop"
+	elseif category == "safes" then
+		local td = tweak_data.economy[category] and tweak_data.economy[category][item_id]
+
+		if td then
+			local guis_catalog = "guis/"
+			local bundle_folder = td.texture_bundle_folder
+
+			if bundle_folder then
+				guis_catalog = guis_catalog .. "dlcs/" .. tostring(bundle_folder) .. "/"
+			end
+
+			local path = category .. "/"
+			texture_path = guis_catalog .. path .. item_id
+			peer_data.steam_drop = true
+			peer_data.effects = {
+				show_wait = "lootdrop_safe_drop_show_wait",
+				show_item = "lootdrop_safe_drop_show_item",
+				flip_card = "lootdrop_safe_drop_flip_card"
+			}
+		else
+			texture_path = "guis/dlcs/cash/safes/default/safes/default_01"
+		end
+	elseif category == "weapon_skins" then
+		local weapon_id = managers.blackmarket:get_weapon_id_by_cosmetic_id(item_id)
+		texture_path, rarity_path = managers.blackmarket:get_weapon_icon_path(weapon_id, {
+			id = item_id
+		})
+	elseif category == "armor_skins" then
+		local skin_tweak = tweak_data.economy.armor_skins[item_id]
+		local guis_catalog = "guis/"
+		local bundle_folder = skin_tweak.texture_bundle_folder
+
+		if bundle_folder then
+			guis_catalog = guis_catalog .. "dlcs/" .. tostring(bundle_folder) .. "/"
+		end
+
+		texture_path = guis_catalog .. "armor_skins/" .. item_id
+		rarity_path = managers.blackmarket:get_cosmetic_rarity_bg(skin_tweak.rarity or "common")
+	elseif category == "drills" then
+		local td = tweak_data.economy[category] and tweak_data.economy[category][item_id]
+
+		if td then
+			local guis_catalog = "guis/"
+			local bundle_folder = td.texture_bundle_folder
+
+			if bundle_folder then
+				guis_catalog = guis_catalog .. "dlcs/" .. tostring(bundle_folder) .. "/"
+			end
+
+			local path = category .. "/"
+			texture_path = guis_catalog .. path .. item_id
+			peer_data.steam_drop = true
+			peer_data.effects = {
+				show_wait = "lootdrop_drill_drop_show_wait",
+				show_item = "lootdrop_drill_drop_show_item",
+				flip_card = "lootdrop_drill_drop_flip_card"
+			}
+		else
+			texture_path = "guis/dlcs/cash/safes/default/drills/default_01"
+		end
 	else
-		local texture_loaded_clbk = callback(self, self, "texture_loaded_clbk", {
-			peer_id,
-			category == "textures" and true or false
-		})
-		local texture_path, rarity_path = nil
+		local guis_catalog = "guis/"
+		local tweak_data_category = category == "mods" and "weapon_mods" or category
+		local guis_id = item_id
 
-		if category == "textures" then
-			texture_path = tweak_data.blackmarket.textures[item_id].texture
-
-			if not texture_path then
-				Application:error("Pattern missing", "PEER", peer_id)
-
-				return
-			end
-		elseif category == "cash" then
-			texture_path = "guis/textures/pd2/blackmarket/cash_drop"
-		elseif category == "xp" then
-			texture_path = "guis/textures/pd2/blackmarket/xp_drop"
-		elseif category == "safes" then
-			local td = tweak_data.economy[category] and tweak_data.economy[category][item_id]
-
-			if td then
-				local guis_catalog = "guis/"
-				local bundle_folder = td.texture_bundle_folder
-
-				if bundle_folder then
-					guis_catalog = guis_catalog .. "dlcs/" .. tostring(bundle_folder) .. "/"
-				end
-
-				local path = category .. "/"
-				texture_path = guis_catalog .. path .. item_id
-				self._peer_data[peer_id].steam_drop = true
-				self._peer_data[peer_id].effects = {
-					show_wait = "lootdrop_safe_drop_show_wait",
-					show_item = "lootdrop_safe_drop_show_item",
-					flip_card = "lootdrop_safe_drop_flip_card"
-				}
-			else
-				texture_path = "guis/dlcs/cash/safes/default/safes/default_01"
-			end
-		elseif category == "weapon_skins" then
-			local weapon_id = managers.blackmarket:get_weapon_id_by_cosmetic_id(item_id)
-			texture_path, rarity_path = managers.blackmarket:get_weapon_icon_path(weapon_id, {
-				id = item_id
-			})
-		elseif category == "armor_skins" then
-			local skin_tweak = tweak_data.economy.armor_skins[item_id]
-			local guis_catalog = "guis/"
-			local bundle_folder = skin_tweak.texture_bundle_folder
-
-			if bundle_folder then
-				guis_catalog = guis_catalog .. "dlcs/" .. tostring(bundle_folder) .. "/"
-			end
-
-			texture_path = guis_catalog .. "armor_skins/" .. item_id
-			rarity_path = managers.blackmarket:get_cosmetic_rarity_bg(skin_tweak.rarity or "common")
-		elseif category == "drills" then
-			local td = tweak_data.economy[category] and tweak_data.economy[category][item_id]
-
-			if td then
-				local guis_catalog = "guis/"
-				local bundle_folder = td.texture_bundle_folder
-
-				if bundle_folder then
-					guis_catalog = guis_catalog .. "dlcs/" .. tostring(bundle_folder) .. "/"
-				end
-
-				local path = category .. "/"
-				texture_path = guis_catalog .. path .. item_id
-				self._peer_data[peer_id].steam_drop = true
-				self._peer_data[peer_id].effects = {
-					show_wait = "lootdrop_drill_drop_show_wait",
-					show_item = "lootdrop_drill_drop_show_item",
-					flip_card = "lootdrop_drill_drop_flip_card"
-				}
-			else
-				texture_path = "guis/dlcs/cash/safes/default/drills/default_01"
-			end
-		else
-			local guis_catalog = "guis/"
-			local tweak_data_category = category == "mods" and "weapon_mods" or category
-			local guis_id = item_id
-
-			if tweak_data.blackmarket[tweak_data_category] and tweak_data.blackmarket[tweak_data_category][item_id] and tweak_data.blackmarket[tweak_data_category][item_id].guis_id then
-				guis_id = tweak_data.blackmarket[tweak_data_category][item_id].guis_id
-			end
-
-			local bundle_folder = tweak_data.blackmarket[tweak_data_category] and tweak_data.blackmarket[tweak_data_category][guis_id] and tweak_data.blackmarket[tweak_data_category][guis_id].texture_bundle_folder
-
-			if bundle_folder then
-				guis_catalog = guis_catalog .. "dlcs/" .. tostring(bundle_folder) .. "/"
-			end
-
-			texture_path = guis_catalog .. "textures/pd2/blackmarket/icons/" .. tostring(category) .. "/" .. tostring(guis_id)
+		if tweak_data.blackmarket[tweak_data_category] and tweak_data.blackmarket[tweak_data_category][item_id] and tweak_data.blackmarket[tweak_data_category][item_id].guis_id then
+			guis_id = tweak_data.blackmarket[tweak_data_category][item_id].guis_id
 		end
 
-		if rarity_path then
-			local rarity_bitmap = item_panel:bitmap({
-				blend_mode = "add",
-				texture = rarity_path
-			})
-			local texture_width = rarity_bitmap:texture_width()
-			local texture_height = rarity_bitmap:texture_height()
-			local panel_width = item_panel:w()
-			local panel_height = item_panel:h()
-			local tw = texture_width
-			local th = texture_height
-			local pw = panel_width
-			local ph = panel_height
+		local bundle_folder = tweak_data.blackmarket[tweak_data_category] and tweak_data.blackmarket[tweak_data_category][guis_id] and tweak_data.blackmarket[tweak_data_category][guis_id].texture_bundle_folder
 
-			if tw == 0 or th == 0 then
-				Application:error("[MenuNodeOpenContainerGui] BG Texture size error!:", "width", tw, "height", th)
-
-				tw = 1
-				th = 1
-			end
-
-			local sw = math.min(pw, ph * tw / th)
-			local sh = math.min(ph, pw / (tw / th))
-
-			rarity_bitmap:set_size(math.round(sw) * 2, math.round(sh) * 2)
-			rarity_bitmap:set_center(item_panel:w() * 0.5, item_panel:h() * 0.5)
+		if bundle_folder then
+			guis_catalog = guis_catalog .. "dlcs/" .. tostring(bundle_folder) .. "/"
 		end
 
-		Application:debug("Requesting Texture", texture_path, "PEER", peer_id)
-
-		if DB:has(Idstring("texture"), texture_path) then
-			TextureCache:request(texture_path, "NORMAL", texture_loaded_clbk, 100)
-		else
-			Application:error("[HUDLootScreen]", "Texture not in DB", texture_path, peer_id)
-			item_panel:rect({
-				color = Color.red
-			})
-		end
+		texture_path = guis_catalog .. "textures/pd2/blackmarket/icons/" .. tostring(category) .. "/" .. tostring(guis_id)
 	end
 
-	if not self._peer_data[peer_id].wait_for_choice then
+	if rarity_path then
+		local rarity_bitmap = item_panel:bitmap({
+			blend_mode = "add",
+			texture = rarity_path
+		})
+		local texture_width = rarity_bitmap:texture_width()
+		local texture_height = rarity_bitmap:texture_height()
+		local panel_width = item_panel:w()
+		local panel_height = item_panel:h()
+		local tw = texture_width
+		local th = texture_height
+		local pw = panel_width
+		local ph = panel_height
+
+		if tw == 0 or th == 0 then
+			Application:error("[MenuNodeOpenContainerGui] BG Texture size error!:", "width", tw, "height", th)
+
+			tw = 1
+			th = 1
+		end
+
+		local sw = math.min(pw, ph * tw / th)
+		local sh = math.min(ph, pw / (tw / th))
+
+		rarity_bitmap:set_size(math.round(sw) * 2, math.round(sh) * 2)
+		rarity_bitmap:set_center(item_panel:w() * 0.5, item_panel:h() * 0.5)
+	end
+
+	Application:debug("Requesting Texture", texture_path, "PEER", peer_id)
+
+	if DB:has(Idstring("texture"), texture_path) then
+		TextureCache:request(texture_path, "NORMAL", texture_loaded_clbk, 100)
+	else
+		Application:error("[HUDLootScreen]", "Texture not in DB", texture_path, peer_id)
+		item_panel:rect({
+			color = Color.red
+		})
+	end
+
+	if not peer_data.wait_for_choice then
 		self:begin_flip_card(peer_id)
 	end
 end
 
--- Lines 685-737
+-- Lines 694-746
 function HUDLootScreen:texture_loaded_clbk(params, texture_idstring)
 	if not alive(self._peers_panel) then
 		TextureCache:unretrieve(texture_idstring)
@@ -933,23 +909,23 @@ function HUDLootScreen:texture_loaded_clbk(params, texture_idstring)
 	end
 end
 
--- Lines 739-834
+-- Lines 748-844
 function HUDLootScreen:begin_choose_card(peer_id, card_id)
-	if not self._peer_data[peer_id].active then
-		self._peer_data[peer_id].delayed_card_id = card_id
+	local peer_data = self._peer_data[peer_id]
+
+	if not peer_data.active then
+		peer_data.delayed_card_id = card_id
 
 		return
 	end
-
-	print("YOU CHOSE " .. card_id .. ", mr." .. peer_id)
 
 	local panel = self._peers_panel:child(peer_id_str(peer_id))
 
 	panel:stop()
 	panel:set_alpha(1)
 
-	local wait_for_lootdrop = self._peer_data[peer_id].wait_for_lootdrop
-	self._peer_data[peer_id].wait_t = not wait_for_lootdrop and 5
+	local wait_for_lootdrop = peer_data.wait_for_lootdrop
+	peer_data.wait_t = not wait_for_lootdrop and 5
 	local card_info_panel = panel:child("card_info")
 	local main_text = card_info_panel:child("main_text")
 
@@ -961,7 +937,7 @@ function HUDLootScreen:begin_choose_card(peer_id, card_id)
 
 	main_text:set_h(hh + 2)
 
-	local lootdrop_data = self._peer_data[peer_id].lootdrops
+	local lootdrop_data = peer_data.lootdrops
 	local item_category = lootdrop_data[3]
 	local item_id = lootdrop_data[4]
 	local item_pc = lootdrop_data[6]
@@ -979,14 +955,15 @@ function HUDLootScreen:begin_choose_card(peer_id, card_id)
 	cards[card_two] = left_pc
 	local card_three = #cards + 1
 	cards[card_three] = right_pc
-	self._peer_data[peer_id].chosen_card_id = wait_for_lootdrop and card_id
+	peer_data.chosen_card_id = wait_for_lootdrop and card_id
+	local possible_fakes = tweak_data.lootdrop.card_fakes
 
 	for i, pc in ipairs(cards) do
 		local my_card = i == card_id
 		local card_panel = panel:child("card" .. i)
 		local downcard = card_panel:child("downcard")
-		local joker = pc == 0 and tweak_data.lootdrop.joker_chance > 0
-		local card_id = tweak_data.lootdrop.type_to_card[my_card and item_category or table.random(tweak_data.lootdrop.card_fakes)]
+		local card_idx = my_card and item_category or possible_fakes[pc]
+		local card_id = tweak_data.lootdrop.type_to_card[card_idx]
 		local texture, rect, coords = tweak_data.hud_icons:get_icon_data(card_id or tweak_data.lootdrop.type_to_card_fallback)
 		local upcard = card_panel:bitmap({
 			name = "upcard",
@@ -1001,10 +978,6 @@ function HUDLootScreen:begin_choose_card(peer_id, card_id)
 
 		upcard:set_rotation(downcard:rotation())
 		upcard:set_shape(downcard:shape())
-
-		if joker then
-			upcard:set_color(Color(1, 0.8, 0.8))
-		end
 
 		if coords then
 			local tl = Vector3(coords[1][1], coords[1][2], 0)
@@ -1023,13 +996,14 @@ function HUDLootScreen:begin_choose_card(peer_id, card_id)
 	panel:child("card" .. card_two):animate(callback(self, self, "flipcard"), 5)
 	panel:child("card" .. card_three):animate(callback(self, self, "flipcard"), 5)
 
-	self._peer_data[peer_id].wait_for_choice = nil
+	peer_data.wait_for_choice = nil
 end
 
--- Lines 836-880
+-- Lines 846-893
 function HUDLootScreen:begin_flip_card(peer_id)
-	self._peer_data[peer_id].wait_t = 5
-	local lootdrop_data = self._peer_data[peer_id].lootdrops
+	local peer_data = self._peer_data[peer_id]
+	peer_data.wait_t = 5
+	local lootdrop_data = peer_data.lootdrops
 	local item_category = lootdrop_data[3]
 	local item_id = lootdrop_data[4]
 	local item_pc = lootdrop_data[6]
@@ -1052,7 +1026,7 @@ function HUDLootScreen:begin_flip_card(peer_id)
 
 	main_text:set_h(hh + 2)
 
-	local card_panel = panel:child("card" .. self._peer_data[peer_id].chosen_card_id)
+	local card_panel = panel:child("card" .. peer_data.chosen_card_id)
 	local upcard = card_panel:child("upcard")
 
 	upcard:set_image(texture)
@@ -1068,17 +1042,17 @@ function HUDLootScreen:begin_flip_card(peer_id)
 		upcard:set_texture_rect(unpack(rect))
 	end
 
-	self._peer_data[peer_id].chosen_card_id = nil
+	peer_data.chosen_card_id = nil
 end
 
--- Lines 882-885
+-- Lines 895-898
 function HUDLootScreen:debug_flip()
 	local card = self._peers_panel:child("peer1"):child("card1")
 
 	card:animate(callback(self, self, "flipcard"), 1.5)
 end
 
--- Lines 887-1014
+-- Lines 900-1027
 function HUDLootScreen:flipcard(card_panel, timer, done_clbk, peer_id, effects)
 	local downcard = card_panel:child("downcard")
 	local upcard = card_panel:child("upcard")
@@ -1220,7 +1194,7 @@ function HUDLootScreen:flipcard(card_panel, timer, done_clbk, peer_id, effects)
 	end)
 end
 
--- Lines 1016-1113
+-- Lines 1029-1126
 function HUDLootScreen:show_item(peer_id)
 	if not self._peer_data[peer_id].active then
 		return
@@ -1236,7 +1210,7 @@ function HUDLootScreen:show_item(peer_id)
 			child:set_center(panel:child("item"):w() * 0.5, panel:child("item"):h() * 0.5)
 		end
 
-		-- Lines 1029-1031
+		-- Lines 1042-1044
 		local function anim_fadein(o)
 			over(1, function (p)
 				o:set_alpha(p)
@@ -1330,7 +1304,7 @@ function HUDLootScreen:show_item(peer_id)
 	end
 end
 
--- Lines 1115-1144
+-- Lines 1128-1157
 function HUDLootScreen:update(t, dt)
 	for peer_id = 1, tweak_data.max_players do
 		if self._peer_data[peer_id].wait_t then
@@ -1362,12 +1336,12 @@ function HUDLootScreen:update(t, dt)
 	end
 end
 
--- Lines 1146-1148
+-- Lines 1159-1161
 function HUDLootScreen:fetch_local_lootdata()
 	return self._peer_data[self:get_local_peer_id()].lootdrops
 end
 
--- Lines 1150-1216
+-- Lines 1163-1229
 function HUDLootScreen:create_stars_giving_animation()
 	local lootdrops = self:fetch_local_lootdata()
 	local human_players = managers.network:session() and managers.network:session():amount_of_alive_players() or 1
@@ -1406,7 +1380,7 @@ function HUDLootScreen:create_stars_giving_animation()
 	star_reason_text:set_h(tweak_data.menu.pd2_medium_font_size)
 	star_reason_text:set_world_center_y(math.round(self._foreground_layer_safe:child("loot_text"):world_center_y()) + 2)
 
-	-- Lines 1186-1211
+	-- Lines 1199-1224
 	local function animation_func(o)
 		local texture, rect = tweak_data.hud_icons:get_icon_data("risk_pd")
 		local latest_star = 0
@@ -1448,12 +1422,12 @@ function HUDLootScreen:create_stars_giving_animation()
 	self._stars_panel:animate(animation_func)
 end
 
--- Lines 1218-1220
+-- Lines 1231-1233
 function HUDLootScreen:get_local_peer_id()
 	return Global.game_settings.single_player and 1 or managers.network:session() and managers.network:session():local_peer():id() or 1
 end
 
--- Lines 1222-1233
+-- Lines 1235-1246
 function HUDLootScreen:check_inside_local_peer(x, y)
 	local peer_id = self:get_local_peer_id()
 	local panel = self._peers_panel:child(peer_id_str(peer_id))
@@ -1468,12 +1442,12 @@ function HUDLootScreen:check_inside_local_peer(x, y)
 	end
 end
 
--- Lines 1235-1237
+-- Lines 1248-1250
 function HUDLootScreen:set_layer(layer)
 	self._backdrop:set_layer(layer)
 end
 
--- Lines 1239-1244
+-- Lines 1252-1257
 function HUDLootScreen:reload()
 	self._backdrop:close()
 
@@ -1482,7 +1456,7 @@ function HUDLootScreen:reload()
 	HUDLootScreen.init(self, self._hud, self._workspace)
 end
 
--- Lines 1246-1252
+-- Lines 1259-1265
 function HUDLootScreen:close()
 	self._active = false
 
