@@ -10,14 +10,22 @@ CoreTimerUnitElement.INSTANCE_VAR_NAMES = {
 CoreTimerUnitElement.RANDOMS = {
 	"timer"
 }
+CoreTimerUnitElement.LINK_VALUES = {
+	{
+		layer = "Statics",
+		output = true,
+		table_value = "digital_gui_unit_ids",
+		type = "guis"
+	}
+}
 TimerUnitElement = TimerUnitElement or class(CoreTimerUnitElement)
 
--- Lines 9-11
+-- Lines 12-14
 function TimerUnitElement:init(...)
 	TimerUnitElement.super.init(self, ...)
 end
 
--- Lines 13-23
+-- Lines 16-26
 function CoreTimerUnitElement:init(unit)
 	CoreTimerUnitElement.super.init(self, unit)
 
@@ -32,7 +40,7 @@ function CoreTimerUnitElement:init(unit)
 	table.insert(self._save_values, "digital_gui_unit_ids")
 end
 
--- Lines 26-35
+-- Lines 29-38
 function CoreTimerUnitElement:layer_finished()
 	MissionElement.layer_finished(self)
 
@@ -45,14 +53,14 @@ function CoreTimerUnitElement:layer_finished()
 	end
 end
 
--- Lines 37-41
+-- Lines 40-44
 function CoreTimerUnitElement:load_unit(unit)
 	if unit then
 		self._digital_gui_units[unit:unit_data().unit_id] = unit
 	end
 end
 
--- Lines 43-66
+-- Lines 46-69
 function CoreTimerUnitElement:update_selected()
 	for _, id in pairs(self._hed.digital_gui_unit_ids) do
 		if not alive(self._digital_gui_units[id]) then
@@ -82,7 +90,7 @@ function CoreTimerUnitElement:update_selected()
 	end
 end
 
--- Lines 68-81
+-- Lines 71-84
 function CoreTimerUnitElement:update_unselected(t, dt, selected_unit, all_units)
 	for _, id in pairs(self._hed.digital_gui_unit_ids) do
 		if not alive(self._digital_gui_units[id]) then
@@ -101,7 +109,7 @@ function CoreTimerUnitElement:update_unselected(t, dt, selected_unit, all_units)
 	end
 end
 
--- Lines 83-96
+-- Lines 86-99
 function CoreTimerUnitElement:draw_links_unselected(...)
 	CoreTimerUnitElement.super.draw_links_unselected(self, ...)
 
@@ -119,7 +127,7 @@ function CoreTimerUnitElement:draw_links_unselected(...)
 	end
 end
 
--- Lines 98-103
+-- Lines 101-106
 function CoreTimerUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -132,7 +140,7 @@ function CoreTimerUnitElement:update_editing()
 	end
 end
 
--- Lines 105-117
+-- Lines 108-120
 function CoreTimerUnitElement:select_unit()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -151,26 +159,26 @@ function CoreTimerUnitElement:select_unit()
 	end
 end
 
--- Lines 119-122
+-- Lines 122-125
 function CoreTimerUnitElement:_remove_unit(unit)
 	self._digital_gui_units[unit:unit_data().unit_id] = nil
 
 	table.delete(self._hed.digital_gui_unit_ids, unit:unit_data().unit_id)
 end
 
--- Lines 124-127
+-- Lines 127-130
 function CoreTimerUnitElement:_add_unit(unit)
 	self._digital_gui_units[unit:unit_data().unit_id] = unit
 
 	table.insert(self._hed.digital_gui_unit_ids, unit:unit_data().unit_id)
 end
 
--- Lines 129-131
+-- Lines 132-134
 function CoreTimerUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "select_unit"))
 end
 
--- Lines 133-138
+-- Lines 136-141
 function CoreTimerUnitElement:_add_unit_filter(unit)
 	if self._digital_gui_units[unit:unit_data().unit_id] then
 		return false
@@ -179,12 +187,12 @@ function CoreTimerUnitElement:_add_unit_filter(unit)
 	return unit:digital_gui() and unit:digital_gui():is_timer()
 end
 
--- Lines 140-142
+-- Lines 143-145
 function CoreTimerUnitElement:_remove_unit_filter(unit)
 	return self._digital_gui_units[unit:unit_data().unit_id]
 end
 
--- Lines 144-158
+-- Lines 147-161
 function CoreTimerUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -208,17 +216,21 @@ CoreTimerOperatorUnitElement = CoreTimerOperatorUnitElement or class(MissionElem
 CoreTimerOperatorUnitElement.RANDOMS = {
 	"time"
 }
-CoreTimerOperatorUnitElement.LINK_ELEMENTS = {
-	"elements"
+CoreTimerOperatorUnitElement.LINK_VALUES = {
+	{
+		output = true,
+		table_value = "elements",
+		type = "operator"
+	}
 }
 TimerOperatorUnitElement = TimerOperatorUnitElement or class(CoreTimerOperatorUnitElement)
 
--- Lines 168-170
+-- Lines 171-173
 function TimerOperatorUnitElement:init(...)
 	TimerOperatorUnitElement.super.init(self, ...)
 end
 
--- Lines 172-182
+-- Lines 175-185
 function CoreTimerOperatorUnitElement:init(unit)
 	CoreTimerOperatorUnitElement.super.init(self, unit)
 
@@ -234,7 +246,7 @@ function CoreTimerOperatorUnitElement:init(unit)
 	table.insert(self._save_values, "elements")
 end
 
--- Lines 184-193
+-- Lines 187-196
 function CoreTimerOperatorUnitElement:draw_links(t, dt, selected_unit, all_units)
 	CoreTimerOperatorUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -254,17 +266,11 @@ function CoreTimerOperatorUnitElement:draw_links(t, dt, selected_unit, all_units
 	end
 end
 
--- Lines 195-198
-function CoreTimerOperatorUnitElement:get_links_to_unit(...)
-	CoreTimerOperatorUnitElement.super.get_links_to_unit(self, ...)
-	self:_get_links_of_type_from_elements(self._hed.elements, "operator", ...)
-end
-
--- Lines 200-201
+-- Lines 198-199
 function CoreTimerOperatorUnitElement:update_editing()
 end
 
--- Lines 203-217
+-- Lines 201-215
 function CoreTimerOperatorUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -282,12 +288,12 @@ function CoreTimerOperatorUnitElement:add_element()
 	end
 end
 
--- Lines 220-222
+-- Lines 218-220
 function CoreTimerOperatorUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines 224-237
+-- Lines 222-235
 function CoreTimerOperatorUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -315,17 +321,20 @@ function CoreTimerOperatorUnitElement:_build_panel(panel, panel_sizer)
 end
 
 CoreTimerTriggerUnitElement = CoreTimerTriggerUnitElement or class(MissionElement)
-CoreTimerTriggerUnitElement.LINK_ELEMENTS = {
-	"elements"
+CoreTimerTriggerUnitElement.LINK_VALUES = {
+	{
+		table_value = "elements",
+		type = "trigger"
+	}
 }
 TimerTriggerUnitElement = TimerTriggerUnitElement or class(CoreTimerTriggerUnitElement)
 
--- Lines 246-248
+-- Lines 244-246
 function TimerTriggerUnitElement:init(...)
 	TimerTriggerUnitElement.super.init(self, ...)
 end
 
--- Lines 250-258
+-- Lines 248-256
 function CoreTimerTriggerUnitElement:init(unit)
 	CoreTimerTriggerUnitElement.super.init(self, unit)
 
@@ -336,7 +345,7 @@ function CoreTimerTriggerUnitElement:init(unit)
 	table.insert(self._save_values, "elements")
 end
 
--- Lines 260-269
+-- Lines 258-267
 function CoreTimerTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 	CoreTimerTriggerUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -356,17 +365,11 @@ function CoreTimerTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 	end
 end
 
--- Lines 271-274
-function CoreTimerTriggerUnitElement:get_links_to_unit(...)
-	CoreTimerTriggerUnitElement.super.get_links_to_unit(self, ...)
-	self:_get_links_of_type_from_elements(self._hed.elements, "trigger", ...)
-end
-
--- Lines 276-277
+-- Lines 269-270
 function CoreTimerTriggerUnitElement:update_editing()
 end
 
--- Lines 279-293
+-- Lines 272-286
 function CoreTimerTriggerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -384,12 +387,12 @@ function CoreTimerTriggerUnitElement:add_element()
 	end
 end
 
--- Lines 296-298
+-- Lines 289-291
 function CoreTimerTriggerUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines 300-312
+-- Lines 293-305
 function CoreTimerTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

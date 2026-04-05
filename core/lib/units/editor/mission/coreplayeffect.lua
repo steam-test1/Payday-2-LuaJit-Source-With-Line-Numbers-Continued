@@ -112,17 +112,21 @@ function CorePlayEffectUnitElement:add_to_mission_package()
 end
 
 CoreStopEffectUnitElement = CoreStopEffectUnitElement or class(MissionElement)
-CoreStopEffectUnitElement.LINK_ELEMENTS = {
-	"elements"
+CoreStopEffectUnitElement.LINK_VALUES = {
+	{
+		output = true,
+		table_value = "elements",
+		type = "operator"
+	}
 }
 StopEffectUnitElement = StopEffectUnitElement or class(CoreStopEffectUnitElement)
 
--- Lines 92-94
+-- Lines 98-100
 function StopEffectUnitElement:init(...)
 	CoreStopEffectUnitElement.init(self, ...)
 end
 
--- Lines 96-104
+-- Lines 102-110
 function CoreStopEffectUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -133,7 +137,7 @@ function CoreStopEffectUnitElement:init(unit)
 	table.insert(self._save_values, "elements")
 end
 
--- Lines 106-115
+-- Lines 112-121
 function CoreStopEffectUnitElement:draw_links(t, dt, selected_unit, all_units)
 	MissionElement.draw_links(self, t, dt, selected_unit)
 
@@ -153,17 +157,11 @@ function CoreStopEffectUnitElement:draw_links(t, dt, selected_unit, all_units)
 	end
 end
 
--- Lines 117-120
-function CoreStopEffectUnitElement:get_links_to_unit(...)
-	CoreStopEffectUnitElement.super.get_links_to_unit(self, ...)
-	self:_get_links_of_type_from_elements(self._hed.elements, "operator", ...)
-end
-
--- Lines 122-123
+-- Lines 123-124
 function CoreStopEffectUnitElement:update_editing()
 end
 
--- Lines 125-135
+-- Lines 126-136
 function CoreStopEffectUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -181,12 +179,12 @@ function CoreStopEffectUnitElement:add_element()
 	end
 end
 
--- Lines 138-140
+-- Lines 139-141
 function CoreStopEffectUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines 142-152
+-- Lines 143-153
 function CoreStopEffectUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

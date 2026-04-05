@@ -1,4 +1,4 @@
--- Lines 1-84
+-- Lines 1-86
 function CoreEditor:build_left_toolbar()
 	local icons_path = managers.database:base_path() .. "core\\lib\\utils\\dev\\editor\\icons\\"
 	local left_upper_panel = EWS:Panel(Global.frame_panel, "", "")
@@ -58,6 +58,8 @@ function CoreEditor:build_left_toolbar()
 
 	self._left_toolbar = EWS:ToolBar(left_panel, "", "TB_FLAT,TB_VERTICAL,TB_NODIVIDER")
 
+	self._left_toolbar:add_tool("LTB_LIST_FLOW", "Opens mission flow dialog", CoreEws.image_path("world_editor\\he_timeline_16x16.png"), "Element Flow Dialog")
+	self._left_toolbar:connect("LTB_LIST_FLOW", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "show_element_flow"), {})
 	self:add_edit_buttons()
 	self._left_toolbar:add_tool("LTB_EDIT_UNIT", "Show edit unit dialog", CoreEWS.image_path("world_editor\\edit_settings_16x16.png"), "Help")
 	self._left_toolbar:connect("LTB_EDIT_UNIT", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "show_edit_unit"), nil)
@@ -71,28 +73,46 @@ function CoreEditor:build_left_toolbar()
 	Global.left_toolbar_sizer:add(left_panel, 0, 0, "EXPAND")
 end
 
--- Lines 86-87
+-- Lines 88-89
 function CoreEditor:_project_add_left_upper_toolbar_tool()
 end
 
--- Lines 89-91
+-- Lines 91-99
+function CoreEditor:show_element_flow()
+	self._element_flow = self._element_flow or _G.MissionElementListFlow:new()
+
+	self._element_flow:set_visible(not self._element_flow:visible())
+
+	if self._element_flow:visible() then
+		self._element_flow:on_unit_selected(self:selected_unit())
+	end
+end
+
+-- Lines 101-105
+function CoreEditor:refresh_list_flow()
+	if self._element_flow and self._element_flow:visible() then
+		self._element_flow:on_unit_selected(self:selected_unit())
+	end
+end
+
+-- Lines 107-109
 function CoreEditor:show_edit_unit()
 	self:show_dialog("edit_unit", "EditUnitDialog")
 end
 
--- Lines 94-96
+-- Lines 112-114
 function CoreEditor:on_open_tool(tool)
 	managers.toolhub:open(tool)
 end
 
--- Lines 99-102
+-- Lines 117-120
 function CoreEditor:on_output_help()
 	local text = "\n"
 
 	self:output(self._current_layer:get_help(text))
 end
 
--- Lines 105-134
+-- Lines 123-152
 function CoreEditor:on_list_units()
 	local units = World:find_units_quick("all")
 	local amount = {}
@@ -127,14 +147,14 @@ function CoreEditor:on_list_units()
 	self:output("Total units: " .. total .. " Total Unique: " .. table.size(amount))
 end
 
--- Lines 136-140
+-- Lines 154-158
 function CoreEditor:on_open_world_folder()
 	if self._opendir then
 		os.execute("explorer " .. self._opendir)
 	end
 end
 
--- Lines 142-149
+-- Lines 160-167
 function CoreEditor:_frustum_freeze_toggle(a, event)
 	local state = self._left_upper_toolbar:tool_state(event:get_id())
 
@@ -145,7 +165,7 @@ function CoreEditor:_frustum_freeze_toggle(a, event)
 	end
 end
 
--- Lines 151-158
+-- Lines 169-176
 function CoreEditor:_interupt_frustum_freeze()
 	if not self._camera_controller:frustum_frozen() then
 		return

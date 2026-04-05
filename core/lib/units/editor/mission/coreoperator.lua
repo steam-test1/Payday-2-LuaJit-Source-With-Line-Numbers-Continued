@@ -1,8 +1,12 @@
 CoreOperatorUnitElement = CoreOperatorUnitElement or class(MissionElement)
 CoreOperatorUnitElement.SAVE_UNIT_POSITION = false
 CoreOperatorUnitElement.SAVE_UNIT_ROTATION = false
-CoreOperatorUnitElement.LINK_ELEMENTS = {
-	"elements"
+CoreOperatorUnitElement.LINK_VALUES = {
+	{
+		output = true,
+		table_value = "elements",
+		type = "operator"
+	}
 }
 OperatorUnitElement = OperatorUnitElement or class(CoreOperatorUnitElement)
 
@@ -47,17 +51,11 @@ function CoreOperatorUnitElement:draw_links(t, dt, selected_unit, all_units)
 	end
 end
 
--- Lines 38-41
-function CoreOperatorUnitElement:get_links_to_unit(...)
-	CoreOperatorUnitElement.super.get_links_to_unit(self, ...)
-	self:_get_links_of_type_from_elements(self._hed.elements, "operator", ...)
-end
-
--- Lines 43-44
+-- Lines 38-39
 function CoreOperatorUnitElement:update_editing()
 end
 
--- Lines 46-56
+-- Lines 41-51
 function CoreOperatorUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -75,12 +73,12 @@ function CoreOperatorUnitElement:add_element()
 	end
 end
 
--- Lines 59-61
+-- Lines 54-56
 function CoreOperatorUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines 63-75
+-- Lines 58-70
 function CoreOperatorUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

@@ -1,12 +1,20 @@
 CoreUnitSequenceUnitElement = CoreUnitSequenceUnitElement or class(MissionElement)
+CoreUnitSequenceUnitElement.LINK_VALUES = {
+	{
+		output = true,
+		table_key = "notify_unit_id",
+		table_value = "trigger_list",
+		layer = "Statics"
+	}
+}
 UnitSequenceUnitElement = UnitSequenceUnitElement or class(CoreUnitSequenceUnitElement)
 
--- Lines 5-7
+-- Lines 14-16
 function UnitSequenceUnitElement:init(...)
 	CoreUnitSequenceUnitElement.init(self, ...)
 end
 
--- Lines 9-17
+-- Lines 18-26
 function CoreUnitSequenceUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -17,23 +25,23 @@ function CoreUnitSequenceUnitElement:init(unit)
 	table.insert(self._save_values, "only_for_local_player")
 end
 
--- Lines 19-22
+-- Lines 28-31
 function CoreUnitSequenceUnitElement:update_unselected(...)
 	MissionElement.update_unselected(self, ...)
 	self:verify_trigger_units()
 end
 
--- Lines 24-28
+-- Lines 33-37
 function CoreUnitSequenceUnitElement:update_selected(...)
 	MissionElement.update_selected(self, ...)
 	self:verify_trigger_units()
 	self:_draw_trigger_units(0, 1, 1)
 end
 
--- Lines 30-39
+-- Lines 39-48
 function CoreUnitSequenceUnitElement:verify_trigger_units()
 	for i = #self._hed.trigger_list, 1, -1 do
-		local unit = managers.editor:unit_with_id(self._hed.trigger_list[i].notify_unit)
+		local unit = managers.editor:unit_with_id(self._hed.trigger_list[i].notify_unit_id)
 
 		if not alive(unit) then
 			table.remove(self._hed.trigger_list, i)
@@ -41,27 +49,13 @@ function CoreUnitSequenceUnitElement:verify_trigger_units()
 	end
 end
 
--- Lines 41-49
-function CoreUnitSequenceUnitElement:get_links_to_unit(to_unit, links, all_units)
-	CoreUnitSequenceUnitElement.super.get_links_to_unit(self, to_unit, links, all_units)
-
-	if to_unit == self._unit then
-		for _, unit in ipairs(self:_get_sequence_units()) do
-			table.insert(links.on_executed, {
-				alternative = "unit",
-				unit = unit
-			})
-		end
-	end
-end
-
--- Lines 51-54
+-- Lines 50-53
 function CoreUnitSequenceUnitElement:draw_links_unselected(...)
 	CoreUnitSequenceUnitElement.super.draw_links_unselected(self, ...)
 	self:_draw_trigger_units(0, 0.75, 0.75)
 end
 
--- Lines 56-72
+-- Lines 55-76
 function CoreUnitSequenceUnitElement:_get_sequence_units()
 	local units = {}
 	local trigger_name_list = self._unit:damage():get_trigger_name_list()
@@ -83,7 +77,7 @@ function CoreUnitSequenceUnitElement:_get_sequence_units()
 	return units
 end
 
--- Lines 74-86
+-- Lines 78-90
 function CoreUnitSequenceUnitElement:_draw_trigger_units(r, g, b)
 	for _, unit in ipairs(self:_get_sequence_units()) do
 		local params = {
@@ -99,42 +93,44 @@ function CoreUnitSequenceUnitElement:_draw_trigger_units(r, g, b)
 	end
 end
 
--- Lines 88-91
+-- Lines 92-95
 function CoreUnitSequenceUnitElement:new_save_values(...)
 	self:_set_trigger_list()
 
 	return MissionElement.new_save_values(self, ...)
 end
 
--- Lines 93-96
+-- Lines 97-100
 function CoreUnitSequenceUnitElement:save_values(...)
 	self:_set_trigger_list()
 	MissionElement.save_values(self, ...)
 end
 
--- Lines 98-124
+-- Lines 102-134
 function CoreUnitSequenceUnitElement:_set_trigger_list()
 	self._hed.trigger_list = {}
 	local triggers = managers.sequence:get_trigger_list(self._unit:name())
 
 	if #triggers > 0 then
-		local trigger_name_list = self._unit:damage():get_trigger_name_list()
+		local trigger_name_list = self._unit:damage():get_trigger_name_list() or {}
 
-		if trigger_name_list then
-			for _, trigger_name in ipairs(trigger_name_list) do
-				local trigger_data = self._unit:damage():get_trigger_data_list(trigger_name)
+		for _, trigger_name in ipairs(trigger_name_list) do
+			local trigger_data = self._unit:damage():get_trigger_data_list(trigger_name)
 
-				if trigger_data and #trigger_data > 0 then
-					for _, data in ipairs(trigger_data) do
-						if alive(data.notify_unit) then
-							table.insert(self._hed.trigger_list, {
-								name = data.trigger_name,
-								id = data.id,
-								notify_unit_id = data.notify_unit:unit_data().unit_id,
-								time = data.time,
-								notify_unit_sequence = data.notify_unit_sequence
-							})
-						end
+			if trigger_data and #trigger_data > 0 then
+				for _, data in ipairs(trigger_data) do
+					local notify_unit_data = data.notify_unit:unit_data()
+
+					if notify_unit_data.instance then
+						Application:warn("[CoreUnitSequenceUnitElement] Attempted to store an instanced unit to this element", self._unit:name(), " - notify unit ID:", notify_unit_data.unit_id)
+					else
+						table.insert(self._hed.trigger_list, {
+							name = data.trigger_name,
+							id = data.id,
+							notify_unit_id = notify_unit_data.unit_id,
+							time = data.time,
+							notify_unit_sequence = data.notify_unit_sequence
+						})
 					end
 				end
 			end
@@ -142,7 +138,7 @@ function CoreUnitSequenceUnitElement:_set_trigger_list()
 	end
 end
 
--- Lines 126-140
+-- Lines 136-150
 function CoreUnitSequenceUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -160,7 +156,7 @@ function CoreUnitSequenceUnitElement:_build_panel(panel, panel_sizer)
 	self:add_help_text(help)
 end
 
--- Lines 142-145
+-- Lines 152-164
 function CoreUnitSequenceUnitElement:add_to_mission_package()
 	managers.editor:add_to_world_package({
 		name = "core/units/run_sequence_dummy/run_sequence_dummy",

@@ -435,7 +435,7 @@ end
 MissionElementAddOnExecutedCommand = MissionElementAddOnExecutedCommand or class(MissionElementEditorCommand)
 MissionElementAddOnExecutedCommand.__type = MissionElementAddOnExecutedCommand
 
--- Lines 409-432
+-- Lines 409-433
 function MissionElementAddOnExecutedCommand:execute(mission_element, unit, existing_params)
 	mission_element = mission_element or self:get_self_mission_element()
 	unit = unit or managers.editor:unit_with_id(self._values.params.id)
@@ -453,11 +453,12 @@ function MissionElementAddOnExecutedCommand:execute(mission_element, unit, exist
 
 	mission_element:append_elements_sorted()
 	mission_element:set_on_executed_element(#mission_element._hed.on_executed)
+	managers.editor:refresh_list_flow()
 
 	self._values.params = params
 end
 
--- Lines 434-443
+-- Lines 435-444
 function MissionElementAddOnExecutedCommand:undo()
 	local mission_element = self:get_self_mission_element()
 	local remove_unit = managers.editor:unit_with_id(self._values.params.id)
@@ -466,7 +467,7 @@ function MissionElementAddOnExecutedCommand:undo()
 	command:execute(mission_element, remove_unit)
 end
 
--- Lines 445-447
+-- Lines 446-448
 function MissionElementAddOnExecutedCommand:__tostring()
 	return string.format("[Command AddOnExecuted %s]", tostring(self._values.element_id))
 end
@@ -474,7 +475,7 @@ end
 MissionElementRemoveOnExecutedCommand = MissionElementRemoveOnExecutedCommand or class(MissionElementEditorCommand)
 MissionElementRemoveOnExecutedCommand.__type = MissionElementRemoveOnExecutedCommand
 
--- Lines 454-481
+-- Lines 455-483
 function MissionElementRemoveOnExecutedCommand:execute(mission_element, unit)
 	mission_element = mission_element or self:get_self_mission_element()
 	unit = unit or managers.editor:unit_with_id(self._values.unit_id)
@@ -491,6 +492,7 @@ function MissionElementRemoveOnExecutedCommand:execute(mission_element, unit)
 			table.delete(mission_element._hed.on_executed, on_executed)
 			table.delete(mission_element._on_executed_units, unit)
 			mission_element:append_elements_sorted()
+			managers.editor:refresh_list_flow()
 
 			return true
 		end
@@ -499,7 +501,7 @@ function MissionElementRemoveOnExecutedCommand:execute(mission_element, unit)
 	return false
 end
 
--- Lines 483-492
+-- Lines 485-494
 function MissionElementRemoveOnExecutedCommand:undo()
 	local mission_element = self:get_self_mission_element()
 	local add_unit = managers.editor:unit_with_id(self._values.removed_on_executed.id)
@@ -508,7 +510,7 @@ function MissionElementRemoveOnExecutedCommand:undo()
 	command:execute(mission_element, add_unit, self._values.removed_on_executed)
 end
 
--- Lines 494-496
+-- Lines 496-498
 function MissionElementRemoveOnExecutedCommand:__tostring()
 	return string.format("[Command RemoveOnExecuted %s]", tostring(self._values.element_id))
 end
@@ -516,7 +518,7 @@ end
 MissionElementAddLinkElementCommand = MissionElementAddLinkElementCommand or class(MissionElementEditorCommand)
 MissionElementAddLinkElementCommand.__type = MissionElementAddLinkElementCommand
 
--- Lines 503-522
+-- Lines 505-524
 function MissionElementAddLinkElementCommand:execute(mission_element, link_name, unit_id)
 	mission_element = mission_element or self:get_self_mission_element()
 	link_name = link_name or self._values.link_name
@@ -534,7 +536,7 @@ function MissionElementAddLinkElementCommand:execute(mission_element, link_name,
 	end
 end
 
--- Lines 524-530
+-- Lines 526-532
 function MissionElementAddLinkElementCommand:undo()
 	local mission_element = self:get_self_mission_element()
 	local command = MissionElementRemoveLinkElementCommand:new(mission_element)
@@ -542,7 +544,7 @@ function MissionElementAddLinkElementCommand:undo()
 	command:execute(mission_element, self:value("link_name"), self:value("unit_id"))
 end
 
--- Lines 532-534
+-- Lines 534-536
 function MissionElementAddLinkElementCommand:__tostring()
 	return string.format("[Command AddLinkElement [%s %s]]", tostring(self:value("link_name")), tostring(self:value("unit_id")))
 end
@@ -550,7 +552,7 @@ end
 MissionElementRemoveLinkElementCommand = MissionElementRemoveLinkElementCommand or class(MissionElementEditorCommand)
 MissionElementRemoveLinkElementCommand.__type = MissionElementRemoveLinkElementCommand
 
--- Lines 541-560
+-- Lines 543-562
 function MissionElementRemoveLinkElementCommand:execute(mission_element, link_name, unit_id)
 	mission_element = mission_element or self:get_self_mission_element()
 	link_name = link_name or self._values.link_name
@@ -568,7 +570,7 @@ function MissionElementRemoveLinkElementCommand:execute(mission_element, link_na
 	end
 end
 
--- Lines 562-568
+-- Lines 564-570
 function MissionElementRemoveLinkElementCommand:undo()
 	local mission_element = self:get_self_mission_element()
 	local command = MissionElementAddLinkElementCommand:new(mission_element)
@@ -576,7 +578,7 @@ function MissionElementRemoveLinkElementCommand:undo()
 	command:execute(mission_element, self:value("link_name"), self:value("unit_id"))
 end
 
--- Lines 570-572
+-- Lines 572-574
 function MissionElementRemoveLinkElementCommand:__tostring()
 	return string.format("[Command RemoveLinkElement [%s %s]]", tostring(self:value("link_name")), tostring(self:value("unit_id")))
 end

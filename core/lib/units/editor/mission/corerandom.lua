@@ -1,14 +1,20 @@
 CoreRandomUnitElement = CoreRandomUnitElement or class(MissionElement)
 CoreRandomUnitElement.SAVE_UNIT_POSITION = false
 CoreRandomUnitElement.SAVE_UNIT_ROTATION = false
+CoreRandomUnitElement.LINK_VALUES = {
+	{
+		value = "counter_id",
+		type = "counter"
+	}
+}
 RandomUnitElement = RandomUnitElement or class(CoreRandomUnitElement)
 
--- Lines 7-9
+-- Lines 8-10
 function RandomUnitElement:init(...)
 	CoreRandomUnitElement.init(self, ...)
 end
 
--- Lines 11-23
+-- Lines 12-24
 function CoreRandomUnitElement:init(unit)
 	CoreRandomUnitElement.super.init(self, unit)
 
@@ -23,11 +29,11 @@ function CoreRandomUnitElement:init(unit)
 	table.insert(self._save_values, "counter_id")
 end
 
--- Lines 25-26
+-- Lines 26-27
 function CoreRandomUnitElement:update_editing()
 end
 
--- Lines 28-38
+-- Lines 29-39
 function CoreRandomUnitElement:draw_links(t, dt, selected_unit, all_units)
 	CoreRandomUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -47,7 +53,7 @@ function CoreRandomUnitElement:draw_links(t, dt, selected_unit, all_units)
 	end
 end
 
--- Lines 40-53
+-- Lines 41-54
 function CoreRandomUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -65,39 +71,39 @@ function CoreRandomUnitElement:add_element()
 	end
 end
 
--- Lines 56-58
+-- Lines 57-59
 function CoreRandomUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines 60-64
+-- Lines 61-65
 function CoreRandomUnitElement:remove_links(unit)
 	if self._hed.counter_id and self._hed.counter_id == unit:unit_data().unit_id then
 		self._hed.counter_id = nil
 	end
 end
 
--- Lines 66-68
+-- Lines 67-69
 function CoreRandomUnitElement:_add_counter_filter(unit)
 	return unit:name() == Idstring("core/units/mission_elements/logic_counter/logic_counter")
 end
 
--- Lines 70-72
+-- Lines 71-73
 function CoreRandomUnitElement:_set_counter_id(unit)
 	self._hed.counter_id = unit:unit_data().unit_id
 end
 
--- Lines 74-76
+-- Lines 75-77
 function CoreRandomUnitElement:_remove_counter_filter(unit)
 	return self._hed.counter_id == unit:unit_data().unit_id
 end
 
--- Lines 78-80
+-- Lines 79-81
 function CoreRandomUnitElement:_remove_counter_id(unit)
 	self._hed.counter_id = nil
 end
 
--- Lines 82-99
+-- Lines 83-100
 function CoreRandomUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

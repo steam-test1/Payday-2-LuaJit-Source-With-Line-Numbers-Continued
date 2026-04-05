@@ -345,24 +345,49 @@ end
 
 CoreInstanceInputEventUnitElement = CoreInstanceInputEventUnitElement or class(InstanceEventUnitElement)
 InstanceInputEventUnitElement = InstanceInputEventUnitElement or class(CoreInstanceInputEventUnitElement)
+InstanceInputEventUnitElement.LINK_VALUES = {
+	{
+		output = true,
+		type = "input",
+		table_key = "instance",
+		table_value = "event_list",
+		layer = "Instances"
+	}
+}
 
--- Lines 307-309
+-- Lines 310-312
 function InstanceInputEventUnitElement:init(...)
 	InstanceInputEventUnitElement.super.init(self, "input", ...)
 end
 
 CoreInstanceOutputEventUnitElement = CoreInstanceOutputEventUnitElement or class(InstanceEventUnitElement)
 InstanceOutputEventUnitElement = InstanceOutputEventUnitElement or class(CoreInstanceOutputEventUnitElement)
+InstanceOutputEventUnitElement.LINK_VALUES = {
+	{
+		layer = "Instances",
+		table_key = "instance",
+		table_value = "event_list",
+		type = "output"
+	}
+}
 
--- Lines 317-319
+-- Lines 323-325
 function InstanceOutputEventUnitElement:init(...)
 	InstanceOutputEventUnitElement.super.init(self, "output", ...)
 end
 
 CoreInstancePointUnitElement = CoreInstancePointUnitElement or class(MissionElement)
 InstancePointUnitElement = InstancePointUnitElement or class(CoreInstancePointUnitElement)
+InstancePointUnitElement.LINK_VALUES = {
+	{
+		value = "instance",
+		output = true,
+		layer = "Instances",
+		type = "spawn_point"
+	}
+}
 
--- Lines 327-333
+-- Lines 334-340
 function InstancePointUnitElement:init(...)
 	InstancePointUnitElement.super.init(self, ...)
 
@@ -371,14 +396,14 @@ function InstancePointUnitElement:init(...)
 	table.insert(self._save_values, "instance")
 end
 
--- Lines 335-339
+-- Lines 342-346
 function InstancePointUnitElement:update_selected(t, dt)
 	if self._hed.instance then
 		InstanceEventUnitElement._draw_instance_link(self, t, dt, self._hed.instance)
 	end
 end
 
--- Lines 341-346
+-- Lines 348-353
 function InstancePointUnitElement:update_editing(t, dt)
 	local instance_name = self:_instance_name_raycast()
 
@@ -387,7 +412,7 @@ function InstancePointUnitElement:update_editing(t, dt)
 	end
 end
 
--- Lines 348-361
+-- Lines 355-368
 function InstancePointUnitElement:selected()
 	InstanceEventUnitElement.super.selected(self)
 
@@ -406,12 +431,12 @@ function InstancePointUnitElement:selected()
 	end
 end
 
--- Lines 363-365
+-- Lines 370-372
 function InstancePointUnitElement:external_change_instance(instance)
 	self._hed.instance = instance
 end
 
--- Lines 367-373
+-- Lines 374-380
 function InstancePointUnitElement:_set_instance_by_raycast()
 	local instance_name = self:_instance_name_raycast()
 
@@ -422,7 +447,7 @@ function InstancePointUnitElement:_set_instance_by_raycast()
 	end
 end
 
--- Lines 375-386
+-- Lines 382-393
 function InstancePointUnitElement:_instance_name_raycast()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -445,7 +470,7 @@ function InstancePointUnitElement:_instance_name_raycast()
 	return instance_data and instance_data.mission_placed and instance_data.script == self._unit:mission_element_data().script and instance_name or nil
 end
 
--- Lines 388-399
+-- Lines 395-406
 function InstancePointUnitElement:_get_options()
 	local _names = managers.world_instance:instance_names_by_script(self._unit:mission_element_data().script)
 	local names = {}
@@ -462,7 +487,7 @@ function InstancePointUnitElement:_get_options()
 	return names
 end
 
--- Lines 401-409
+-- Lines 408-416
 function InstancePointUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -472,7 +497,7 @@ function InstancePointUnitElement:_build_panel(panel, panel_sizer)
 	self._instance_params = instance_params
 end
 
--- Lines 411-413
+-- Lines 418-420
 function InstancePointUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "_set_instance_by_raycast"))
 end
@@ -489,7 +514,7 @@ CoreInstanceParamsUnitElement.TYPES = {
 }
 InstanceParamsUnitElement = InstanceParamsUnitElement or class(CoreInstanceParamsUnitElement)
 
--- Lines 422-428
+-- Lines 429-435
 function InstanceParamsUnitElement:init(...)
 	InstanceParamsUnitElement.super.init(self, ...)
 
@@ -498,7 +523,7 @@ function InstanceParamsUnitElement:init(...)
 	table.insert(self._save_values, "params")
 end
 
--- Lines 430-471
+-- Lines 437-478
 function InstanceParamsUnitElement:_add_var_dialog()
 	local var_name = EWS:get_text_from_user(Global.frame_panel, "Enter variable name:", "Add variable", "var_", Vector3(-1, -1, 0), true)
 
@@ -550,11 +575,11 @@ function InstanceParamsUnitElement:_add_var_dialog()
 	self:_build_var_panel(data)
 end
 
--- Lines 473-475
+-- Lines 480-482
 function InstanceParamsUnitElement:_add_var(var_name, type, default_value)
 end
 
--- Lines 477-490
+-- Lines 484-497
 function InstanceParamsUnitElement:_remove_var_name(var_name)
 	for i, data in ipairs(self._hed.params) do
 		if data.var_name == var_name then
@@ -574,7 +599,7 @@ function InstanceParamsUnitElement:_remove_var_name(var_name)
 	end
 end
 
--- Lines 492-526
+-- Lines 499-533
 function InstanceParamsUnitElement:_build_var_panel(data)
 	self._panels = self._panels or {}
 	local panel = EWS:Panel(self._panel, "", "TAB_TRAVERSAL")
@@ -613,7 +638,7 @@ function InstanceParamsUnitElement:_build_var_panel(data)
 	self._panel:layout()
 end
 
--- Lines 528-546
+-- Lines 535-553
 function InstanceParamsUnitElement:_build_number(data, panel, sizer)
 	local number_params = {
 		name_proportions = 1,
@@ -638,7 +663,7 @@ function InstanceParamsUnitElement:_build_number(data, panel, sizer)
 	})
 end
 
--- Lines 548-573
+-- Lines 555-580
 function InstanceParamsUnitElement:_build_combobox(data, panel, sizer, options)
 	local horizontal_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -674,13 +699,13 @@ function InstanceParamsUnitElement:_build_combobox(data, panel, sizer, options)
 	horizontal_sizer:add(toolbar, 0, 1, "EXPAND,LEFT")
 end
 
--- Lines 575-578
+-- Lines 582-585
 function InstanceParamsUnitElement:_set_default_var_name(data)
 	local value = data.ctrlr:get_value()
 	data.data.default_value = tonumber(value) or value
 end
 
--- Lines 580-589
+-- Lines 587-596
 function InstanceParamsUnitElement:_on_gui_select_name_dialog(params)
 	local dialog = SelectNameModal:new("Select name", params.combobox.options)
 
@@ -697,7 +722,7 @@ function InstanceParamsUnitElement:_on_gui_select_name_dialog(params)
 	end
 end
 
--- Lines 591-606
+-- Lines 598-613
 function InstanceParamsUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -717,8 +742,16 @@ end
 
 CoreInstanceSetParamsUnitElement = CoreInstanceSetParamsUnitElement or class(MissionElement)
 InstanceSetParamsUnitElement = InstanceSetParamsUnitElement or class(CoreInstanceSetParamsUnitElement)
+InstanceSetParamsUnitElement.LINK_VALUES = {
+	{
+		value = "instance",
+		output = true,
+		layer = "Instances",
+		type = "params"
+	}
+}
 
--- Lines 623-636
+-- Lines 631-644
 function InstanceSetParamsUnitElement:init(...)
 	InstanceSetParamsUnitElement.super.init(self, ...)
 
@@ -732,14 +765,14 @@ function InstanceSetParamsUnitElement:init(...)
 	table.insert(self._save_values, "apply_on_execute")
 end
 
--- Lines 638-642
+-- Lines 646-650
 function InstanceSetParamsUnitElement:update_selected(t, dt)
 	if self._hed.instance then
 		InstanceEventUnitElement._draw_instance_link(self, t, dt, self._hed.instance)
 	end
 end
 
--- Lines 644-649
+-- Lines 652-657
 function InstanceSetParamsUnitElement:update_editing(t, dt)
 	local instance_name = self:_instance_name_raycast()
 
@@ -748,7 +781,7 @@ function InstanceSetParamsUnitElement:update_editing(t, dt)
 	end
 end
 
--- Lines 651-664
+-- Lines 659-672
 function InstanceSetParamsUnitElement:selected()
 	InstanceEventUnitElement.super.selected(self)
 
@@ -767,7 +800,7 @@ function InstanceSetParamsUnitElement:selected()
 	end
 end
 
--- Lines 667-674
+-- Lines 675-682
 function InstanceSetParamsUnitElement:on_instance_changed_name(old_name, new_name)
 	if old_name == self._hed.instance then
 		self._hed.instance = new_name
@@ -778,7 +811,7 @@ function InstanceSetParamsUnitElement:on_instance_changed_name(old_name, new_nam
 	end
 end
 
--- Lines 677-686
+-- Lines 685-694
 function InstanceSetParamsUnitElement:on_instance_deleted(name)
 	if name == self._hed.instance then
 		self._hed.instance = nil
@@ -792,7 +825,7 @@ function InstanceSetParamsUnitElement:on_instance_deleted(name)
 	end
 end
 
--- Lines 688-699
+-- Lines 696-707
 function InstanceSetParamsUnitElement:_instance_name_raycast()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -815,7 +848,7 @@ function InstanceSetParamsUnitElement:_instance_name_raycast()
 	return instance_data and instance_data.script == self._unit:mission_element_data().script and instance_name or nil
 end
 
--- Lines 701-708
+-- Lines 709-716
 function InstanceSetParamsUnitElement:_set_instance_by_raycast()
 	local instance_name = self:_instance_name_raycast()
 
@@ -826,7 +859,7 @@ function InstanceSetParamsUnitElement:_set_instance_by_raycast()
 	end
 end
 
--- Lines 710-718
+-- Lines 718-726
 function InstanceSetParamsUnitElement:_get_options()
 	local _names = managers.world_instance:instance_names_by_script(self._unit:mission_element_data().script)
 	local names = {}
@@ -840,12 +873,12 @@ function InstanceSetParamsUnitElement:_get_options()
 	return names
 end
 
--- Lines 720-722
+-- Lines 728-730
 function InstanceSetParamsUnitElement:_on_gui_change_instance(params)
 	self:_check_change_instance(params.ctrlr:get_value())
 end
 
--- Lines 724-756
+-- Lines 732-764
 function InstanceSetParamsUnitElement:_check_change_instance(new_instance)
 	if not self._hed.instance or not next(self._hed.params) then
 		self._hed.instance = new_instance
@@ -882,7 +915,7 @@ function InstanceSetParamsUnitElement:_check_change_instance(new_instance)
 	self._hed.instance = new_instance
 end
 
--- Lines 758-763
+-- Lines 766-771
 function InstanceSetParamsUnitElement:_on_instance_changed()
 	if self._hed.instance then
 		local params = managers.world_instance:get_instance_params_by_name(self._hed.instance)
@@ -891,14 +924,14 @@ function InstanceSetParamsUnitElement:_on_instance_changed()
 	end
 end
 
--- Lines 765-769
+-- Lines 773-777
 function InstanceSetParamsUnitElement:_set_var_name(data)
 	local value = data.ctrlr:get_value()
 	value = tonumber(value) or value
 	self._hed.params[data.var_name] = value
 end
 
--- Lines 771-777
+-- Lines 779-785
 function InstanceSetParamsUnitElement:_destroy_params_panels()
 	for _, panel in ipairs(self._panels) do
 		panel:destroy_children()
@@ -908,7 +941,7 @@ function InstanceSetParamsUnitElement:_destroy_params_panels()
 	self._panels = {}
 end
 
--- Lines 779-826
+-- Lines 787-834
 function InstanceSetParamsUnitElement:_build_from_params(params)
 	self._panel:freeze()
 	self:_destroy_params_panels()
@@ -964,7 +997,7 @@ function InstanceSetParamsUnitElement:_build_from_params(params)
 	self._panel:thaw()
 end
 
--- Lines 828-837
+-- Lines 836-845
 function InstanceSetParamsUnitElement:_on_gui_toggle_use(params)
 	local use = params.ctrlr:get_value()
 
@@ -982,7 +1015,7 @@ function InstanceSetParamsUnitElement:_on_gui_toggle_use(params)
 	end
 end
 
--- Lines 839-859
+-- Lines 847-867
 function InstanceSetParamsUnitElement:_build_number(data, panel, sizer)
 	local number_params = {
 		name_proportions = 1,
@@ -1009,7 +1042,7 @@ function InstanceSetParamsUnitElement:_build_number(data, panel, sizer)
 	return number
 end
 
--- Lines 861-888
+-- Lines 869-896
 function InstanceSetParamsUnitElement:_build_combobox(data, panel, sizer, options)
 	local horizontal_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -1047,7 +1080,7 @@ function InstanceSetParamsUnitElement:_build_combobox(data, panel, sizer, option
 	return combobox
 end
 
--- Lines 890-899
+-- Lines 898-907
 function InstanceSetParamsUnitElement:_on_gui_select_name_dialog(params)
 	local dialog = SelectNameModal:new("Select name", params.combobox.options)
 
@@ -1064,7 +1097,7 @@ function InstanceSetParamsUnitElement:_on_gui_select_name_dialog(params)
 	end
 end
 
--- Lines 901-913
+-- Lines 909-921
 function InstanceSetParamsUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -1077,7 +1110,7 @@ function InstanceSetParamsUnitElement:_build_panel(panel, panel_sizer)
 	self:_on_instance_changed()
 end
 
--- Lines 915-922
+-- Lines 923-930
 function InstanceSetParamsUnitElement:set_element_data(params, ...)
 	if params.value == "instance" then
 		self:_on_gui_change_instance(params)
@@ -1089,7 +1122,7 @@ function InstanceSetParamsUnitElement:set_element_data(params, ...)
 	InstanceSetParamsUnitElement.super.set_element_data(self, params, ...)
 end
 
--- Lines 924-926
+-- Lines 932-934
 function InstanceSetParamsUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "_set_instance_by_raycast"))
 end

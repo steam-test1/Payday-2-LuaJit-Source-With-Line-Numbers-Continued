@@ -1,8 +1,12 @@
 CoreToggleUnitElement = CoreToggleUnitElement or class(MissionElement)
 CoreToggleUnitElement.SAVE_UNIT_POSITION = false
 CoreToggleUnitElement.SAVE_UNIT_ROTATION = false
-CoreToggleUnitElement.LINK_ELEMENTS = {
-	"elements"
+CoreToggleUnitElement.LINK_VALUES = {
+	{
+		output = true,
+		table_value = "elements",
+		type = "toggle"
+	}
 }
 ToggleUnitElement = ToggleUnitElement or class(CoreToggleUnitElement)
 
@@ -44,17 +48,11 @@ function CoreToggleUnitElement:draw_links(t, dt, selected_unit, all_units)
 	end
 end
 
--- Lines 35-38
-function CoreToggleUnitElement:get_links_to_unit(...)
-	CoreToggleUnitElement.super.get_links_to_unit(self, ...)
-	self:_get_links_of_type_from_elements(self._hed.elements, "operator", ...)
-end
-
--- Lines 40-41
+-- Lines 35-36
 function CoreToggleUnitElement:update_editing()
 end
 
--- Lines 43-53
+-- Lines 38-48
 function CoreToggleUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -72,12 +70,12 @@ function CoreToggleUnitElement:add_element()
 	end
 end
 
--- Lines 56-58
+-- Lines 51-53
 function CoreToggleUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines 60-71
+-- Lines 55-66
 function CoreToggleUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

@@ -315,7 +315,7 @@ function StaticLayer:set_select_unit(unit)
 	end
 end
 
--- Lines 274-290
+-- Lines 274-294
 function StaticLayer:delete_selected_unit(btn, pressed)
 	managers.editor:freeze_gui_lists()
 
@@ -338,7 +338,7 @@ function StaticLayer:delete_selected_unit(btn, pressed)
 	managers.editor:thaw_gui_lists()
 end
 
--- Lines 292-298
+-- Lines 296-302
 function StaticLayer:create_marker(marker)
 	if self._selected_unit then
 		marker:set_pos(self._selected_unit:position())
@@ -348,7 +348,7 @@ function StaticLayer:create_marker(marker)
 	end
 end
 
--- Lines 299-304
+-- Lines 303-308
 function StaticLayer:use_marker(marker)
 	if self._selected_unit then
 		self:set_unit_positions(marker._pos)
@@ -356,7 +356,7 @@ function StaticLayer:use_marker(marker)
 	end
 end
 
--- Lines 306-311
+-- Lines 310-315
 function StaticLayer:reset_rotation()
 	if self._selected_unit then
 		local yaw = not self:shift() and self._selected_unit:rotation():yaw() or 0
@@ -365,7 +365,7 @@ function StaticLayer:reset_rotation()
 	end
 end
 
--- Lines 313-371
+-- Lines 317-375
 function StaticLayer:update(t, dt)
 	self:draw_units(t, dt)
 	self:draw_rotation(t, dt)
@@ -427,7 +427,7 @@ function StaticLayer:update(t, dt)
 	end
 end
 
--- Lines 373-392
+-- Lines 377-396
 function StaticLayer:draw_marker(t, dt)
 	if not managers.editor:layer_draw_marker() then
 		return
@@ -450,7 +450,7 @@ function StaticLayer:draw_marker(t, dt)
 	end
 end
 
--- Lines 395-424
+-- Lines 399-428
 function StaticLayer:update_move_triggers(t, dt)
 	if not alive(self._selected_unit) or not self._editor_data.keyboard_available or self:condition() then
 		return
@@ -482,7 +482,7 @@ function StaticLayer:update_move_triggers(t, dt)
 	end
 end
 
--- Lines 427-458
+-- Lines 431-462
 function StaticLayer:update_rotate_triggers(t, dt)
 	if not alive(self._selected_unit) or not self._editor_data.keyboard_available or self:condition() then
 		return
@@ -518,7 +518,7 @@ function StaticLayer:update_rotate_triggers(t, dt)
 	end
 end
 
--- Lines 460-471
+-- Lines 464-475
 function StaticLayer:draw_rotation(t, dt)
 	if not alive(self._selected_unit) then
 		return
@@ -533,7 +533,7 @@ function StaticLayer:draw_rotation(t, dt)
 	end
 end
 
--- Lines 473-493
+-- Lines 477-497
 function StaticLayer:draw_units(t, dt)
 	if self._selected_units then
 		for _, unit in ipairs(self._selected_units) do
@@ -551,7 +551,7 @@ function StaticLayer:draw_units(t, dt)
 	Application:draw(self._selected_unit, 0, 1, 0)
 end
 
--- Lines 495-526
+-- Lines 499-530
 function StaticLayer:build_panel(notebook, settings)
 	cat_print("editor", "StaticLayer:build_panel")
 
@@ -581,11 +581,11 @@ function StaticLayer:build_panel(notebook, settings)
 	return self._ews_panel
 end
 
--- Lines 528-530
+-- Lines 532-534
 function StaticLayer:build_btn_toolbar()
 end
 
--- Lines 532-538
+-- Lines 536-542
 function StaticLayer:add_btns_to_toolbar()
 	self._btn_toolbar:add_tool("HIDE_ALL", "Hide All", CoreEws.image_path("toolbar\\hide_16x16.png"), "Hide All")
 	self._btn_toolbar:connect("HIDE_ALL", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "hide_all"), nil)
@@ -593,7 +593,7 @@ function StaticLayer:add_btns_to_toolbar()
 	self._btn_toolbar:connect("UNHIDE_ALL", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "unhide_all"), nil)
 end
 
--- Lines 540-560
+-- Lines 544-564
 function StaticLayer:get_help(text)
 	local t = "\t"
 	local n = "\n"
@@ -617,12 +617,12 @@ function StaticLayer:get_help(text)
 	return text
 end
 
--- Lines 562-564
+-- Lines 566-568
 function StaticLayer:deactivate()
 	StaticLayer.super.deactivate(self)
 end
 
--- Lines 566-586
+-- Lines 570-590
 function StaticLayer:add_triggers()
 	StaticLayer.super.add_triggers(self)
 

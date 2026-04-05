@@ -190,7 +190,7 @@ function MissionLayer:adding_to_mission()
 	return vc:down(Idstring("add_on_executed")) or vc:down(Idstring("add_trigger")) or vc:down(Idstring("remove_connection")) or vc:down(Idstring("select_action_with_unit"))
 end
 
--- Lines 170-183
+-- Lines 170-180
 function MissionLayer:set_select_unit(unit, ...)
 	if alive(unit) and unit:mission_element_data().script and unit:mission_element_data().script ~= self:current_script() then
 		return
@@ -199,13 +199,9 @@ function MissionLayer:set_select_unit(unit, ...)
 	if not self:_add_on_executed(unit) then
 		MissionLayer.super.set_select_unit(self, unit, ...)
 	end
-
-	if self._list_flow and self._list_flow:visible() then
-		self._list_flow:on_unit_selected(self._selected_unit)
-	end
 end
 
--- Lines 185-210
+-- Lines 182-207
 function MissionLayer:_add_on_executed(unit)
 	if not alive(unit) then
 		if self:adding_to_mission() then
@@ -236,7 +232,7 @@ function MissionLayer:_add_on_executed(unit)
 	return false
 end
 
--- Lines 212-242
+-- Lines 209-239
 function MissionLayer:delete_selected_unit(btn, pressed)
 	managers.editor:freeze_gui_lists()
 
@@ -264,25 +260,14 @@ function MissionLayer:delete_selected_unit(btn, pressed)
 	managers.editor:thaw_gui_lists()
 end
 
--- Lines 244-251
+-- Lines 241-245
 function MissionLayer:delete_unit(del_unit, prevent_undo)
 	if not self._editing_mission_element then
 		MissionLayer.super.delete_unit(self, del_unit, prevent_undo)
 	end
-
-	if self._list_flow then
-		self._list_flow:on_unit_selected(self._selected_unit)
-	end
 end
 
--- Lines 253-257
-function MissionLayer:refresh_list_flow()
-	if self._list_flow and self._list_flow:visible() then
-		self._list_flow:on_unit_selected(self._selected_unit)
-	end
-end
-
--- Lines 259-280
+-- Lines 247-268
 function MissionLayer:clone_edited_values(unit, source)
 	MissionLayer.super.clone_edited_values(self, unit, source)
 
@@ -301,7 +286,7 @@ function MissionLayer:clone_edited_values(unit, source)
 	unit:mission_element():clone_data(self:_units_as_pairs(self._created_units))
 end
 
--- Lines 283-292
+-- Lines 271-280
 function MissionLayer:hide_all()
 	for _, unit in ipairs(self._created_units) do
 		if unit:mission_element_data().script == self:current_script() then
@@ -313,7 +298,7 @@ function MissionLayer:hide_all()
 	self:update_unit_settings()
 end
 
--- Lines 294-309
+-- Lines 282-297
 function MissionLayer:set_enabled(enabled)
 	self._layer_enabled = enabled
 
@@ -333,7 +318,7 @@ function MissionLayer:set_enabled(enabled)
 	return true
 end
 
--- Lines 311-319
+-- Lines 299-307
 function MissionLayer:widget_affect_object()
 	local object = MissionLayer.super.widget_affect_object(self)
 
@@ -344,7 +329,7 @@ function MissionLayer:widget_affect_object()
 	return object
 end
 
--- Lines 321-330
+-- Lines 309-318
 function MissionLayer:use_widget_position(pos)
 	if self._editing_mission_element and alive(self._selected_unit) and self._selected_unit:mission_element():use_widget_position(pos) then
 		return
@@ -353,7 +338,7 @@ function MissionLayer:use_widget_position(pos)
 	MissionLayer.super.use_widget_position(self, pos)
 end
 
--- Lines 333-339
+-- Lines 321-327
 function MissionLayer:_units_as_pairs(units)
 	local t = {}
 
@@ -364,14 +349,14 @@ function MissionLayer:_units_as_pairs(units)
 	return t
 end
 
--- Lines 341-347
+-- Lines 329-335
 function MissionLayer:_on_reference_unit_unselected(unit)
 	if alive(unit) and unit:mission_element().on_unselected ~= nil then
 		unit:mission_element():on_unselected()
 	end
 end
 
--- Lines 350-477
+-- Lines 338-465
 function MissionLayer:update(time, rel_time)
 	MissionLayer.super.update(self, time, rel_time)
 
@@ -468,7 +453,7 @@ function MissionLayer:update(time, rel_time)
 	end
 end
 
--- Lines 479-484
+-- Lines 467-472
 function MissionLayer:_cloning_done()
 	if alive(self._selected_unit) then
 		self._selected_unit:mission_element():destroy_panel()
@@ -476,7 +461,7 @@ function MissionLayer:_cloning_done()
 	end
 end
 
--- Lines 486-518
+-- Lines 474-506
 function MissionLayer:update_unit_settings()
 	MissionLayer.super.update_unit_settings(self)
 	self:set_current_panel_visible(false)
@@ -511,14 +496,14 @@ function MissionLayer:update_unit_settings()
 	self:do_layout()
 end
 
--- Lines 520-527
+-- Lines 508-515
 function MissionLayer:set_current_panel_visible(visible)
 	if self._current_panel and (not self._current_panel:extension() or self._current_panel:extension() and self._current_panel:extension().alive) then
 		self._current_panel:set_visible(visible)
 	end
 end
 
--- Lines 529-536
+-- Lines 517-524
 function MissionLayer:show_timeline()
 	if self:ctrl() then
 		return
@@ -529,26 +514,26 @@ function MissionLayer:show_timeline()
 	end
 end
 
--- Lines 538-540
+-- Lines 526-528
 function MissionLayer:test_element()
 	self._selected_unit:mission_element():test_element()
 end
 
--- Lines 542-544
+-- Lines 530-532
 function MissionLayer:stop_test_element()
 	self._selected_unit:mission_element():stop_test_element()
 end
 
--- Lines 546-548
+-- Lines 534-536
 function MissionLayer:toggle_update_selected_on()
 	self._selected_unit:mission_element():set_update_selected_on(self._element_toolbar:tool_state("UPDATE_SELECTED_ON"))
 end
 
--- Lines 550-555
+-- Lines 538-543
 function MissionLayer:_on_gui_mission_element_help()
 end
 
--- Lines 557-566
+-- Lines 545-554
 function MissionLayer:toolbar_toggle(data, event)
 	CoreEditorUtils.toolbar_toggle(data, event)
 
@@ -561,7 +546,7 @@ function MissionLayer:toolbar_toggle(data, event)
 	end
 end
 
--- Lines 568-584
+-- Lines 556-572
 function MissionLayer:toolbar_toggle_trg(data)
 	if data.value == "_editing_mission_element" and (not alive(self._selected_unit) or not self._selected_unit:mission_element():can_edit()) then
 		return
@@ -581,23 +566,23 @@ function MissionLayer:toolbar_toggle_trg(data)
 	end
 end
 
--- Lines 587-589
+-- Lines 575-577
 function MissionLayer:missionelement_panel()
 	return self._missionelement_panel
 end
 
--- Lines 592-594
+-- Lines 580-582
 function MissionLayer:missionelement_sizer()
 	return self._missionelement_sizer
 end
 
--- Lines 596-600
+-- Lines 584-588
 function MissionLayer:do_layout()
 	self._missionelement_panel:layout()
 	self._ews_panel:refresh()
 end
 
--- Lines 602-650
+-- Lines 590-638
 function MissionLayer:build_panel(notebook)
 	MissionLayer.super.build_panel(self, notebook, {
 		units_noteboook_proportion = 0,
@@ -648,7 +633,7 @@ function MissionLayer:build_panel(notebook)
 	return self._ews_panel
 end
 
--- Lines 652-691
+-- Lines 640-679
 function MissionLayer:_build_scripts()
 	local sizer = EWS:StaticBoxSizer(self._ews_panel, "HORIZONTAL", "Scripts")
 	self._scripts_toolbar = EWS:ToolBar(self._ews_panel, "", "TB_FLAT,TB_NODIVIDER")
@@ -685,7 +670,7 @@ function MissionLayer:_build_scripts()
 	self._sizer:add(sizer, 0, 0, "EXPAND")
 end
 
--- Lines 693-722
+-- Lines 681-707
 function MissionLayer:add_btns_to_toolbar(...)
 	MissionLayer.super.add_btns_to_toolbar(self, ...)
 	self._btn_toolbar:add_separator()
@@ -723,32 +708,19 @@ function MissionLayer:add_btns_to_toolbar(...)
 		class = self
 	})
 	self._btn_toolbar:add_separator()
-	self._btn_toolbar:add_tool("SHOW_LIST_FLOW", "Opens mission flow dialog", CoreEws.image_path("world_editor\\he_timeline_16x16.png"), "Opens mission flow dialog")
-	self._btn_toolbar:connect("SHOW_LIST_FLOW", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_show_list_flow"), {})
 end
 
--- Lines 724-726
+-- Lines 709-711
 function MissionLayer:toggle_persistent_debug(params)
 	managers.mission:set_persistent_debug_enabled(self._btn_toolbar:tool_state("PERSISTENT_DEBUG"))
 end
 
--- Lines 728-734
-function MissionLayer:_show_list_flow()
-	self._list_flow = self._list_flow or _G.MissionElementListFlow:new()
-
-	if not self._list_flow:visible() then
-		self._list_flow:set_visible(true)
-	end
-
-	self._list_flow:on_unit_selected(self._selected_unit)
-end
-
--- Lines 736-738
+-- Lines 713-715
 function MissionLayer:_on_activate_on_parsed()
 	self._scripts[self:current_script()].activate_on_parsed = self._scripts_toolbar:tool_state("ACTIVATE_ON_PARSED")
 end
 
--- Lines 740-749
+-- Lines 717-726
 function MissionLayer:_on_create_script()
 	local name = EWS:get_text_from_user(Global.frame_panel, "Enter name for new script:", "Create new script", "", Vector3(-1, -1, 0), true)
 
@@ -761,7 +733,7 @@ function MissionLayer:_on_create_script()
 	end
 end
 
--- Lines 751-763
+-- Lines 728-740
 function MissionLayer:_on_set_script()
 	if not self:current_script() then
 		return
@@ -776,7 +748,7 @@ function MissionLayer:_on_set_script()
 	self:_set_toolbar_settings()
 end
 
--- Lines 765-770
+-- Lines 742-747
 function MissionLayer:_populate_scripts_combobox()
 	self._scripts_combobox:clear()
 
@@ -785,17 +757,17 @@ function MissionLayer:_populate_scripts_combobox()
 	end
 end
 
--- Lines 772-774
+-- Lines 749-751
 function MissionLayer:_clear_scripts_combobox()
 	self._scripts_combobox:clear()
 end
 
--- Lines 776-778
+-- Lines 753-755
 function MissionLayer:_append_scripts_combobox(name)
 	self._scripts_combobox:append(name)
 end
 
--- Lines 783-788
+-- Lines 760-765
 function MissionLayer:_set_scripts_combobox(name)
 	name = self._scripts[name] and name
 	name = name or self:_get_script_combobox_name(true)
@@ -804,7 +776,7 @@ function MissionLayer:_set_scripts_combobox(name)
 	self._scripts_combobox:set_value(name)
 end
 
--- Lines 791-797
+-- Lines 768-774
 function MissionLayer:_get_script_combobox_name(continent)
 	for name, script in pairs(self._scripts) do
 		if not continent or script.continent == managers.editor:current_continent():name() then
@@ -813,14 +785,14 @@ function MissionLayer:_get_script_combobox_name(continent)
 	end
 end
 
--- Lines 799-802
+-- Lines 776-779
 function MissionLayer:_set_toolbar_settings()
 	local script = self._scripts[self:current_script()]
 
 	self._scripts_toolbar:set_tool_state("ACTIVATE_ON_PARSED", script.activate_on_parsed)
 end
 
--- Lines 804-810
+-- Lines 781-787
 function MissionLayer:current_script()
 	if self._scripts_combobox:get_value() ~= "" then
 		return self._scripts_combobox:get_value()
@@ -829,7 +801,7 @@ function MissionLayer:current_script()
 	end
 end
 
--- Lines 812-820
+-- Lines 789-797
 function MissionLayer:scripts_by_continent(continent)
 	local scripts = {}
 
@@ -842,7 +814,7 @@ function MissionLayer:scripts_by_continent(continent)
 	return scripts
 end
 
--- Lines 822-828
+-- Lines 799-805
 function MissionLayer:_reset_scripts()
 	self:_clear_scripts_combobox()
 
@@ -853,7 +825,7 @@ function MissionLayer:_reset_scripts()
 	})
 end
 
--- Lines 830-841
+-- Lines 807-818
 function MissionLayer:_create_script(name, values)
 	if not name then
 		return
@@ -869,13 +841,13 @@ function MissionLayer:_create_script(name, values)
 	self:_on_set_script()
 end
 
--- Lines 843-846
+-- Lines 820-823
 function MissionLayer:set_script(name)
 	self:_set_scripts_combobox(name)
 	self:_on_set_script()
 end
 
--- Lines 848-857
+-- Lines 825-834
 function MissionLayer:_on_delete_script()
 	if not self:current_script() then
 		return
@@ -890,7 +862,7 @@ function MissionLayer:_on_delete_script()
 	self:_delete_script(self:current_script())
 end
 
--- Lines 859-873
+-- Lines 836-850
 function MissionLayer:_delete_script(name)
 	if self._scripts[name].continent ~= managers.editor:current_continent():name() then
 		EWS:message_box(Global.frame_panel, "Can't delete script " .. name .. ", it does not belong to current continent.", "Mission", "CANCEL,ICON_ERROR", Vector3(-1, -1, 0))
@@ -911,7 +883,7 @@ function MissionLayer:_delete_script(name)
 	self:_on_set_script()
 end
 
--- Lines 875-895
+-- Lines 852-872
 function MissionLayer:_on_rename_script()
 	if not self:current_script() then
 		return
@@ -936,7 +908,7 @@ function MissionLayer:_on_rename_script()
 	end
 end
 
--- Lines 898-911
+-- Lines 875-888
 function MissionLayer:_rename_script(name, new_name)
 	for _, unit in ipairs(self._created_units) do
 		if unit:mission_element_data().script == name then
@@ -953,28 +925,28 @@ function MissionLayer:_rename_script(name, new_name)
 	self:_on_set_script()
 end
 
--- Lines 913-917
+-- Lines 890-894
 function MissionLayer:_set_script(name)
 	if not self._scripts[name] then
 		return
 	end
 end
 
--- Lines 919-923
+-- Lines 896-900
 function MissionLayer:_hide_all_scripts()
 	for name, _ in pairs(self._scripts) do
 		self:_hide_script(name)
 	end
 end
 
--- Lines 925-929
+-- Lines 902-906
 function MissionLayer:_show_all_mission_scripts()
 	for name, _ in pairs(self._scripts) do
 		self:_show_script(name)
 	end
 end
 
--- Lines 931-941
+-- Lines 908-918
 function MissionLayer:_hide_script(name)
 	if not self._scripts[name] then
 		return
@@ -988,7 +960,7 @@ function MissionLayer:_hide_script(name)
 	end
 end
 
--- Lines 943-957
+-- Lines 920-934
 function MissionLayer:_show_script(name)
 	if not self._scripts[name] then
 		return
@@ -1003,7 +975,7 @@ function MissionLayer:_show_script(name)
 	end
 end
 
--- Lines 959-965
+-- Lines 936-942
 function MissionLayer:script_names()
 	local names = {}
 
@@ -1014,7 +986,7 @@ function MissionLayer:script_names()
 	return names
 end
 
--- Lines 967-975
+-- Lines 944-952
 function MissionLayer:set_show_all_scripts(show_all_scripts)
 	self._show_all_scripts = show_all_scripts
 
@@ -1026,12 +998,12 @@ function MissionLayer:set_show_all_scripts(show_all_scripts)
 	end
 end
 
--- Lines 977-979
+-- Lines 954-956
 function MissionLayer:show_all_scripts(show_all_scripts)
 	return self._show_all_scripts
 end
 
--- Lines 981-986
+-- Lines 958-963
 function MissionLayer:set_iconsize(size)
 	Global.iconsize = size
 
@@ -1040,17 +1012,17 @@ function MissionLayer:set_iconsize(size)
 	end
 end
 
--- Lines 988-990
+-- Lines 965-967
 function MissionLayer:visualize_flow()
 	return self._visualize_flow
 end
 
--- Lines 992-994
+-- Lines 969-971
 function MissionLayer:use_colored_links()
 	return self._use_colored_links
 end
 
--- Lines 996-1012
+-- Lines 973-985
 function MissionLayer:clear()
 	for _, unit in ipairs(self._created_units) do
 		unit:mission_element():clear()
@@ -1061,18 +1033,14 @@ function MissionLayer:clear()
 	MissionLayer.super.clear(self)
 	self:_reset_scripts()
 	self:update_unit_settings()
-
-	if self._list_flow then
-		self._list_flow:on_unit_selected(nil)
-	end
 end
 
--- Lines 1014-1016
+-- Lines 987-989
 function MissionLayer:simulate_with_current_script()
 	return self._simulate_with_current_script
 end
 
--- Lines 1018-1024
+-- Lines 991-999
 function MissionLayer:get_unit_links(to_unit)
 	local links = {
 		executers = {},
@@ -1086,29 +1054,7 @@ function MissionLayer:get_unit_links(to_unit)
 	return links
 end
 
--- Lines 1026-1032
-function MissionLayer:activate(...)
-	MissionLayer.super.activate(self, ...)
-
-	if self._list_flow then
-		self._list_flow:set_visible(self._was_list_flow_visible)
-
-		self._was_list_flow_visible = nil
-	end
-end
-
--- Lines 1034-1040
-function MissionLayer:deactivate(...)
-	MissionLayer.super.deactivate(self, ...)
-
-	if self._list_flow then
-		self._was_list_flow_visible = self._list_flow:visible()
-
-		self._list_flow:set_visible(false)
-	end
-end
-
--- Lines 1042-1052
+-- Lines 1001-1011
 function MissionLayer:add_triggers()
 	MissionLayer.super.add_triggers(self)
 
@@ -1126,7 +1072,7 @@ function MissionLayer:add_triggers()
 	end
 end
 
--- Lines 1054-1075
+-- Lines 1013-1034
 function MissionLayer:break_links()
 	managers.editor:freeze_gui_lists()
 

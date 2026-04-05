@@ -953,7 +953,7 @@ function InstancesLayer:_build_predefined_instances_notebook()
 	return notebook_sizer
 end
 
--- Lines 932-976
+-- Lines 932-980
 function InstancesLayer:_add_predefined_instances_notebook_pages()
 	local style = "LC_REPORT,LC_NO_HEADER,LC_SORT_ASCENDING,LC_SINGLE_SEL"
 	self._predefined_instances_notebook_lists = {}
@@ -989,7 +989,7 @@ function InstancesLayer:_add_predefined_instances_notebook_pages()
 		instance_filter:connect("EVT_COMMAND_TEXT_UPDATED", callback(self, self, "_on_gui_instances_update_filter"), {
 			filter = instance_filter,
 			instances = instances,
-			category = c
+			category = category_name
 		})
 
 		local page_name = category_name
@@ -1002,7 +1002,7 @@ function InstancesLayer:_add_predefined_instances_notebook_pages()
 	end
 end
 
--- Lines 978-983
+-- Lines 982-987
 function InstancesLayer:_clear_predefined_instances_notebook()
 	self._predefined_instances_notebook_lists = {}
 
@@ -1011,7 +1011,7 @@ function InstancesLayer:_clear_predefined_instances_notebook()
 	end
 end
 
--- Lines 985-996
+-- Lines 989-1000
 function InstancesLayer:_predefined_data_by_category()
 	local t = {
 		ALL = {}
@@ -1028,7 +1028,7 @@ function InstancesLayer:_predefined_data_by_category()
 	return t
 end
 
--- Lines 999-1005
+-- Lines 1003-1009
 function InstancesLayer:_on_gui_instances_page_changed()
 	for _, data in pairs(self._predefined_instances_notebook_lists) do
 		for _, item in ipairs(data.instances:selected_items()) do
@@ -1037,7 +1037,7 @@ function InstancesLayer:_on_gui_instances_page_changed()
 	end
 end
 
--- Lines 1008-1021
+-- Lines 1012-1025
 function InstancesLayer:_on_gui_instances_update_filter(data)
 	local filter = data.filter:get_value()
 
@@ -1056,12 +1056,12 @@ function InstancesLayer:_on_gui_instances_update_filter(data)
 	data.instances:autosize_column(0)
 end
 
--- Lines 1023-1026
+-- Lines 1027-1030
 function InstancesLayer:_on_gui_new_instance()
 	self:_get_instance_info_from_user()
 end
 
--- Lines 1028-1036
+-- Lines 1032-1040
 function InstancesLayer:_on_gui_open_selected_instance_path()
 	local name = self:_get_selection_instances_listbox()
 
@@ -1074,7 +1074,7 @@ function InstancesLayer:_on_gui_open_selected_instance_path()
 	end
 end
 
--- Lines 1038-1078
+-- Lines 1042-1082
 function InstancesLayer:_on_gui_rename_instance()
 	local name = self:_get_selection_instances_listbox()
 
@@ -1122,14 +1122,14 @@ function InstancesLayer:_on_gui_rename_instance()
 	end
 end
 
--- Lines 1080-1084
+-- Lines 1084-1088
 function InstancesLayer:_on_gui_delete_instance()
 	if #self._selected_instances > 0 then
 		self:delete_all_selected_instances()
 	end
 end
 
--- Lines 1086-1106
+-- Lines 1090-1110
 function InstancesLayer:_on_gui_reindex_instances()
 	if EWS:MessageDialog(Global.frame_panel, "This will change the indexes for all instances!", "Are you sure!", "YES_NO,NO_DEFAULT,ICON_EXCLAMATION"):show_modal() == "ID_NO" then
 		return
@@ -1153,7 +1153,7 @@ function InstancesLayer:_on_gui_reindex_instances()
 	end
 end
 
--- Lines 1108-1116
+-- Lines 1112-1120
 function InstancesLayer:_on_gui_mission_placed()
 	local name = self:_get_selection_instances_listbox()
 
@@ -1166,14 +1166,14 @@ function InstancesLayer:_on_gui_mission_placed()
 	end
 end
 
--- Lines 1118-1121
+-- Lines 1122-1125
 function InstancesLayer:_on_gui_select_predefined_instance(predefined_instances_list_box)
 	local name = self:_get_selection_predefined_instances_listbox(predefined_instances_list_box)
 
 	self:_set_selected_predefined_instance(name)
 end
 
--- Lines 1123-1161
+-- Lines 1127-1165
 function InstancesLayer:_set_selected_predefined_instance(name)
 	self._selected_predefined_instance = name
 
@@ -1220,7 +1220,7 @@ function InstancesLayer:_set_selected_predefined_instance(name)
 	end
 end
 
--- Lines 1163-1170
+-- Lines 1167-1174
 function InstancesLayer:_get_selection_predefined_instances_listbox(predefined_instances_list_box)
 	predefined_instances_list_box = predefined_instances_list_box or self._predefined_instances_listbox
 	local i = predefined_instances_list_box:selected_item()
@@ -1232,7 +1232,7 @@ function InstancesLayer:_get_selection_predefined_instances_listbox(predefined_i
 	return nil
 end
 
--- Lines 1172-1179
+-- Lines 1176-1183
 function InstancesLayer:_on_gui_select_instance()
 	local indices = self._instances_listbox:selected_indices()
 	local names = {}
@@ -1244,7 +1244,7 @@ function InstancesLayer:_on_gui_select_instance()
 	self:select_instance(names, #indices > 1)
 end
 
--- Lines 1181-1188
+-- Lines 1185-1192
 function InstancesLayer:_get_selection_instances_listbox()
 	local indices = self._instances_listbox:selected_indices()
 	local i = #indices > 0 and indices[1] or -1
@@ -1256,7 +1256,7 @@ function InstancesLayer:_get_selection_instances_listbox()
 	return nil
 end
 
--- Lines 1190-1195
+-- Lines 1194-1199
 function InstancesLayer:_update_instances_listbox()
 	self._instances_listbox:clear()
 
@@ -1265,7 +1265,7 @@ function InstancesLayer:_update_instances_listbox()
 	end
 end
 
--- Lines 1197-1214
+-- Lines 1201-1218
 function InstancesLayer:_set_selection_instances_listbox(name)
 	for i, index in ipairs(self._instances_listbox:selected_indices()) do
 		self._instances_listbox:deselect_index(index)
@@ -1286,7 +1286,7 @@ function InstancesLayer:_set_selection_instances_listbox(name)
 	end
 end
 
--- Lines 1216-1225
+-- Lines 1220-1229
 function InstancesLayer:_on_gui_open_instance_path(name)
 	name = name or self._selected_predefined_instance
 
@@ -1299,7 +1299,7 @@ function InstancesLayer:_on_gui_open_instance_path(name)
 	self:_open_instance_path(folder)
 end
 
--- Lines 1227-1237
+-- Lines 1231-1241
 function InstancesLayer:_open_instance_path(folder)
 	if managers.editor:confirm_on_new() then
 		return
@@ -1314,12 +1314,12 @@ function InstancesLayer:_open_instance_path(folder)
 	managers.editor:load_level(abs_folder, abs_file)
 end
 
--- Lines 1239-1241
+-- Lines 1243-1245
 function InstancesLayer:_on_gui_open_predefined_instances_file()
 	os.execute("start " .. managers.database:entry_expanded_directory(self._predefined_instances_file .. ".xml"))
 end
 
--- Lines 1243-1267
+-- Lines 1247-1271
 function InstancesLayer:_on_gui_reload_predefined_instances_file()
 	local t = {
 		target_db_name = "all",
@@ -1347,7 +1347,7 @@ function InstancesLayer:_on_gui_reload_predefined_instances_file()
 	self._predefined_instances_notebook:set_page(math.min(current_page_index, self._predefined_instances_notebook:get_page_count() - 1))
 end
 
--- Lines 1269-1275
+-- Lines 1273-1279
 function InstancesLayer:on_continent_changed(...)
 	InstancesLayer.super.on_continent_changed(self, ...)
 	self:select_instance(nil)
@@ -1355,7 +1355,7 @@ function InstancesLayer:on_continent_changed(...)
 	self:_update_overlay_gui()
 end
 
--- Lines 1277-1283
+-- Lines 1281-1287
 function InstancesLayer:hide_all()
 	for continent_name, _ in pairs(managers.editor:continents()) do
 		for _, name in ipairs(managers.world_instance:instance_names(continent_name)) do
@@ -1364,7 +1364,7 @@ function InstancesLayer:hide_all()
 	end
 end
 
--- Lines 1285-1291
+-- Lines 1289-1295
 function InstancesLayer:unhide_all()
 	for continent_name, _ in pairs(managers.editor:continents()) do
 		for _, name in ipairs(managers.world_instance:instance_names(continent_name)) do
@@ -1373,7 +1373,7 @@ function InstancesLayer:unhide_all()
 	end
 end
 
--- Lines 1293-1303
+-- Lines 1297-1307
 function InstancesLayer:on_hide_selected()
 	if #self._selected_instances > 0 then
 		for i, instance_data in ipairs(self._selected_instances) do
@@ -1384,7 +1384,7 @@ function InstancesLayer:on_hide_selected()
 	self:select_instance(nil)
 end
 
--- Lines 1305-1311
+-- Lines 1309-1315
 function InstancesLayer:set_instance_visible(instance_name, visible)
 	for name, units in pairs(self:get_instance_units_by_name(instance_name)) do
 		for _, unit in ipairs(units) do
@@ -1393,7 +1393,7 @@ function InstancesLayer:set_instance_visible(instance_name, visible)
 	end
 end
 
--- Lines 1313-1333
+-- Lines 1317-1337
 function InstancesLayer:_create_overlay_gui()
 	if self._workspace then
 		Overlay:newgui():destroy_workspace(self._workspace)
@@ -1418,7 +1418,7 @@ function InstancesLayer:_create_overlay_gui()
 	})
 end
 
--- Lines 1335-1372
+-- Lines 1339-1376
 function InstancesLayer:_update_overlay_gui()
 	self._gui_panel:clear()
 	self._gui_panel:rect({
@@ -1458,7 +1458,7 @@ function InstancesLayer:_update_overlay_gui()
 	end
 end
 
--- Lines 1398-1412
+-- Lines 1402-1416
 function InstancesLayer:on_simulation_started()
 	self._stashed_instance_units = {}
 
@@ -1477,16 +1477,18 @@ function InstancesLayer:on_simulation_started()
 	end
 end
 
--- Lines 1414-1419
+-- Lines 1418-1426
 function InstancesLayer:update_unit_settings(...)
 	InstancesLayer.super.update_unit_settings(self, ...)
 
 	for i, instance_data in ipairs(self._selected_instances) do
 		managers.editor:on_reference_unit(instance_data.instance)
 	end
+
+	managers.editor:on_selected_instance(self._selected_instance)
 end
 
--- Lines 1421-1426
+-- Lines 1428-1433
 function InstancesLayer:activate()
 	InstancesLayer.super.activate(self)
 
@@ -1495,7 +1497,7 @@ function InstancesLayer:activate()
 	end
 end
 
--- Lines 1428-1434
+-- Lines 1435-1441
 function InstancesLayer:deactivate()
 	self._stashed_instance_units = {}
 
@@ -1506,7 +1508,7 @@ function InstancesLayer:deactivate()
 	end
 end
 
--- Lines 1436-1441
+-- Lines 1443-1448
 function InstancesLayer:add_triggers()
 	local vc = self._editor_data.virtual_controller
 
@@ -1514,12 +1516,12 @@ function InstancesLayer:add_triggers()
 	InstancesLayer.super.add_triggers(self)
 end
 
--- Lines 1443-1445
+-- Lines 1450-1452
 function InstancesLayer:selected_amount_string()
 	return string.format("Selected %s: %i", self._save_name, #self._selected_instances)
 end
 
--- Lines 1447-1459
+-- Lines 1454-1466
 function InstancesLayer:clear()
 	self._stashed_instance_units = {}
 	self._selected_instance = nil
@@ -1533,50 +1535,50 @@ end
 
 Reference = Reference or class()
 
--- Lines 1462-1465
+-- Lines 1469-1472
 function Reference:init(pos, rot)
 	self._pos = pos
 	self._rot = rot
 end
 
--- Lines 1467-1469
+-- Lines 1474-1476
 function Reference:position()
 	return self._pos
 end
 
--- Lines 1471-1473
+-- Lines 1478-1480
 function Reference:rotation()
 	return self._rot
 end
 
 Instance = Instance or class()
 
--- Lines 1476-1478
+-- Lines 1483-1485
 function Instance:init(data)
 	self._data = data
 end
 
--- Lines 1480-1482
+-- Lines 1487-1489
 function Instance:name()
 	return self._data.name
 end
 
--- Lines 1484-1486
+-- Lines 1491-1493
 function Instance:alive()
 	return true
 end
 
--- Lines 1488-1490
+-- Lines 1495-1497
 function Instance:data()
 	return self._data
 end
 
--- Lines 1492-1494
+-- Lines 1499-1501
 function Instance:position()
 	return self._data.position or Vector3()
 end
 
--- Lines 1496-1498
+-- Lines 1503-1505
 function Instance:rotation()
 	return self._data.rotation or Rotation()
 end

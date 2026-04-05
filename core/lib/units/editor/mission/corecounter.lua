@@ -207,8 +207,12 @@ CoreCounterOperatorUnitElement.INSTANCE_VAR_NAMES = {
 		type = "number"
 	}
 }
-CoreCounterOperatorUnitElement.LINK_ELEMENTS = {
-	"elements"
+CoreCounterOperatorUnitElement.LINK_VALUES = {
+	{
+		output = true,
+		table_value = "elements",
+		type = "operator"
+	}
 }
 CounterOperatorUnitElement = CounterOperatorUnitElement or class(CoreCounterOperatorUnitElement)
 
@@ -250,17 +254,11 @@ function CoreCounterOperatorUnitElement:draw_links(t, dt, selected_unit, all_uni
 	end
 end
 
--- Lines 196-199
-function CoreCounterOperatorUnitElement:get_links_to_unit(...)
-	CoreCounterOperatorUnitElement.super.get_links_to_unit(self, ...)
-	self:_get_links_of_type_from_elements(self._hed.elements, "operator", ...)
-end
-
--- Lines 201-202
+-- Lines 196-197
 function CoreCounterOperatorUnitElement:update_editing()
 end
 
--- Lines 204-217
+-- Lines 199-212
 function CoreCounterOperatorUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -278,12 +276,12 @@ function CoreCounterOperatorUnitElement:add_element()
 	end
 end
 
--- Lines 220-222
+-- Lines 215-217
 function CoreCounterOperatorUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines 224-237
+-- Lines 219-232
 function CoreCounterOperatorUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -311,17 +309,20 @@ end
 CoreCounterTriggerUnitElement = CoreCounterTriggerUnitElement or class(MissionElement)
 CoreCounterTriggerUnitElement.SAVE_UNIT_POSITION = false
 CoreCounterTriggerUnitElement.SAVE_UNIT_ROTATION = false
-CoreCounterTriggerUnitElement.LINK_ELEMENTS = {
-	"elements"
+CoreCounterTriggerUnitElement.LINK_VALUES = {
+	{
+		table_value = "elements",
+		type = "trigger"
+	}
 }
 CounterTriggerUnitElement = CounterTriggerUnitElement or class(CoreCounterTriggerUnitElement)
 
--- Lines 248-250
+-- Lines 243-245
 function CounterTriggerUnitElement:init(...)
 	CounterTriggerUnitElement.super.init(self, ...)
 end
 
--- Lines 252-262
+-- Lines 247-257
 function CoreCounterTriggerUnitElement:init(unit)
 	CoreCounterTriggerUnitElement.super.init(self, unit)
 
@@ -334,7 +335,7 @@ function CoreCounterTriggerUnitElement:init(unit)
 	table.insert(self._save_values, "elements")
 end
 
--- Lines 264-273
+-- Lines 259-268
 function CoreCounterTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 	CoreCounterTriggerUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -354,17 +355,11 @@ function CoreCounterTriggerUnitElement:draw_links(t, dt, selected_unit, all_unit
 	end
 end
 
--- Lines 275-278
-function CoreCounterTriggerUnitElement:get_links_to_unit(...)
-	CoreCounterTriggerUnitElement.super.get_links_to_unit(self, ...)
-	self:_get_links_of_type_from_elements(self._hed.elements, "trigger", ...)
-end
-
--- Lines 280-281
+-- Lines 270-271
 function CoreCounterTriggerUnitElement:update_editing()
 end
 
--- Lines 283-296
+-- Lines 273-286
 function CoreCounterTriggerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -382,12 +377,12 @@ function CoreCounterTriggerUnitElement:add_element()
 	end
 end
 
--- Lines 299-301
+-- Lines 289-291
 function CoreCounterTriggerUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines 303-316
+-- Lines 293-306
 function CoreCounterTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -415,17 +410,21 @@ end
 CoreCounterFilterUnitElement = CoreCounterFilterUnitElement or class(MissionElement)
 CoreCounterFilterUnitElement.SAVE_UNIT_POSITION = false
 CoreCounterFilterUnitElement.SAVE_UNIT_ROTATION = false
-CoreCounterFilterUnitElement.LINK_ELEMENTS = {
-	"elements"
+CoreCounterFilterUnitElement.LINK_VALUES = {
+	{
+		output = true,
+		table_value = "elements",
+		type = "filter"
+	}
 }
 CounterFilterUnitElement = CounterFilterUnitElement or class(CoreCounterFilterUnitElement)
 
--- Lines 327-329
+-- Lines 317-319
 function CounterFilterUnitElement:init(...)
 	CounterFilterUnitElement.super.init(self, ...)
 end
 
--- Lines 331-343
+-- Lines 321-333
 function CoreCounterFilterUnitElement:init(unit)
 	CoreCounterFilterUnitElement.super.init(self, unit)
 
@@ -440,7 +439,7 @@ function CoreCounterFilterUnitElement:init(unit)
 	table.insert(self._save_values, "check_type")
 end
 
--- Lines 345-354
+-- Lines 335-344
 function CoreCounterFilterUnitElement:draw_links(t, dt, selected_unit, all_units)
 	CoreCounterFilterUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -460,17 +459,11 @@ function CoreCounterFilterUnitElement:draw_links(t, dt, selected_unit, all_units
 	end
 end
 
--- Lines 356-359
-function CoreCounterFilterUnitElement:get_links_to_unit(...)
-	CoreCounterFilterUnitElement.super.get_links_to_unit(self, ...)
-	self:_get_links_of_type_from_elements(self._hed.elements, "filter", ...)
-end
-
--- Lines 361-362
+-- Lines 346-347
 function CoreCounterFilterUnitElement:update_editing()
 end
 
--- Lines 364-377
+-- Lines 349-362
 function CoreCounterFilterUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -488,12 +481,12 @@ function CoreCounterFilterUnitElement:add_element()
 	end
 end
 
--- Lines 380-382
+-- Lines 365-367
 function CoreCounterFilterUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines 384-398
+-- Lines 369-383
 function CoreCounterFilterUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
