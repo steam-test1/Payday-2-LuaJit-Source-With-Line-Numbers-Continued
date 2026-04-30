@@ -1,9 +1,17 @@
 SecurityCameraUnitElement = SecurityCameraUnitElement or class(MissionElement)
 SecurityCameraUnitElement.SAVE_UNIT_POSITION = false
 SecurityCameraUnitElement.SAVE_UNIT_ROTATION = false
+SecurityCameraUnitElement.LINK_VALUES = {
+	{
+		value = "camera_u_id",
+		output = true,
+		layer = "Statics",
+		type = "operator"
+	}
+}
 SecurityCameraUnitElement._object_original_rotations = {}
 
--- Lines 8-27
+-- Lines 12-31
 function SecurityCameraUnitElement:init(unit)
 	SecurityCameraUnitElement.super.init(self, unit)
 
@@ -20,7 +28,7 @@ function SecurityCameraUnitElement:init(unit)
 	table.insert(self._save_values, "apply_settings")
 end
 
--- Lines 31-42
+-- Lines 35-46
 function SecurityCameraUnitElement:post_init(...)
 	SecurityCameraUnitElement.super.post_init(self, ...)
 
@@ -35,7 +43,7 @@ function SecurityCameraUnitElement:post_init(...)
 	end
 end
 
--- Lines 46-52
+-- Lines 50-56
 function SecurityCameraUnitElement:_add_camera_filter(unit)
 	local id = unit:unit_data().unit_id
 
@@ -46,17 +54,17 @@ function SecurityCameraUnitElement:_add_camera_filter(unit)
 	return unit:base() and unit:base().security_camera
 end
 
--- Lines 54-56
+-- Lines 58-60
 function SecurityCameraUnitElement:_remove_camera_filter(unit)
 	return self._hed.camera_u_id == unit:unit_data().unit_id
 end
 
--- Lines 58-60
+-- Lines 62-64
 function SecurityCameraUnitElement:_remove_camera_unit()
 	self:_set_camera_unit(nil)
 end
 
--- Lines 64-214
+-- Lines 68-218
 function SecurityCameraUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -254,13 +262,13 @@ function SecurityCameraUnitElement:_build_panel(panel, panel_sizer)
 	})
 end
 
--- Lines 218-221
+-- Lines 222-225
 function SecurityCameraUnitElement:update_editing()
 	self:_find_camera_raycast()
 	self:_raycast()
 end
 
--- Lines 225-244
+-- Lines 229-248
 function SecurityCameraUnitElement:_find_camera_raycast()
 	local from = managers.editor:get_cursor_look_point(0)
 	local to = managers.editor:get_cursor_look_point(100000)
@@ -283,7 +291,7 @@ function SecurityCameraUnitElement:_find_camera_raycast()
 	return ray.unit
 end
 
--- Lines 248-257
+-- Lines 252-261
 function SecurityCameraUnitElement:_raycast()
 	local from = managers.editor:get_cursor_look_point(0)
 	local to = managers.editor:get_cursor_look_point(100000)
@@ -298,7 +306,7 @@ function SecurityCameraUnitElement:_raycast()
 	return nil
 end
 
--- Lines 261-271
+-- Lines 265-275
 function SecurityCameraUnitElement:_lmb()
 	local unit = self:_find_camera_raycast()
 
@@ -311,7 +319,7 @@ function SecurityCameraUnitElement:_lmb()
 	end
 end
 
--- Lines 275-286
+-- Lines 279-290
 function SecurityCameraUnitElement:update_selected(t, dt, selected_unit, all_units)
 	self:_chk_units_alive()
 
@@ -330,19 +338,19 @@ function SecurityCameraUnitElement:update_selected(t, dt, selected_unit, all_uni
 	end
 end
 
--- Lines 290-292
+-- Lines 294-296
 function SecurityCameraUnitElement:update_unselected(t, dt, selected_unit, all_units)
 	self:_chk_units_alive()
 end
 
--- Lines 296-300
+-- Lines 300-304
 function SecurityCameraUnitElement:_chk_units_alive()
 	if self._camera_u_data and not alive(self._camera_u_data.unit) then
 		self:_set_camera_unit(nil)
 	end
 end
 
--- Lines 304-316
+-- Lines 308-320
 function SecurityCameraUnitElement:draw_links(t, dt, selected_unit, all_units)
 	SecurityCameraUnitElement.super.draw_links(self, t, dt, selected_unit)
 	self:_chk_units_alive()
@@ -362,7 +370,7 @@ function SecurityCameraUnitElement:draw_links(t, dt, selected_unit, all_units)
 	end
 end
 
--- Lines 321-332
+-- Lines 325-336
 function SecurityCameraUnitElement:layer_finished()
 	SecurityCameraUnitElement.super.layer_finished(self)
 
@@ -377,12 +385,12 @@ function SecurityCameraUnitElement:layer_finished()
 	end
 end
 
--- Lines 336-338
+-- Lines 340-342
 function SecurityCameraUnitElement:load_camera_unit(unit)
 	self:_set_camera_unit(unit)
 end
 
--- Lines 344-350
+-- Lines 348-354
 function SecurityCameraUnitElement:selected()
 	AIAttentionElement.super.selected(self)
 	self:_chk_units_alive()
@@ -392,12 +400,12 @@ function SecurityCameraUnitElement:selected()
 	end
 end
 
--- Lines 354-356
+-- Lines 358-360
 function SecurityCameraUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "_lmb"))
 end
 
--- Lines 360-393
+-- Lines 364-397
 function SecurityCameraUnitElement:_set_camera_unit(unit)
 	if self._camera_u_data and self._camera_u_data.unit == unit or not self._camera_u_data and not unit then
 		return
@@ -438,7 +446,7 @@ function SecurityCameraUnitElement:_set_camera_unit(unit)
 	end
 end
 
--- Lines 397-426
+-- Lines 401-430
 function SecurityCameraUnitElement:set_element_data(...)
 	local had_settings = self._hed.apply_settings
 
@@ -470,7 +478,7 @@ function SecurityCameraUnitElement:set_element_data(...)
 	end
 end
 
--- Lines 430-445
+-- Lines 434-449
 function SecurityCameraUnitElement:_align_camera_unit()
 	if self._hed.apply_settings then
 		local unit = self._camera_u_data.unit

@@ -1,6 +1,14 @@
 AccessCameraUnitElement = AccessCameraUnitElement or class(MissionElement)
+AccessCameraUnitElement.LINK_VALUES = {
+	{
+		value = "camera_u_id",
+		output = true,
+		layer = "Statics",
+		type = "filter"
+	}
+}
 
--- Lines 3-18
+-- Lines 11-26
 function AccessCameraUnitElement:init(unit)
 	AccessCameraUnitElement.super.init(self, unit)
 
@@ -19,7 +27,7 @@ function AccessCameraUnitElement:init(unit)
 	table.insert(self._save_values, "camera_u_id")
 end
 
--- Lines 20-36
+-- Lines 28-44
 function AccessCameraUnitElement:layer_finished()
 	AccessCameraUnitElement.super.layer_finished(self)
 
@@ -32,14 +40,14 @@ function AccessCameraUnitElement:layer_finished()
 	end
 end
 
--- Lines 38-43
+-- Lines 46-51
 function AccessCameraUnitElement:load_unit(unit)
 	if unit then
 		self._camera_unit = unit
 	end
 end
 
--- Lines 45-62
+-- Lines 53-70
 function AccessCameraUnitElement:update_selected(t, dt, selected_unit, all_units)
 	Application:draw_cone(self._unit:position(), self._unit:position() + self._unit:rotation():y() * 75, 35, 1, 1, 1)
 
@@ -57,7 +65,7 @@ function AccessCameraUnitElement:update_selected(t, dt, selected_unit, all_units
 	end
 end
 
--- Lines 64-79
+-- Lines 72-87
 function AccessCameraUnitElement:update_unselected(t, dt, selected_unit, all_units)
 	if alive(self._camera_unit) then
 		-- Nothing
@@ -66,11 +74,11 @@ function AccessCameraUnitElement:update_unselected(t, dt, selected_unit, all_uni
 	end
 end
 
--- Lines 81-84
+-- Lines 89-92
 function AccessCameraUnitElement:update_editing()
 end
 
--- Lines 86-98
+-- Lines 94-106
 function AccessCameraUnitElement:_add_text_options_from_file(path)
 	local xml = SystemFS:parse_xml(Application:base_path() .. "../../assets/" .. path)
 
@@ -85,7 +93,7 @@ function AccessCameraUnitElement:_add_text_options_from_file(path)
 	end
 end
 
--- Lines 100-104
+-- Lines 108-112
 function AccessCameraUnitElement:_add_text_options()
 	self._text_options = {
 		"debug_none"
@@ -95,12 +103,12 @@ function AccessCameraUnitElement:_add_text_options()
 	self:_add_text_options_from_file("strings/wip.strings")
 end
 
--- Lines 106-108
+-- Lines 114-116
 function AccessCameraUnitElement:_set_text()
 	self._text:set_value(managers.localization:text(self._hed.text_id))
 end
 
--- Lines 110-119
+-- Lines 118-127
 function AccessCameraUnitElement:add_camera_uid()
 	local unit = SecurityCameraUnitElement._find_camera_raycast(self)
 
@@ -113,7 +121,7 @@ function AccessCameraUnitElement:add_camera_uid()
 	end
 end
 
--- Lines 121-126
+-- Lines 129-134
 function AccessCameraUnitElement:set_element_data(params, ...)
 	AccessCameraUnitElement.super.set_element_data(self, params, ...)
 
@@ -122,12 +130,12 @@ function AccessCameraUnitElement:set_element_data(params, ...)
 	end
 end
 
--- Lines 129-131
+-- Lines 137-139
 function AccessCameraUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_camera_uid"))
 end
 
--- Lines 135-141
+-- Lines 143-149
 function AccessCameraUnitElement:_add_camera_filter(unit)
 	local id = unit:unit_data().unit_id
 
@@ -138,24 +146,24 @@ function AccessCameraUnitElement:_add_camera_filter(unit)
 	return unit:base() and unit:base().security_camera
 end
 
--- Lines 143-145
+-- Lines 151-153
 function AccessCameraUnitElement:_remove_camera_filter(unit)
 	return self._hed.camera_u_id == unit:unit_data().unit_id
 end
 
--- Lines 147-150
+-- Lines 155-158
 function AccessCameraUnitElement:_add_camera_unit(unit)
 	self._hed.camera_u_id = unit:unit_data().unit_id
 	self._camera_unit = unit
 end
 
--- Lines 152-155
+-- Lines 160-163
 function AccessCameraUnitElement:_remove_camera_unit()
 	self._hed.camera_u_id = nil
 	self._camera_unit = nil
 end
 
--- Lines 159-181
+-- Lines 167-189
 function AccessCameraUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -194,7 +202,7 @@ AccessCameraOperatorUnitElement.LINK_ELEMENTS = {
 	"elements"
 }
 
--- Lines 188-196
+-- Lines 196-204
 function AccessCameraOperatorUnitElement:init(unit)
 	AccessCameraOperatorUnitElement.super.init(self, unit)
 
@@ -205,7 +213,7 @@ function AccessCameraOperatorUnitElement:init(unit)
 	table.insert(self._save_values, "elements")
 end
 
--- Lines 198-207
+-- Lines 206-215
 function AccessCameraOperatorUnitElement:draw_links(t, dt, selected_unit, all_units)
 	AccessCameraOperatorUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -225,11 +233,11 @@ function AccessCameraOperatorUnitElement:draw_links(t, dt, selected_unit, all_un
 	end
 end
 
--- Lines 209-210
+-- Lines 217-218
 function AccessCameraOperatorUnitElement:update_editing()
 end
 
--- Lines 212-227
+-- Lines 220-235
 function AccessCameraOperatorUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -247,12 +255,12 @@ function AccessCameraOperatorUnitElement:add_element()
 	end
 end
 
--- Lines 230-232
+-- Lines 238-240
 function AccessCameraOperatorUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines 234-246
+-- Lines 242-254
 function AccessCameraOperatorUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -276,7 +284,7 @@ AccessCameraTriggerUnitElement.LINK_ELEMENTS = {
 	"elements"
 }
 
--- Lines 253-261
+-- Lines 261-269
 function AccessCameraTriggerUnitElement:init(unit)
 	AccessCameraTriggerUnitElement.super.init(self, unit)
 
@@ -287,7 +295,7 @@ function AccessCameraTriggerUnitElement:init(unit)
 	table.insert(self._save_values, "elements")
 end
 
--- Lines 263-272
+-- Lines 271-280
 function AccessCameraTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 	AccessCameraTriggerUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -307,11 +315,11 @@ function AccessCameraTriggerUnitElement:draw_links(t, dt, selected_unit, all_uni
 	end
 end
 
--- Lines 274-275
+-- Lines 282-283
 function AccessCameraTriggerUnitElement:update_editing()
 end
 
--- Lines 277-292
+-- Lines 285-300
 function AccessCameraTriggerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -329,12 +337,12 @@ function AccessCameraTriggerUnitElement:add_element()
 	end
 end
 
--- Lines 295-297
+-- Lines 303-305
 function AccessCameraTriggerUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines 299-311
+-- Lines 307-319
 function AccessCameraTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

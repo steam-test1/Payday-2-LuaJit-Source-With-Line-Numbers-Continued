@@ -20,8 +20,12 @@ end
 InstigatorOperatorUnitElement = InstigatorOperatorUnitElement or class(MissionElement)
 InstigatorOperatorUnitElement.SAVE_UNIT_POSITION = false
 InstigatorOperatorUnitElement.SAVE_UNIT_ROTATION = false
-InstigatorOperatorUnitElement.LINK_ELEMENTS = {
-	"elements"
+InstigatorOperatorUnitElement.LINK_VALUES = {
+	{
+		output = true,
+		table_value = "elements",
+		type = "operator"
+	}
 }
 
 -- Lines 26-36
@@ -57,17 +61,11 @@ function InstigatorOperatorUnitElement:draw_links(t, dt, selected_unit, all_unit
 	end
 end
 
--- Lines 49-52
-function InstigatorOperatorUnitElement:get_links_to_unit(...)
-	InstigatorOperatorUnitElement.super.get_links_to_unit(self, ...)
-	self:_get_links_of_type_from_elements(self._hed.elements, "operator", ...)
-end
-
--- Lines 54-55
+-- Lines 49-50
 function InstigatorOperatorUnitElement:update_editing()
 end
 
--- Lines 57-70
+-- Lines 52-65
 function InstigatorOperatorUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -85,12 +83,12 @@ function InstigatorOperatorUnitElement:add_element()
 	end
 end
 
--- Lines 73-75
+-- Lines 68-70
 function InstigatorOperatorUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines 77-90
+-- Lines 72-85
 function InstigatorOperatorUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -119,11 +117,14 @@ end
 InstigatorTriggerUnitElement = InstigatorTriggerUnitElement or class(MissionElement)
 InstigatorTriggerUnitElement.SAVE_UNIT_POSITION = false
 InstigatorTriggerUnitElement.SAVE_UNIT_ROTATION = false
-InstigatorTriggerUnitElement.LINK_ELEMENTS = {
-	"elements"
+InstigatorTriggerUnitElement.LINK_VALUES = {
+	{
+		table_value = "elements",
+		type = "trigger"
+	}
 }
 
--- Lines 99-107
+-- Lines 94-102
 function InstigatorTriggerUnitElement:init(unit)
 	InstigatorTriggerUnitElement.super.init(self, unit)
 
@@ -134,7 +135,7 @@ function InstigatorTriggerUnitElement:init(unit)
 	table.insert(self._save_values, "elements")
 end
 
--- Lines 109-118
+-- Lines 104-113
 function InstigatorTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 	InstigatorTriggerUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -154,17 +155,11 @@ function InstigatorTriggerUnitElement:draw_links(t, dt, selected_unit, all_units
 	end
 end
 
--- Lines 120-123
-function InstigatorTriggerUnitElement:get_links_to_unit(...)
-	InstigatorTriggerUnitElement.super.get_links_to_unit(self, ...)
-	self:_get_links_of_type_from_elements(self._hed.elements, "trigger", ...)
-end
-
--- Lines 125-126
+-- Lines 115-116
 function InstigatorTriggerUnitElement:update_editing()
 end
 
--- Lines 128-141
+-- Lines 118-131
 function InstigatorTriggerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -182,12 +177,12 @@ function InstigatorTriggerUnitElement:add_element()
 	end
 end
 
--- Lines 144-146
+-- Lines 134-136
 function InstigatorTriggerUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines 148-160
+-- Lines 138-150
 function InstigatorTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

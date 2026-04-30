@@ -235,8 +235,9 @@ function WorldEditor:project_prestart_up(with_mission)
 	managers.hud:on_simulation_started()
 end
 
--- Lines 225-254
-function WorldEditor:project_run_simulation(with_mission)
+-- Lines 225-263
+function WorldEditor:project_run_simulation(simulation_mode)
+	local with_mission = simulation_mode == self.SIMULATION_MODE.MISSION or simulation_mode == self.SIMULATION_MODE.BRIEFING
 	Global.game_settings.difficulty = self._mission_difficulty
 
 	managers.network:host_game()
@@ -262,7 +263,13 @@ function WorldEditor:project_run_simulation(with_mission)
 	end
 
 	managers.network:session():on_load_complete(true)
-	managers.network:session():spawn_players()
+
+	if simulation_mode == self.SIMULATION_MODE.BRIEFING then
+		game_state_machine:change_state_by_name("ingame_waiting_for_players")
+	else
+		managers.network:session():spawn_players()
+	end
+
 	managers.mission:set_mission_filter(self:layer("Level Settings"):get_mission_filter())
 
 	local level_id = self:layer("Level Settings"):get_setting("simulation_level_id")
@@ -271,11 +278,11 @@ function WorldEditor:project_run_simulation(with_mission)
 	managers.game_play_central:start_heist_timer()
 end
 
--- Lines 256-258
+-- Lines 265-267
 function WorldEditor:_project_check_unit(unit)
 end
 
--- Lines 262-292
+-- Lines 271-304
 function WorldEditor:project_stop_simulation()
 	managers.hud:on_simulation_ended()
 	managers.hud:clear_waypoints()
@@ -283,6 +290,8 @@ function WorldEditor:project_stop_simulation()
 	managers.menu:close_menu("menu_pause")
 	managers.objectives:reset()
 	setup:freeflight():disable()
+	managers.platform:set_presence("Idle")
+	managers.platform:set_playing(false)
 	managers.groupai:on_simulation_ended()
 	managers.enemy:on_simulation_ended()
 	managers.navigation:on_simulation_ended()
@@ -304,7 +313,7 @@ function WorldEditor:project_stop_simulation()
 	managers.dot:on_simulation_ended()
 end
 
--- Lines 296-308
+-- Lines 308-320
 function WorldEditor:project_clear_units()
 	managers.groupai:state():set_AI_enabled(false)
 
@@ -321,19 +330,19 @@ function WorldEditor:project_clear_units()
 	end
 end
 
--- Lines 313-314
+-- Lines 325-326
 function WorldEditor:project_clear_layers()
 end
 
--- Lines 319-320
+-- Lines 331-332
 function WorldEditor:project_recreate_layers()
 end
 
--- Lines 323-328
+-- Lines 335-340
 function WorldEditor:_project_add_menubar()
 end
 
--- Lines 338-344
+-- Lines 350-356
 function WorldEditor:_project_add_left_upper_toolbar_tool()
 	self._left_upper_toolbar:add_tool("TB_INVENTORY_ICON_CREATOR", "Icon Creator", CoreEWS.image_path("world_editor/icon_creator_16x16.png"), "Material Editor")
 	self._left_upper_toolbar:connect("TB_INVENTORY_ICON_CREATOR", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_open_inventory_icon_creator"), nil)
@@ -341,34 +350,34 @@ function WorldEditor:_project_add_left_upper_toolbar_tool()
 	self._left_upper_toolbar:connect("TB_PREPLANNING_HELPER", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_open_preplanning_helper"), nil)
 end
 
--- Lines 346-349
+-- Lines 358-361
 function WorldEditor:_open_inventory_icon_creator()
 	self._inventory_icon_creator = self._inventory_icon_creator or InventoryIconCreator:new()
 
 	self._inventory_icon_creator:show_ews()
 end
 
--- Lines 351-354
+-- Lines 363-366
 function WorldEditor:_open_preplanning_helper()
 	self._preplanning_helper = self._preplanning_helper or PreplanningHelper:new()
 
 	self._preplanning_helper:show_ews()
 end
 
--- Lines 356-359
+-- Lines 368-371
 function WorldEditor:open()
 	WorldEditor.super.open(self)
 	managers.menu_component:set_rev_visible(self._enable_revision_number)
 end
 
--- Lines 361-365
+-- Lines 373-377
 function WorldEditor:on_enable_revision_number(changed, value)
 	if changed then
 		managers.menu_component:set_rev_visible(value)
 	end
 end
 
--- Lines 367-372
+-- Lines 379-384
 function WorldEditor:deleted_unit(unit)
 	WorldEditor.super.deleted_unit(self, unit)
 
@@ -377,7 +386,7 @@ function WorldEditor:deleted_unit(unit)
 	end
 end
 
--- Lines 374-379
+-- Lines 386-391
 function WorldEditor:select_unit(unit)
 	WorldEditor.super.select_unit(self, unit)
 
@@ -386,7 +395,7 @@ function WorldEditor:select_unit(unit)
 	end
 end
 
--- Lines 381-388
+-- Lines 393-400
 function WorldEditor:select_units(units)
 	WorldEditor.super.select_units(self, units)
 
@@ -397,7 +406,7 @@ function WorldEditor:select_units(units)
 	end
 end
 
--- Lines 390-395
+-- Lines 402-407
 function WorldEditor:on_selected_unit(unit)
 	WorldEditor.super.on_selected_unit(self, unit)
 

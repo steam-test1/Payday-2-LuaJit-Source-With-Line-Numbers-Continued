@@ -4,7 +4,7 @@ GamemodeStandard._NAME = "Heist Gamemode"
 
 Gamemode.register(GamemodeStandard.id, GamemodeStandard)
 
--- Lines 7-442
+-- Lines 7-444
 function GamemodeStandard:setup_gsm(gsm, empty, setup_boot, setup_title)
 	local editor = EditorState:new(gsm)
 	local world_camera = WorldCameraState:new(gsm)
@@ -74,6 +74,7 @@ function GamemodeStandard:setup_gsm(gsm, empty, setup_boot, setup_title)
 	gsm:add_transition(editor, ingame_civilian, editor_func)
 	gsm:add_transition(editor, ingame_parachuting, editor_func)
 	gsm:add_transition(editor, ingame_freefall, editor_func)
+	gsm:add_transition(editor, ingame_waiting_for_players, editor_func)
 	gsm:add_transition(world_camera, editor, world_camera_func)
 	gsm:add_transition(world_camera, empty, world_camera_func)
 	gsm:add_transition(world_camera, world_camera, world_camera_func)
@@ -299,6 +300,7 @@ function GamemodeStandard:setup_gsm(gsm, empty, setup_boot, setup_title)
 	gsm:add_transition(ingame_waiting_for_players, disconnected, ingame_waiting_for_players_func)
 	gsm:add_transition(ingame_waiting_for_players, kicked, ingame_waiting_for_players_func)
 	gsm:add_transition(ingame_waiting_for_players, ingame_lobby, ingame_waiting_for_players_func)
+	gsm:add_transition(ingame_waiting_for_players, editor, ingame_waiting_for_players_func)
 	gsm:add_transition(ingame_waiting_for_players, ingame_waiting_for_spawn_allowed, ingame_waiting_for_players_func)
 	gsm:add_transition(ingame_waiting_for_respawn, ingame_standard, ingame_waiting_for_respawn_func)
 	gsm:add_transition(ingame_waiting_for_respawn, ingame_mask_off, ingame_waiting_for_respawn_func)

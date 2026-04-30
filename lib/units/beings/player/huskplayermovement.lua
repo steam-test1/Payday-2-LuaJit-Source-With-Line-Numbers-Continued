@@ -4025,7 +4025,7 @@ local material_variables = {
 -- Lines 4070-4134
 function HuskPlayerMovement:_spawn_magazine_unit(part_id, unit_name, pos, rot)
 	local equipped_weapon = self._unit:inventory():equipped_unit()
-	local is_thq = managers.weapon_factory:use_thq_weapon_parts()
+	local is_thq = self:allow_dropped_magazines()
 	local use_cc_material_config = is_thq and equipped_weapon and equipped_weapon:base()._cosmetics_data and true or false
 	local material_config_ids = Idstring("material_config")
 	local magazine_unit = World:spawn_unit(unit_name, pos, rot)
@@ -5657,7 +5657,7 @@ function HuskPlayerMovement:anim_clbk_show_akimbo_weapon()
 	end
 end
 
--- Lines 5853-5863
+-- Lines 5853-5867
 function HuskPlayerMovement:sync_interaction_anim_start(tweak)
 	self:destroy_magazine_in_hand()
 
@@ -5665,17 +5665,21 @@ function HuskPlayerMovement:sync_interaction_anim_start(tweak)
 
 	if tweak == "revive" then
 		self:play_redirect("revive_enter")
+	elseif tweak == "laser_watch" then
+		self:play_redirect("laser_watch_enter")
 	else
 		self:play_redirect("interact_enter")
 	end
 end
 
--- Lines 5865-5875
+-- Lines 5869-5884
 function HuskPlayerMovement:sync_interaction_anim_end()
 	self:destroy_magazine_in_hand()
 
 	if self._interaction_tweak == "revive" then
 		self:play_redirect("revive_exit")
+	elseif self._interaction_tweak == "laser_watch" then
+		self:play_redirect("laser_watch_exit")
 	else
 		self:play_redirect("interact_exit")
 	end
@@ -5691,10 +5695,13 @@ HuskPlayerMovement._gadgets = {
 	},
 	needle = {
 		Idstring("units/payday2/characters/npc_acc_syringe/npc_acc_syringe")
+	},
+	laser_watch = {
+		Idstring("units/pd2_dlc_esp/weapons/wpn_prj_watch_husk/wpn_prj_watch_husk")
 	}
 }
 
--- Lines 5890-5897
+-- Lines 5904-5911
 function HuskPlayerMovement:spawn_wanted_items()
 	if self._wanted_items then
 		for _, spawn_info in ipairs(self._wanted_items) do
@@ -5705,7 +5712,9 @@ function HuskPlayerMovement:spawn_wanted_items()
 	end
 end
 
--- Lines 5899-5919
+local ids_unit = Idstring("unit")
+
+-- Lines 5915-5941
 function HuskPlayerMovement:_equip_item(item_type, align_place, droppable)
 	local align_name = self._gadgets.aligns[align_place]
 
@@ -5725,6 +5734,13 @@ function HuskPlayerMovement:_equip_item(item_type, align_place, droppable)
 	end
 
 	local item_name = available_items[math.random(available_items)]
+
+	if not PackageManager:has(ids_unit, item_name) then
+		Application:error("[HuskPlayerMovement:_equip_item] Trying to spawn an unloaded item:", item_name)
+
+		return
+	end
+
 	local item_unit = World:spawn_unit(item_name, align_obj:position(), align_obj:rotation())
 
 	self._unit:link(align_name, item_unit, item_unit:orientation_object():name())
@@ -5735,7 +5751,7 @@ function HuskPlayerMovement:_equip_item(item_type, align_place, droppable)
 	table.insert(self._equipped_items[align_place], item_unit)
 end
 
--- Lines 5921-5934
+-- Lines 5943-5956
 function HuskPlayerMovement:_destroy_items()
 	if not self._equipped_items then
 		return
@@ -5752,7 +5768,7 @@ function HuskPlayerMovement:_destroy_items()
 	self._equipped_items = nil
 end
 
--- Lines 5937-5948
+-- Lines 5959-5970
 function HuskPlayerMovement:anim_clbk_wanted_item(unit, item_type, align_place, droppable)
 	self._wanted_items = self._wanted_items or {}
 
@@ -5768,19 +5784,19 @@ function HuskPlayerMovement:anim_clbk_wanted_item(unit, item_type, align_place, 
 	self:spawn_wanted_items()
 end
 
--- Lines 5950-5953
+-- Lines 5972-5975
 function HuskPlayerMovement:anim_clbk_flush_wanted_items()
 	self._wanted_items = nil
 
 	self:_destroy_items()
 end
 
--- Lines 5958-5960
+-- Lines 5980-5982
 function HuskPlayerMovement:is_vr()
 	return self._is_vr
 end
 
--- Lines 5962-5964
+-- Lines 5984-5986
 function HuskPlayerMovement:set_is_vr()
 	self._is_vr = true
 end

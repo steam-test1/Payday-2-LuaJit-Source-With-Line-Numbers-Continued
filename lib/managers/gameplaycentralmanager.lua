@@ -59,6 +59,7 @@ function GamePlayCentralManager:init()
 		running = false,
 		start_time = 0
 	}
+	self._access_cameras = {}
 	local is_ps3 = SystemInfo:platform() == Idstring("PS3")
 	local is_x360 = SystemInfo:platform() == Idstring("X360")
 	self._block_bullet_decals = is_ps3 or is_x360
@@ -101,6 +102,50 @@ function GamePlayCentralManager:remove_impact_override(unit)
 	end
 
 	self._impact_override[unit:key()] = nil
+end
+
+-- Lines 121-130
+function GamePlayCentralManager:add_access_camera(channel_id, camera)
+	if not camera or not channel_id then
+		return
+	end
+
+	local entry = {
+		access_camera = camera
+	}
+	self._access_cameras[channel_id] = self._access_cameras[channel_id] or {}
+
+	table.insert(self._access_cameras[channel_id], entry)
+end
+
+-- Lines 132-154
+function GamePlayCentralManager:remove_access_camera(channel_id, camera)
+	if not camera or not channel_id then
+		return
+	end
+
+	if not self._access_cameras[channel_id] then
+		return
+	end
+
+	local cameras = self._access_cameras[channel_id]
+
+	for i, entry in ipairs(cameras) do
+		if camera == entry.access_camera then
+			table.remove(cameras, i)
+
+			break
+		end
+	end
+
+	if #cameras == 0 then
+		self._access_cameras[channel_id] = nil
+	end
+end
+
+-- Lines 156-158
+function GamePlayCentralManager:get_access_cameras(channel_id)
+	return self._access_cameras[channel_id]
 end
 
 -- Lines 162-170

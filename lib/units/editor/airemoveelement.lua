@@ -1,6 +1,10 @@
 AIRemoveUnitElement = AIRemoveUnitElement or class(MissionElement)
-AIRemoveUnitElement.LINK_ELEMENTS = {
-	"elements"
+AIRemoveUnitElement.LINK_VALUES = {
+	{
+		output = true,
+		table_value = "elements",
+		type = "operator"
+	}
 }
 
 -- Lines 4-18

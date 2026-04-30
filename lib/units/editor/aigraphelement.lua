@@ -1,9 +1,14 @@
 AIGraphUnitElement = AIGraphUnitElement or class(MissionElement)
-AIGraphUnitElement.LINK_ELEMENTS = {
-	"elements"
+AIGraphUnitElement.LINK_VALUES = {
+	{
+		layer = "Ai",
+		output = true,
+		table_value = "graph_ids",
+		type = "operator"
+	}
 }
 
--- Lines 4-14
+-- Lines 11-21
 function AIGraphUnitElement:init(unit)
 	EnemyPreferedRemoveUnitElement.super.init(self, unit)
 
@@ -16,16 +21,16 @@ function AIGraphUnitElement:init(unit)
 	table.insert(self._save_values, "filter_group")
 end
 
--- Lines 16-18
+-- Lines 23-25
 function AIGraphUnitElement:draw_links(t, dt, selected_unit, all_units)
 	EnemyPreferedRemoveUnitElement.super.draw_links(self, t, dt, selected_unit)
 end
 
--- Lines 20-21
+-- Lines 27-28
 function AIGraphUnitElement:update_editing()
 end
 
--- Lines 23-30
+-- Lines 30-37
 function AIGraphUnitElement:_get_unit(id)
 	for _, unit in ipairs(managers.editor:layer("Ai"):created_units()) do
 		if unit:unit_data().unit_id == id then
@@ -34,7 +39,7 @@ function AIGraphUnitElement:_get_unit(id)
 	end
 end
 
--- Lines 32-41
+-- Lines 39-48
 function AIGraphUnitElement:update_selected(t, dt)
 	managers.editor:layer("Ai"):external_draw(t, dt)
 
@@ -53,7 +58,7 @@ function AIGraphUnitElement:update_selected(t, dt)
 	end
 end
 
--- Lines 43-50
+-- Lines 50-57
 function AIGraphUnitElement:update_unselected()
 	for _, id in ipairs(self._hed.graph_ids) do
 		local unit = self:_get_unit(id)
@@ -64,7 +69,7 @@ function AIGraphUnitElement:update_unselected()
 	end
 end
 
--- Lines 52-57
+-- Lines 59-64
 function AIGraphUnitElement:_add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -76,7 +81,7 @@ function AIGraphUnitElement:_add_element()
 	end
 end
 
--- Lines 59-65
+-- Lines 66-72
 function AIGraphUnitElement:_add_or_remove_graph(id)
 	if table.contains(self._hed.graph_ids, id) then
 		table.delete(self._hed.graph_ids, id)
@@ -85,9 +90,9 @@ function AIGraphUnitElement:_add_or_remove_graph(id)
 	end
 end
 
--- Lines 67-73
+-- Lines 74-80
 function AIGraphUnitElement:add_unit_list_btn()
-	-- Lines 68-68
+	-- Lines 75-75
 	local function f(unit)
 		return unit:type() == Idstring("ai")
 	end
@@ -99,12 +104,12 @@ function AIGraphUnitElement:add_unit_list_btn()
 	end
 end
 
--- Lines 76-78
+-- Lines 83-85
 function AIGraphUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "_add_element"))
 end
 
--- Lines 80-86
+-- Lines 87-93
 function AIGraphUnitElement:set_element_data(data)
 	AIGraphUnitElement.super.set_element_data(self, data)
 
@@ -113,7 +118,7 @@ function AIGraphUnitElement:set_element_data(data)
 	end
 end
 
--- Lines 89-137
+-- Lines 96-144
 function AIGraphUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

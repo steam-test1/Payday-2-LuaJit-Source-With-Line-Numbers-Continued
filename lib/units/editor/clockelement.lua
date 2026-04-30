@@ -1,14 +1,28 @@
 ClockUnitElement = ClockUnitElement or class(MissionElement)
 ClockUnitElement.SAVE_UNIT_POSITION = false
 ClockUnitElement.SAVE_UNIT_ROTATION = false
-ClockUnitElement.LINK_ELEMENTS = {
-	"elements"
+ClockUnitElement.LINK_VALUES = {
+	{
+		output = true,
+		table_value = "hour_elements",
+		type = "operator"
+	},
+	{
+		output = true,
+		table_value = "minute_elements",
+		type = "operator"
+	},
+	{
+		output = true,
+		table_value = "second_elements",
+		type = "operator"
+	}
 }
 ClockUnitElement.HOUR_COLOR = Color(0.34901960784313724, 0.16470588235294117, 0.44313725490196076)
 ClockUnitElement.MINUTE_COLOR = Color(0.47843137254901963, 0.6196078431372549, 0.20784313725490197)
 ClockUnitElement.SECOND_COLOR = Color(0.6666666666666666, 0.592156862745098, 0.2235294117647059)
 
--- Lines 10-22
+-- Lines 26-38
 function ClockUnitElement:init(unit)
 	ClockUnitElement.super.init(self, unit)
 
@@ -23,7 +37,7 @@ function ClockUnitElement:init(unit)
 	table.insert(self._save_values, "second_elements")
 end
 
--- Lines 24-30
+-- Lines 40-46
 function ClockUnitElement:draw_links(t, dt, selected_unit, all_units)
 	ClockUnitElement.super.draw_links(self, t, dt, selected_unit)
 	self:_draw_clock_elements(self._hed.hour_elements, self.HOUR_COLOR, selected_unit, all_units)
@@ -31,7 +45,7 @@ function ClockUnitElement:draw_links(t, dt, selected_unit, all_units)
 	self:_draw_clock_elements(self._hed.second_elements, self.SECOND_COLOR, selected_unit, all_units)
 end
 
--- Lines 32-44
+-- Lines 48-60
 function ClockUnitElement:_draw_clock_elements(elements, color, selected_unit, all_units)
 	for _, id in ipairs(elements) do
 		local unit = all_units[id]
@@ -54,7 +68,7 @@ function ClockUnitElement:_draw_clock_elements(elements, color, selected_unit, a
 	end
 end
 
--- Lines 46-60
+-- Lines 62-76
 function ClockUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -68,12 +82,12 @@ function ClockUnitElement:add_element()
 	end
 end
 
--- Lines 62-64
+-- Lines 78-80
 function ClockUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines 66-85
+-- Lines 82-101
 function ClockUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -93,7 +107,7 @@ function ClockUnitElement:_build_panel(panel, panel_sizer)
 	self:_add_help_text("This element can modify logic_counter elements using set operation when time changes. Select counters to modify using insert and clicking on the elements.")
 end
 
--- Lines 87-102
+-- Lines 103-118
 function ClockUnitElement:_build_clock_elements_sizer(panel, clock_sizer, elements, text)
 	local element_sizer = EWS:BoxSizer("HORIZONTAL")
 

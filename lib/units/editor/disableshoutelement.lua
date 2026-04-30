@@ -1,9 +1,13 @@
 DisableShoutElement = DisableShoutElement or class(MissionElement)
-DisableShoutElement.LINK_ELEMENTS = {
-	"elements"
+DisableShoutElement.LINK_VALUES = {
+	{
+		output = true,
+		table_value = "elements",
+		type = "operator"
+	}
 }
 
--- Lines 4-12
+-- Lines 6-14
 function DisableShoutElement:init(unit)
 	DisableShoutElement.super.init(self, unit)
 
@@ -14,7 +18,7 @@ function DisableShoutElement:init(unit)
 	table.insert(self._save_values, "disable_shout")
 end
 
--- Lines 16-29
+-- Lines 18-31
 function DisableShoutElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -37,11 +41,11 @@ function DisableShoutElement:_build_panel(panel, panel_sizer)
 	panel_sizer:add(dis_shout, 0, 0, "EXPAND")
 end
 
--- Lines 32-33
+-- Lines 34-35
 function DisableShoutElement:update_editing()
 end
 
--- Lines 36-44
+-- Lines 38-46
 function DisableShoutElement:update_selected(t, dt, selected_unit, all_units)
 	for _, id in ipairs(self._hed.elements) do
 		local unit = all_units[id]
@@ -59,7 +63,7 @@ function DisableShoutElement:update_selected(t, dt, selected_unit, all_units)
 	end
 end
 
--- Lines 46-58
+-- Lines 48-60
 function DisableShoutElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -77,7 +81,7 @@ function DisableShoutElement:add_element()
 	end
 end
 
--- Lines 61-63
+-- Lines 63-65
 function DisableShoutElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end

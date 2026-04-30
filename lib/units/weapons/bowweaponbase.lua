@@ -242,6 +242,47 @@ function CrossbowWeaponBase:add_damage_result(unit, is_dead, attacker, damage_pe
 	})
 end
 
+DartWeaponBase = DartWeaponBase or class(BowWeaponBase)
+DartWeaponBase.charge_multiplier = BowWeaponBase.charge_multiplier
+
+-- Lines 285-289
+function DartWeaponBase:init(unit)
+	DartWeaponBase.super.init(self, unit)
+
+	self._steelsight_speed = 1
+end
+
+-- Lines 291-293
+function DartWeaponBase:manages_steelsight()
+	return false
+end
+
+-- Lines 295-297
+function DartWeaponBase:wants_steelsight()
+	return true
+end
+
+-- Lines 299-304
+function DartWeaponBase:_update_stats_values()
+	DartWeaponBase.super._update_stats_values(self)
+
+	self._charge_speed_mul = self._charge_speed_mul or 1
+	self._launch_speed_mul = self._launch_speed_mul or 1
+end
+
+-- Lines 306-308
+function DartWeaponBase:charge_max_t()
+	return self:weapon_tweak_data().charge_data.max_t * self._charge_speed_mul
+end
+
+-- Lines 310-315
+function DartWeaponBase:projectile_speed_multiplier()
+	local multiplier = DartWeaponBase.super.projectile_speed_multiplier(self)
+	multiplier = multiplier * self._launch_speed_mul
+
+	return multiplier
+end
+
 if _G.IS_VR then
 	require("lib/units/weapons/vr/BowWeaponBaseVR")
 end

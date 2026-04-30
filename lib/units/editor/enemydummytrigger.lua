@@ -1,6 +1,9 @@
 EnemyDummyTriggerUnitElement = EnemyDummyTriggerUnitElement or class(MissionElement)
-EnemyDummyTriggerUnitElement.LINK_ELEMENTS = {
-	"elements"
+EnemyDummyTriggerUnitElement.LINK_VALUES = {
+	{
+		table_value = "elements",
+		type = "trigger"
+	}
 }
 
 -- Lines 4-12
@@ -34,17 +37,11 @@ function EnemyDummyTriggerUnitElement:draw_links(t, dt, selected_unit, all_units
 	end
 end
 
--- Lines 25-28
-function EnemyDummyTriggerUnitElement:get_links_to_unit(...)
-	EnemyDummyTriggerUnitElement.super.get_links_to_unit(self, ...)
-	self:_get_links_of_type_from_elements(self._hed.elements, "trigger", ...)
-end
-
--- Lines 30-31
+-- Lines 25-26
 function EnemyDummyTriggerUnitElement:update_editing()
 end
 
--- Lines 33-43
+-- Lines 28-38
 function EnemyDummyTriggerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -62,7 +59,7 @@ function EnemyDummyTriggerUnitElement:add_element()
 	end
 end
 
--- Lines 45-53
+-- Lines 40-48
 function EnemyDummyTriggerUnitElement:_correct_unit(u_name)
 	local names = {
 		"ai_spawn_enemy",
@@ -80,12 +77,12 @@ function EnemyDummyTriggerUnitElement:_correct_unit(u_name)
 	return false
 end
 
--- Lines 56-58
+-- Lines 51-53
 function EnemyDummyTriggerUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines 61-95
+-- Lines 56-90
 function EnemyDummyTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

@@ -1964,6 +1964,16 @@ function HUDManager:set_access_camera_name(name)
 	self._hud_access_camera:set_camera_name(name)
 end
 
+-- Lines 1933-1935
+function HUDManager:set_access_camera_theme(theme)
+	self._hud_access_camera:set_camera_theme(theme)
+end
+
+-- Lines 1937-1939
+function HUDManager:set_access_damage_taken()
+	self._hud_access_camera:damage_taken()
+end
+
 -- Lines 1943-1945
 function HUDManager:set_access_camera_destroyed(destroyed, no_feed)
 	self._hud_access_camera:set_destroyed(destroyed, no_feed)

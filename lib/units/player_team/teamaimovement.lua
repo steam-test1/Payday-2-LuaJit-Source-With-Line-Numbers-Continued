@@ -115,7 +115,7 @@ function TeamAIMovement:on_cuffed()
 	self._unit:character_damage():on_arrested()
 end
 
--- Lines 123-155
+-- Lines 123-153
 function TeamAIMovement:on_SPOOCed(enemy_unit)
 	local cooldown_id = "crew_ai_counter_strike"
 
@@ -144,7 +144,7 @@ function TeamAIMovement:on_SPOOCed(enemy_unit)
 	return true
 end
 
--- Lines 159-164
+-- Lines 157-162
 function TeamAIMovement:is_SPOOC_attack_allowed()
 	if alive(self.vehicle_unit) then
 		return false
@@ -153,34 +153,34 @@ function TeamAIMovement:is_SPOOC_attack_allowed()
 	return true
 end
 
--- Lines 168-172
+-- Lines 166-170
 function TeamAIMovement:on_discovered()
 	if self._cool then
 		self:_switch_to_not_cool()
 	end
 end
 
--- Lines 176-178
+-- Lines 174-176
 function TeamAIMovement:on_tase_ended()
 	self._unit:character_damage():on_tase_ended()
 end
 
--- Lines 182-184
+-- Lines 180-182
 function TeamAIMovement:tased()
 	return self._unit:anim_data().tased
 end
 
--- Lines 188-190
+-- Lines 186-188
 function TeamAIMovement:cool()
 	return self._cool
 end
 
--- Lines 194-196
+-- Lines 192-194
 function TeamAIMovement:downed()
 	return self._unit:interaction()._active
 end
 
--- Lines 200-238
+-- Lines 198-236
 function TeamAIMovement:set_cool(state)
 	state = state and true or false
 
@@ -220,14 +220,14 @@ function TeamAIMovement:set_cool(state)
 	end
 end
 
--- Lines 242-246
+-- Lines 240-244
 function TeamAIMovement:heat_clbk(state)
 	if self._cool and not state then
 		self:_switch_to_not_cool()
 	end
 end
 
--- Lines 250-276
+-- Lines 248-274
 function TeamAIMovement:_switch_to_not_cool(instant)
 	if not Network:is_server() then
 		if instant then
@@ -262,7 +262,7 @@ function TeamAIMovement:_switch_to_not_cool(instant)
 	end
 end
 
--- Lines 280-299
+-- Lines 278-297
 function TeamAIMovement:_switch_to_not_cool_clbk_func()
 	if self._switch_to_not_cool_clbk_id and self._cool then
 		if self._unit:inventory():is_mask_unit_loaded() then
@@ -290,17 +290,17 @@ function TeamAIMovement:_switch_to_not_cool_clbk_func()
 	end
 end
 
--- Lines 303-305
+-- Lines 301-303
 function TeamAIMovement:zipline_unit()
 	return nil
 end
 
--- Lines 307-309
+-- Lines 305-307
 function TeamAIMovement:current_state_name()
 	return nil
 end
 
--- Lines 313-327
+-- Lines 311-325
 function TeamAIMovement:pre_destroy(...)
 	TeamAIMovement.super.pre_destroy(self, ...)
 
@@ -317,7 +317,7 @@ function TeamAIMovement:pre_destroy(...)
 	end
 end
 
--- Lines 331-338
+-- Lines 329-336
 function TeamAIMovement:save(save_data)
 	TeamAIMovement.super.save(self, save_data)
 
@@ -325,7 +325,7 @@ function TeamAIMovement:save(save_data)
 	save_data.movement.should_stay = self._should_stay
 end
 
--- Lines 340-348
+-- Lines 338-346
 function TeamAIMovement:load(load_data)
 	TeamAIMovement.super.load(self, load_data)
 
@@ -334,7 +334,7 @@ function TeamAIMovement:load(load_data)
 	end
 end
 
--- Lines 351-364
+-- Lines 349-362
 function TeamAIMovement:set_should_stay(should_stay)
 	if self._should_stay ~= should_stay then
 		local panel = managers.criminals:character_data_by_unit(self._unit)
@@ -353,7 +353,7 @@ function TeamAIMovement:set_should_stay(should_stay)
 	end
 end
 
--- Lines 368-380
+-- Lines 366-378
 function TeamAIMovement:chk_action_forbidden(action_type)
 	if action_type == "walk" and self._should_stay then
 		if Network:is_server() and self._unit:brain():objective() and (self._unit:brain():objective().type == "revive" or self._unit:brain():objective().forced) then
@@ -366,7 +366,7 @@ function TeamAIMovement:chk_action_forbidden(action_type)
 	return TeamAIMovement.super.chk_action_forbidden(self, action_type)
 end
 
--- Lines 385-416
+-- Lines 383-414
 function TeamAIMovement:update(...)
 	TeamAIMovement.super.update(self, ...)
 

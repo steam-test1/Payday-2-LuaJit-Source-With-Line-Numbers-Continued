@@ -27,18 +27,49 @@ function PlayerEquipment:valid_look_at_placement(equipment_data)
 	local to = from + self._unit:movement():m_head_rot():y() * 200
 	local ray = self._unit:raycast("ray", from, to, "slot_mask", self._slotmask, "ignore_unit", {}, "ray_type", "equipment_placement")
 
-	if ray and equipment_data and equipment_data.dummy_unit then
-		local pos = ray.position
-		local rot = Rotation(ray.normal, math.UP)
+	if ray then
+		if equipment_data and equipment_data.dummy_unit then
+			local pos = ray.position
+			local rot = Rotation(ray.normal, math.UP)
 
-		if not alive(self._dummy_unit) then
-			self._dummy_unit = World:spawn_unit(Idstring(equipment_data.dummy_unit), pos, rot)
+			if not alive(self._dummy_unit) then
+				self._dummy_unit = World:spawn_unit(Idstring(equipment_data.dummy_unit), pos, rot)
 
-			self:_disable_contour(self._dummy_unit)
+				self:_disable_contour(self._dummy_unit)
+			end
+
+			self._dummy_unit:set_position(pos)
+			self._dummy_unit:set_rotation(rot)
 		end
 
-		self._dummy_unit:set_position(pos)
-		self._dummy_unit:set_rotation(rot)
+		if equipment_data and equipment_data.deploy_check_settings then
+			local deploy_check_settings = equipment_data.deploy_check_settings
+
+			if deploy_check_settings.block_ray_type then
+				local block_ray = self._unit:raycast("ray", from, to, "slot_mask", self._slotmask, "ray_type", deploy_check_settings.block_ray_type)
+
+				if block_ray then
+					local distance = mvector3.distance(ray.position, block_ray.position)
+					ray = distance <= (deploy_check_settings.block_ray_tolerance or 20) and ray
+				end
+			end
+
+			if ray and deploy_check_settings.radius then
+				local pos = ray.position
+				local find_start_pos = pos + ray.normal
+				local find_end_pos = pos + ray.normal * 20
+				local find_slot = self._slotmask + 14 + 25
+				local bodies = self._dummy_unit:find_bodies("intersect", "cylinder", find_start_pos, find_end_pos, deploy_check_settings.radius, find_slot)
+
+				for _, body in ipairs(bodies or {}) do
+					if body:unit() ~= self._dummy_unit and body:has_ray_type(IDS_BODY) then
+						ray = false
+
+						break
+					end
+				end
+			end
+		end
 	end
 
 	if alive(self._dummy_unit) then
@@ -276,6 +307,42 @@ function PlayerEquipment:use_grenade_crate()
 	end
 
 	return false
+end
+
+-- Lines 310-337
+function PlayerEquipment:use_spy_camera()
+	if self._spy_camera_placement_requested then
+		return
+	end
+
+	local equipment_data = tweak_data.equipments.spy_camera
+	local ray = self:valid_look_at_placement(equipment_data)
+
+	if ray then
+		managers.statistics:use_spy_camera()
+
+		local position = ray.position
+
+		if Network:is_client() then
+			self._spy_camera_placement_requested = true
+
+			managers.network:session():send_to_host("request_place_spy_camera", position, ray.normal)
+		else
+			local rotation = Rotation(ray.normal, math.UP)
+			local unit = SpyCameraBase.spawn(position, rotation, self._unit, managers.network:session():local_peer():id())
+
+			unit:base():link_attachment()
+		end
+
+		return true
+	end
+
+	return false
+end
+
+-- Lines 339-341
+function PlayerEquipment:from_server_spy_camera_placement_result()
+	self._spy_camera_placement_requested = nil
 end
 
 -- Lines 345-421
@@ -594,10 +661,15 @@ function PlayerEquipment:throw_flash_grenade()
 	self._grenade_name = nil
 end
 
--- Lines 788-816
+-- Lines 788-819
 function PlayerEquipment:throw_projectile()
 	local projectile_entry = managers.blackmarket:equipped_projectile()
 	local projectile_data = tweak_data.blackmarket.projectiles[projectile_entry]
+
+	if not projectile_data or not projectile_data.unit then
+		return
+	end
+
 	local from = self._unit:movement():m_head_pos()
 	local pos = from + self._unit:movement():m_head_rot():y() * 30 + Vector3(0, 0, 0)
 	local dir = self._unit:movement():m_head_rot():y()
@@ -624,7 +696,7 @@ function PlayerEquipment:throw_projectile()
 	managers.player:on_throw_grenade()
 end
 
--- Lines 818-847
+-- Lines 821-850
 function PlayerEquipment:throw_grenade()
 	local grenade_name = managers.blackmarket:equipped_grenade()
 	local grenade_tweak = tweak_data.blackmarket.projectiles[grenade_name]
@@ -653,7 +725,70 @@ function PlayerEquipment:throw_grenade()
 	managers.player:on_throw_grenade()
 end
 
--- Lines 906-910
+-- Lines 855-870
+function PlayerEquipment:use_throwable()
+	local projectile_entry = managers.blackmarket:equipped_projectile()
+	local projectile_data = tweak_data.blackmarket.projectiles[projectile_entry]
+
+	if projectile_data and projectile_data.use_function_name then
+		local func = self[projectile_data.use_function_name]
+
+		if func then
+			func(self)
+		end
+
+		managers.player:on_throw_grenade()
+
+		return projectile_data.reuse_expire_t
+	end
+end
+
+-- Lines 872-913
+function PlayerEquipment:use_throwable_watch(watch_unit)
+	local projectile_data = tweak_data.projectiles.laser_watch
+
+	if not projectile_data then
+		return
+	end
+
+	local head_pos = self._unit:movement():m_head_pos()
+	local from_pos = head_pos + self._unit:movement():m_head_rot():y() * 30
+	local dir = self._unit:movement():m_head_rot():y()
+
+	if alive(watch_unit) then
+		from_pos = watch_unit:position()
+		dir = watch_unit:rotation():z()
+	end
+
+	local to_pos = Vector3()
+
+	mvector3.add(to_pos, from_pos + dir * projectile_data.range)
+
+	local col_ray = World:raycast("ray", from_pos, to_pos, "slot_mask", managers.slot:get_mask("bullet_impact_targets"), "ray_type", "body bullet lock")
+
+	if col_ray then
+		local hit_body = col_ray.body
+
+		if hit_body:extension() and hit_body:extension().damage then
+			local lock_damage = projectile_data.damage
+			lock_damage = math.clamp(lock_damage, 0, 200)
+			local damaged = hit_body:extension().damage:damage_lock(self._unit, col_ray.normal, col_ray.position, col_ray.direction, lock_damage)
+
+			if damaged then
+				managers.game_play_central:play_impact_sound_and_effects({
+					no_decal = true,
+					col_ray = col_ray
+				})
+
+				if col_ray.unit:id() ~= -1 then
+					managers.network:session():send_to_peers_synched("sync_body_damage_lock", hit_body, lock_damage)
+				end
+			end
+		end
+	end
+end
+
+-- Lines 918-922
 function PlayerEquipment:use_duck()
 	local soundsource = SoundDevice:create_source("duck")
 
@@ -662,7 +797,7 @@ function PlayerEquipment:use_duck()
 	return true
 end
 
--- Lines 914-919
+-- Lines 926-931
 function PlayerEquipment:from_server_sentry_gun_place_result(sentry_gun_id)
 	if self._sentrygun_placement_requested then
 		self:_sentry_gun_ammo_cost(sentry_gun_id)
@@ -671,7 +806,7 @@ function PlayerEquipment:from_server_sentry_gun_place_result(sentry_gun_id)
 	self._sentrygun_placement_requested = nil
 end
 
--- Lines 923-928
+-- Lines 935-940
 function PlayerEquipment:destroy()
 	if alive(self._dummy_unit) then
 		World:delete_unit(self._dummy_unit)

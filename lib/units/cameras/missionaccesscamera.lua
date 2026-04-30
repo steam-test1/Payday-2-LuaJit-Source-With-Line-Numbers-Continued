@@ -140,3 +140,8 @@ function MissionAccessCamera:destroy()
 		self._listener_id = nil
 	end
 end
+
+-- Lines 145-147
+function MissionAccessCamera:set_near_range(value)
+	self._camera:set_near_range(value)
+end

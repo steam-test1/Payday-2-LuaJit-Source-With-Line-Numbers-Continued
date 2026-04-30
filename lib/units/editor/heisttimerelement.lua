@@ -1,6 +1,13 @@
 HeistTimerOperatorUnitElement = HeistTimerOperatorUnitElement or class(TimerOperatorUnitElement)
+HeistTimerOperatorUnitElement.LINK_VALUES = {
+	{
+		output = true,
+		table_value = "elements",
+		type = "operator"
+	}
+}
 
--- Lines 3-17
+-- Lines 4-18
 function HeistTimerOperatorUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -19,8 +26,14 @@ function HeistTimerOperatorUnitElement:add_element()
 end
 
 HeistTimerTriggerUnitElement = HeistTimerTriggerUnitElement or class(TimerTriggerUnitElement)
+HeistTimerTriggerUnitElement.LINK_VALUES = {
+	{
+		table_value = "elements",
+		type = "trigger"
+	}
+}
 
--- Lines 22-36
+-- Lines 24-38
 function HeistTimerTriggerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",

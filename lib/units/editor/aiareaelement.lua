@@ -1,7 +1,14 @@
 AIAreaElement = AIAreaElement or class(MissionElement)
 AIAreaElement.SAVE_UNIT_ROTATION = false
+AIAreaElement.LINK_VALUES = {
+	{
+		output = true,
+		table_value = "nav_segs",
+		layer = "Ai"
+	}
+}
 
--- Lines 5-13
+-- Lines 12-20
 function AIAreaElement:init(unit)
 	AIAreaElement.super.init(self, unit)
 
@@ -10,12 +17,12 @@ function AIAreaElement:init(unit)
 	table.insert(self._save_values, "nav_segs")
 end
 
--- Lines 17-19
+-- Lines 24-26
 function AIAreaElement:post_init(...)
 	AIAreaElement.super.post_init(self, ...)
 end
 
--- Lines 24-37
+-- Lines 31-44
 function AIAreaElement:layer_finished()
 	AIAreaElement.super.layer_finished(self)
 
@@ -32,12 +39,12 @@ function AIAreaElement:layer_finished()
 	end
 end
 
--- Lines 41-43
+-- Lines 48-50
 function AIAreaElement:load_nav_seg_unit(unit)
 	self._nav_seg_units[unit:unit_data().unit_id] = unit
 end
 
--- Lines 47-57
+-- Lines 54-64
 function AIAreaElement:draw_links(t, dt, selected_unit, all_units)
 	AIAreaElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -56,7 +63,7 @@ function AIAreaElement:draw_links(t, dt, selected_unit, all_units)
 	end
 end
 
--- Lines 61-70
+-- Lines 68-77
 function AIAreaElement:update_selected(t, dt, selected_unit, all_units)
 	self:_chk_units_alive()
 	managers.editor:layer("Ai"):external_draw(t, dt)
@@ -64,12 +71,12 @@ function AIAreaElement:update_selected(t, dt, selected_unit, all_units)
 	SpecialObjectiveUnitElement._highlight_if_outside_the_nav_field(self, t)
 end
 
--- Lines 74-76
+-- Lines 81-83
 function AIAreaElement:update_unselected(t, dt, selected_unit, all_units)
 	self:_chk_units_alive()
 end
 
--- Lines 80-87
+-- Lines 87-94
 function AIAreaElement:_chk_units_alive()
 	for u_id, unit in pairs(self._nav_seg_units) do
 		if not alive(unit) then
@@ -80,12 +87,12 @@ function AIAreaElement:_chk_units_alive()
 	end
 end
 
--- Lines 91-93
+-- Lines 98-100
 function AIAreaElement:update_editing()
 	self:_raycast()
 end
 
--- Lines 97-109
+-- Lines 104-116
 function AIAreaElement:_raycast()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -105,7 +112,7 @@ function AIAreaElement:_raycast()
 	end
 end
 
--- Lines 113-127
+-- Lines 120-134
 function AIAreaElement:_lmb()
 	local unit = self:_raycast()
 
@@ -126,34 +133,34 @@ function AIAreaElement:_lmb()
 	end
 end
 
--- Lines 131-133
+-- Lines 138-140
 function AIAreaElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "_lmb"))
 end
 
--- Lines 139-142
+-- Lines 146-149
 function AIAreaElement:selected()
 	AIAreaElement.super.selected(self)
 	self:_chk_units_alive()
 end
 
--- Lines 146-148
+-- Lines 153-155
 function AIAreaElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 end
 
--- Lines 152-155
+-- Lines 159-162
 function AIAreaElement:add_to_mission_package()
 end
 
--- Lines 159-162
+-- Lines 166-169
 function AIAreaElement:_add_nav_seg(unit)
 	self._hed.nav_segs = self._hed.nav_segs or {}
 
 	table.insert(self._hed.nav_segs, unit:unit_data().unit_id)
 end
 
--- Lines 166-176
+-- Lines 173-183
 function AIAreaElement:_remove_nav_seg(u_id)
 	for i, test_u_id in ipairs(self._hed.nav_segs) do
 		if u_id == test_u_id then

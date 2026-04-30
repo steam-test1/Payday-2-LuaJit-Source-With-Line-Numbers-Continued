@@ -1,6 +1,14 @@
 DisableUnitUnitElement = DisableUnitUnitElement or class(MissionElement)
+DisableUnitUnitElement.LINK_VALUES = {
+	{
+		layer = "Statics",
+		output = true,
+		table_value = "unit_ids",
+		type = "disable"
+	}
+}
 
--- Lines 3-11
+-- Lines 6-14
 function DisableUnitUnitElement:init(unit)
 	DisableUnitUnitElement.super.init(self, unit)
 
@@ -10,7 +18,7 @@ function DisableUnitUnitElement:init(unit)
 	table.insert(self._save_values, "unit_ids")
 end
 
--- Lines 14-23
+-- Lines 17-26
 function DisableUnitUnitElement:layer_finished()
 	MissionElement.layer_finished(self)
 
@@ -23,14 +31,14 @@ function DisableUnitUnitElement:layer_finished()
 	end
 end
 
--- Lines 25-29
+-- Lines 28-32
 function DisableUnitUnitElement:load_unit(unit)
 	if unit then
 		self._units[unit:unit_data().unit_id] = unit
 	end
 end
 
--- Lines 31-54
+-- Lines 34-57
 function DisableUnitUnitElement:update_selected()
 	for _, id in pairs(self._hed.unit_ids) do
 		if not alive(self._units[id]) then
@@ -60,7 +68,7 @@ function DisableUnitUnitElement:update_selected()
 	end
 end
 
--- Lines 56-69
+-- Lines 59-72
 function DisableUnitUnitElement:update_unselected(t, dt, selected_unit, all_units)
 	for _, id in pairs(self._hed.unit_ids) do
 		if not alive(self._units[id]) then
@@ -79,7 +87,7 @@ function DisableUnitUnitElement:update_unselected(t, dt, selected_unit, all_unit
 	end
 end
 
--- Lines 71-84
+-- Lines 74-87
 function DisableUnitUnitElement:draw_links_unselected(...)
 	DisableUnitUnitElement.super.draw_links_unselected(self, ...)
 
@@ -97,7 +105,7 @@ function DisableUnitUnitElement:draw_links_unselected(...)
 	end
 end
 
--- Lines 86-91
+-- Lines 89-94
 function DisableUnitUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -110,7 +118,7 @@ function DisableUnitUnitElement:update_editing()
 	end
 end
 
--- Lines 93-109
+-- Lines 96-112
 function DisableUnitUnitElement:select_unit()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -129,28 +137,28 @@ function DisableUnitUnitElement:select_unit()
 	end
 end
 
--- Lines 111-114
+-- Lines 114-117
 function DisableUnitUnitElement:_remove_unit(unit)
 	self._units[unit:unit_data().unit_id] = nil
 
 	table.delete(self._hed.unit_ids, unit:unit_data().unit_id)
 end
 
--- Lines 116-119
+-- Lines 119-122
 function DisableUnitUnitElement:_add_unit(unit)
 	self._units[unit:unit_data().unit_id] = unit
 
 	table.insert(self._hed.unit_ids, unit:unit_data().unit_id)
 end
 
--- Lines 121-123
+-- Lines 124-126
 function DisableUnitUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "select_unit"))
 end
 
--- Lines 125-139
+-- Lines 128-142
 function DisableUnitUnitElement:add_unit_list_btn()
-	-- Lines 126-131
+	-- Lines 129-134
 	local function f(unit)
 		if self._units[unit:unit_data().unit_id] then
 			return false
@@ -168,9 +176,9 @@ function DisableUnitUnitElement:add_unit_list_btn()
 	end
 end
 
--- Lines 141-149
+-- Lines 144-152
 function DisableUnitUnitElement:remove_unit_list_btn()
-	-- Lines 142-142
+	-- Lines 145-145
 	local function f(unit)
 		return self._units[unit:unit_data().unit_id]
 	end
@@ -184,7 +192,7 @@ function DisableUnitUnitElement:remove_unit_list_btn()
 	end
 end
 
--- Lines 151-168
+-- Lines 154-171
 function DisableUnitUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

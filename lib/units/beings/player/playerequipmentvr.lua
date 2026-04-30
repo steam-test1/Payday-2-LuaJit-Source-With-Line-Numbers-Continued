@@ -1,6 +1,7 @@
 PlayerEquipmentVR = PlayerEquipment
+local IDS_BODY = Idstring("body")
 
--- Lines 7-14
+-- Lines 9-16
 function PlayerEquipmentVR:_m_deploy_rot()
 	local active_hand = self._unit:hand():get_active_hand("deployable") or self._unit:hand():get_active_hand("weapon")
 
@@ -11,12 +12,12 @@ function PlayerEquipmentVR:_m_deploy_rot()
 	return active_hand:rotation()
 end
 
--- Lines 17-19
+-- Lines 19-21
 function PlayerEquipmentVR:dummy_unit()
 	return alive(self._dummy_unit) and self._dummy_unit
 end
 
--- Lines 21-46
+-- Lines 23-93
 function PlayerEquipmentVR:valid_look_at_placement(equipment_data)
 	local active_hand = self._unit:hand():get_active_hand("deployable") or self._unit:hand():get_active_hand("weapon")
 
@@ -28,18 +29,49 @@ function PlayerEquipmentVR:valid_look_at_placement(equipment_data)
 	local to = from + active_hand:rotation():y() * 200
 	local ray = self._unit:raycast("ray", from, to, "slot_mask", managers.slot:get_mask("trip_mine_placeables"), "ignore_unit", {}, "ray_type", "equipment_placement")
 
-	if ray and equipment_data and equipment_data.dummy_unit then
-		local pos = ray.position
-		local rot = Rotation(ray.normal, math.UP)
+	if ray then
+		if equipment_data and equipment_data.dummy_unit then
+			local pos = ray.position
+			local rot = Rotation(ray.normal, math.UP)
 
-		if not alive(self._dummy_unit) then
-			self._dummy_unit = World:spawn_unit(Idstring(equipment_data.dummy_unit), pos, rot)
+			if not alive(self._dummy_unit) then
+				self._dummy_unit = World:spawn_unit(Idstring(equipment_data.dummy_unit), pos, rot)
 
-			self:_disable_contour(self._dummy_unit)
+				self:_disable_contour(self._dummy_unit)
+			end
+
+			self._dummy_unit:set_position(pos)
+			self._dummy_unit:set_rotation(rot)
 		end
 
-		self._dummy_unit:set_position(pos)
-		self._dummy_unit:set_rotation(rot)
+		if equipment_data and equipment_data.deploy_check_settings then
+			local deploy_check_settings = equipment_data.deploy_check_settings
+
+			if deploy_check_settings.block_ray_type then
+				local block_ray = self._unit:raycast("ray", from, to, "slot_mask", self._slotmask, "ray_type", deploy_check_settings.block_ray_type)
+
+				if block_ray then
+					local distance = mvector3.distance(ray.position, block_ray.position)
+					ray = distance <= (deploy_check_settings.block_ray_tolerance or 20) and ray
+				end
+			end
+
+			if ray and deploy_check_settings.radius then
+				local pos = ray.position
+				local find_start_pos = pos + ray.normal
+				local find_end_pos = pos + ray.normal * 20
+				local find_slot = self._slotmask + 14 + 25
+				local bodies = self._dummy_unit:find_bodies("intersect", "cylinder", find_start_pos, find_end_pos, deploy_check_settings.radius, find_slot)
+
+				for _, body in ipairs(bodies or {}) do
+					if body:unit() ~= self._dummy_unit and body:has_ray_type(IDS_BODY) then
+						ray = false
+
+						break
+					end
+				end
+			end
+		end
 	end
 
 	if alive(self._dummy_unit) then
@@ -49,7 +81,7 @@ function PlayerEquipmentVR:valid_look_at_placement(equipment_data)
 	return ray
 end
 
--- Lines 51-105
+-- Lines 98-152
 function PlayerEquipmentVR:valid_shape_placement(equipment_id, equipment_data)
 	local active_hand = self._unit:hand():get_active_hand("deployable") or self._unit:hand():get_active_hand("weapon")
 
@@ -111,7 +143,7 @@ function PlayerEquipmentVR:valid_shape_placement(equipment_id, equipment_data)
 	return valid and ray
 end
 
--- Lines 108-141
+-- Lines 155-191
 function PlayerEquipment:throw_projectile()
 	local active_hand = self._unit:hand():get_active_hand("throwable") or self._unit:hand():get_active_hand("weapon")
 
@@ -121,6 +153,11 @@ function PlayerEquipment:throw_projectile()
 
 	local projectile_entry = managers.blackmarket:equipped_projectile()
 	local projectile_data = tweak_data.blackmarket.projectiles[projectile_entry]
+
+	if not projectile_data or not projectile_data.unit then
+		return
+	end
+
 	local from = active_hand:position()
 	local dir = active_hand:rotation():y()
 	local pos = from + dir * 30 + Vector3(0, 0, 0)
@@ -147,7 +184,7 @@ function PlayerEquipment:throw_projectile()
 	managers.player:on_throw_grenade()
 end
 
--- Lines 143-165
+-- Lines 193-216
 function PlayerEquipment:throw_grenade()
 	local active_hand = self._unit:hand():get_active_hand("throwable") or self._unit:hand():get_active_hand("weapon")
 
@@ -172,4 +209,26 @@ function PlayerEquipment:throw_grenade()
 	end
 
 	managers.player:on_throw_grenade()
+end
+
+-- Lines 220-239
+function PlayerEquipment:use_throwable(item_unit)
+	if not alive(item_unit) then
+		return false
+	end
+
+	local projectile_entry = managers.blackmarket:equipped_projectile()
+	local projectile_data = tweak_data.blackmarket.projectiles[projectile_entry]
+
+	if projectile_data and projectile_data.use_function_name then
+		local func = self[projectile_data.use_function_name]
+
+		if func then
+			func(self, item_unit)
+		end
+
+		managers.player:on_throw_grenade()
+
+		return projectile_data.reuse_expire_t
+	end
 end

@@ -1,6 +1,6 @@
 TweakDataVR = TweakDataVR or class()
 
--- Lines 4-6372
+-- Lines 4-6422
 function TweakDataVR:init(tweak_data)
 	self.melee_offsets = {
 		default = {
@@ -846,6 +846,12 @@ function TweakDataVR:init(tweak_data)
 			},
 			elastic = {
 				grip = "grip_wpn"
+			},
+			pmm = {
+				position = Vector3(-0.5, 2, 1)
+			},
+			x_pmm = {
+				position = Vector3(-0.5, 2, 1)
 			}
 		}
 	}
@@ -892,6 +898,11 @@ function TweakDataVR:init(tweak_data)
 			grip = "grip_wpn",
 			position = Vector3(0, 0, 3),
 			rotation = Rotation(180, 110, -40)
+		},
+		laser_watch = {
+			grip = "grip_wpn",
+			position = Vector3(0, 0, 4.5),
+			rotation = Rotation(0, -90, 0)
 		}
 	}
 	self.magazine_offsets = {
@@ -5116,6 +5127,147 @@ function TweakDataVR:init(tweak_data)
 							from = 3
 						}
 					}
+				}
+			}
+		},
+		welrod = {
+			start = {
+				{
+					time = 0,
+					sound = "wp_welrod_mag_flick"
+				},
+				{
+					drop_mag = true,
+					time = 0.05,
+					visible = false,
+					pos = Vector3(0, -5, -20)
+				}
+			},
+			finish = {
+				{
+					time = 0,
+					sound = "wp_welrod_mag_contact",
+					visible = true,
+					pos = Vector3(0, -5, -20)
+				},
+				{
+					time = 0.1,
+					pos = Vector3(0, -2, -7)
+				},
+				{
+					time = 0.56,
+					pos = Vector3(0, -2, -7)
+				},
+				{
+					time = 0.6,
+					sound = "wp_welrod_bolt_lock",
+					pos = Vector3()
+				}
+			}
+		},
+		pmm = {
+			start = {
+				{
+					time = 0,
+					sound = "wp_g17_clip_slide_out"
+				},
+				{
+					drop_mag = true,
+					time = 0.05,
+					visible = false,
+					pos = Vector3(0, -5, -20)
+				}
+			},
+			finish = {
+				{
+					time = 0,
+					sound = "wp_g17_clip_slide_in",
+					visible = true,
+					pos = Vector3(0, -5, -20)
+				},
+				{
+					time = 0.1,
+					pos = Vector3(0, -2.5, -10)
+				},
+				{
+					time = 0.56,
+					pos = Vector3(0, -2.5, -10)
+				},
+				{
+					time = 0.6,
+					sound = "wp_g17_lever_release",
+					pos = Vector3()
+				}
+			}
+		},
+		x_pmm = {
+			start = {
+				{
+					time = 0,
+					sound = "wp_g17_clip_slide_out"
+				},
+				{
+					drop_mag = true,
+					time = 0.05,
+					visible = false,
+					pos = Vector3(0, -5, -20)
+				}
+			},
+			finish = {
+				{
+					time = 0,
+					sound = "wp_g17_clip_slide_in",
+					visible = true,
+					pos = Vector3(0, -5, -20)
+				},
+				{
+					time = 0.1,
+					pos = Vector3(0, -2.5, -10)
+				},
+				{
+					time = 0.56,
+					pos = Vector3(0, -2.5, -10)
+				},
+				{
+					time = 0.6,
+					sound = "wp_g17_lever_release",
+					pos = Vector3()
+				}
+			}
+		},
+		speen = {
+			start = {
+				{
+					time = 0,
+					sound = "sub2k_mag_out"
+				},
+				{
+					drop_mag = true,
+					time = 0.05,
+					visible = false,
+					pos = Vector3(0, -5, -20),
+					rot = Rotation()
+				}
+			},
+			finish = {
+				{
+					time = 0,
+					sound = "sub2k_mag_in",
+					visible = true,
+					pos = Vector3(0, -7, -20)
+				},
+				{
+					time = 0.1,
+					pos = Vector3(0, -1.5, -4.5)
+				},
+				{
+					time = 0.56,
+					pos = Vector3(0, -1.5, -4.5)
+				},
+				{
+					time = 0.6,
+					sound = "sub2k_release_lever",
+					pos = Vector3()
 				}
 			}
 		},
@@ -11036,7 +11188,7 @@ function TweakDataVR:init(tweak_data)
 	}
 end
 
--- Lines 6378-6489
+-- Lines 6428-6539
 function TweakDataVR:init_specializations(tweak_data)
 	local addon_indices = {
 		"health",
@@ -11251,7 +11403,7 @@ function TweakDataVR:init_specializations(tweak_data)
 	end
 end
 
--- Lines 6493-6553
+-- Lines 6543-6603
 function TweakDataVR:init_skills(tweak_data)
 	self.post_warp = {
 		min = 1,
@@ -11331,7 +11483,7 @@ function TweakDataVR:init_skills(tweak_data)
 	}
 end
 
--- Lines 6556-6568
+-- Lines 6606-6618
 function TweakDataVR:is_locked(category, id, ...)
 	local locked = self.locked[category] and self.locked[category][id]
 
@@ -11352,7 +11504,7 @@ function TweakDataVR:is_locked(category, id, ...)
 	return locked
 end
 
--- Lines 6570-6596
+-- Lines 6620-6646
 function TweakDataVR:get_offset_by_id(id, ...)
 	if id == "magazine" then
 		return self:_get_magazine_offsets_by_id(...)
@@ -11373,14 +11525,14 @@ function TweakDataVR:get_offset_by_id(id, ...)
 	return {}
 end
 
--- Lines 6598-6602
+-- Lines 6648-6652
 local function combine_offset(offset, new)
 	for key, value in pairs(new) do
 		offset[key] = offset[key] or value
 	end
 end
 
--- Lines 6604-6616
+-- Lines 6654-6666
 function TweakDataVR:_get_melee_offset_by_id(id)
 	local offset = {}
 	local tweak = tweak_data.blackmarket.melee_weapons[id]
@@ -11398,7 +11550,7 @@ function TweakDataVR:_get_melee_offset_by_id(id)
 	return offset
 end
 
--- Lines 6618-6626
+-- Lines 6668-6676
 function TweakDataVR:_get_weapon_offset_by_id(id)
 	local offset = {}
 
@@ -11411,7 +11563,7 @@ function TweakDataVR:_get_weapon_offset_by_id(id)
 	return offset
 end
 
--- Lines 6628-6632
+-- Lines 6678-6682
 function TweakDataVR:_get_mask_offsets_by_id(id)
 	local offset = {}
 
@@ -11420,7 +11572,7 @@ function TweakDataVR:_get_mask_offsets_by_id(id)
 	return offset
 end
 
--- Lines 6634-6642
+-- Lines 6684-6692
 function TweakDataVR:_get_throwable_offsets_by_id(id)
 	local offset = {}
 
@@ -11435,7 +11587,7 @@ function TweakDataVR:_get_throwable_offsets_by_id(id)
 	return offset
 end
 
--- Lines 6644-6651
+-- Lines 6694-6701
 function TweakDataVR:_get_magazine_offsets_by_id(id)
 	local offset = {}
 
@@ -11448,7 +11600,7 @@ function TweakDataVR:_get_magazine_offsets_by_id(id)
 	return offset
 end
 
--- Lines 6653-6660
+-- Lines 6703-6710
 function TweakDataVR:_get_bow_offsets_by_id(id)
 	local offset = {}
 

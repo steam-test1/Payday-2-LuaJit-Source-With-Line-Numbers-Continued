@@ -3698,7 +3698,7 @@ end
 
 MissionBriefingGui = MissionBriefingGui or class()
 
--- Lines 2990-3212
+-- Lines 2990-3213
 function MissionBriefingGui:init(saferect_ws, fullrect_ws, node)
 	self._safe_workspace = saferect_ws
 	self._full_workspace = fullrect_ws
@@ -3977,7 +3977,7 @@ function MissionBriefingGui:init(saferect_ws, fullrect_ws, node)
 	self:flash_ready()
 end
 
--- Lines 3217-3228
+-- Lines 3218-3229
 function MissionBriefingGui:chk_reduce_to_small_font(iteration)
 	local max_x = alive(self._next_page) and self._next_page:left() - 5 or self._panel:w()
 
@@ -3994,7 +3994,7 @@ function MissionBriefingGui:chk_reduce_to_small_font(iteration)
 	end
 end
 
--- Lines 3230-3252
+-- Lines 3231-3253
 function MissionBriefingGui:update(t, dt)
 	if not alive(self._panel) or not alive(self._fullscreen_panel) or not self._enabled then
 		return
@@ -4023,14 +4023,14 @@ function MissionBriefingGui:update(t, dt)
 	end
 end
 
--- Lines 3254-3257
+-- Lines 3255-3258
 function MissionBriefingGui:ready_text()
 	local legend = not managers.menu:is_pc_controller() and managers.localization:get_default_macro("BTN_Y") or ""
 
 	return legend .. utf8.to_upper(managers.localization:text("menu_waiting_is_ready"))
 end
 
--- Lines 3259-3300
+-- Lines 3260-3301
 function MissionBriefingGui:flash_ready()
 	if self._ready then
 		return
@@ -4044,7 +4044,7 @@ function MissionBriefingGui:flash_ready()
 
 	self._next_ready_flash = TimerManager:main():time() + 3
 
-	-- Lines 3270-3297
+	-- Lines 3271-3298
 	local function animate_flash_ready(o)
 		local center_x, center_y = o:center()
 		local font_size = o:font_size()
@@ -4077,7 +4077,7 @@ function MissionBriefingGui:flash_ready()
 	self._ready_button:animate(animate_flash_ready)
 end
 
--- Lines 3303-3320
+-- Lines 3304-3321
 function MissionBriefingGui:open_asset_buy(i, id, is_gage_asset)
 	local params = {
 		asset_id = id
@@ -4098,27 +4098,27 @@ function MissionBriefingGui:open_asset_buy(i, id, is_gage_asset)
 	end
 end
 
--- Lines 3322-3324
+-- Lines 3323-3325
 function MissionBriefingGui:_buy_gage_asset_callback(asset_id)
 	managers.crime_spree:unlock_gage_asset(asset_id)
 end
 
--- Lines 3326-3328
+-- Lines 3327-3329
 function MissionBriefingGui:unlock_gage_asset(asset_id)
 	self._gage_assets_item:unlock_asset_by_id(asset_id)
 end
 
--- Lines 3339-3341
+-- Lines 3340-3342
 function MissionBriefingGui:_buy_asset_callback(asset_id)
 	managers.assets:unlock_asset(asset_id, true)
 end
 
--- Lines 3343-3345
+-- Lines 3344-3346
 function MissionBriefingGui:unlock_asset(asset_id)
 	self._assets_item:unlock_asset_by_id(asset_id)
 end
 
--- Lines 3347-3394
+-- Lines 3348-3395
 function MissionBriefingGui:create_asset_tab()
 	if managers.skirmish:is_skirmish() then
 		return
@@ -4187,20 +4187,20 @@ function MissionBriefingGui:create_asset_tab()
 	self:chk_reduce_to_small_font()
 end
 
--- Lines 3396-3400
+-- Lines 3397-3401
 function MissionBriefingGui:on_whisper_mode_changed()
 	if self._description_item then
 		self._description_item:on_whisper_mode_changed()
 	end
 end
 
--- Lines 3402-3434
+-- Lines 3403-3435
 function MissionBriefingGui:open_asset(asset_index)
 	self._displaying_asset = asset_index
 	local fullscreen_asset = self._fullscreen_assets_list[self._displaying_asset]
 
 	if fullscreen_asset and alive(fullscreen_asset) then
-		-- Lines 3407-3410
+		-- Lines 3408-3411
 		local function animate_show(o)
 			local start_alpha = o:alpha()
 
@@ -4228,7 +4228,7 @@ function MissionBriefingGui:open_asset(asset_index)
 	end
 end
 
--- Lines 3437-3441
+-- Lines 3438-3442
 function MissionBriefingGui:open_gage_asset(asset_id)
 	local params = {
 		asset_id = asset_id
@@ -4237,7 +4237,7 @@ function MissionBriefingGui:open_gage_asset(asset_id)
 	managers.menu:show_gage_asset_desc(params)
 end
 
--- Lines 3444-3466
+-- Lines 3445-3467
 function MissionBriefingGui:close_asset()
 	if not self._fullscreen_assets_list then
 		return
@@ -4246,7 +4246,7 @@ function MissionBriefingGui:close_asset()
 	local fullscreen_asset = self._fullscreen_assets_list[self._displaying_asset]
 
 	if fullscreen_asset and alive(fullscreen_asset) then
-		-- Lines 3450-3454
+		-- Lines 3451-3455
 		local function animate_hide(o)
 			local start_alpha = o:alpha()
 
@@ -4267,7 +4267,7 @@ function MissionBriefingGui:close_asset()
 	self._displaying_asset = nil
 end
 
--- Lines 3468-3484
+-- Lines 3469-3485
 function MissionBriefingGui:zoom_asset(zoom)
 	local fullscreen_asset = self._fullscreen_assets_list[self._displaying_asset]
 
@@ -4284,21 +4284,21 @@ function MissionBriefingGui:zoom_asset(zoom)
 	local cx, cy = fullscreen_asset:center()
 end
 
--- Lines 3486-3489
+-- Lines 3487-3490
 function MissionBriefingGui:next_tab(no_sound)
 	local new_selected_item = self._selected_item + 1
 
 	return self:set_tab(new_selected_item, no_sound)
 end
 
--- Lines 3491-3494
+-- Lines 3492-3495
 function MissionBriefingGui:prev_tab(no_sound)
 	local new_selected_item = self._selected_item - 1
 
 	return self:set_tab(new_selected_item, no_sound)
 end
 
--- Lines 3496-3519
+-- Lines 3497-3520
 function MissionBriefingGui:set_tab(i, no_sound)
 	if self._selected_item == i then
 		return
@@ -4329,7 +4329,7 @@ function MissionBriefingGui:set_tab(i, no_sound)
 	return self._selected_item
 end
 
--- Lines 3521-3630
+-- Lines 3522-3631
 function MissionBriefingGui:mouse_pressed(button, x, y)
 	if not alive(self._panel) or not alive(self._fullscreen_panel) or not self._enabled then
 		return
@@ -4437,7 +4437,7 @@ function MissionBriefingGui:mouse_pressed(button, x, y)
 	return self._selected_item
 end
 
--- Lines 3632-3638
+-- Lines 3633-3639
 function MissionBriefingGui:set_enabled(state)
 	self._enabled = state
 
@@ -4446,7 +4446,7 @@ function MissionBriefingGui:set_enabled(state)
 	end
 end
 
--- Lines 3640-3700
+-- Lines 3641-3701
 function MissionBriefingGui:mouse_moved(x, y)
 	if not alive(self._panel) or not alive(self._fullscreen_panel) or not self._enabled then
 		return false, "arrow"
@@ -4514,7 +4514,7 @@ function MissionBriefingGui:mouse_moved(x, y)
 	return u or false, p or "arrow"
 end
 
--- Lines 3702-3706
+-- Lines 3703-3707
 function MissionBriefingGui:set_description_text_id(text_id)
 	self._node:parameters().menu_component_data.saved_descriptions = self._node:parameters().menu_component_data.saved_descriptions or {}
 
@@ -4522,24 +4522,24 @@ function MissionBriefingGui:set_description_text_id(text_id)
 	self:add_description_text(managers.localization:text(text_id))
 end
 
--- Lines 3708-3710
+-- Lines 3709-3711
 function MissionBriefingGui:add_description_text(text)
 	self._description_item:add_description_text(text)
 end
 
--- Lines 3712-3714
+-- Lines 3713-3715
 function MissionBriefingGui:set_description_text(text)
 	self._description_item:set_description_text(text)
 end
 
--- Lines 3716-3720
+-- Lines 3717-3721
 function MissionBriefingGui:set_slot_outfit(slot, criminal_name, outfit)
 	if self._team_loadout_item then
 		self._team_loadout_item:set_slot_outfit(slot, criminal_name, outfit)
 	end
 end
 
--- Lines 3722-3761
+-- Lines 3723-3762
 function MissionBriefingGui:on_ready_pressed(ready)
 	if not managers.network:session() then
 		return
@@ -4581,7 +4581,7 @@ function MissionBriefingGui:on_ready_pressed(ready)
 	end
 end
 
--- Lines 3763-3780
+-- Lines 3764-3781
 function MissionBriefingGui:input_focus()
 	if self._jukebox_item then
 		if self._jukebox_item.displayed then
@@ -4602,7 +4602,7 @@ function MissionBriefingGui:input_focus()
 	return self._displaying_asset and true or self._enabled and 1
 end
 
--- Lines 3782-3792
+-- Lines 3783-3793
 function MissionBriefingGui:scroll_up()
 	if not alive(self._panel) or not alive(self._fullscreen_panel) or not self._enabled then
 		return
@@ -4617,7 +4617,7 @@ function MissionBriefingGui:scroll_up()
 	end
 end
 
--- Lines 3794-3804
+-- Lines 3795-3805
 function MissionBriefingGui:scroll_down()
 	if not alive(self._panel) or not alive(self._fullscreen_panel) or not self._enabled then
 		return
@@ -4632,7 +4632,7 @@ function MissionBriefingGui:scroll_down()
 	end
 end
 
--- Lines 3806-3819
+-- Lines 3807-3820
 function MissionBriefingGui:move_up()
 	if not alive(self._panel) or not alive(self._fullscreen_panel) or not self._enabled then
 		return
@@ -4651,7 +4651,7 @@ function MissionBriefingGui:move_up()
 	end
 end
 
--- Lines 3821-3834
+-- Lines 3822-3835
 function MissionBriefingGui:move_down()
 	if not alive(self._panel) or not alive(self._fullscreen_panel) or not self._enabled then
 		return
@@ -4670,7 +4670,7 @@ function MissionBriefingGui:move_down()
 	end
 end
 
--- Lines 3836-3849
+-- Lines 3837-3850
 function MissionBriefingGui:move_left()
 	if not alive(self._panel) or not alive(self._fullscreen_panel) or not self._enabled then
 		return
@@ -4689,7 +4689,7 @@ function MissionBriefingGui:move_left()
 	end
 end
 
--- Lines 3851-3864
+-- Lines 3852-3865
 function MissionBriefingGui:move_right()
 	if not alive(self._panel) or not alive(self._fullscreen_panel) or not self._enabled then
 		return
@@ -4708,7 +4708,7 @@ function MissionBriefingGui:move_right()
 	end
 end
 
--- Lines 3866-3916
+-- Lines 3867-3917
 function MissionBriefingGui:confirm_pressed()
 	if not alive(self._panel) or not alive(self._fullscreen_panel) or not self._enabled then
 		return false
@@ -4765,7 +4765,7 @@ function MissionBriefingGui:confirm_pressed()
 	return false
 end
 
--- Lines 3918-3930
+-- Lines 3919-3931
 function MissionBriefingGui:back_pressed()
 	if not alive(self._panel) or not alive(self._fullscreen_panel) or not self._enabled then
 		return false
@@ -4784,7 +4784,7 @@ function MissionBriefingGui:back_pressed()
 	return false
 end
 
--- Lines 3933-3967
+-- Lines 3934-3968
 function MissionBriefingGui:special_btn_pressed(button)
 	if not alive(self._panel) or not alive(self._fullscreen_panel) or not self._enabled then
 		return false
@@ -4823,12 +4823,12 @@ function MissionBriefingGui:special_btn_pressed(button)
 	return false
 end
 
--- Lines 3969-3971
+-- Lines 3970-3972
 function MissionBriefingGui:accept_input(accept)
 	print("MissionBriefingGui:accept_input", accept)
 end
 
--- Lines 3973-3984
+-- Lines 3974-3985
 function MissionBriefingGui:next_page()
 	if not alive(self._panel) or not alive(self._fullscreen_panel) or not self._enabled then
 		return
@@ -4845,7 +4845,7 @@ function MissionBriefingGui:next_page()
 	self:next_tab(false)
 end
 
--- Lines 3986-3997
+-- Lines 3987-3998
 function MissionBriefingGui:previous_page()
 	if not alive(self._panel) or not alive(self._fullscreen_panel) or not self._enabled then
 		return
@@ -4862,7 +4862,7 @@ function MissionBriefingGui:previous_page()
 	self:prev_tab(false)
 end
 
--- Lines 3999-4015
+-- Lines 4000-4016
 function MissionBriefingGui:hide()
 	self._enabled = false
 
@@ -4879,7 +4879,7 @@ function MissionBriefingGui:hide()
 	end
 end
 
--- Lines 4017-4032
+-- Lines 4018-4033
 function MissionBriefingGui:show()
 	self._enabled = true
 
@@ -4895,14 +4895,14 @@ function MissionBriefingGui:show()
 	end
 end
 
--- Lines 4034-4038
+-- Lines 4035-4039
 function MissionBriefingGui:update_tab_positions()
 	for i, item in ipairs(self._items) do
 		item:update_tab_position()
 	end
 end
 
--- Lines 4040-4077
+-- Lines 4041-4078
 function MissionBriefingGui:close()
 	WalletGuiObject.close_wallet(self._safe_workspace:panel())
 	managers.music:stop_listen_all()
@@ -4937,7 +4937,7 @@ function MissionBriefingGui:close()
 	end
 end
 
--- Lines 4080-4110
+-- Lines 4081-4111
 function MissionBriefingGui:reload_loadout()
 	self._node:parameters().menu_component_data = self._node:parameters().menu_component_data or {}
 	self._node:parameters().menu_component_data.loadout = self._node:parameters().menu_component_data.loadout or {}
@@ -4968,7 +4968,7 @@ function MissionBriefingGui:reload_loadout()
 	WalletGuiObject.set_wallet(self._safe_workspace:panel(), 10)
 end
 
--- Lines 4113-4117
+-- Lines 4114-4118
 function MissionBriefingGui:reload()
 	self:close()
 	MissionBriefingGui.init(self, self._safe_workspace, self._full_workspace, self._node)
@@ -4976,7 +4976,7 @@ end
 
 JukeboxItem = JukeboxItem or class(MissionBriefingTabItem)
 
--- Lines 4123-4130
+-- Lines 4124-4131
 function JukeboxItem:init(panel, text, i, assets_names, max_assets, menu_component_data)
 	JukeboxItem.super.init(self, panel, text, i)
 	self._panel:set_w(self._main_panel:w())
@@ -4985,11 +4985,11 @@ function JukeboxItem:init(panel, text, i, assets_names, max_assets, menu_compone
 	self._my_menu_component_data = menu_component_data
 end
 
--- Lines 4132-4133
+-- Lines 4133-4134
 function JukeboxItem:post_init()
 end
 
--- Lines 4135-4146
+-- Lines 4136-4147
 function JukeboxItem:select(no_sound)
 	JukeboxItem.super.select(self, no_sound)
 
@@ -5004,7 +5004,7 @@ function JukeboxItem:select(no_sound)
 	end
 end
 
--- Lines 4148-4160
+-- Lines 4149-4161
 function JukeboxItem:deselect()
 	self.closing = true
 
@@ -5020,7 +5020,7 @@ function JukeboxItem:deselect()
 	JukeboxItem.super.deselect(self)
 end
 
--- Lines 4162-4173
+-- Lines 4163-4174
 function JukeboxItem:set_enabled(state)
 	if not self.displayed then
 		return
@@ -5037,7 +5037,7 @@ end
 
 JukeboxGhostItem = JukeboxGhostItem or class(MissionBriefingTabItem)
 
--- Lines 4178-4185
+-- Lines 4179-4186
 function JukeboxGhostItem:init(panel, text, i, assets_names, max_assets, menu_component_data)
 	JukeboxGhostItem.super.init(self, panel, text, i)
 	self._panel:set_w(self._main_panel:w())
@@ -5046,11 +5046,11 @@ function JukeboxGhostItem:init(panel, text, i, assets_names, max_assets, menu_co
 	self._my_menu_component_data = menu_component_data
 end
 
--- Lines 4187-4188
+-- Lines 4188-4189
 function JukeboxGhostItem:post_init()
 end
 
--- Lines 4190-4201
+-- Lines 4191-4202
 function JukeboxGhostItem:select(no_sound)
 	JukeboxGhostItem.super.select(self, no_sound)
 
@@ -5065,7 +5065,7 @@ function JukeboxGhostItem:select(no_sound)
 	end
 end
 
--- Lines 4203-4215
+-- Lines 4204-4216
 function JukeboxGhostItem:deselect()
 	self.closing = true
 
@@ -5081,7 +5081,7 @@ function JukeboxGhostItem:deselect()
 	JukeboxGhostItem.super.deselect(self)
 end
 
--- Lines 4217-4228
+-- Lines 4218-4229
 function JukeboxGhostItem:set_enabled(state)
 	if not self.displayed then
 		return

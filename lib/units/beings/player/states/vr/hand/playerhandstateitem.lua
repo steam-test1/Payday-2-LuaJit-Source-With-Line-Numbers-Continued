@@ -16,7 +16,7 @@ function PlayerHandStateItem:init(hsm, name, hand_unit, sequence)
 	end
 end
 
--- Lines 17-49
+-- Lines 17-50
 function PlayerHandStateItem:_link_item(item_unit, body, offset)
 	self._item_unit = item_unit
 
@@ -56,7 +56,7 @@ function PlayerHandStateItem:_link_item(item_unit, body, offset)
 	self._item_unit:set_visible(true)
 end
 
--- Lines 51-78
+-- Lines 52-79
 function PlayerHandStateItem:_prompt(prompt)
 	self._prompt_data = prompt
 
@@ -90,17 +90,17 @@ function PlayerHandStateItem:_prompt(prompt)
 	managers.hud:watch_prompt_panel():show()
 end
 
--- Lines 80-82
+-- Lines 81-83
 function PlayerHandStateItem:item_type()
 	return self._item_type
 end
 
--- Lines 84-86
+-- Lines 85-87
 function PlayerHandStateItem:item_unit()
 	return self._item_unit
 end
 
--- Lines 88-92
+-- Lines 89-93
 function PlayerHandStateItem:switch_hands()
 	self._switching_hands = true
 
@@ -112,7 +112,7 @@ function PlayerHandStateItem:switch_hands()
 	self:hsm():change_to_default()
 end
 
--- Lines 94-163
+-- Lines 95-171
 function PlayerHandStateItem:at_enter(prev_state, params)
 	PlayerHandStateItem.super.at_enter(self, prev_state, params)
 
@@ -159,6 +159,8 @@ function PlayerHandStateItem:at_enter(prev_state, params)
 			self._dynamic_geometry:set_visibility(true)
 		end
 
+		local projectile_entry = managers.blackmarket:equipped_projectile()
+		self._throwable_data = tweak_data.blackmarket.projectiles[projectile_entry]
 		local offset = tweak_data.vr:get_offset_by_id(managers.blackmarket:equipped_grenade())
 
 		if offset then
@@ -192,7 +194,7 @@ function PlayerHandStateItem:at_enter(prev_state, params)
 	end
 end
 
--- Lines 165-189
+-- Lines 173-197
 function PlayerHandStateItem:at_exit(next_state, hide_item)
 	self:hsm():exit_controller_state(self._controller_state)
 
@@ -219,7 +221,7 @@ function PlayerHandStateItem:at_exit(next_state, hide_item)
 	self._switching_hands = false
 end
 
--- Lines 191-204
+-- Lines 199-212
 function PlayerHandStateItem:_remove_unit()
 	if alive(self._item_unit) then
 		for _, linked_unit in ipairs(self._item_unit:children()) do
@@ -236,7 +238,7 @@ function PlayerHandStateItem:_remove_unit()
 	end
 end
 
--- Lines 206-217
+-- Lines 214-225
 function PlayerHandStateItem:_hide_unit()
 	if alive(self._item_unit) then
 		for _, linked_unit in ipairs(self._item_unit:children()) do
@@ -251,7 +253,7 @@ function PlayerHandStateItem:_hide_unit()
 	end
 end
 
--- Lines 219-228
+-- Lines 227-236
 function PlayerHandStateItem:set_warping(warping)
 	if not warping then
 		self._wants_dynamic = true
@@ -264,7 +266,7 @@ function PlayerHandStateItem:set_warping(warping)
 	end
 end
 
--- Lines 230-243
+-- Lines 238-251
 function PlayerHandStateItem:set_bodies_dynamic(dynamic, ignore_body)
 	if alive(self._item_unit) then
 		for i = 0, self._item_unit:num_bodies() - 1 do
@@ -281,7 +283,7 @@ function PlayerHandStateItem:set_bodies_dynamic(dynamic, ignore_body)
 	end
 end
 
--- Lines 245-251
+-- Lines 253-259
 function PlayerHandStateItem:set_bodies_colliding(colliding)
 	if alive(self._item_unit) then
 		for i = 0, self._item_unit:num_bodies() - 1 do
@@ -290,7 +292,7 @@ function PlayerHandStateItem:set_bodies_colliding(colliding)
 	end
 end
 
--- Lines 253-331
+-- Lines 261-379
 function PlayerHandStateItem:update(t, dt)
 	if self._wants_dynamic then
 		self._dynamic_t = t + 0.05
@@ -305,7 +307,7 @@ function PlayerHandStateItem:update(t, dt)
 
 	local controller = managers.vr:hand_state_machine():controller()
 
-	if controller:get_input_pressed("use_item_vr") and self._item_type == "throwable" and not managers.player:player_unit():hand():check_hand_through_wall(self:hsm():hand_id()) then
+	if controller:get_input_pressed("use_item_vr") and self._item_type == "throwable" and not managers.player:player_unit():hand():check_hand_through_wall(self:hsm():hand_id()) and (not self._throwable_data or not self._throwable_data.reuse_expire_t) then
 		managers.player:player_unit():equipment():throw_projectile(self._hand_unit)
 
 		if not managers.vr:get_setting("keep_items_in_hand") or not managers.player:can_throw_grenade() then
@@ -341,6 +343,26 @@ function PlayerHandStateItem:update(t, dt)
 		else
 			self._hand_unit:damage():run_sequence_simple("ready")
 		end
+	elseif self._item_type == "throwable" then
+		if self._throwable_reuse_t and self._throwable_reuse_t <= t then
+			local player = managers.player:player_unit()
+			local reuse_expire_t = player:equipment():use_throwable(self._item_unit)
+
+			if not managers.player:can_throw_grenade() then
+				self:_remove_unit()
+				self:hsm():change_to_default()
+			elseif controller:get_input_bool("use_item_vr") then
+				self._throwable_reuse_t = t + reuse_expire_t
+			elseif alive(self._item_unit) then
+				self._throwable_reuse_t = nil
+
+				self._item_unit:damage():has_then_run_sequence_simple("deactivate")
+			end
+		elseif self._throwable_data and self._throwable_data.reuse_expire_t and alive(self._item_unit) and controller:get_input_pressed("use_item_vr") then
+			self._throwable_reuse_t = t + self._throwable_data.reuse_expire_t
+
+			self._item_unit:damage():has_then_run_sequence_simple("activate")
+		end
 	elseif self._item_type == "magazine" then
 		local player = managers.player:player_unit()
 		local weapon = player:inventory():equipped_unit()
@@ -371,7 +393,7 @@ function PlayerHandStateItem:update(t, dt)
 	end
 end
 
--- Lines 333-339
+-- Lines 381-387
 function PlayerHandStateItem:swipe_transition(next_state, params)
 	params.unit = alive(self._item_unit) and self._item_unit
 	params.type = self._item_type

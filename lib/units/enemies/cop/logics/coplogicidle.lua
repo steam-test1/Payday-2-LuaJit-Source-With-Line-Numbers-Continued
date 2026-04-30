@@ -31,7 +31,9 @@ function CopLogicIdle.enter(data, new_logic_name, enter_params)
 	local is_cool = data.unit:movement():cool()
 	local objective = data.objective
 
-	if is_cool then
+	if objective and objective.detection then
+		my_data.detection = objective.detection
+	elseif is_cool then
 		my_data.detection = data.char_tweak.detection.ntl
 	else
 		my_data.detection = data.char_tweak.detection.idle
@@ -974,7 +976,7 @@ function CopLogicIdle.action_complete_clbk(data, action)
 	end
 end
 
--- Lines 963-986
+-- Lines 963-994
 function CopLogicIdle.is_available_for_assignment(data, objective)
 	if objective and objective.forced then
 		return true
@@ -983,6 +985,10 @@ function CopLogicIdle.is_available_for_assignment(data, objective)
 	local my_data = data.internal_data
 
 	if data.objective and data.objective.action then
+		if objective and objective.distraction and (data.unit:anim_data().act_idle or data.unit:anim_data().look) then
+			return true
+		end
+
 		if my_data.action_started then
 			if not data.unit:anim_data().act_idle then
 				return
@@ -999,7 +1005,7 @@ function CopLogicIdle.is_available_for_assignment(data, objective)
 	return true
 end
 
--- Lines 990-1008
+-- Lines 998-1016
 function CopLogicIdle.clbk_action_timeout(ignore_this, data)
 	local my_data = data.internal_data
 
@@ -1022,12 +1028,12 @@ function CopLogicIdle.clbk_action_timeout(ignore_this, data)
 	data.objective_complete_clbk(data.unit, data.objective)
 end
 
--- Lines 1012-1014
+-- Lines 1020-1022
 function CopLogicIdle._nav_point_pos(nav_point)
 	return nav_point.x and nav_point or nav_point:script_data().element:value("position")
 end
 
--- Lines 1018-1152
+-- Lines 1026-1160
 function CopLogicIdle._chk_relocate(data)
 	if data.objective and data.objective.type == "follow" then
 		if data.is_converted then
@@ -1157,7 +1163,7 @@ function CopLogicIdle._chk_relocate(data)
 	end
 end
 
--- Lines 1156-1175
+-- Lines 1164-1183
 function CopLogicIdle._chk_exit_non_walkable_area(data)
 	local my_data = data.internal_data
 
@@ -1184,19 +1190,19 @@ function CopLogicIdle._chk_exit_non_walkable_area(data)
 	end
 end
 
--- Lines 1179-1183
+-- Lines 1187-1191
 function CopLogicIdle._get_all_paths(data)
 	return {
 		stare_path = data.internal_data.stare_path
 	}
 end
 
--- Lines 1187-1189
+-- Lines 1195-1197
 function CopLogicIdle._set_verified_paths(data, verified_paths)
 	data.internal_data.stare_path = verified_paths.stare_path
 end
 
--- Lines 1193-1246
+-- Lines 1201-1254
 function CopLogicIdle._chk_focus_on_attention_object(data, my_data)
 	local current_attention = data.attention_obj
 
@@ -1255,7 +1261,7 @@ function CopLogicIdle._chk_focus_on_attention_object(data, my_data)
 	return true
 end
 
--- Lines 1250-1264
+-- Lines 1258-1272
 function CopLogicIdle._chk_turn_needed(data, my_data, my_pos, look_pos)
 	local fwd = data.unit:movement():m_fwd()
 	local target_vec = look_pos - my_pos
@@ -1272,7 +1278,7 @@ function CopLogicIdle._chk_turn_needed(data, my_data, my_pos, look_pos)
 	return err_to_correct
 end
 
--- Lines 1268-1528
+-- Lines 1276-1536
 function CopLogicIdle._get_priority_attention(data, attention_objects, reaction_func)
 	reaction_func = reaction_func or CopLogicIdle._chk_reaction_to_attention_object
 	local best_target, best_target_priority_slot, best_target_priority, best_target_reaction = nil
@@ -1474,7 +1480,7 @@ function CopLogicIdle._get_priority_attention(data, attention_objects, reaction_
 	return best_target, best_target_priority_slot, best_target_reaction
 end
 
--- Lines 1532-1569
+-- Lines 1540-1577
 function CopLogicIdle._upd_curious_reaction(data)
 	local my_data = data.internal_data
 	local unit = data.unit
@@ -1489,7 +1495,7 @@ function CopLogicIdle._upd_curious_reaction(data)
 		CopLogicBase._set_attention(data, attention_obj)
 	end
 
-	-- Lines 1550-1552
+	-- Lines 1558-1560
 	local function _get_spin_to_att_obj()
 		return (attention_obj.m_pos - data.m_pos):to_polar_with_reference(data.unit:movement():m_fwd(), math.UP).spin
 	end
@@ -1515,7 +1521,7 @@ function CopLogicIdle._upd_curious_reaction(data)
 	end
 end
 
--- Lines 1573-1584
+-- Lines 1581-1592
 function CopLogicIdle._turn_by_spin(data, my_data, spin)
 	local new_action_data = {
 		body_part = 2,
@@ -1530,7 +1536,7 @@ function CopLogicIdle._turn_by_spin(data, my_data, spin)
 	end
 end
 
--- Lines 1588-1607
+-- Lines 1596-1615
 function CopLogicIdle._chk_objective_needs_travel(data, new_objective)
 	if not new_objective.nav_seg and new_objective.type ~= "follow" then
 		return
@@ -1553,7 +1559,7 @@ function CopLogicIdle._chk_objective_needs_travel(data, new_objective)
 	return true
 end
 
--- Lines 1611-1664
+-- Lines 1619-1672
 function CopLogicIdle._upd_stance_and_pose(data, my_data, objective)
 	if data.unit:movement():chk_action_forbidden("walk") then
 		return
@@ -1615,7 +1621,7 @@ function CopLogicIdle._upd_stance_and_pose(data, my_data, objective)
 	end
 end
 
--- Lines 1668-1689
+-- Lines 1676-1697
 function CopLogicIdle._perform_objective_action(data, my_data, objective)
 	if objective and not my_data.action_started and (data.unit:anim_data().act_idle or not data.unit:movement():chk_action_forbidden("action")) then
 		if objective.action then
@@ -1640,7 +1646,7 @@ function CopLogicIdle._perform_objective_action(data, my_data, objective)
 	end
 end
 
--- Lines 1693-1716
+-- Lines 1701-1724
 function CopLogicIdle._upd_stop_old_action(data, my_data, objective)
 	if data.unit:anim_data().to_idle then
 		return
@@ -1677,7 +1683,7 @@ function CopLogicIdle._upd_stop_old_action(data, my_data, objective)
 	CopLogicIdle._chk_has_old_action(data, my_data)
 end
 
--- Lines 1720-1726
+-- Lines 1728-1734
 function CopLogicIdle._chk_has_old_action(data, my_data)
 	local anim_data = data.unit:anim_data()
 	my_data.has_old_action = anim_data.to_idle or anim_data.act
@@ -1685,7 +1691,7 @@ function CopLogicIdle._chk_has_old_action(data, my_data)
 	my_data.advancing = lower_body_action and lower_body_action:type() == "walk" and lower_body_action
 end
 
--- Lines 1730-1732
+-- Lines 1738-1740
 function CopLogicIdle._start_idle_action_from_act(data)
 	data.unit:brain():action_request({
 		variant = "idle",

@@ -276,7 +276,113 @@ function CopBrain:set_followup_objective(followup_objective)
 	end
 end
 
--- Lines 436-466
+-- Lines 333-423
+function CopBrain:set_distract_objective(params)
+	if not self._logic_data.cool then
+		return
+	end
+
+	if self._logic_data.distract_objective then
+		return
+	end
+
+	local old_objective = self._logic_data.objective
+	local return_objective = {
+		action_duration = 1,
+		type = "act",
+		stance = "ntl",
+		followup_objective = old_objective,
+		action = {
+			body_part = 1,
+			type = "idle"
+		}
+	}
+	local t = TimerManager:game():time()
+	local duration = params.duration
+
+	if self._logic_data.distract_penalty_t and t < self._logic_data.distract_penalty_t then
+		duration = duration and duration * 0.5
+	end
+
+	local distract_objective = {
+		type = "act",
+		stance = "ntl",
+		haste = "walk",
+		interrupt_dis = -1,
+		attitude = "avoid",
+		distraction = true,
+		followup_objective = return_objective,
+		detection = params.detection,
+		action_duration = duration,
+		fail_clbk = callback(self, self, "clbk_distract_objective_failed"),
+		complete_clbk = callback(self, self, "clbk_distract_objective_complete"),
+		action = {
+			align_sync = true,
+			needs_full_blend = true,
+			type = "act",
+			body_part = 1,
+			variant = params.act,
+			blocks = {
+				light_hurt = -1,
+				hurt = -1,
+				action = -1,
+				heavy_hurt = -1,
+				aim = -1,
+				walk = -1
+			}
+		}
+	}
+
+	if self:is_available_for_assignment(distract_objective) then
+		if old_objective and old_objective.path_data and self:is_advancing() then
+			local path = {
+				points = {}
+			}
+
+			for _, point in ipairs(self._logic_data.internal_data.advancing._simplified_path) do
+				table.insert(path.points, {
+					position = point
+				})
+			end
+
+			table.remove(path.points, 1)
+
+			old_objective.path_data = path
+		end
+
+		self._logic_data.distract_objective = true
+
+		if params.penalty_duration then
+			self._logic_data.distract_penalty_t = t + params.penalty_duration
+		end
+
+		self._unit:sound():say("a07a", true)
+		self._unit:contour():add("friendly", true)
+		self:set_objective(distract_objective)
+	end
+end
+
+-- Lines 425-429
+function CopBrain:clbk_distract_objective_failed(unit)
+	self._logic_data.distract_objective = false
+
+	self._unit:contour():remove("friendly", true)
+end
+
+-- Lines 431-436
+function CopBrain:clbk_distract_objective_complete(unit)
+	self._logic_data.distract_objective = false
+
+	self._unit:contour():remove("friendly", true)
+	self._unit:sound():say("a07b", true)
+end
+
+-- Lines 438-440
+function CopBrain:is_distracted()
+	return self._logic_data.distract_objective
+end
+
+-- Lines 447-477
 function CopBrain:save(save_data)
 	local my_save_data = {}
 
@@ -305,22 +411,22 @@ function CopBrain:save(save_data)
 	save_data.brain = my_save_data
 end
 
--- Lines 470-472
+-- Lines 481-483
 function CopBrain:objective()
 	return self._logic_data.objective
 end
 
--- Lines 476-478
+-- Lines 487-489
 function CopBrain:is_hostage()
 	return self._logic_data.internal_data and self._logic_data.internal_data.is_hostage
 end
 
--- Lines 482-484
+-- Lines 493-495
 function CopBrain:is_available_for_assignment(objective)
 	return self._current_logic.is_available_for_assignment(self._logic_data, objective)
 end
 
--- Lines 488-514
+-- Lines 499-525
 function CopBrain:_reset_logic_data()
 	self._logic_data = {
 		unit = self._unit,
@@ -343,7 +449,7 @@ function CopBrain:_reset_logic_data()
 	}
 end
 
--- Lines 518-528
+-- Lines 529-539
 function CopBrain:set_init_logic(name, enter_params)
 	local logic = self._logics[name]
 	local l_data = self._logic_data
@@ -357,7 +463,7 @@ function CopBrain:set_init_logic(name, enter_params)
 	logic.enter(l_data, name, enter_params)
 end
 
--- Lines 532-543
+-- Lines 543-554
 function CopBrain:set_logic(name, enter_params)
 	local logic = self._logics[name]
 	local l_data = self._logic_data
@@ -374,17 +480,17 @@ function CopBrain:set_logic(name, enter_params)
 	logic.enter(l_data, name, enter_params)
 end
 
--- Lines 547-549
+-- Lines 558-560
 function CopBrain:get_logic_by_name(name)
 	return self._logics[name]
 end
 
--- Lines 551-553
+-- Lines 562-564
 function CopBrain:is_current_logic(logic_name)
 	return logic_name == self._current_logic_name
 end
 
--- Lines 557-575
+-- Lines 568-586
 function CopBrain:search_for_path_to_unit(search_id, other_unit, access_neg)
 	local enemy_tracker = other_unit:movement():nav_tracker()
 	local pos_to = enemy_tracker:field_position()
@@ -403,7 +509,7 @@ function CopBrain:search_for_path_to_unit(search_id, other_unit, access_neg)
 	return true
 end
 
--- Lines 579-596
+-- Lines 590-607
 function CopBrain:search_for_path(search_id, to_pos, prio, access_neg, nav_segs)
 	local params = {
 		tracker_from = self._unit:movement():nav_tracker(),
@@ -422,7 +528,7 @@ function CopBrain:search_for_path(search_id, to_pos, prio, access_neg, nav_segs)
 	return true
 end
 
--- Lines 600-617
+-- Lines 611-628
 function CopBrain:search_for_path_from_pos(search_id, from_pos, to_pos, prio, access_neg, nav_segs)
 	local params = {
 		pos_from = from_pos,
@@ -441,7 +547,7 @@ function CopBrain:search_for_path_from_pos(search_id, from_pos, to_pos, prio, ac
 	return true
 end
 
--- Lines 621-638
+-- Lines 632-649
 function CopBrain:search_for_path_to_cover(search_id, cover, offset_pos, access_neg)
 	local params = {
 		tracker_from = self._unit:movement():nav_tracker(),
@@ -458,7 +564,7 @@ function CopBrain:search_for_path_to_cover(search_id, cover, offset_pos, access_
 	return true
 end
 
--- Lines 642-661
+-- Lines 653-672
 function CopBrain:search_for_coarse_path(search_id, to_seg, verify_clbk, access_neg)
 	local params = {
 		from_tracker = self._unit:movement():nav_tracker(),
@@ -479,22 +585,22 @@ function CopBrain:search_for_coarse_path(search_id, to_seg, verify_clbk, access_
 	return true
 end
 
--- Lines 665-667
+-- Lines 676-678
 function CopBrain:action_request(new_action_data)
 	return self._unit:movement():action_request(new_action_data)
 end
 
--- Lines 671-673
+-- Lines 682-684
 function CopBrain:action_complete_clbk(action)
 	self._current_logic.action_complete_clbk(self._logic_data, action)
 end
 
--- Lines 677-679
+-- Lines 688-690
 function CopBrain:clbk_coarse_pathing_results(search_id, path)
 	self:_add_pathing_result(search_id, path)
 end
 
--- Lines 683-721
+-- Lines 694-732
 function CopBrain:clbk_pathing_results(search_id, path)
 	local dead_nav_link_id = self._nav_links_to_check_on_results and self._nav_links_to_check_on_results[search_id]
 
@@ -537,14 +643,14 @@ function CopBrain:clbk_pathing_results(search_id, path)
 	end
 end
 
--- Lines 724-728
+-- Lines 735-739
 function CopBrain:_add_pathing_result(search_id, path)
 	self._logic_data.active_searches[search_id] = nil
 	self._logic_data.pathing_results = self._logic_data.pathing_results or {}
 	self._logic_data.pathing_results[search_id] = path or "failed"
 end
 
--- Lines 732-767
+-- Lines 743-778
 function CopBrain:cancel_all_pathing_searches()
 	local dead_nav_links = self._nav_links_to_check_on_results
 	local has_dead_nav_link = {}
@@ -582,7 +688,7 @@ function CopBrain:cancel_all_pathing_searches()
 	self._logic_data.pathing_results = nil
 end
 
--- Lines 772-785
+-- Lines 783-796
 function CopBrain:abort_detailed_pathing(search_id)
 	if self._logic_data.active_searches[search_id] then
 		self._logic_data.active_searches[search_id] = nil
@@ -599,14 +705,14 @@ function CopBrain:abort_detailed_pathing(search_id)
 	end
 end
 
--- Lines 789-793
+-- Lines 800-804
 function CopBrain:clbk_damage(my_unit, damage_info)
 	if alive(damage_info.attacker_unit) and damage_info.attacker_unit:in_slot(self._slotmask_enemies) then
 		self._current_logic.damage_clbk(self._logic_data, damage_info)
 	end
 end
 
--- Lines 797-812
+-- Lines 808-823
 function CopBrain:clbk_death(my_unit, damage_info)
 	self._current_logic.death_clbk(self._logic_data, damage_info)
 	self:set_active(false)
@@ -626,12 +732,12 @@ function CopBrain:clbk_death(my_unit, damage_info)
 	end
 end
 
--- Lines 816-818
+-- Lines 827-829
 function CopBrain:is_active()
 	return self._active
 end
 
--- Lines 822-833
+-- Lines 833-844
 function CopBrain:set_active(state)
 	self._active = state
 
@@ -646,7 +752,7 @@ function CopBrain:set_active(state)
 	end
 end
 
--- Lines 837-850
+-- Lines 848-861
 function CopBrain:cancel_trade()
 	if not self._active then
 		return
@@ -666,12 +772,12 @@ function CopBrain:cancel_trade()
 	end
 end
 
--- Lines 854-868
+-- Lines 865-879
 function CopBrain:interaction_voice()
 	return self._logic_data.objective and self._logic_data.objective.followup_objective and self._logic_data.objective.followup_objective.interaction_voice
 end
 
--- Lines 872-880
+-- Lines 883-891
 function CopBrain:on_intimidated(amount, aggressor_unit)
 	local interaction_voice = self:interaction_voice()
 
@@ -684,37 +790,37 @@ function CopBrain:on_intimidated(amount, aggressor_unit)
 	end
 end
 
--- Lines 884-886
+-- Lines 895-897
 function CopBrain:on_tied(aggressor_unit, not_tied, can_flee)
 	return self._current_logic.on_tied(self._logic_data, aggressor_unit, not_tied, can_flee)
 end
 
--- Lines 890-892
+-- Lines 901-903
 function CopBrain:on_trade(pos, rotation, free_criminal)
 	return self._current_logic.on_trade(self._logic_data, pos, rotation, free_criminal)
 end
 
--- Lines 896-898
+-- Lines 907-909
 function CopBrain:on_detected_enemy_destroyed(destroyed_unit)
 	self._current_logic.on_detected_enemy_destroyed(self._logic_data, destroyed_unit)
 end
 
--- Lines 902-904
+-- Lines 913-915
 function CopBrain:on_detected_attention_obj_modified(modified_u_key)
 	self._current_logic.on_detected_attention_obj_modified(self._logic_data, modified_u_key)
 end
 
--- Lines 908-910
+-- Lines 919-921
 function CopBrain:on_detected_attention_obj_tweak_data_changed(modified_u_key, old_tweak_data, new_tweak_data)
 	self._current_logic.on_detected_attention_obj_tweak_data_changed(self._logic_data, modified_u_key, old_tweak_data, new_tweak_data)
 end
 
--- Lines 914-916
+-- Lines 925-927
 function CopBrain:on_criminal_neutralized(criminal_key)
 	self._current_logic.on_criminal_neutralized(self._logic_data, criminal_key)
 end
 
--- Lines 920-926
+-- Lines 931-937
 function CopBrain:on_alert(alert_data)
 	if alert_data[5] == self._unit then
 		return
@@ -723,32 +829,32 @@ function CopBrain:on_alert(alert_data)
 	self._current_logic.on_alert(self._logic_data, alert_data)
 end
 
--- Lines 930-932
+-- Lines 941-943
 function CopBrain:surrendered()
 	return self:is_current_logic("intimidated")
 end
 
--- Lines 936-938
+-- Lines 947-949
 function CopBrain:filter_area_unsafe(nav_seg)
 	return not managers.groupai:state():is_nav_seg_safe(nav_seg)
 end
 
--- Lines 942-944
+-- Lines 953-955
 function CopBrain:on_area_safety(...)
 	self._current_logic.on_area_safety(self._logic_data, ...)
 end
 
--- Lines 948-950
+-- Lines 959-961
 function CopBrain:draw_reserved_positions()
 	self._current_logic.draw_reserved_positions(self._logic_data)
 end
 
--- Lines 954-956
+-- Lines 965-967
 function CopBrain:draw_reserved_covers()
 	self._current_logic.draw_reserved_covers(self._logic_data)
 end
 
--- Lines 960-964
+-- Lines 971-975
 function CopBrain:set_important(state)
 	self._important = state
 	self._logic_data.important = state
@@ -756,12 +862,12 @@ function CopBrain:set_important(state)
 	self._current_logic.on_importance(self._logic_data)
 end
 
--- Lines 968-970
+-- Lines 979-981
 function CopBrain:is_important()
 	return self._important
 end
 
--- Lines 974-979
+-- Lines 985-990
 function CopBrain:on_reload()
 	self._logic_data.char_tweak = tweak_data.character[self._unit:base()._tweak_table]
 	self._logics = CopBrain._logic_variants[self._unit:base()._tweak_table]
@@ -769,7 +875,7 @@ function CopBrain:on_reload()
 	self._logic_data.char_tweak = tweak_data.character[self._unit:base()._tweak_table]
 end
 
--- Lines 981-1006
+-- Lines 992-1017
 function CopBrain:_clbk_tweak_data_changed(old_tweak_data, new_tweak_data)
 	local logic_data = self._logic_data
 	local current_access = logic_data.SO_access_str
@@ -790,41 +896,41 @@ function CopBrain:_clbk_tweak_data_changed(old_tweak_data, new_tweak_data)
 	end
 end
 
--- Lines 1015-1019
+-- Lines 1026-1030
 function CopBrain:on_rescue_allowed_state(state)
 	if self._current_logic.on_rescue_allowed_state then
 		self._current_logic.on_rescue_allowed_state(self._logic_data, state)
 	end
 end
 
--- Lines 1023-1025
+-- Lines 1034-1036
 function CopBrain:on_objective_unit_destroyed(unit)
 	return self._current_logic.on_objective_unit_destroyed(self._logic_data, unit)
 end
 
--- Lines 1029-1033
+-- Lines 1040-1044
 function CopBrain:on_objective_unit_damaged(unit, damage_info)
 	if unit:character_damage().dead and unit:character_damage():dead() then
 		return self._current_logic.on_objective_unit_damaged(self._logic_data, unit, damage_info.attacker_unit)
 	end
 end
 
--- Lines 1037-1039
+-- Lines 1048-1050
 function CopBrain:is_advancing()
 	return self._current_logic.is_advancing(self._logic_data)
 end
 
--- Lines 1043-1045
+-- Lines 1054-1056
 function CopBrain:anim_clbk(unit, ...)
 	self._current_logic.anim_clbk(self._logic_data, ...)
 end
 
--- Lines 1049-1051
+-- Lines 1060-1062
 function CopBrain:anim_clbk_dodge_cover_grenade(unit)
 	self:_chk_use_cover_grenade(unit)
 end
 
--- Lines 1055-1086
+-- Lines 1066-1097
 function CopBrain:_chk_use_cover_grenade(unit)
 	if not Network:is_server() or not self._logic_data.char_tweak.dodge_with_grenade or not self._logic_data.attention_obj then
 		return
@@ -865,7 +971,7 @@ function CopBrain:_chk_use_cover_grenade(unit)
 	end
 end
 
--- Lines 1090-1147
+-- Lines 1101-1158
 function CopBrain:on_nav_link_unregistered(element_id)
 	if self._logic_data.pathing_results then
 		local failed_search_ids = nil
@@ -926,22 +1032,22 @@ function CopBrain:on_nav_link_unregistered(element_id)
 	self._current_logic._set_verified_paths(self._logic_data, verified_paths)
 end
 
--- Lines 1151-1153
+-- Lines 1162-1164
 function CopBrain:SO_access()
 	return self._SO_access
 end
 
--- Lines 1157-1159
+-- Lines 1168-1170
 function CopBrain:_setup_attention_handler()
 	self._attention_handler = CharacterAttentionObject:new(self._unit)
 end
 
--- Lines 1163-1165
+-- Lines 1174-1176
 function CopBrain:attention_handler()
 	return self._attention_handler
 end
 
--- Lines 1169-1190
+-- Lines 1180-1201
 function CopBrain:set_attention_settings(params)
 	local att_settings = nil
 
@@ -976,16 +1082,16 @@ function CopBrain:set_attention_settings(params)
 	PlayerMovement.set_attention_settings(self, att_settings)
 end
 
--- Lines 1194-1196
+-- Lines 1205-1207
 function CopBrain:_create_attention_setting_from_descriptor(setting_desc, setting_name)
 	return PlayerMovement._create_attention_setting_from_descriptor(self, setting_desc, setting_name)
 end
 
--- Lines 1200-1201
+-- Lines 1211-1212
 function CopBrain:clbk_attention_notice_corpse(observer_unit, status)
 end
 
--- Lines 1205-1231
+-- Lines 1216-1242
 function CopBrain:on_cool_state_changed(state)
 	if self._logic_data then
 		self._logic_data.cool = state
@@ -1028,7 +1134,7 @@ function CopBrain:on_cool_state_changed(state)
 	managers.groupai:state():add_alert_listener(self._alert_listen_key, callback(self, self, "on_alert"), alert_listen_filter, alert_types, self._unit:movement():m_head_pos())
 end
 
--- Lines 1235-1247
+-- Lines 1246-1258
 function CopBrain:on_suppressed(state)
 	self._logic_data.is_suppressed = state or nil
 
@@ -1043,7 +1149,7 @@ function CopBrain:on_suppressed(state)
 	end
 end
 
--- Lines 1251-1261
+-- Lines 1262-1272
 function CopBrain:attention_objects()
 	if self._logic_data.attention_obj then
 		print("attention_obj")
@@ -1057,7 +1163,7 @@ function CopBrain:attention_objects()
 	end
 end
 
--- Lines 1265-1277
+-- Lines 1276-1288
 function CopBrain:clbk_enemy_weapons_hot()
 	managers.groupai:state():remove_listener(self._enemy_weapons_hot_listen_id)
 
@@ -1070,36 +1176,36 @@ function CopBrain:clbk_enemy_weapons_hot()
 	end
 end
 
--- Lines 1281-1283
+-- Lines 1292-1294
 function CopBrain:set_group(group)
 	self._logic_data.group = group
 end
 
--- Lines 1287-1290
+-- Lines 1298-1301
 function CopBrain:on_team_set(team_data)
 	self._logic_data.team = team_data
 
 	self._attention_handler:set_team(team_data)
 end
 
--- Lines 1294-1298
+-- Lines 1305-1309
 function CopBrain:on_new_group_objective(objective)
 	if self._current_logic.on_new_group_objective then
 		self._current_logic.on_new_group_objective(self._logic_data, objective)
 	end
 end
 
--- Lines 1302-1304
+-- Lines 1313-1315
 function CopBrain:clbk_group_member_attention_identified(member_unit, attention_u_key)
 	self._current_logic.identify_attention_obj_instant(self._logic_data, attention_u_key)
 end
 
--- Lines 1308-1310
+-- Lines 1319-1321
 function CopBrain:is_hostile()
 	return self._current_logic_name ~= "intimidated" and not self._logic_data.is_converted
 end
 
--- Lines 1314-1396
+-- Lines 1325-1407
 function CopBrain:convert_to_criminal(mastermind_criminal)
 	self._logic_data.is_converted = true
 	self._logic_data.group = nil
@@ -1178,12 +1284,12 @@ function CopBrain:convert_to_criminal(mastermind_criminal)
 	self._unit:sound():say("cn1", true, nil)
 end
 
--- Lines 1398-1400
+-- Lines 1409-1411
 function CopBrain:converted()
 	return self._logic_data.is_converted
 end
 
--- Lines 1404-1429
+-- Lines 1415-1440
 function CopBrain:on_surrender_chance()
 	local t = TimerManager:game():time()
 
@@ -1211,7 +1317,7 @@ function CopBrain:on_surrender_chance()
 	managers.enemy:add_delayed_clbk(self._logic_data.surrender_window.expire_clbk_id, callback(self, self, "clbk_surrender_chance_expired"), self._logic_data.surrender_window.expire_t)
 end
 
--- Lines 1433-1441
+-- Lines 1444-1452
 function CopBrain:terminate_all_suspicion()
 	for u_key, u_data in pairs(self._logic_data.detected_attention_objects) do
 		if u_data.uncover_progress then
@@ -1223,12 +1329,12 @@ function CopBrain:terminate_all_suspicion()
 	end
 end
 
--- Lines 1445-1447
+-- Lines 1456-1458
 function CopBrain:clbk_surrender_chance_expired()
 	self._logic_data.surrender_window = nil
 end
 
--- Lines 1451-1465
+-- Lines 1462-1476
 function CopBrain:add_pos_rsrv(rsrv_name, pos_rsrv)
 	local pos_reservations = self._logic_data.pos_rsrv
 
@@ -1249,7 +1355,7 @@ function CopBrain:add_pos_rsrv(rsrv_name, pos_rsrv)
 	end
 end
 
--- Lines 1469-1485
+-- Lines 1480-1496
 function CopBrain:set_pos_rsrv(rsrv_name, pos_rsrv)
 	local pos_reservations = self._logic_data.pos_rsrv
 
@@ -1270,7 +1376,7 @@ function CopBrain:set_pos_rsrv(rsrv_name, pos_rsrv)
 	pos_reservations[rsrv_name] = pos_rsrv
 end
 
--- Lines 1489-1502
+-- Lines 1500-1513
 function CopBrain:rem_pos_rsrv(rsrv_name)
 	local pos_reservations = self._logic_data.pos_rsrv
 
@@ -1289,12 +1395,12 @@ function CopBrain:rem_pos_rsrv(rsrv_name)
 	pos_reservations[rsrv_name] = nil
 end
 
--- Lines 1506-1508
+-- Lines 1517-1519
 function CopBrain:get_pos_rsrv(rsrv_name)
 	return self._logic_data.pos_rsrv[rsrv_name]
 end
 
--- Lines 1512-1517
+-- Lines 1523-1528
 function CopBrain:rem_all_pos_rsrv()
 	for rsrv_name, pos_rsrv in pairs(self._logic_data.pos_rsrv) do
 		managers.navigation:unreserve_pos(pos_rsrv)
@@ -1303,7 +1409,7 @@ function CopBrain:rem_all_pos_rsrv()
 	self._logic_data.pos_rsrv = {}
 end
 
--- Lines 1521-1536
+-- Lines 1532-1547
 function CopBrain:begin_alarm_pager(reset)
 	if not reset and self._alarm_pager_has_run then
 		return
@@ -1320,12 +1426,12 @@ function CopBrain:begin_alarm_pager(reset)
 	managers.enemy:add_delayed_clbk(self._alarm_pager_data.pager_clbk_id, callback(self, self, "clbk_alarm_pager"), TimerManager:game():time() + call_delay)
 end
 
--- Lines 1540-1542
+-- Lines 1551-1553
 function CopBrain:is_pager_started()
 	return self._alarm_pager_data and true or nil
 end
 
--- Lines 1546-1556
+-- Lines 1557-1567
 function CopBrain:end_alarm_pager()
 	if not self._alarm_pager_data then
 		return
@@ -1338,7 +1444,7 @@ function CopBrain:end_alarm_pager()
 	self._alarm_pager_data = nil
 end
 
--- Lines 1560-1645
+-- Lines 1571-1656
 function CopBrain:on_alarm_pager_interaction(status, player)
 	if not managers.groupai:state():whisper_mode() then
 		return
@@ -1424,7 +1530,7 @@ function CopBrain:on_alarm_pager_interaction(status, player)
 	end
 end
 
--- Lines 1649-1719
+-- Lines 1660-1730
 function CopBrain:clbk_alarm_pager(ignore_this, data)
 	local pager_data = self._alarm_pager_data
 	local clbk_id = pager_data.pager_clbk_id
@@ -1494,7 +1600,7 @@ function CopBrain:clbk_alarm_pager(ignore_this, data)
 	end
 end
 
--- Lines 1742-1759
+-- Lines 1753-1770
 function CopBrain:_chk_enable_bodybag_interaction()
 	if self:is_pager_started() then
 		return
@@ -1514,14 +1620,14 @@ function CopBrain:_chk_enable_bodybag_interaction()
 	return true
 end
 
--- Lines 1763-1767
+-- Lines 1774-1778
 function CopBrain:on_police_call_success(unit)
 	if self._logic_data.logic.on_police_call_success then
 		self._logic_data.logic.on_police_call_success(self._logic_data)
 	end
 end
 
--- Lines 1771-1801
+-- Lines 1782-1812
 function CopBrain:pre_destroy(unit)
 	self:set_active(false)
 
@@ -1555,7 +1661,7 @@ function CopBrain:pre_destroy(unit)
 	end
 end
 
--- Lines 1805-1813
+-- Lines 1816-1824
 function CopBrain:_get_radio_id(id)
 	local tweak = tweak_data.character[self._unit:base()._tweak_table]
 

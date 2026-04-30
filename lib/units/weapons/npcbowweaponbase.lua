@@ -15,3 +15,4 @@ function NPCBowWeaponBase:fire_blank(direction, impact)
 end
 
 NPCCrossBowWeaponBase = NPCCrossBowWeaponBase or class(NPCBowWeaponBase)
+NPCDartWeaponBase = NPCDartWeaponBase or class(NPCBowWeaponBase)

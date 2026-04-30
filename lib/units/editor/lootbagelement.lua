@@ -1,7 +1,14 @@
 LootBagUnitElement = LootBagUnitElement or class(MissionElement)
 LootBagUnitElement.USES_POINT_ORIENTATION = true
+LootBagUnitElement.LINK_VALUES = {
+	{
+		value = "zipline_unit_id",
+		layer = "Statics",
+		type = "zipline"
+	}
+}
 
--- Lines 4-15
+-- Lines 11-22
 function LootBagUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -13,7 +20,7 @@ function LootBagUnitElement:init(unit)
 	self._hed.zipline_unit_id = nil
 end
 
--- Lines 19-28
+-- Lines 26-35
 function LootBagUnitElement:save(list)
 	if self._hed.push_multiplier ~= 0 then
 		list.spawn_dir = self._hed.spawn_dir
@@ -25,7 +32,7 @@ function LootBagUnitElement:save(list)
 	list.zipline_unit_id = self._hed.zipline_unit_id
 end
 
--- Lines 30-44
+-- Lines 37-51
 function LootBagUnitElement:layer_finished()
 	MissionElement.layer_finished(self)
 
@@ -38,14 +45,14 @@ function LootBagUnitElement:layer_finished()
 	end
 end
 
--- Lines 46-54
+-- Lines 53-61
 function LootBagUnitElement:load_unit(unit)
 	if alive(unit) and unit:zipline() and (unit:zipline():is_usage_type_bag() or ray.unit:zipline():is_usage_type_both()) then
 		self._zipline_unit = unit
 	end
 end
 
--- Lines 56-76
+-- Lines 63-83
 function LootBagUnitElement:test_element()
 	local unit_name = "units/payday2/pickups/gen_pku_lootbag/gen_pku_lootbag"
 	local throw_distance_multiplier = 1
@@ -70,7 +77,7 @@ function LootBagUnitElement:test_element()
 	end
 end
 
--- Lines 78-86
+-- Lines 85-93
 function LootBagUnitElement:stop_test_element()
 	for _, unit in ipairs(self._test_units) do
 		if alive(unit) then
@@ -81,7 +88,7 @@ function LootBagUnitElement:stop_test_element()
 	self._test_units = {}
 end
 
--- Lines 88-106
+-- Lines 95-113
 function LootBagUnitElement:update_selected(time, rel_time)
 	Application:draw_arrow(self._unit:position(), self._unit:position() + self._hed.spawn_dir * 50, 0.75, 0.75, 0.75, 0.1)
 
@@ -102,7 +109,7 @@ function LootBagUnitElement:update_selected(time, rel_time)
 	end
 end
 
--- Lines 108-132
+-- Lines 115-139
 function LootBagUnitElement:update_editing(time, rel_time)
 	local kb = Input:keyboard()
 	local speed = 60 * rel_time
@@ -136,7 +143,7 @@ function LootBagUnitElement:update_editing(time, rel_time)
 	end
 end
 
--- Lines 134-151
+-- Lines 141-158
 function LootBagUnitElement:select_unit()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -155,24 +162,24 @@ function LootBagUnitElement:select_unit()
 	end
 end
 
--- Lines 153-156
+-- Lines 160-163
 function LootBagUnitElement:_add_unit(unit)
 	self._zipline_unit = unit
 	self._hed.zipline_unit_id = unit:unit_data().unit_id
 end
 
--- Lines 158-161
+-- Lines 165-168
 function LootBagUnitElement:_remove_unit(unit)
 	self._zipline_unit = nil
 	self._hed.zipline_unit_id = nil
 end
 
--- Lines 163-165
+-- Lines 170-172
 function LootBagUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "select_unit"))
 end
 
--- Lines 168-177
+-- Lines 175-184
 function LootBagUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -192,11 +199,14 @@ end
 LootBagTriggerUnitElement = LootBagTriggerUnitElement or class(MissionElement)
 LootBagTriggerUnitElement.SAVE_UNIT_POSITION = false
 LootBagTriggerUnitElement.SAVE_UNIT_ROTATION = false
-LootBagTriggerUnitElement.LINK_ELEMENTS = {
-	"elements"
+LootBagTriggerUnitElement.LINK_VALUES = {
+	{
+		table_value = "elements",
+		type = "trigger"
+	}
 }
 
--- Lines 186-194
+-- Lines 198-206
 function LootBagTriggerUnitElement:init(unit)
 	LootBagTriggerUnitElement.super.init(self, unit)
 
@@ -207,7 +217,7 @@ function LootBagTriggerUnitElement:init(unit)
 	table.insert(self._save_values, "trigger_type")
 end
 
--- Lines 196-205
+-- Lines 208-217
 function LootBagTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 	LootBagTriggerUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -227,11 +237,11 @@ function LootBagTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 	end
 end
 
--- Lines 207-208
+-- Lines 219-220
 function LootBagTriggerUnitElement:update_editing()
 end
 
--- Lines 210-223
+-- Lines 222-235
 function LootBagTriggerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -249,12 +259,12 @@ function LootBagTriggerUnitElement:add_element()
 	end
 end
 
--- Lines 226-228
+-- Lines 238-240
 function LootBagTriggerUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines 230-241
+-- Lines 242-253
 function LootBagTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

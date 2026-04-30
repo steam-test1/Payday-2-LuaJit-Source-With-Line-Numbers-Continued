@@ -15,8 +15,19 @@ SpecialObjectiveUnitElement._AI_SO_types = {
 	"AI_sniper",
 	"AI_phalanx"
 }
+SpecialObjectiveUnitElement.LINK_VALUES = {
+	{
+		output = true,
+		table_value = "followup_elements",
+		type = "followup"
+	},
+	{
+		table_value = "spawn_instigator_ids",
+		type = "instigator"
+	}
+}
 
--- Lines 6-83
+-- Lines 27-104
 function SpecialObjectiveUnitElement:init(unit)
 	SpecialObjectiveUnitElement.super.init(self, unit)
 
@@ -85,7 +96,7 @@ function SpecialObjectiveUnitElement:init(unit)
 	table.insert(self._save_values, "interrupt_objective")
 end
 
--- Lines 85-92
+-- Lines 106-113
 function SpecialObjectiveUnitElement:post_init(...)
 	SpecialObjectiveUnitElement.super.post_init(self, ...)
 
@@ -96,13 +107,13 @@ function SpecialObjectiveUnitElement:post_init(...)
 	end
 end
 
--- Lines 94-97
+-- Lines 115-118
 function SpecialObjectiveUnitElement:destroy(...)
 	SpecialObjectiveUnitElement.super.destroy(self, ...)
 	self:stop_test_element()
 end
 
--- Lines 99-163
+-- Lines 120-184
 function SpecialObjectiveUnitElement:test_element()
 	if not managers.navigation:is_data_ready() then
 		EWS:message_box(Global.frame_panel, "Can't test spawn unit without ready navigation data (AI-graph)", "Spawn", "OK,ICON_ERROR", Vector3(-1, -1, 0))
@@ -183,7 +194,7 @@ function SpecialObjectiveUnitElement:test_element()
 	self._start_test_t = Application:time()
 end
 
--- Lines 165-176
+-- Lines 186-197
 function SpecialObjectiveUnitElement:stop_test_element()
 	for _, enemy in ipairs(self._enemies) do
 		if alive(enemy) then
@@ -200,13 +211,13 @@ function SpecialObjectiveUnitElement:stop_test_element()
 	self._enemies = {}
 end
 
--- Lines 178-181
+-- Lines 199-202
 function SpecialObjectiveUnitElement:draw_links(t, dt, selected_unit, all_units)
 	SpecialObjectiveUnitElement.super.draw_links(self, t, dt, selected_unit)
 	self:_draw_follow_up(selected_unit, all_units)
 end
 
--- Lines 183-210
+-- Lines 204-231
 function SpecialObjectiveUnitElement:update_selected(t, dt, selected_unit, all_units)
 	if self._hed.patrol_path ~= "none" then
 		managers.editor:layer("Ai"):draw_patrol_path_externaly(self._hed.patrol_path)
@@ -244,7 +255,7 @@ function SpecialObjectiveUnitElement:update_selected(t, dt, selected_unit, all_u
 	self:_highlight_if_outside_the_nav_field(t)
 end
 
--- Lines 212-231
+-- Lines 233-252
 function SpecialObjectiveUnitElement:_highlight_if_outside_the_nav_field(t)
 	if managers.navigation:is_data_ready() then
 		local my_pos = self._unit:position()
@@ -271,7 +282,7 @@ function SpecialObjectiveUnitElement:_highlight_if_outside_the_nav_field(t)
 	end
 end
 
--- Lines 233-263
+-- Lines 254-284
 function SpecialObjectiveUnitElement:update_unselected(t, dt, selected_unit, all_units)
 	if self._hed.followup_elements then
 		local followup_elements = self._hed.followup_elements
@@ -312,7 +323,7 @@ function SpecialObjectiveUnitElement:update_unselected(t, dt, selected_unit, all
 	end
 end
 
--- Lines 265-275
+-- Lines 286-296
 function SpecialObjectiveUnitElement:_draw_follow_up(selected_unit, all_units)
 	if self._hed.followup_elements then
 		for _, element_id in ipairs(self._hed.followup_elements) do
@@ -332,14 +343,14 @@ function SpecialObjectiveUnitElement:_draw_follow_up(selected_unit, all_units)
 	end
 end
 
--- Lines 277-281
+-- Lines 298-302
 function SpecialObjectiveUnitElement:update_editing()
 	self:_so_raycast()
 	self:_spawn_raycast()
 	self:_raycast()
 end
 
--- Lines 283-291
+-- Lines 304-312
 function SpecialObjectiveUnitElement:_so_raycast()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -357,7 +368,7 @@ function SpecialObjectiveUnitElement:_so_raycast()
 	return nil
 end
 
--- Lines 293-310
+-- Lines 314-331
 function SpecialObjectiveUnitElement:_spawn_raycast()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -379,7 +390,7 @@ function SpecialObjectiveUnitElement:_spawn_raycast()
 	return id
 end
 
--- Lines 312-321
+-- Lines 333-342
 function SpecialObjectiveUnitElement:_raycast()
 	local from = managers.editor:get_cursor_look_point(0)
 	local to = managers.editor:get_cursor_look_point(100000)
@@ -394,7 +405,7 @@ function SpecialObjectiveUnitElement:_raycast()
 	return nil
 end
 
--- Lines 323-365
+-- Lines 344-386
 function SpecialObjectiveUnitElement:_lmb()
 	local id = self:_so_raycast()
 
@@ -447,12 +458,12 @@ function SpecialObjectiveUnitElement:_lmb()
 	self._hed.search_position = self:_raycast() or self._hed.search_position
 end
 
--- Lines 367-369
+-- Lines 388-390
 function SpecialObjectiveUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "_lmb"))
 end
 
--- Lines 373-381
+-- Lines 394-402
 function SpecialObjectiveUnitElement:selected()
 	SpecialObjectiveUnitElement.super.selected(self)
 
@@ -466,7 +477,7 @@ function SpecialObjectiveUnitElement:selected()
 	CoreEws.change_combobox_value(self._patrol_path_params, self._hed.patrol_path)
 end
 
--- Lines 383-397
+-- Lines 404-418
 function SpecialObjectiveUnitElement:_apply_preset(params)
 	local value = params.ctrlr:get_value()
 	local confirm = EWS:message_box(Global.frame_panel, "Apply preset " .. value .. "?", "Special objective", "YES_NO,ICON_QUESTION", Vector3(-1, -1, 0))
@@ -484,7 +495,7 @@ function SpecialObjectiveUnitElement:_apply_preset(params)
 	end
 end
 
--- Lines 399-404
+-- Lines 420-425
 function SpecialObjectiveUnitElement:_enable_all_nav_link_filters()
 	for name, ctrlr in pairs(self._nav_link_filter_check_boxes) do
 		ctrlr:set_value(true)
@@ -495,7 +506,7 @@ function SpecialObjectiveUnitElement:_enable_all_nav_link_filters()
 	end
 end
 
--- Lines 406-411
+-- Lines 427-432
 function SpecialObjectiveUnitElement:_clear_all_nav_link_filters()
 	for name, ctrlr in pairs(self._nav_link_filter_check_boxes) do
 		ctrlr:set_value(false)
@@ -506,7 +517,7 @@ function SpecialObjectiveUnitElement:_clear_all_nav_link_filters()
 	end
 end
 
--- Lines 413-424
+-- Lines 434-445
 function SpecialObjectiveUnitElement:_toggle_nav_link_filter_value(data)
 	local adding = data.ctrlr:get_value()
 
@@ -523,7 +534,7 @@ function SpecialObjectiveUnitElement:_toggle_nav_link_filter_value(data)
 	self._hed.SO_access = managers.navigation:convert_access_filter_to_string(self._nav_link_filter)
 end
 
--- Lines 426-435
+-- Lines 447-456
 function SpecialObjectiveUnitElement:set_element_data(data)
 	SpecialObjectiveUnitElement.super.set_element_data(self, data)
 
@@ -533,7 +544,7 @@ function SpecialObjectiveUnitElement:set_element_data(data)
 	end
 end
 
--- Lines 437-537
+-- Lines 458-558
 function SpecialObjectiveUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -684,6 +695,6 @@ function SpecialObjectiveUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_value_combobox(panel, panel_sizer, "test_unit", test_units, "Select the unit to be used when testing.")
 end
 
--- Lines 539-542
+-- Lines 560-563
 function SpecialObjectiveUnitElement:add_to_mission_package()
 end

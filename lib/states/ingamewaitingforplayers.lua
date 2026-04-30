@@ -329,7 +329,7 @@ function IngameWaitingForPlayersState:update(t, dt)
 	end
 end
 
--- Lines 381-507
+-- Lines 381-512
 function IngameWaitingForPlayersState:at_enter()
 	if _G.IS_VR then
 		managers.menu:open_menu("waiting_for_players")
@@ -337,6 +337,11 @@ function IngameWaitingForPlayersState:at_enter()
 	end
 
 	self._started_from_beginning = true
+
+	if Application:editor() then
+		self._blackscreen_started = nil
+		self._starting_game_intro = nil
+	end
 
 	if Global.job_manager.current_job and Global.job_manager.current_job.current_stage == 1 then
 		Global.statistics_manager.playing_from_start = true
@@ -435,7 +440,7 @@ function IngameWaitingForPlayersState:at_enter()
 	TestAPIHelper.on_event("start_job_loadout")
 end
 
--- Lines 511-542
+-- Lines 516-547
 function IngameWaitingForPlayersState:clbk_file_streamer_status(workload)
 	if not managers.network:session() then
 		self._file_streamer_max_workload = nil
@@ -473,7 +478,7 @@ function IngameWaitingForPlayersState:clbk_file_streamer_status(workload)
 	end
 end
 
--- Lines 546-560
+-- Lines 551-565
 function IngameWaitingForPlayersState:_chk_show_skip_prompt()
 	if not self._skip_promt_shown and not self._file_streamer_max_workload and (not managers.menu:active_menu() or managers.menu:active_menu().name == "waiting_for_players") and managers.network:session() then
 		if managers.network:session():are_peers_done_streaming() then
@@ -490,7 +495,7 @@ function IngameWaitingForPlayersState:_chk_show_skip_prompt()
 	end
 end
 
--- Lines 562-569
+-- Lines 567-574
 function IngameWaitingForPlayersState:start_game_intro()
 	if self._starting_game_intro then
 		return
@@ -501,17 +506,17 @@ function IngameWaitingForPlayersState:start_game_intro()
 	self:_start()
 end
 
--- Lines 572-574
+-- Lines 577-579
 function IngameWaitingForPlayersState:set_dropin(char_name)
 	self._started_from_beginning = false
 end
 
--- Lines 576-578
+-- Lines 581-583
 function IngameWaitingForPlayersState:check_is_dropin()
 	return not self._started_from_beginning
 end
 
--- Lines 580-684
+-- Lines 585-689
 function IngameWaitingForPlayersState:at_exit(next_state)
 	if _G.IS_VR then
 		managers.menu:close_menu("waiting_for_players")
@@ -597,7 +602,7 @@ function IngameWaitingForPlayersState:at_exit(next_state)
 	Telemetry:on_start_heist()
 end
 
--- Lines 686-699
+-- Lines 691-704
 function IngameWaitingForPlayersState:_get_cameras()
 	self._cameras = {}
 
@@ -628,7 +633,7 @@ function IngameWaitingForPlayersState:_get_cameras()
 	end
 end
 
--- Lines 701-714
+-- Lines 706-719
 function IngameWaitingForPlayersState:_next_camera()
 	self._camera_data.next_t = Application:time() + 8 + math.rand(4)
 	self._camera_data.index = self._camera_data.index + 1
@@ -642,17 +647,17 @@ function IngameWaitingForPlayersState:_next_camera()
 	self._cam_unit:camera():start(math.rand(30))
 end
 
--- Lines 716-718
+-- Lines 721-723
 function IngameWaitingForPlayersState:on_server_left()
 	IngameCleanState.on_server_left(self)
 end
 
--- Lines 720-722
+-- Lines 725-727
 function IngameWaitingForPlayersState:on_kicked()
 	IngameCleanState.on_kicked(self)
 end
 
--- Lines 724-726
+-- Lines 729-731
 function IngameWaitingForPlayersState:on_disconnected()
 	IngameCleanState.on_disconnected(self)
 end

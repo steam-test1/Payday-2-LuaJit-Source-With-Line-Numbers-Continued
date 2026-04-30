@@ -1,9 +1,16 @@
 -- Lines 2-39
 function BlackMarketTweakData:_init_bullets(tweak_data)
-	self.bullets = {}
+	self.bullets = {
+		revive = {
+			effect = Idstring("effects/payday2/particles/weapons/parts/impact_dart_revive")
+		},
+		daze = {
+			effect = Idstring("effects/payday2/particles/weapons/parts/impact_dart_daze")
+		}
+	}
 end
 
--- Lines 41-1088
+-- Lines 41-1096
 function BlackMarketTweakData:_init_projectiles(tweak_data)
 	self.projectiles = {
 		frag = {}
@@ -727,6 +734,58 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 		expire_t = 1.1,
 		repeat_expire_t = 1.5
 	}
+	self.projectiles.dart_poison = {
+		impact_detonation = true,
+		local_unit = "units/pd2_dlc_esp/weapons/wpn_prj_dart_poison/wpn_prj_dart_poison_local",
+		no_cheat_count = true,
+		unit = "units/pd2_dlc_esp/weapons/wpn_prj_dart_poison/wpn_prj_dart_poison",
+		weapon_id = "dart",
+		client_authoritative = true
+	}
+	self.projectiles.dart_daze = {
+		impact_detonation = true,
+		local_unit = "units/pd2_dlc_esp/weapons/wpn_prj_dart_daze/wpn_prj_dart_daze_local",
+		no_cheat_count = true,
+		unit = "units/pd2_dlc_esp/weapons/wpn_prj_dart_daze/wpn_prj_dart_daze",
+		weapon_id = "dart",
+		client_authoritative = true
+	}
+	self.projectiles.dart_revive = {
+		impact_detonation = true,
+		local_unit = "units/pd2_dlc_esp/weapons/wpn_prj_dart_revive/wpn_prj_dart_revive_local",
+		no_cheat_count = true,
+		unit = "units/pd2_dlc_esp/weapons/wpn_prj_dart_revive/wpn_prj_dart_revive",
+		weapon_id = "dart",
+		client_authoritative = true
+	}
+	self.projectiles.laser_watch = {
+		throw_allowed_expire_t = 1,
+		texture_bundle_folder = "esp",
+		throwable = true,
+		use_interact_anim = true,
+		menu_scene_yaw = 0,
+		use_function_name = "use_throwable_watch",
+		desc_id = "bm_grenade_laser_watch_desc",
+		dlc = "esp",
+		throw_shout = true,
+		no_shouting = true,
+		pickup_amount = 10,
+		anim_global_param = "projectile_watch",
+		icon = "laser_watch",
+		sprint_unit = "units/pd2_dlc_esp/weapons/wpn_prj_watch_husk/wpn_prj_watch_husk",
+		reuse_expire_t = 0.56,
+		repeat_expire_t = 0.46,
+		unit_dummy = "units/pd2_dlc_esp/weapons/wpn_prj_watch/wpn_prj_watch",
+		max_amount = 30,
+		name_id = "bm_grenade_laser_watch",
+		expire_t = 0.52,
+		sounds = {
+			impact_stop = "laser_impact_gen_loop_stop",
+			impact_start = "laser_impact_gen_loop",
+			activate = "watch_fire",
+			deactivate = "watch_stop"
+		}
+	}
 	self._projectiles_index = {
 		"frag",
 		"launcher_frag",
@@ -802,7 +861,11 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 		"launcher_frag_ms3gl",
 		"launcher_incendiary_ms3gl",
 		"launcher_electric_ms3gl",
-		"sticky_grenade"
+		"sticky_grenade",
+		"dart_poison",
+		"dart_daze",
+		"dart_revive",
+		"laser_watch"
 	}
 	local free_dlcs = tweak_data:free_dlc_list()
 
@@ -815,12 +878,12 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 	self:_add_desc_from_name_macro(self.projectiles)
 end
 
--- Lines 1090-1092
+-- Lines 1098-1100
 function BlackMarketTweakData:get_projectiles_index()
 	return self._projectiles_index
 end
 
--- Lines 1094-1101
+-- Lines 1102-1109
 function BlackMarketTweakData:get_index_from_projectile_id(projectile_id)
 	for index, entry_name in ipairs(self._projectiles_index) do
 		if entry_name == projectile_id then
@@ -831,7 +894,7 @@ function BlackMarketTweakData:get_index_from_projectile_id(projectile_id)
 	return 0
 end
 
--- Lines 1103-1105
+-- Lines 1111-1113
 function BlackMarketTweakData:get_projectile_name_from_index(index)
 	return self._projectiles_index[index]
 end

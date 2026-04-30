@@ -1,7 +1,15 @@
 StopwatchUnitElement = StopwatchUnitElement or class(MissionElement)
 StopwatchUnitElement.ELEMENT_NAME = "units/dev_tools/mission_elements/logic_stopwatch/logic_stopwatch"
+StopwatchUnitElement.LINK_VALUES = {
+	{
+		layer = "Statics",
+		output = true,
+		table_value = "digital_gui_unit_ids",
+		type = "guis"
+	}
+}
 
--- Lines 5-17
+-- Lines 12-24
 function StopwatchUnitElement:init(unit)
 	StopwatchUnitElement.super.init(self, unit)
 
@@ -16,7 +24,7 @@ function StopwatchUnitElement:init(unit)
 	table.insert(self._save_values, "digital_gui_unit_ids")
 end
 
--- Lines 19-30
+-- Lines 26-37
 function StopwatchUnitElement:layer_finished()
 	MissionElement.layer_finished(self)
 
@@ -29,14 +37,14 @@ function StopwatchUnitElement:layer_finished()
 	end
 end
 
--- Lines 32-36
+-- Lines 39-43
 function StopwatchUnitElement:load_unit(unit)
 	if unit then
 		self._digital_gui_units[unit:unit_data().unit_id] = unit
 	end
 end
 
--- Lines 38-62
+-- Lines 45-69
 function StopwatchUnitElement:update_selected()
 	for _, id in pairs(self._hed.digital_gui_unit_ids) do
 		if not alive(self._digital_gui_units[id]) then
@@ -62,7 +70,7 @@ function StopwatchUnitElement:update_selected()
 	end
 end
 
--- Lines 64-78
+-- Lines 71-85
 function StopwatchUnitElement:update_unselected(t, dt, selected_unit, all_units)
 	for _, id in pairs(self._hed.digital_gui_unit_ids) do
 		if not alive(self._digital_gui_units[id]) then
@@ -77,7 +85,7 @@ function StopwatchUnitElement:update_unselected(t, dt, selected_unit, all_units)
 	end
 end
 
--- Lines 80-96
+-- Lines 87-103
 function StopwatchUnitElement:draw_links_unselected(...)
 	StopwatchUnitElement.super.draw_links_unselected(self, ...)
 
@@ -95,7 +103,7 @@ function StopwatchUnitElement:draw_links_unselected(...)
 	end
 end
 
--- Lines 98-105
+-- Lines 105-112
 function StopwatchUnitElement:update_editing()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -108,7 +116,7 @@ function StopwatchUnitElement:update_editing()
 	end
 end
 
--- Lines 107-119
+-- Lines 114-126
 function StopwatchUnitElement:select_unit()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "body editor",
@@ -127,32 +135,32 @@ function StopwatchUnitElement:select_unit()
 	end
 end
 
--- Lines 121-123
+-- Lines 128-130
 function StopwatchUnitElement:_remove_unit(unit)
 	self:remove_link_element("digital_gui_unit_ids", unit:unit_data().unit_id)
 end
 
--- Lines 125-127
+-- Lines 132-134
 function StopwatchUnitElement:_add_unit(unit)
 	self:add_link_element("digital_gui_unit_ids", unit:unit_data().unit_id)
 end
 
--- Lines 129-131
+-- Lines 136-138
 function StopwatchUnitElement:on_added_link_element(element_name, unit_id)
 	self._digital_gui_units[unit_id] = managers.editor:unit_with_id(unit_id)
 end
 
--- Lines 133-135
+-- Lines 140-142
 function StopwatchUnitElement:on_removed_link_element(element_name, unit_id)
 	self._digital_gui_units[unit_id] = nil
 end
 
--- Lines 137-139
+-- Lines 144-146
 function StopwatchUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "select_unit"))
 end
 
--- Lines 141-146
+-- Lines 148-153
 function StopwatchUnitElement:_add_unit_filter(unit)
 	if self._digital_gui_units[unit:unit_data().unit_id] then
 		return false
@@ -161,12 +169,12 @@ function StopwatchUnitElement:_add_unit_filter(unit)
 	return unit:digital_gui() and unit:digital_gui():is_timer()
 end
 
--- Lines 148-150
+-- Lines 155-157
 function StopwatchUnitElement:_remove_unit_filter(unit)
 	return self._digital_gui_units[unit:unit_data().unit_id]
 end
 
--- Lines 152-165
+-- Lines 159-172
 function StopwatchUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -186,11 +194,15 @@ StopwatchOperatorUnitElement = StopwatchOperatorUnitElement or class(MissionElem
 StopwatchOperatorUnitElement.RANDOMS = {
 	"time"
 }
-StopwatchOperatorUnitElement.LINK_ELEMENTS = {
-	"elements"
+StopwatchOperatorUnitElement.LINK_VALUES = {
+	{
+		output = true,
+		table_value = "elements",
+		type = "operator"
+	}
 }
 
--- Lines 173-189
+-- Lines 180-196
 function StopwatchOperatorUnitElement:init(unit)
 	StopwatchOperatorUnitElement.super.init(self, unit)
 
@@ -210,7 +222,7 @@ function StopwatchOperatorUnitElement:init(unit)
 	table.insert(self._save_values, "elements")
 end
 
--- Lines 191-204
+-- Lines 198-211
 function StopwatchOperatorUnitElement:draw_links(t, dt, selected_unit, all_units)
 	StopwatchOperatorUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -235,17 +247,11 @@ function StopwatchOperatorUnitElement:draw_links(t, dt, selected_unit, all_units
 	end
 end
 
--- Lines 206-209
-function StopwatchOperatorUnitElement:get_links_to_unit(...)
-	StopwatchOperatorUnitElement.super.get_links_to_unit(self, ...)
-	self:_get_links_of_type_from_elements(self._hed.elements, "operator", ...)
-end
-
--- Lines 211-212
+-- Lines 213-214
 function StopwatchOperatorUnitElement:update_editing()
 end
 
--- Lines 214-230
+-- Lines 216-232
 function StopwatchOperatorUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -265,12 +271,12 @@ function StopwatchOperatorUnitElement:add_element()
 	end
 end
 
--- Lines 233-235
+-- Lines 235-237
 function StopwatchOperatorUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines 237-272
+-- Lines 239-274
 function StopwatchOperatorUnitElement:set_element_data(data)
 	StopwatchOperatorUnitElement.super.set_element_data(self, data)
 	self._value_time:set_enabled(false)
@@ -306,7 +312,7 @@ function StopwatchOperatorUnitElement:set_element_data(data)
 	end
 end
 
--- Lines 274-309
+-- Lines 276-311
 function StopwatchOperatorUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -368,11 +374,14 @@ function StopwatchOperatorUnitElement:_build_panel(panel, panel_sizer)
 end
 
 StopwatchTriggerUnitElement = StopwatchTriggerUnitElement or class(MissionElement)
-StopwatchTriggerUnitElement.LINK_ELEMENTS = {
-	"elements"
+StopwatchTriggerUnitElement.LINK_VALUES = {
+	{
+		table_value = "elements",
+		type = "trigger"
+	}
 }
 
--- Lines 316-326
+-- Lines 318-328
 function StopwatchTriggerUnitElement:init(unit)
 	StopwatchTriggerUnitElement.super.init(self, unit)
 
@@ -383,7 +392,7 @@ function StopwatchTriggerUnitElement:init(unit)
 	table.insert(self._save_values, "elements")
 end
 
--- Lines 328-344
+-- Lines 330-346
 function StopwatchTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 	StopwatchTriggerUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -408,17 +417,11 @@ function StopwatchTriggerUnitElement:draw_links(t, dt, selected_unit, all_units)
 	end
 end
 
--- Lines 346-349
-function StopwatchTriggerUnitElement:get_links_to_unit(...)
-	StopwatchTriggerUnitElement.super.get_links_to_unit(self, ...)
-	self:_get_links_of_type_from_elements(self._hed.elements, "trigger", ...)
-end
-
--- Lines 351-352
+-- Lines 348-349
 function StopwatchTriggerUnitElement:update_editing()
 end
 
--- Lines 354-373
+-- Lines 351-370
 function StopwatchTriggerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -440,12 +443,12 @@ function StopwatchTriggerUnitElement:add_element()
 	end
 end
 
--- Lines 375-377
+-- Lines 372-374
 function StopwatchTriggerUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines 379-393
+-- Lines 376-390
 function StopwatchTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -466,11 +469,14 @@ end
 StopwatchFilterUnitElement = StopwatchFilterUnitElement or class(MissionElement)
 StopwatchFilterUnitElement.SAVE_UNIT_POSITION = false
 StopwatchFilterUnitElement.SAVE_UNIT_ROTATION = false
-StopwatchFilterUnitElement.LINK_ELEMENTS = {
-	"elements"
+StopwatchFilterUnitElement.LINK_VALUES = {
+	{
+		table_value = "elements",
+		type = "filter"
+	}
 }
 
--- Lines 402-416
+-- Lines 399-413
 function StopwatchFilterUnitElement:init(unit)
 	StopwatchFilterUnitElement.super.init(self, unit)
 
@@ -487,11 +493,11 @@ function StopwatchFilterUnitElement:init(unit)
 	table.insert(self._save_values, "check_type")
 end
 
--- Lines 418-441
+-- Lines 415-438
 function StopwatchFilterUnitElement:draw_links(t, dt, selected_unit, all_units)
 	StopwatchFilterUnitElement.super.draw_links(self, t, dt, selected_unit)
 
-	-- Lines 422-432
+	-- Lines 419-429
 	local function draw_link_element(element_name, id, r, g, b)
 		local unit = all_units[id]
 
@@ -521,17 +527,11 @@ function StopwatchFilterUnitElement:draw_links(t, dt, selected_unit, all_units)
 	end
 end
 
--- Lines 443-446
-function StopwatchFilterUnitElement:get_links_to_unit(...)
-	StopwatchFilterUnitElement.super.get_links_to_unit(self, ...)
-	self:_get_links_of_type_from_elements(self._hed.elements, "filter", ...)
-end
-
--- Lines 448-449
+-- Lines 440-441
 function StopwatchFilterUnitElement:update_editing()
 end
 
--- Lines 451-465
+-- Lines 443-457
 function StopwatchFilterUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -549,12 +549,12 @@ function StopwatchFilterUnitElement:add_element()
 	end
 end
 
--- Lines 468-470
+-- Lines 460-462
 function StopwatchFilterUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines 472-478
+-- Lines 464-470
 function StopwatchFilterUnitElement:_add_stopwatch_value_unit(params)
 	local dialog = (params.single and SingleSelectUnitByNameModal or SelectUnitByNameModal):new("Add Stopwatch Unit", params.add_filter)
 
@@ -565,7 +565,7 @@ function StopwatchFilterUnitElement:_add_stopwatch_value_unit(params)
 	end
 end
 
--- Lines 480-487
+-- Lines 472-479
 function StopwatchFilterUnitElement:_add_unit(unit)
 	if #self._hed.stopwatch_value_ids > 0 then
 		self:_clear_connected_stopwatch_value()
@@ -576,12 +576,12 @@ function StopwatchFilterUnitElement:_add_unit(unit)
 	self._value_ctrl:set_value(string.format("Using stopwatch time from '%s' as value", unit:unit_data().name_id))
 end
 
--- Lines 489-491
+-- Lines 481-483
 function StopwatchFilterUnitElement:_add_unit_filter(unit)
 	return unit:name() == Idstring(StopwatchUnitElement.ELEMENT_NAME)
 end
 
--- Lines 493-499
+-- Lines 485-491
 function StopwatchFilterUnitElement:_clear_connected_stopwatch_value(params)
 	for idx, unit_id in ipairs(self._hed.stopwatch_value_ids) do
 		self:remove_link_element("stopwatch_value_ids", unit_id)
@@ -591,7 +591,7 @@ function StopwatchFilterUnitElement:_clear_connected_stopwatch_value(params)
 	self._value_ctrl:set_value(self._hed.value)
 end
 
--- Lines 501-556
+-- Lines 493-548
 function StopwatchFilterUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

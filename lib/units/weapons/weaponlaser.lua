@@ -90,7 +90,7 @@ local mvec1 = Vector3()
 local mvec2 = Vector3()
 local mvec_l_dir = Vector3()
 
--- Lines 102-165
+-- Lines 103-166
 function WeaponLaser:update(unit, t, dt)
 	local rotation = self._custom_rotation or self._laser_obj:rotation()
 
@@ -149,7 +149,7 @@ function WeaponLaser:update(unit, t, dt)
 	self._custom_rotation = nil
 end
 
--- Lines 169-176
+-- Lines 170-177
 function WeaponLaser:_check_state(current_state)
 	WeaponLaser.super._check_state(self, current_state)
 	self._light:set_enable(self._on)
@@ -159,12 +159,12 @@ function WeaponLaser:_check_state(current_state)
 	self._unit:set_extension_update_enabled(Idstring("base"), self._on)
 end
 
--- Lines 178-180
+-- Lines 179-181
 function WeaponLaser:set_npc()
 	self._is_npc = true
 end
 
--- Lines 184-194
+-- Lines 185-195
 function WeaponLaser:destroy(unit)
 	WeaponLaser.super.destroy(self, unit)
 
@@ -177,7 +177,7 @@ function WeaponLaser:destroy(unit)
 	end
 end
 
--- Lines 198-210
+-- Lines 199-211
 function WeaponLaser:set_color_by_theme(type)
 	self._theme_type = type
 	local theme = self._themes[type] or self._themes.default
@@ -189,12 +189,12 @@ function WeaponLaser:set_color_by_theme(type)
 	self._brush:set_color(theme.brush)
 end
 
--- Lines 214-216
+-- Lines 215-217
 function WeaponLaser:theme_type()
 	return self._theme_type
 end
 
--- Lines 220-241
+-- Lines 221-242
 function WeaponLaser:set_color(color)
 	if not color then
 		return
@@ -211,17 +211,17 @@ function WeaponLaser:set_color(color)
 	self._brush:set_color(color)
 end
 
--- Lines 244-246
+-- Lines 245-247
 function WeaponLaser:color()
 	return self._color or tweak_data.custom_colors.defaults.laser
 end
 
--- Lines 251-253
+-- Lines 252-254
 function WeaponLaser:set_max_distace(dis)
 	self._max_distance = dis
 end
 
--- Lines 257-260
+-- Lines 258-261
 function WeaponLaser:add_ray_ignore_unit(unit)
 	self._ray_ignore_units = self._ray_ignore_units or {}
 
@@ -231,7 +231,7 @@ end
 WeaponMultiLaser = WeaponMultiLaser or class(WeaponLaser)
 WeaponMultiLaser.GADGET_TYPE = "laser"
 
--- Lines 269-338
+-- Lines 270-339
 function WeaponMultiLaser:init(unit)
 	WeaponLaser.super.init(self, unit)
 
@@ -304,7 +304,7 @@ function WeaponMultiLaser:init(unit)
 	self._brush:set_blend_mode("opacity_add")
 end
 
--- Lines 342-396
+-- Lines 343-397
 function WeaponMultiLaser:update(unit, t, dt)
 	for index, laser_obj in ipairs(self._laser_objs) do
 		local light = self._lights[index] or self._lights[1]
@@ -364,7 +364,7 @@ function WeaponMultiLaser:update(unit, t, dt)
 	self._custom_rotation = nil
 end
 
--- Lines 400-420
+-- Lines 401-421
 function WeaponMultiLaser:_check_state(current_state)
 	WeaponLaser.super._check_state(self, current_state)
 
@@ -387,7 +387,7 @@ function WeaponMultiLaser:_check_state(current_state)
 	self._unit:set_extension_update_enabled(Idstring("base"), self._on)
 end
 
--- Lines 424-440
+-- Lines 425-441
 function WeaponMultiLaser:set_color_by_theme(type)
 	self._theme_type = type
 	local theme = self._themes[type] or self._themes.default
@@ -407,7 +407,7 @@ function WeaponMultiLaser:set_color_by_theme(type)
 	self._brush:set_color(theme.brush)
 end
 
--- Lines 444-467
+-- Lines 445-468
 function WeaponMultiLaser:set_color(color)
 	if not color then
 		return
@@ -430,7 +430,7 @@ function WeaponMultiLaser:set_color(color)
 	self._brush:set_color(color)
 end
 
--- Lines 471-481
+-- Lines 472-482
 function WeaponMultiLaser:destroy(unit)
 	WeaponLaser.super.destroy(self, unit)
 
@@ -440,5 +440,105 @@ function WeaponMultiLaser:destroy(unit)
 
 	for _, light_glow in ipairs(self._light_glows) do
 		World:delete_light(light_glow)
+	end
+end
+
+WatchLaser = WatchLaser or class()
+WatchLaser.MAX_DISTANCE = 68
+local mrot1 = Rotation()
+
+-- Lines 491-509
+function WatchLaser:init(unit)
+	self._unit = unit
+	self._active = false
+
+	if self._laser_obj_name and self._impact_obj_name and self._impact_effect_name then
+		self._laser_obj = self._unit:get_object(Idstring(self._laser_obj_name))
+		self._impact_obj = self._unit:get_object(Idstring(self._impact_obj_name))
+		self._impact_effect = self._unit:effect_spawner(Idstring(self._impact_effect_name))
+	end
+
+	if self._impact_sound_source_name then
+		self._impact_sound_source = self._unit:sound_source(Idstring(self._impact_sound_source_name))
+	end
+
+	self._projectile_data = tweak_data.blackmarket.projectiles[self._tweak_projectile_entry or "laser_watch"]
+	self._slotmask = managers.slot:get_mask("bullet_impact_targets")
+
+	self._unit:set_extension_update_enabled(Idstring("base"), false)
+end
+
+-- Lines 511-532
+function WatchLaser:set_enabled(enabled)
+	local has_laser = not not self._impact_effect
+
+	self._unit:set_extension_update_enabled(Idstring("base"), enabled and has_laser)
+
+	local event = self._projectile_data.sounds and self._projectile_data.sounds[enabled and "activate" or "deactivate"]
+
+	if event then
+		self._unit:sound_source():post_event(event)
+	end
+
+	if not enabled and has_laser then
+		self._active = false
+
+		self._impact_effect:kill_effect()
+
+		local event = self._projectile_data.sounds and self._projectile_data.sounds.impact_stop
+
+		if event and self._impact_sound_source then
+			self._impact_sound_source:post_event(event)
+		end
+	end
+end
+
+-- Lines 534-576
+function WatchLaser:update(unit, t, dt)
+	local rotation = self._laser_obj:rotation()
+
+	mrotation.x(rotation, mvec_l_dir)
+
+	local from = mvec1
+
+	mvector3.set(from, self._laser_obj:position())
+
+	local to = mvec2
+
+	mvector3.set(to, -mvec_l_dir)
+	mvector3.multiply(to, self.MAX_DISTANCE)
+	mvector3.add(to, from)
+
+	local ray = self._unit:raycast("ray", from, to, "slot_mask", self._slotmask)
+
+	if ray then
+		local normal = ray.normal
+		local position = ray.position + ray.normal
+
+		mrotation.set_look_at(mrot1, normal, math.UP)
+		self._impact_obj:set_position(position)
+		self._impact_obj:set_rotation(mrot1)
+
+		if not self._active then
+			self._active = true
+
+			self._impact_effect:activate()
+
+			local event = self._projectile_data.sounds and self._projectile_data.sounds.impact_start
+
+			if event and self._impact_sound_source then
+				self._impact_sound_source:post_event(event)
+			end
+		end
+	elseif self._active then
+		self._active = false
+
+		self._impact_effect:kill_effect()
+
+		local event = self._projectile_data.sounds and self._projectile_data.sounds.impact_stop
+
+		if event and self._impact_sound_source then
+			self._impact_sound_source:post_event(event)
+		end
 	end
 end

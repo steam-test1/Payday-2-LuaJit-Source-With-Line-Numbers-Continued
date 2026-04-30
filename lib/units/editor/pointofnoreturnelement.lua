@@ -1,9 +1,12 @@
 PointOfNoReturnElement = PointOfNoReturnElement or class(MissionElement)
-PointOfNoReturnElement.LINK_ELEMENTS = {
-	"elements"
+PointOfNoReturnElement.LINK_VALUES = {
+	{
+		table_value = "elements",
+		type = "trigger"
+	}
 }
 
--- Lines 4-30
+-- Lines 9-35
 function PointOfNoReturnElement:init(unit)
 	PointOfNoReturnElement.super.init(self, unit)
 	self:_add_tweak_options()
@@ -31,7 +34,7 @@ function PointOfNoReturnElement:init(unit)
 	table.insert(self._save_values, "time_sm_wish")
 end
 
--- Lines 32-42
+-- Lines 37-47
 function PointOfNoReturnElement:post_init(...)
 	PointOfNoReturnElement.super.post_init(self, ...)
 
@@ -44,7 +47,7 @@ function PointOfNoReturnElement:post_init(...)
 	end
 end
 
--- Lines 44-50
+-- Lines 49-55
 function PointOfNoReturnElement:_add_tweak_options()
 	self._tweak_options = table.map_keys(tweak_data.point_of_no_returns, function (x, y)
 		if x == "noreturn" then
@@ -59,14 +62,14 @@ function PointOfNoReturnElement:_add_tweak_options()
 	end)
 end
 
--- Lines 52-55
+-- Lines 57-60
 function PointOfNoReturnElement:_set_text()
 	local data = tweak_data.point_of_no_returns[self._hed.tweak_id]
 
 	self._text:set_value(managers.localization:text(data.text_id))
 end
 
--- Lines 57-62
+-- Lines 62-67
 function PointOfNoReturnElement:set_element_data(params, ...)
 	PointOfNoReturnElement.super.set_element_data(self, params, ...)
 
@@ -75,7 +78,7 @@ function PointOfNoReturnElement:set_element_data(params, ...)
 	end
 end
 
--- Lines 65-241
+-- Lines 70-246
 function PointOfNoReturnElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -275,16 +278,16 @@ function PointOfNoReturnElement:_build_panel(panel, panel_sizer)
 	})
 end
 
--- Lines 250-252
+-- Lines 255-257
 function PointOfNoReturnElement:draw_links(t, dt, selected_unit, all_units)
 	MissionElement.draw_links(self, t, dt, selected_unit, all_units)
 end
 
--- Lines 254-255
+-- Lines 259-260
 function PointOfNoReturnElement:update_editing()
 end
 
--- Lines 258-266
+-- Lines 263-271
 function PointOfNoReturnElement:update_selected(t, dt, selected_unit, all_units)
 	for _, id in ipairs(self._hed.elements) do
 		local unit = all_units[id]
@@ -302,7 +305,7 @@ function PointOfNoReturnElement:update_selected(t, dt, selected_unit, all_units)
 	end
 end
 
--- Lines 268-278
+-- Lines 273-283
 function PointOfNoReturnElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -320,7 +323,7 @@ function PointOfNoReturnElement:add_element()
 	end
 end
 
--- Lines 281-283
+-- Lines 286-288
 function PointOfNoReturnElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end

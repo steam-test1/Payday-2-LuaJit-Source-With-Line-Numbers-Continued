@@ -106,7 +106,7 @@ function CopInventory:get_weapon()
 	return unit
 end
 
--- Lines 112-130
+-- Lines 112-132
 function CopInventory:drop_weapon()
 	local selection = self._available_selections[self._equipped_selection]
 	local unit = selection and selection.unit
@@ -130,7 +130,7 @@ function CopInventory:drop_weapon()
 	end
 end
 
--- Lines 134-203
+-- Lines 136-205
 function CopInventory:on_shield_break(attacker_unit)
 	if not alive(self._shield_unit) then
 		return
@@ -189,7 +189,7 @@ function CopInventory:on_shield_break(attacker_unit)
 	end
 end
 
--- Lines 207-222
+-- Lines 209-224
 function CopInventory:anim_clbk_weapon_attached(unit, state)
 	print("[CopInventory:anim_clbk_weapon_attached]", state)
 
@@ -207,7 +207,7 @@ function CopInventory:anim_clbk_weapon_attached(unit, state)
 	end
 end
 
--- Lines 226-229
+-- Lines 228-231
 function CopInventory:destroy_all_items()
 	CopInventory.super.destroy_all_items(self)
 	self:_call_listeners("unequip")

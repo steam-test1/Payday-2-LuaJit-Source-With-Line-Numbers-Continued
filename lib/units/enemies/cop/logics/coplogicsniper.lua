@@ -200,7 +200,7 @@ function CopLogicSniper._chk_crouch_visibility(my_pos, target_pos, slotmask)
 	return ray
 end
 
--- Lines 209-227
+-- Lines 209-229
 function CopLogicSniper.action_complete_clbk(data, action)
 	local action_type = action:type()
 	local my_data = data.internal_data
@@ -210,7 +210,7 @@ function CopLogicSniper.action_complete_clbk(data, action)
 	elseif action_type == "shoot" then
 		my_data.shooting = nil
 	elseif action_type == "walk" then
-		my_data.advacing = nil
+		my_data.advancing = nil
 
 		if action:expired() then
 			my_data.reposition = nil
@@ -220,7 +220,7 @@ function CopLogicSniper.action_complete_clbk(data, action)
 	end
 end
 
--- Lines 231-350
+-- Lines 233-352
 function CopLogicSniper._upd_aim(data, my_data)
 	local shoot, aim = nil
 	local focus_enemy = data.attention_obj
@@ -354,7 +354,7 @@ function CopLogicSniper._upd_aim(data, my_data)
 	CopLogicAttack.aim_allow_fire(shoot, aim, data, my_data)
 end
 
--- Lines 354-380
+-- Lines 356-382
 function CopLogicSniper._chk_reaction_to_attention_object(data, attention_data, stationary)
 	local record = attention_data.criminal_record
 
@@ -382,7 +382,7 @@ function CopLogicSniper._chk_reaction_to_attention_object(data, attention_data, 
 	return math.min(attention_data.settings.reaction, AIAttentionObject.REACT_COMBAT)
 end
 
--- Lines 384-386
+-- Lines 386-388
 function CopLogicSniper.should_duck_on_alert(data, alert_data)
 	return data.internal_data.attitude == "avoid" and CopLogicBase.should_duck_on_alert(data, alert_data)
 end

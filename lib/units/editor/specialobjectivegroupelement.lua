@@ -1,6 +1,17 @@
 SpecialObjectiveGroupElement = SpecialObjectiveGroupElement or class(MissionElement)
+SpecialObjectiveGroupElement.LINK_VALUES = {
+	{
+		table_value = "spawn_instigator_ids",
+		type = "instigator"
+	},
+	{
+		output = true,
+		table_value = "followup_elements",
+		type = "followup"
+	}
+}
 
--- Lines 3-17
+-- Lines 15-29
 function SpecialObjectiveGroupElement:init(unit)
 	SpecialObjectiveGroupElement.super.init(self, unit)
 
@@ -17,18 +28,18 @@ function SpecialObjectiveGroupElement:init(unit)
 	table.insert(self._save_values, "mode")
 end
 
--- Lines 19-21
+-- Lines 31-33
 function SpecialObjectiveGroupElement:post_init(...)
 	SpecialObjectiveGroupElement.super.post_init(self, ...)
 end
 
--- Lines 23-26
+-- Lines 35-38
 function SpecialObjectiveGroupElement:draw_links(t, dt, selected_unit, all_units)
 	SpecialObjectiveUnitElement.super.draw_links(self, t, dt, selected_unit)
 	self:_draw_follow_up(selected_unit, all_units)
 end
 
--- Lines 28-40
+-- Lines 40-52
 function SpecialObjectiveGroupElement:update_selected(t, dt, selected_unit, all_units)
 	self:_draw_follow_up(selected_unit, all_units)
 
@@ -50,7 +61,7 @@ function SpecialObjectiveGroupElement:update_selected(t, dt, selected_unit, all_
 	end
 end
 
--- Lines 42-66
+-- Lines 54-78
 function SpecialObjectiveGroupElement:update_unselected(t, dt, selected_unit, all_units)
 	if self._hed.followup_elements then
 		local followup_elements = self._hed.followup_elements
@@ -83,19 +94,19 @@ function SpecialObjectiveGroupElement:update_unselected(t, dt, selected_unit, al
 	end
 end
 
--- Lines 68-70
+-- Lines 80-82
 function SpecialObjectiveGroupElement:_draw_follow_up(selected_unit, all_units)
 	SpecialObjectiveUnitElement._draw_follow_up(self, selected_unit, all_units)
 end
 
--- Lines 72-76
+-- Lines 84-88
 function SpecialObjectiveGroupElement:update_editing()
 	self:_so_raycast()
 	self:_spawn_raycast()
 	self:_raycast()
 end
 
--- Lines 78-86
+-- Lines 90-98
 function SpecialObjectiveGroupElement:_so_raycast()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -113,7 +124,7 @@ function SpecialObjectiveGroupElement:_so_raycast()
 	return nil
 end
 
--- Lines 88-105
+-- Lines 100-117
 function SpecialObjectiveGroupElement:_spawn_raycast()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -135,7 +146,7 @@ function SpecialObjectiveGroupElement:_spawn_raycast()
 	return id
 end
 
--- Lines 107-116
+-- Lines 119-128
 function SpecialObjectiveGroupElement:_raycast()
 	local from = managers.editor:get_cursor_look_point(0)
 	local to = managers.editor:get_cursor_look_point(100000)
@@ -150,7 +161,7 @@ function SpecialObjectiveGroupElement:_raycast()
 	return nil
 end
 
--- Lines 118-151
+-- Lines 130-163
 function SpecialObjectiveGroupElement:_lmb()
 	local id = self:_so_raycast()
 
@@ -193,21 +204,21 @@ function SpecialObjectiveGroupElement:_lmb()
 	end
 end
 
--- Lines 153-155
+-- Lines 165-167
 function SpecialObjectiveGroupElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "_lmb"))
 end
 
--- Lines 159-161
+-- Lines 171-173
 function SpecialObjectiveGroupElement:selected()
 	SpecialObjectiveUnitElement.super.selected(self)
 end
 
--- Lines 163-209
+-- Lines 175-221
 function SpecialObjectiveGroupElement:add_unit_list_btn()
 	local script = self._unit:mission_element_data().script
 
-	-- Lines 165-186
+	-- Lines 177-198
 	local function f(unit)
 		if not unit:mission_element_data() or unit:mission_element_data().script ~= script then
 			return
@@ -247,9 +258,9 @@ function SpecialObjectiveGroupElement:add_unit_list_btn()
 	end
 end
 
--- Lines 211-224
+-- Lines 223-236
 function SpecialObjectiveGroupElement:remove_unit_list_btn()
-	-- Lines 212-213
+	-- Lines 224-225
 	local function f(unit)
 		return self._hed.spawn_instigator_ids and table.contains(self._hed.spawn_instigator_ids, unit:unit_data().unit_id) or self._hed.followup_elements and table.contains(self._hed.followup_elements, unit:unit_data().unit_id)
 	end
@@ -269,7 +280,7 @@ function SpecialObjectiveGroupElement:remove_unit_list_btn()
 	end
 end
 
--- Lines 226-285
+-- Lines 238-297
 function SpecialObjectiveGroupElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -340,6 +351,6 @@ function SpecialObjectiveGroupElement:_build_panel(panel, panel_sizer)
 	panel_sizer:add(self._btn_toolbar, 0, 1, "EXPAND,LEFT")
 end
 
--- Lines 287-290
+-- Lines 299-302
 function SpecialObjectiveGroupElement:add_to_mission_package()
 end

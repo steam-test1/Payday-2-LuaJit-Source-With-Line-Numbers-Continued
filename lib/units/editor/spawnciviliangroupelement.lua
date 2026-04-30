@@ -1,6 +1,10 @@
 SpawnCivilianGroupUnitElement = SpawnCivilianGroupUnitElement or class(MissionElement)
-SpawnCivilianGroupUnitElement.LINK_ELEMENTS = {
-	"elements"
+SpawnCivilianGroupUnitElement.LINK_VALUES = {
+	{
+		output = true,
+		table_value = "elements",
+		type = "spawn_point"
+	}
 }
 
 -- Lines 4-18
@@ -65,18 +69,12 @@ function SpawnCivilianGroupUnitElement:add_element()
 	end
 end
 
--- Lines 49-52
-function SpawnCivilianGroupUnitElement:get_links_to_unit(...)
-	SpawnCivilianGroupUnitElement.super.get_links_to_unit(self, ...)
-	self:_get_links_of_type_from_elements(self._hed.elements, "spawn_point", ...)
-end
-
--- Lines 55-57
+-- Lines 50-52
 function SpawnCivilianGroupUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines 60-73
+-- Lines 55-68
 function SpawnCivilianGroupUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

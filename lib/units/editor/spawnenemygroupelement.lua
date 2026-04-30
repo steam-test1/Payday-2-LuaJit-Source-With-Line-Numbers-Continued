@@ -4,11 +4,15 @@ SpawnEnemyGroupUnitElement.SAVE_UNIT_ROTATION = false
 SpawnEnemyGroupUnitElement.RANDOMS = {
 	"amount"
 }
-SpawnEnemyGroupUnitElement.LINK_ELEMENTS = {
-	"elements"
+SpawnEnemyGroupUnitElement.LINK_VALUES = {
+	{
+		output = true,
+		table_value = "elements",
+		type = "spawn_point"
+	}
 }
 
--- Lines 8-26
+-- Lines 14-32
 function SpawnEnemyGroupUnitElement:init(unit)
 	MissionElement.init(self, unit)
 
@@ -31,7 +35,7 @@ function SpawnEnemyGroupUnitElement:init(unit)
 	table.insert(self._save_values, "team")
 end
 
--- Lines 29-49
+-- Lines 35-55
 function SpawnEnemyGroupUnitElement:post_init(...)
 	SpawnEnemyGroupUnitElement.super.post_init(self, ...)
 
@@ -57,16 +61,16 @@ function SpawnEnemyGroupUnitElement:post_init(...)
 	end
 end
 
--- Lines 51-53
+-- Lines 57-59
 function SpawnEnemyGroupUnitElement:draw_links(t, dt, selected_unit, all_units)
 	MissionElement.draw_links(self, t, dt, selected_unit, all_units)
 end
 
--- Lines 55-56
+-- Lines 61-62
 function SpawnEnemyGroupUnitElement:update_editing()
 end
 
--- Lines 58-66
+-- Lines 64-72
 function SpawnEnemyGroupUnitElement:update_selected(t, dt, selected_unit, all_units)
 	for _, id in ipairs(self._hed.elements) do
 		local unit = all_units[id]
@@ -84,7 +88,7 @@ function SpawnEnemyGroupUnitElement:update_selected(t, dt, selected_unit, all_un
 	end
 end
 
--- Lines 68-78
+-- Lines 74-84
 function SpawnEnemyGroupUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -102,18 +106,12 @@ function SpawnEnemyGroupUnitElement:add_element()
 	end
 end
 
--- Lines 80-83
-function SpawnEnemyGroupUnitElement:get_links_to_unit(...)
-	SpawnEnemyGroupUnitElement.super.get_links_to_unit(self, ...)
-	self:_get_links_of_type_from_elements(self._hed.elements, "spawn_point", ...)
-end
-
--- Lines 86-88
+-- Lines 87-89
 function SpawnEnemyGroupUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines 91-145
+-- Lines 92-146
 function SpawnEnemyGroupUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -184,7 +182,7 @@ function SpawnEnemyGroupUnitElement:_build_panel(panel, panel_sizer)
 	opt_sizer:add(filter_sizer, 1, 0, "EXPAND")
 end
 
--- Lines 149-158
+-- Lines 150-159
 function SpawnEnemyGroupUnitElement:set_element_data(data)
 	SpecialObjectiveUnitElement.super.set_element_data(self, data)
 
@@ -194,7 +192,7 @@ function SpawnEnemyGroupUnitElement:set_element_data(data)
 	end
 end
 
--- Lines 160-178
+-- Lines 161-179
 function SpawnEnemyGroupUnitElement:on_preferred_spawn_groups_checkbox_changed(params)
 	local value = params.ctrlr:get_value()
 

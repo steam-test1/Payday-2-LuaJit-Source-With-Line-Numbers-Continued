@@ -1,11 +1,18 @@
 AIForceAttentionOperatorElement = AIForceAttentionOperatorElement or class(MissionElement)
+AIForceAttentionOperatorElement.LINK_VALUES = {
+	{
+		value = "element_id",
+		output = true,
+		type = "operator"
+	}
+}
 local element_unit_name_id = Idstring("units/dev_tools/mission_elements/ai_force_attention/ai_force_attention")
 local valid_operations = {
 	"disable"
 }
 local element_label_base = "Operating On: "
 
--- Lines 10-18
+-- Lines 17-25
 function AIForceAttentionOperatorElement:init(unit)
 	AIForceAttentionOperatorElement.super.init(self, unit)
 
@@ -16,9 +23,9 @@ function AIForceAttentionOperatorElement:init(unit)
 	table.insert(self._save_values, "element_id")
 end
 
--- Lines 22-37
+-- Lines 29-44
 function AIForceAttentionOperatorElement:select_element(label)
-	-- Lines 23-28
+	-- Lines 30-35
 	local function f(unit)
 		if self._hed.att_unit_id == unit:unit_data().unit_id then
 			return false
@@ -36,7 +43,7 @@ function AIForceAttentionOperatorElement:select_element(label)
 	end
 end
 
--- Lines 41-64
+-- Lines 48-71
 function AIForceAttentionOperatorElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

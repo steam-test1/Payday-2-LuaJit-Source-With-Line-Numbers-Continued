@@ -45,7 +45,7 @@ function ElementWorldCameraTrigger:init(...)
 	end
 end
 
--- Lines 44-60
+-- Lines 44-62
 function ElementWorldCameraTrigger:on_executed(instigator)
 	if not self._values.enabled then
 		return

@@ -1,8 +1,16 @@
 VehicleBoardingElement = VehicleBoardingElement or class(MissionElement)
 VehicleBoardingElement.SAVE_UNIT_POSITION = false
 VehicleBoardingElement.SAVE_UNIT_ROTATION = false
+VehicleBoardingElement.LINK_VALUES = {
+	{
+		value = "vehicle",
+		output = true,
+		layer = "Statics",
+		type = "operator"
+	}
+}
 
--- Lines 5-16
+-- Lines 13-24
 function VehicleBoardingElement:init(unit)
 	VehicleBoardingElement.super.init(self, unit)
 
@@ -16,11 +24,11 @@ function VehicleBoardingElement:init(unit)
 	table.insert(self._save_values, "teleport_points")
 end
 
--- Lines 18-19
+-- Lines 26-27
 function VehicleBoardingElement:update_editing()
 end
 
--- Lines 21-73
+-- Lines 29-81
 function VehicleBoardingElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		mask = managers.slot:get_mask("vehicles")
@@ -81,12 +89,12 @@ function VehicleBoardingElement:add_element()
 	end
 end
 
--- Lines 75-77
+-- Lines 83-85
 function VehicleBoardingElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines 79-90
+-- Lines 87-98
 function VehicleBoardingElement:set_vehicle(vehicle_unit)
 	if self._vehicle_unit == vehicle_unit then
 		return
@@ -99,7 +107,7 @@ function VehicleBoardingElement:set_vehicle(vehicle_unit)
 	self:_update_gui()
 end
 
--- Lines 92-98
+-- Lines 100-106
 function VehicleBoardingElement:vehicle_unit()
 	if not self._vehicle_unit or self._vehicle_unit:unit_data().unit_id ~= self._hed.vehicle then
 		self._vehicle_unit = managers.editor:unit_with_id(self._hed.vehicle)
@@ -108,7 +116,7 @@ function VehicleBoardingElement:vehicle_unit()
 	return self._vehicle_unit
 end
 
--- Lines 100-126
+-- Lines 108-134
 function VehicleBoardingElement:draw_links(t, dt, selected_unit, all_units)
 	VehicleBoardingElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -154,7 +162,7 @@ function VehicleBoardingElement:draw_links(t, dt, selected_unit, all_units)
 	end
 end
 
--- Lines 128-137
+-- Lines 136-145
 function VehicleBoardingElement:_update_gui()
 	local vehicle_unit = self:vehicle_unit()
 	local seats_interface_enabled = not not vehicle_unit
@@ -165,7 +173,7 @@ function VehicleBoardingElement:_update_gui()
 	self:_populate_seats_list()
 end
 
--- Lines 139-158
+-- Lines 147-166
 function VehicleBoardingElement:_populate_seats_list()
 	self._seats_list:clear()
 
@@ -190,17 +198,17 @@ function VehicleBoardingElement:_populate_seats_list()
 	self:_populate_teleport_points_list()
 end
 
--- Lines 160-162
+-- Lines 168-170
 function VehicleBoardingElement:_move_up_clicked(button, event)
 	self:_move_seat_in_direction("up")
 end
 
--- Lines 164-166
+-- Lines 172-174
 function VehicleBoardingElement:_move_down_clicked(button, event)
 	self:_move_seat_in_direction("down")
 end
 
--- Lines 168-193
+-- Lines 176-201
 function VehicleBoardingElement:_move_seat_in_direction(direction)
 	local seat_index = self._seats_list:selected_index() + 1
 	local swap_index = nil
@@ -227,7 +235,7 @@ function VehicleBoardingElement:_move_seat_in_direction(direction)
 	self._seats_list:select_index(swap_index - 1)
 end
 
--- Lines 195-220
+-- Lines 203-228
 function VehicleBoardingElement:_populate_teleport_points_list()
 	self._teleport_points_list:clear()
 
@@ -258,7 +266,7 @@ function VehicleBoardingElement:_populate_teleport_points_list()
 	end
 end
 
--- Lines 222-228
+-- Lines 230-236
 function VehicleBoardingElement:_teleport_remove_clicked(button, event)
 	local seat_id = self._teleport_points_list:selected_index() + 1
 	self._hed.teleport_points[seat_id] = nil
@@ -267,17 +275,17 @@ function VehicleBoardingElement:_teleport_remove_clicked(button, event)
 	self._teleport_points_list:select_index(seat_id - 1)
 end
 
--- Lines 230-232
+-- Lines 238-240
 function VehicleBoardingElement:_teleport_move_up_clicked(button, event)
 	self:_move_teleport_in_direction("up")
 end
 
--- Lines 234-236
+-- Lines 242-244
 function VehicleBoardingElement:_teleport_move_down_clicked(button, event)
 	self:_move_teleport_in_direction("down")
 end
 
--- Lines 238-245
+-- Lines 246-253
 function VehicleBoardingElement:_select_teleport_doubleclicked(...)
 	local seat_id = self._teleport_points_list:selected_index() + 1
 	local point_id = self._hed.teleport_points[seat_id]
@@ -288,7 +296,7 @@ function VehicleBoardingElement:_select_teleport_doubleclicked(...)
 	end
 end
 
--- Lines 247-276
+-- Lines 255-284
 function VehicleBoardingElement:_move_teleport_in_direction(direction)
 	if not self._hed.seats_order then
 		return
@@ -319,7 +327,7 @@ function VehicleBoardingElement:_move_teleport_in_direction(direction)
 	self._teleport_points_list:select_index(swap_index - 1)
 end
 
--- Lines 278-323
+-- Lines 286-331
 function VehicleBoardingElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

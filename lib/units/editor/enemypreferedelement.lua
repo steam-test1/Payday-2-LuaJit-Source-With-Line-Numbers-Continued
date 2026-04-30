@@ -1,27 +1,35 @@
 EnemyPreferedAddUnitElement = EnemyPreferedAddUnitElement or class(MissionElement)
 EnemyPreferedAddUnitElement.SAVE_UNIT_POSITION = false
 EnemyPreferedAddUnitElement.SAVE_UNIT_ROTATION = false
-EnemyPreferedAddUnitElement.LINK_ELEMENTS = {
-	"spawn_points",
-	"spawn_groups"
+EnemyPreferedAddUnitElement.LINK_VALUES = {
+	{
+		output = true,
+		table_value = "spawn_groups",
+		type = "spawn_group"
+	},
+	{
+		output = true,
+		table_value = "spawn_points",
+		type = "spawn_point"
+	}
 }
 
--- Lines 7-15
+-- Lines 10-18
 function EnemyPreferedAddUnitElement:init(unit)
 	EnemyPreferedRemoveUnitElement.super.init(self, unit)
 	table.insert(self._save_values, "spawn_points")
 	table.insert(self._save_values, "spawn_groups")
 end
 
--- Lines 17-20
+-- Lines 20-23
 function EnemyPreferedAddUnitElement:draw_links(t, dt, selected_unit, all_units)
 	EnemyPreferedRemoveUnitElement.super.draw_links(self, t, dt, selected_unit, all_units)
 	self:_private_draw_links(t, dt, selected_unit, all_units)
 end
 
--- Lines 22-39
+-- Lines 25-42
 function EnemyPreferedAddUnitElement:_private_draw_links(t, dt, selected_unit, all_units)
-	-- Lines 23-35
+	-- Lines 26-38
 	local function _draw_func(element_ids)
 		if not element_ids then
 			return
@@ -47,11 +55,11 @@ function EnemyPreferedAddUnitElement:_private_draw_links(t, dt, selected_unit, a
 	_draw_func(self._hed.spawn_groups)
 end
 
--- Lines 41-42
+-- Lines 44-45
 function EnemyPreferedAddUnitElement:update_editing()
 end
 
--- Lines 44-74
+-- Lines 47-77
 function EnemyPreferedAddUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -88,7 +96,7 @@ function EnemyPreferedAddUnitElement:add_element()
 	end
 end
 
--- Lines 76-86
+-- Lines 79-89
 function EnemyPreferedAddUnitElement:_delete_id_from_table(id, table_name)
 	if not self._hed[table_name] then
 		return
@@ -101,29 +109,16 @@ function EnemyPreferedAddUnitElement:_delete_id_from_table(id, table_name)
 	end
 end
 
--- Lines 88-96
-function EnemyPreferedAddUnitElement:get_links_to_unit(...)
-	EnemyPreferedAddUnitElement.super.get_links_to_unit(self, ...)
-
-	if self._hed.spawn_groups then
-		self:_get_links_of_type_from_elements(self._hed.spawn_groups, "spawn_group", ...)
-	end
-
-	if self._hed.spawn_points then
-		self:_get_links_of_type_from_elements(self._hed.spawn_points, "spawn_point", ...)
-	end
-end
-
--- Lines 99-101
+-- Lines 92-94
 function EnemyPreferedAddUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines 103-134
+-- Lines 96-127
 function EnemyPreferedAddUnitElement:add_unit_list_btn()
 	local script = self._unit:mission_element_data().script
 
-	-- Lines 105-121
+	-- Lines 98-114
 	local function f(unit)
 		if not unit:mission_element_data() or unit:mission_element_data().script ~= script then
 			return
@@ -163,9 +158,9 @@ function EnemyPreferedAddUnitElement:add_unit_list_btn()
 	end
 end
 
--- Lines 136-145
+-- Lines 129-138
 function EnemyPreferedAddUnitElement:remove_unit_list_btn()
-	-- Lines 137-138
+	-- Lines 130-131
 	local function f(unit)
 		return self._hed.spawn_groups and table.contains(self._hed.spawn_groups, unit:unit_data().unit_id) or self._hed.spawn_points and table.contains(self._hed.spawn_points, unit:unit_data().unit_id)
 	end
@@ -180,7 +175,7 @@ function EnemyPreferedAddUnitElement:remove_unit_list_btn()
 	end
 end
 
--- Lines 148-165
+-- Lines 141-158
 function EnemyPreferedAddUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -199,11 +194,15 @@ end
 EnemyPreferedRemoveUnitElement = EnemyPreferedRemoveUnitElement or class(MissionElement)
 EnemyPreferedRemoveUnitElement.SAVE_UNIT_POSITION = false
 EnemyPreferedRemoveUnitElement.SAVE_UNIT_ROTATION = false
-EnemyPreferedRemoveUnitElement.LINK_ELEMENTS = {
-	"elements"
+EnemyPreferedRemoveUnitElement.LINK_VALUES = {
+	{
+		output = true,
+		table_value = "elements",
+		type = "operator"
+	}
 }
 
--- Lines 175-181
+-- Lines 168-174
 function EnemyPreferedRemoveUnitElement:init(unit)
 	EnemyPreferedRemoveUnitElement.super.init(self, unit)
 
@@ -212,11 +211,11 @@ function EnemyPreferedRemoveUnitElement:init(unit)
 	table.insert(self._save_values, "elements")
 end
 
--- Lines 183-184
+-- Lines 176-177
 function EnemyPreferedRemoveUnitElement:update_editing()
 end
 
--- Lines 186-195
+-- Lines 179-188
 function EnemyPreferedRemoveUnitElement:draw_links(t, dt, selected_unit, all_units)
 	EnemyPreferedRemoveUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -236,7 +235,7 @@ function EnemyPreferedRemoveUnitElement:draw_links(t, dt, selected_unit, all_uni
 	end
 end
 
--- Lines 197-207
+-- Lines 190-200
 function EnemyPreferedRemoveUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		ray_type = "editor",
@@ -254,21 +253,12 @@ function EnemyPreferedRemoveUnitElement:add_element()
 	end
 end
 
--- Lines 209-214
-function EnemyPreferedRemoveUnitElement:get_links_to_unit(...)
-	EnemyPreferedRemoveUnitElement.super.get_links_to_unit(self, ...)
-
-	if self._hed.elements then
-		self:_get_links_of_type_from_elements(self._hed.elements, "operator", ...)
-	end
-end
-
--- Lines 217-219
+-- Lines 203-205
 function EnemyPreferedRemoveUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines 221-229
+-- Lines 207-215
 function EnemyPreferedRemoveUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

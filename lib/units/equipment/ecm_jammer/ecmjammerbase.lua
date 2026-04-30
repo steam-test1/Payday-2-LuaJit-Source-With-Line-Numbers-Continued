@@ -15,7 +15,7 @@ ECMJammerBase.battery_life_multiplier = {
 	1.5
 }
 
--- Lines 22-31
+-- Lines 21-32
 function ECMJammerBase.spawn(pos, rot, battery_life_upgrade_lvl, owner, peer_id)
 	battery_life_upgrade_lvl = math.clamp(battery_life_upgrade_lvl, 1, #ECMJammerBase.battery_life_multiplier)
 	local unit = World:spawn_unit(Idstring("units/payday2/equipment/gen_equipment_jammer/gen_equipment_jammer"), pos, rot)
@@ -26,7 +26,7 @@ function ECMJammerBase.spawn(pos, rot, battery_life_upgrade_lvl, owner, peer_id)
 	return unit
 end
 
--- Lines 36-39
+-- Lines 37-43
 function ECMJammerBase:set_server_information(peer_id)
 	self._server_information = {
 		owner_peer_id = peer_id
@@ -35,27 +35,27 @@ function ECMJammerBase:set_server_information(peer_id)
 	managers.network:session():peer(peer_id):set_used_deployable(true)
 end
 
--- Lines 44-46
+-- Lines 48-50
 function ECMJammerBase:server_information()
 	return self._server_information
 end
 
--- Lines 50-79
+-- Lines 54-81
 function ECMJammerBase:init(unit)
 	UnitBase.init(self, unit, true)
 
 	self._unit = unit
 	self._position = self._unit:position()
 	self._rotation = self._unit:rotation()
-	self._g_glow_jammer_green = self._unit:get_object(Idstring("g_glow_func1_green"))
-	self._g_glow_jammer_red = self._unit:get_object(Idstring("g_glow_func1_red"))
-	self._g_glow_feedback_green = self._unit:get_object(Idstring("g_glow_func2_green"))
-	self._g_glow_feedback_red = self._unit:get_object(Idstring("g_glow_func2_red"))
+
+	self:_setup_glows()
+
 	self._max_battery_life = tweak_data.upgrades.ecm_jammer_base_battery_life
 	self._battery_life = self._max_battery_life
 	self._low_battery_life = tweak_data.upgrades.ecm_jammer_base_low_battery_life
 	self._feedback_active = false
 	self._jammer_active = false
+	self._duration_multiplier = 1
 
 	if Network:is_client() then
 		self._validate_clbk_id = "ecm_jammer_validate" .. tostring(unit:key())
@@ -64,7 +64,19 @@ function ECMJammerBase:init(unit)
 	end
 end
 
--- Lines 83-90
+-- Lines 85-95
+function ECMJammerBase:_setup_glows()
+	local glow_f1_on = Idstring("g_glow_func1_green")
+	local glow_f1_off = Idstring("g_glow_func1_red")
+	local glow_f2_on = Idstring("g_glow_func2_green")
+	local glow_f2_off = Idstring("g_glow_func2_red")
+	self._g_glow_jammer_green = self._unit:get_object(glow_f1_on) or nil
+	self._g_glow_jammer_red = self._unit:get_object(glow_f1_off) or nil
+	self._g_glow_feedback_green = self._unit:get_object(glow_f2_on) or nil
+	self._g_glow_feedback_red = self._unit:get_object(glow_f2_off) or nil
+end
+
+-- Lines 99-106
 function ECMJammerBase:_clbk_validate()
 	self._validate_clbk_id = nil
 
@@ -75,7 +87,7 @@ function ECMJammerBase:_clbk_validate()
 	end
 end
 
--- Lines 94-104
+-- Lines 110-121
 function ECMJammerBase:sync_setup(upgrade_lvl, peer_id)
 	if self._validate_clbk_id then
 		managers.enemy:remove_delayed_clbk(self._validate_clbk_id)
@@ -89,12 +101,12 @@ function ECMJammerBase:sync_setup(upgrade_lvl, peer_id)
 	managers.player:verify_equipment(peer_id, "ecm_jammer")
 end
 
--- Lines 108-110
+-- Lines 125-127
 function ECMJammerBase:get_name_id()
 	return "ecm_jammer"
 end
 
--- Lines 113-124
+-- Lines 130-156
 function ECMJammerBase:set_owner(owner)
 	self._owner = owner
 
@@ -106,10 +118,24 @@ function ECMJammerBase:set_owner(owner)
 		end
 	end
 
+	if alive(owner) then
+		local duration_mul = 1
+
+		if self._owner_id == 1 then
+			duration_mul = duration_mul * managers.player:upgrade_value("ecm_jammer", "feedback_duration_boost", 1)
+			duration_mul = duration_mul * managers.player:upgrade_value("ecm_jammer", "feedback_duration_boost_2", 1)
+		else
+			duration_mul = duration_mul * (owner:base():upgrade_value("ecm_jammer", "feedback_duration_boost") or 1)
+			duration_mul = duration_mul * (owner:base():upgrade_value("ecm_jammer", "feedback_duration_boost_2") or 1)
+		end
+
+		self._duration_multiplier = duration_mul
+	end
+
 	self:contour_interaction()
 end
 
--- Lines 128-137
+-- Lines 160-170
 function ECMJammerBase:owner()
 	if not alive(self._owner) then
 		local peer = managers.network:session():peer(self._owner_id)
@@ -122,12 +148,12 @@ function ECMJammerBase:owner()
 	return self._owner
 end
 
--- Lines 141-143
+-- Lines 174-176
 function ECMJammerBase:battery_life()
 	return self._battery_life or 0
 end
 
--- Lines 147-164
+-- Lines 180-197
 function ECMJammerBase:sync_net_event(event_id)
 	local net_events = self._NET_EVENTS
 
@@ -148,17 +174,17 @@ function ECMJammerBase:sync_net_event(event_id)
 	end
 end
 
--- Lines 168-170
+-- Lines 201-203
 function ECMJammerBase:_send_net_event(event_id)
 	managers.network:session():send_to_peers_synched("sync_unit_event_id_16", self._unit, "base", event_id)
 end
 
--- Lines 174-176
+-- Lines 207-209
 function ECMJammerBase:_send_net_event_to_host(event_id)
 	managers.network:session():send_to_host("sync_unit_event_id_16", self._unit, "base", event_id)
 end
 
--- Lines 180-192
+-- Lines 213-225
 function ECMJammerBase:setup(battery_life_upgrade_lvl, owner)
 	self._slotmask = managers.slot:get_mask("trip_mine_targets")
 	self._max_battery_life = tweak_data.upgrades.ecm_jammer_base_battery_life * self.battery_life_multiplier[battery_life_upgrade_lvl]
@@ -174,7 +200,7 @@ function ECMJammerBase:setup(battery_life_upgrade_lvl, owner)
 	end
 end
 
--- Lines 196-206
+-- Lines 229-239
 function ECMJammerBase:link_attachment(body, relative_pos, relative_rot)
 	if relative_pos then
 		body:unit():link(body:root_object():name(), self._unit, self._unit:orientation_object():name())
@@ -187,7 +213,7 @@ function ECMJammerBase:link_attachment(body, relative_pos, relative_rot)
 	self._attached_body = body
 end
 
--- Lines 208-255
+-- Lines 241-288
 function ECMJammerBase:set_active(active)
 	active = active and true
 
@@ -244,12 +270,12 @@ function ECMJammerBase:set_active(active)
 	self._jammer_active = active
 end
 
--- Lines 259-261
+-- Lines 292-294
 function ECMJammerBase:active()
 	return self._jammer_active
 end
 
--- Lines 265-289
+-- Lines 298-322
 function ECMJammerBase:update(unit, t, dt)
 	if self._battery_life > 0 then
 		self._battery_life = self._battery_life - dt
@@ -278,7 +304,7 @@ function ECMJammerBase:update(unit, t, dt)
 	end
 end
 
--- Lines 291-298
+-- Lines 325-331
 function ECMJammerBase:check_battery()
 	if self._battery_life <= 0 then
 		self:set_battery_empty()
@@ -287,7 +313,7 @@ function ECMJammerBase:check_battery()
 	end
 end
 
--- Lines 300-310
+-- Lines 333-341
 function ECMJammerBase:set_battery_empty()
 	if self._battery_empty then
 		return
@@ -298,12 +324,18 @@ function ECMJammerBase:set_battery_empty()
 	self:_set_battery_empty()
 end
 
--- Lines 312-324
+-- Lines 343-360
 function ECMJammerBase:_set_battery_empty()
 	self._battery_empty = true
 
-	self._g_glow_jammer_green:set_visibility(false)
-	self._g_glow_jammer_red:set_visibility(false)
+	if self._g_glow_jammer_green then
+		self._g_glow_jammer_green:set_visibility(false)
+	end
+
+	if self._g_glow_jammer_red then
+		self._g_glow_jammer_red:set_visibility(false)
+	end
+
 	self:set_active(false)
 
 	if Network:is_server() then
@@ -311,7 +343,7 @@ function ECMJammerBase:_set_battery_empty()
 	end
 end
 
--- Lines 326-335
+-- Lines 362-370
 function ECMJammerBase:set_battery_low()
 	if self._battery_low then
 		return
@@ -322,11 +354,13 @@ function ECMJammerBase:set_battery_low()
 	self:_set_battery_low()
 end
 
--- Lines 337-350
+-- Lines 372-387
 function ECMJammerBase:_set_battery_low()
 	self._battery_low = true
 
-	self._g_glow_jammer_red:set_visibility(true)
+	if self._g_glow_jammer_red then
+		self._g_glow_jammer_red:set_visibility(true)
+	end
 
 	if not self._unit:contour():is_flashing() then
 		self._unit:contour():flash("deployable_active", 0.15)
@@ -337,26 +371,26 @@ function ECMJammerBase:_set_battery_low()
 	end
 end
 
--- Lines 352-355
+-- Lines 389-392
 function ECMJammerBase:sync_set_battery_life(battery_life)
 	self._battery_life = battery_life
 
 	self:check_battery()
 end
 
--- Lines 359-363
+-- Lines 396-402
 function ECMJammerBase:_check_body()
 	if not alive(self._attached_body) or not self._attached_body:enabled() then
 		self:_force_remove()
 	end
 end
 
--- Lines 367-369
+-- Lines 406-408
 function ECMJammerBase:feedback_active()
 	return self._feedback_active
 end
 
--- Lines 373-384
+-- Lines 412-423
 function ECMJammerBase:set_feedback_active()
 	if not managers.network:session() then
 		return
@@ -369,7 +403,7 @@ function ECMJammerBase:set_feedback_active()
 	end
 end
 
--- Lines 387-465
+-- Lines 426-502
 function ECMJammerBase:_set_feedback_active(state)
 	state = state and true
 
@@ -385,17 +419,7 @@ function ECMJammerBase:_set_feedback_active(state)
 			self._feedback_clbk_id = "ecm_feedback" .. tostring(self._unit:key())
 			self._feedback_interval = tweak_data.upgrades.ecm_feedback_interval or 1.5
 			self._feedback_range = tweak_data.upgrades.ecm_jammer_base_range
-			local duration_mul = 1
-
-			if self._owner_id == 1 then
-				duration_mul = duration_mul * managers.player:upgrade_value("ecm_jammer", "feedback_duration_boost", 1)
-				duration_mul = duration_mul * managers.player:upgrade_value("ecm_jammer", "feedback_duration_boost_2", 1)
-			else
-				duration_mul = duration_mul * (self:owner():base():upgrade_value("ecm_jammer", "feedback_duration_boost") or 1)
-				duration_mul = duration_mul * (self:owner():base():upgrade_value("ecm_jammer", "feedback_duration_boost_2") or 1)
-			end
-
-			self._feedback_duration = math.lerp(tweak_data.upgrades.ecm_feedback_min_duration or 15, tweak_data.upgrades.ecm_feedback_max_duration or 20, math.random()) * duration_mul
+			self._feedback_duration = math.lerp(tweak_data.upgrades.ecm_feedback_min_duration or 15, tweak_data.upgrades.ecm_feedback_max_duration or 20, math.random()) * self._duration_multiplier
 			self._feedback_expire_t = t + self._feedback_duration
 			local first_impact_t = t + math.lerp(0.1, 1, math.random())
 
@@ -427,7 +451,6 @@ function ECMJammerBase:_set_feedback_active(state)
 	end
 
 	if state then
-		print("PUKE!")
 		self._g_glow_feedback_green:set_visibility(true)
 		self._g_glow_feedback_red:set_visibility(false)
 
@@ -457,12 +480,12 @@ function ECMJammerBase:_set_feedback_active(state)
 	self._feedback_active = state
 end
 
--- Lines 469-471
+-- Lines 506-508
 function ECMJammerBase:sync_set_feedback_active()
 	self:_set_feedback_active()
 end
 
--- Lines 475-503
+-- Lines 512-540
 function ECMJammerBase:clbk_feedback()
 	local t = TimerManager:game():time()
 	self._feedback_clbk_id = "ecm_feedback" .. tostring(self._unit:key())
@@ -502,24 +525,24 @@ function ECMJammerBase:clbk_feedback()
 	end
 end
 
--- Lines 507-509
+-- Lines 544-546
 function ECMJammerBase:contour_selected()
 	self._unit:contour():add("deployable_selected")
 end
 
--- Lines 511-513
+-- Lines 548-550
 function ECMJammerBase:contour_unselected()
 	self._unit:contour():remove("deployable_selected")
 end
 
--- Lines 515-521
+-- Lines 552-558
 function ECMJammerBase:contour_interaction()
 	if managers.player:has_category_upgrade("ecm_jammer", "can_activate_feedback") and managers.network:session() and self._unit:contour() and self._owner_id == managers.network:session():local_peer():id() then
 		self._unit:contour():add("deployable_interactable")
 	end
 end
 
--- Lines 525-632
+-- Lines 562-669
 function ECMJammerBase._detect_and_give_dmg(hit_pos, device_unit, user_unit, range)
 	local mvec3_dis_sq = mvector3.distance_sq
 	local slotmask = managers.slot:get_mask("bullet_impact_targets")
@@ -561,7 +584,7 @@ function ECMJammerBase._detect_and_give_dmg(hit_pos, device_unit, user_unit, ran
 	local half_range_sq = range * 0.5
 	half_range_sq = half_range_sq * half_range_sq
 
-	-- Lines 584-624
+	-- Lines 621-661
 	local function _chk_apply_dmg_to_char(u_data)
 		if not u_data.char_tweak.ecm_vulnerability then
 			return
@@ -617,12 +640,12 @@ function ECMJammerBase._detect_and_give_dmg(hit_pos, device_unit, user_unit, ran
 	end
 end
 
--- Lines 636-638
+-- Lines 673-675
 function ECMJammerBase:_force_remove()
 	self._unit:set_slot(0)
 end
 
--- Lines 642-650
+-- Lines 679-687
 function ECMJammerBase:save(data)
 	local state = {
 		jammer_active = self._jammer_active or nil,
@@ -633,7 +656,7 @@ function ECMJammerBase:save(data)
 	data.ECMJammerBase = state
 end
 
--- Lines 654-673
+-- Lines 691-710
 function ECMJammerBase:load(data)
 	local state = data.ECMJammerBase
 	self._owner_id = state.owner_id
@@ -655,7 +678,7 @@ function ECMJammerBase:load(data)
 	self._was_dropin = true
 end
 
--- Lines 677-685
+-- Lines 714-722
 function ECMJammerBase:destroy()
 	if self._validate_clbk_id then
 		managers.enemy:remove_delayed_clbk(self._validate_clbk_id)
