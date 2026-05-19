@@ -181,7 +181,7 @@ function AssetsTweakData:_init_gage_assets(tweak_data)
 	}
 end
 
--- Lines 189-1757
+-- Lines 189-1463
 function AssetsTweakData:_init_assets(tweak_data)
 	self.safe_escape = {
 		name_id = "menu_asset_safe_escape",
@@ -218,6 +218,7 @@ function AssetsTweakData:_init_assets(tweak_data)
 			"welcome_to_the_jungle_2",
 			"election_day_1",
 			"election_day_2",
+			"firestarter_1",
 			"firestarter_2",
 			"ukrainian_job",
 			"jewelry_store",
@@ -1397,7 +1398,7 @@ function AssetsTweakData:_init_assets(tweak_data)
 	}
 end
 
--- Lines 1760-1807
+-- Lines 1466-1513
 function AssetsTweakData:_init_debug_assets(tweak_data)
 	self.debug_1 = {
 		name_id = "debug_1",
@@ -1462,7 +1463,7 @@ function AssetsTweakData:_init_debug_assets(tweak_data)
 	}
 end
 
--- Lines 1809-1846
+-- Lines 1515-1552
 function AssetsTweakData:debug_assets()
 	local levels = {}
 
@@ -1470,7 +1471,7 @@ function AssetsTweakData:debug_assets()
 		levels[level_id] = 0
 	end
 
-	-- Lines 1815-1823
+	-- Lines 1521-1529
 	local function f(id)
 		if id == "all" then
 			for i, d in pairs(levels) do

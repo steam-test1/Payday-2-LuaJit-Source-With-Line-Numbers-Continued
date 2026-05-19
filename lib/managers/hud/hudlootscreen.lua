@@ -689,7 +689,7 @@ function HUDLootScreen:make_cards(peer, max_pc, left_card, right_card)
 	end
 end
 
--- Lines 546-692
+-- Lines 546-702
 function HUDLootScreen:make_lootdrop(lootdrop_data)
 	local peer = lootdrop_data[1]
 	local category = lootdrop_data[3]
@@ -706,11 +706,7 @@ function HUDLootScreen:make_lootdrop(lootdrop_data)
 		category = "mods"
 	end
 
-	local texture_loaded_clbk = callback(self, self, "texture_loaded_clbk", {
-		peer_id,
-		category == "textures" and true or false
-	})
-	local texture_path, rarity_path = nil
+	local texture_path, rarity_path, texture_color = nil
 
 	if category == "textures" then
 		texture_path = tweak_data.blackmarket.textures[item_id].texture
@@ -720,6 +716,8 @@ function HUDLootScreen:make_lootdrop(lootdrop_data)
 
 			return
 		end
+	elseif category == "materials" then
+		texture_path, texture_color = managers.blackmarket:get_mask_materials_icon(item_id)
 	elseif category == "cash" then
 		texture_path = "guis/textures/pd2/blackmarket/cash_drop"
 	elseif category == "xp" then
@@ -832,12 +830,18 @@ function HUDLootScreen:make_lootdrop(lootdrop_data)
 
 	Application:debug("Requesting Texture", texture_path, "PEER", peer_id)
 
+	local texture_loaded_clbk = callback(self, self, "texture_loaded_clbk", {
+		peer_id = peer_id,
+		category = category,
+		color = texture_color
+	})
+
 	if DB:has(Idstring("texture"), texture_path) then
 		TextureCache:request(texture_path, "NORMAL", texture_loaded_clbk, 100)
 	else
 		Application:error("[HUDLootScreen]", "Texture not in DB", texture_path, peer_id)
 		item_panel:rect({
-			color = Color.red
+			color = texture_color or Color.red
 		})
 	end
 
@@ -846,7 +850,7 @@ function HUDLootScreen:make_lootdrop(lootdrop_data)
 	end
 end
 
--- Lines 694-746
+-- Lines 704-773
 function HUDLootScreen:texture_loaded_clbk(params, texture_idstring)
 	if not alive(self._peers_panel) then
 		TextureCache:unretrieve(texture_idstring)
@@ -854,13 +858,15 @@ function HUDLootScreen:texture_loaded_clbk(params, texture_idstring)
 		return
 	end
 
-	local peer_id = params[1]
-	local is_pattern = params[2]
+	local peer_id = params.peer_id
+	local is_pattern = params.category and params.category == "textures" or false
+	local texture_color = params.color
 	local panel = self._peers_panel:child(peer_id_str(peer_id)):child("item")
 	local item = panel:bitmap({
 		blend_mode = "normal",
 		layer = 1,
-		texture = texture_idstring
+		texture = texture_idstring,
+		color = texture_color
 	})
 
 	TextureCache:unretrieve(texture_idstring)
@@ -876,8 +882,6 @@ function HUDLootScreen:texture_loaded_clbk(params, texture_idstring)
 	local panel_height = 100
 
 	if texture_width == 0 or texture_height == 0 or panel_width == 0 or panel_height == 0 then
-		Application:error("HUDLootScreen:texture_loaded_clbk():", texture_idstring)
-		Application:debug("HUDLootScreen:", "texture_width " .. texture_width, "texture_height " .. texture_height, "panel_width " .. panel_width, "panel_height " .. panel_height)
 		panel:remove(item)
 
 		local rect = panel:rect({
@@ -885,7 +889,7 @@ function HUDLootScreen:texture_loaded_clbk(params, texture_idstring)
 			w = 100,
 			h = 100,
 			rotation = 360,
-			color = Color.red
+			color = texture_color or Color.red
 		})
 
 		rect:set_center(panel:w() * 0.5, panel:h() * 0.5)
@@ -897,7 +901,6 @@ function HUDLootScreen:texture_loaded_clbk(params, texture_idstring)
 	local dw = texture_width / s
 	local dh = texture_height / s
 
-	Application:debug("Got texture: ", texture_idstring, peer_id)
 	item:set_size(math.round(dw * panel_width), math.round(dh * panel_height))
 	item:set_rotation(360)
 	item:set_center(panel:w() * 0.5, panel:h() * 0.5)
@@ -909,7 +912,7 @@ function HUDLootScreen:texture_loaded_clbk(params, texture_idstring)
 	end
 end
 
--- Lines 748-844
+-- Lines 775-871
 function HUDLootScreen:begin_choose_card(peer_id, card_id)
 	local peer_data = self._peer_data[peer_id]
 
@@ -999,7 +1002,7 @@ function HUDLootScreen:begin_choose_card(peer_id, card_id)
 	peer_data.wait_for_choice = nil
 end
 
--- Lines 846-893
+-- Lines 873-922
 function HUDLootScreen:begin_flip_card(peer_id)
 	local peer_data = self._peer_data[peer_id]
 	peer_data.wait_t = 5
@@ -1029,30 +1032,32 @@ function HUDLootScreen:begin_flip_card(peer_id)
 	local card_panel = panel:child("card" .. peer_data.chosen_card_id)
 	local upcard = card_panel:child("upcard")
 
-	upcard:set_image(texture)
+	if alive(upcard) then
+		upcard:set_image(texture)
 
-	if coords then
-		local tl = Vector3(coords[1][1], coords[1][2], 0)
-		local tr = Vector3(coords[2][1], coords[2][2], 0)
-		local bl = Vector3(coords[3][1], coords[3][2], 0)
-		local br = Vector3(coords[4][1], coords[4][2], 0)
+		if coords then
+			local tl = Vector3(coords[1][1], coords[1][2], 0)
+			local tr = Vector3(coords[2][1], coords[2][2], 0)
+			local bl = Vector3(coords[3][1], coords[3][2], 0)
+			local br = Vector3(coords[4][1], coords[4][2], 0)
 
-		upcard:set_texture_coordinates(tl, tr, bl, br)
-	else
-		upcard:set_texture_rect(unpack(rect))
+			upcard:set_texture_coordinates(tl, tr, bl, br)
+		else
+			upcard:set_texture_rect(unpack(rect))
+		end
 	end
 
 	peer_data.chosen_card_id = nil
 end
 
--- Lines 895-898
+-- Lines 924-927
 function HUDLootScreen:debug_flip()
 	local card = self._peers_panel:child("peer1"):child("card1")
 
 	card:animate(callback(self, self, "flipcard"), 1.5)
 end
 
--- Lines 900-1027
+-- Lines 929-1056
 function HUDLootScreen:flipcard(card_panel, timer, done_clbk, peer_id, effects)
 	local downcard = card_panel:child("downcard")
 	local upcard = card_panel:child("upcard")
@@ -1194,7 +1199,7 @@ function HUDLootScreen:flipcard(card_panel, timer, done_clbk, peer_id, effects)
 	end)
 end
 
--- Lines 1029-1126
+-- Lines 1058-1162
 function HUDLootScreen:show_item(peer_id)
 	if not self._peer_data[peer_id].active then
 		return
@@ -1210,7 +1215,7 @@ function HUDLootScreen:show_item(peer_id)
 			child:set_center(panel:child("item"):w() * 0.5, panel:child("item"):h() * 0.5)
 		end
 
-		-- Lines 1042-1044
+		-- Lines 1071-1073
 		local function anim_fadein(o)
 			over(1, function (p)
 				o:set_alpha(p)
@@ -1304,7 +1309,7 @@ function HUDLootScreen:show_item(peer_id)
 	end
 end
 
--- Lines 1128-1157
+-- Lines 1164-1193
 function HUDLootScreen:update(t, dt)
 	for peer_id = 1, tweak_data.max_players do
 		if self._peer_data[peer_id].wait_t then
@@ -1336,12 +1341,12 @@ function HUDLootScreen:update(t, dt)
 	end
 end
 
--- Lines 1159-1161
+-- Lines 1195-1197
 function HUDLootScreen:fetch_local_lootdata()
 	return self._peer_data[self:get_local_peer_id()].lootdrops
 end
 
--- Lines 1163-1229
+-- Lines 1199-1265
 function HUDLootScreen:create_stars_giving_animation()
 	local lootdrops = self:fetch_local_lootdata()
 	local human_players = managers.network:session() and managers.network:session():amount_of_alive_players() or 1
@@ -1380,7 +1385,7 @@ function HUDLootScreen:create_stars_giving_animation()
 	star_reason_text:set_h(tweak_data.menu.pd2_medium_font_size)
 	star_reason_text:set_world_center_y(math.round(self._foreground_layer_safe:child("loot_text"):world_center_y()) + 2)
 
-	-- Lines 1199-1224
+	-- Lines 1235-1260
 	local function animation_func(o)
 		local texture, rect = tweak_data.hud_icons:get_icon_data("risk_pd")
 		local latest_star = 0
@@ -1422,12 +1427,12 @@ function HUDLootScreen:create_stars_giving_animation()
 	self._stars_panel:animate(animation_func)
 end
 
--- Lines 1231-1233
+-- Lines 1267-1269
 function HUDLootScreen:get_local_peer_id()
 	return Global.game_settings.single_player and 1 or managers.network:session() and managers.network:session():local_peer():id() or 1
 end
 
--- Lines 1235-1246
+-- Lines 1271-1282
 function HUDLootScreen:check_inside_local_peer(x, y)
 	local peer_id = self:get_local_peer_id()
 	local panel = self._peers_panel:child(peer_id_str(peer_id))
@@ -1442,12 +1447,12 @@ function HUDLootScreen:check_inside_local_peer(x, y)
 	end
 end
 
--- Lines 1248-1250
+-- Lines 1284-1286
 function HUDLootScreen:set_layer(layer)
 	self._backdrop:set_layer(layer)
 end
 
--- Lines 1252-1257
+-- Lines 1288-1293
 function HUDLootScreen:reload()
 	self._backdrop:close()
 
@@ -1456,7 +1461,7 @@ function HUDLootScreen:reload()
 	HUDLootScreen.init(self, self._hud, self._workspace)
 end
 
--- Lines 1259-1265
+-- Lines 1295-1301
 function HUDLootScreen:close()
 	self._active = false
 

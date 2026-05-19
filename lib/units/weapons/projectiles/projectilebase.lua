@@ -980,7 +980,7 @@ function ProjectileBase:remove_trail_effect()
 	end
 end
 
--- Lines 1024-1072
+-- Lines 1024-1073
 function ProjectileBase:_hide_and_freeze(skip_bodies)
 	if not skip_bodies then
 		local body_ray_type = Idstring("body")
@@ -1025,7 +1025,7 @@ function ProjectileBase:_hide_and_freeze(skip_bodies)
 	self:_warning_fx_vfx_remove()
 end
 
--- Lines 1074-1092
+-- Lines 1075-1095
 function ProjectileBase:_handle_hiding_and_destroying(destroy, destruction_delay)
 	self:_hide_and_freeze(true)
 	self._unit:set_enabled(false)
@@ -1043,7 +1043,12 @@ function ProjectileBase:_handle_hiding_and_destroying(destroy, destruction_delay
 	end
 end
 
--- Lines 1094-1100
+-- Lines 1099-1101
+function ProjectileBase:_destruct_delay()
+	return nil
+end
+
+-- Lines 1103-1109
 function ProjectileBase:_clbk_destroy()
 	self._destroy_clbk_id = nil
 
@@ -1052,7 +1057,7 @@ function ProjectileBase:_clbk_destroy()
 	end
 end
 
--- Lines 1104-1121
+-- Lines 1113-1130
 function ProjectileBase.check_time_cheat(projectile_type, owner_peer_id)
 	if not owner_peer_id then
 		return true
@@ -1073,18 +1078,18 @@ function ProjectileBase.check_time_cheat(projectile_type, owner_peer_id)
 	return true
 end
 
--- Lines 1125-1136
+-- Lines 1134-1145
 function ProjectileBase.spawn(unit_name, pos, rot)
 	local unit = World:spawn_unit(Idstring(unit_name), pos, rot)
 
 	return unit
 end
 
--- Lines 1140-1141
+-- Lines 1149-1150
 function ProjectileBase._dispose_of_sound(...)
 end
 
--- Lines 1143-1159
+-- Lines 1152-1168
 function ProjectileBase:_detect_and_give_dmg(hit_pos)
 	local params = {
 		hit_pos = hit_pos,
@@ -1104,13 +1109,13 @@ function ProjectileBase:_detect_and_give_dmg(hit_pos)
 	return hit_units, splinters
 end
 
--- Lines 1162-1165
+-- Lines 1171-1174
 function ProjectileBase._explode_on_client(position, normal, user_unit, dmg, range, curve_pow, custom_params)
 	managers.explosion:play_sound_and_effects(position, normal, range, custom_params)
 	managers.explosion:client_damage_and_push(position, normal, user_unit, dmg, range, curve_pow)
 end
 
--- Lines 1167-1169
+-- Lines 1176-1178
 function ProjectileBase._play_sound_and_effects(position, normal, range, custom_params)
 	managers.explosion:play_sound_and_effects(position, normal, range, custom_params)
 end

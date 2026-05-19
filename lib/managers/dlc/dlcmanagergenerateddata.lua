@@ -508,6 +508,11 @@ function GenericDLCManager:has_txt4()
 	return self:is_dlc_unlocked("txt4")
 end
 
+-- Lines 584-586
+function GenericDLCManager:has_unk()
+	return self:is_dlc_unlocked("unk")
+end
+
 -- Lines 589-591
 function GenericDLCManager:has_wcc()
 	return self:is_dlc_unlocked("wcc")
@@ -1101,6 +1106,11 @@ function WINDLCManager:init_generated()
 		epic_id = "52c49755b2b04f32a569a418b720399d",
 		no_install = true,
 		webpage = "https://pd2.link/LawlessTailorPackYBS"
+	}
+	Global.dlc_manager.all_dlc_data.unk = {
+		app_id = "218620",
+		epic_id = "c9e33efd38a7409e8aeee22f7a6f2e06",
+		no_install = true
 	}
 	Global.dlc_manager.all_dlc_data.wcc = {
 		app_id = "1347751",

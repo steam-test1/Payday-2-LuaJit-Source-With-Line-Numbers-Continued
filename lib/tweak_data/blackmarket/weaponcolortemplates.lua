@@ -195,7 +195,7 @@ function WeaponColorTemplates._setup_npc_weapons(tweak_data, weapons)
 	end
 end
 
--- Lines 213-1878
+-- Lines 213-1882
 function WeaponColorTemplates._setup_color_skin_weapons(tweak_data)
 	local weapons = {}
 
@@ -316,6 +316,7 @@ function WeaponColorTemplates._setup_color_skin_weapons(tweak_data)
 	weapons.x_pmm.pattern_tweak = deep_clone(weapons.pmm.pattern_tweak)
 	weapons.x_pmm.types = deep_clone(weapons.pmm.types)
 	weapons.x_pmm.parts = deep_clone(weapons.pmm.parts)
+	weapons.flun.pattern_tweak = Vector3(2.5, 0, 0)
 	weapons.peacemaker.pattern_tweak = Vector3(1, 0, 0)
 	weapons.peacemaker.uv_scale = Vector3(1, 1, 0.131887)
 	weapons.x_judge.pattern_tweak = Vector3(1, 0, 0)

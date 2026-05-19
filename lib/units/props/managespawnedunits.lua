@@ -225,7 +225,7 @@ function ManageSpawnedUnits:remove_unit(unit_id)
 	self._spawned_units[unit_id] = nil
 end
 
--- Lines 338-355
+-- Lines 338-354
 function ManageSpawnedUnits:destroy(unit)
 	local allowed_to_delete = Network:is_server()
 
@@ -244,7 +244,7 @@ function ManageSpawnedUnits:destroy(unit)
 	self._spawned_units = {}
 end
 
--- Lines 359-373
+-- Lines 358-372
 function ManageSpawnedUnits:on_post_detached_from_network()
 	if self._sync_spawn_and_link then
 		local spawned_units = self._spawned_units
@@ -259,7 +259,7 @@ function ManageSpawnedUnits:on_post_detached_from_network()
 	end
 end
 
--- Lines 377-399
+-- Lines 376-398
 function ManageSpawnedUnits:save(data)
 	if not alive(self._unit) or self._unit:id() == -1 or self.local_only then
 		data.managed_spawned_units = nil
@@ -288,7 +288,7 @@ function ManageSpawnedUnits:save(data)
 	end
 end
 
--- Lines 403-420
+-- Lines 402-419
 function ManageSpawnedUnits:load(data)
 	if not data.managed_spawned_units then
 		return
@@ -308,7 +308,7 @@ function ManageSpawnedUnits:load(data)
 	end
 end
 
--- Lines 424-446
+-- Lines 423-445
 function ManageSpawnedUnits:_clbk_drop_in_sync(data)
 	if not alive(self._unit) or self._unit:id() == -1 then
 		return
@@ -333,7 +333,7 @@ function ManageSpawnedUnits:_clbk_drop_in_sync(data)
 	end
 end
 
--- Lines 450-473
+-- Lines 449-472
 function ManageSpawnedUnits:_spawn_run_sequence(unit_id, sequence_name)
 	local entry = self._spawned_units[unit_id]
 
@@ -365,7 +365,7 @@ end
 local empty_vec = Vector3()
 local empty_rot = Rotation()
 
--- Lines 479-497
+-- Lines 478-496
 function ManageSpawnedUnits:_link_joints(unit_id, joint_table)
 	local ids, parent_object, child_object = nil
 	local parent_unit = self._unit
@@ -386,7 +386,7 @@ function ManageSpawnedUnits:_link_joints(unit_id, joint_table)
 	parent_unit:set_moving()
 end
 
--- Lines 500-509
+-- Lines 499-508
 function ManageSpawnedUnits:get_unit(unit_id)
 	local entry = self._spawned_units[unit_id]
 
@@ -401,7 +401,7 @@ function ManageSpawnedUnits:get_unit(unit_id)
 	return entry.unit
 end
 
--- Lines 512-528
+-- Lines 511-527
 function ManageSpawnedUnits:set_visibility_state(state)
 	self._visibility_state = state
 

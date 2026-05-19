@@ -10,7 +10,7 @@ function BlackMarketTweakData:_init_bullets(tweak_data)
 	}
 end
 
--- Lines 41-1096
+-- Lines 41-1112
 function BlackMarketTweakData:_init_projectiles(tweak_data)
 	self.projectiles = {
 		frag = {}
@@ -786,6 +786,15 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 			deactivate = "watch_stop"
 		}
 	}
+	self.projectiles.flun_flare = {
+		impact_detonation = true,
+		is_explosive = true,
+		local_unit = "units/pd2_dlc_unk/weapons/wpn_prj_flun_flare/wpn_prj_flun_flare_local",
+		time_cheat = 1.5,
+		no_cheat_count = true,
+		unit = "units/pd2_dlc_unk/weapons/wpn_prj_flun_flare/wpn_prj_flun_flare",
+		weapon_id = "flun"
+	}
 	self._projectiles_index = {
 		"frag",
 		"launcher_frag",
@@ -865,7 +874,8 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 		"dart_poison",
 		"dart_daze",
 		"dart_revive",
-		"laser_watch"
+		"laser_watch",
+		"flun_flare"
 	}
 	local free_dlcs = tweak_data:free_dlc_list()
 
@@ -878,12 +888,12 @@ function BlackMarketTweakData:_init_projectiles(tweak_data)
 	self:_add_desc_from_name_macro(self.projectiles)
 end
 
--- Lines 1098-1100
+-- Lines 1114-1116
 function BlackMarketTweakData:get_projectiles_index()
 	return self._projectiles_index
 end
 
--- Lines 1102-1109
+-- Lines 1118-1125
 function BlackMarketTweakData:get_index_from_projectile_id(projectile_id)
 	for index, entry_name in ipairs(self._projectiles_index) do
 		if entry_name == projectile_id then
@@ -894,7 +904,7 @@ function BlackMarketTweakData:get_index_from_projectile_id(projectile_id)
 	return 0
 end
 
--- Lines 1111-1113
+-- Lines 1127-1129
 function BlackMarketTweakData:get_projectile_name_from_index(index)
 	return self._projectiles_index[index]
 end

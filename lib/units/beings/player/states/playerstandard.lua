@@ -2754,7 +2754,7 @@ function PlayerStandard:_do_melee_damage(t, bayonet_melee, melee_hit_ray, melee_
 
 	if col_ray and alive(col_ray.unit) then
 		local damage, damage_effect = managers.blackmarket:equipped_melee_weapon_damage_info(charge_lerp_value)
-		local damage_effect_mul = math.max(managers.player:upgrade_value("player", "melee_knockdown_mul", 1), managers.player:upgrade_value(self._equipped_unit:base():weapon_tweak_data().categories and self._equipped_unit:base():weapon_tweak_data().categories[1], "melee_knockdown_mul", 1))
+		local damage_effect_mul = math.max(managers.player:upgrade_value("player", "melee_knockdown_mul", 1), managers.player:upgrade_value(self._equipped_unit:base():categories() and self._equipped_unit:base():categories()[1], "melee_knockdown_mul", 1))
 		damage = damage * managers.player:get_melee_dmg_multiplier()
 		damage_effect = damage_effect * damage_effect_mul
 		col_ray.sphere_cast_radius = sphere_cast_radius
@@ -5479,7 +5479,7 @@ function PlayerStandard:_update_charging_weapon_timers(t, dt)
 	end
 end
 
--- Lines 6358-6386
+-- Lines 6358-6405
 function PlayerStandard:_start_action_reload_enter(t)
 	local weapon = self._equipped_unit:base()
 
@@ -5500,8 +5500,10 @@ function PlayerStandard:_start_action_reload_enter(t)
 			weapon:cache_reload_speed_multiplier()
 
 			local speed_multiplier = weapon:reload_speed_multiplier()
+			local tweak_data = weapon:weapon_tweak_data()
+			local reload_name_id = tweak_data.animations.reload_name_id or weapon.name_id
 
-			self._ext_camera:play_redirect(Idstring("reload_enter_" .. weapon.name_id), speed_multiplier)
+			self._ext_camera:play_redirect(Idstring("reload_enter_" .. reload_name_id), speed_multiplier)
 
 			self._state_data.reload_enter_expire_t = t + base_reload_enter_expire_t / speed_multiplier
 
@@ -5514,7 +5516,7 @@ function PlayerStandard:_start_action_reload_enter(t)
 	end
 end
 
--- Lines 6388-6437
+-- Lines 6407-6456
 function PlayerStandard:_start_action_reload(t)
 	local weapon = self._equipped_unit:base()
 
@@ -5567,7 +5569,7 @@ function PlayerStandard:_start_action_reload(t)
 	end
 end
 
--- Lines 6503-6527
+-- Lines 6522-6546
 function PlayerStandard:_interupt_action_reload(t)
 	if alive(self._equipped_unit) then
 		self._equipped_unit:base():check_bullet_objects()
@@ -5594,22 +5596,22 @@ function PlayerStandard:_interupt_action_reload(t)
 	self:send_reload_interupt()
 end
 
--- Lines 6529-6531
+-- Lines 6548-6550
 function PlayerStandard:send_reload_interupt()
 	self._ext_network:send("reload_weapon_interupt")
 end
 
--- Lines 6533-6535
+-- Lines 6552-6554
 function PlayerStandard:_is_reloading()
 	return self._state_data.reload_expire_t or self._state_data.reload_enter_expire_t or self._state_data.reload_exit_expire_t
 end
 
--- Lines 6539-6541
+-- Lines 6558-6560
 function PlayerStandard:start_deploying_bipod(bipod_deploy_duration)
 	self._deploy_bipod_expire_t = managers.player:player_timer():time() + bipod_deploy_duration
 end
 
--- Lines 6543-6550
+-- Lines 6562-6569
 function PlayerStandard:_is_deploying_bipod()
 	local deploying = false
 
@@ -5620,12 +5622,12 @@ function PlayerStandard:_is_deploying_bipod()
 	return deploying
 end
 
--- Lines 6555-6557
+-- Lines 6574-6576
 function PlayerStandard:_is_using_bipod()
 	return self._state_data.using_bipod
 end
 
--- Lines 6560-6583
+-- Lines 6579-6602
 function PlayerStandard:_get_swap_speed_multiplier()
 	local multiplier = 1
 	local weapon_tweak_data = self._equipped_unit:base():weapon_tweak_data()
@@ -5648,7 +5650,7 @@ function PlayerStandard:_get_swap_speed_multiplier()
 	return multiplier
 end
 
--- Lines 6586-6646
+-- Lines 6605-6665
 function PlayerStandard:_start_action_unequip_weapon(t, data)
 	local selection_wanted = data.selection_wanted
 
@@ -5718,7 +5720,7 @@ function PlayerStandard:_start_action_unequip_weapon(t, data)
 	self._ext_network:send("switch_weapon", speed_multiplier, 1)
 end
 
--- Lines 6648-6700
+-- Lines 6667-6719
 function PlayerStandard:_start_action_equip_weapon(t)
 	if self._change_weapon_data.next then
 		local next_equip = self._ext_inventory:get_next_selection()
@@ -5771,12 +5773,12 @@ function PlayerStandard:_start_action_equip_weapon(t)
 	managers.upgrades:setup_current_weapon()
 end
 
--- Lines 6702-6704
+-- Lines 6721-6723
 function PlayerStandard:_changing_weapon()
 	return self._unequip_weapon_expire_t or self._equip_weapon_expire_t
 end
 
--- Lines 6708-6727
+-- Lines 6727-6746
 function PlayerStandard:_find_pickups(t)
 	local pickups = World:find_units_quick("sphere", self._unit:movement():m_pos(), self._pickup_area, self._slotmask_pickups)
 	local grenade_tweak = tweak_data.blackmarket.projectiles[managers.blackmarket:equipped_grenade()]
@@ -5799,7 +5801,7 @@ function PlayerStandard:_find_pickups(t)
 	end
 end
 
--- Lines 6731-6748
+-- Lines 6750-6767
 function PlayerStandard:_upd_attention()
 	local preset = nil
 
@@ -5840,15 +5842,15 @@ function PlayerStandard:_upd_attention()
 	self._ext_movement:set_attention_settings(preset)
 end
 
--- Lines 6754-6755
+-- Lines 6773-6774
 function PlayerStandard:get_melee_damage_result(attack_data)
 end
 
--- Lines 6761-6762
+-- Lines 6780-6781
 function PlayerStandard:get_bullet_damage_result(attack_data)
 end
 
--- Lines 6768-6775
+-- Lines 6787-6794
 function PlayerStandard:push(vel)
 	if self._unit:mover() then
 		self._last_velocity_xy = self._last_velocity_xy + vel
@@ -5859,7 +5861,7 @@ function PlayerStandard:push(vel)
 	self:_interupt_action_running(managers.player:player_timer():time())
 end
 
--- Lines 6782-6799
+-- Lines 6801-6818
 function PlayerStandard:_get_dir_str_from_vec(fwd, dir_vec)
 	local att_dir_spin = dir_vec:to_polar_with_reference(fwd, math.UP).spin
 	local abs_spin = math.abs(att_dir_spin)
@@ -5877,7 +5879,7 @@ function PlayerStandard:_get_dir_str_from_vec(fwd, dir_vec)
 	managers.network:session():send_to_peers_synched("sync_underbarrel_switch", self._equipped_unit:base():selection_index(), underbarrel_base.name_id, underbarrel_base:is_on())
 end
 
--- Lines 6802-6808
+-- Lines 6821-6827
 function PlayerStandard:get_movement_state()
 	if self._state_data.ducking then
 		return self._moving and "moving_crouching" or "crouching"
@@ -5886,7 +5888,7 @@ function PlayerStandard:get_movement_state()
 	end
 end
 
--- Lines 6813-6825
+-- Lines 6832-6844
 function PlayerStandard:set_animation_weapon_hold(name_override)
 	if self._weapon_hold then
 		self._camera_unit:anim_state_machine():set_global(self._weapon_hold, 0)
@@ -5899,7 +5901,7 @@ function PlayerStandard:set_animation_weapon_hold(name_override)
 	end
 end
 
--- Lines 6827-6858
+-- Lines 6846-6877
 function PlayerStandard:get_weapon_hold_str()
 	local hold_str = self._weapon_hold or "m4"
 	local weapon = self._ext_inventory:equipped_unit()
@@ -5927,7 +5929,7 @@ function PlayerStandard:get_weapon_hold_str()
 	return hold_str
 end
 
--- Lines 6885-6910
+-- Lines 6904-6929
 function PlayerStandard:inventory_clbk_listener(unit, event)
 	if event == "equip" then
 		local weapon = self._ext_inventory:equipped_unit()
@@ -5956,7 +5958,7 @@ function PlayerStandard:inventory_clbk_listener(unit, event)
 	end
 end
 
--- Lines 6915-6935
+-- Lines 6934-6954
 function PlayerStandard:_check_action_night_vision(t, input)
 	if not input.btn_night_vision_press then
 		return
@@ -5971,7 +5973,7 @@ function PlayerStandard:_check_action_night_vision(t, input)
 	self:set_night_vision_state(not self._state_data.night_vision_active)
 end
 
--- Lines 6937-6974
+-- Lines 6956-6993
 function PlayerStandard:set_night_vision_state(state)
 	local mask_id = managers.blackmarket:equipped_mask().mask_id
 	local mask_tweak = tweak_data.blackmarket.masks[mask_id]
@@ -5985,7 +5987,7 @@ function PlayerStandard:set_night_vision_state(state)
 	local effect = nil
 
 	if state then
-		-- Lines 6950-6954
+		-- Lines 6969-6973
 		local function light_modifier(handler, feeder)
 			local base_light = feeder._target and mvector3.copy(feeder._target) or Vector3()
 			local light = night_vision.light
@@ -6014,14 +6016,14 @@ function PlayerStandard:set_night_vision_state(state)
 	self._state_data.night_vision_active = state
 end
 
--- Lines 6979-6983
+-- Lines 6998-7002
 function PlayerStandard:weapon_recharge_clbk_listener()
 	for id, weapon in pairs(self._ext_inventory:available_selections()) do
 		managers.hud:set_ammo_amount(id, weapon.unit:base():ammo_info())
 	end
 end
 
--- Lines 6986-6991
+-- Lines 7005-7010
 function PlayerStandard:get_equipped_weapon()
 	if self._equipped_unit then
 		return self._equipped_unit:base()
@@ -6030,7 +6032,7 @@ function PlayerStandard:get_equipped_weapon()
 	return nil
 end
 
--- Lines 6995-7001
+-- Lines 7014-7020
 function PlayerStandard:save(data)
 	if self._state_data.ducking then
 		data.pose = 2
@@ -6039,7 +6041,7 @@ function PlayerStandard:save(data)
 	end
 end
 
--- Lines 7005-7019
+-- Lines 7024-7038
 function PlayerStandard:pre_destroy(...)
 	PlayerStandard.super.pre_destroy(self, ...)
 
@@ -6056,7 +6058,7 @@ function PlayerStandard:pre_destroy(...)
 	self:set_night_vision_state(false)
 end
 
--- Lines 7025-7034
+-- Lines 7044-7053
 function PlayerStandard:tweak_data_clbk_reload()
 	local state_name = self._ext_movement:current_state_name()
 

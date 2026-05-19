@@ -1787,15 +1787,22 @@ function WeaponFactoryManager:get_perks(factory_id, blueprint)
 	return perks
 end
 
--- Lines 1881-1918
+-- Lines 1881-1954
 function WeaponFactoryManager:get_sound_switch(switch_group, factory_id, blueprint)
 	local factory = tweak_data.weapon.factory
 	local forbidden = self:_get_forbidden_parts(factory_id, blueprint)
+	local overrides = factory[factory_id] and factory[factory_id].override
 	local t = {}
 
 	for _, part_id in ipairs(blueprint) do
-		if not forbidden[part_id] and factory.parts[part_id].sound_switch and factory.parts[part_id].sound_switch[switch_group] and not table.contains(t, part_id) then
-			table.insert(t, part_id)
+		if not forbidden[part_id] then
+			local part = factory.parts[part_id]
+			local has_switch = part and part.sound_switch and part.sound_switch[switch_group]
+			has_switch = has_switch or overrides and overrides[part_id] and overrides[part_id].sound_switch and overrides[part_id].sound_switch[switch_group]
+
+			if has_switch and not table.contains(t, part_id) then
+				table.insert(t, part_id)
+			end
 		end
 	end
 
@@ -1819,13 +1826,16 @@ function WeaponFactoryManager:get_sound_switch(switch_group, factory_id, bluepri
 			end)
 		end
 
-		return factory.parts[t[1]].sound_switch[switch_group]
+		local part_id = t[1]
+		local part_override = overrides and overrides[part_id]
+
+		return part_override and part_override.sound_switch and part_override.sound_switch[switch_group] or factory.parts[part_id].sound_switch[switch_group]
 	end
 
 	return nil
 end
 
--- Lines 1922-1965
+-- Lines 1958-2001
 function WeaponFactoryManager:disassemble(parts)
 	for task_data, _ in pairs(self._async_load_tasks) do
 		if task_data.parts == parts then
@@ -1875,17 +1885,17 @@ function WeaponFactoryManager:disassemble(parts)
 	end
 end
 
--- Lines 1970-1972
+-- Lines 2006-2008
 function WeaponFactoryManager:save(data)
 	data.weapon_factory = self._global
 end
 
--- Lines 1975-1978
+-- Lines 2011-2014
 function WeaponFactoryManager:load(data)
 	self._global = data.weapon_factory
 end
 
--- Lines 1982-2020
+-- Lines 2018-2056
 function WeaponFactoryManager:verify_weapon(weapon_id, factory_id)
 	if not weapon_id or not factory_id then
 		Application:error("[WeaponFactoryManager:verify_weapon] Missing weapon id or factory id", weapon_id, factory_id)
@@ -1926,7 +1936,7 @@ function WeaponFactoryManager:verify_weapon(weapon_id, factory_id)
 	return true
 end
 
--- Lines 2024-2036
+-- Lines 2060-2072
 function WeaponFactoryManager:debug_get_stats(factory_id, blueprint)
 	local factory = tweak_data.weapon.factory
 	local forbidden = self:_get_forbidden_parts(factory_id, blueprint)

@@ -393,7 +393,7 @@ function TweakData:index_to_menu_sync_state(index)
 	return self.menu_sync_states[index]
 end
 
--- Lines 416-2894
+-- Lines 416-2935
 function TweakData:init()
 	self.max_players = 4
 	self.difficulties = {
@@ -2994,6 +2994,25 @@ Play the full version soon to get your full PAYDAY!]],
 		range = 68,
 		damage = 12
 	}
+	self.projectiles.flun_flare = {
+		sound_event = "white_explosion",
+		range = 350,
+		curve_pow = 0.1,
+		player_damage = 5,
+		damage = 3,
+		adjust_z = 0,
+		effect_name = "effects/payday2/particles/explosions/flare_incendiary_explosion_with_flare",
+		airdrop_unit = "units/pd2_dlc_unk/weapons/wpn_prj_flun_flare_airdrop/wpn_prj_flun_flare_airdrop",
+		alert_radius = 5000,
+		impact_effect_name = "effects/payday2/particles/explosions/flare_incendiary_explosion",
+		name_id = "bm_grenade_flun_flare",
+		dot_data_name = "proj_fire_com",
+		launch_speed = 75,
+		sounds = {
+			flyby = "flare_flyby",
+			flyby_stop = "flare_flyby_stop"
+		}
+	}
 	self.voting = {
 		timeout = 30,
 		cooldown = 50,
@@ -3120,7 +3139,7 @@ Play the full version soon to get your full PAYDAY!]],
 	self:digest_tweak_data()
 end
 
--- Lines 2898-2924
+-- Lines 2939-2965
 function TweakData:load_movie_list()
 	self.movies = {
 		{
@@ -3148,7 +3167,7 @@ function TweakData:load_movie_list()
 	end
 end
 
--- Lines 2929-3035
+-- Lines 2970-3076
 function TweakData:init_screen_colors()
 	self.screen_colors = {
 		text = Color(255, 255, 255, 255) / 255,
@@ -3234,7 +3253,7 @@ function TweakData:init_screen_colors()
 	end
 end
 
--- Lines 3038-3069
+-- Lines 3079-3110
 function TweakData:init_accessibility_colors()
 	self.accessibility_colors = {
 		dot = {}
@@ -3266,14 +3285,14 @@ function TweakData:init_accessibility_colors()
 	self.accessibility_colors.screenflash.blurzone.gray_dark = Color(0.19607843137254902, 0.19607843137254902, 0.19607843137254902)
 end
 
--- Lines 3074-3152
+-- Lines 3115-3193
 function TweakData:free_dlc_list()
 	local free_dlcs = {}
 
 	return free_dlcs
 end
 
--- Lines 3162-3170
+-- Lines 3203-3211
 function TweakData:_execute_reload_clbks()
 	if self._reload_clbks then
 		for key, clbk_data in pairs(self._reload_clbks) do
@@ -3284,7 +3303,7 @@ function TweakData:_execute_reload_clbks()
 	end
 end
 
--- Lines 3174-3177
+-- Lines 3215-3218
 function TweakData:add_reload_callback(object, func)
 	self._reload_clbks = self._reload_clbks or {}
 
@@ -3294,7 +3313,7 @@ function TweakData:add_reload_callback(object, func)
 	})
 end
 
--- Lines 3181-3190
+-- Lines 3222-3231
 function TweakData:remove_reload_callback(object)
 	if self._reload_clbks then
 		for i, k in ipairs(self._reload_clbks) do
@@ -3307,7 +3326,7 @@ function TweakData:remove_reload_callback(object)
 	end
 end
 
--- Lines 3194-3370
+-- Lines 3235-3411
 function TweakData:set_scale()
 	local lang_key = SystemInfo:language():key()
 	local lang_mods = {
@@ -3496,7 +3515,7 @@ function TweakData:set_scale()
 	}
 end
 
--- Lines 3372-3551
+-- Lines 3413-3592
 function TweakData:set_menu_scale()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -3610,7 +3629,7 @@ function TweakData:set_menu_scale()
 	}
 end
 
--- Lines 3553-3633
+-- Lines 3594-3674
 function TweakData:set_hud_values()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -3689,7 +3708,7 @@ function TweakData:set_hud_values()
 	}
 end
 
--- Lines 3637-3685
+-- Lines 3678-3726
 function TweakData:_setup_access_cameras()
 	self.camera_channels = {
 		bravo = true,
@@ -3733,7 +3752,7 @@ function TweakData:_setup_access_cameras()
 	end
 end
 
--- Lines 3690-3694
+-- Lines 3731-3735
 function TweakData:resolution_changed()
 	self:set_scale()
 	self:set_menu_scale()
@@ -3751,7 +3770,7 @@ if (not tweak_data or tweak_data.RELOAD) and managers.dlc then
 	end
 end
 
--- Lines 3711-3926
+-- Lines 3752-3967
 function TweakData:get_controller_help_coords()
 	if managers.controller:get_default_wrapper_type() == "pc" or managers.controller:get_default_wrapper_type() == "steam" then
 		return false

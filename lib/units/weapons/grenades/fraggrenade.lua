@@ -1,6 +1,6 @@
 FragGrenade = FragGrenade or class(GrenadeBase)
 
--- Lines 5-31
+-- Lines 5-47
 function FragGrenade:_setup_from_tweak_data()
 	local grenade_entry = self._tweak_projectile_entry or "frag"
 	local tweak_entry = tweak_data.projectiles[grenade_entry]
@@ -8,6 +8,11 @@ function FragGrenade:_setup_from_tweak_data()
 	self._mass_look_up_modifier = tweak_entry.mass_look_up_modifier
 	self._range = tweak_entry.range
 	self._effect_name = tweak_entry.effect_name or "effects/payday2/particles/explosions/grenade_explosion"
+
+	if tweak_entry.impact_effect_name then
+		self._impact_effect_name = tweak_entry.impact_effect_name
+	end
+
 	self._curve_pow = tweak_entry.curve_pow or 3
 	self._damage = tweak_entry.damage
 	self._player_damage = tweak_entry.player_damage
@@ -28,12 +33,12 @@ function FragGrenade:_setup_from_tweak_data()
 	return tweak_entry
 end
 
--- Lines 35-37
+-- Lines 51-53
 function FragGrenade:update(unit, t, dt)
 	FragGrenade.super.update(self, unit, t, dt)
 end
 
--- Lines 42-59
+-- Lines 58-75
 function FragGrenade:clbk_impact(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 	local reflect = other_unit and other_unit:vehicle() and other_unit:vehicle():is_active()
 	reflect = managers.modifiers:modify_value("FragGrenade:ShouldReflect", reflect, other_unit, self._unit)
@@ -45,7 +50,7 @@ function FragGrenade:clbk_impact(tag, unit, body, other_unit, other_body, positi
 	self:_detonate(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 end
 
--- Lines 61-81
+-- Lines 77-97
 function FragGrenade:_on_collision(col_ray)
 	local reflect = col_ray and col_ray.unit:vehicle() and col_ray.unit:vehicle():is_active()
 	reflect = managers.modifiers:modify_value("FragGrenade:ShouldReflect", reflect, col_ray and col_ray.unit, self._unit)
@@ -57,7 +62,7 @@ function FragGrenade:_on_collision(col_ray)
 	self:_detonate()
 end
 
--- Lines 84-121
+-- Lines 100-146
 function FragGrenade:_detonate(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 	if self._detonated then
 		return
@@ -70,6 +75,11 @@ function FragGrenade:_detonate(tag, unit, body, other_unit, other_body, position
 	local slot_mask = managers.slot:get_mask("explosion_targets")
 
 	managers.explosion:give_local_player_dmg(pos, range, self._player_damage)
+
+	if self._timer and self._timer > 0 then
+		self._custom_params.effect = self._impact_effect_name or self._custom_params.effect
+	end
+
 	managers.explosion:play_sound_and_effects(pos, normal, range, self._custom_params)
 
 	local hit_units, splinters = managers.explosion:detect_and_give_dmg({
@@ -89,10 +99,10 @@ function FragGrenade:_detonate(tag, unit, body, other_unit, other_body, position
 		managers.network:session():send_to_peers_synched("sync_unit_event_id_16", self._unit, "base", GrenadeBase.EVENT_IDS.detonate)
 	end
 
-	self:_handle_hiding_and_destroying(true, nil)
+	self:_handle_hiding_and_destroying(true, self:_destruct_delay())
 end
 
--- Lines 125-138
+-- Lines 150-163
 function FragGrenade:_detonate_on_client()
 	if self._detonated then
 		return
@@ -107,7 +117,7 @@ function FragGrenade:_detonate_on_client()
 	self:_handle_hiding_and_destroying(true, nil)
 end
 
--- Lines 142-149
+-- Lines 167-174
 function FragGrenade:bullet_hit()
 	if not Network:is_server() then
 		return

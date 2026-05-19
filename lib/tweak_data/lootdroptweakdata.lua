@@ -2,7 +2,7 @@ LootDropTweakData = LootDropTweakData or class()
 
 require("lib/tweak_data/GeneratedLootDropTweakData")
 
--- Lines 5-2556
+-- Lines 5-2554
 function LootDropTweakData:init(tweak_data)
 	self:_init_card_types()
 
@@ -181,11 +181,22 @@ function LootDropTweakData:init(tweak_data)
 				table.insert(crafted_weapons, weapon.factory_id)
 			end
 
-			table.list_union(crafted_weapons)
+			crafted_weapons = table.list_union(crafted_weapons)
 
 			for _, factory_id in pairs(weapons) do
 				if table.contains(crafted_weapons, factory_id) then
 					return 2
+				end
+			end
+
+			return 1
+		end,
+		masks = function (global_value, category, id)
+			local mask_inventory = managers.blackmarket:get_inventory_category("masks") or {}
+
+			for _, data in pairs(mask_inventory) do
+				if global_value == data.global_value and id == data.id then
+					return 0.5
 				end
 			end
 
@@ -1996,7 +2007,7 @@ function LootDropTweakData:init(tweak_data)
 	self:_create_global_value_list_map()
 end
 
--- Lines 2561-2604
+-- Lines 2559-2602
 function LootDropTweakData:_init_card_types()
 	self.type_to_card_fallback = "upcard_random"
 	self.type_to_card = {
@@ -2029,7 +2040,7 @@ function LootDropTweakData:_init_card_types()
 	}
 end
 
--- Lines 2606-2611
+-- Lines 2604-2609
 function LootDropTweakData:_create_global_value_list_map()
 	self.global_value_list_map = {}
 

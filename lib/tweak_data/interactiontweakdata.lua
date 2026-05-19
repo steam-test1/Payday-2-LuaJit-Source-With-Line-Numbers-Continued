@@ -1,6 +1,6 @@
 InteractionTweakData = InteractionTweakData or class()
 
--- Lines 4-9300
+-- Lines 4-9356
 function InteractionTweakData:init(tweak_data)
 	self.DEFAULT_INTERACTION_DOT = 0.9
 	self.CULLING_DISTANCE = 2000

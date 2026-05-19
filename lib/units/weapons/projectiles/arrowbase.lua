@@ -599,16 +599,19 @@ ArrowBase.DEFUALT_SOUNDS = {
 	flyby = "arrow_flyby"
 }
 
--- Lines 637-642
+-- Lines 637-647
 function ArrowBase:_tweak_data_play_sound(entry)
 	local tweak_entry = tweak_data.projectiles[self._tweak_projectile_entry]
 	local event = tweak_entry.sounds and tweak_entry.sounds[entry]
 	event = event or ArrowBase.DEFUALT_SOUNDS[entry]
+	local snd_src = self._unit:sound_source(Idstring("snd"))
 
-	self._unit:sound_source(Idstring("snd")):post_event(event)
+	if snd_src then
+		snd_src:post_event(event)
+	end
 end
 
--- Lines 646-680
+-- Lines 651-685
 function ArrowBase:save(data)
 	ArrowBase.super.save(self, data)
 
@@ -646,7 +649,7 @@ function ArrowBase:save(data)
 	data.ArrowBase = state
 end
 
--- Lines 682-707
+-- Lines 687-712
 function ArrowBase:load(data)
 	ArrowBase.super.load(self, data)
 
@@ -660,7 +663,7 @@ function ArrowBase:load(data)
 		print(inspect(state.sync_attach_data))
 
 		if state.sync_attach_data then
-			-- Lines 694-699
+			-- Lines 699-704
 			local function _dropin_attach(parent_unit)
 				local parent_body = parent_unit:body(state.sync_attach_data.parent_body_index)
 				local parent_obj = parent_body:root_object()
@@ -680,7 +683,7 @@ function ArrowBase:load(data)
 	end
 end
 
--- Lines 709-736
+-- Lines 714-741
 function ArrowBase:_delay_sync_attach(peer)
 	if not managers.network:session() then
 		return
@@ -697,7 +700,7 @@ function ArrowBase:_delay_sync_attach(peer)
 	peer:send_queued_sync("sync_attach_projectile", self._unit:id() ~= -1 and self._unit or nil, false, self._sync_attach_data.parent_unit, nil, self._sync_attach_data.parent_obj, self._sync_attach_data.local_pos, self._sync_attach_data.dir, tweak_data.blackmarket:get_index_from_projectile_id(self._tweak_projectile_entry), managers.network:session():local_peer():id())
 end
 
--- Lines 740-746
+-- Lines 745-751
 function ArrowBase:_remove_switch_to_pickup_clbk()
 	if not self._switch_to_pickup_clbk or not managers.enemy then
 		return
@@ -708,12 +711,12 @@ function ArrowBase:_remove_switch_to_pickup_clbk()
 	self._switch_to_pickup_clbk = nil
 end
 
--- Lines 750-752
+-- Lines 755-757
 function ArrowBase:_kill_trail()
 	managers.game_play_central:remove_projectile_trail(self._unit)
 end
 
--- Lines 756-795
+-- Lines 761-800
 function ArrowBase:destroy(unit)
 	self:_check_stop_flyby_sound(true)
 
@@ -754,7 +757,7 @@ function ArrowBase:destroy(unit)
 	ArrowBase.super.destroy(self, unit)
 end
 
--- Lines 799-821
+-- Lines 804-826
 function ArrowBase.find_nearest_arrow(peer_id, position)
 	local closest_unit, closest_dist_sq = nil
 
@@ -781,7 +784,7 @@ function ArrowBase.find_nearest_arrow(peer_id, position)
 	return closest_unit
 end
 
--- Lines 826-835
+-- Lines 831-840
 function ArrowBase:reload_contour()
 	if self._unit:contour() then
 		if managers.user:get_setting("throwable_contour") then
@@ -795,7 +798,7 @@ end
 
 DartArrowBase = DartArrowBase or class(ArrowBase)
 
--- Lines 843-847
+-- Lines 848-852
 function DartArrowBase:_switch_to_pickup(dynamic)
 	DartArrowBase.super._switch_to_pickup(self, dynamic)
 	self._unit:set_slot(18)
@@ -803,7 +806,7 @@ end
 
 ReviveDartArrowBase = ReviveDartArrowBase or class(DartArrowBase)
 
--- Lines 851-860
+-- Lines 856-865
 function ReviveDartArrowBase:init(unit)
 	ReviveDartArrowBase.super.init(self, unit)
 
@@ -814,7 +817,7 @@ function ReviveDartArrowBase:init(unit)
 	self._criminal_sphere_cast_radius = tweak_entry.sweep_radius or 80
 end
 
--- Lines 862-881
+-- Lines 867-886
 function ReviveDartArrowBase:update(unit, t, dt)
 	if self._sweep_data and not self._collided then
 		self._unit:m_position(self._sweep_data.current_pos)
@@ -837,7 +840,7 @@ function ReviveDartArrowBase:update(unit, t, dt)
 	ReviveDartArrowBase.super.update(self, unit, t, dt)
 end
 
--- Lines 883-930
+-- Lines 888-935
 function ReviveDartArrowBase:_check_revive_targets()
 	if not self._sweep_data then
 		return
@@ -868,7 +871,7 @@ function ReviveDartArrowBase:_check_revive_targets()
 	return not check_ray and col_ray
 end
 
--- Lines 932-951
+-- Lines 937-956
 function ReviveDartArrowBase:clbk_impact(tag, unit, body, other_unit, other_body, position, ...)
 	if self._sweep_data and not self._collided then
 		self._sweep_data.current_pos = position
