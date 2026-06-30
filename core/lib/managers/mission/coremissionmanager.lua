@@ -692,26 +692,34 @@ function MissionScript:save(data)
 	data[self._name] = state
 end
 
--- Lines 649-680
+-- Lines 649-683
 function MissionScript:load(data)
 	local state = data[self._name]
 
 	if self._element_groups.ElementInstancePoint then
 		for _, element in ipairs(self._element_groups.ElementInstancePoint) do
-			if state[element:id()] then
-				self._elements[element:id()]:load(state[element:id()])
+			local id = element:id()
 
-				state[element:id()] = nil
+			if state[id] then
+				if self._elements[id].load then
+					self._elements[id]:load(state[id])
+				end
+
+				state[id] = nil
 			end
 		end
 	end
 
 	for id, mission_state in pairs(state) do
-		self._elements[id]:load(mission_state)
+		local element = self._elements[id]
+
+		if element.load then
+			element:load(mission_state)
+		end
 	end
 end
 
--- Lines 683-688
+-- Lines 686-691
 function MissionScript:stop_simulation(...)
 	for _, element in pairs(self._elements) do
 		element:stop_simulation(...)
@@ -720,7 +728,7 @@ function MissionScript:stop_simulation(...)
 	MissionScript.super.clear(self)
 end
 
--- Lines 691-696
+-- Lines 694-699
 function MissionScript:pre_destroy(...)
 	for _, element in pairs(self._elements) do
 		element:pre_destroy(...)
@@ -729,7 +737,7 @@ function MissionScript:pre_destroy(...)
 	MissionScript.super.clear(self)
 end
 
--- Lines 699-704
+-- Lines 702-707
 function MissionScript:destroy(...)
 	for _, element in pairs(self._elements) do
 		element:destroy(...)

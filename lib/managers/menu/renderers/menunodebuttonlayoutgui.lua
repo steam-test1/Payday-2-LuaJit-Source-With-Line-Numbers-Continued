@@ -13,7 +13,7 @@ function MenuNodeButtonLayoutGui:_setup_panels(node)
 	local safe_rect_pixels = managers.viewport:get_safe_rect_pixels()
 end
 
--- Lines 15-89
+-- Lines 15-45
 function MenuNodeButtonLayoutGui:_setup()
 	self._coords = tweak_data:get_controller_help_coords() or {}
 	self._categories = {}
@@ -57,7 +57,7 @@ function MenuNodeButtonLayoutGui:_setup()
 		color = Color.black
 	})
 
-	-- Lines 80-83
+	-- Lines 36-39
 	local function func(o)
 		local start_blur = 0
 
@@ -83,7 +83,7 @@ function MenuNodeButtonLayoutGui:_setup()
 	self:_layout()
 end
 
--- Lines 91-130
+-- Lines 47-86
 function MenuNodeButtonLayoutGui:_layout()
 	local safe_rect_pixels = managers.viewport:get_safe_rect_pixels()
 	local res = RenderSettings.resolution
@@ -128,35 +128,35 @@ function MenuNodeButtonLayoutGui:_layout()
 	end
 end
 
--- Lines 132-134
+-- Lines 88-90
 function MenuNodeButtonLayoutGui:_create_menu_item(row_item)
 	MenuNodeButtonLayoutGui.super._create_menu_item(self, row_item)
 end
 
--- Lines 136-138
+-- Lines 92-94
 function MenuNodeButtonLayoutGui:_setup_item_panel_parent(safe_rect)
 	MenuNodeButtonLayoutGui.super._setup_item_panel_parent(self, safe_rect)
 end
 
--- Lines 140-142
+-- Lines 96-98
 function MenuNodeButtonLayoutGui:_setup_item_panel(safe_rect, res)
 	MenuNodeButtonLayoutGui.super._setup_item_panel(self, safe_rect, res)
 end
 
--- Lines 144-147
+-- Lines 100-103
 function MenuNodeButtonLayoutGui:set_current_category(category)
 	self._current_category = category
 
 	self:_layout()
 end
 
--- Lines 149-153
+-- Lines 105-109
 function MenuNodeButtonLayoutGui:resolution_changed()
 	MenuNodeButtonLayoutGui.super.resolution_changed(self)
 	self:_layout()
 end
 
--- Lines 155-160
+-- Lines 111-116
 function MenuNodeButtonLayoutGui:close(...)
 	self._bg:parent():remove(self._bg)
 	self._blur:parent():remove(self._blur)

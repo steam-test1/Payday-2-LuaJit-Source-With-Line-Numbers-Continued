@@ -44,7 +44,7 @@ end
 
 -- Lines 44-63
 function ControllerManager:_poll_reconnected_controller()
-	if SystemInfo:platform() == Idstring("XB1") and Global.controller_manager.connect_controller_dialog_visible then
+	if IS_XB1 and Global.controller_manager.connect_controller_dialog_visible then
 		local active_xuid = XboxLive:current_user()
 		local nr_controllers = Input:num_controllers()
 
@@ -174,7 +174,7 @@ function ControllerManager:_show_controller_changed_dialog()
 		NR = Global.controller_manager.default_wrapper_index or 1
 	})
 
-	if SystemInfo:platform() == Idstring("XB1") then
+	if IS_XB1 then
 		data.no_buttons = true
 	else
 		data.button_list = {
@@ -197,7 +197,7 @@ end
 
 -- Lines 188-202
 function ControllerManager:set_menu_mode_enabled(enabled)
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if IS_PC then
 		self._menu_mode_enabled = self._menu_mode_enabled or 0
 		self._menu_mode_enabled = self._menu_mode_enabled + (enabled and 1 or -1)
 
@@ -220,7 +220,7 @@ end
 
 -- Lines 208-218
 function ControllerManager:set_ingame_mode(mode)
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if IS_PC then
 		if mode then
 			self._ingame_mode = mode
 		end

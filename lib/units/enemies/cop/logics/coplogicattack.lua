@@ -1550,7 +1550,7 @@ function CopLogicAttack.queue_update(data, my_data)
 	CopLogicBase.queue_task(my_data, my_data.update_queue_id, data.logic.queued_update, data, data.t + (data.important and 0.5 or 2), true)
 end
 
--- Lines 1497-1615
+-- Lines 1497-1607
 function CopLogicAttack._get_expected_attention_position(data, my_data)
 	local main_enemy = data.attention_obj
 	local e_nav_tracker = main_enemy.nav_tracker
@@ -1585,7 +1585,7 @@ function CopLogicAttack._get_expected_attention_position(data, my_data)
 		end
 
 		if i_from_seg then
-			-- Lines 1541-1571
+			-- Lines 1541-1567
 			local function _find_aim_pos(from_nav_seg, to_nav_seg)
 				local closest_dis = 1000000000
 				local closest_door
@@ -1593,7 +1593,7 @@ function CopLogicAttack._get_expected_attention_position(data, my_data)
 				local found_doors = managers.navigation:find_segment_doors(from_nav_seg, callback(CopLogicAttack, CopLogicAttack, "_chk_is_right_segment", to_nav_seg))
 
 				for _, door in pairs(found_doors) do
-					mvec3_set(temp_vec1, door.center)
+					mvec3_set(temp_vec1, door)
 
 					local dis = mvec3_dis_sq(e_pos, temp_vec1)
 
@@ -1604,12 +1604,12 @@ function CopLogicAttack._get_expected_attention_position(data, my_data)
 				end
 
 				if closest_door then
-					mvec3_set(temp_vec1, closest_door.center)
+					mvec3_set(temp_vec1, closest_door)
 					mvec3_sub(temp_vec1, data.m_pos)
 					mvec3_set_z(temp_vec1, 0)
 
 					if min_point_dis_sq < mvector3.length_sq(temp_vec1) then
-						mvec3_set(temp_vec1, closest_door.center)
+						mvec3_set(temp_vec1, closest_door)
 						mvec3_set_z(temp_vec1, temp_vec1.z + 140)
 
 						return temp_vec1
@@ -1666,12 +1666,12 @@ function CopLogicAttack._get_expected_attention_position(data, my_data)
 	end
 end
 
--- Lines 1619-1621
+-- Lines 1611-1613
 function CopLogicAttack._chk_is_right_segment(ignore_this, enemy_nav_seg, test_nav_seg)
 	return enemy_nav_seg == test_nav_seg
 end
 
--- Lines 1625-1633
+-- Lines 1617-1625
 function CopLogicAttack.is_advancing(data)
 	if data.internal_data.moving_to_cover then
 		return data.internal_data.moving_to_cover[1][1]
@@ -1682,7 +1682,7 @@ function CopLogicAttack.is_advancing(data)
 	end
 end
 
--- Lines 1637-1642
+-- Lines 1629-1634
 function CopLogicAttack._get_all_paths(data)
 	return {
 		cover_path = data.internal_data.cover_path,
@@ -1690,13 +1690,13 @@ function CopLogicAttack._get_all_paths(data)
 	}
 end
 
--- Lines 1646-1649
+-- Lines 1638-1641
 function CopLogicAttack._set_verified_paths(data, verified_paths)
 	data.internal_data.cover_path = verified_paths.cover_path
 	data.internal_data.flank_path = verified_paths.flank_path
 end
 
--- Lines 1653-1668
+-- Lines 1645-1660
 function CopLogicAttack._chk_exit_attack_logic(data, new_reaction)
 	if not data.unit:movement():chk_action_forbidden("walk") then
 		local wanted_state = CopLogicBase._get_logic_state_from_reaction(data, new_reaction)
@@ -1717,12 +1717,12 @@ function CopLogicAttack._chk_exit_attack_logic(data, new_reaction)
 	end
 end
 
--- Lines 1672-1674
+-- Lines 1664-1666
 function CopLogicAttack.action_taken(data, my_data)
 	return my_data.turning or my_data.moving_to_cover or my_data.walking_to_cover_shoot_pos or my_data.surprised or my_data.has_old_action or data.unit:movement():chk_action_forbidden("walk")
 end
 
--- Lines 1678-1692
+-- Lines 1670-1684
 function CopLogicAttack._upd_stop_old_action(data, my_data)
 	if data.unit:anim_data().to_idle then
 		return
@@ -1739,7 +1739,7 @@ function CopLogicAttack._upd_stop_old_action(data, my_data)
 	CopLogicIdle._chk_has_old_action(data, my_data)
 end
 
--- Lines 1696-1712
+-- Lines 1688-1704
 function CopLogicAttack._upd_pose(data, my_data)
 	local unit_can_stand = not data.char_tweak.allowed_poses or data.char_tweak.allowed_poses.stand
 	local unit_can_crouch = not data.char_tweak.allowed_poses or data.char_tweak.allowed_poses.crouch
@@ -1756,7 +1756,7 @@ function CopLogicAttack._upd_pose(data, my_data)
 	end
 end
 
--- Lines 1716-1735
+-- Lines 1708-1727
 function CopLogicAttack._chk_exit_non_walkable_area(data)
 	local my_data = data.internal_data
 
@@ -1785,7 +1785,7 @@ end
 
 MarshalLogicAttack = MarshalLogicAttack or class(CopLogicAttack)
 
--- Lines 1744-1793
+-- Lines 1736-1785
 function MarshalLogicAttack.update(data)
 	local my_data = data.internal_data
 
@@ -1841,7 +1841,7 @@ function MarshalLogicAttack.update(data)
 	end
 end
 
--- Lines 1797-1816
+-- Lines 1789-1808
 function MarshalLogicAttack._chk_exit_non_walkable_area(data)
 	local my_data = data.internal_data
 

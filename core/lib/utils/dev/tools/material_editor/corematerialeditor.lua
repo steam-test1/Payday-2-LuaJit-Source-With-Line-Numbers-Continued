@@ -516,13 +516,9 @@ function CoreMaterialEditor:_save_to_disk(path)
 	local global_file = self:_save_global_to_disk(false)
 
 	Application:data_compile({
-		preprocessor_definitions = "preprocessor_definitions",
 		send_idstrings = false,
-		target_db_name = "all",
 		verbose = false,
-		platform = string.lower(SystemInfo:platform():s()),
-		source_root = managers.database:base_path(),
-		target_db_root = Application:base_path() .. "assets",
+		build_profile = Application:build_profile_path(),
 		source_files = {
 			managers.database:entry_relative_path(path),
 			managers.database:entry_relative_path(global_file)
@@ -539,7 +535,7 @@ function CoreMaterialEditor:_save_to_disk(path)
 	self._text_in_node = node:to_xml()
 end
 
--- Lines 493-517
+-- Lines 493-513
 function CoreMaterialEditor:_save_global_to_disk(recompile)
 	local global = self._global_material_config_node:to_real_node()
 	local global_file = self._global_material_config_path
@@ -548,13 +544,9 @@ function CoreMaterialEditor:_save_global_to_disk(recompile)
 
 	if recompile then
 		Application:data_compile({
-			preprocessor_definitions = "preprocessor_definitions",
 			send_idstrings = false,
-			target_db_name = "all",
 			verbose = false,
-			platform = string.lower(SystemInfo:platform():s()),
-			source_root = managers.database:base_path(),
-			target_db_root = Application:base_path() .. "assets",
+			build_profile = Application:build_profile_path(),
 			source_files = {
 				managers.database:entry_relative_path(global_file)
 			}
@@ -568,17 +560,17 @@ function CoreMaterialEditor:_save_global_to_disk(recompile)
 	return global_file
 end
 
--- Lines 519-521
+-- Lines 515-517
 function CoreMaterialEditor:_data_diff()
 	return self._text_in_node ~= self._material_config_node:to_xml() or self._text_in_global_node ~= self._global_material_config_node:to_xml()
 end
 
--- Lines 523-525
+-- Lines 519-521
 function CoreMaterialEditor:_reset_diff()
 	self._text_in_node = ""
 end
 
--- Lines 527-539
+-- Lines 523-535
 function CoreMaterialEditor:_ok_by_law(node)
 	local rule = node:parameter("rule")
 
@@ -597,7 +589,7 @@ function CoreMaterialEditor:_ok_by_law(node)
 	return true
 end
 
--- Lines 541-548
+-- Lines 537-544
 function CoreMaterialEditor:_is_options_valid_by_law()
 	for k, v in pairs(self._shader_defines) do
 		if v._checked and not self:_ok_by_law(v._define_node) then
@@ -608,7 +600,7 @@ function CoreMaterialEditor:_is_options_valid_by_law()
 	return true, ""
 end
 
--- Lines 550-557
+-- Lines 546-553
 function CoreMaterialEditor:_load_shader_options()
 	local rt_name = self._current_material_node:parameter("render_template")
 	local v = RenderTemplateDatabase:render_template_name_to_defines(rt_name)
@@ -618,7 +610,7 @@ function CoreMaterialEditor:_load_shader_options()
 	self:_set_shader_options(v.defines)
 end
 
--- Lines 559-591
+-- Lines 555-587
 function CoreMaterialEditor:_find_render_template()
 	local t = {}
 
@@ -653,7 +645,7 @@ function CoreMaterialEditor:_find_render_template()
 	self:_update_output()
 end
 
--- Lines 593-616
+-- Lines 589-612
 function CoreMaterialEditor:_clean_parameters()
 	if self._current_render_template then
 		local remove_list = {}
@@ -681,7 +673,7 @@ function CoreMaterialEditor:_clean_parameters()
 	end
 end
 
--- Lines 618-626
+-- Lines 614-622
 function CoreMaterialEditor:_update_interface_after_material_list_change(listbox_select_material)
 	self:_freeze_frame()
 	self:_load_material_list(listbox_select_material)
@@ -693,7 +685,7 @@ function CoreMaterialEditor:_update_interface_after_material_list_change(listbox
 	self._parameter_collapse_box:lower_panel():set_enabled(false)
 end
 
--- Lines 628-634
+-- Lines 624-630
 function CoreMaterialEditor:_create_new_material_config(path)
 	local node = Node("materials")
 
@@ -702,7 +694,7 @@ function CoreMaterialEditor:_create_new_material_config(path)
 	self:_save_to_disk(path)
 end
 
--- Lines 636-662
+-- Lines 632-658
 function CoreMaterialEditor:_load_node(path, node)
 	local prev_node = self._material_config_node
 	local prev_entry = self._material_config_path
@@ -732,7 +724,7 @@ function CoreMaterialEditor:_load_node(path, node)
 	return true
 end
 
--- Lines 664-669
+-- Lines 660-665
 function CoreMaterialEditor:_update_output()
 	if not self._lock_output and self._material_config_node and self._output_collapse_box:expanded() then
 		self._output_text_ctrl:set_value(self._material_config_node:to_xml())
@@ -740,18 +732,18 @@ function CoreMaterialEditor:_update_output()
 	end
 end
 
--- Lines 671-673
+-- Lines 667-669
 function CoreMaterialEditor:_layout_all()
 	self._main_scroll_window:fit_inside()
 end
 
--- Lines 675-678
+-- Lines 671-674
 function CoreMaterialEditor:_layout_output()
 	self._output_collapse_box:panel():layout()
 	self:_layout_all()
 end
 
--- Lines 680-691
+-- Lines 676-687
 function CoreMaterialEditor:_set_shader_options(options)
 	for k, v in pairs(self._shader_defines) do
 		v._check_box:set_state(0)
@@ -768,7 +760,7 @@ function CoreMaterialEditor:_set_shader_options(options)
 	end
 end
 
--- Lines 693-711
+-- Lines 689-707
 function CoreMaterialEditor:_load_material_list(listbox_select_material)
 	self._material_nodes = {}
 
@@ -791,7 +783,7 @@ function CoreMaterialEditor:_load_material_list(listbox_select_material)
 	end
 end
 
--- Lines 713-719
+-- Lines 709-715
 function CoreMaterialEditor:_check_loaded_shader_sources(t, s)
 	for i, source in ipairs(t) do
 		if source._entry == s then
@@ -800,7 +792,7 @@ function CoreMaterialEditor:_check_loaded_shader_sources(t, s)
 	end
 end
 
--- Lines 721-725
+-- Lines 717-721
 function CoreMaterialEditor:_load_shader_sources()
 	self._shader_sources = {}
 
@@ -808,7 +800,7 @@ function CoreMaterialEditor:_load_shader_sources()
 	self:_load_shader_sources_from_db(self._shader_sources)
 end
 
--- Lines 727-739
+-- Lines 723-735
 function CoreMaterialEditor:_load_shader_sources_from_db(t)
 	local sources = managers.database:list_entries_of_type("shader_source")
 
@@ -830,7 +822,7 @@ function CoreMaterialEditor:_load_shader_sources_from_db(t)
 	end
 end
 
--- Lines 741-763
+-- Lines 737-759
 function CoreMaterialEditor:_load_shader_dropdown()
 	self:_freeze_frame()
 
@@ -865,7 +857,7 @@ function CoreMaterialEditor:_load_shader_dropdown()
 	self:_unfreeze_frame()
 end
 
--- Lines 765-781
+-- Lines 761-777
 function CoreMaterialEditor:_load_parent_dropdown()
 	self:_freeze_frame()
 	self._parent_combo_box:clear()

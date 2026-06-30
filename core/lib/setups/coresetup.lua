@@ -292,7 +292,7 @@ function CoreSetup:__init()
 		local frame_resolution = SystemInfo:desktop_resolution()
 
 		aspect_ratio = frame_resolution.x / frame_resolution.y
-	elseif SystemInfo:platform() == Idstring("WIN32") then
+	elseif IS_WIN32 then
 		aspect_ratio = RenderSettings.aspect_ratio
 
 		if aspect_ratio == 0 then
@@ -424,7 +424,7 @@ end
 function CoreSetup:__paused_update(t, dt)
 	managers.viewport:paused_update(t, dt)
 
-	if SystemInfo:platform() == Idstring("XB1") then
+	if IS_XB1 then
 		managers.controller:update(t, dt)
 	else
 		managers.controller:paused_update(t, dt)
@@ -470,7 +470,7 @@ function CoreSetup:__render()
 	self:render()
 end
 
--- Lines 628-689
+-- Lines 628-688
 function CoreSetup:__end_frame(t, dt)
 	self:end_frame(t, dt)
 	managers.viewport:end_frame(t, dt)
@@ -493,7 +493,6 @@ function CoreSetup:__end_frame(t, dt)
 		end
 
 		World:unload_all_units()
-		Application:resource_soft_reset()
 
 		if managers.menu_scene then
 			managers.menu_scene:unload()
@@ -528,23 +527,23 @@ function CoreSetup:__end_frame(t, dt)
 	end
 end
 
--- Lines 691-694
+-- Lines 690-693
 function CoreSetup:__loading_update(t, dt)
 	self._session:update(t, dt)
 	self:loading_update()
 end
 
--- Lines 696-697
+-- Lines 695-696
 function CoreSetup:__animations_reloaded()
 	return
 end
 
--- Lines 699-700
+-- Lines 698-699
 function CoreSetup:__script_reloaded()
 	return
 end
 
--- Lines 702-707
+-- Lines 701-706
 function CoreSetup:__entering_window(user_data, event_object)
 	if Global.frame:is_active() then
 		Global.application_window:set_focus()
@@ -552,26 +551,26 @@ function CoreSetup:__entering_window(user_data, event_object)
 	end
 end
 
--- Lines 709-713
+-- Lines 708-712
 function CoreSetup:__leaving_window(user_data, event_object)
 	if not managers.editor or managers.editor._in_mixed_input_mode then
 		Input:keyboard():unacquire()
 	end
 end
 
--- Lines 715-719
+-- Lines 714-718
 function CoreSetup:__kill_focus(user_data, event_object)
 	if managers.editor and not managers.editor:in_mixed_input_mode() and not Global.running_simulation then
 		managers.editor:set_in_mixed_input_mode(true)
 	end
 end
 
--- Lines 721-723
+-- Lines 720-722
 function CoreSetup:__save(data)
 	self:save(data)
 end
 
--- Lines 725-727
+-- Lines 724-726
 function CoreSetup:__load(data)
 	self:load(data)
 end
@@ -580,7 +579,7 @@ core:module("CoreSetup")
 
 CoreSetup = _CoreSetup
 
--- Lines 737-775
+-- Lines 736-774
 function CoreSetup:make_entrypoint()
 	if not _G.CoreSetup.__entrypoint_is_setup then
 		assert(rawget(_G, "pre_init") == nil)

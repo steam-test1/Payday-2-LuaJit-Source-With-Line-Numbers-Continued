@@ -763,6 +763,7 @@ function ContractBrokerGui:_setup_filter_contact()
 	local last_y = 0
 	local check_new_job_data = {
 		filter_key = "contact",
+		filter_param = nil,
 		filter_func = ContractBrokerGui.perform_filter_contact
 	}
 
@@ -798,6 +799,7 @@ function ContractBrokerGui:_setup_filter_time()
 	local last_y = 0
 	local check_new_job_data = {
 		filter_key = "job_id",
+		filter_param = nil,
 		filter_func = ContractBrokerGui.perform_filter_time
 	}
 
@@ -835,6 +837,7 @@ function ContractBrokerGui:_setup_filter_tactic()
 	local last_y = 0
 	local check_new_job_data = {
 		filter_key = "job",
+		filter_param = nil,
 		filter_func = ContractBrokerGui.perform_filter_tactic
 	}
 
@@ -1612,7 +1615,7 @@ function ContractBrokerGui:disconnect_search_input()
 	end
 end
 
--- Lines 1619-1706
+-- Lines 1619-1649
 function ContractBrokerGui:search_key_press(o, k)
 	if self._skip_first then
 		self._skip_first = false
@@ -1639,141 +1642,35 @@ function ContractBrokerGui:search_key_press(o, k)
 	local len = utf8.len(text:text())
 
 	text:clear_range_color(0, len)
-
-	if k == Idstring("backspace") then
-		if s == e and s > 0 then
-			text:set_selection(s - 1, e)
-		end
-
-		text:replace_text("")
-	elseif k == Idstring("delete") then
-		if s == e and s < n then
-			text:set_selection(s, e + 1)
-		end
-
-		text:replace_text("")
-	elseif k == Idstring("insert") then
-		local clipboard = Application:get_clipboard() or ""
-
-		text:replace_text(clipboard)
-
-		local lbs = text:line_breaks()
-
-		if #text:text() > ContractBrokerGui.MAX_SEARCH_LENGTH then
-			text:set_text(string.sub(text:text(), 1, ContractBrokerGui.MAX_SEARCH_LENGTH))
-		end
-
-		if #lbs > 1 then
-			local s = lbs[2]
-			local e = utf8.len(text:text())
-
-			text:set_selection(s, e)
-			text:replace_text("")
-		end
-	elseif k == Idstring("left") then
-		if s < e then
-			text:set_selection(s, s)
-		elseif s > 0 then
-			text:set_selection(s - 1, s - 1)
-		end
-	elseif k == Idstring("right") then
-		if s < e then
-			text:set_selection(e, e)
-		elseif s < n then
-			text:set_selection(s + 1, s + 1)
-		end
-	elseif self._key_pressed == Idstring("end") then
-		text:set_selection(n, n)
-	elseif self._key_pressed == Idstring("home") then
-		text:set_selection(0, 0)
-	elseif k == Idstring("enter") then
-		if type(self._enter_callback) ~= "number" then
-			self._enter_callback()
-		end
-	elseif k == Idstring("esc") and type(self._esc_callback) ~= "number" then
-		if not _G.IS_VR then
-			text:set_text("")
-			text:set_selection(0, 0)
-		end
-
-		self._esc_callback()
-	end
-
+	InputUtils.common_text_input_key_press(text, k, ContractBrokerGui.MAX_SEARCH_LENGTH, false, self._enter_callback, self._esc_callback)
 	self:update_caret()
 end
 
--- Lines 1708-1713
+-- Lines 1651-1657
 function ContractBrokerGui:search_key_release(o, k)
 	if self._key_pressed == k then
 		self._key_pressed = false
 
 		self:_setup_change_search()
 	end
+
+	self:update_caret()
 end
 
--- Lines 1715-1769
+-- Lines 1659-1671
 function ContractBrokerGui:update_key_down(o, k)
 	wait(0.6)
 
 	local text = self._search.text
 
 	while self._key_pressed == k do
-		local s, e = text:selection()
-		local n = utf8.len(text:text())
-		local d = math.abs(e - s)
-
-		if self._key_pressed == Idstring("backspace") then
-			if s == e and s > 0 then
-				text:set_selection(s - 1, e)
-			end
-
-			text:replace_text("")
-		elseif self._key_pressed == Idstring("delete") then
-			if s == e and s < n then
-				text:set_selection(s, e + 1)
-			end
-
-			text:replace_text("")
-		elseif self._key_pressed == Idstring("insert") then
-			local clipboard = Application:get_clipboard() or ""
-
-			text:replace_text(clipboard)
-
-			if #text:text() > ContractBrokerGui.MAX_SEARCH_LENGTH then
-				text:set_text(string.sub(text:text(), 1, ContractBrokerGui.MAX_SEARCH_LENGTH))
-			end
-
-			local lbs = text:line_breaks()
-
-			if #lbs > 1 then
-				local s = lbs[2]
-				local e = utf8.len(text:text())
-
-				text:set_selection(s, e)
-				text:replace_text("")
-			end
-		elseif self._key_pressed == Idstring("left") then
-			if s < e then
-				text:set_selection(s, s)
-			elseif s > 0 then
-				text:set_selection(s - 1, s - 1)
-			end
-		elseif self._key_pressed == Idstring("right") then
-			if s < e then
-				text:set_selection(e, e)
-			elseif s < n then
-				text:set_selection(s + 1, s + 1)
-			end
-		else
-			self._key_pressed = false
-		end
-
+		InputUtils.common_text_input_key_press(text, k, ContractBrokerGui.MAX_SEARCH_LENGTH, false, nil, nil)
 		self:update_caret()
 		wait(0.03)
 	end
 end
 
--- Lines 1771-1804
+-- Lines 1673-1706
 function ContractBrokerGui:enter_text(o, s)
 	if self._skip_first then
 		self._skip_first = false
@@ -1805,17 +1702,17 @@ function ContractBrokerGui:enter_text(o, s)
 	self:_setup_change_search()
 end
 
--- Lines 1806-1808
+-- Lines 1708-1710
 function ContractBrokerGui:enter_key_callback()
 	self:_setup_change_search()
 end
 
--- Lines 1810-1812
+-- Lines 1712-1714
 function ContractBrokerGui:esc_key_callback()
 	self:disconnect_search_input()
 end
 
--- Lines 1814-1821
+-- Lines 1716-1723
 function ContractBrokerGui.blink(o)
 	while true do
 		o:set_color(Color(0, 1, 1, 1))
@@ -1825,7 +1722,7 @@ function ContractBrokerGui.blink(o)
 	end
 end
 
--- Lines 1823-1837
+-- Lines 1725-1739
 function ContractBrokerGui:set_blinking(b)
 	local caret = self._search.caret
 
@@ -1846,36 +1743,9 @@ function ContractBrokerGui:set_blinking(b)
 	end
 end
 
--- Lines 1839-1869
+-- Lines 1741-1744
 function ContractBrokerGui:update_caret()
-	local text = self._search.text
-	local caret = self._search.caret
-	local s, e = text:selection()
-	local x, y, w, h = text:selection_rect()
-	local text_s = text:text()
+	local blink = InputUtils.common_text_input_update_caret(self._search.text, self._search.caret, self._focus, self._search.placeholder)
 
-	if #text_s == 0 then
-		if text:align() == "center" then
-			x = text:world_x() + text:w() / 2
-		else
-			x = text:world_x() + text:w()
-		end
-
-		y = text:world_y()
-	end
-
-	h = text:h()
-
-	if w < 3 then
-		w = 3
-	end
-
-	if not self._focus then
-		w = 0
-		h = 0
-	end
-
-	caret:set_world_shape(x, y + 2, w, h - 4)
-	self:set_blinking(s == e and self._focus)
-	self._search.placeholder:set_visible(#text_s == 0)
+	self:set_blinking(blink)
 end

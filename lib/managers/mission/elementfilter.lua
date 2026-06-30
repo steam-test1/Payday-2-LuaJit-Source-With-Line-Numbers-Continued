@@ -38,22 +38,16 @@ function ElementFilter:on_executed(instigator)
 end
 
 local win32 = Idstring("WIN32")
-local ps3 = Idstring("PS3")
-local x360 = Idstring("X360")
 local ps4 = Idstring("PS4")
 local xb1 = Idstring("XB1")
 
--- Lines 42-63
+-- Lines 41-60
 function ElementFilter:_check_platform()
 	local platform = Global.running_simulation and Idstring(managers.editor:mission_platform())
 
-	platform = platform or SystemInfo:platform()
+	platform = platform or PLATFORM
 
 	if self._values.platform_win32 and (platform == win32 or platform == ps4 or platform == xb1) then
-		return true
-	end
-
-	if self._values.platform_ps3 and (platform == ps3 or platform == x360) then
 		return true
 	end
 
@@ -72,7 +66,7 @@ function ElementFilter:_check_platform()
 	return false
 end
 
--- Lines 65-94
+-- Lines 62-91
 function ElementFilter:_check_difficulty()
 	local diff = Global.game_settings and Global.game_settings.difficulty or "hard"
 
@@ -113,7 +107,7 @@ function ElementFilter:_check_difficulty()
 	return false
 end
 
--- Lines 96-115
+-- Lines 93-112
 function ElementFilter:_check_players()
 	local players = Global.running_simulation and managers.editor:mission_player()
 
@@ -142,7 +136,7 @@ function ElementFilter:_check_players()
 	return false
 end
 
--- Lines 118-132
+-- Lines 115-129
 function ElementFilter:_check_mode()
 	if self._values.mode_control == nil or self._values.mode_assault == nil then
 		return true

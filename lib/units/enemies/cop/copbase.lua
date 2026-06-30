@@ -599,7 +599,7 @@ function CopBase:melee_weapon()
 	return self._melee_weapon_table or self._char_tweak.melee_weapon or "weapon"
 end
 
--- Lines 651-663
+-- Lines 651-660
 function CopBase:pre_destroy(unit)
 	if alive(self._headwear_unit) then
 		self._headwear_unit:set_slot(0)
@@ -607,15 +607,12 @@ function CopBase:pre_destroy(unit)
 		self._headwear_unit = nil
 	end
 
-	unit:brain():pre_destroy(unit)
-	self._ext_movement:pre_destroy()
-	self._unit:inventory():pre_destroy()
 	UnitBase.pre_destroy(self, unit)
 
 	self._tweak_data_listener_holder = nil
 end
 
--- Lines 668-679
+-- Lines 665-676
 function CopBase:_refresh_buff_total(name)
 	local buff_list = self._buffs[name]
 	local sum = 0
@@ -631,13 +628,13 @@ function CopBase:_refresh_buff_total(name)
 	managers.network:session():send_to_peers_synched("sync_enemy_buff", self._unit, name, sync_value)
 end
 
--- Lines 681-684
+-- Lines 678-681
 function CopBase:_sync_buff_total(name, total)
 	self._buffs[name] = self._buffs[name] or {}
 	self._buffs[name]._total = total * 0.001
 end
 
--- Lines 686-707
+-- Lines 683-704
 function CopBase:add_buff(name, value)
 	if not Network:is_server() then
 		return
@@ -664,7 +661,7 @@ function CopBase:add_buff(name, value)
 	return id
 end
 
--- Lines 709-723
+-- Lines 706-720
 function CopBase:remove_buff_by_id(name, id)
 	if not Network:is_server() then
 		return
@@ -681,7 +678,7 @@ function CopBase:remove_buff_by_id(name, id)
 	self:_refresh_buff_total(name)
 end
 
--- Lines 725-736
+-- Lines 722-733
 function CopBase:get_total_buff(name)
 	local buff_list = self._buffs[name]
 
@@ -696,7 +693,7 @@ function CopBase:get_total_buff(name)
 	return 0
 end
 
--- Lines 742-749
+-- Lines 739-746
 function CopBase:add_tweak_data_changed_listener(key, clbk)
 	if not self._tweak_data_listener_holder then
 		self._tweak_data_listener_holder = ListenerHolder:new()
@@ -705,7 +702,7 @@ function CopBase:add_tweak_data_changed_listener(key, clbk)
 	self._tweak_data_listener_holder:add(key, clbk)
 end
 
--- Lines 751-764
+-- Lines 748-761
 function CopBase:remove_tweak_data_changed_listener(key)
 	if not self._tweak_data_listener_holder then
 		return
@@ -718,14 +715,14 @@ function CopBase:remove_tweak_data_changed_listener(key)
 	end
 end
 
--- Lines 766-770
+-- Lines 763-767
 function CopBase:_chk_call_tweak_data_changed_listeners(...)
 	if self._tweak_data_listener_holder then
 		self._tweak_data_listener_holder:call(...)
 	end
 end
 
--- Lines 774-812
+-- Lines 771-809
 function CopBase:change_char_tweak(new_tweak_name)
 	local new_tweak_data = tweak_data.character[new_tweak_name]
 
@@ -754,7 +751,7 @@ function CopBase:change_char_tweak(new_tweak_name)
 	self:_chk_call_tweak_data_changed_listeners(old_tweak_data, new_tweak_data)
 end
 
--- Lines 814-835
+-- Lines 811-832
 function CopBase:change_stats_name(new_stats_name)
 	if not new_stats_name or new_stats_name == self._stats_name then
 		return

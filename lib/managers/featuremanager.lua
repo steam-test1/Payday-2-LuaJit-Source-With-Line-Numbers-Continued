@@ -275,7 +275,7 @@ function FeatureManager:join_pd2_clan()
 
 	local button_list = {}
 
-	if SystemInfo:distribution() == Idstring("STEAM") then
+	if IS_STEAM then
 		local joining_pd2_clan_button = {}
 
 		joining_pd2_clan_button.text = managers.localization:text("dialog_join_pd2_clan")
@@ -392,7 +392,7 @@ function FeatureManager:short_heist()
 
 	-- Lines 396-403
 	local function yes_func()
-		if SystemInfo:distribution() == Idstring("STEAM") then
+		if IS_STEAM then
 			managers.statistics:publish_custom_stat_to_steam("info_playing_tutorial_yes")
 		end
 
@@ -402,7 +402,7 @@ function FeatureManager:short_heist()
 
 	-- Lines 405-409
 	local function no_func()
-		if SystemInfo:distribution() == Idstring("STEAM") then
+		if IS_STEAM then
 			managers.statistics:publish_custom_stat_to_steam("info_playing_tutorial_no")
 		end
 	end

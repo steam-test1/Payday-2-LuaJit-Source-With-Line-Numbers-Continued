@@ -3,7 +3,7 @@ core:import("CoreMissionScriptElement")
 
 ElementInstanceInput = ElementInstanceInput or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines 6-16
+-- Lines 8-16
 function ElementInstanceInput:init(...)
 	ElementInstanceInput.super.init(self, ...)
 
@@ -12,12 +12,7 @@ function ElementInstanceInput:init(...)
 	end
 end
 
--- Lines 18-20
-function ElementInstanceInput:client_on_executed(...)
-	return
-end
-
--- Lines 22-30
+-- Lines 19-25
 function ElementInstanceInput:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -28,22 +23,12 @@ end
 
 ElementInstanceOutput = ElementInstanceOutput or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines 36-40
-function ElementInstanceOutput:init(...)
-	ElementInstanceOutput.super.init(self, ...)
-end
-
--- Lines 42-45
+-- Lines 31-34
 function ElementInstanceOutput:on_created()
 	self._output_elements = managers.world_instance:get_registered_output_event_elements(self._values.instance_name, self._values.event)
 end
 
--- Lines 47-49
-function ElementInstanceOutput:client_on_executed(...)
-	return
-end
-
--- Lines 51-63
+-- Lines 37-49
 function ElementInstanceOutput:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -60,22 +45,7 @@ end
 
 ElementInstanceInputEvent = ElementInstanceInputEvent or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines 69-71
-function ElementInstanceInputEvent:init(...)
-	ElementInstanceInputEvent.super.init(self, ...)
-end
-
--- Lines 73-77
-function ElementInstanceInputEvent:on_created()
-	return
-end
-
--- Lines 79-81
-function ElementInstanceInputEvent:client_on_executed(...)
-	return
-end
-
--- Lines 83-108
+-- Lines 55-80
 function ElementInstanceInputEvent:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -106,7 +76,7 @@ end
 
 ElementInstanceOutputEvent = ElementInstanceOutputEvent or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines 114-126
+-- Lines 86-98
 function ElementInstanceOutputEvent:init(...)
 	ElementInstanceOutputEvent.super.init(self, ...)
 
@@ -121,12 +91,7 @@ function ElementInstanceOutputEvent:init(...)
 	end
 end
 
--- Lines 128-130
-function ElementInstanceOutputEvent:client_on_executed(...)
-	return
-end
-
--- Lines 132-140
+-- Lines 101-107
 function ElementInstanceOutputEvent:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -137,12 +102,12 @@ end
 
 ElementInstancePoint = ElementInstancePoint or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines 146-148
+-- Lines 113-115
 function ElementInstancePoint:client_on_executed(...)
 	return
 end
 
--- Lines 150-159
+-- Lines 118-126
 function ElementInstancePoint:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -152,9 +117,13 @@ function ElementInstancePoint:on_executed(instigator)
 	ElementInstancePoint.super.on_executed(self, instigator)
 end
 
--- Lines 161-174
+-- Lines 129-157
 function ElementInstancePoint:_create()
 	if self._has_created then
+		if Application:editor() then
+			managers.editor:output_error("[ElementInstancePoint:_create()] Attempted to double-spawn a spawned instance [" .. self._editor_name .. "]")
+		end
+
 		return
 	end
 
@@ -165,21 +134,23 @@ function ElementInstancePoint:_create()
 	end
 
 	if self._values.instance then
+		local pos, rot = self:get_orientation()
+
 		managers.world_instance:custom_create_instance(self._values.instance, {
-			position = self._values.position,
-			rotation = self._values.rotation
+			position = pos,
+			rotation = rot
 		})
 	elseif Application:editor() then
 		managers.editor:output_error("[ElementInstancePoint:_create()] No instance defined in [" .. self._editor_name .. "]")
 	end
 end
 
--- Lines 177-179
+-- Lines 160-166
 function ElementInstancePoint:save(data)
 	data.has_created = self._has_created
 end
 
--- Lines 181-185
+-- Lines 169-177
 function ElementInstancePoint:load(data)
 	if data.has_created then
 		self:_create()
@@ -189,7 +160,7 @@ end
 ElementInstanceParams = ElementInstanceParams or class(CoreMissionScriptElement.MissionScriptElement)
 ElementInstanceSetParams = ElementInstanceSetParams or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines 196-202
+-- Lines 186-192
 function ElementInstanceSetParams:init(...)
 	ElementInstanceOutputEvent.super.init(self, ...)
 
@@ -198,12 +169,12 @@ function ElementInstanceSetParams:init(...)
 	end
 end
 
--- Lines 204-206
+-- Lines 195-197
 function ElementInstanceSetParams:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines 208-214
+-- Lines 200-206
 function ElementInstanceSetParams:_apply_instance_params()
 	if self._values.instance then
 		managers.world_instance:set_instance_params(self._values.instance, self._values.params)
@@ -212,7 +183,7 @@ function ElementInstanceSetParams:_apply_instance_params()
 	end
 end
 
--- Lines 216-227
+-- Lines 209-220
 function ElementInstanceSetParams:on_executed(instigator)
 	if not self._values.enabled then
 		return

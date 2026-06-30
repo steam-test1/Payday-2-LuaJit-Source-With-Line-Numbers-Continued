@@ -2679,7 +2679,8 @@ function AchievementsTweakData:init(tweak_data)
 		jordan_3 = {
 			award = "brooklyn_3",
 			memory = {
-				is_shortterm = false
+				is_shortterm = false,
+				value = nil
 			}
 		},
 		jordan_4 = {
@@ -4756,7 +4757,8 @@ function AchievementsTweakData:init(tweak_data)
 			award = "cac_4",
 			loud = true,
 			memory = {
-				is_shortterm = false
+				is_shortterm = false,
+				value = nil
 			}
 		},
 		cac_5 = {
@@ -5750,7 +5752,8 @@ function AchievementsTweakData:init(tweak_data)
 			job = "alex",
 			need_full_job = true,
 			memory = {
-				is_shortterm = false
+				is_shortterm = false,
+				value = nil
 			}
 		},
 		challenge_crime_spree = {
@@ -6088,7 +6091,8 @@ function AchievementsTweakData:init(tweak_data)
 				"MutatorFriendlyFire"
 			},
 			memory = {
-				is_shortterm = false
+				is_shortterm = false,
+				value = nil
 			}
 		},
 		trophy_defender = {
@@ -6176,7 +6180,8 @@ function AchievementsTweakData:init(tweak_data)
 				}
 			},
 			memory = {
-				is_shortterm = true
+				is_shortterm = true,
+				value = nil
 			}
 		},
 		daily_spacetime = {
@@ -6232,7 +6237,8 @@ function AchievementsTweakData:init(tweak_data)
 				armor = "level_7"
 			},
 			memory = {
-				is_shortterm = true
+				is_shortterm = true,
+				value = nil
 			}
 		},
 		daily_akimbo = {
@@ -8561,7 +8567,7 @@ function AchievementsTweakData:init(tweak_data)
 		}
 	}
 
-	if SystemInfo:platform() == Idstring("PS4") or SystemInfo:platform() == Idstring("XB1") then
+	if IS_PS4 or IS_XB1 then
 		self.weapon_part_tracker = {}
 	end
 

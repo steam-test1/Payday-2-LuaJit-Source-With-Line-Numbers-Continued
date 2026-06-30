@@ -6,7 +6,7 @@ local massive_font_size = tweak_data.menu.pd2_massive_font_size
 local large_font_size = tweak_data.menu.pd2_large_font_size
 local medium_font_size = tweak_data.menu.pd2_medium_font_size
 local small_font_size = tweak_data.menu.pd2_small_font_size
-local IS_WIN_32 = SystemInfo:platform() == Idstring("WIN32")
+local IS_WIN_32 = IS_PC
 local NOT_WIN_32 = not IS_WIN_32
 local TOP_ADJUSTMENT = NOT_WIN_32 and 55 or 55
 local BOT_ADJUSTMENT = NOT_WIN_32 and 60 or 60
@@ -43,40 +43,45 @@ function MenuGuiComponentGeneric:init(ws, fullscreen_ws, node)
 	self:set_layer(10)
 end
 
--- Lines 48-51
+-- Lines 49-51
+function MenuGuiComponentGeneric:allow_input()
+	return true
+end
+
+-- Lines 53-56
 function MenuGuiComponentGeneric:close()
 	self._ws:panel():remove(self._panel)
 	self._fullscreen_ws:panel():remove(self._fullscreen_panel)
 end
 
--- Lines 53-55
+-- Lines 58-60
 function MenuGuiComponentGeneric:event_listener()
 	return self._event_listener
 end
 
--- Lines 57-59
+-- Lines 62-64
 function MenuGuiComponentGeneric:call_refresh()
 	self._event_listener:call("refresh")
 end
 
--- Lines 61-63
+-- Lines 66-68
 function MenuGuiComponentGeneric:_on_refresh_event()
 	self:refresh()
 end
 
--- Lines 65-69
+-- Lines 70-74
 function MenuGuiComponentGeneric:set_layer(layer)
 	if alive(self._panel) then
 		self._panel:set_layer(self._init_layer + layer)
 	end
 end
 
--- Lines 73-75
+-- Lines 78-80
 function MenuGuiComponentGeneric:populate_tabs_data(tabs_data)
 	return
 end
 
--- Lines 77-81
+-- Lines 82-86
 function MenuGuiComponentGeneric:_start_page_data()
 	local data = {}
 
@@ -85,22 +90,22 @@ function MenuGuiComponentGeneric:_start_page_data()
 	return data
 end
 
--- Lines 85-87
+-- Lines 90-92
 function MenuGuiComponentGeneric:tabs_panel()
 	return self._tabs_panel
 end
 
--- Lines 89-91
+-- Lines 94-96
 function MenuGuiComponentGeneric:page_panel()
 	return self._page_panel
 end
 
--- Lines 93-95
+-- Lines 98-100
 function MenuGuiComponentGeneric:info_panel()
 	return self._info_panel
 end
 
--- Lines 97-129
+-- Lines 102-134
 function MenuGuiComponentGeneric:_setup(is_start_page, component_data)
 	self._data = component_data or self:_start_page_data()
 
@@ -136,12 +141,12 @@ function MenuGuiComponentGeneric:_setup(is_start_page, component_data)
 	self:set_active_page(1)
 end
 
--- Lines 131-132
+-- Lines 136-137
 function MenuGuiComponentGeneric:_setup_panel_size()
 	return
 end
 
--- Lines 134-177
+-- Lines 139-182
 function MenuGuiComponentGeneric:_add_page_title()
 	if alive(self._panel:child("title_text")) then
 		self._panel:remove(self._panel:child("title_text"))
@@ -186,7 +191,7 @@ function MenuGuiComponentGeneric:_add_page_title()
 	end
 end
 
--- Lines 179-215
+-- Lines 184-220
 function MenuGuiComponentGeneric:_add_back_button()
 	self._panel:text({
 		align = "right",
@@ -224,7 +229,7 @@ function MenuGuiComponentGeneric:_add_back_button()
 	end
 end
 
--- Lines 217-235
+-- Lines 222-240
 function MenuGuiComponentGeneric:_blur_background()
 	local black_rect = self._fullscreen_panel:rect({
 		layer = 1,
@@ -238,7 +243,7 @@ function MenuGuiComponentGeneric:_blur_background()
 		h = self._fullscreen_ws:panel():h()
 	})
 
-	-- Lines 230-232
+	-- Lines 235-237
 	local function func(o)
 		over(0.6, function(p)
 			o:set_alpha(p)
@@ -248,7 +253,7 @@ function MenuGuiComponentGeneric:_blur_background()
 	blur:animate(func)
 end
 
--- Lines 237-287
+-- Lines 242-292
 function MenuGuiComponentGeneric:_add_panels()
 	local h = self._panel:h() - TOP_ADJUSTMENT - PAGE_TAB_H
 
@@ -306,7 +311,7 @@ function MenuGuiComponentGeneric:_add_panels()
 	end
 end
 
--- Lines 289-336
+-- Lines 294-341
 function MenuGuiComponentGeneric:_add_tabs()
 	local tab_x = 0
 	local bumper_offsets = 7
@@ -367,7 +372,7 @@ function MenuGuiComponentGeneric:_add_tabs()
 	end
 end
 
--- Lines 338-363
+-- Lines 343-368
 function MenuGuiComponentGeneric:_add_legend()
 	if not managers.menu:is_pc_controller() then
 		self._legends_panel = self._panel:panel({
@@ -391,7 +396,7 @@ function MenuGuiComponentGeneric:_add_legend()
 	end
 end
 
--- Lines 365-422
+-- Lines 370-427
 function MenuGuiComponentGeneric:set_active_page(new_index, play_sound)
 	if new_index == self._active_page or new_index <= 0 or new_index > #self._tabs then
 		return false
@@ -465,7 +470,7 @@ function MenuGuiComponentGeneric:set_active_page(new_index, play_sound)
 	return true
 end
 
--- Lines 424-468
+-- Lines 429-473
 function MenuGuiComponentGeneric:update_legend()
 	if not managers.menu:is_pc_controller() then
 		local legend_items = {}
@@ -527,14 +532,14 @@ function MenuGuiComponentGeneric:update_legend()
 	end
 end
 
--- Lines 472-476
+-- Lines 477-481
 function MenuGuiComponentGeneric:update(t, dt)
 	if self._selected_page then
 		return self._selected_page:update(t, dt)
 	end
 end
 
--- Lines 478-501
+-- Lines 483-506
 function MenuGuiComponentGeneric:mouse_clicked(o, button, x, y)
 	if not self._panel then
 		return
@@ -561,35 +566,35 @@ function MenuGuiComponentGeneric:mouse_clicked(o, button, x, y)
 	end
 end
 
--- Lines 503-507
+-- Lines 508-512
 function MenuGuiComponentGeneric:mouse_pressed(button, x, y)
 	if self._selected_page then
 		return self._selected_page:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines 509-513
+-- Lines 514-518
 function MenuGuiComponentGeneric:mouse_released(button, x, y)
 	if self._selected_page then
 		return self._selected_page:mouse_released(button, x, y)
 	end
 end
 
--- Lines 515-519
+-- Lines 520-524
 function MenuGuiComponentGeneric:mouse_wheel_up(x, y)
 	if self._selected_page then
 		return self._selected_page:mouse_wheel_up(x, y)
 	end
 end
 
--- Lines 521-525
+-- Lines 526-530
 function MenuGuiComponentGeneric:mouse_wheel_down(x, y)
 	if self._selected_page then
 		return self._selected_page:mouse_wheel_down(x, y)
 	end
 end
 
--- Lines 528-551
+-- Lines 533-556
 function MenuGuiComponentGeneric:mouse_moved(button, x, y)
 	if managers.menu_scene and managers.menu_scene:input_focus() then
 		return false
@@ -615,68 +620,68 @@ function MenuGuiComponentGeneric:mouse_moved(button, x, y)
 	return used, pointer
 end
 
--- Lines 553-555
+-- Lines 558-560
 function MenuGuiComponentGeneric:input_focus()
 	return 1
 end
 
--- Lines 557-561
+-- Lines 562-566
 function MenuGuiComponentGeneric:move_up()
 	if self._selected_page then
 		return self._selected_page:move_up()
 	end
 end
 
--- Lines 563-567
+-- Lines 568-572
 function MenuGuiComponentGeneric:move_down()
 	if self._selected_page then
 		return self._selected_page:move_down()
 	end
 end
 
--- Lines 569-573
+-- Lines 574-578
 function MenuGuiComponentGeneric:move_left()
 	if self._selected_page then
 		return self._selected_page:move_left()
 	end
 end
 
--- Lines 575-579
+-- Lines 580-584
 function MenuGuiComponentGeneric:move_right()
 	if self._selected_page then
 		return self._selected_page:move_right()
 	end
 end
 
--- Lines 581-585
+-- Lines 586-590
 function MenuGuiComponentGeneric:next_page()
 	if self._active_page ~= nil then
 		return self:set_active_page(self._active_page + 1)
 	end
 end
 
--- Lines 587-591
+-- Lines 592-596
 function MenuGuiComponentGeneric:previous_page()
 	if self._active_page ~= nil then
 		return self:set_active_page(self._active_page - 1)
 	end
 end
 
--- Lines 593-597
+-- Lines 598-602
 function MenuGuiComponentGeneric:confirm_pressed()
 	if self._selected_page then
 		return self._selected_page:confirm_pressed()
 	end
 end
 
--- Lines 599-603
+-- Lines 604-608
 function MenuGuiComponentGeneric:special_btn_pressed(button)
 	if self._selected_page then
 		self._selected_page:special_btn_pressed(button)
 	end
 end
 
--- Lines 607-625
+-- Lines 612-630
 function MenuGuiComponentGeneric:update_back_button_hover(button, x, y)
 	if not self._panel or not self._panel:child("back_button") then
 		return
@@ -698,7 +703,7 @@ function MenuGuiComponentGeneric:update_back_button_hover(button, x, y)
 	end
 end
 
--- Lines 627-652
+-- Lines 632-657
 function MenuGuiComponentGeneric:update_tabs_hover(button, x, y)
 	if not self._tabs or #self._tabs < 2 then
 		return
@@ -725,7 +730,7 @@ function MenuGuiComponentGeneric:update_tabs_hover(button, x, y)
 	end
 end
 
--- Lines 654-667
+-- Lines 659-672
 function MenuGuiComponentGeneric:update_pages_hover(button, x, y)
 	if not self._tabs then
 		return

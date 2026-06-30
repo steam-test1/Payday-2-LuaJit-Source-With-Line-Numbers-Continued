@@ -381,7 +381,7 @@ function LaserTriggerUnitElement:_check_remove_index(index)
 	end
 end
 
--- Lines 293-316
+-- Lines 293-308
 function LaserTriggerUnitElement:_check_remove_connection(i1, i2)
 	for i, connection in ipairs(clone(self._hed.connections)) do
 		if connection.from == i1 and connection.to == i2 or connection.from == i2 and connection.to == i1 then
@@ -399,7 +399,7 @@ function LaserTriggerUnitElement:_check_remove_connection(i1, i2)
 	return false
 end
 
--- Lines 319-326
+-- Lines 311-318
 function LaserTriggerUnitElement:add_triggers(vc)
 	LaserTriggerUnitElement.super.add_triggers(self, vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "_lmb"))
@@ -408,7 +408,7 @@ function LaserTriggerUnitElement:add_triggers(vc)
 	vc:add_release_trigger(Idstring("emb"), callback(self, self, "_release_emb"))
 end
 
--- Lines 328-338
+-- Lines 320-330
 function LaserTriggerUnitElement:_on_clicked_connections_box()
 	print("LaserTriggerUnitElement:_on_clicked_connections_box()")
 
@@ -425,7 +425,7 @@ function LaserTriggerUnitElement:_on_clicked_connections_box()
 	self._selected_connection = tonumber(self._connections_box:get_string(selected_index))
 end
 
--- Lines 340-345
+-- Lines 332-337
 function LaserTriggerUnitElement:_fill_connections_box()
 	self._connections_box:clear()
 
@@ -434,7 +434,7 @@ function LaserTriggerUnitElement:_fill_connections_box()
 	end
 end
 
--- Lines 347-358
+-- Lines 339-350
 function LaserTriggerUnitElement:_move_connection_up()
 	print("LaserTriggerUnitElement:_move_connection_up()")
 
@@ -450,7 +450,7 @@ function LaserTriggerUnitElement:_move_connection_up()
 	self:_on_clicked_connections_box()
 end
 
--- Lines 360-371
+-- Lines 352-363
 function LaserTriggerUnitElement:_move_connection_down()
 	print("LaserTriggerUnitElement:_move_connection_down()")
 
@@ -466,7 +466,27 @@ function LaserTriggerUnitElement:_move_connection_down()
 	self:_on_clicked_connections_box()
 end
 
--- Lines 373-378
+-- Lines 365-381
+function LaserTriggerUnitElement:_delete_connection()
+	print("LaserTriggerUnitElement:_delete_connection()")
+
+	if not self._selected_connection then
+		return
+	end
+
+	local selected_index = self._connections_box:selected_index()
+
+	if selected_index then
+		table.remove(self._hed.connections, selected_index + 1)
+		self:_fill_connections_box()
+
+		if self._selected_connection and self._selected_connection == selected_index then
+			self._selected_connection = nil
+		end
+	end
+end
+
+-- Lines 383-388
 function LaserTriggerUnitElement:set_element_data(params, ...)
 	LaserTriggerUnitElement.super.set_element_data(self, params, ...)
 
@@ -475,7 +495,7 @@ function LaserTriggerUnitElement:set_element_data(params, ...)
 	end
 end
 
--- Lines 381-437
+-- Lines 391-450
 function LaserTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -522,10 +542,12 @@ function LaserTriggerUnitElement:_build_panel(panel, panel_sizer)
 
 	local toolbar = EWS:ToolBar(panel, "", "TB_FLAT,TB_NODIVIDER,TB_VERTICAL")
 
-	toolbar:add_tool("MOVE_UP", "Move up", CoreEws.image_path("world_editor\\unit_by_name_list.png"), nil)
+	toolbar:add_tool("MOVE_UP", "Move up", CoreEws.image_path("toolbar\\up_16x16.png"), nil)
 	toolbar:connect("MOVE_UP", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_move_connection_up"), nil)
-	toolbar:add_tool("MOVE_DOWN", "Move down", CoreEws.image_path("toolbar\\delete_16x16.png"), nil)
+	toolbar:add_tool("MOVE_DOWN", "Move down", CoreEws.image_path("toolbar\\down_16x16.png"), nil)
 	toolbar:connect("MOVE_DOWN", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_move_connection_down"), nil)
+	toolbar:add_tool("DELETE_SELECTED", "Remove selected connection", CoreEws.image_path("toolbar\\delete_16x16.png"), nil)
+	toolbar:connect("DELETE_SELECTED", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_delete_connection"), nil)
 	toolbar:realize()
 	connections_sizer:add(toolbar, 0, 1, "EXPAND,LEFT,ALIGN_RIGHT")
 
@@ -540,7 +562,7 @@ function LaserTriggerUnitElement:_build_panel(panel, panel_sizer)
 	self:_fill_connections_box()
 end
 
--- Lines 439-447
+-- Lines 452-460
 function LaserTriggerUnitElement:add_to_mission_package()
 	local unit_name = self._dummy_unit_name
 

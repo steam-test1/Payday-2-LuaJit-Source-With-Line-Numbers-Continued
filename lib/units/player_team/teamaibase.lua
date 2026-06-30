@@ -31,24 +31,20 @@ function TeamAIBase:arrest_settings()
 	return tweak_data.character[self._tweak_table].arrest
 end
 
--- Lines 41-53
+-- Lines 41-49
 function TeamAIBase:pre_destroy(unit)
 	self:remove_upgrades()
 	self:unregister()
 	UnitBase.pre_destroy(self, unit)
-	unit:brain():pre_destroy(unit)
-	unit:movement():pre_destroy()
-	unit:inventory():pre_destroy(unit)
-	unit:character_damage():pre_destroy()
 end
 
--- Lines 58-76
+-- Lines 54-72
 function TeamAIBase:set_loadout(loadout)
 	if self._loadout then
 		self:remove_upgrades()
 	end
 
-	-- Lines 63-69
+	-- Lines 59-65
 	local function aquire(item)
 		local definition = tweak_data.upgrades.crew_skill_definitions[item] or {
 			upgrades = item and {
@@ -74,10 +70,10 @@ function TeamAIBase:set_loadout(loadout)
 	self._loadout = loadout
 end
 
--- Lines 81-96
+-- Lines 77-92
 function TeamAIBase:remove_upgrades()
 	if self._loadout then
-		-- Lines 83-89
+		-- Lines 79-85
 		local function unaquire(item)
 			local definition = tweak_data.upgrades.crew_skill_definitions[item] or {
 				upgrades = item and {
@@ -104,7 +100,7 @@ function TeamAIBase:remove_upgrades()
 	end
 end
 
--- Lines 100-111
+-- Lines 96-107
 function TeamAIBase:save(data)
 	local character = managers.criminals:character_by_unit(self._unit)
 	local visual_seed = character and character.visual_state and character.visual_state.visual_seed
@@ -116,14 +112,14 @@ function TeamAIBase:save(data)
 	}
 end
 
--- Lines 115-119
+-- Lines 111-115
 function TeamAIBase:on_death_exit()
 	TeamAIBase.super.on_death_exit(self)
 	self:unregister()
 	self:set_slot(self._unit, 0)
 end
 
--- Lines 123-128
+-- Lines 119-124
 function TeamAIBase:_register()
 	if not self._registered then
 		managers.groupai:state():register_criminal(self._unit)
@@ -132,7 +128,7 @@ function TeamAIBase:_register()
 	end
 end
 
--- Lines 132-143
+-- Lines 128-139
 function TeamAIBase:unregister()
 	if self._registered then
 		if Network:is_server() then
@@ -148,7 +144,7 @@ function TeamAIBase:unregister()
 	end
 end
 
--- Lines 147-149
+-- Lines 143-145
 function TeamAIBase:character_name()
 	return managers.criminals:character_name_by_unit(self._unit)
 end

@@ -9,7 +9,7 @@ SequenceManager = SequenceManager or class()
 SequenceManager.GLOBAL_CORE_SEQUENCE_PATH = "core/settings/core_sequence_manager"
 SequenceManager.GLOBAL_SEQUENCE_PATH = "settings/sequence_manager"
 SequenceManager.SEQUENCE_FILE_EXTENSION = "sequence_manager"
-SequenceManager.IDS_UNIT = Idstring("unit")
+SequenceManager.IDS_UNIT = IDS_UNIT
 
 -- Lines 16-126
 function SequenceManager:init(area_damage_mask, target_world_mask, beings_mask)
@@ -794,12 +794,11 @@ function SequenceManager:remove(unit_name)
 	return unit_element ~= nil
 end
 
--- Lines 734-798
+-- Lines 734-797
 function SequenceManager:verify_material_configs(skip_unit_map, processed_unit_map, processed_unit_list)
 	local index_file = DB:open("index", "indices/types/unit")
 	local unit_list_string = index_file:read()
 	local unit_list = string.split(unit_list_string, "[\r\n]")
-	local unit_id = Idstring("unit")
 	local assets_path = Application:base_path() .. "../../assets/"
 
 	assets_path = managers.debug and managers.debug.macro:get_cleaned_path(assets_path) or assets_path
@@ -865,7 +864,7 @@ function SequenceManager:verify_material_configs(skip_unit_map, processed_unit_m
 	cat_print("debug", "Done")
 end
 
--- Lines 800-828
+-- Lines 799-827
 function SequenceManager:_verify_material_configs(data, material_config_map, material_group, sequence_file_name)
 	for _, sub_data in ipairs(data) do
 		if sub_data._meta == "material_config" then
@@ -897,7 +896,7 @@ function SequenceManager:_verify_material_configs(data, material_config_map, mat
 	end
 end
 
--- Lines 830-848
+-- Lines 829-847
 function SequenceManager:test_unit_by_name(unit_name, pos, rot)
 	local pos = pos or Vector3(math.random(-5000, 5000), math.random(-5000, 5000), math.random(-5000, 5000))
 	local rot = rot or Rotation()
@@ -918,7 +917,7 @@ function SequenceManager:test_unit_by_name(unit_name, pos, rot)
 	end
 end
 
--- Lines 850-874
+-- Lines 849-873
 function SequenceManager:test_unit_variations(unit)
 	if alive(unit) and unit:damage() then
 		local unit_element = self._unit_elements[unit:name():key()]
@@ -956,7 +955,7 @@ function SequenceManager:test_unit_variations(unit)
 	end
 end
 
--- Lines 876-904
+-- Lines 875-903
 function SequenceManager:test_unit_damage(unit)
 	if alive(unit) and unit:damage() then
 		local unit_element = self._unit_elements[unit:name():key()]
@@ -991,12 +990,12 @@ function SequenceManager:test_unit_damage(unit)
 	end
 end
 
--- Lines 906-908
+-- Lines 905-907
 function SequenceManager:load_element_data(unit, element_name, data)
 	self._event_element_class_map[element_name].load(unit, data)
 end
 
--- Lines 910-949
+-- Lines 909-948
 function SequenceManager:save(data)
 	local state = {}
 	local changed = self:save_global_save_data(state)
@@ -1037,7 +1036,7 @@ function SequenceManager:save(data)
 	end
 end
 
--- Lines 951-981
+-- Lines 950-980
 function SequenceManager:load(data)
 	local state = data.CoreSequenceManager
 
@@ -1070,7 +1069,7 @@ function SequenceManager:load(data)
 	end
 end
 
--- Lines 983-992
+-- Lines 982-991
 function SequenceManager:save_global_save_data(data)
 	if next(SequenceEnvironment.g_save_data) then
 		local state = {}
@@ -1084,7 +1083,7 @@ function SequenceManager:save_global_save_data(data)
 	end
 end
 
--- Lines 994-1000
+-- Lines 993-999
 function SequenceManager:load_global_save_data(data)
 	local state = data.SequenceEnvironment
 
@@ -1093,12 +1092,12 @@ function SequenceManager:load_global_save_data(data)
 	end
 end
 
--- Lines 1002-1004
+-- Lines 1001-1003
 function SequenceManager:safe_save_map(map)
 	return self:_safe_save_map(map, {})
 end
 
--- Lines 1006-1049
+-- Lines 1005-1048
 function SequenceManager:_safe_save_map(map, visited_map)
 	local state = {}
 
@@ -1148,7 +1147,7 @@ function SequenceManager:_safe_save_map(map, visited_map)
 	return state
 end
 
--- Lines 1051-1065
+-- Lines 1050-1064
 function SequenceManager:safe_load_map(data_map)
 	data_map = table.deep_map_copy(data_map)
 
@@ -1166,7 +1165,7 @@ function SequenceManager:safe_load_map(data_map)
 	return data_map
 end
 
--- Lines 1067-1090
+-- Lines 1066-1089
 function SequenceManager:_safe_load_map_done(data_map)
 	local env = data_map.env
 
@@ -1195,7 +1194,7 @@ function SequenceManager:_safe_load_map_done(data_map)
 	end
 end
 
--- Lines 1092-1115
+-- Lines 1091-1114
 function SequenceManager:_safe_load_map(state, wait_unit_load_map, done_callback_func, visited_map)
 	if visited_map[state] then
 		return
@@ -1231,7 +1230,7 @@ function SequenceManager:_safe_load_map(state, wait_unit_load_map, done_callback
 	end
 end
 
--- Lines 1117-1124
+-- Lines 1116-1123
 function SequenceManager:_on_load_unit_done_callback(data, unit)
 	data.state[data.key] = unit
 
@@ -1242,7 +1241,7 @@ function SequenceManager:_on_load_unit_done_callback(data, unit)
 	end
 end
 
--- Lines 1126-1132
+-- Lines 1125-1131
 function SequenceManager:_count_down_wait_unit_load_map(wait_unit_load_map, id)
 	wait_unit_load_map[id] = wait_unit_load_map[id] - 1
 
@@ -1251,7 +1250,7 @@ function SequenceManager:_count_down_wait_unit_load_map(wait_unit_load_map, id)
 	end
 end
 
--- Lines 1134-1153
+-- Lines 1133-1152
 function SequenceManager:internal_load()
 	if DB:has(self.SEQUENCE_FILE_EXTENSION, self.GLOBAL_CORE_SEQUENCE_PATH) then
 		local core_data = PackageManager:script_data(self.SEQUENCE_FILE_EXTENSION:id(), self.GLOBAL_CORE_SEQUENCE_PATH:id())
@@ -1277,7 +1276,7 @@ function SequenceManager:internal_load()
 	SequenceEnvironment:init_static_env()
 end
 
--- Lines 1156-1160
+-- Lines 1155-1159
 function SequenceManager:add_area_damage_callback(func)
 	self._last_area_damage_callback_id = self._last_area_damage_callback_id + 1
 	self._area_damage_callback_map[self._last_area_damage_callback_id] = func
@@ -1285,12 +1284,12 @@ function SequenceManager:add_area_damage_callback(func)
 	return self._last_area_damage_callback_id
 end
 
--- Lines 1162-1164
+-- Lines 1161-1163
 function SequenceManager:remove_area_damage_callback(id)
 	self._area_damage_callback_map[id] = nil
 end
 
--- Lines 1166-1285
+-- Lines 1165-1284
 function SequenceManager:do_area_damage(damage_type, attack_unit, pos, range, constant_damage, damage, physic_effect, mass, ignore_unit, direct_attack_unit, ignore_mask, get_damage_func, velocity)
 	local checked_unit_map = {}
 	local damaged_prop_map = {}
@@ -1414,12 +1413,12 @@ function SequenceManager:do_area_damage(damage_type, attack_unit, pos, range, co
 	return killed_being_map, damaged_being_map, killed_prop_map, damaged_prop_map, hit_being_map, hit_prop_map
 end
 
--- Lines 1287-1289
+-- Lines 1286-1288
 function SequenceManager:do_area_damage_on_body(unit, body, body_extension, damage_type, attack_unit, normal, pos, dir, body_damage, velocity, ignore_unit, direct_attack_unit)
 	return body_extension:damage_by_area(damage_type, attack_unit, normal, pos, dir, body_damage, velocity or Vector3())
 end
 
--- Lines 1291-1296
+-- Lines 1290-1295
 function SequenceManager:do_area_damage_on_unit(unit, body, unit_extension, damage_type, attack_unit, normal, pos, dir, body_damage, velocity, ignore_unit, direct_attack_unit)
 	unit_extension:set_direct_attack_unit(direct_attack_unit)
 
@@ -1432,7 +1431,7 @@ function SequenceManager:do_area_damage_on_unit(unit, body, unit_extension, dama
 	return unpack(return_param_list)
 end
 
--- Lines 1298-1322
+-- Lines 1297-1321
 function SequenceManager:is_hit_by_area_damage(dest_unit, position, ray_caller, ignore_unit)
 	local ray
 	local had_target_object = false
@@ -1465,22 +1464,22 @@ function SequenceManager:is_hit_by_area_damage(dest_unit, position, ray_caller, 
 	return false
 end
 
--- Lines 1324-1326
+-- Lines 1323-1325
 function SequenceManager:get_editable_state_sequence_list(unit_name)
 	return self:get_sequence_list(unit_name, "editable_state", true)
 end
 
--- Lines 1328-1330
+-- Lines 1327-1329
 function SequenceManager:get_reset_editable_state_sequence_list(unit_name)
 	return self:get_sequence_list(unit_name, "reset_editable_state", true)
 end
 
--- Lines 1332-1334
+-- Lines 1331-1333
 function SequenceManager:get_triggable_sequence_list(unit_name)
 	return self:get_sequence_list(unit_name, "triggable", true)
 end
 
--- Lines 1336-1344
+-- Lines 1335-1343
 function SequenceManager:get_trigger_list(unit_name)
 	local unit_element = self:get(unit_name, true)
 
@@ -1491,7 +1490,7 @@ function SequenceManager:get_trigger_list(unit_name)
 	end
 end
 
--- Lines 1346-1354
+-- Lines 1345-1353
 function SequenceManager:get_trigger_map(unit_name)
 	local unit_element = self:get(unit_name, true)
 
@@ -1502,7 +1501,7 @@ function SequenceManager:get_trigger_map(unit_name)
 	end
 end
 
--- Lines 1356-1369
+-- Lines 1355-1368
 function SequenceManager:get_sequence_list(unit_name, property_name, property_value)
 	local sequence_list = {}
 	local unit_element = self:get(unit_name, true)
@@ -1518,7 +1517,7 @@ function SequenceManager:get_sequence_list(unit_name, property_name, property_va
 	return sequence_list
 end
 
--- Lines 1371-1379
+-- Lines 1370-1378
 function SequenceManager:has_sequence_name(unit_name, sequence_name, ignore_error)
 	local unit_element = self:get(unit_name, ignore_error)
 
@@ -1529,7 +1528,7 @@ function SequenceManager:has_sequence_name(unit_name, sequence_name, ignore_erro
 	return false
 end
 
--- Lines 1381-1389
+-- Lines 1380-1388
 function SequenceManager:get_unit_count()
 	local count = 0
 
@@ -1540,7 +1539,7 @@ function SequenceManager:get_unit_count()
 	return count
 end
 
--- Lines 1391-1405
+-- Lines 1390-1404
 function SequenceManager.set_effect_spawner_enabled(effect_spawner, enabled)
 	if enabled then
 		effect_spawner:activate()
@@ -1573,7 +1572,7 @@ SequenceEnvironment.string = string
 SequenceEnvironment.stack_dump = Application.stack_dump
 SequenceEnvironment.Idstring = Idstring
 
--- Lines 1425-1448
+-- Lines 1424-1447
 function SequenceEnvironment:init(endurance_type, source_unit, dest_unit, dest_body, dest_normal, position, direction, damage, velocity, params, unit_element, damage_ext)
 	self.damage_type = endurance_type
 	self.src_unit = source_unit
@@ -1601,7 +1600,7 @@ function SequenceEnvironment:init(endurance_type, source_unit, dest_unit, dest_b
 	end
 end
 
--- Lines 1450-1475
+-- Lines 1449-1474
 function SequenceEnvironment:init_static_env()
 	self.damage_type = "init"
 	self.src_unit = nil
@@ -1631,52 +1630,52 @@ function SequenceEnvironment:init_static_env()
 	self.dest_unit = nil
 end
 
--- Lines 1477-1479
+-- Lines 1476-1478
 function SequenceEnvironment.src_unit_unit()
 	return SequenceEnvironment.self.src_unit
 end
 
--- Lines 1481-1483
+-- Lines 1480-1482
 function SequenceEnvironment.src_unit_pos()
 	return SequenceEnvironment.self.src_unit:position()
 end
 
--- Lines 1485-1487
+-- Lines 1484-1486
 function SequenceEnvironment.src_unit_rot()
 	return SequenceEnvironment.self.src_unit:rotation()
 end
 
--- Lines 1489-1491
+-- Lines 1488-1490
 function SequenceEnvironment.dest_unit_pos()
 	return SequenceEnvironment.self.dest_unit:position()
 end
 
--- Lines 1493-1495
+-- Lines 1492-1494
 function SequenceEnvironment.dest_unit_rot()
 	return SequenceEnvironment.self.dest_unit:rotation()
 end
 
--- Lines 1497-1499
+-- Lines 1496-1498
 function SequenceEnvironment.dest_body_pos()
 	return SequenceEnvironment.self.dest_body:position()
 end
 
--- Lines 1501-1503
+-- Lines 1500-1502
 function SequenceEnvironment.dest_body_rot()
 	return SequenceEnvironment.self.dest_body:rotation()
 end
 
--- Lines 1505-1507
+-- Lines 1504-1506
 function SequenceEnvironment.object(object_name)
 	return object_name and SequenceEnvironment.self.dest_unit:get_object(object_name:id())
 end
 
--- Lines 1509-1511
+-- Lines 1508-1510
 function SequenceEnvironment.body(body_name)
 	return body_name and SequenceEnvironment.self.dest_unit:body(body_name)
 end
 
--- Lines 1513-1521
+-- Lines 1512-1520
 function SequenceEnvironment.object_pos(object_name)
 	local obj = object_name and SequenceEnvironment.self.dest_unit:get_object(object_name:id())
 
@@ -1689,7 +1688,7 @@ function SequenceEnvironment.object_pos(object_name)
 	end
 end
 
--- Lines 1523-1531
+-- Lines 1522-1530
 function SequenceEnvironment.object_rot(object_name)
 	local obj = object_name and SequenceEnvironment.self.dest_unit:get_object(object_name:id())
 
@@ -1702,7 +1701,7 @@ function SequenceEnvironment.object_rot(object_name)
 	end
 end
 
--- Lines 1533-1541
+-- Lines 1532-1540
 function SequenceEnvironment.object_rot_x(object_name)
 	local obj = object_name and SequenceEnvironment.self.dest_unit:get_object(object_name:id())
 
@@ -1715,7 +1714,7 @@ function SequenceEnvironment.object_rot_x(object_name)
 	end
 end
 
--- Lines 1543-1551
+-- Lines 1542-1550
 function SequenceEnvironment.object_rot_y(object_name)
 	local obj = object_name and SequenceEnvironment.self.dest_unit:get_object(object_name:id())
 
@@ -1728,7 +1727,7 @@ function SequenceEnvironment.object_rot_y(object_name)
 	end
 end
 
--- Lines 1553-1561
+-- Lines 1552-1560
 function SequenceEnvironment.object_rot_z(object_name)
 	local obj = object_name and SequenceEnvironment.self.dest_unit:get_object(object_name:id())
 
@@ -1741,7 +1740,7 @@ function SequenceEnvironment.object_rot_z(object_name)
 	end
 end
 
--- Lines 1563-1571
+-- Lines 1562-1570
 function SequenceEnvironment.object_local_pos(object_name)
 	local obj = object_name and SequenceEnvironment.self.dest_unit:get_object(object_name:id())
 
@@ -1754,7 +1753,7 @@ function SequenceEnvironment.object_local_pos(object_name)
 	end
 end
 
--- Lines 1573-1581
+-- Lines 1572-1580
 function SequenceEnvironment.object_local_rot(object_name)
 	local obj = object_name and SequenceEnvironment.self.dest_unit:get_object(object_name:id())
 
@@ -1767,7 +1766,7 @@ function SequenceEnvironment.object_local_rot(object_name)
 	end
 end
 
--- Lines 1583-1591
+-- Lines 1582-1590
 function SequenceEnvironment.object_local_rot_x(object_name)
 	local obj = object_name and SequenceEnvironment.self.dest_unit:get_object(object_name:id())
 
@@ -1780,7 +1779,7 @@ function SequenceEnvironment.object_local_rot_x(object_name)
 	end
 end
 
--- Lines 1593-1601
+-- Lines 1592-1600
 function SequenceEnvironment.object_local_rot_y(object_name)
 	local obj = object_name and SequenceEnvironment.self.dest_unit:get_object(object_name:id())
 
@@ -1793,7 +1792,7 @@ function SequenceEnvironment.object_local_rot_y(object_name)
 	end
 end
 
--- Lines 1603-1611
+-- Lines 1602-1610
 function SequenceEnvironment.object_local_rot_z(object_name)
 	local obj = object_name and SequenceEnvironment.self.dest_unit:get_object(object_name:id())
 
@@ -1806,7 +1805,7 @@ function SequenceEnvironment.object_local_rot_z(object_name)
 	end
 end
 
--- Lines 1613-1623
+-- Lines 1612-1622
 function SequenceEnvironment.object_rot_y_flat(object_name)
 	local obj = object_name and SequenceEnvironment.self.dest_unit:get_object(object_name:id())
 
@@ -1823,12 +1822,12 @@ function SequenceEnvironment.object_rot_y_flat(object_name)
 	end
 end
 
--- Lines 1625-1627
+-- Lines 1624-1626
 function SequenceEnvironment.Z()
 	return math.Z
 end
 
--- Lines 1629-1632
+-- Lines 1628-1631
 function SequenceEnvironment.pick(...)
 	local pick_list = {
 		...
@@ -1837,7 +1836,7 @@ function SequenceEnvironment.pick(...)
 	return pick_list[math.random(1, #pick_list)]
 end
 
--- Lines 1634-1643
+-- Lines 1633-1642
 function SequenceEnvironment.rot_sum(...)
 	local rot_list = {
 		...
@@ -1851,12 +1850,12 @@ function SequenceEnvironment.rot_sum(...)
 	return rot_sum
 end
 
--- Lines 1645-1647
+-- Lines 1644-1646
 function SequenceEnvironment.rot_mul(rot, float)
 	return Rotation(rot:yaw() * float, rot:pitch() * float, rot:roll() * float)
 end
 
--- Lines 1649-1656
+-- Lines 1648-1655
 function SequenceEnvironment.rot_div(rot, float)
 	if float ~= 0 then
 		return Rotation(rot:yaw() / float, rot:pitch() / float, rot:roll() / float)
@@ -1867,12 +1866,12 @@ function SequenceEnvironment.rot_div(rot, float)
 	end
 end
 
--- Lines 1658-1660
+-- Lines 1657-1659
 function SequenceEnvironment.t()
 	return TimerManager:game():time()
 end
 
--- Lines 1662-1720
+-- Lines 1661-1719
 function SequenceEnvironment.print_vars()
 	cat_print("debug", "damage_type: " .. tostring(SequenceEnvironment.self.damage_type))
 	cat_print("debug", "src_unit: " .. tostring(SequenceEnvironment.self.src_unit))
@@ -1941,7 +1940,7 @@ function SequenceEnvironment.print_vars()
 	cat_print("debug", SequenceEnvironment.element:get_xml_origin())
 end
 
--- Lines 1722-1734
+-- Lines 1721-1733
 function SequenceEnvironment.angle(v1, v2, up)
 	if up then
 		local side = math.cross(v1, up)
@@ -1956,14 +1955,14 @@ function SequenceEnvironment.angle(v1, v2, up)
 	end
 end
 
--- Lines 1736-1739
+-- Lines 1735-1738
 function SequenceEnvironment.pos_side(obj, pos)
 	local dir = (pos - obj:position()):normalized()
 
 	return SequenceEnvironment.dir_side(obj, dir)
 end
 
--- Lines 1741-1766
+-- Lines 1740-1765
 function SequenceEnvironment.dir_side(obj, dir)
 	local world_dir = (-dir):rotate_with(obj:rotation())
 	local abs_x = math.abs(world_dir.x)
@@ -1989,12 +1988,12 @@ function SequenceEnvironment.dir_side(obj, dir)
 	end
 end
 
--- Lines 1768-1775
+-- Lines 1767-1774
 function SequenceEnvironment.within_box(pos, box_pos1, box_pos2)
 	return (box_pos1.x <= box_pos2.x and pos.x >= box_pos1.x and pos.x <= box_pos1.x or pos.x >= box_pos2.x and pos.x <= box_pos2.x) and (box_pos1.y <= box_pos2.y and pos.x >= box_pos1.y and pos.x <= box_pos1.y or pos.y >= box_pos2.y and pos.y <= box_pos2.y) and (box_pos1.z <= box_pos2.z and pos.z >= box_pos1.z and pos.z <= box_pos1.z or pos.z >= box_pos2.z and pos.z <= box_pos2.z)
 end
 
--- Lines 1777-1786
+-- Lines 1776-1785
 function SequenceEnvironment.light_mul(light_name)
 	local light = light_name and SequenceEnvironment.self.dest_unit:get_object(light_name:id())
 
@@ -2007,7 +2006,7 @@ function SequenceEnvironment.light_mul(light_name)
 	end
 end
 
--- Lines 1788-1797
+-- Lines 1787-1796
 function SequenceEnvironment.light_color(light_name)
 	local light = light_name and SequenceEnvironment.self.dest_unit:get_object(light_name:id())
 
@@ -2020,7 +2019,7 @@ function SequenceEnvironment.light_color(light_name)
 	end
 end
 
--- Lines 1799-1808
+-- Lines 1798-1807
 function SequenceEnvironment.light_far_range(light_name)
 	local light = light_name and SequenceEnvironment.self.dest_unit:get_object(light_name:id())
 
@@ -2033,7 +2032,7 @@ function SequenceEnvironment.light_far_range(light_name)
 	end
 end
 
--- Lines 1810-1819
+-- Lines 1809-1818
 function SequenceEnvironment.light_spot_angle_start(light_name)
 	local light = light_name and SequenceEnvironment.self.dest_unit:get_object(light_name:id())
 
@@ -2046,7 +2045,7 @@ function SequenceEnvironment.light_spot_angle_start(light_name)
 	end
 end
 
--- Lines 1821-1830
+-- Lines 1820-1829
 function SequenceEnvironment.light_spot_angle_end(light_name)
 	local light = light_name and SequenceEnvironment.self.dest_unit:get_object(light_name:id())
 
@@ -2059,26 +2058,26 @@ function SequenceEnvironment.light_spot_angle_end(light_name)
 	end
 end
 
--- Lines 1832-1835
+-- Lines 1831-1834
 function SequenceEnvironment.get_unique_save_data(id)
 	local global_id = SequenceEnvironment.get_unique_save_data_id(id)
 
 	return SequenceEnvironment.g_save_data[global_id]
 end
 
--- Lines 1837-1840
+-- Lines 1836-1839
 function SequenceEnvironment.set_unique_save_data(id, save_value)
 	local global_id = SequenceEnvironment.get_unique_save_data_id(id)
 
 	SequenceEnvironment.g_save_data[global_id] = save_value
 end
 
--- Lines 1842-1844
+-- Lines 1841-1843
 function SequenceEnvironment.get_unique_save_data_id(id)
 	return string.format("%s_%s", tostring(alive(SequenceEnvironment.self.dest_unit) and SequenceEnvironment.self.dest_unit:editor_id()), tostring(id))
 end
 
--- Lines 1846-1853
+-- Lines 1845-1852
 function SequenceEnvironment.get_camera_pos(index)
 	local viewport = managers.viewport:get_active_vp(index)
 
@@ -2089,7 +2088,7 @@ function SequenceEnvironment.get_camera_pos(index)
 	end
 end
 
--- Lines 1855-1862
+-- Lines 1854-1861
 function SequenceEnvironment.get_camera_rot(index)
 	local viewport = managers.viewport:get_active_vp(index)
 
@@ -2111,7 +2110,7 @@ BaseElement.BASE_ATTRIBUTE_MAP = BaseElement.BASE_ATTRIBUTE_MAP or {
 }
 BaseElement.SAVE_STATE = true
 
--- Lines 1869-1933
+-- Lines 1868-1932
 function BaseElement:init(node, unit_element)
 	self._unit_element = unit_element
 
@@ -2151,7 +2150,7 @@ function BaseElement:init(node, unit_element)
 	end
 
 	if __filter_name ~= nil and unit_element then
-		-- Lines 1909-1918
+		-- Lines 1908-1917
 		function self:_is_allowed_func(env)
 			local filter_name = self:run_parsed_func(env, __filter_name)
 			local filter = filter_name and unit_element:get_filter(filter_name)
@@ -2165,7 +2164,7 @@ function BaseElement:init(node, unit_element)
 	end
 
 	if __delayed_filter_name ~= nil and unit_element then
-		-- Lines 1922-1931
+		-- Lines 1921-1930
 		function self:_delayed_is_allowed_func(env)
 			local filter_name = self:run_parsed_func(env, __delayed_filter_name)
 			local filter = unit_element:get_filter(filter_name)
@@ -2179,12 +2178,12 @@ function BaseElement:init(node, unit_element)
 	end
 end
 
--- Lines 1935-1937
+-- Lines 1934-1936
 function BaseElement:retrieve_node_file(node)
 	return node.file and node:file() or nil
 end
 
--- Lines 1939-1947
+-- Lines 1938-1946
 function BaseElement:retrieve_node_line(node)
 	local line = node.line and node:line() or nil
 
@@ -2195,12 +2194,12 @@ function BaseElement:retrieve_node_line(node)
 	end
 end
 
--- Lines 1949-1951
+-- Lines 1948-1950
 function BaseElement:get(name, set_function)
 	return self:get_static(name, self._parameters[name], set_function)
 end
 
--- Lines 1953-1973
+-- Lines 1952-1972
 function BaseElement:get_static(name, value, set_function, node)
 	local __func
 
@@ -2230,7 +2229,7 @@ function BaseElement:get_static(name, value, set_function, node)
 	return nil
 end
 
--- Lines 1975-1981
+-- Lines 1974-1980
 function BaseElement:run_parsed_func(env, func)
 	if func ~= nil then
 		return func(env)
@@ -2239,7 +2238,7 @@ function BaseElement:run_parsed_func(env, func)
 	end
 end
 
--- Lines 1983-1991
+-- Lines 1982-1990
 function BaseElement:run_parsed_func_list(env, list)
 	local parsed_list = {}
 
@@ -2250,7 +2249,7 @@ function BaseElement:run_parsed_func_list(env, list)
 	return parsed_list
 end
 
--- Lines 1993-2001
+-- Lines 1992-2000
 function BaseElement:run_parsed_func_map(env, map)
 	local parsed_map = {}
 
@@ -2261,7 +2260,7 @@ function BaseElement:run_parsed_func_map(env, map)
 	return parsed_map
 end
 
--- Lines 2003-2030
+-- Lines 2002-2029
 function BaseElement:activate(env)
 	SequenceEnvironment.self = env
 	SequenceEnvironment.element = self
@@ -2292,7 +2291,7 @@ function BaseElement:activate(env)
 	end
 end
 
--- Lines 2032-2038
+-- Lines 2031-2037
 function BaseElement:start_time_callback(env)
 	if alive(env.dest_unit) and self:delayed_filter_callback(env) then
 		SequenceEnvironment.self = env
@@ -2302,22 +2301,22 @@ function BaseElement:start_time_callback(env)
 	end
 end
 
--- Lines 2040-2042
+-- Lines 2039-2041
 function BaseElement:filter_callback(env)
 	return not self._is_allowed_func or self:_is_allowed_func(env)
 end
 
--- Lines 2044-2046
+-- Lines 2043-2045
 function BaseElement:delayed_filter_callback(env)
 	return not self._delayed_is_allowed_func or self:_delayed_is_allowed_func(env)
 end
 
--- Lines 2048-2050
+-- Lines 2047-2049
 function BaseElement:activate_callback(env)
 	return
 end
 
--- Lines 2052-2059
+-- Lines 2051-2058
 function BaseElement:set_state(unit, data)
 	local extension = unit:damage()
 
@@ -2327,7 +2326,7 @@ function BaseElement:set_state(unit, data)
 	end
 end
 
--- Lines 2061-2071
+-- Lines 2060-2070
 function BaseElement:set_cat_state(unit, category, cat_data)
 	local extension = unit:damage()
 
@@ -2341,7 +2340,7 @@ function BaseElement:set_cat_state(unit, category, cat_data)
 	end
 end
 
--- Lines 2073-2085
+-- Lines 2072-2084
 function BaseElement:set_cat_state2(unit, category1, category2, cat_data)
 	local extension = unit:damage()
 
@@ -2357,7 +2356,7 @@ function BaseElement:set_cat_state2(unit, category1, category2, cat_data)
 	end
 end
 
--- Lines 2087-2092
+-- Lines 2086-2091
 function BaseElement:check_invalid_node(node, valid_node_list)
 	if self:is_valid_xml_node(node) then
 		local unit_name = self._unit_element and self._unit_element:get_name() or self._name or "[None]"
@@ -2366,12 +2365,12 @@ function BaseElement:check_invalid_node(node, valid_node_list)
 	end
 end
 
--- Lines 2094-2096
+-- Lines 2093-2095
 function BaseElement:is_valid_xml_node(node)
 	return #node:name() ~= 0 and node:name() ~= "xdefine" and node:name() ~= "#text"
 end
 
--- Lines 2098-2106
+-- Lines 2097-2105
 function BaseElement:print_attribute_error(attribute_name, attribute_value, valid_values, recoverable, env_to_print, node)
 	local msg = string.format("Attribute \"%s\" evaluated to the invalid value \"%s\".", attribute_name, tostring(attribute_value))
 
@@ -2382,12 +2381,12 @@ function BaseElement:print_attribute_error(attribute_name, attribute_value, vali
 	self:print_error(msg, recoverable, env_to_print, node)
 end
 
--- Lines 2108-2127
+-- Lines 2107-2126
 function BaseElement:print_error(msg, recoverable, env_to_print, node)
 	return
 end
 
--- Lines 2129-2134
+-- Lines 2128-2133
 function BaseElement:get_xml_origin(node)
 	local file = node and self:retrieve_node_file(node) or self:get_model_xml_file()
 	local line = node and self:retrieve_node_line(node) or self._node_line
@@ -2397,9 +2396,9 @@ function BaseElement:get_xml_origin(node)
 	return "File: \"" .. tostring(file or "N/A") .. "\" (Line: " .. tostring(line or "N/A, remove .xmb file") .. ")\nUnit: \"" .. tostring(self._unit_element and self._unit_element:get_name():t() or "[None]") .. "\"\nElement: " .. self:get_xml_element_string(node)
 end
 
-local is_win32 = SystemInfo:platform() == Idstring("WIN32")
+local is_win32 = IS_WIN32
 
--- Lines 2137-2148
+-- Lines 2136-2147
 function BaseElement:get_model_xml_file()
 	if self._node_file then
 		return self._node_file
@@ -2412,7 +2411,7 @@ function BaseElement:get_model_xml_file()
 	return nil
 end
 
--- Lines 2150-2160
+-- Lines 2149-2159
 function BaseElement:get_xml_element_string(node)
 	local name = node and type(node.name) == "function" and node:name() or self._element_name
 	local str = "<" .. tostring(name)
@@ -2427,7 +2426,7 @@ end
 
 UnitElement = UnitElement or class(BaseElement)
 
--- Lines 2165-2322
+-- Lines 2164-2321
 function UnitElement:init(node, name, is_global)
 	BaseElement.init(self, node, self)
 
@@ -2595,7 +2594,7 @@ function UnitElement:init(node, name, is_global)
 	end
 end
 
--- Lines 2324-2333
+-- Lines 2323-2332
 function UnitElement:_register_start_time_callback(id, element, node)
 	if id == nil then
 		self._last_created_start_time_element_id = (self._last_created_start_time_element_id or 0) + 1
@@ -2607,7 +2606,7 @@ function UnitElement:_register_start_time_callback(id, element, node)
 	return id
 end
 
--- Lines 2335-2356
+-- Lines 2334-2355
 function UnitElement:get_startup_sequence_map(unit, damage_ext)
 	local env, map
 
@@ -2630,7 +2629,7 @@ function UnitElement:get_startup_sequence_map(unit, damage_ext)
 	return map
 end
 
--- Lines 2358-2379
+-- Lines 2357-2378
 function UnitElement:get_editor_startup_sequence_map(unit, damage_ext)
 	local env, map
 
@@ -2653,27 +2652,27 @@ function UnitElement:get_editor_startup_sequence_map(unit, damage_ext)
 	return map
 end
 
--- Lines 2381-2383
+-- Lines 2380-2382
 function UnitElement:get_name()
 	return self._name
 end
 
--- Lines 2385-2387
+-- Lines 2384-2386
 function UnitElement:get_global_set_var_map()
 	return self._set_global_vars
 end
 
--- Lines 2389-2391
+-- Lines 2388-2390
 function UnitElement:get_set_var_map()
 	return self._set_variables
 end
 
--- Lines 2393-2395
+-- Lines 2392-2394
 function UnitElement:get_body_element(body_name)
 	return self._bodies[body_name]
 end
 
--- Lines 2397-2407
+-- Lines 2396-2406
 function UnitElement:get_trigger_name_list()
 	local trigger_name_list = {}
 
@@ -2686,17 +2685,17 @@ function UnitElement:get_trigger_name_list()
 	return trigger_name_list
 end
 
--- Lines 2409-2411
+-- Lines 2408-2410
 function UnitElement:has_trigger_name(trigger_name)
 	return self._triggers and self._triggers[trigger_name] ~= nil
 end
 
--- Lines 2413-2415
+-- Lines 2412-2414
 function UnitElement:get_trigger_name_map()
 	return self._triggers or {}
 end
 
--- Lines 2417-2429
+-- Lines 2416-2428
 function UnitElement:get_sequence_name_list()
 	local sequence_name_list = {}
 
@@ -2711,7 +2710,7 @@ function UnitElement:get_sequence_name_list()
 	return sequence_name_list
 end
 
--- Lines 2431-2443
+-- Lines 2430-2442
 function UnitElement:get_parameter_sequence_name_list(parameter_name, parameter_value)
 	local sequence_name_list = {}
 
@@ -2726,33 +2725,33 @@ function UnitElement:get_parameter_sequence_name_list(parameter_name, parameter_
 	return sequence_name_list
 end
 
--- Lines 2445-2447
+-- Lines 2444-2446
 function UnitElement:has_sequence_name(sequence_name)
 	return self._sequence_elements[sequence_name] ~= nil
 end
 
--- Lines 2449-2451
+-- Lines 2448-2450
 function UnitElement:get_body_element(body_name)
 	return self._bodies[body_name]
 end
 
--- Lines 2453-2455
+-- Lines 2452-2454
 function UnitElement:get_body_element_list()
 	return self._bodies
 end
 
--- Lines 2457-2459
+-- Lines 2456-2458
 function UnitElement:get_endurance()
 	return self._global_vars and self._global_vars.endurance or 0
 end
 
--- Lines 2461-2464
+-- Lines 2460-2463
 function UnitElement:set_endurance(endurance)
 	self._global_vars = self._global_vars or {}
 	self._global_vars.endurance = endurance
 end
 
--- Lines 2466-2477
+-- Lines 2465-2476
 function UnitElement:reset_damage(unit)
 	for _, root_body in pairs(self._bodies) do
 		local extension = unit:body(root_body._name):extension().damage
@@ -2766,7 +2765,7 @@ function UnitElement:reset_damage(unit)
 	unit:damage()._damage = 0
 end
 
--- Lines 2479-2496
+-- Lines 2478-2495
 function UnitElement:run_sequence(name, endurance_type, source_unit, dest_unit, dest_body, dest_normal, position, direction, damage, velocity, params)
 	local sequence = self:get_sequence_element(name)
 	local env = SequenceEnvironment:new(endurance_type, source_unit, dest_unit, dest_body, dest_normal, position, direction, damage, velocity, params, self)
@@ -2779,17 +2778,17 @@ function UnitElement:run_sequence(name, endurance_type, source_unit, dest_unit, 
 	end
 end
 
--- Lines 2498-2500
+-- Lines 2497-2499
 function UnitElement:has_sequence(sequence_name)
 	return self:get_sequence_element(sequence_name) ~= nil
 end
 
--- Lines 2502-2504
+-- Lines 2501-2503
 function UnitElement:get_sequence_element(sequence_name)
 	return self._sequence_elements[sequence_name] or managers.sequence:get_global_sequence(sequence_name)
 end
 
--- Lines 2506-2512
+-- Lines 2505-2511
 function UnitElement:get_proximity_element_map()
 	if self._proximity_element then
 		return self._proximity_element:get_proximity_element_map()
@@ -2798,7 +2797,7 @@ function UnitElement:get_proximity_element_map()
 	end
 end
 
--- Lines 2514-2527
+-- Lines 2513-2526
 function UnitElement:save_by_unit(unit, data)
 	local state = {}
 	local changed = false
@@ -2814,7 +2813,7 @@ function UnitElement:save_by_unit(unit, data)
 	return changed
 end
 
--- Lines 2529-2537
+-- Lines 2528-2536
 function UnitElement:load_by_unit(unit, data)
 	local state = data.UnitElement
 
@@ -2825,17 +2824,17 @@ function UnitElement:load_by_unit(unit, data)
 	end
 end
 
--- Lines 2539-2541
+-- Lines 2538-2540
 function UnitElement:get_filter(filter_name)
 	return self._filters and self._filters[filter_name] or managers.sequence:get_global_filter(filter_name)
 end
 
--- Lines 2543-2545
+-- Lines 2542-2544
 function UnitElement:get_water_element_map()
 	return self._water_element_map
 end
 
--- Lines 2547-2564
+-- Lines 2546-2563
 function UnitElement:save(data)
 	local state = {}
 	local changed = false
@@ -2856,7 +2855,7 @@ function UnitElement:save(data)
 	end
 end
 
--- Lines 2566-2572
+-- Lines 2565-2571
 function UnitElement:load(data)
 	local state = data[self._name]
 
@@ -2867,7 +2866,7 @@ end
 
 TriggerDeclarationElement = TriggerDeclarationElement or class(BaseElement)
 
--- Lines 2577-2589
+-- Lines 2576-2588
 function TriggerDeclarationElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -2884,7 +2883,7 @@ end
 
 FilterElement = FilterElement or class(BaseElement)
 
--- Lines 2594-2624
+-- Lines 2593-2623
 function FilterElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -2917,7 +2916,7 @@ function FilterElement:init(node, unit_element)
 	end
 end
 
--- Lines 2626-2642
+-- Lines 2625-2641
 function FilterElement:is_allowed(env)
 	local allow = self:run_parsed_func(env, self._allow) or true
 	local check_all = self:run_parsed_func(env, self._check_all) or true
@@ -2939,7 +2938,7 @@ end
 CheckFilterElement = CheckFilterElement or class(BaseElement)
 CheckFilterElement.NAME = "check"
 
--- Lines 2648-2656
+-- Lines 2647-2655
 function CheckFilterElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -2950,7 +2949,7 @@ function CheckFilterElement:init(node, unit_element)
 	end
 end
 
--- Lines 2658-2660
+-- Lines 2657-2659
 function CheckFilterElement:is_allowed(env)
 	return self:run_parsed_func(env, self._value) == true
 end
@@ -2958,7 +2957,7 @@ end
 SideFilterElement = SideFilterElement or class(BaseElement)
 SideFilterElement.NAME = "side"
 
--- Lines 2666-2689
+-- Lines 2665-2688
 function SideFilterElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -2984,7 +2983,7 @@ function SideFilterElement:init(node, unit_element)
 	end
 end
 
--- Lines 2691-2700
+-- Lines 2690-2699
 function SideFilterElement:is_allowed(env)
 	if alive(env.dest_body) then
 		local rotation = env.dest_body:rotation()
@@ -3001,7 +3000,7 @@ end
 ZoneFilterElement = ZoneFilterElement or class(BaseElement)
 ZoneFilterElement.NAME = "zone"
 
--- Lines 2706-2747
+-- Lines 2705-2746
 function ZoneFilterElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -3027,12 +3026,12 @@ function ZoneFilterElement:init(node, unit_element)
 			local func
 
 			if negative then
-				-- Lines 2734-2734
+				-- Lines 2733-2733
 				function func(zone_vector)
 					return zone_vector[__chr] < 0
 				end
 			else
-				-- Lines 2736-2736
+				-- Lines 2735-2735
 				function func(zone_vector)
 					return zone_vector[__chr] >= 0
 				end
@@ -3049,7 +3048,7 @@ function ZoneFilterElement:init(node, unit_element)
 	end
 end
 
--- Lines 2749-2770
+-- Lines 2748-2769
 function ZoneFilterElement:is_allowed(env)
 	local obj_name = self:run_parsed_func(env, self._ref_object)
 	local obj = obj_name and env.dest_unit:get_object(obj_name:id())
@@ -3076,7 +3075,7 @@ end
 
 SequenceElement = SequenceElement or class(BaseElement)
 
--- Lines 2775-2800
+-- Lines 2774-2799
 function SequenceElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -3105,7 +3104,7 @@ function SequenceElement:init(node, unit_element)
 	end
 end
 
--- Lines 2802-2823
+-- Lines 2801-2822
 function SequenceElement:activate_callback(env)
 	managers.sequence:update_startup_callbacks()
 
@@ -3131,7 +3130,7 @@ end
 
 ProximityElement = ProximityElement or class(BaseElement)
 
--- Lines 2828-2847
+-- Lines 2827-2846
 function ProximityElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -3149,7 +3148,7 @@ function ProximityElement:init(node, unit_element)
 	end
 end
 
--- Lines 2849-2851
+-- Lines 2848-2850
 function ProximityElement:get_proximity_element_map()
 	return self._element_map
 end
@@ -3157,7 +3156,7 @@ end
 ProximityTypeElement = ProximityTypeElement or class(BaseElement)
 ProximityTypeElement.MIN_INTERVAL = 0.2
 
--- Lines 2857-2927
+-- Lines 2856-2926
 function ProximityTypeElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -3229,54 +3228,54 @@ function ProximityTypeElement:init(node, unit_element)
 	end
 end
 
--- Lines 2929-2931
+-- Lines 2928-2930
 function ProximityTypeElement:get_name()
 	return self._name
 end
 
--- Lines 2933-2935
+-- Lines 2932-2934
 function ProximityTypeElement:get_slotmask()
 	return self._slotmask
 end
 
--- Lines 2937-2939
+-- Lines 2936-2938
 function ProximityTypeElement:get_enabled()
 	return self._enabled
 end
 
--- Lines 2941-2943
+-- Lines 2940-2942
 function ProximityTypeElement:get_ref_object()
 	return self._ref_object
 end
 
--- Lines 2945-2947
+-- Lines 2944-2946
 function ProximityTypeElement:get_interval()
 	return self._interval
 end
 
--- Lines 2949-2951
+-- Lines 2948-2950
 function ProximityTypeElement:is_quick()
 	return self._quick
 end
 
--- Lines 2953-2955
+-- Lines 2952-2954
 function ProximityTypeElement:get_start_within()
 	return self._start_within
 end
 
--- Lines 2957-2959
+-- Lines 2956-2958
 function ProximityTypeElement:get_within_element()
 	return self._within_element
 end
 
--- Lines 2961-2963
+-- Lines 2960-2962
 function ProximityTypeElement:get_outside_element()
 	return self._outside_element
 end
 
 ProximityRangeElement = ProximityRangeElement or class(BaseElement)
 
--- Lines 2968-3000
+-- Lines 2967-2999
 function ProximityRangeElement:init(node, unit_element, within)
 	BaseElement.init(self, node, unit_element)
 
@@ -3310,27 +3309,27 @@ function ProximityRangeElement:init(node, unit_element, within)
 	end
 end
 
--- Lines 3002-3004
+-- Lines 3001-3003
 function ProximityRangeElement:get_max_activation_count()
 	return self._max_activation_count
 end
 
--- Lines 3006-3008
+-- Lines 3005-3007
 function ProximityRangeElement:get_delay()
 	return self._delay
 end
 
--- Lines 3010-3012
+-- Lines 3009-3011
 function ProximityRangeElement:get_range()
 	return self._range
 end
 
--- Lines 3014-3016
+-- Lines 3013-3015
 function ProximityRangeElement:get_count()
 	return self._count
 end
 
--- Lines 3018-3022
+-- Lines 3017-3021
 function ProximityRangeElement:activate_elements(env)
 	for _, element in ipairs(self._elements) do
 		element:activate(env)
@@ -3339,7 +3338,7 @@ end
 
 WaterElement = WaterElement or class(BaseElement)
 
--- Lines 3027-3085
+-- Lines 3026-3084
 function WaterElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -3397,54 +3396,54 @@ function WaterElement:init(node, unit_element)
 	end
 end
 
--- Lines 3087-3089
+-- Lines 3086-3088
 function WaterElement:is_empty()
 	return (not self._enter_element or self._enter_element:sequence_count() == 0) and (not self._exit_element or self._exit_element:sequence_count() == 0)
 end
 
--- Lines 3091-3093
+-- Lines 3090-3092
 function WaterElement:get_name()
 	return self._name
 end
 
--- Lines 3095-3097
+-- Lines 3094-3096
 function WaterElement:get_enabled()
 	return self._enabled
 end
 
--- Lines 3099-3101
+-- Lines 3098-3100
 function WaterElement:get_interval()
 	return self._interval
 end
 
--- Lines 3103-3105
+-- Lines 3102-3104
 function WaterElement:get_ref_object()
 	return self._ref_object
 end
 
--- Lines 3107-3109
+-- Lines 3106-3108
 function WaterElement:get_ref_body()
 	return self._ref_body
 end
 
--- Lines 3111-3113
+-- Lines 3110-3112
 function WaterElement:get_body_depth()
 	return self._body_depth
 end
 
--- Lines 3115-3117
+-- Lines 3114-3116
 function WaterElement:get_physic_effect()
 	return self._physic_effect
 end
 
--- Lines 3119-3123
+-- Lines 3118-3122
 function WaterElement:activate_enter(env)
 	if self._enter_element then
 		self._enter_element:activate(env)
 	end
 end
 
--- Lines 3125-3129
+-- Lines 3124-3128
 function WaterElement:activate_exit(env)
 	if self._exit_element then
 		self._exit_element:activate(env)
@@ -3453,7 +3452,7 @@ end
 
 SequenceContainerElement = SequenceContainerElement or class(BaseElement)
 
--- Lines 3134-3152
+-- Lines 3133-3151
 function SequenceContainerElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -3476,12 +3475,12 @@ function SequenceContainerElement:init(node, unit_element)
 	end
 end
 
--- Lines 3154-3156
+-- Lines 3153-3155
 function SequenceContainerElement:sequence_count()
 	return #self._sequence_list
 end
 
--- Lines 3158-3162
+-- Lines 3157-3161
 function SequenceContainerElement:activate_callback(env)
 	for _, element in ipairs(self._sequence_list) do
 		element:activate(env)
@@ -3492,7 +3491,7 @@ EnterWaterElement = EnterWaterElement or class(SequenceContainerElement)
 ExitWaterElement = ExitWaterElement or class(SequenceContainerElement)
 RootBodyElement = RootBodyElement or class(BaseElement)
 
--- Lines 3171-3239
+-- Lines 3170-3238
 function RootBodyElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -3566,42 +3565,42 @@ function RootBodyElement:init(node, unit_element)
 	end
 end
 
--- Lines 3241-3243
+-- Lines 3240-3242
 function RootBodyElement:get_body_param(param_name)
 	return self._body_params[param_name]
 end
 
--- Lines 3245-3247
+-- Lines 3244-3246
 function RootBodyElement:get_body_param_list()
 	return self._body_params
 end
 
--- Lines 3249-3251
+-- Lines 3248-3250
 function RootBodyElement:get_first_endurance_element(endurance_type)
 	return self._first_endurance[endurance_type]
 end
 
--- Lines 3253-3255
+-- Lines 3252-3254
 function RootBodyElement:get_first_endurance_element_list()
 	return self._first_endurance
 end
 
--- Lines 3257-3259
+-- Lines 3256-3258
 function RootBodyElement:activate_inflict_enter(env)
 	self._inflict_element:activate_enter(env)
 end
 
--- Lines 3261-3263
+-- Lines 3260-3262
 function RootBodyElement:activate_inflict_damage(env)
 	self._inflict_element:activate_damage(env)
 end
 
--- Lines 3265-3267
+-- Lines 3264-3266
 function RootBodyElement:activate_inflict_exit(env)
 	self._inflict_element:activate_exit(env)
 end
 
--- Lines 3269-3273
+-- Lines 3268-3272
 function RootBodyElement:get_inflict_element_list()
 	if self._inflict_element then
 		return self._inflict_element:get_element_list()
@@ -3610,7 +3609,7 @@ end
 
 RootInflictElement = RootInflictElement or class(BaseElement)
 
--- Lines 3278-3296
+-- Lines 3277-3295
 function RootInflictElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -3631,29 +3630,29 @@ function RootInflictElement:init(node, unit_element)
 	end
 end
 
--- Lines 3298-3300
+-- Lines 3297-3299
 function RootInflictElement:activate_enter(env)
 	self._element_list[env.damage_type]:activate_enter(env)
 end
 
--- Lines 3302-3304
+-- Lines 3301-3303
 function RootInflictElement:activate_damage(env)
 	self._element_list[env.damage_type]:activate_damage(env)
 end
 
--- Lines 3306-3308
+-- Lines 3305-3307
 function RootInflictElement:activate_exit(env)
 	self._element_list[env.damage_type]:activate_exit(env)
 end
 
--- Lines 3310-3312
+-- Lines 3309-3311
 function RootInflictElement:get_element_list()
 	return self._element_list
 end
 
 InflictElement = InflictElement or class(BaseElement)
 
--- Lines 3317-3362
+-- Lines 3316-3361
 function InflictElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -3702,63 +3701,63 @@ function InflictElement:init(node, unit_element)
 	end
 end
 
--- Lines 3364-3366
+-- Lines 3363-3365
 function InflictElement:get_damage()
 	return self._damage
 end
 
--- Lines 3368-3370
+-- Lines 3367-3369
 function InflictElement:get_interval()
 	return self._interval
 end
 
--- Lines 3372-3374
+-- Lines 3371-3373
 function InflictElement:get_instant()
 	return self._instant
 end
 
--- Lines 3376-3378
+-- Lines 3375-3377
 function InflictElement:get_enabled()
 	return self._enabled
 end
 
--- Lines 3380-3382
+-- Lines 3379-3381
 function InflictElement:get_enter_element()
 	return self._enter_element
 end
 
--- Lines 3384-3386
+-- Lines 3383-3385
 function InflictElement:get_exit_element()
 	return self._exit_element
 end
 
--- Lines 3388-3390
+-- Lines 3387-3389
 function InflictElement:get_damage_element()
 	return self._damage_element
 end
 
--- Lines 3392-3396
+-- Lines 3391-3395
 function InflictElement:activate_enter(env)
 	if self._enter_element then
 		self._enter_element:activate(env)
 	end
 end
 
--- Lines 3398-3402
+-- Lines 3397-3401
 function InflictElement:activate_damage(env)
 	if self._damage_element then
 		self._damage_element:activate(env)
 	end
 end
 
--- Lines 3404-3408
+-- Lines 3403-3407
 function InflictElement:activate_exit(env)
 	if self._exit_element then
 		self._exit_element:activate(env)
 	end
 end
 
--- Lines 3410-3416
+-- Lines 3409-3415
 function InflictElement:enter_sequence_count()
 	if self._enter_element then
 		return self._enter_element:sequence_count()
@@ -3767,7 +3766,7 @@ function InflictElement:enter_sequence_count()
 	end
 end
 
--- Lines 3418-3424
+-- Lines 3417-3423
 function InflictElement:damage_sequence_count()
 	if self._damage_element then
 		return self._damage_element:sequence_count()
@@ -3776,7 +3775,7 @@ function InflictElement:damage_sequence_count()
 	end
 end
 
--- Lines 3426-3432
+-- Lines 3425-3431
 function InflictElement:exit_sequence_count()
 	if self._exit_element then
 		return self._exit_element:sequence_count()
@@ -3790,7 +3789,7 @@ InflictElectricityElement.NAME = "electricity"
 InflictFireElement = InflictFireElement or class(InflictElement)
 InflictFireElement.NAME = "fire"
 
--- Lines 3442-3456
+-- Lines 3441-3455
 function InflictFireElement:init(node, unit_element)
 	InflictElement.init(self, node, unit_element)
 
@@ -3804,22 +3803,22 @@ function InflictFireElement:init(node, unit_element)
 	self._falloff = self._falloff and self._falloff(SequenceEnvironment)
 end
 
--- Lines 3458-3460
+-- Lines 3457-3459
 function InflictFireElement:get_fire_object_name()
 	return self._fire_object_name
 end
 
--- Lines 3462-3464
+-- Lines 3461-3463
 function InflictFireElement:get_fire_height()
 	return self._fire_height
 end
 
--- Lines 3466-3468
+-- Lines 3465-3467
 function InflictFireElement:get_velocity()
 	return self._velocity
 end
 
--- Lines 3470-3472
+-- Lines 3469-3471
 function InflictFireElement:get_falloff()
 	return self._falloff
 end
@@ -3829,7 +3828,7 @@ DamageInflictElement = DamageInflictElement or class(SequenceContainerElement)
 ExitInflictElement = ExitInflictElement or class(SequenceContainerElement)
 EnduranceElement = EnduranceElement or class(BaseElement)
 
--- Lines 3482-3534
+-- Lines 3481-3533
 function EnduranceElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -3879,12 +3878,12 @@ function EnduranceElement:init(node, unit_element)
 	end
 end
 
--- Lines 3536-3538
+-- Lines 3535-3537
 function EnduranceElement:can_skip()
 	return self._can_skip
 end
 
--- Lines 3540-3560
+-- Lines 3539-3559
 function EnduranceElement:damage(env)
 	local new_damage = env.damage - self._abs[env.damage_type]
 
@@ -3909,7 +3908,7 @@ function EnduranceElement:damage(env)
 	end
 end
 
--- Lines 3562-3583
+-- Lines 3561-3582
 function EnduranceElement:activate(env)
 	local extension = env.dest_body:extension().damage
 
@@ -3935,7 +3934,7 @@ function EnduranceElement:activate(env)
 	end
 end
 
--- Lines 3585-3589
+-- Lines 3584-3588
 function EnduranceElement:activate_elements(env)
 	for _, element in ipairs(self._elements) do
 		element:activate(env)
@@ -3945,7 +3944,7 @@ end
 AnimationGroupElement = AnimationGroupElement or class(BaseElement)
 AnimationGroupElement.NAME = "animation_group"
 
--- Lines 3596-3608
+-- Lines 3595-3607
 function AnimationGroupElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -3960,7 +3959,7 @@ function AnimationGroupElement:init(node, unit_element)
 	self._start_loop_time = self:get("start_loop_time")
 end
 
--- Lines 3610-3626
+-- Lines 3609-3625
 function AnimationGroupElement:activate_callback(env)
 	local name = self:run_parsed_func(env, self._name)
 
@@ -3979,7 +3978,7 @@ function AnimationGroupElement:activate_callback(env)
 	end
 end
 
--- Lines 3628-3679
+-- Lines 3627-3678
 function AnimationGroupElement:play(env, name)
 	local once = self:run_parsed_func(env, self._once)
 	local ids_name = Idstring(name)
@@ -4046,7 +4045,7 @@ function AnimationGroupElement:play(env, name)
 	end
 end
 
--- Lines 3681-3687
+-- Lines 3680-3686
 function AnimationGroupElement:stop(env, name)
 	env.dest_unit:anim_stop(Idstring(name))
 
@@ -4057,7 +4056,7 @@ function AnimationGroupElement:stop(env, name)
 	end
 end
 
--- Lines 3689-3695
+-- Lines 3688-3694
 function AnimationGroupElement:set_time(env, name)
 	local time = self:run_parsed_func(env, self._time)
 
@@ -4066,7 +4065,7 @@ function AnimationGroupElement:set_time(env, name)
 	end
 end
 
--- Lines 3697-3701
+-- Lines 3696-3700
 function AnimationGroupElement.load(unit, data)
 	for name, cat_data in pairs(data) do
 		unit[cat_data[1]](unit, Idstring(name), cat_data[2], cat_data[3], cat_data[4])
@@ -4076,7 +4075,7 @@ end
 AnimationRedirectElement = AnimationRedirectElement or class(BaseElement)
 AnimationRedirectElement.NAME = "animation_redirect"
 
--- Lines 3706-3711
+-- Lines 3705-3710
 function AnimationRedirectElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -4084,7 +4083,7 @@ function AnimationRedirectElement:init(node, unit_element)
 	self._enabled = self:get("enabled")
 end
 
--- Lines 3713-3720
+-- Lines 3712-3719
 function AnimationRedirectElement:activate_callback(env)
 	local name = self:run_parsed_func(env, self._name)
 
@@ -4094,7 +4093,7 @@ end
 AreaDamageElement = AreaDamageElement or class(BaseElement)
 AreaDamageElement.NAME = "area_damage"
 
--- Lines 3725-3754
+-- Lines 3724-3753
 function AreaDamageElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -4127,7 +4126,7 @@ function AreaDamageElement:init(node, unit_element)
 	end
 end
 
--- Lines 3756-3798
+-- Lines 3755-3797
 function AreaDamageElement:activate_callback(env)
 	local damage_type = self:run_parsed_func(env, self._damage_type)
 
@@ -4173,7 +4172,7 @@ function AreaDamageElement:activate_callback(env)
 	end
 end
 
--- Lines 3800-3820
+-- Lines 3799-3819
 function AreaDamageElement:get_params(env)
 	local params = {}
 
@@ -4198,12 +4197,12 @@ function AreaDamageElement:get_params(env)
 	return params
 end
 
--- Lines 3823-3825
+-- Lines 3822-3824
 function AreaDamageElement:do_area_damage(env, damage_type, attack_unit, pos, range, constant_damage, damage, physic_effect, mass, ignore_unit, direct_attack_unit, ignore_mask, get_damage_func, velocity)
 	managers.sequence:do_area_damage(damage_type, attack_unit, pos, range, constant_damage, damage, physic_effect, mass, ignore_unit, direct_attack_unit, ignore_mask, get_damage_func, velocity)
 end
 
--- Lines 3827-3865
+-- Lines 3826-3864
 function AreaDamageElement:get_falloff_key_damage(params, unit, body, dir, hit_pos, damage_type, attack_unit, pos, range, constant_damage, damage, velocity, ignore_unit, direct_attack_unit, ignore_mask)
 	local distance = self:get_distance(body, hit_pos, pos)
 	local key, index
@@ -4245,21 +4244,21 @@ function AreaDamageElement:get_falloff_key_damage(params, unit, body, dir, hit_p
 	end
 end
 
--- Lines 3867-3870
+-- Lines 3866-3869
 function AreaDamageElement:get_falloff_preset1_damage(params, unit, body, dir, hit_pos, damage_type, attack_unit, pos, range, constant_damage, damage, velocity, ignore_unit, direct_attack_unit, ignore_mask)
 	local distance = self:get_distance(body, hit_pos, pos)
 
 	return (1 - (distance / range)^2) * damage
 end
 
--- Lines 3872-3874
+-- Lines 3871-3873
 function AreaDamageElement:get_distance(body, hit_pos, pos)
 	return body and get_distance_to_body(body, pos) or (hit_pos - pos):length()
 end
 
 AreaDamageKeyElement = AreaDamageKeyElement or class(BaseElement)
 
--- Lines 3879-3890
+-- Lines 3878-3889
 function AreaDamageKeyElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -4272,7 +4271,7 @@ function AreaDamageKeyElement:init(node, unit_element)
 	self._falloff_func_map.linear = self.get_linear_damage
 end
 
--- Lines 3892-3903
+-- Lines 3891-3902
 function AreaDamageKeyElement:get_parsed_key(env)
 	local parsed_key = ParsedKeyElement:new(self)
 
@@ -4288,7 +4287,7 @@ function AreaDamageKeyElement:get_parsed_key(env)
 	return parsed_key
 end
 
--- Lines 3905-3915
+-- Lines 3904-3914
 function AreaDamageKeyElement:get_distance_damage(parsed_key, distance, prev_key_range, prev_key_damage)
 	local falloff_func = parsed_key:get_variable("falloff_func")
 
@@ -4302,7 +4301,7 @@ function AreaDamageKeyElement:get_distance_damage(parsed_key, distance, prev_key
 	end
 end
 
--- Lines 3917-3931
+-- Lines 3916-3930
 function AreaDamageKeyElement:activate(env, unit, body, pos, distance, total_range)
 	SequenceEnvironment.element = self
 
@@ -4319,7 +4318,7 @@ function AreaDamageKeyElement:activate(env, unit, body, pos, distance, total_ran
 	end
 end
 
--- Lines 3933-3944
+-- Lines 3932-3943
 function AreaDamageKeyElement:get_linear_damage(distance, range, damage, prev_key_range, prev_key_damage)
 	local diff = range - prev_key_range
 	local offset
@@ -4335,23 +4334,23 @@ end
 
 ParsedKeyElement = ParsedKeyElement or class()
 
--- Lines 3949-3952
+-- Lines 3948-3951
 function ParsedKeyElement:init(key_element, variable_map)
 	self._key_element = key_element
 	self._variable_map = variable_map or {}
 end
 
--- Lines 3954-3956
+-- Lines 3953-3955
 function ParsedKeyElement:get_key_element()
 	return self._key_element
 end
 
--- Lines 3958-3960
+-- Lines 3957-3959
 function ParsedKeyElement:get_variable(name)
 	return self._variable_map[name]
 end
 
--- Lines 3962-3964
+-- Lines 3961-3963
 function ParsedKeyElement:set_variable(name, value)
 	self._variable_map[name] = value
 end
@@ -4379,7 +4378,7 @@ BodyElement.VALID_MOVER_MAP = BodyElement.VALID_MOVER_MAP or {
 	none = ""
 }
 
--- Lines 3973-3982
+-- Lines 3972-3981
 function BodyElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -4391,7 +4390,7 @@ function BodyElement:init(node, unit_element)
 	end
 end
 
--- Lines 3984-4008
+-- Lines 3983-4007
 function BodyElement:activate_callback(env)
 	local name = self:run_parsed_func(env, self._name)
 
@@ -4422,7 +4421,7 @@ function BodyElement:activate_callback(env)
 	self:print_attribute_error("name", name, supported_values, true, env, nil)
 end
 
--- Lines 4010-4023
+-- Lines 4009-4022
 function BodyElement:set_motion(env, motion, body)
 	local func_name = motion and self.VALID_MOTION_MAP[motion]
 
@@ -4441,7 +4440,7 @@ function BodyElement:set_motion(env, motion, body)
 	end
 end
 
--- Lines 4025-4031
+-- Lines 4024-4030
 function BodyElement:set_enabled(env, enabled, body)
 	body:set_enabled(enabled)
 
@@ -4453,7 +4452,7 @@ function BodyElement:set_enabled(env, enabled, body)
 	end
 end
 
--- Lines 4033-4040
+-- Lines 4032-4039
 function BodyElement:add_ray_type(env, ray_type, body)
 	print("BodyElement:add_ray_type", ray_type, body:name())
 	body:add_ray_type(Idstring(ray_type))
@@ -4466,7 +4465,7 @@ function BodyElement:add_ray_type(env, ray_type, body)
 	end
 end
 
--- Lines 4042-4049
+-- Lines 4041-4048
 function BodyElement:remove_ray_type(env, ray_type, body)
 	print("BodyElement:remove_ray_type", ray_type, body:name())
 	body:remove_ray_type(Idstring(ray_type))
@@ -4479,7 +4478,7 @@ function BodyElement:remove_ray_type(env, ray_type, body)
 	end
 end
 
--- Lines 4052-4058
+-- Lines 4051-4057
 function BodyElement:set_body_collision(env, enabled, body)
 	body:set_collisions_enabled(enabled)
 
@@ -4491,7 +4490,7 @@ function BodyElement:set_body_collision(env, enabled, body)
 	end
 end
 
--- Lines 4060-4066
+-- Lines 4059-4065
 function BodyElement:set_mover_collision(env, enabled, body)
 	body:set_collides_with_mover(enabled)
 
@@ -4503,7 +4502,7 @@ function BodyElement:set_mover_collision(env, enabled, body)
 	end
 end
 
--- Lines 4068-4074
+-- Lines 4067-4073
 function BodyElement:set_pushed_by_mover(env, enabled, body)
 	body:set_pushed_by_mover(enabled)
 
@@ -4515,7 +4514,7 @@ function BodyElement:set_pushed_by_mover(env, enabled, body)
 	end
 end
 
--- Lines 4076-4089
+-- Lines 4075-4088
 function BodyElement:set_mover(env, mover, body)
 	local value = mover and self.VALID_MOVER_MAP[mover]
 
@@ -4535,7 +4534,7 @@ function BodyElement:set_mover(env, mover, body)
 	end
 end
 
--- Lines 4091-4103
+-- Lines 4090-4102
 function BodyElement:interpolate(env, value, body)
 	value = tonumber(value)
 
@@ -4553,7 +4552,7 @@ function BodyElement:interpolate(env, value, body)
 	end
 end
 
--- Lines 4105-4118
+-- Lines 4104-4117
 function BodyElement.load(unit, data)
 	for body_id, cat_data in pairs(data) do
 		for _, sub_data in pairs(cat_data) do
@@ -4575,7 +4574,7 @@ end
 ConstraintElement = ConstraintElement or class(BaseElement)
 ConstraintElement.NAME = "constraint"
 
--- Lines 4124-4130
+-- Lines 4123-4129
 function ConstraintElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
@@ -4584,7 +4583,7 @@ function ConstraintElement:init(node, unit_element)
 	self._remove = self:get("remove")
 end
 
--- Lines 4132-4161
+-- Lines 4131-4160
 function ConstraintElement:activate_callback(env)
 	local name = self:run_parsed_func(env, self._name)
 	local unit = env.dest_unit
@@ -4616,7 +4615,7 @@ function ConstraintElement:activate_callback(env)
 	end
 end
 
--- Lines 4163-4167
+-- Lines 4162-4166
 function ConstraintElement.load(unit, data)
 	for constraint_name, func_name in pairs(data) do
 		unit[func_name](unit, Idstring(constraint_name))
@@ -4626,18 +4625,19 @@ end
 DebugElement = DebugElement or class(BaseElement)
 DebugElement.NAME = "debug"
 
--- Lines 4173-4177
+-- Lines 4172-4176
 function DebugElement:init(node, unit_element)
 	BaseElement.init(self, node, unit_element)
 
 	self._text = self:get("text")
 end
 
--- Lines 4179-4182
+-- Lines 4178-4182
 function DebugElement:activate_callback(env)
 	local text = self:run_parsed_func(env, self._text)
 
 	cat_debug("sequence", "[SequenceManager] " .. tostring(text))
+	print("[SequenceManager]", tostring(text))
 end
 
 AlertElement = AlertElement or class(BaseElement)
@@ -5656,7 +5656,7 @@ function PhysicEffectElement:activate_callback(env)
 	local param_list = self:run_parsed_func_list(env, self._param_list)
 	local store_id_var = self:run_parsed_func(env, self._store_id_var) or "last_physic_effect_id"
 
-	env.vars[store_id_var] = World:play_physic_effect(Idstring(name), target, unpack(param_list))
+	env.vars[store_id_var] = World:play_physic_effect_on_unit(env.dest_unit, Idstring(name), target, unpack(param_list))
 end
 
 ProjectDecalElement = ProjectDecalElement or class(BaseElement)

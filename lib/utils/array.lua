@@ -81,7 +81,31 @@ function Array.from_node(node)
 	return nil
 end
 
--- Lines 66-74
+-- Lines 66-83
+function Array.from_script_data(script_data)
+	local width = script_data.width
+	local height = script_data.height
+	local name = script_data.name
+	local array_data = script_data.data
+
+	if width and height then
+		width = tonumber(width)
+		height = tonumber(height)
+
+		local data = {}
+		local items = array_data:split(" ")
+
+		for i, v in ipairs(items) do
+			data[i] = tonumber(v)
+		end
+
+		return Array:new(data, height, width, name)
+	end
+
+	return nil
+end
+
+-- Lines 85-93
 function Array.random(height, width, out)
 	local data = out and out._data or {}
 
@@ -94,7 +118,7 @@ function Array.random(height, width, out)
 	return out
 end
 
--- Lines 76-84
+-- Lines 95-103
 function Array.zero(height, width, out)
 	local data = out and out._data or {}
 
@@ -107,7 +131,7 @@ function Array.zero(height, width, out)
 	return out
 end
 
--- Lines 86-100
+-- Lines 105-119
 function Array:serialize_thread(name)
 	local str = "<array"
 
@@ -130,7 +154,7 @@ function Array:serialize_thread(name)
 	return str
 end
 
--- Lines 102-113
+-- Lines 121-132
 function Array:serialize(name)
 	local str = "<array"
 
@@ -149,7 +173,7 @@ function Array:serialize(name)
 	return str
 end
 
--- Lines 115-143
+-- Lines 134-162
 function Array:dot(other, out)
 	local src = self._data
 	local dst = other._data
@@ -180,7 +204,7 @@ function Array:dot(other, out)
 	return out
 end
 
--- Lines 145-175
+-- Lines 164-194
 function Array:dot_transpose(other, out)
 	local src = self._data
 	local dst = other._data
@@ -212,7 +236,7 @@ function Array:dot_transpose(other, out)
 	return out
 end
 
--- Lines 177-189
+-- Lines 196-208
 function Array:transpose(out)
 	local data = out and out._data or {}
 	local oindex = 1
@@ -229,7 +253,7 @@ function Array:transpose(out)
 	return out
 end
 
--- Lines 191-199
+-- Lines 210-218
 function array_tanh(dst, src)
 	local dst_data = dst:data()
 	local src_data = src:data()
@@ -241,7 +265,7 @@ function array_tanh(dst, src)
 	return dst
 end
 
--- Lines 201-208
+-- Lines 220-227
 function array_tanh_d(dst, src)
 	local dst_data = dst:data()
 	local src_data = src:data()
@@ -253,7 +277,7 @@ function array_tanh_d(dst, src)
 	return dst
 end
 
--- Lines 210-218
+-- Lines 229-237
 function array_logistic(dst, src)
 	local dst_data = dst:data()
 	local src_data = src:data()
@@ -265,7 +289,7 @@ function array_logistic(dst, src)
 	return dst
 end
 
--- Lines 220-227
+-- Lines 239-246
 function array_logistic_d(dst, src)
 	local dst_data = dst:data()
 	local src_data = src:data()
@@ -277,7 +301,7 @@ function array_logistic_d(dst, src)
 	return dst
 end
 
--- Lines 229-237
+-- Lines 248-256
 function array_relu(dst, src)
 	local dst_data = dst:data()
 	local src_data = src:data()
@@ -289,7 +313,7 @@ function array_relu(dst, src)
 	return dst
 end
 
--- Lines 239-247
+-- Lines 258-266
 function array_relu_d(dst, src)
 	local dst_data = dst:data()
 	local src_data = src:data()
@@ -303,7 +327,7 @@ function array_relu_d(dst, src)
 	return dst
 end
 
--- Lines 249-257
+-- Lines 268-276
 function array_softplus(dst, src)
 	local dst_data = dst:data()
 	local src_data = src:data()
@@ -315,7 +339,7 @@ function array_softplus(dst, src)
 	return dst
 end
 
--- Lines 259-267
+-- Lines 278-286
 function array_softplus_d(dst, src)
 	local dst_data = dst:data()
 	local src_data = src:data()
@@ -329,17 +353,17 @@ function array_softplus_d(dst, src)
 	return dst
 end
 
--- Lines 269-274
+-- Lines 288-293
 function array_sigmoid(dst, src)
 	return array_logistic(dst, src)
 end
 
--- Lines 276-281
+-- Lines 295-300
 function array_sigmoid_d(dst, src)
 	return array_logistic_d(dst, src)
 end
 
--- Lines 283-290
+-- Lines 302-309
 function array_dropout(dst, src, probability)
 	local dst_data = dst:data()
 	local src_data = src:data()
@@ -350,7 +374,7 @@ function array_dropout(dst, src, probability)
 	end
 end
 
--- Lines 292-302
+-- Lines 311-321
 function array_add(dst, a, b)
 	local dst_data = dst:data()
 	local a_data = a:data()
@@ -363,7 +387,7 @@ function array_add(dst, a, b)
 	return dst
 end
 
--- Lines 304-314
+-- Lines 323-333
 function array_mul(dst, a, b)
 	local dst_data = dst:data()
 	local a_data = a:data()
@@ -376,7 +400,7 @@ function array_mul(dst, a, b)
 	return dst
 end
 
--- Lines 316-325
+-- Lines 335-344
 function array_scalar(dst, a, s)
 	local dst_data = dst:data()
 	local a_data = a:data()
@@ -388,7 +412,7 @@ function array_scalar(dst, a, s)
 	return dst
 end
 
--- Lines 327-337
+-- Lines 346-356
 function array_sub(dst, a, b)
 	local dst_data = dst:data()
 	local a_data = a:data()
@@ -401,7 +425,7 @@ function array_sub(dst, a, b)
 	return dst
 end
 
--- Lines 339-346
+-- Lines 358-365
 function array_mean_error(src)
 	local src_data = src:data()
 	local err = 0

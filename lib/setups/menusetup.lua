@@ -29,11 +29,11 @@ core:import("SequenceManager")
 MenuSetup = MenuSetup or class(Setup)
 MenuSetup.IS_START_MENU = true
 
-local is_steam = SystemInfo:distribution() == Idstring("STEAM")
-local is_epic = SystemInfo:distribution() == Idstring("EPIC")
-local is_mm_eos = SystemInfo:matchmaking() == Idstring("MM_EPIC")
+local is_steam = IS_STEAM
+local is_epic = IS_EPIC
+local is_mm_eos = IS_EPIC_MM
 
--- Lines 68-123
+-- Lines 68-122
 function MenuSetup:load_packages()
 	Setup.load_packages(self)
 
@@ -71,9 +71,7 @@ function MenuSetup:load_packages()
 		end
 	end
 
-	local platform = SystemInfo:platform()
-
-	if platform == Idstring("XB1") or platform == Idstring("PS4") then
+	if IS_XB1 or IS_PS4 then
 		if not PackageManager:loaded("packages/game_base_init") then
 			PackageManager:load("packages/game_base_init")
 
@@ -84,12 +82,12 @@ function MenuSetup:load_packages()
 			Global._game_base_package_loaded = true
 		end
 	elseif not PackageManager:loaded("packages/game_base_init") then
-		-- Lines 115-117
+		-- Lines 114-116
 		local function _load_wip_func()
 			Global._game_base_package_loaded = true
 		end
 
-		-- Lines 118-120
+		-- Lines 117-119
 		local function load_base_func()
 			PackageManager:load("packages/game_base", _load_wip_func)
 		end
@@ -98,7 +96,7 @@ function MenuSetup:load_packages()
 	end
 end
 
--- Lines 125-147
+-- Lines 124-146
 function MenuSetup:gather_packages_to_unload()
 	Setup.unload_packages(self)
 
@@ -120,7 +118,7 @@ function MenuSetup:gather_packages_to_unload()
 	end
 end
 
--- Lines 149-161
+-- Lines 148-160
 function MenuSetup:unload_packages()
 	Setup.unload_packages(self)
 
@@ -133,7 +131,7 @@ function MenuSetup:unload_packages()
 	end
 end
 
--- Lines 163-293
+-- Lines 162-292
 function MenuSetup:init_game()
 	local gsm = Setup.init_game(self)
 
@@ -200,11 +198,11 @@ function MenuSetup:init_game()
 	return gsm
 end
 
--- Lines 295-307
+-- Lines 294-306
 function MenuSetup:init_managers(managers)
 	Setup.init_managers(self, managers)
 	managers.sequence:preload()
-	PackageManager:set_resource_loaded_clbk(Idstring("unit"), callback(managers.sequence, managers.sequence, "clbk_pkg_manager_unit_loaded"))
+	PackageManager:set_resource_loaded_clbk(IDS_UNIT, callback(managers.sequence, managers.sequence, "clbk_pkg_manager_unit_loaded"))
 
 	managers.menu_scene = MenuSceneManager:new()
 	managers.money = MoneyManager:new()
@@ -212,7 +210,7 @@ function MenuSetup:init_managers(managers)
 	managers.network = NetworkManager:new()
 end
 
--- Lines 309-339
+-- Lines 308-329
 function MenuSetup:init_finalize()
 	Setup.init_finalize(self)
 
@@ -220,17 +218,7 @@ function MenuSetup:init_finalize()
 		managers.network:init_finalize()
 	end
 
-	if SystemInfo:platform() == Idstring("PS3") then
-		if not Global.hdd_space_checked then
-			managers.savefile:check_space_required()
-
-			self.update = self.update_wait_for_savegame_info
-		else
-			managers.achievment:chk_install_trophies()
-		end
-	end
-
-	if SystemInfo:platform() == Idstring("PS4") then
+	if IS_PS4 then
 		managers.achievment:chk_install_trophies()
 	end
 
@@ -246,7 +234,7 @@ function MenuSetup:init_finalize()
 	TestAPIHelper.on_event("exit_to_menu")
 end
 
--- Lines 341-360
+-- Lines 331-350
 function MenuSetup:update_wait_for_savegame_info(t, dt)
 	managers.savefile:update(t, dt)
 	print("Checking fetch_savegame_hdd_space_required")
@@ -254,7 +242,7 @@ function MenuSetup:update_wait_for_savegame_info(t, dt)
 	if managers.savefile:fetch_savegame_hdd_space_required() then
 		Application:check_sufficient_hdd_space_to_launch(managers.savefile:fetch_savegame_hdd_space_required(), managers.dlc:has_full_game())
 
-		if SystemInfo:platform() == Idstring("PS3") or SystemInfo:platform() == Idstring("PS4") then
+		if IS_PS4 then
 			Trophies:set_translation_text(managers.localization:text("err_load"), managers.localization:text("err_ins"), managers.localization:text("err_disk"))
 			managers.achievment:chk_install_trophies()
 		end
@@ -264,32 +252,32 @@ function MenuSetup:update_wait_for_savegame_info(t, dt)
 	end
 end
 
--- Lines 362-367
+-- Lines 352-357
 function MenuSetup:update(t, dt)
 	Setup.update(self, t, dt)
 	managers.crimenet:update(t, dt)
 	managers.network:update(t, dt)
 end
 
--- Lines 369-373
+-- Lines 359-363
 function MenuSetup:paused_update(t, dt)
 	Setup.paused_update(self, t, dt)
 	managers.network:update(t, dt)
 end
 
--- Lines 375-403
+-- Lines 365-393
 function MenuSetup:end_update(t, dt)
 	Setup.end_update(self, t, dt)
 	managers.network:end_update()
 end
 
--- Lines 405-409
+-- Lines 395-399
 function MenuSetup:paused_end_update(t, dt)
 	Setup.paused_end_update(self, t, dt)
 	managers.network:end_update()
 end
 
--- Lines 411-414
+-- Lines 401-404
 function MenuSetup:destroy()
 	MenuSetup.super.destroy(self)
 	managers.menu_scene:destroy()

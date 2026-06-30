@@ -252,35 +252,22 @@ function toolbar_toggle_trg(data)
 	end
 end
 
--- Lines 246-300
+-- Lines 246-295
 function dump_mesh(units, name, get_objects_string)
 	name = name or "dump_mesh"
 	get_objects_string = get_objects_string or "g_*"
 	units = units or World:find_units_quick("all", managers.slot:get_mask("dump_mesh"))
 
 	local objects = {}
-	local lods = {
-		"e",
-		"_e",
-		"d",
-		"_d",
-		"c",
-		"_c",
-		"b",
-		"_b",
-		"a",
-		"_a"
-	}
 
-	cat_print("editor", "Starting dump mesh")
+	cat_print("editor", "Starting dump on: " .. name .. " -> " .. get_objects_string)
 	cat_print("editor", "  Dumping from " .. #units .. " units")
 
 	for _, u in ipairs(units) do
-		local i = 1
 		local objs = {}
 
 		if #objs == 0 then
-			cat_print("editor", "getting gfx instead of lod for unit " .. u:name():s())
+			cat_print("editor", "getting " .. get_objects_string .. " instead of lod for unit " .. u:name():s())
 
 			objs = u:get_objects(get_objects_string)
 		end
@@ -306,7 +293,7 @@ function dump_mesh(units, name, get_objects_string)
 	MeshDumper:dump_meshes(managers.database:root_path() .. name, objects, Rotation(Vector3(1, 0, 0), Vector3(0, 0, -1), Vector3(0, -1, 0)))
 end
 
--- Lines 303-350
+-- Lines 298-345
 function dump_all(units, name, get_objects_string)
 	name = name or "all_dumped"
 	get_objects_string = get_objects_string or "g_*"

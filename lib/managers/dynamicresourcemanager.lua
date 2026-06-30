@@ -4,7 +4,7 @@ DynamicResourceManager.listener_events = {
 	file_streamer_workload = 1
 }
 
-local ids_unit = Idstring("unit")
+local ids_unit = IDS_UNIT
 
 -- Lines 10-28
 function DynamicResourceManager:init()

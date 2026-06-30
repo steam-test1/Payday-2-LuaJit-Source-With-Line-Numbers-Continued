@@ -9,7 +9,7 @@ end
 
 -- Lines 16-27
 function PerpetualEventManager:init_finalize()
-	if SystemInfo:matchmaking() == Idstring("MM_STEAM") and not Global.perpetual_manager.event_fetched then
+	if IS_STEAM_MM and not Global.perpetual_manager.event_fetched then
 		self:fetch_event()
 	end
 

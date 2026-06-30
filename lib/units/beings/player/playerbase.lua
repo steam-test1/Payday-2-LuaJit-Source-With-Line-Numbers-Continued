@@ -351,7 +351,7 @@ function PlayerBase:_unregister()
 	end
 end
 
--- Lines 380-406
+-- Lines 380-402
 function PlayerBase:pre_destroy(unit)
 	self:_unregister()
 	UnitBase.pre_destroy(self, unit)
@@ -378,23 +378,19 @@ function PlayerBase:pre_destroy(unit)
 			peer:set_unit(nil)
 		end
 	end
-
-	unit:movement():pre_destroy(unit)
-	unit:inventory():pre_destroy(unit)
-	unit:character_damage():pre_destroy()
 end
 
--- Lines 414-416
+-- Lines 410-412
 function PlayerBase:upgrade_value(category, upgrade)
 	return managers.player:upgrade_value_nil(category, upgrade)
 end
 
--- Lines 418-420
+-- Lines 414-416
 function PlayerBase:upgrade_level(category, upgrade)
 	return managers.player:upgrade_level_nil(category, upgrade)
 end
 
--- Lines 424-426
+-- Lines 420-422
 function PlayerBase:character_name()
 	return managers.criminals:character_name_by_unit(self._unit)
 end

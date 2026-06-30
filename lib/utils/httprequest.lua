@@ -1,26 +1,21 @@
 HttpRequest = HttpRequest or class()
 
--- Lines 9-21
+-- Lines 9-17
 function HttpRequest:init()
 	self._requests = self._requests or {}
-
-	if SystemInfo:distribution() == Idstring("STEAM") then
-		self.handler = Steam
-	else
-		self.handler = HttpCurl
-	end
+	self.handler = Steam
 
 	if table.size(self._requests) > 0 then
 		self:check_requests()
 	end
 end
 
--- Lines 23-25
+-- Lines 19-21
 function HttpRequest:update(t, dt)
 	self:check_requests()
 end
 
--- Lines 27-37
+-- Lines 23-33
 function HttpRequest:on_request_done(clbk, ...)
 	self._current_request = false
 
@@ -31,7 +26,7 @@ function HttpRequest:on_request_done(clbk, ...)
 	self:check_requests()
 end
 
--- Lines 39-72
+-- Lines 35-68
 function HttpRequest:check_requests()
 	if self._current_request then
 		return
@@ -64,7 +59,7 @@ function HttpRequest:check_requests()
 	end
 end
 
--- Lines 74-112
+-- Lines 70-108
 function HttpRequest:create_request(method, url, clbk, content_type, body, headers, key)
 	if key then
 		if self._current_request and self._current_request.key and self._current_request.key == key then
@@ -101,17 +96,26 @@ function HttpRequest:create_request(method, url, clbk, content_type, body, heade
 	self:check_requests()
 end
 
--- Lines 114-116
+-- Lines 110-121
 function HttpRequest:get(url, clbk, headers, key)
-	self:create_request("get", url, clbk, nil, nil, headers, key)
+	-- Lines 112-118
+	local function new_clbk(error_code, status_code, response_body)
+		if status_code >= 200 and status_code <= 206 then
+			clbk(true, response_body)
+		else
+			clbk(false)
+		end
+	end
+
+	Distribution:make_http_request("GET", url, new_clbk, headers)
 end
 
--- Lines 118-120
+-- Lines 123-125
 function HttpRequest:post(url, clbk, content_type, body, headers, key)
-	self:create_request("post", url, clbk, content_type, body, headers, key)
+	Distribution:make_http_request("POST", url, clbk, headers, content_type, body, string.len(body))
 end
 
--- Lines 122-124
+-- Lines 127-129
 function HttpRequest:put(url, clbk, content_type, body, headers, key)
-	self:create_request("put", url, clbk, content_type, body, headers, key)
+	Distribution:make_http_request("PUT", url, clbk, headers, content_type, body, string.len(body))
 end

@@ -4,48 +4,39 @@ core:import("CoreApp")
 core:import("CoreString")
 
 DatabaseManager = DatabaseManager or class()
+DatabaseManager.IDS_INDEX = Idstring("index")
+DatabaseManager.IDS_TYPES = Idstring("indices/lookups/editor_types")
 
--- Lines 8-18
+-- Lines 10-21
 function DatabaseManager:list_unit_types()
 	if self.__unit_types == nil then
+		self:list_units_of_type("")
+
 		self.__unit_types = {}
 
-		for _, unit in ipairs(self:list_entries_of_type("unit")) do
-			local unit_data = CoreEngineAccess._editor_unit_data(unit:id())
-
-			table.insert(self.__unit_types, unit_data and unit_data:type() or nil)
+		for _, type in ipairs(self.__units_by_type) do
+			self.__unit_types[type._meta] = true
 		end
 	end
 
 	return self.__unit_types
 end
 
--- Lines 20-34
+-- Lines 23-29
 function DatabaseManager:list_units_of_type(type)
 	if self.__units_by_type == nil then
-		self.__units_by_type = {}
-
-		for _, unit in ipairs(self:list_entries_of_type("unit")) do
-			local unit_data = CoreEngineAccess._editor_unit_data(unit:id())
-			local key = unit_data and unit_data:type() and unit_data:type():key()
-
-			if key then
-				self.__units_by_type[key] = self.__units_by_type[key] or {}
-
-				table.insert(self.__units_by_type[key], unit)
-			end
-		end
+		self.__units_by_type = PackageManager:editor_load_script_data(self.IDS_INDEX, self.IDS_TYPES)
 	end
 
-	return self.__units_by_type[type:key()] or {}
+	return self.__units_by_type[type] or {}
 end
 
--- Lines 36-38
+-- Lines 31-33
 function DatabaseManager:list_entries_of_type(type, pattern)
 	return self:list_entries_in_index(self:_type_index(type), pattern)
 end
 
--- Lines 40-43
+-- Lines 35-38
 function DatabaseManager:list_entries_in_index(index, pattern)
 	local entries = self:_entries_in_index(index)
 
@@ -54,7 +45,7 @@ function DatabaseManager:list_entries_in_index(index, pattern)
 	end) or entries
 end
 
--- Lines 45-62
+-- Lines 40-54
 function DatabaseManager:recompile(...)
 	local files = {}
 
@@ -65,19 +56,15 @@ function DatabaseManager:recompile(...)
 	end
 
 	Application:data_compile({
-		preprocessor_definitions = "preprocessor_definitions",
-		target_db_name = "all",
 		verbose = false,
-		platform = string.lower(SystemInfo:platform():s()),
-		source_root = self:base_path(),
-		target_db_root = Application:base_path() .. "assets",
+		build_profile = Application:build_profile_path(),
 		source_files = files
 	})
 	DB:reload()
 	self:clear_all_cached_indices()
 end
 
--- Lines 64-73
+-- Lines 56-65
 function DatabaseManager:clear_cached_index(index)
 	if self.__entries then
 		self.__entries[index] = nil
@@ -89,22 +76,22 @@ function DatabaseManager:clear_cached_index(index)
 	end
 end
 
--- Lines 75-79
+-- Lines 67-71
 function DatabaseManager:clear_all_cached_indices()
 	self.__entries = nil
 	self.__unit_types = nil
 	self.__units_by_type = nil
 end
 
--- Lines 82-89
+-- Lines 74-81
 function DatabaseManager:root_path()
-	local path = Application:base_path() .. (CoreApp.arg_value("-assetslocation") or "..\\..\\")
+	local path = Application:project_path()
 
 	path = Application:nice_path(path, true)
 
 	local f
 
-	-- Lines 87-87
+	-- Lines 79-79
 	function f(s)
 		local str, i = string.gsub(s, "\\[%w_%.%s]+\\%.%.", "")
 
@@ -114,22 +101,22 @@ function DatabaseManager:root_path()
 	return f(path)
 end
 
--- Lines 91-93
+-- Lines 83-85
 function DatabaseManager:base_path()
 	return self:root_path() .. "assets\\"
 end
 
--- Lines 95-97
+-- Lines 87-89
 function DatabaseManager:is_valid_database_path(path)
 	return string.begins(Application:nice_path(path, true):lower(), Application:nice_path(self:base_path(), true):lower())
 end
 
--- Lines 99-101
+-- Lines 91-93
 function DatabaseManager:entry_name(path)
 	return string.match(self:entry_path(path), "([^/]*)$")
 end
 
--- Lines 103-106
+-- Lines 95-98
 function DatabaseManager:entry_type(path)
 	if not string.find(path, "%.") then
 		return nil
@@ -138,7 +125,7 @@ function DatabaseManager:entry_type(path)
 	return string.match(path, "([^.]*)$")
 end
 
--- Lines 108-112
+-- Lines 100-104
 function DatabaseManager:entry_path(path)
 	path = string.match(string.gsub(path, ".*assets[/\\]", ""), "([^.]*)")
 	path = string.gsub(path, "[/\\]+", "/")
@@ -146,7 +133,7 @@ function DatabaseManager:entry_path(path)
 	return path
 end
 
--- Lines 114-119
+-- Lines 106-111
 function DatabaseManager:entry_path_with_properties(path)
 	path = string.gsub(path, ".*assets[/\\]", "")
 	path = string.gsub(path, "%.%w-$", "")
@@ -155,7 +142,7 @@ function DatabaseManager:entry_path_with_properties(path)
 	return path
 end
 
--- Lines 121-125
+-- Lines 113-117
 function DatabaseManager:entry_relative_path(path)
 	path = string.gsub(path, ".*assets[/\\]", "")
 	path = string.gsub(path, "[/\\]+", "/")
@@ -163,7 +150,7 @@ function DatabaseManager:entry_relative_path(path)
 	return path
 end
 
--- Lines 127-131
+-- Lines 119-123
 function DatabaseManager:entry_expanded_path(type, entry_path, prop)
 	local properties = prop or ""
 	local path = string.gsub(self:base_path() .. entry_path .. properties .. "." .. type, "/", "\\")
@@ -171,14 +158,14 @@ function DatabaseManager:entry_expanded_path(type, entry_path, prop)
 	return path
 end
 
--- Lines 133-136
+-- Lines 125-128
 function DatabaseManager:entry_expanded_directory(entry_path)
 	local path = string.gsub(self:base_path() .. entry_path, "/", "\\")
 
 	return path
 end
 
--- Lines 138-142
+-- Lines 130-134
 function DatabaseManager:load_node_dialog(parent, file_pattern, start_path)
 	local path = self:open_file_dialog(parent, file_pattern, start_path)
 	local node = path and self:load_node(path)
@@ -186,7 +173,7 @@ function DatabaseManager:load_node_dialog(parent, file_pattern, start_path)
 	return node, path
 end
 
--- Lines 144-152
+-- Lines 136-144
 function DatabaseManager:open_file_dialog(parent, file_pattern, start_path)
 	local path = start_path or self:base_path()
 	local pattern = file_pattern or "*.*"
@@ -197,7 +184,7 @@ function DatabaseManager:open_file_dialog(parent, file_pattern, start_path)
 	end
 end
 
--- Lines 154-177
+-- Lines 146-169
 function DatabaseManager:save_file_dialog(parent, new, file_pattern, start_path, save_outside_project)
 	local pattern = file_pattern or "*.*"
 	local path = start_path or self:base_path()
@@ -226,7 +213,7 @@ function DatabaseManager:save_file_dialog(parent, new, file_pattern, start_path,
 	return nil, nil
 end
 
--- Lines 179-187
+-- Lines 171-179
 function DatabaseManager:load_node(path)
 	if self:has(path) then
 		local file = SystemFS:open(path, "r")
@@ -240,7 +227,7 @@ function DatabaseManager:load_node(path)
 	return nil
 end
 
--- Lines 189-193
+-- Lines 181-185
 function DatabaseManager:save_node(node, path)
 	local file = assert(SystemFS:open(path, "w"))
 
@@ -248,17 +235,17 @@ function DatabaseManager:save_node(node, path)
 	file:close()
 end
 
--- Lines 195-197
+-- Lines 187-189
 function DatabaseManager:delete(path)
 	return SystemFS:delete_file(path)
 end
 
--- Lines 199-201
+-- Lines 191-193
 function DatabaseManager:has(path)
 	return SystemFS:exists(path)
 end
 
--- Lines 203-213
+-- Lines 195-205
 function DatabaseManager:_entries_in_index(index)
 	local result = self.__entries and self.__entries[index]
 
@@ -271,22 +258,18 @@ function DatabaseManager:_entries_in_index(index)
 	return result
 end
 
--- Lines 215-217
+-- Lines 207-209
 function DatabaseManager:_type_index(type)
 	return string.format("indices/types/%s", type:s())
 end
 
--- Lines 219-228
+-- Lines 211-218
 function DatabaseManager:_parse_entries_in_index(index)
-	local file = DB:has("index", index) and DB:open("index", index) or nil
-
-	if file == nil then
+	if not DB:has("index", index) then
 		return {}
-	else
-		local contents = file:read()
-
-		file:close()
-
-		return string.split(contents, "[\r\n]")
 	end
+
+	local file = PackageManager:editor_load_script_data(self.IDS_INDEX, Idstring(index))
+
+	return file
 end

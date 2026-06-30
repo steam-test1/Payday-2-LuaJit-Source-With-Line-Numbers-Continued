@@ -5284,7 +5284,9 @@ function MenuNodeOpenContainerGui:setup(half_fade)
 
 			if is_weapon_skin then
 				table.insert(self._text_buttons, {
+					blur = nil,
 					highlighted = false,
+					text = nil,
 					panel = new_content,
 					clbk = callback(self, self, "weapon_cosmetics_callback"),
 					image = select_box,
@@ -5298,7 +5300,9 @@ function MenuNodeOpenContainerGui:setup(half_fade)
 				})
 			elseif is_armor_skin then
 				table.insert(self._text_buttons, {
+					blur = nil,
 					highlighted = false,
+					text = nil,
 					panel = new_content,
 					clbk = callback(self, self, "armor_cosmetics_callback"),
 					image = select_box,
@@ -5383,8 +5387,10 @@ function MenuNodeOpenContainerGui:update_info(button)
 			make_fine_text(title_text)
 
 			local desc, colors = InventoryDescription.create_description_item({
+				bonus = nil,
 				category = "weapon_skins",
 				instance_id = 0,
+				quality = nil,
 				entry = button.params.cosmetic_id
 			}, tweak_data.blackmarket.weapon_skins[button.params.cosmetic_id], {
 				default = tweak_data.screen_colors.text,
@@ -5418,8 +5424,10 @@ function MenuNodeOpenContainerGui:update_info(button)
 			make_fine_text(title_text)
 
 			local desc, colors = InventoryDescription.create_description_item({
+				bonus = nil,
 				category = "armor_skins",
 				instance_id = 0,
+				quality = nil,
 				entry = button.params.cosmetic_id
 			}, c_td, {
 				default = tweak_data.screen_colors.text,

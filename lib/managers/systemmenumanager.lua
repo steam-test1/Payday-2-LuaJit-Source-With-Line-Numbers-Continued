@@ -25,9 +25,9 @@ SystemMenuManager.PLATFORM_CLASS_MAP = {}
 
 -- Lines 34-37
 function SystemMenuManager:new(...)
-	local platform = SystemInfo:platform()
+	local platform = PLATFORM:key()
 
-	return (self.PLATFORM_CLASS_MAP[platform:key()] or GenericSystemMenuManager):new(...)
+	return (self.PLATFORM_CLASS_MAP[platform] or GenericSystemMenuManager):new(...)
 end
 
 GenericSystemMenuManager = GenericSystemMenuManager or class()
@@ -48,7 +48,9 @@ GenericSystemMenuManager.GENERIC_BUTTON_DIALOG_CLASS = ButtonsDialog
 -- Lines 83-107
 function GenericSystemMenuManager:init()
 	if not Global.dialog_manager then
-		Global.dialog_manager = {}
+		Global.dialog_manager = {
+			init_show_data_list = nil
+		}
 	end
 
 	self._dialog_shown_callback_handler = CoreEvent.CallbackEventHandler:new()

@@ -13,7 +13,7 @@ function ElementDebug:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines 14-31
+-- Lines 14-30
 function ElementDebug:on_executed(instigator)
 	if not self._values.enabled then
 		return

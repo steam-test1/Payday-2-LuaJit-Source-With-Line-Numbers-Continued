@@ -548,7 +548,7 @@ function HUDChat:set_blinking(b)
 	end
 end
 
--- Lines 409-438
+-- Lines 409-439
 function HUDChat:update_caret()
 	local text = self._input_panel:child("input_text")
 	local caret = self._input_panel:child("caret")
@@ -576,8 +576,9 @@ function HUDChat:update_caret()
 		h = 0
 	end
 
-	caret:set_world_shape(x, y + 2, w, h - 4)
-	self:set_blinking(s == e and self._focus)
+	local blink = InputUtils.common_text_input_update_caret(text, caret, self._focus, nil)
+
+	self:set_blinking(blink)
 
 	local mid = x / self._input_panel:child("input_bg"):w()
 
@@ -591,7 +592,7 @@ function HUDChat:update_caret()
 	})
 end
 
--- Lines 441-471
+-- Lines 442-472
 function HUDChat:enter_text(o, s)
 	if managers.hud and managers.hud:showing_stats_screen() then
 		return
@@ -624,86 +625,37 @@ function HUDChat:enter_text(o, s)
 	self:update_caret()
 end
 
--- Lines 474-537
+-- Lines 475-494
 function HUDChat:update_key_down(o, k)
 	wait(0.6)
 
 	local text = self._input_panel:child("input_text")
 
 	while self._key_pressed == k do
-		local s, e = text:selection()
-		local n = utf8.len(text:text())
-		local d = math.abs(e - s)
-
-		if self._key_pressed == Idstring("backspace") then
-			if s == e and s > 0 then
-				text:set_selection(s - 1, e)
+		InputUtils.common_text_input_key_press(text, k, nil, false, self._enter_callback, self._esc_callback, function(arrow)
+			if arrow == "up" then
+				self:scroll_up()
+				self:set_scroll_indicators()
+			elseif arrow == "down" then
+				self:scroll_down()
+				self:set_scroll_indicators()
 			end
-
-			text:replace_text("")
-
-			if utf8.len(text:text()) < 1 and type(self._esc_callback) ~= "number" then
-				-- Nothing
-			end
-		elseif self._key_pressed == Idstring("delete") then
-			if s == e and s < n then
-				text:set_selection(s, e + 1)
-			end
-
-			text:replace_text("")
-
-			if utf8.len(text:text()) < 1 and type(self._esc_callback) ~= "number" then
-				-- Nothing
-			end
-		elseif self._key_pressed == Idstring("insert") then
-			local clipboard = Application:get_clipboard() or ""
-
-			text:replace_text(clipboard)
-
-			local lbs = text:line_breaks()
-
-			if #lbs > 1 then
-				local s = lbs[2]
-				local e = utf8.len(text:text())
-
-				text:set_selection(s, e)
-				text:replace_text("")
-			end
-		elseif self._key_pressed == Idstring("left") then
-			if s < e then
-				text:set_selection(s, s)
-			elseif s > 0 then
-				text:set_selection(s - 1, s - 1)
-			end
-		elseif self._key_pressed == Idstring("right") then
-			if s < e then
-				text:set_selection(e, e)
-			elseif s < n then
-				text:set_selection(s + 1, s + 1)
-			end
-		elseif self._key_pressed == Idstring("up") then
-			self:scroll_up()
-			self:set_scroll_indicators()
-		elseif self._key_pressed == Idstring("down") then
-			self:scroll_down()
-			self:set_scroll_indicators()
-		else
-			self._key_pressed = false
-		end
-
+		end)
 		self:update_caret()
 		wait(0.03)
 	end
 end
 
--- Lines 539-543
+-- Lines 496-501
 function HUDChat:key_release(o, k)
 	if self._key_pressed == k then
 		self._key_pressed = false
 	end
+
+	self:update_caret()
 end
 
--- Lines 546-637
+-- Lines 504-541
 function HUDChat:key_press(o, k)
 	if self._skip_first then
 		self._skip_first = false
@@ -726,82 +678,24 @@ function HUDChat:key_press(o, k)
 
 	text:stop()
 	text:animate(callback(self, self, "update_key_down"), k)
-
-	if k == Idstring("backspace") then
-		if s == e and s > 0 then
-			text:set_selection(s - 1, e)
+	InputUtils.common_text_input_key_press(text, k, nil, false, self._enter_callback, self._esc_callback, function(arrow)
+		if arrow == "up" then
+			self:scroll_up()
+			self:set_scroll_indicators()
+		elseif arrow == "down" then
+			self:scroll_down()
+			self:set_scroll_indicators()
 		end
-
-		text:replace_text("")
-
-		if utf8.len(text:text()) < 1 and type(self._esc_callback) ~= "number" then
-			-- Nothing
-		end
-	elseif k == Idstring("delete") then
-		if s == e and s < n then
-			text:set_selection(s, e + 1)
-		end
-
-		text:replace_text("")
-
-		if utf8.len(text:text()) < 1 and type(self._esc_callback) ~= "number" then
-			-- Nothing
-		end
-	elseif k == Idstring("insert") then
-		local clipboard = Application:get_clipboard() or ""
-
-		text:replace_text(clipboard)
-
-		local lbs = text:line_breaks()
-
-		if #lbs > 1 then
-			local s = lbs[2]
-			local e = utf8.len(text:text())
-
-			text:set_selection(s, e)
-			text:replace_text("")
-		end
-	elseif k == Idstring("left") then
-		if s < e then
-			text:set_selection(s, s)
-		elseif s > 0 then
-			text:set_selection(s - 1, s - 1)
-		end
-	elseif k == Idstring("right") then
-		if s < e then
-			text:set_selection(e, e)
-		elseif s < n then
-			text:set_selection(s + 1, s + 1)
-		end
-	elseif k == Idstring("up") then
-		self:scroll_up()
-		self:set_scroll_indicators()
-	elseif k == Idstring("down") then
-		self:scroll_down()
-		self:set_scroll_indicators()
-	elseif self._key_pressed == Idstring("end") then
-		text:set_selection(n, n)
-	elseif self._key_pressed == Idstring("home") then
-		text:set_selection(0, 0)
-	elseif k == Idstring("enter") then
-		if type(self._enter_callback) ~= "number" then
-			self._enter_callback()
-		end
-	elseif k == Idstring("esc") and type(self._esc_callback) ~= "number" then
-		text:set_text("")
-		text:set_selection(0, 0)
-		self._esc_callback()
-	end
-
+	end)
 	self:update_caret()
 end
 
--- Lines 641-643
+-- Lines 545-547
 function HUDChat:send_message(name, message)
 	return
 end
 
--- Lines 645-691
+-- Lines 549-595
 function HUDChat:receive_message(name, message, color, icon)
 	local output_panel = self._panel:child("output_panel")
 	local scroll_panel = output_panel:child("scroll_panel")
@@ -866,7 +760,7 @@ function HUDChat:receive_message(name, message, color, icon)
 	end
 end
 
--- Lines 693-704
+-- Lines 597-608
 function HUDChat:_animate_show_output(o, start_alpha)
 	local TOTAL_T = 0.25
 	local t = 0
@@ -884,7 +778,7 @@ function HUDChat:_animate_show_output(o, start_alpha)
 	self:set_output_alpha(1)
 end
 
--- Lines 706-721
+-- Lines 610-625
 function HUDChat:_animate_fade_output()
 	local wait_t = 10
 	local fade_t = 1
@@ -909,7 +803,7 @@ function HUDChat:_animate_fade_output()
 	self:set_output_alpha(0)
 end
 
--- Lines 723-734
+-- Lines 627-638
 function HUDChat:_animate_show_component(input_panel, start_alpha)
 	local TOTAL_T = 0.25
 	local t = 0
@@ -927,7 +821,7 @@ function HUDChat:_animate_show_component(input_panel, start_alpha)
 	input_panel:set_alpha(1)
 end
 
--- Lines 736-746
+-- Lines 640-650
 function HUDChat:_animate_hide_input(input_panel)
 	local TOTAL_T = 0.25
 	local t = 0
@@ -943,7 +837,7 @@ function HUDChat:_animate_hide_input(input_panel)
 	input_panel:set_alpha(0)
 end
 
--- Lines 748-757
+-- Lines 652-661
 function HUDChat:_animate_input_bg(input_bg)
 	local t = 0
 
@@ -958,7 +852,7 @@ function HUDChat:_animate_input_bg(input_bg)
 	end
 end
 
--- Lines 759-777
+-- Lines 663-681
 function HUDChat:set_output_alpha(alpha)
 	local output_panel = self._panel:child("output_panel")
 	local scroll_bar = self._panel:child("scroll_bar")
@@ -975,7 +869,7 @@ function HUDChat:set_output_alpha(alpha)
 	scroll_down_indicator_arrow:set_alpha(alpha)
 end
 
--- Lines 779-788
+-- Lines 683-692
 function HUDChat:remove()
 	self._panel:child("output_panel"):stop()
 	self._input_panel:stop()

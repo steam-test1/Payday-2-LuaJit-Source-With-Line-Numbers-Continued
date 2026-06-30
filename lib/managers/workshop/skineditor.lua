@@ -490,7 +490,7 @@ function SkinEditor:get_texture_list(skin, path)
 
 	-- Lines 395-402
 	local function valid_ext(filename)
-		local dot_index = string.find(filename, ".[^.]*$")
+		local dot_index = string.find(filename, "%.[^%.]*$")
 
 		if dot_index == 1 then
 			return false

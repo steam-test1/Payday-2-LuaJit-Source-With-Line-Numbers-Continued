@@ -12,7 +12,7 @@ end
 function DummyCivilianBase:play_state(state_name, at_time)
 	local result = self._unit:play_state(Idstring(state_name), at_time)
 
-	return result ~= Idstring("") and result
+	return result ~= IDS_EMPTY and result
 end
 
 -- Lines 19-21

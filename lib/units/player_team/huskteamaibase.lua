@@ -32,16 +32,14 @@ function HuskTeamAIBase:on_death_exit()
 	self:set_slot(self._unit, 0)
 end
 
--- Lines 43-53
+-- Lines 43-52
 function HuskTeamAIBase:pre_destroy(unit)
 	self:remove_upgrades()
-	unit:movement():pre_destroy()
-	unit:inventory():pre_destroy(unit)
 	TeamAIBase.unregister(self)
 	UnitBase.pre_destroy(self, unit)
 end
 
--- Lines 57-76
+-- Lines 56-75
 function HuskTeamAIBase:load(data)
 	self._tweak_table = data.base.tweak_table or self._tweak_table
 
@@ -65,12 +63,12 @@ function HuskTeamAIBase:load(data)
 	end
 end
 
--- Lines 80-82
+-- Lines 79-81
 function HuskTeamAIBase:unregister()
 	TeamAIBase.unregister(self)
 end
 
--- Lines 86-88
+-- Lines 85-87
 function HuskTeamAIBase:character_name()
 	return managers.criminals:character_name_by_unit(self._unit)
 end

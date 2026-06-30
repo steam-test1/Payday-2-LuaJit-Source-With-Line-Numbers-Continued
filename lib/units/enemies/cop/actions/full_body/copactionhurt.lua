@@ -1853,14 +1853,41 @@ function CopActionHurt:_prepare_ragdoll()
 	end
 end
 
--- Lines 1755-1807
+local ZeroVec = Vector3()
+
+-- Lines 1757-1843
 function CopActionHurt:_start_ragdoll(reset_momentum)
 	if self._ragdolled then
 		return true
 	end
 
 	if reset_momentum and self._unit:damage() and self._unit:damage():has_sequence("leg_arm_hitbox") then
+		local nr_u_bodies = self._unit:num_bodies()
+		local i_u_body = 0
+
+		while i_u_body < nr_u_bodies do
+			local u_body = self._unit:body(i_u_body)
+
+			if u_body:dynamic() then
+				u_body:set_velocity(ZeroVec)
+			end
+
+			i_u_body = i_u_body + 1
+		end
+
 		self._unit:damage():run_sequence_simple("leg_arm_hitbox")
+
+		i_u_body = 0
+
+		while i_u_body < nr_u_bodies do
+			local u_body = self._unit:body(i_u_body)
+
+			if u_body:dynamic() then
+				u_body:set_velocity(ZeroVec)
+			end
+
+			i_u_body = i_u_body + 1
+		end
 	end
 
 	if self._unit:damage() and self._unit:damage():has_sequence("switch_to_ragdoll") then
@@ -1914,11 +1941,26 @@ function CopActionHurt:_start_ragdoll(reset_momentum)
 			self._unit:sound():anim_clbk_play_sound(self._unit, "repel_end")
 		end
 
+		if reset_momentum then
+			local nr_u_bodies = self._unit:num_bodies()
+			local i_u_body = 0
+
+			while i_u_body < nr_u_bodies do
+				local u_body = self._unit:body(i_u_body)
+
+				if u_body:dynamic() then
+					u_body:set_velocity(ZeroVec)
+				end
+
+				i_u_body = i_u_body + 1
+			end
+		end
+
 		return true
 	end
 end
 
--- Lines 1811-1816
+-- Lines 1847-1852
 function CopActionHurt:force_ragdoll(reset_momentum)
 	if self:_start_ragdoll(reset_momentum) then
 		self.update = self._upd_ragdolled
@@ -1927,7 +1969,7 @@ function CopActionHurt:force_ragdoll(reset_momentum)
 	end
 end
 
--- Lines 1820-1833
+-- Lines 1856-1869
 function CopActionHurt:clbk_body_active_state(tag, unit, body, activated)
 	if self._root_act_tags[tag:key()] then
 		if activated then
@@ -1947,7 +1989,7 @@ end
 
 CopActionHurt._apply_freefall = CopActionWalk._apply_freefall
 
--- Lines 1841-1846
+-- Lines 1877-1882
 function CopActionHurt:_freeze_ragdoll()
 	self._root_act_tags = {}
 
@@ -1956,7 +1998,7 @@ function CopActionHurt:_freeze_ragdoll()
 	end
 end
 
--- Lines 1850-1867
+-- Lines 1886-1903
 function CopActionHurt:clbk_chk_freeze_ragdoll()
 	if not alive(self._unit) then
 		self._ragdoll_freeze_clbk_id = nil
@@ -1980,7 +2022,7 @@ function CopActionHurt:clbk_chk_freeze_ragdoll()
 	end
 end
 
--- Lines 1871-1882
+-- Lines 1907-1918
 function CopActionHurt:clbk_shooting_hurt()
 	self._delayed_shooting_hurt_clbk_id = nil
 
@@ -1995,7 +2037,7 @@ function CopActionHurt:clbk_shooting_hurt()
 	end
 end
 
--- Lines 1886-1905
+-- Lines 1922-1941
 function CopActionHurt:on_destroy()
 	if self._burn_death_effects_clbk_id then
 		managers.enemy:remove_delayed_clbk(self._burn_death_effects_clbk_id)

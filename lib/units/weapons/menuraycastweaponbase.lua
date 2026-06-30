@@ -260,7 +260,7 @@ function NewRaycastWeaponBase:_cosmetics_applied(clbk)
 	end
 end
 
-local material_type_ids = Idstring("material")
+local material_type_ids = IDS_MATERIAL
 
 -- Lines 310-335
 function NewRaycastWeaponBase:apply_material_parameters()
@@ -310,7 +310,7 @@ function NewRaycastWeaponBase:apply_texture_switches()
 
 				if texture_switch and part_data then
 					unit = part_data.unit
-					material_config = unit:get_objects_by_type(Idstring("material"))
+					material_config = unit:get_objects_by_type(IDS_MATERIAL)
 
 					local ids = {}
 
@@ -488,7 +488,7 @@ function NewRaycastWeaponBase:stance_mod()
 	return nil
 end
 
--- Lines 541-569
+-- Lines 541-585
 function NewRaycastWeaponBase:tweak_data_anim_play(anim, speed_multiplier)
 	local data = tweak_data.weapon.factory[self._factory_id]
 
@@ -517,7 +517,7 @@ function NewRaycastWeaponBase:tweak_data_anim_play(anim, speed_multiplier)
 	return true
 end
 
--- Lines 571-588
+-- Lines 587-618
 function NewRaycastWeaponBase:tweak_data_anim_stop(anim)
 	local data = tweak_data.weapon.factory[self._factory_id]
 
@@ -536,7 +536,7 @@ function NewRaycastWeaponBase:tweak_data_anim_stop(anim)
 	end
 end
 
--- Lines 592-600
+-- Lines 622-630
 function NewRaycastWeaponBase:_set_parts_enabled(enabled)
 	if self._parts then
 		for part_id, data in pairs(self._parts) do
@@ -547,26 +547,26 @@ function NewRaycastWeaponBase:_set_parts_enabled(enabled)
 	end
 end
 
--- Lines 602-609
+-- Lines 632-639
 function NewRaycastWeaponBase:on_enabled(...)
 	NewRaycastWeaponBase.super.on_enabled(self, ...)
 	self:_set_parts_enabled(true)
 	self:_chk_charm_upd_state()
 end
 
--- Lines 611-620
+-- Lines 641-650
 function NewRaycastWeaponBase:on_disabled(...)
 	self:gadget_off()
 	self:_set_parts_enabled(false)
 	self:_chk_charm_upd_state()
 end
 
--- Lines 624-626
+-- Lines 654-656
 function NewRaycastWeaponBase:has_gadget()
 	return managers.weapon_factory:get_part_from_weapon_by_type("gadget", self._parts) and true or false
 end
 
--- Lines 628-634
+-- Lines 658-664
 function NewRaycastWeaponBase:gadget_on()
 	self._gadget_on = true
 
@@ -577,7 +577,7 @@ function NewRaycastWeaponBase:gadget_on()
 	end
 end
 
--- Lines 636-642
+-- Lines 666-672
 function NewRaycastWeaponBase:gadget_off()
 	self._gadget_on = false
 
@@ -588,7 +588,7 @@ function NewRaycastWeaponBase:gadget_off()
 	end
 end
 
--- Lines 644-650
+-- Lines 674-680
 function NewRaycastWeaponBase:toggle_gadget()
 	self._gadget_on = not self._gadget_on
 
@@ -599,12 +599,12 @@ function NewRaycastWeaponBase:toggle_gadget()
 	end
 end
 
--- Lines 652-653
+-- Lines 682-683
 function NewRaycastWeaponBase:toggle_firemode()
 	return
 end
 
--- Lines 656-695
+-- Lines 686-725
 function NewRaycastWeaponBase:check_stats()
 	local base_stats = self:weapon_tweak_data().stats
 
@@ -646,7 +646,7 @@ function NewRaycastWeaponBase:check_stats()
 	return stats
 end
 
--- Lines 699-725
+-- Lines 729-755
 function NewRaycastWeaponBase:destroy(unit)
 	if self._parts_texture_switches then
 		for part_id, texture_ids in pairs(self._parts_texture_switches) do

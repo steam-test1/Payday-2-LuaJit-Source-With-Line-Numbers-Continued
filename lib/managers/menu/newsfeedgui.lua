@@ -75,20 +75,24 @@ function NewsFeedGui:update(t, dt)
 	end
 end
 
--- Lines 77-86
+-- Lines 77-92
 function NewsFeedGui:make_news_request()
-	if SystemInfo:distribution() == Idstring("STEAM") or SystemInfo:distribution() == Idstring("EPIC") then
+	if IS_STEAM or IS_EPIC then
 		Application:debug("[NewsFeedGui] make_news_request()")
 
-		local headers = {}
+		local feed_url
 
-		headers["Content-Type"] = "text/xml"
+		feed_url = IS_STEAM and "https://steamcommunity.com/games/218620/rss" or "https://www.paydaythegame.com/news/category/payday2/feed/"
 
-		HttpRequest:get("https://www.paydaythegame.com/feed/", callback(self, self, "news_result"), headers)
+		local headers = {
+			["Content-Type"] = "text/xml"
+		}
+
+		HttpRequest:get(feed_url, callback(self, self, "news_result"), headers)
 	end
 end
 
--- Lines 88-107
+-- Lines 94-118
 function NewsFeedGui:news_result(success, body)
 	Application:debug("[NewsFeedGui] news_result()", success)
 
@@ -98,7 +102,13 @@ function NewsFeedGui:news_result(success, body)
 
 	if success then
 		self._titles = self:_get_text_block(body, "<title>", "</title>", self.MAX_NEWS)
-		self._links = self:_get_text_block(body, "<link>", "</link>", self.MAX_NEWS)
+
+		if IS_STEAM then
+			self._links = self:_get_text_block(body, "<link><![CDATA[", "]]></link>", self.MAX_NEWS)
+		else
+			self._links = self:_get_text_block(body, "<link>", "</link>", self.MAX_NEWS)
+		end
+
 		self._news = {
 			i = 0
 		}
@@ -110,7 +120,7 @@ function NewsFeedGui:news_result(success, body)
 	end
 end
 
--- Lines 109-162
+-- Lines 120-173
 function NewsFeedGui:_create_gui()
 	local size = managers.gui_data:scaled_size()
 
@@ -162,13 +172,13 @@ function NewsFeedGui:_create_gui()
 	self._title_panel:set_right(-10)
 end
 
--- Lines 164-223
+-- Lines 175-234
 function NewsFeedGui:_get_text_block(s, sp, ep, max_results)
 	local result = {}
 	local len = string.len(s)
 	local i = 1
 
-	-- Lines 170-193
+	-- Lines 181-204
 	local function f(s, sp, ep, max_results)
 		local s1, e1 = string.find(s, sp, 1, true)
 
@@ -211,7 +221,7 @@ function NewsFeedGui:_get_text_block(s, sp, ep, max_results)
 	return result
 end
 
--- Lines 225-230
+-- Lines 236-241
 function NewsFeedGui:mouse_moved(x, y)
 	local inside = self._panel:inside(x, y)
 
@@ -220,7 +230,7 @@ function NewsFeedGui:mouse_moved(x, y)
 	return inside, inside and "link"
 end
 
--- Lines 232-242
+-- Lines 243-253
 function NewsFeedGui:mouse_pressed(button, x, y)
 	if not self._news then
 		return
@@ -231,7 +241,7 @@ function NewsFeedGui:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines 244-248
+-- Lines 255-259
 function NewsFeedGui:close()
 	if alive(self._panel) then
 		self._ws:panel():remove(self._panel)

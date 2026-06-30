@@ -3,7 +3,7 @@ if _G.IS_VR then
 end
 
 PlayerCamera = PlayerCamera or class()
-PlayerCamera.IDS_NOTHING = Idstring("")
+PlayerCamera.IDS_NOTHING = IDS_EMPTY
 
 -- Lines 12-43
 function PlayerCamera:init(unit)

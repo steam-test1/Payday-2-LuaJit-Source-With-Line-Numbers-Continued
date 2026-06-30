@@ -1156,6 +1156,7 @@ function NetworkMatchMakingPSN:search_lobby(settings)
 		strings = strings
 	}
 	local filter = {
+		closed = nil,
 		full = false,
 		numbers = {
 			{

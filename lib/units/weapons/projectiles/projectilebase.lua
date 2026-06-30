@@ -888,7 +888,7 @@ function ProjectileBase:destroy(...)
 	self:_warning_fx_vfx_remove()
 end
 
-local ids_unit = Idstring("unit")
+local ids_unit = IDS_UNIT
 
 -- Lines 936-979
 function ProjectileBase.throw_projectile(projectile_type, pos, dir, owner_peer_id)

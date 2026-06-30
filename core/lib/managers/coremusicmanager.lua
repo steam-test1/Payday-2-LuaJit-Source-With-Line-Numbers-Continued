@@ -52,30 +52,22 @@ function CoreMusicManager:init()
 	self._external_media_playing = false
 end
 
--- Lines 58-68
+-- Lines 58-60
 function CoreMusicManager:init_finalize()
-	if SystemInfo:platform() == Idstring("X360") then
-		self._has_music_control = XboxLive:app_has_playback_control()
-
-		print("[CoreMusicManager:init_finalize]", self._has_music_control)
-		managers.platform:add_event_callback("media_player_control", callback(self, self, "clbk_game_has_music_control"))
-		self:set_volume(Global.music_manager.volume)
-	end
-
 	managers.savefile:add_load_sequence_done_callback_handler(callback(self, self, "on_load_complete"))
 end
 
--- Lines 70-71
+-- Lines 62-63
 function CoreMusicManager:init_globals()
 	return
 end
 
--- Lines 73-75
+-- Lines 65-67
 function CoreMusicManager:music_tracks()
 	return {}
 end
 
--- Lines 77-87
+-- Lines 69-79
 function CoreMusicManager:check_music_switch()
 	local switches = tweak_data.levels:get_music_switches()
 
@@ -87,7 +79,7 @@ function CoreMusicManager:check_music_switch()
 	end
 end
 
--- Lines 89-102
+-- Lines 81-94
 function CoreMusicManager:post_event(name)
 	if not name then
 		return
@@ -102,29 +94,29 @@ function CoreMusicManager:post_event(name)
 	end
 end
 
--- Lines 106-109
+-- Lines 98-101
 function CoreMusicManager:stop()
 	Global.music_manager.source:stop()
 
 	Global.music_manager.current_event = nil
 end
 
--- Lines 111-113
+-- Lines 103-105
 function CoreMusicManager:music_paths()
 	return self._path_list
 end
 
--- Lines 115-117
+-- Lines 107-109
 function CoreMusicManager:music_events(path)
 	return self._event_map[path]
 end
 
--- Lines 119-121
+-- Lines 111-113
 function CoreMusicManager:music_path(event)
 	return self._path_map[event]
 end
 
--- Lines 124-131
+-- Lines 116-123
 function CoreMusicManager:set_volume(volume)
 	Global.music_manager.volume = volume
 
@@ -135,7 +127,7 @@ function CoreMusicManager:set_volume(volume)
 	end
 end
 
--- Lines 134-143
+-- Lines 126-135
 function CoreMusicManager:clbk_game_has_music_control(status)
 	print("[CoreMusicManager:clbk_game_has_music_control]", status)
 
@@ -148,17 +140,17 @@ function CoreMusicManager:clbk_game_has_music_control(status)
 	self._has_music_control = status
 end
 
--- Lines 145-147
+-- Lines 137-139
 function CoreMusicManager:on_load_complete()
 	self:set_volume(managers.user:get_setting("music_volume") / 100)
 end
 
--- Lines 149-151
+-- Lines 141-143
 function CoreMusicManager:has_music_control()
 	return self._has_music_control
 end
 
--- Lines 154-164
+-- Lines 146-156
 function CoreMusicManager:save(data)
 	local state = {}
 
@@ -170,7 +162,7 @@ function CoreMusicManager:save(data)
 	data.CoreMusicManager = state
 end
 
--- Lines 166-173
+-- Lines 158-165
 function CoreMusicManager:load(data)
 	local state = data.CoreMusicManager
 

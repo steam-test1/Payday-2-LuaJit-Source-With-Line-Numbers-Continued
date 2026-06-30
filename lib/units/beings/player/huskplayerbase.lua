@@ -91,7 +91,7 @@ function HuskPlayerBase:save(data)
 	data.concealment_modifier = managers.blackmarket:get_concealment_of_peer(managers.network:session():peer_by_unit(self._unit))
 end
 
--- Lines 97-115
+-- Lines 105-123
 function HuskPlayerBase:set_upgrade_value(category, upgrade, level)
 	self._upgrades[category] = self._upgrades[category] or {}
 	self._upgrade_levels[category] = self._upgrade_levels[category] or {}
@@ -116,7 +116,7 @@ function HuskPlayerBase:set_upgrade_value(category, upgrade, level)
 	end
 end
 
--- Lines 117-122
+-- Lines 125-130
 function HuskPlayerBase:update_concealment()
 	local con_mul, index = managers.blackmarket:get_concealment_of_peer(managers.network:session():peer_by_unit(self._unit))
 
@@ -125,7 +125,7 @@ function HuskPlayerBase:update_concealment()
 	self:setup_hud_offset()
 end
 
--- Lines 124-135
+-- Lines 132-143
 function HuskPlayerBase:setup_hud_offset()
 	if not self._suspicion_settings then
 		return
@@ -140,7 +140,7 @@ function HuskPlayerBase:setup_hud_offset()
 	self._suspicion_settings.hud_offset = managers.blackmarket:get_suspicion_offset_of_peer(peer, tweak_data.player.SUSPICION_OFFSET_LERP or 0.75)
 end
 
--- Lines 137-147
+-- Lines 145-155
 function HuskPlayerBase:set_temporary_upgrade_owned(category, upgrade, level, index)
 	local upgrade_values = managers.player:upgrade_value_by_level(category, upgrade, level)
 
@@ -157,12 +157,12 @@ function HuskPlayerBase:set_temporary_upgrade_owned(category, upgrade, level, in
 	}
 end
 
--- Lines 149-170
+-- Lines 157-178
 function HuskPlayerBase:activate_temporary_upgrade(index)
 	self._temporary_upgrades[index].activation_time = TimerManager:game():time()
 end
 
--- Lines 172-177
+-- Lines 180-185
 function HuskPlayerBase:has_activate_temporary_upgrade(category, upgrade)
 	local index = self._temporary_upgrades_map[category] and self._temporary_upgrades_map[category][upgrade]
 
@@ -171,7 +171,7 @@ function HuskPlayerBase:has_activate_temporary_upgrade(category, upgrade)
 	end
 end
 
--- Lines 181-191
+-- Lines 189-199
 function HuskPlayerBase:upgrade_value(category, upgrade)
 	local val = self._upgrades[category] and self._upgrades[category][upgrade]
 
@@ -190,15 +190,14 @@ function HuskPlayerBase:upgrade_value(category, upgrade)
 	return val
 end
 
--- Lines 193-195
+-- Lines 201-203
 function HuskPlayerBase:upgrade_level(category, upgrade)
 	return self._upgrade_levels[category] and self._upgrade_levels[category][upgrade]
 end
 
--- Lines 199-213
+-- Lines 207-221
 function HuskPlayerBase:pre_destroy(unit)
-	self._unit:movement():pre_destroy(unit)
-	self._unit:inventory():pre_destroy(self._unit)
+	self._unit:movement():attention_handler():set_attention(nil)
 	managers.groupai:state():unregister_criminal(self._unit)
 
 	if managers.network:session() then
@@ -212,14 +211,14 @@ function HuskPlayerBase:pre_destroy(unit)
 	UnitBase.pre_destroy(self, unit)
 end
 
--- Lines 217-220
+-- Lines 225-228
 function HuskPlayerBase:nick_name()
 	local peer = managers.network:session():peer_by_unit(self._unit)
 
 	return peer and peer:name() or ""
 end
 
--- Lines 224-226
+-- Lines 232-234
 function HuskPlayerBase:on_death_exit()
 	return
 end

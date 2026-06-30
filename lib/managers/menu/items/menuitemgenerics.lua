@@ -1,4 +1,4 @@
-local is_win32 = SystemInfo:platform() == Idstring("WIN32")
+local is_win32 = IS_PC
 local NOT_WIN_32 = not is_win32
 local medium_font = tweak_data.menu.pd2_medium_font
 local medium_font_size = tweak_data.menu.pd2_medium_font_size
@@ -6,6 +6,7 @@ local small_font = tweak_data.menu.pd2_small_font
 local small_font_size = tweak_data.menu.pd2_small_font_size
 
 MenuGuiItem = MenuGuiItem or class()
+MenuGuiItem._input_components_set = {}
 
 -- Lines 12-14
 function MenuGuiItem:init()
@@ -65,6 +66,155 @@ function MenuGuiItem:flash()
 	return
 end
 
+-- Lines 55-57
+function MenuGuiItem:allow_input()
+	return self._active
+end
+
+-- Lines 59-64
+function MenuGuiItem:add_input_component(component)
+	self._input_components_set[component] = true
+
+	if component.__input_parents then
+		component.__input_parents[self] = true
+	end
+end
+
+-- Lines 66-71
+function MenuGuiItem:remove_input_component(component, dont_change_input_parents)
+	self._input_components_set[component] = nil
+
+	if not dont_change_input_parents then
+		component.__input_parents[self] = nil
+	end
+end
+
+-- Lines 73-75
+function MenuGuiItem:clear_input_components()
+	self._input_components_set = {}
+end
+
+-- Lines 77-81
+function MenuGuiItem:mouse_clicked(o, button, x, y)
+	if not self:allow_input() then
+		return
+	end
+
+	return ExtendedPanel.call_return_b_on_all_exists(self._input_components_set, "mouse_clicked", o, button, x, y)
+end
+
+-- Lines 83-87
+function MenuGuiItem:mouse_pressed(button, x, y)
+	if not self:allow_input() then
+		return
+	end
+
+	return ExtendedPanel.call_return_b_on_all_exists(self._input_components_set, "mouse_pressed", button, x, y)
+end
+
+-- Lines 89-93
+function MenuGuiItem:mouse_released(button, x, y)
+	if not self:allow_input() then
+		return
+	end
+
+	return ExtendedPanel.call_return_b_on_all_exists(self._input_components_set, "mouse_released", button, x, y)
+end
+
+-- Lines 95-109
+function MenuGuiItem:mouse_moved(o, x, y)
+	if not self:allow_input() then
+		return
+	end
+
+	local hover, cursor_type
+
+	for v, _ in pairs(self._input_components_set) do
+		if v.mouse_moved and v:allow_input() then
+			local res, t = v:mouse_moved(o, x, y)
+
+			if res then
+				hover = res
+				cursor_type = t
+			end
+		end
+	end
+
+	return hover, cursor_type
+end
+
+-- Lines 111-115
+function MenuGuiItem:mouse_wheel_up(x, y)
+	if not self:allow_input() then
+		return
+	end
+
+	return ExtendedPanel.call_return_b_on_all_exists(self._input_components_set, "mouse_wheel_up", x, y)
+end
+
+-- Lines 117-121
+function MenuGuiItem:mouse_wheel_down(x, y)
+	if not self:allow_input() then
+		return
+	end
+
+	return ExtendedPanel.call_return_b_on_all_exists(self._input_components_set, "mouse_wheel_down", x, y)
+end
+
+-- Lines 123-127
+function MenuGuiItem:move_up()
+	if not self:allow_input() then
+		return
+	end
+
+	return ExtendedPanel.call_return_b_on_all_exists(self._input_components_set, "move_up")
+end
+
+-- Lines 129-133
+function MenuGuiItem:move_down()
+	if not self:allow_input() then
+		return
+	end
+
+	return ExtendedPanel.call_return_b_on_all_exists(self._input_components_set, "move_down")
+end
+
+-- Lines 135-139
+function MenuGuiItem:move_left()
+	if not self:allow_input() then
+		return
+	end
+
+	return ExtendedPanel.call_return_b_on_all_exists(self._input_components_set, "move_left")
+end
+
+-- Lines 141-145
+function MenuGuiItem:move_right()
+	if not self:allow_input() then
+		return
+	end
+
+	return ExtendedPanel.call_return_b_on_all_exists(self._input_components_set, "move_right")
+end
+
+-- Lines 147-151
+function MenuGuiItem:confirm_pressed()
+	if not self:allow_input() then
+		return
+	end
+
+	return ExtendedPanel.call_return_b_on_all_exists(self._input_components_set, "confirm_pressed")
+end
+
+-- Lines 153-159
+function MenuGuiItem:special_btn_pressed(button)
+	if not self:allow_input() then
+		return
+	end
+
+	return ExtendedPanel.call_return_b_on_all_exists(self._input_components_set, "special_btn_pressed", button)
+end
+
 MenuGuiTabItem = MenuGuiTabItem or class(MenuGuiItem)
 MenuGuiTabItem.FONT = medium_font
 MenuGuiTabItem.FONT_SIZE = medium_font_size
@@ -72,7 +222,7 @@ MenuGuiTabItem.PAGE_PADDING = 15
 MenuGuiTabItem.TEXT_PADDING_W = 15
 MenuGuiTabItem.TEXT_PADDING_H = 10
 
--- Lines 64-105
+-- Lines 170-211
 function MenuGuiTabItem:init(index, title_id, page_item, gui, tab_x, tab_panel)
 	MenuGuiTabItem.super.init(self)
 
@@ -115,44 +265,44 @@ function MenuGuiTabItem:init(index, title_id, page_item, gui, tab_x, tab_panel)
 	self:refresh()
 end
 
--- Lines 107-109
+-- Lines 213-215
 function MenuGuiTabItem:index()
 	return self._index
 end
 
--- Lines 111-113
+-- Lines 217-219
 function MenuGuiTabItem:page()
 	return self._page_item
 end
 
--- Lines 115-117
+-- Lines 221-223
 function MenuGuiTabItem:prev_page_position()
 	return self._page_panel:left() - self.PAGE_PADDING
 end
 
--- Lines 119-121
+-- Lines 225-227
 function MenuGuiTabItem:next_page_position()
 	return self._page_panel:right() + self.PAGE_PADDING
 end
 
--- Lines 123-126
+-- Lines 229-232
 function MenuGuiTabItem:set_active(active)
 	self._active = active
 
 	self:refresh()
 end
 
--- Lines 128-130
+-- Lines 234-236
 function MenuGuiTabItem:is_active()
 	return self._active
 end
 
--- Lines 132-134
+-- Lines 238-240
 function MenuGuiTabItem:inside(x, y)
 	return self._page_panel:inside(x, y)
 end
 
--- Lines 136-145
+-- Lines 242-251
 function MenuGuiTabItem:refresh()
 	if alive(self._page_panel) then
 		self._page_panel:child("PageText"):set_blend_mode(self._active and "normal" or "add")
@@ -169,7 +319,7 @@ MenuGuiSmallTabItem.TEXT_PADDING_W = 15
 MenuGuiSmallTabItem.TEXT_PADDING_H = 4
 MenuGuiTabPage = MenuGuiTabPage or class(MenuGuiItem)
 
--- Lines 158-176
+-- Lines 264-284
 function MenuGuiTabPage:init(page_id, page_panel, fullscreen_panel, gui)
 	MenuGuiTabPage.super.init(self)
 
@@ -177,8 +327,11 @@ function MenuGuiTabPage:init(page_id, page_panel, fullscreen_panel, gui)
 	self._active = false
 	self._selected = 0
 	self._page_name = page_id
-	self._panel = page_panel:panel({})
-	self._info_panel = gui:info_panel():panel({})
+	self._panel = ExtendedPanel:new(page_panel)
+	self._info_panel = ExtendedPanel:new(gui:info_panel())
+
+	self:add_input_component(self._panel)
+	self:add_input_component(self._info_panel)
 
 	if gui.event_listener then
 		self._event_listener = gui:event_listener()
@@ -191,23 +344,23 @@ function MenuGuiTabPage:init(page_id, page_panel, fullscreen_panel, gui)
 	self:refresh()
 end
 
--- Lines 178-179
+-- Lines 286-287
 function MenuGuiTabPage:update(t, dt)
 	return
 end
 
--- Lines 181-183
+-- Lines 289-291
 function MenuGuiTabPage:event_listener()
 	return self._event_listener
 end
 
--- Lines 185-188
+-- Lines 293-296
 function MenuGuiTabPage:refresh()
 	self:panel():set_visible(self._active)
 	self:info_panel():set_visible(self._active)
 end
 
--- Lines 190-194
+-- Lines 298-302
 function MenuGuiTabPage:set_active(active)
 	self._active = active
 
@@ -216,27 +369,27 @@ function MenuGuiTabPage:set_active(active)
 	return active
 end
 
--- Lines 196-197
+-- Lines 304-305
 function MenuGuiTabPage:on_notify(tree, msg)
 	return
 end
 
--- Lines 199-201
+-- Lines 307-309
 function MenuGuiTabPage:name()
 	return self._page_name
 end
 
--- Lines 203-205
+-- Lines 311-313
 function MenuGuiTabPage:panel()
 	return self._panel
 end
 
--- Lines 207-209
+-- Lines 315-317
 function MenuGuiTabPage:info_panel()
 	return self._info_panel
 end
 
--- Lines 211-218
+-- Lines 319-326
 function MenuGuiTabPage:stack_panels(padding, panels)
 	for idx, panel in ipairs(panels) do
 		panel:set_left(0)
@@ -244,64 +397,14 @@ function MenuGuiTabPage:stack_panels(padding, panels)
 	end
 end
 
--- Lines 220-221
-function MenuGuiTabPage:mouse_clicked(o, button, x, y)
-	return
+-- Lines 327-329
+function MenuGuiTabItem:allow_input()
+	return true
 end
 
--- Lines 223-224
-function MenuGuiTabPage:mouse_pressed(button, x, y)
-	return
-end
-
--- Lines 226-227
-function MenuGuiTabPage:mouse_released(button, x, y)
-	return
-end
-
--- Lines 229-230
-function MenuGuiTabPage:mouse_moved(button, x, y)
-	return
-end
-
--- Lines 232-233
-function MenuGuiTabPage:mouse_wheel_up(x, y)
-	return
-end
-
--- Lines 235-236
-function MenuGuiTabPage:mouse_wheel_down(x, y)
-	return
-end
-
--- Lines 238-239
-function MenuGuiTabPage:move_up()
-	return
-end
-
--- Lines 241-242
-function MenuGuiTabPage:move_down()
-	return
-end
-
--- Lines 244-245
-function MenuGuiTabPage:move_left()
-	return
-end
-
--- Lines 247-248
-function MenuGuiTabPage:move_right()
-	return
-end
-
--- Lines 250-251
-function MenuGuiTabPage:confirm_pressed()
-	return
-end
-
--- Lines 253-269
+-- Lines 331-347
 function MenuGuiTabPage:special_btn_pressed(button)
-	if not self:is_active() or not self._controllers_mapping then
+	if not self:is_active() or not self:allow_input() then
 		return
 	end
 
@@ -315,9 +418,11 @@ function MenuGuiTabPage:special_btn_pressed(button)
 
 		return
 	end
+
+	return MenuGuiTabPage.super.special_btn_pressed(self, button)
 end
 
--- Lines 271-273
+-- Lines 349-351
 function MenuGuiTabPage:get_legend()
 	return {
 		"move",
@@ -327,7 +432,7 @@ end
 
 MenuGuiButtonItem = MenuGuiButtonItem or class(MenuGuiItem)
 
--- Lines 279-322
+-- Lines 357-400
 function MenuGuiButtonItem:init(panel, data, x, priority)
 	MenuGuiButtonItem.super.init(self, panel, data)
 
@@ -373,7 +478,7 @@ function MenuGuiButtonItem:init(panel, data, x, priority)
 	end
 end
 
--- Lines 324-329
+-- Lines 402-407
 function MenuGuiButtonItem:set_text(text)
 	self._btn_text:set_text(utf8.to_upper(text))
 
@@ -383,27 +488,27 @@ function MenuGuiButtonItem:set_text(text)
 	self._btn_text:set_h(h)
 end
 
--- Lines 331-333
+-- Lines 409-411
 function MenuGuiButtonItem:inside(x, y)
 	return self._panel:inside(x, y)
 end
 
--- Lines 335-337
+-- Lines 413-415
 function MenuGuiButtonItem:show()
 	self._select_rect:set_visible(true)
 end
 
--- Lines 339-341
+-- Lines 417-419
 function MenuGuiButtonItem:hide()
 	self._select_rect:set_visible(false)
 end
 
--- Lines 343-345
+-- Lines 421-423
 function MenuGuiButtonItem:visible()
 	return self._select_rect:visible()
 end
 
--- Lines 347-353
+-- Lines 425-431
 function MenuGuiButtonItem:refresh()
 	if self._selected then
 		self:show()
@@ -412,7 +517,7 @@ function MenuGuiButtonItem:refresh()
 	end
 end
 
--- Lines 355-358
+-- Lines 433-436
 function MenuGuiButtonItem:trigger()
 	MenuGuiButtonItem.super.trigger(self)
 	self._callback()

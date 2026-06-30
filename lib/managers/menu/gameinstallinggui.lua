@@ -3,7 +3,7 @@ GameInstallingGui = GameInstallingGui or class()
 -- Lines 3-10
 function GameInstallingGui:init(ws)
 	self._ws = ws
-	self._show_installing_text = SystemInfo:platform() ~= Idstring("PS4")
+	self._show_installing_text = not IS_PS4
 	self._panel = self._ws:panel():panel()
 
 	self._panel:text({

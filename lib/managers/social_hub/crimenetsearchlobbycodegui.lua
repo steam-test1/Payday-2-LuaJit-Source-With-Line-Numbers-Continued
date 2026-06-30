@@ -86,28 +86,32 @@ function CrimenetSearchLobbyCodeGui:close()
 	managers.menu_component:enable_crimenet()
 end
 
--- Lines 58-63
-function CrimenetSearchLobbyCodeGui:searchbox_disconnect_callback(first, second, third)
-	if string.len(first) == 32 then
-		EpicSocialHub:get_lobby_info(first, callback(self, self, "on_search_lobby_fetched"))
+-- Lines 58-65
+function CrimenetSearchLobbyCodeGui:searchbox_disconnect_callback(lobby_id, second, third)
+	if string.len(lobby_id) == 32 then
+		DistributionMatchmaking:lobby_from_id(lobby_id, true, callback(self, self, "on_search_lobby_fetched"))
+	elseif string.len(lobby_id) == 6 then
+		DistributionMatchmaking:lobby_from_hash(lobby_id, true, callback(self, self, "on_search_lobby_fetched"))
 	end
 end
 
--- Lines 64-96
-function CrimenetSearchLobbyCodeGui:on_search_lobby_fetched(first, second, third)
-	if not first or not second then
+-- Lines 66-100
+function CrimenetSearchLobbyCodeGui:on_search_lobby_fetched(lobby, result, intended_lobby_id)
+	if not lobby or not result == "success" then
 		return
 	end
 
-	print("CrimenetSearchLobbyCodeGui:on_search_lobby_fetched", inspect(first), inspect(second), inspect(third))
+	local lobby_data = lobby:lobby_attributes()
 
-	third.buttons = {
+	print("CrimenetSearchLobbyCodeGui:on_search_lobby_fetched", inspect(lobby_data))
+
+	lobby_data.buttons = {
 		{
 			text = managers.localization:text("socialhub_lobby_action_join"),
 			press_callback = callback(self, self, "on_user_lobby_pressed", "join")
 		}
 	}
-	third.LOBBYID = first
+	lobby_data.lobby_id = lobby:id()
 
 	if self.search_item then
 		self.scroll:remove_item(1)
@@ -116,11 +120,11 @@ function CrimenetSearchLobbyCodeGui:on_search_lobby_fetched(first, second, third
 		self.search_item = nil
 	end
 
-	local owner_name = third.OWNER_NAME
+	local owner_name = lobby_data.owner_name
 
 	if owner_name and utf8.len(owner_name) <= NetworkManager.MAX_PEER_NAME_LENGTH then
-		third.OWNER_NAME = managers.network:sanitize_peer_name(owner_name)
-		self.search_item = SocialHubLobbyItem:new(self.scroll:canvas(), third)
+		lobby_data.owner_name = managers.network:sanitize_peer_name(owner_name)
+		self.search_item = SocialHubLobbyItem:new(self.scroll:canvas(), lobby_data)
 
 		self.scroll:add_item(self.search_item, nil)
 		self.scroll:place_items_in_order(nil, true, true)
@@ -130,7 +134,7 @@ function CrimenetSearchLobbyCodeGui:on_search_lobby_fetched(first, second, third
 	end
 end
 
--- Lines 98-108
+-- Lines 102-112
 function CrimenetSearchLobbyCodeGui:on_user_lobby_pressed(first, second, third)
 	print("CrimenetSearchLobbyCodeGui:on_user_lobby_pressed", inspect(first or "NO"), inspect(second or "NO"), inspect(third or "NO"))
 
@@ -139,13 +143,13 @@ function CrimenetSearchLobbyCodeGui:on_user_lobby_pressed(first, second, third)
 	end
 
 	if first == "join" then
-		EpicSocialHub:join_lobby(second)
+		DistributionMatchmaking:request_lobby_join(second)
 	elseif first == "decline" then
 		-- Nothing
 	end
 end
 
--- Lines 110-130
+-- Lines 114-134
 function CrimenetSearchLobbyCodeGui:setup_panel()
 	self._searchbox = SearchBoxGuiObject:new(self._main_panel, self._ws, nil, {
 		w = 292
@@ -190,7 +194,7 @@ function CrimenetSearchLobbyCodeGui:setup_panel()
 	})
 end
 
--- Lines 132-153
+-- Lines 136-157
 function CrimenetSearchLobbyCodeGui:mouse_moved(button, x, y)
 	local back_button = self._panel:child("back_button")
 
@@ -218,7 +222,7 @@ function CrimenetSearchLobbyCodeGui:mouse_moved(button, x, y)
 	end
 end
 
--- Lines 155-173
+-- Lines 159-177
 function CrimenetSearchLobbyCodeGui:mouse_pressed(button, x, y)
 	local back_button = self._panel:child("back_button")
 
@@ -241,7 +245,7 @@ function CrimenetSearchLobbyCodeGui:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines 175-185
+-- Lines 179-189
 function CrimenetSearchLobbyCodeGui:confirm_pressed()
 	if self._searchbox:input_focus() then
 		self._searchbox:disconnect_search_input()
@@ -256,7 +260,7 @@ function CrimenetSearchLobbyCodeGui:confirm_pressed()
 	end
 end
 
--- Lines 187-193
+-- Lines 191-197
 function CrimenetSearchLobbyCodeGui:special_btn_pressed(button)
 	if button == Idstring("menu_respec_tree") then
 		self._searchbox:clear_text()

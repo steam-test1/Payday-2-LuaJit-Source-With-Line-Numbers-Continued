@@ -331,14 +331,19 @@ function EnvironmentFire:_do_damage()
 	self._burn_tick_counter = 0
 end
 
--- Lines 338-342
+-- Lines 338-339
+function EnvironmentFire:pre_destroy(unit)
+	return
+end
+
+-- Lines 341-345
 function EnvironmentFire:destroy(unit)
 	for _, damage_effect_entry in pairs(self._molotov_damage_effect_table) do
 		World:effect_manager():fade_kill(damage_effect_entry.effect_id)
 	end
 end
 
--- Lines 345-368
+-- Lines 348-371
 function EnvironmentFire:save(data)
 	local state = {}
 
@@ -364,7 +369,7 @@ function EnvironmentFire:save(data)
 	data.EnvironmentFire = state
 end
 
--- Lines 370-393
+-- Lines 373-396
 function EnvironmentFire:load(data)
 	local state = data.EnvironmentFire
 

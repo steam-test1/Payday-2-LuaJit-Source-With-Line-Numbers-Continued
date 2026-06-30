@@ -74,40 +74,42 @@ function ArmSimulator:init(neural_network, controller)
 	self._velocity = Vector3()
 end
 
--- Lines 71-85
+-- Lines 71-88
 function ArmSimulator:load_neural_net(neural_network)
-	local node = PackageManager:xml_data(Idstring("neural_net"), Idstring(neural_network))
+	local node = PackageManager:script_data(Idstring("neural_net"), Idstring(neural_network))
 
 	self._neural_network = {
 		weights = {},
 		bias = {}
 	}
 
-	for n, _ in node:children() do
-		local array = Array.from_node(n):transpose()
-		local name = array:name()
+	for k, v in ipairs(node) do
+		if type(k) == "number" then
+			local array = Array.from_script_data(v):transpose()
+			local name = array:name()
 
-		if not name or name == "weight" then
-			table.insert(self._neural_network.weights, array)
-		elseif name == "bias" then
-			table.insert(self._neural_network.bias, array)
+			if not name or name == "weight" then
+				table.insert(self._neural_network.weights, array)
+			elseif name == "bias" then
+				table.insert(self._neural_network.bias, array)
+			end
 		end
 	end
 end
 
--- Lines 103-105
+-- Lines 106-108
 function ArmSimulator:enabled()
 	return self._enabled
 end
 
--- Lines 107-111
+-- Lines 110-114
 function ArmSimulator:refresh_settings()
 	for _, setting in ipairs(self._settings) do
 		setting.clbk(setting.name, nil, managers.vr:get_setting(setting.name))
 	end
 end
 
--- Lines 113-119
+-- Lines 116-122
 function ArmSimulator:_add_setting_callback(setting_name, method)
 	local clbk = callback(self, self, method)
 
@@ -122,35 +124,35 @@ function ArmSimulator:_add_setting_callback(setting_name, method)
 	})
 end
 
--- Lines 121-124
+-- Lines 124-127
 function ArmSimulator:_arm_length_changed(setting, old, new)
 	self._arm_length = new
 	self._body_config = NNetHelper.create_body_config(self._arm_length, self._head_to_shoulder, self._shoulder_width)
 end
 
--- Lines 126-129
+-- Lines 129-132
 function ArmSimulator:_head_to_shoulder_changed(setting, old, new)
 	self._head_to_shoulder = new
 	self._body_config = NNetHelper.create_body_config(self._arm_length, self._head_to_shoulder, self._shoulder_width)
 end
 
--- Lines 131-134
+-- Lines 134-137
 function ArmSimulator:_shoulder_width_changed(setting, old, new)
 	self._shoulder_width = new
 	self._body_config = NNetHelper.create_body_config(self._arm_length, self._head_to_shoulder, self._shoulder_width)
 end
 
--- Lines 136-138
+-- Lines 139-141
 function ArmSimulator:_arm_animation_enabled_changed(setting, old, new)
 	self._enabled = new
 end
 
--- Lines 140-142
+-- Lines 143-145
 function ArmSimulator:pose()
 	return self._pose
 end
 
--- Lines 197-206
+-- Lines 200-209
 local function slerp_pose(cur_pose, target_pose, t)
 	mrotation.slerp(cur_pose.shoulder[1], cur_pose.shoulder[1], target_pose.shoulder[1], t)
 	mrotation.slerp(cur_pose.shoulder[2], cur_pose.shoulder[2], target_pose.shoulder[2], t)
@@ -162,7 +164,7 @@ local function slerp_pose(cur_pose, target_pose, t)
 	mrotation.slerp(cur_pose.hand[2], cur_pose.hand[2], target_pose.hand[2], t)
 end
 
--- Lines 208-218
+-- Lines 211-221
 function springdamp(src, dst, velocity, spring, dampening, max_speed, dt)
 	local offset = dst - src
 	local accel = offset * spring - velocity * dampening
@@ -180,7 +182,7 @@ function springdamp(src, dst, velocity, spring, dampening, max_speed, dt)
 	return src + velocity * dt
 end
 
--- Lines 220-226
+-- Lines 223-229
 function ArmSimulator:_update_assist_arm(input_sample, dt)
 	local assist_r = managers.player:player_unit():hand():current_hand_state(1):name() == "weapon_assist"
 	local assist_l = managers.player:player_unit():hand():current_hand_state(2):name() == "weapon_assist"
@@ -189,7 +191,7 @@ function ArmSimulator:_update_assist_arm(input_sample, dt)
 	self._neutral_arm_modifier[2]:update(assist_l, input_sample.body_config, input_sample.hmd[1], input_sample.left_controller, self._facing, 2, dt)
 end
 
--- Lines 228-350
+-- Lines 231-353
 function ArmSimulator:update(t, dt, base_rotation, target, moving, dir)
 	if not self._enabled then
 		return false

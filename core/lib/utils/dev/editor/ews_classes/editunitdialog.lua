@@ -17,7 +17,7 @@ function EditUnitDialog:init(toolbar, btn)
 	self._dialog_sizer:add(self._panel, 1, 0, "EXPAND")
 end
 
--- Lines 20-37
+-- Lines 20-36
 function EditUnitDialog:add_page(data)
 	local name = data.name
 	local start_page = data.start_page
@@ -25,7 +25,6 @@ function EditUnitDialog:add_page(data)
 	local panel = EWS:ScrolledWindow(self._notebook, "", "VSCROLL,TAB_TRAVERSAL")
 
 	panel:set_scroll_rate(Vector3(0, 1, 0))
-	panel:set_virtual_size_hints(Vector3(0, 0, 0), Vector3(1, -1, -1))
 
 	local sizer = EWS:BoxSizer("VERTICAL")
 
@@ -43,7 +42,7 @@ function EditUnitDialog:add_page(data)
 	return panel, sizer
 end
 
--- Lines 39-47
+-- Lines 38-46
 function EditUnitDialog:set_enabled(unit, units)
 	for _, page in ipairs(self._pages) do
 		if page.class then
@@ -54,7 +53,7 @@ function EditUnitDialog:set_enabled(unit, units)
 	end
 end
 
--- Lines 49-54
+-- Lines 48-53
 function EditUnitDialog:update(t, dt)
 	local current_page = self:_current_page()
 
@@ -63,7 +62,7 @@ function EditUnitDialog:update(t, dt)
 	end
 end
 
--- Lines 56-66
+-- Lines 55-65
 function EditUnitDialog:_current_page()
 	if not self._dialog:visible() then
 		return nil
@@ -76,7 +75,7 @@ function EditUnitDialog:_current_page()
 	end
 end
 
--- Lines 72-79
+-- Lines 71-78
 function EditUnitDialog:dialog_closed(data, event)
 	for _, page in ipairs(self._pages) do
 		if page.class then
@@ -89,24 +88,24 @@ end
 
 EditUnitBase = EditUnitBase or class()
 
--- Lines 85-89
+-- Lines 84-88
 function EditUnitBase:init()
 	self._debug = false
 	self._brush = Draw:brush()
 	self._pen = Draw:pen()
 end
 
--- Lines 91-93
+-- Lines 90-92
 function EditUnitBase:update()
 	return
 end
 
--- Lines 95-97
+-- Lines 94-96
 function EditUnitBase:dialog_closed()
 	return
 end
 
--- Lines 99-101
+-- Lines 98-100
 function EditUnitBase:update_debug(ctrlr)
 	self._debug = ctrlr:get_value()
 end

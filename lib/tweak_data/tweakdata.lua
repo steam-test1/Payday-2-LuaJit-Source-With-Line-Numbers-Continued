@@ -402,7 +402,7 @@ function TweakData:index_to_menu_sync_state(index)
 	return self.menu_sync_states[index]
 end
 
--- Lines 416-2935
+-- Lines 416-2962
 function TweakData:init()
 	self.max_players = 4
 	self.difficulties = {
@@ -437,7 +437,8 @@ function TweakData:init()
 	self.permissions = {
 		"public",
 		"friends_only",
-		"private"
+		"private",
+		"invisible"
 	}
 	self.server_states = {
 		"in_lobby",
@@ -1006,7 +1007,8 @@ function TweakData:init()
 			value = "color_payday"
 		},
 		{
-			text_id = "menu_color_default"
+			text_id = "menu_color_default",
+			value = nil
 		},
 		{
 			text_id = "menu_color_heat",
@@ -1059,6 +1061,7 @@ function TweakData:init()
 		fade_in = 3,
 		fade_out = 2,
 		play_paused = true,
+		sustain = nil,
 		color = Color(1, 0, 0, 0),
 		timer = TimerManager:main()
 	}
@@ -2536,7 +2539,7 @@ function TweakData:init()
 	self.projectiles.launcher_frag_m32.damage = 130
 	self.projectiles.launcher_incendiary_m32 = deep_clone(self.projectiles.launcher_incendiary)
 	self.projectiles.launcher_frag_china = deep_clone(self.projectiles.launcher_frag)
-	self.projectiles.launcher_frag_china.damage = 96
+	self.projectiles.launcher_frag_china.damage = 100
 	self.projectiles.launcher_incendiary_china = deep_clone(self.projectiles.launcher_incendiary)
 	self.projectiles.launcher_frag_arbiter = {}
 	self.projectiles.launcher_frag_arbiter.damage = 48
@@ -2832,7 +2835,7 @@ function TweakData:init()
 	self.projectiles.xmas_snowball.sounds.impact = "snow_impact_gen"
 	self.projectiles.xmas_snowball.effect_name = "effects/payday2/particles/impacts/snowball_impact"
 	self.projectiles.xmas_snowball.idstr_decal = Idstring("snow_explosion_std")
-	self.projectiles.xmas_snowball.idstr_effect = Idstring("")
+	self.projectiles.xmas_snowball.idstr_effect = IDS_EMPTY
 	self.projectiles.xmas_snowball.alert_radius = 0
 	self.projectiles.poison_gas_grenade = {}
 	self.projectiles.poison_gas_grenade.damage = 100
@@ -3025,14 +3028,19 @@ function TweakData:init()
 	}
 	self.player_turrets = {}
 	self.player_turrets.ranc_heavy_machine_gun = {
+		activate_point = nil,
 		assemble_point = "assemble",
+		deactivate_point = nil,
 		disassemble_into_inactive = true,
 		disassemble_point = "disassemble",
 		enter_point = "enter",
+		exit_point = nil,
+		interact_activate = nil,
 		interact_assemble = "ranc_hold_assemble_turret",
 		interact_deactivate = "ranc_hold_disassemble_turret",
 		interact_disassemble = "ranc_hold_disassemble_turret",
 		interact_enter = "ranc_hold_enter_turret",
+		interact_exit = nil,
 		bullet_objects = {
 			amount = 12,
 			prefix = "g_bullet_",
@@ -3083,7 +3091,7 @@ function TweakData:init()
 	self:digest_tweak_data()
 end
 
--- Lines 2939-2965
+-- Lines 2966-2992
 function TweakData:load_movie_list()
 	self.movies = {
 		{
@@ -3112,7 +3120,7 @@ function TweakData:load_movie_list()
 	end
 end
 
--- Lines 2970-3076
+-- Lines 2997-3103
 function TweakData:init_screen_colors()
 	self.screen_colors = {}
 	self.screen_colors.text = Color(255, 255, 255, 255) / 255
@@ -3197,7 +3205,7 @@ function TweakData:init_screen_colors()
 	end
 end
 
--- Lines 3079-3110
+-- Lines 3106-3137
 function TweakData:init_accessibility_colors()
 	self.accessibility_colors = {}
 	self.accessibility_colors.dot = {}
@@ -3227,14 +3235,14 @@ function TweakData:init_accessibility_colors()
 	self.accessibility_colors.screenflash.blurzone.gray_dark = Color(0.19607843137254902, 0.19607843137254902, 0.19607843137254902)
 end
 
--- Lines 3115-3193
+-- Lines 3142-3220
 function TweakData:free_dlc_list()
 	local free_dlcs = {}
 
 	return free_dlcs
 end
 
--- Lines 3203-3211
+-- Lines 3230-3238
 function TweakData:_execute_reload_clbks()
 	if self._reload_clbks then
 		for key, clbk_data in pairs(self._reload_clbks) do
@@ -3245,7 +3253,7 @@ function TweakData:_execute_reload_clbks()
 	end
 end
 
--- Lines 3215-3218
+-- Lines 3242-3245
 function TweakData:add_reload_callback(object, func)
 	self._reload_clbks = self._reload_clbks or {}
 
@@ -3255,7 +3263,7 @@ function TweakData:add_reload_callback(object, func)
 	})
 end
 
--- Lines 3222-3231
+-- Lines 3249-3258
 function TweakData:remove_reload_callback(object)
 	if self._reload_clbks then
 		for i, k in ipairs(self._reload_clbks) do
@@ -3268,7 +3276,7 @@ function TweakData:remove_reload_callback(object)
 	end
 end
 
--- Lines 3235-3411
+-- Lines 3262-3438
 function TweakData:set_scale()
 	local lang_key = SystemInfo:language():key()
 	local lang_mods = {
@@ -3458,7 +3466,7 @@ function TweakData:set_scale()
 	self.scale.victory_title_multiplier = victory_title_multiplier or 1
 end
 
--- Lines 3413-3592
+-- Lines 3440-3619
 function TweakData:set_menu_scale()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -3572,7 +3580,7 @@ function TweakData:set_menu_scale()
 	self.load_level.stonecold_small_logo = "guis/textures/game_small_logo"
 end
 
--- Lines 3594-3674
+-- Lines 3621-3701
 function TweakData:set_hud_values()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -3651,7 +3659,7 @@ function TweakData:set_hud_values()
 	self.hud.revive_colors[4] = Color(255, 91, 87, 87) / 255
 end
 
--- Lines 3678-3726
+-- Lines 3705-3753
 function TweakData:_setup_access_cameras()
 	self.camera_channels = {
 		alpha = true,
@@ -3696,7 +3704,7 @@ function TweakData:_setup_access_cameras()
 	end
 end
 
--- Lines 3731-3735
+-- Lines 3758-3762
 function TweakData:resolution_changed()
 	self:set_scale()
 	self:set_menu_scale()
@@ -3715,7 +3723,7 @@ if (not tweak_data or tweak_data.RELOAD) and managers.dlc then
 	end
 end
 
--- Lines 3752-3967
+-- Lines 3779-3948
 function TweakData:get_controller_help_coords()
 	if managers.controller:get_default_wrapper_type() == "pc" or managers.controller:get_default_wrapper_type() == "steam" then
 		return false
@@ -3726,230 +3734,7 @@ function TweakData:get_controller_help_coords()
 		vehicle = {}
 	}
 
-	if SystemInfo:platform() == Idstring("PS3") then
-		coords.normal.left_thumb = {
-			align = "right",
-			id = "menu_button_sprint",
-			vertical = "top",
-			x = 195,
-			y = 255
-		}
-		coords.normal.left = {
-			align = "right",
-			id = "menu_button_move",
-			vertical = "top",
-			x = 195,
-			y = 280
-		}
-		coords.normal.right_thumb = {
-			align = "left",
-			id = "menu_button_melee",
-			vertical = "top",
-			x = 319,
-			y = 255
-		}
-		coords.normal.right = {
-			align = "left",
-			id = "menu_button_look",
-			vertical = "top",
-			x = 319,
-			y = 280
-		}
-		coords.normal.triangle = {
-			align = "left",
-			id = "menu_button_switch_weapon",
-			x = 511,
-			y = 112
-		}
-		coords.normal.square = {
-			align = "left",
-			id = "menu_button_reload",
-			x = 511,
-			y = 214
-		}
-		coords.normal.circle = {
-			align = "left",
-			id = "menu_button_crouch",
-			x = 511,
-			y = 146
-		}
-		coords.normal.cross = {
-			align = "left",
-			id = "menu_button_jump",
-			x = 511,
-			y = 178
-		}
-		coords.normal.r2_trigger = {
-			align = "left",
-			id = "menu_button_shout",
-			x = 511,
-			y = 8
-		}
-		coords.normal.r1_trigger = {
-			align = "left",
-			id = "menu_button_fire_weapon",
-			x = 511,
-			y = 36
-		}
-		coords.normal.l2_trigger = {
-			align = "right",
-			id = "menu_button_deploy",
-			x = 0,
-			y = 8
-		}
-		coords.normal.l1_trigger = {
-			align = "right",
-			id = "menu_button_aim_down_sight",
-			x = 0,
-			y = 36
-		}
-		coords.normal.start = {
-			align = "left",
-			id = "menu_button_ingame_menu",
-			vertical = "bottom",
-			x = 280,
-			y = 0
-		}
-		coords.normal.back = {
-			align = "right",
-			id = "menu_button_stats_screen",
-			vertical = "bottom",
-			x = 230,
-			y = 0
-		}
-		coords.normal.d_down = {
-			align = "right",
-			id = "menu_button_weapon_gadget_bipod",
-			vertical = "center",
-			x = 0,
-			y = 171
-		}
-		coords.normal.d_left = {
-			align = "right",
-			id = "menu_button_throw_grenade",
-			vertical = "center",
-			x = 0,
-			y = 145
-		}
-		coords.normal.d_right = {
-			align = "right",
-			id = "menu_button_weapon_firemode",
-			vertical = "center",
-			x = 0,
-			y = 87
-		}
-		coords.vehicle.left_thumb = {
-			align = "right",
-			id = "menu_button_unassigned",
-			vertical = "top",
-			x = 195,
-			y = 255
-		}
-		coords.vehicle.left = {
-			align = "right",
-			id = "menu_button_steering",
-			vertical = "top",
-			x = 195,
-			y = 280
-		}
-		coords.vehicle.right_thumb = {
-			align = "left",
-			id = "menu_button_vehicle_rear_camera",
-			vertical = "top",
-			x = 319,
-			y = 255
-		}
-		coords.vehicle.right = {
-			align = "left",
-			id = "menu_button_unassigned",
-			vertical = "top",
-			x = 319,
-			y = 280
-		}
-		coords.vehicle.triangle = {
-			align = "left",
-			id = "menu_button_unassigned",
-			x = 511,
-			y = 112
-		}
-		coords.vehicle.square = {
-			align = "left",
-			id = "menu_button_vehicle_change_camera",
-			x = 511,
-			y = 214
-		}
-		coords.vehicle.circle = {
-			align = "left",
-			id = "menu_button_vehicle_shooting_stance",
-			x = 511,
-			y = 146
-		}
-		coords.vehicle.cross = {
-			align = "left",
-			id = "menu_button_handbrake",
-			x = 511,
-			y = 178
-		}
-		coords.vehicle.r2_trigger = {
-			align = "left",
-			id = "menu_button_vehicle_exit",
-			x = 511,
-			y = 8
-		}
-		coords.vehicle.r1_trigger = {
-			align = "left",
-			id = "menu_button_accelerate",
-			x = 511,
-			y = 36
-		}
-		coords.vehicle.l2_trigger = {
-			align = "right",
-			id = "menu_button_unassigned",
-			x = 0,
-			y = 8
-		}
-		coords.vehicle.l1_trigger = {
-			align = "right",
-			id = "menu_button_brake",
-			x = 0,
-			y = 36
-		}
-		coords.vehicle.start = {
-			align = "left",
-			id = "menu_button_ingame_menu",
-			vertical = "bottom",
-			x = 280,
-			y = 0
-		}
-		coords.vehicle.back = {
-			align = "right",
-			id = "menu_button_stats_screen",
-			vertical = "bottom",
-			x = 230,
-			y = 0
-		}
-		coords.vehicle.d_down = {
-			align = "right",
-			id = "menu_button_unassigned",
-			vertical = "center",
-			x = 0,
-			y = 171
-		}
-		coords.vehicle.d_left = {
-			align = "right",
-			id = "menu_button_unassigned",
-			vertical = "center",
-			x = 0,
-			y = 145
-		}
-		coords.vehicle.d_right = {
-			align = "right",
-			id = "menu_button_unassigned",
-			vertical = "center",
-			x = 0,
-			y = 87
-		}
-	elseif SystemInfo:platform() == Idstring("PS4") then
+	if IS_PS4 then
 		coords.normal.left_thumb = {
 			align = "right",
 			id = "menu_button_sprint",
@@ -4172,7 +3957,7 @@ function TweakData:get_controller_help_coords()
 			x = 0,
 			y = 181
 		}
-	elseif SystemInfo:platform() == Idstring("XB1") then
+	elseif IS_XB1 then
 		coords.normal.left_thumb = {
 			align = "right",
 			id = "menu_button_sprint",
@@ -4508,7 +4293,7 @@ function TweakData:get_controller_help_coords()
 			y = 256
 		}
 
-		if SystemInfo:platform() == Idstring("WIN32") then
+		if IS_PC then
 			coords.normal.d_up = {
 				align = "right",
 				id = "menu_button_push_to_talk",
@@ -4630,7 +4415,7 @@ function TweakData:get_controller_help_coords()
 			y = 256
 		}
 
-		if SystemInfo:platform() == Idstring("WIN32") then
+		if IS_PC then
 			coords.vehicle.d_up = {
 				align = "right",
 				id = "menu_button_unassigned",

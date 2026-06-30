@@ -17,17 +17,10 @@ function HuskCopBase:post_init()
 	self:hide_and_remove_collisions_for_a_few_frames()
 end
 
--- Lines 28-39
+-- Lines 28-34
 function HuskCopBase:pre_destroy(unit)
 	if alive(self._headwear_unit) then
 		self._headwear_unit:set_slot(0)
-	end
-
-	self._unit:brain():pre_destroy()
-	self._ext_movement:pre_destroy()
-
-	if unit:inventory() then
-		unit:inventory():pre_destroy(unit)
 	end
 
 	UnitBase.pre_destroy(self, unit)

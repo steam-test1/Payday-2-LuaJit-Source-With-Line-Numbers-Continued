@@ -204,7 +204,7 @@ function ElementStopwatchOperator:client_on_executed(...)
 	return
 end
 
--- Lines 184-234
+-- Lines 184-238
 function ElementStopwatchOperator:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -258,7 +258,7 @@ function ElementStopwatchOperator:on_executed(instigator)
 	ElementStopwatchOperator.super.on_executed(self, instigator)
 end
 
--- Lines 236-254
+-- Lines 240-258
 function ElementStopwatchOperator:_save_value_ok(new_time, saved_time)
 	local condition = self:value("condition")
 
@@ -281,17 +281,17 @@ end
 
 ElementStopwatchTrigger = ElementStopwatchTrigger or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines 260-262
+-- Lines 264-266
 function ElementStopwatchTrigger:init(...)
 	ElementStopwatchTrigger.super.init(self, ...)
 end
 
--- Lines 264-266
+-- Lines 268-270
 function ElementStopwatchTrigger:on_script_activated()
 	self:activate_trigger()
 end
 
--- Lines 268-273
+-- Lines 272-277
 function ElementStopwatchTrigger:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -300,12 +300,12 @@ function ElementStopwatchTrigger:on_executed(instigator)
 	ElementStopwatchTrigger.super.on_executed(self, instigator)
 end
 
--- Lines 275-277
+-- Lines 279-281
 function ElementStopwatchTrigger:client_on_executed(...)
 	return
 end
 
--- Lines 279-289
+-- Lines 283-293
 function ElementStopwatchTrigger:activate_trigger()
 	for _, id in ipairs(self._values.elements) do
 		local element = self:get_mission_element(id)
@@ -316,12 +316,12 @@ function ElementStopwatchTrigger:activate_trigger()
 	end
 end
 
--- Lines 291-292
+-- Lines 295-296
 function ElementStopwatchTrigger:operation_add()
 	return
 end
 
--- Lines 294-305
+-- Lines 298-309
 function ElementStopwatchTrigger:set_enabled(enabled)
 	for _, id in ipairs(self._values.elements) do
 		local element = self:get_mission_element(id)
@@ -336,29 +336,29 @@ end
 
 ElementStopwatchFilter = ElementStopwatchFilter or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines 311-313
+-- Lines 315-317
 function ElementStopwatchFilter:init(...)
 	ElementStopwatchFilter.super.init(self, ...)
 end
 
--- Lines 315-317
+-- Lines 319-321
 function ElementStopwatchFilter:on_script_activated()
 	return
 end
 
--- Lines 319-321
+-- Lines 323-325
 function ElementStopwatchFilter:client_on_executed(...)
 	return
 end
 
--- Lines 323-327
+-- Lines 327-331
 function ElementStopwatchFilter:on_executed(instigator)
 	if self._values.enabled and self:_values_ok() then
 		ElementStopwatchFilter.super.on_executed(self, instigator)
 	end
 end
 
--- Lines 329-336
+-- Lines 333-340
 function ElementStopwatchFilter:_values_ok()
 	if self._values.needed_to_execute == "all" then
 		return self:_all_elements_ok()
@@ -369,7 +369,7 @@ function ElementStopwatchFilter:_values_ok()
 	end
 end
 
--- Lines 338-345
+-- Lines 342-349
 function ElementStopwatchFilter:_all_elements_ok()
 	for _, id in ipairs(self._values.elements) do
 		if not self:_check_time(self:get_mission_element(id), self:_get_time()) then
@@ -380,7 +380,7 @@ function ElementStopwatchFilter:_all_elements_ok()
 	return true
 end
 
--- Lines 347-354
+-- Lines 351-358
 function ElementStopwatchFilter:_any_elements_ok()
 	for _, id in ipairs(self._values.elements) do
 		if self:_check_time(self:get_mission_element(id), self:_get_time()) then
@@ -391,7 +391,7 @@ function ElementStopwatchFilter:_any_elements_ok()
 	return false
 end
 
--- Lines 356-367
+-- Lines 360-371
 function ElementStopwatchFilter:_get_time()
 	local time = self._values.value
 
@@ -406,7 +406,7 @@ function ElementStopwatchFilter:_get_time()
 	return time
 end
 
--- Lines 369-382
+-- Lines 373-386
 function ElementStopwatchFilter:_check_time(element, value)
 	if not self._values.check_type or self._values.check_type == "equal" then
 		return element:get_time() == value

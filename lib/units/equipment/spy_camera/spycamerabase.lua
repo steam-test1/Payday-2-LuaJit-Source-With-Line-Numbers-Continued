@@ -2,7 +2,7 @@ SpyCameraBase = SpyCameraBase or class(UnitBase)
 SpyCameraBase.UPDATE_RATE = 1.5
 SpyCameraBase.WHISPER_UPDATE_RATE = 4
 
-local IDS_MATERIAL = Idstring("material")
+local IDS_MATERIAL = IDS_MATERIAL
 local IDS_UV0_SPEED = Idstring("uv0_speed")
 
 -- Lines 10-28
@@ -147,26 +147,28 @@ function SpyCameraBase:on_whisper_mode_changed()
 	self:_update_materials()
 end
 
--- Lines 146-157
+-- Lines 146-159
 function SpyCameraBase:_update_materials()
-	self._material_clbk_id = nil
+	if alive(self._unit) then
+		self._material_clbk_id = nil
 
-	local uv0_speed = Vector3(1 / (self._update_rate or 1), 0, 0)
+		local uv0_speed = Vector3(1 / (self._update_rate or 1), 0, 0)
 
-	for _, material in ipairs(self._unit:get_objects_by_type(IDS_MATERIAL)) do
-		if material:variable_exists(IDS_UV0_SPEED) then
-			material:set_variable(IDS_UV0_SPEED, uv0_speed)
-			material:set_time(0)
+		for _, material in ipairs(self._unit:get_objects_by_type(IDS_MATERIAL)) do
+			if material:variable_exists(IDS_UV0_SPEED) then
+				material:set_variable(IDS_UV0_SPEED, uv0_speed)
+				material:set_time(0)
+			end
 		end
 	end
 end
 
--- Lines 159-161
+-- Lines 161-163
 function SpyCameraBase:get_owner_id()
 	return self._owner_id or 1
 end
 
--- Lines 165-175
+-- Lines 167-177
 function SpyCameraBase:owner()
 	if not alive(self._owner) then
 		local peer = managers.network:session():peer(self._owner_id)
@@ -179,7 +181,7 @@ function SpyCameraBase:owner()
 	return self._owner
 end
 
--- Lines 179-199
+-- Lines 181-201
 function SpyCameraBase:link_attachment()
 	local position = self._unit:position()
 	local rotation = self._unit:rotation()
@@ -201,7 +203,7 @@ function SpyCameraBase:link_attachment()
 	end
 end
 
--- Lines 202-258
+-- Lines 204-260
 function SpyCameraBase:update(unit, t, dt)
 	if self._removed then
 		return
@@ -253,7 +255,7 @@ function SpyCameraBase:update(unit, t, dt)
 	end
 end
 
--- Lines 262-269
+-- Lines 264-271
 function SpyCameraBase:on_interaction()
 	if Network:is_server() then
 		SpyCameraBase.on_picked_up()
@@ -263,24 +265,24 @@ function SpyCameraBase:on_interaction()
 	end
 end
 
--- Lines 271-273
+-- Lines 273-275
 function SpyCameraBase.on_picked_up()
 	managers.player:add_spy_camera()
 end
 
--- Lines 277-280
+-- Lines 279-282
 function SpyCameraBase:remove()
 	self._removed = true
 
 	self._unit:set_slot(0)
 end
 
--- Lines 282-284
+-- Lines 284-286
 function SpyCameraBase:is_removed()
 	return self._removed
 end
 
--- Lines 288-313
+-- Lines 290-315
 function SpyCameraBase:_check_body()
 	if self._is_dynamic or not self._attached_data then
 		return
@@ -307,7 +309,7 @@ function SpyCameraBase:_check_body()
 	self._attached_data.index = (self._attached_data.index < self._attached_data.max_index and self._attached_data.index or 0) + 1
 end
 
--- Lines 315-321
+-- Lines 317-323
 function SpyCameraBase:server_set_dynamic()
 	self:_set_dynamic()
 
@@ -316,14 +318,14 @@ function SpyCameraBase:server_set_dynamic()
 	end
 end
 
--- Lines 323-327
+-- Lines 325-329
 function SpyCameraBase:sync_net_event(event_id)
 	if event_id == 1 then
 		self:_set_dynamic()
 	end
 end
 
--- Lines 329-337
+-- Lines 331-339
 function SpyCameraBase:_set_dynamic()
 	self._is_dynamic = true
 
@@ -334,7 +336,7 @@ function SpyCameraBase:_set_dynamic()
 	end
 end
 
--- Lines 341-361
+-- Lines 343-363
 function SpyCameraBase:interaction_setup(interaction_unit, owner_id)
 	if alive(interaction_unit) then
 		self._unit:link(self._unit:orientation_object():name(), interaction_unit, interaction_unit:orientation_object():name())
@@ -357,7 +359,7 @@ function SpyCameraBase:interaction_setup(interaction_unit, owner_id)
 	end
 end
 
--- Lines 363-385
+-- Lines 365-392
 function SpyCameraBase:destroy(unit)
 	SpyCameraBase.super.destroy(self, unit)
 
@@ -373,6 +375,12 @@ function SpyCameraBase:destroy(unit)
 		self._dropin_clbk_id = nil
 	end
 
+	if self._material_clbk_id then
+		managers.enemy:remove_delayed_clbk(self._material_clbk_id)
+
+		self._material_clbk_id = nil
+	end
+
 	if self._whisper_listener then
 		managers.groupai:state():remove_listener(self._whisper_listener)
 
@@ -384,7 +392,7 @@ function SpyCameraBase:destroy(unit)
 	end
 end
 
--- Lines 387-392
+-- Lines 394-399
 function SpyCameraBase:remove_interaction()
 	if self._interaction_unit and alive(self._interaction_unit) then
 		self._interaction_unit:set_slot(0)
@@ -393,7 +401,7 @@ function SpyCameraBase:remove_interaction()
 	end
 end
 
--- Lines 394-406
+-- Lines 401-413
 function SpyCameraBase:save(data)
 	local state = {}
 
@@ -409,7 +417,7 @@ function SpyCameraBase:save(data)
 	end
 end
 
--- Lines 408-426
+-- Lines 415-433
 function SpyCameraBase:_clbk_drop_in_sync(peer_id)
 	self._dropin_clbk_id = nil
 
@@ -432,7 +440,7 @@ function SpyCameraBase:_clbk_drop_in_sync(peer_id)
 	session:send_to_peer_synched(peer, "sync_spy_camera_interaction", self._unit, self._interaction_unit, self._owner_id)
 end
 
--- Lines 428-436
+-- Lines 435-443
 function SpyCameraBase:load(data)
 	local state = data.SpyCameraBase
 
@@ -445,7 +453,7 @@ end
 
 SpyCameraDummyBase = SpyCameraDummyBase or class()
 
--- Lines 445-463
+-- Lines 452-470
 function SpyCameraDummyBase:init(unit)
 	if not unit:damage() then
 		return
@@ -469,7 +477,7 @@ end
 
 SpyAccessCameraBase = SpyAccessCameraBase or class(UnitBase)
 
--- Lines 471-493
+-- Lines 478-500
 function SpyAccessCameraBase:init(unit)
 	SpyAccessCameraBase.super.init(self, unit, true)
 
@@ -491,7 +499,7 @@ function SpyAccessCameraBase:init(unit)
 	managers.game_play_central:add_access_camera(self._tweak_data.access_channel, self)
 end
 
--- Lines 495-503
+-- Lines 502-510
 function SpyAccessCameraBase:destroy()
 	managers.game_play_central:remove_access_camera(self._tweak_data.access_channel, self)
 
@@ -502,27 +510,27 @@ function SpyAccessCameraBase:destroy()
 	end
 end
 
--- Lines 505-509
+-- Lines 512-516
 function SpyAccessCameraBase:add_trigger(id, type, callback)
 	if type == "destroyed" then
 		self:add_destroy_listener(id, callback)
 	end
 end
 
--- Lines 511-515
+-- Lines 518-522
 function SpyAccessCameraBase:remove_trigger(id, type)
 	if type == "destroyed" then
 		self:remove_destroy_listener(id)
 	end
 end
 
--- Lines 517-520
+-- Lines 524-527
 function SpyAccessCameraBase:trigger_accessed(instigator)
 	self._values.position = self:camera_position()
 	self._values.rotation = self:camera_rotation()
 end
 
--- Lines 524-538
+-- Lines 531-545
 function SpyAccessCameraBase:is_moving()
 	if self._destroyed then
 		return
@@ -538,37 +546,37 @@ function SpyAccessCameraBase:is_moving()
 	end
 end
 
--- Lines 540-542
+-- Lines 547-549
 function SpyAccessCameraBase:enabled()
 	return true
 end
 
--- Lines 544-546
+-- Lines 551-553
 function SpyAccessCameraBase:has_camera_unit()
 	return alive(self._unit)
 end
 
--- Lines 548-550
+-- Lines 555-557
 function SpyAccessCameraBase:camera_unit()
 	return self._unit
 end
 
--- Lines 552-554
+-- Lines 559-561
 function SpyAccessCameraBase:camera_position()
 	return self._camera_object:position()
 end
 
--- Lines 556-558
+-- Lines 563-565
 function SpyAccessCameraBase:camera_rotation()
 	return self._camera_object:rotation()
 end
 
--- Lines 560-562
+-- Lines 567-569
 function SpyAccessCameraBase:value(value)
 	return self._values[value]
 end
 
--- Lines 564-571
+-- Lines 571-578
 function SpyAccessCameraBase:set_destroyed(value)
 	self._values.destroyed = value
 	self._destroyed = value
@@ -578,7 +586,7 @@ function SpyAccessCameraBase:set_destroyed(value)
 	end
 end
 
--- Lines 573-588
+-- Lines 580-595
 function SpyAccessCameraBase:set_owner_id(owner_id)
 	local owner_peer = managers.network:session():peer(owner_id)
 
@@ -597,7 +605,7 @@ function SpyAccessCameraBase:set_owner_id(owner_id)
 	self._values.text_macros.NAME = managers.localization:text("menu_" .. character_name)
 end
 
--- Lines 590-598
+-- Lines 597-605
 function SpyAccessCameraBase:m_camera_rotation(m_rot)
 	if not m_rot then
 		return self:camera_rotation()
@@ -608,7 +616,7 @@ function SpyAccessCameraBase:m_camera_rotation(m_rot)
 	return m_rot
 end
 
--- Lines 600-608
+-- Lines 607-615
 function SpyAccessCameraBase:m_camera_position(m_vec)
 	if not m_vec then
 		return self:camera_position()
@@ -619,7 +627,7 @@ function SpyAccessCameraBase:m_camera_position(m_vec)
 	return m_vec
 end
 
--- Lines 610-617
+-- Lines 617-624
 function SpyAccessCameraBase:save(data)
 	local state = {
 		owner_id = self._owner_id,
@@ -629,7 +637,7 @@ function SpyAccessCameraBase:save(data)
 	data.SpyAccessCameraBase = state
 end
 
--- Lines 619-624
+-- Lines 626-631
 function SpyAccessCameraBase:load(data)
 	local state = data.SpyAccessCameraBase
 
