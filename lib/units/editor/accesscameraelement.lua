@@ -1,10 +1,10 @@
 AccessCameraUnitElement = AccessCameraUnitElement or class(MissionElement)
 AccessCameraUnitElement.LINK_VALUES = {
 	{
-		value = "camera_u_id",
-		output = true,
 		layer = "Statics",
-		type = "filter"
+		output = true,
+		type = "filter",
+		value = "camera_u_id"
 	}
 }
 
@@ -53,8 +53,8 @@ function AccessCameraUnitElement:update_selected(t, dt, selected_unit, all_units
 
 	if alive(self._camera_unit) then
 		self:_draw_link({
-			g = 0.75,
 			b = 0,
+			g = 0.75,
 			r = 0,
 			from_unit = self._unit,
 			to_unit = self._camera_unit
@@ -76,6 +76,7 @@ end
 
 -- Lines 89-92
 function AccessCameraUnitElement:update_editing()
+	return
 end
 
 -- Lines 94-106
@@ -223,8 +224,8 @@ function AccessCameraOperatorUnitElement:draw_links(t, dt, selected_unit, all_un
 
 		if draw then
 			self:_draw_link({
-				g = 0.75,
 				b = 0.25,
+				g = 0.75,
 				r = 0.75,
 				from_unit = self._unit,
 				to_unit = unit
@@ -235,13 +236,14 @@ end
 
 -- Lines 217-218
 function AccessCameraOperatorUnitElement:update_editing()
+	return
 end
 
 -- Lines 220-235
 function AccessCameraOperatorUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit and (ray.unit:name() == Idstring("units/dev_tools/mission_elements/point_access_camera/point_access_camera") or ray.unit:name() == Idstring("units/dev_tools/mission_elements/ai_security_camera/ai_security_camera")) then
@@ -266,6 +268,7 @@ function AccessCameraOperatorUnitElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local exact_names = {
 		"units/dev_tools/mission_elements/point_access_camera/point_access_camera",
 		"units/dev_tools/mission_elements/ai_security_camera/ai_security_camera"
@@ -305,8 +308,8 @@ function AccessCameraTriggerUnitElement:draw_links(t, dt, selected_unit, all_uni
 
 		if draw then
 			self:_draw_link({
-				g = 0.85,
 				b = 0.25,
+				g = 0.85,
 				r = 0.85,
 				from_unit = unit,
 				to_unit = self._unit
@@ -317,13 +320,14 @@ end
 
 -- Lines 282-283
 function AccessCameraTriggerUnitElement:update_editing()
+	return
 end
 
 -- Lines 285-300
 function AccessCameraTriggerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit and (ray.unit:name() == Idstring("units/dev_tools/mission_elements/point_access_camera/point_access_camera") or ray.unit:name() == Idstring("units/dev_tools/mission_elements/ai_security_camera/ai_security_camera")) then
@@ -348,6 +352,7 @@ function AccessCameraTriggerUnitElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local exact_names = {
 		"units/dev_tools/mission_elements/point_access_camera/point_access_camera",
 		"units/dev_tools/mission_elements/ai_security_camera/ai_security_camera"

@@ -37,6 +37,7 @@ end
 -- Lines 28-54
 function ReloadTimeline:get_key(key, time)
 	time = math.clamp(time, 0, 1)
+
 	local before = {
 		time = 0,
 		[key] = tweak_data.vr.reload_timelines.default_keys[key]

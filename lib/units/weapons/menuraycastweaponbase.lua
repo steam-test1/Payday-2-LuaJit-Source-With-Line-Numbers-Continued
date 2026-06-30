@@ -102,6 +102,7 @@ function NewRaycastWeaponBase:_chk_has_bullet_belt()
 
 			if bullet_belt then
 				local parent_id = managers.weapon_factory:get_part_id_from_weapon_by_type(type, self._blueprint)
+
 				self._custom_units = self._custom_units or {}
 				self._custom_units.bullet_belt = {
 					parent = parent_id,
@@ -184,15 +185,17 @@ function NewRaycastWeaponBase:assemble(factory_id, skip_queue)
 
 	self._unit:set_visible(false)
 
-	self._parts, self._blueprint = managers.weapon_factory:assemble_default(factory_id, self._unit, third_person, self:is_npc(), callback(self, self, "_assemble_completed", function ()
+	self._parts, self._blueprint = managers.weapon_factory:assemble_default(factory_id, self._unit, third_person, self:is_npc(), callback(self, self, "_assemble_completed", function()
+		return
 	end), skip_queue)
 
 	self:_check_thq_align_anim()
 	self:_update_stats_values()
 
-	return
+	do return end
 
 	local third_person = self:is_npc()
+
 	self._parts, self._blueprint = managers.weapon_factory:assemble_default(factory_id, self._unit, third_person, self:is_npc())
 
 	self:_update_fire_object()
@@ -205,15 +208,17 @@ function NewRaycastWeaponBase:assemble_from_blueprint(factory_id, blueprint, ski
 
 	self._unit:set_visible(false)
 
-	self._parts, self._blueprint = managers.weapon_factory:assemble_from_blueprint(factory_id, self._unit, blueprint, third_person, self:is_npc(), callback(self, self, "_assemble_completed", clbk or function ()
+	self._parts, self._blueprint = managers.weapon_factory:assemble_from_blueprint(factory_id, self._unit, blueprint, third_person, self:is_npc(), callback(self, self, "_assemble_completed", clbk or function()
+		return
 	end), skip_queue)
 
 	self:_check_thq_align_anim()
 	self:_update_stats_values()
 
-	return
+	do return end
 
 	local third_person = self:is_npc()
+
 	self._parts, self._blueprint = managers.weapon_factory:assemble_from_blueprint(factory_id, self._unit, blueprint, third_person, self:is_npc())
 
 	self:_update_fire_object()
@@ -290,20 +295,23 @@ end
 -- Lines 337-393
 function NewRaycastWeaponBase:apply_texture_switches()
 	local parts_tweak = tweak_data.weapon.factory.parts
+
 	self._parts_texture_switches = self._parts_texture_switches or {}
 
 	if self._texture_switches then
-		local texture_switch, part_data, unit, material_ids, material_config, switch_material = nil
+		local texture_switch, part_data, unit, material_ids, material_config, switch_material
 
 		for part_id, texture_data in pairs(self._texture_switches) do
 			if self._parts_texture_switches[part_id] ~= texture_data then
 				local switch_materials = {}
+
 				texture_switch = parts_tweak[part_id] and parts_tweak[part_id].texture_switch
 				part_data = self._parts and self._parts[part_id]
 
 				if texture_switch and part_data then
 					unit = part_data.unit
 					material_config = unit:get_objects_by_type(Idstring("material"))
+
 					local ids = {}
 
 					if type(texture_switch.material) == "table" then
@@ -349,6 +357,7 @@ end
 
 -- Lines 396-397
 function NewRaycastWeaponBase:check_npc()
+	return
 end
 
 -- Lines 401-411
@@ -402,7 +411,7 @@ end
 
 -- Lines 461-509
 function NewRaycastWeaponBase:_update_stats_values()
-	return
+	do return end
 
 	local base_stats = self:weapon_tweak_data().stats
 
@@ -411,7 +420,9 @@ function NewRaycastWeaponBase:_update_stats_values()
 	end
 
 	local parts_stats = managers.weapon_factory:get_stats(self._factory_id, self._blueprint)
+
 	self._silencer = managers.weapon_factory:has_perk("silencer", self._factory_id, self._blueprint)
+
 	local stats = deep_clone(base_stats)
 	local tweak_data = tweak_data.weapon.stats
 	local modifier_stats = self:weapon_tweak_data().stats_modifiers
@@ -484,6 +495,7 @@ function NewRaycastWeaponBase:tweak_data_anim_play(anim, speed_multiplier)
 	if data.animations and data.animations[anim] then
 		local anim_name = data.animations[anim]
 		local length = self._unit:anim_length(Idstring(anim_name))
+
 		speed_multiplier = speed_multiplier or 1
 
 		self._unit:anim_stop(Idstring(anim_name))
@@ -494,6 +506,7 @@ function NewRaycastWeaponBase:tweak_data_anim_play(anim, speed_multiplier)
 		if data.animations and data.animations[anim] then
 			local anim_name = data.animations[anim]
 			local length = data.unit:anim_length(Idstring(anim_name))
+
 			speed_multiplier = speed_multiplier or 1
 
 			data.unit:anim_stop(Idstring(anim_name))
@@ -556,6 +569,7 @@ end
 -- Lines 628-634
 function NewRaycastWeaponBase:gadget_on()
 	self._gadget_on = true
+
 	local gadget = managers.weapon_factory:get_part_from_weapon_by_type("gadget", self._parts)
 
 	if gadget then
@@ -566,6 +580,7 @@ end
 -- Lines 636-642
 function NewRaycastWeaponBase:gadget_off()
 	self._gadget_on = false
+
 	local gadget = managers.weapon_factory:get_part_from_weapon_by_type("gadget", self._parts)
 
 	if gadget then
@@ -576,6 +591,7 @@ end
 -- Lines 644-650
 function NewRaycastWeaponBase:toggle_gadget()
 	self._gadget_on = not self._gadget_on
+
 	local gadget = managers.weapon_factory:get_part_from_weapon_by_type("gadget", self._parts)
 
 	if gadget then
@@ -585,6 +601,7 @@ end
 
 -- Lines 652-653
 function NewRaycastWeaponBase:toggle_firemode()
+	return
 end
 
 -- Lines 656-695
@@ -601,6 +618,7 @@ function NewRaycastWeaponBase:check_stats()
 	local stats = deep_clone(base_stats)
 	local tweak_data = tweak_data.weapon.stats
 	local modifier_stats = self:weapon_tweak_data().stats_modifiers
+
 	stats.zoom = math.min(stats.zoom + managers.player:upgrade_value(self:categories()[1], "zoom_increase", 0), #tweak_data.zoom)
 
 	for stat, _ in pairs(stats) do

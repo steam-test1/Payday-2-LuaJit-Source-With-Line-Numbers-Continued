@@ -238,6 +238,7 @@ end
 -- Lines 225-263
 function WorldEditor:project_run_simulation(simulation_mode)
 	local with_mission = simulation_mode == self.SIMULATION_MODE.MISSION or simulation_mode == self.SIMULATION_MODE.BRIEFING
+
 	Global.game_settings.difficulty = self._mission_difficulty
 
 	managers.network:host_game()
@@ -280,6 +281,7 @@ end
 
 -- Lines 265-267
 function WorldEditor:_project_check_unit(unit)
+	return
 end
 
 -- Lines 271-304
@@ -332,14 +334,17 @@ end
 
 -- Lines 325-326
 function WorldEditor:project_clear_layers()
+	return
 end
 
 -- Lines 331-332
 function WorldEditor:project_recreate_layers()
+	return
 end
 
 -- Lines 335-340
 function WorldEditor:_project_add_menubar()
+	return
 end
 
 -- Lines 350-356

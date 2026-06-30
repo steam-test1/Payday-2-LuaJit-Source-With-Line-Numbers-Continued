@@ -27,6 +27,7 @@ end
 
 -- Lines 25-31
 function CoreVisualFXCutsceneKey:prime(player)
+	return
 end
 
 -- Lines 33-35
@@ -61,7 +62,7 @@ end
 
 -- Lines 50-54
 function CoreVisualFXCutsceneKey:update(player, time)
-	if self:duration() and self:duration() < time then
+	if self:duration() and time > self:duration() then
 		self:stop()
 	end
 end

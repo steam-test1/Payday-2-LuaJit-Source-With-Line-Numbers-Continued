@@ -180,6 +180,7 @@ function GenericUserManager:setup_setting(id, name, default_value)
 		id = id,
 		default_value = self:get_clone_value(default_value)
 	}
+
 	Global.user_manager.setting_data_map[name] = setting_data
 	Global.user_manager.setting_data_id_to_name_map[id] = name
 	Global.user_manager.setting_map[id] = self:get_default_setting(name)
@@ -187,6 +188,7 @@ end
 
 -- Lines 287-288
 function GenericUserManager:update(t, dt)
+	return
 end
 
 -- Lines 290-292
@@ -370,6 +372,7 @@ function GenericUserManager:set_setting(name, value, force_change)
 	end
 
 	local old_value = Global.user_manager.setting_map[setting_data.id]
+
 	Global.user_manager.setting_map[setting_data.id] = value
 
 	if self:has_setting_changed(old_value, value) or force_change then
@@ -388,6 +391,7 @@ function GenericUserManager:add_setting_changed_callback(setting_name, callback_
 	assert(Global.user_manager.setting_data_map[setting_name], "[UserManager] Tried to add setting changed callback for non-existing setting \"" .. tostring(setting_name) .. "\".")
 
 	local callback_handler = self._setting_changed_callback_handler_map[setting_name] or CoreEvent.CallbackEventHandler:new()
+
 	self._setting_changed_callback_handler_map[setting_name] = callback_handler
 
 	callback_handler:add(callback_func)
@@ -454,8 +458,9 @@ function GenericUserManager:check_add_setting_clbks_to_obj(obj, to_add)
 		if not obj._setting_clbks[sett_name] then
 			local data = type(sett_data) == "table" and sett_data or {}
 			local var_name = data.var_name or "_setting_" .. tostring(sett_name)
+
 			obj[var_name] = self:get_setting(sett_name)
-			obj._setting_clbks[sett_name] = data.clbk or data.clbk_name and callback(obj, obj, data.clbk_name) or function (setting_name, old_value, new_value)
+			obj._setting_clbks[sett_name] = data.clbk or data.clbk_name and callback(obj, obj, data.clbk_name) or function(setting_name, old_value, new_value)
 				obj[var_name] = new_value
 			end
 
@@ -506,10 +511,12 @@ end
 
 -- Lines 618-618
 function GenericUserManager:update_all_users()
+	return
 end
 
 -- Lines 620-620
 function GenericUserManager:update_user(user_index, ignore_username_change)
+	return
 end
 
 -- Lines 622-624
@@ -552,6 +559,7 @@ function GenericUserManager:set_user_soft(user_index, platform_id, storage_id, u
 		username = username,
 		signin_state = signin_state
 	}
+
 	Global.user_manager.user_map[user_index] = user_data
 end
 
@@ -565,6 +573,7 @@ function GenericUserManager:set_user(user_index, platform_id, storage_id, userna
 		username = username,
 		signin_state = signin_state
 	}
+
 	Global.user_manager.user_map[user_index] = user_data
 
 	self:check_user_state_change(old_user_data, user_data, ignore_username_change)
@@ -578,7 +587,7 @@ function GenericUserManager:check_user_state_change(old_user_data, user_data, ig
 	local old_username = old_user_data and old_user_data.username
 	local username_changed = old_username ~= username
 	local old_user_has_signed_out = old_user_data and old_user_data.has_signed_out
-	local user_changed, active_user_changed = nil
+	local user_changed, active_user_changed
 	local was_signed_in = old_signin_state ~= self.NOT_SIGNED_IN_STATE
 	local is_signed_in = signin_state ~= self.NOT_SIGNED_IN_STATE
 	local sign_in_state_changed = was_signed_in ~= is_signed_in
@@ -628,14 +637,15 @@ function GenericUserManager:active_user_change_state(old_user_data, user_data)
 	if self:get_active_user_state_change_quit() or is_x360 and managers.savefile:is_in_loading_sequence() then
 		print("-- Cause loading", self:get_active_user_state_change_quit(), managers.savefile:is_in_loading_sequence())
 
-		local dialog_data = {
-			title = managers.localization:text("dialog_signin_change_title"),
-			text = managers.localization:text("dialog_signin_change"),
-			id = "user_changed"
-		}
-		local ok_button = {
-			text = managers.localization:text("dialog_ok")
-		}
+		local dialog_data = {}
+
+		dialog_data.title = managers.localization:text("dialog_signin_change_title")
+		dialog_data.text = managers.localization:text("dialog_signin_change")
+		dialog_data.id = "user_changed"
+
+		local ok_button = {}
+
+		ok_button.text = managers.localization:text("dialog_ok")
 		dialog_data.button_list = {
 			ok_button
 		}
@@ -710,6 +720,7 @@ function GenericUserManager:set_index(user_index)
 		cat_print("user_manager", "[UserManager] Changed user index from " .. tostring(old_user_index) .. " to " .. tostring(user_index) .. ".")
 
 		Global.user_manager.user_index = user_index
+
 		local old_user_data = old_user_index and self:_get_user_data(old_user_index)
 
 		if not user_index and old_user_data and not is_xb1 then
@@ -799,20 +810,23 @@ function GenericUserManager:check_user(callback_func, show_select_user_question_
 
 		if show_select_user_question_dialog then
 			self._active_check_user_callback_func = callback_func
-			local dialog_data = {
-				id = "show_select_user_question_dialog",
-				title = managers.localization:text("dialog_signin_title"),
-				text = managers.localization:text("dialog_signin_question"),
-				focus_button = 1
-			}
-			local yes_button = {
-				text = managers.localization:text("dialog_yes"),
-				callback_func = callback(self, self, "_success_callback", confirm_callback)
-			}
-			local no_button = {
-				text = managers.localization:text("dialog_no"),
-				callback_func = callback(self, self, "_fail_callback", confirm_callback)
-			}
+
+			local dialog_data = {}
+
+			dialog_data.id = "show_select_user_question_dialog"
+			dialog_data.title = managers.localization:text("dialog_signin_title")
+			dialog_data.text = managers.localization:text("dialog_signin_question")
+			dialog_data.focus_button = 1
+
+			local yes_button = {}
+
+			yes_button.text = managers.localization:text("dialog_yes")
+			yes_button.callback_func = callback(self, self, "_success_callback", confirm_callback)
+
+			local no_button = {}
+
+			no_button.text = managers.localization:text("dialog_no")
+			no_button.callback_func = callback(self, self, "_fail_callback", confirm_callback)
 			dialog_data.button_list = {
 				yes_button,
 				no_button
@@ -916,6 +930,7 @@ end
 -- Lines 976-996
 function GenericUserManager:save(data)
 	local state = self:get_setting_map()
+
 	data.UserManager = state
 
 	if Global.DEBUG_MENU_ON then
@@ -1017,6 +1032,7 @@ end
 
 -- Lines 1104-1106
 function Xbox360UserManager:connect_callback()
+	return
 end
 
 -- Lines 1108-1110
@@ -1036,10 +1052,10 @@ end
 
 -- Lines 1120-1130
 function Xbox360UserManager:setup_setting_map()
-	local platform_default_type_map = {
-		invert_camera_y = "gamer_yaxis_inversion",
-		camera_sensitivity = "gamer_control_sensitivity"
-	}
+	local platform_default_type_map = {}
+
+	platform_default_type_map.invert_camera_y = "gamer_yaxis_inversion"
+	platform_default_type_map.camera_sensitivity = "gamer_control_sensitivity"
 	Global.user_manager.platform_setting_map = nil
 	Global.user_manager.platform_default_type_map = platform_default_type_map
 
@@ -1122,13 +1138,14 @@ end
 -- Lines 1199-1215
 function Xbox360UserManager:get_setting_map()
 	local platform_setting_map = Global.user_manager.platform_setting_map
-	local setting_map = nil
+	local setting_map
 
 	if platform_setting_map then
 		local packed_string_value = ""
 
 		for i = 1, self.CUSTOM_PROFILE_VARIABLE_COUNT do
 			local setting_name = "title_specific" .. i
+
 			packed_string_value = packed_string_value .. (platform_setting_map[setting_name] or "")
 		end
 
@@ -1156,7 +1173,7 @@ function Xbox360UserManager:save_setting_map(callback_func)
 	local setting_count = 1
 	local max_char_count = self.CUSTOM_PROFILE_VARIABLE_COUNT * self.CUSTOM_PROFILE_VARIABLE_CHAR_COUNT
 
-	if char_count > max_char_count then
+	if max_char_count < char_count then
 		Application:stack_dump_error("[UserManager] Exceeded (" .. char_count .. ") maximum character count that can be stored in the profile (" .. max_char_count .. ").")
 		callback_func(false)
 
@@ -1198,6 +1215,7 @@ function Xbox360UserManager:signin_changed_callback(...)
 		...
 	}) do
 		local was_signed_in = self:is_signed_in(user_index)
+
 		Global.user_manager.user_map[user_index].has_signed_out = was_signed_in and not signed_in
 
 		if Global.user_manager.user_index == user_index and not was_signed_in and signed_in and self._active_check_user_callback_func then
@@ -1224,6 +1242,7 @@ end
 
 -- Lines 1299-1309
 function Xbox360UserManager:profile_setting_changed_callback(...)
+	return
 end
 
 -- Lines 1311-1315
@@ -1238,7 +1257,7 @@ function Xbox360UserManager:update_user(user_index, ignore_username_change)
 	local platform_id = user_index - 1
 	local signin_state = XboxLive:signin_state(platform_id)
 	local is_signed_in = signin_state ~= self.NOT_SIGNED_IN_STATE
-	local storage_id, username = nil
+	local storage_id, username
 
 	if is_signed_in then
 		username = XboxLive:name(platform_id)
@@ -1359,6 +1378,7 @@ end
 
 WinUserManager = WinUserManager or class(GenericUserManager)
 UserManager.PLATFORM_CLASS_MAP[Idstring("WIN32"):key()] = WinUserManager
+
 local is_epic = SystemInfo:distribution() == Idstring("EPIC")
 
 -- Lines 1435-1439
@@ -1442,7 +1462,9 @@ function WinUserManager:update(t, dt)
 
 		if self._epic_dlcs_checked and self._epic_achievements_fetched then
 			self._epic_logged_in_and_ready = true
+
 			local user_index = self._epic_user_index
+
 			self._epic_user_index = nil
 
 			if user_index then
@@ -1450,6 +1472,7 @@ function WinUserManager:update(t, dt)
 			end
 
 			local callback_func, show_select_user_question_dialog = unpack(self._epic_check_user_params)
+
 			self._epic_check_user_params = nil
 
 			self:check_user(callback_func, show_select_user_question_dialog)
@@ -1495,8 +1518,9 @@ function XB1UserManager:update(t, dt)
 		if not self._privilege_check_enabled then
 			self._privilege_check_enabled = true
 			self._next_privilege_check_time = wall_time + 2
-		elseif self._next_privilege_check_time and self._next_privilege_check_time < wall_time then
+		elseif self._next_privilege_check_time and wall_time > self._next_privilege_check_time then
 			self._next_privilege_check_time = nil
+
 			local result = self:check_privilege(nil, "multiplayer_sessions", callback(self, self, "_check_privilege_callback"))
 
 			if not result then
@@ -1561,6 +1585,7 @@ end
 
 -- Lines 1622-1624
 function XB1UserManager:connect_callback()
+	return
 end
 
 -- Lines 1626-1629
@@ -1650,7 +1675,7 @@ function XB1UserManager:save_setting_map(callback_func)
 	local setting_count = 1
 	local max_char_count = self.CUSTOM_PROFILE_VARIABLE_COUNT * self.CUSTOM_PROFILE_VARIABLE_CHAR_COUNT
 
-	if char_count > max_char_count then
+	if max_char_count < char_count then
 		Application:stack_dump_error("[UserManager] Exceeded (" .. char_count .. ") maximum character count that can be stored in the profile (" .. max_char_count .. ").")
 		callback_func(false)
 
@@ -1696,6 +1721,7 @@ function XB1UserManager:signin_changed_callback(selected_xuid)
 	for user_index, user_data in pairs(Global.user_manager.user_map) do
 		local was_signed_in = user_data.signin_state ~= self.NOT_SIGNED_IN_STATE
 		local is_signed_in = XboxLive:signin_state(user_data.platform_id) ~= "not_signed_in"
+
 		user_data.has_signed_out = was_signed_in and not is_signed_in
 	end
 
@@ -1716,6 +1742,7 @@ end
 
 -- Lines 1767-1777
 function XB1UserManager:profile_setting_changed_callback(...)
+	return
 end
 
 -- Lines 1779-1804
@@ -1733,7 +1760,7 @@ function XB1UserManager:update_all_users()
 	end
 
 	for _, user_index in ipairs(old_user_indexes) do
-		local found = nil
+		local found
 
 		for _, xuid in pairs(xuids) do
 			if user_index == tostring(xuid) then
@@ -1759,7 +1786,7 @@ function XB1UserManager:update_user(xuid, ignore_username_change)
 
 	local signin_state = XboxLive:signin_state(xuid)
 	local is_signed_in = signin_state ~= self.NOT_SIGNED_IN_STATE
-	local storage_id, username = nil
+	local storage_id, username
 
 	print("[XB1UserManager:update_user] xuid", xuid, "signin_state", signin_state, "is_signed_in", is_signed_in)
 
@@ -1800,6 +1827,7 @@ end
 
 -- Lines 1843-1847
 function XB1UserManager:invite_accepted_by_inactive_user()
+	return
 end
 
 -- Lines 1849-1862

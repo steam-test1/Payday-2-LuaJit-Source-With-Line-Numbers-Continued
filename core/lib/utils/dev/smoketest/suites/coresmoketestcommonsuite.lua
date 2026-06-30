@@ -40,15 +40,16 @@ end
 
 -- Lines 41-42
 function Substep:update(t, dt)
+	return
 end
 
 CallAndDoneSubstep = CallAndDoneSubstep or CoreClass.class(Substep)
 
 -- Lines 50-54
 function CallAndDoneSubstep.step_arguments(callback)
-	local step_arguments = {
-		callback = callback
-	}
+	local step_arguments = {}
+
+	step_arguments.callback = callback
 
 	return step_arguments
 end
@@ -63,16 +64,16 @@ WaitEventSubstep = WaitEventSubstep or CoreClass.class(Substep)
 
 -- Lines 67-71
 function WaitEventSubstep.step_arguments(event_id)
-	local step_arguments = {
-		event_id = event_id
-	}
+	local step_arguments = {}
+
+	step_arguments.event_id = event_id
 
 	return step_arguments
 end
 
 -- Lines 73-75
 function WaitEventSubstep:start()
-	self._event_listener = EventManager:register_listener(self._step_arguments.event_id, function ()
+	self._event_listener = EventManager:register_listener(self._step_arguments.event_id, function()
 		self:_set_done()
 	end, nil)
 end
@@ -86,17 +87,17 @@ CallAndWaitEventSubstep = CallAndWaitEventSubstep or CoreClass.class(Substep)
 
 -- Lines 87-92
 function CallAndWaitEventSubstep.step_arguments(callback, event_id)
-	local step_arguments = {
-		callback = callback,
-		event_id = event_id
-	}
+	local step_arguments = {}
+
+	step_arguments.callback = callback
+	step_arguments.event_id = event_id
 
 	return step_arguments
 end
 
 -- Lines 94-97
 function CallAndWaitEventSubstep:start()
-	self._event_listener = EventManager:register_listener(self._step_arguments.event_id, function ()
+	self._event_listener = EventManager:register_listener(self._step_arguments.event_id, function()
 		self:_set_done()
 	end, nil)
 
@@ -112,9 +113,9 @@ DelaySubstep = DelaySubstep or CoreClass.class(Substep)
 
 -- Lines 109-113
 function DelaySubstep.step_arguments(seconds)
-	local step_arguments = {
-		seconds = seconds
-	}
+	local step_arguments = {}
+
+	step_arguments.seconds = seconds
 
 	return step_arguments
 end
@@ -142,11 +143,11 @@ end
 
 -- Lines 136-142
 function CommonSuite:add_step(name, class, params)
-	local step_entry = {
-		name = name,
-		class = class,
-		params = params
-	}
+	local step_entry = {}
+
+	step_entry.name = name
+	step_entry.class = class
+	step_entry.params = params
 
 	table.insert(self._step_list, step_entry)
 end

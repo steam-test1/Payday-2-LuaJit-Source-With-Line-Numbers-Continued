@@ -6,7 +6,9 @@ Item.TYPE = "item"
 -- Lines 6-78
 function Item:init(data_node, parameters)
 	self._type = ""
+
 	local params = parameters or {}
+
 	params.info_panel = ""
 
 	if data_node then
@@ -178,7 +180,7 @@ end
 -- Lines 165-169
 function Item:dirty()
 	if self.dirty_callback then
-		self:dirty_callback()
+		self.dirty_callback(self)
 	end
 end
 
@@ -206,6 +208,7 @@ end
 
 -- Lines 189-191
 function Item:on_delete_row_item()
+	return
 end
 
 -- Lines 193-199
@@ -219,10 +222,12 @@ end
 
 -- Lines 201-202
 function Item:on_item_position(row_item, node)
+	return
 end
 
 -- Lines 204-205
 function Item:on_item_positions_done(row_item, node)
+	return
 end
 
 -- Lines 207-209

@@ -57,6 +57,7 @@ function SubtitleManager:load_sequences(sequence_file_path)
 	for sequence_node in root_node:children() do
 		if sequence_node:name() == "sequence" then
 			local sequence = CoreSubtitleSequence.SubtitleSequence:new(sequence_node)
+
 			self.__subtitle_sequences[sequence:name()] = sequence
 		end
 	end
@@ -135,6 +136,7 @@ end
 -- Lines 110-113
 function SubtitleManager:run_subtitle_sequence(sequence_id)
 	local sequence = sequence_id and assert(self.__subtitle_sequences[sequence_id], string.format("Sequence \"%s\" not found.", sequence_id))
+
 	self.__player = sequence and CoreSubtitleSequencePlayer.SubtitleSequencePlayer:new(sequence, self:presenter())
 end
 

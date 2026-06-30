@@ -9,14 +9,15 @@ local ignored_groups = {
 	"Phalanx_minion",
 	"Phalanx_vip"
 }
+
 MutatorEnemyReplacer = MutatorEnemyReplacer or class(BaseMutator)
 MutatorEnemyReplacer._type = "MutatorEnemyReplacer"
 MutatorEnemyReplacer.name_id = "mutator_specials_override"
 MutatorEnemyReplacer.desc_id = "mutator_specials_override_desc"
 MutatorEnemyReplacer.has_options = true
 MutatorEnemyReplacer.reductions = {
-	money = 0.35,
-	exp = 0.35
+	exp = 0.35,
+	money = 0.35
 }
 MutatorEnemyReplacer.disables_achievements = true
 MutatorEnemyReplacer.categories = {
@@ -38,6 +39,7 @@ end
 -- Lines 29-37
 function MutatorEnemyReplacer:setup()
 	self._groups = self._groups or {}
+
 	local difficulty = Global.game_settings and Global.game_settings.difficulty or "normal"
 	local difficulty_index = tweak_data:difficulty_to_index(difficulty)
 
@@ -69,36 +71,36 @@ end
 function MutatorEnemyReplacer:setup_options_gui(node)
 	local params = {
 		callback = "_update_mutator_value",
+		filter = true,
 		name = "enemy_selector_choice",
 		text_id = "mutator_specials_override_select",
-		filter = true,
 		update_callback = callback(self, self, "_update_selected_enemy")
 	}
 	local data_node = {
 		{
-			value = "tank",
+			_meta = "option",
 			text_id = "mutator_specials_override_tank",
-			_meta = "option"
+			value = "tank"
 		},
 		{
-			value = "taser",
+			_meta = "option",
 			text_id = "mutator_specials_override_taser",
-			_meta = "option"
+			value = "taser"
 		},
 		{
-			value = "shield",
+			_meta = "option",
 			text_id = "mutator_specials_override_shield",
-			_meta = "option"
+			value = "shield"
 		},
 		{
-			value = "spooc",
+			_meta = "option",
 			text_id = "mutator_specials_override_spooc",
-			_meta = "option"
+			value = "spooc"
 		},
 		{
-			value = "medic",
+			_meta = "option",
 			text_id = "mutator_specials_override_medic",
-			_meta = "option"
+			value = "medic"
 		},
 		type = "MenuItemMultiChoice"
 	}
@@ -562,8 +564,8 @@ MutatorMediDozer._type = "MutatorMediDozer"
 MutatorMediDozer.name_id = "mutator_medidozer"
 MutatorMediDozer.desc_id = "mutator_medidozer_desc"
 MutatorMediDozer.reductions = {
-	money = 0,
-	exp = 0
+	exp = 0,
+	money = 0
 }
 MutatorMediDozer.disables_achievements = true
 MutatorMediDozer.categories = {
@@ -580,6 +582,7 @@ MutatorMediDozer.icon_coords = {
 -- Lines 638-646
 function MutatorMediDozer:setup()
 	self._groups = self._groups or {}
+
 	local difficulty = Global.game_settings and Global.game_settings.difficulty or "normal"
 	local difficulty_index = tweak_data:difficulty_to_index(difficulty)
 
@@ -590,8 +593,8 @@ end
 function MutatorMediDozer:modify_unit_categories(group_ai_tweak, difficulty_index)
 	group_ai_tweak.special_unit_spawn_limits = {
 		shield = 0,
-		taser = 0,
 		spooc = 0,
+		taser = 0,
 		tank = math.huge,
 		medic = math.huge
 	}
@@ -668,8 +671,8 @@ MutatorTitandozers._type = "MutatorTitandozers"
 MutatorTitandozers.name_id = "mutator_titandozers"
 MutatorTitandozers.desc_id = "mutator_titandozers_desc"
 MutatorTitandozers.reductions = {
-	money = 0,
-	exp = 0
+	exp = 0,
+	money = 0
 }
 MutatorTitandozers.disables_achievements = true
 MutatorTitandozers.categories = {
@@ -685,6 +688,7 @@ MutatorTitandozers.load_priority = -10
 -- Lines 760-768
 function MutatorTitandozers:setup()
 	self._groups = self._groups or {}
+
 	local difficulty = Global.game_settings and Global.game_settings.difficulty or "normal"
 	local difficulty_index = tweak_data:difficulty_to_index(difficulty)
 
@@ -694,7 +698,8 @@ end
 -- Lines 772-786
 function MutatorTitandozers:modify_unit_categories(group_ai_tweak, difficulty_index)
 	group_ai_tweak.special_unit_spawn_limits.tank = math.huge
-	local unit_group = self:_get_unit_group_titandozer(difficulty_index)
+
+	local unit_group = self._get_unit_group_titandozer(self, difficulty_index)
 
 	for group, units_data in pairs(group_ai_tweak.unit_categories) do
 		if not table.contains(ignored_groups, group) and units_data.special_type == "tank" then

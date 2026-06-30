@@ -14,7 +14,7 @@ end
 function ElementAccessCamera:on_script_activated()
 	if self._values.camera_u_id then
 		local id = self._values.camera_u_id
-		local unit = nil
+		local unit
 
 		if Global.running_simulation then
 			unit = managers.editor:unit_with_id(id)
@@ -47,6 +47,7 @@ end
 
 -- Lines 45-47
 function ElementAccessCamera:client_on_executed(...)
+	return
 end
 
 -- Lines 49-55
@@ -245,6 +246,7 @@ end
 
 -- Lines 217-219
 function ElementAccessCameraTrigger:client_on_executed(...)
+	return
 end
 
 -- Lines 221-227

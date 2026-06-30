@@ -11,6 +11,7 @@ function HUDStageEndCrimeSpreeScreen:init(hud, workspace)
 	self._hud = hud
 	self._workspace = workspace
 	self._singleplayer = Global.game_settings.single_player
+
 	local bg_font = tweak_data.menu.pd2_massive_font
 	local title_font = tweak_data.menu.pd2_large_font
 	local content_font = tweak_data.menu.pd2_medium_font
@@ -25,6 +26,7 @@ function HUDStageEndCrimeSpreeScreen:init(hud, workspace)
 	local massive_font_size = bg_font_size
 	local large_font_size = title_font_size
 	local medium_font_size = content_font_size
+
 	self._background_layer_safe = self._backdrop:get_new_background_layer()
 	self._background_layer_full = self._backdrop:get_new_background_layer()
 	self._foreground_layer_safe = self._backdrop:get_new_foreground_layer()
@@ -34,12 +36,13 @@ function HUDStageEndCrimeSpreeScreen:init(hud, workspace)
 	self._backdrop:set_panel_to_saferect(self._foreground_layer_safe)
 
 	local mission = managers.crime_spree:get_mission(managers.crime_spree:current_played_mission())
+
 	self._stage_name = managers.job:current_level_id() and managers.localization:to_upper_text(tweak_data.levels[mission.level.level_id].name_id) or ""
 
 	self._foreground_layer_safe:text({
+		align = "right",
 		name = "stage_text",
 		vertical = "center",
-		align = "right",
 		text = self._stage_name,
 		h = title_font_size,
 		font_size = title_font_size,
@@ -48,10 +51,10 @@ function HUDStageEndCrimeSpreeScreen:init(hud, workspace)
 	})
 
 	local bg_text = self._background_layer_full:text({
+		align = "left",
+		alpha = 0.4,
 		name = "stage_text",
 		vertical = "top",
-		alpha = 0.4,
-		align = "left",
 		text = self._stage_name,
 		h = bg_font_size,
 		font_size = bg_font_size,
@@ -78,6 +81,7 @@ end
 
 -- Lines 70-71
 function HUDStageEndCrimeSpreeScreen:update(t, dt)
+	return
 end
 
 -- Lines 73-75
@@ -92,6 +96,7 @@ end
 
 -- Lines 81-82
 function HUDStageEndCrimeSpreeScreen:set_continue_button_text(text)
+	return
 end
 
 -- Lines 84-86
@@ -101,10 +106,12 @@ end
 
 -- Lines 88-89
 function HUDStageEndCrimeSpreeScreen:set_special_packages(params)
+	return
 end
 
 -- Lines 91-92
 function HUDStageEndCrimeSpreeScreen:set_speed_up(multiplier)
+	return
 end
 
 -- Lines 94-96
@@ -114,4 +121,5 @@ end
 
 -- Lines 98-99
 function HUDStageEndCrimeSpreeScreen:send_xp_data(data, done_clbk)
+	return
 end

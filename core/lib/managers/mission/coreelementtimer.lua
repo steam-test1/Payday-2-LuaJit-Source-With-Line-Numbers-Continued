@@ -81,7 +81,7 @@ function ElementTimer:update_timer(t, dt)
 	end
 
 	for id, cb_data in pairs(self._triggers) do
-		if self._timer <= cb_data.time and not cb_data.disabled then
+		if cb_data.time >= self._timer and not cb_data.disabled then
 			cb_data.callback()
 			self:remove_trigger(id)
 		end
@@ -90,6 +90,7 @@ end
 
 -- Lines 94-96
 function ElementTimer:client_on_executed(...)
+	return
 end
 
 -- Lines 98-104
@@ -209,6 +210,7 @@ end
 
 -- Lines 192-194
 function ElementTimerOperator:client_on_executed(...)
+	return
 end
 
 -- Lines 196-223
@@ -256,6 +258,7 @@ end
 
 -- Lines 237-239
 function ElementTimerTrigger:client_on_executed(...)
+	return
 end
 
 -- Lines 241-247

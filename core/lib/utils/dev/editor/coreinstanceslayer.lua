@@ -28,6 +28,7 @@ end
 function InstancesLayer:_load_predefined_instances()
 	if DB:has("xml", self._predefined_instances_file) then
 		local file = DB:open("xml", self._predefined_instances_file)
+
 		self._predefined_instances = ScriptSerializer:from_generic_xml(file:read())
 	end
 end
@@ -63,6 +64,7 @@ end
 function InstancesLayer:clone()
 	if #self._selected_instances > 0 then
 		local to_clone = self._selected_instances
+
 		self._selected_instances = {}
 
 		for i, instance_data in ipairs(to_clone) do
@@ -87,6 +89,7 @@ end
 
 -- Lines 99-101
 function InstancesLayer:do_spawn_unit(name, pos, rot)
+	return
 end
 
 -- Lines 103-110
@@ -209,7 +212,7 @@ end
 -- Lines 195-223
 function InstancesLayer:rotate_unit(btn, pressed)
 	if self._selected_instance and not self:condition() then
-		local rot_axis = nil
+		local rot_axis
 		local snap_axis = self:snap_rotation_axis()
 
 		if self:local_rot() then
@@ -324,7 +327,7 @@ function InstancesLayer:select_instance(instance_name_or_table, force_select)
 			local continent_data = managers.editor:continents()[data.continent]
 			local indx = continent_data:base_id() + managers.world_instance:start_offset_index() + data.start_index
 
-			if start_index > indx then
+			if indx < start_index then
 				start_index = indx
 			end
 
@@ -412,6 +415,7 @@ function InstancesLayer:_delete_instance_by_name(name)
 					table.remove(managers.world_instance:instance_data(), i)
 
 					self._stashed_instance_units[name] = nil
+
 					local mission_units = managers.editor:layer("Mission"):get_created_unit_by_pattern({
 						"func_instance_input_event",
 						"func_instance_output_event",
@@ -464,6 +468,7 @@ end
 
 -- Lines 442-447
 function InstancesLayer:reset_rotation()
+	return
 end
 
 -- Lines 449-489
@@ -471,15 +476,16 @@ function InstancesLayer:add_instance(name, folder, index_size, script, pos, rot,
 	folder = folder or "levels/tests/inst/world"
 	continent = managers.editor:current_continent():name()
 	script = script or "default"
-	local instance = {
-		continent = continent,
-		folder = folder,
-		name = name,
-		position = pos or self._current_pos,
-		rotation = rot or self._current_rot or Rotation(),
-		script = script,
-		index_size = index_size
-	}
+
+	local instance = {}
+
+	instance.continent = continent
+	instance.folder = folder
+	instance.name = name
+	instance.position = pos or self._current_pos
+	instance.rotation = rot or self._current_rot or Rotation()
+	instance.script = script
+	instance.index_size = index_size
 	instance.start_index = managers.world_instance:get_safe_start_index(instance.index_size, instance.continent)
 
 	managers.world_instance:add_instance_data(instance)
@@ -547,6 +553,7 @@ function InstancesLayer:update(t, dt)
 		end
 
 		local current_pos, current_rot = managers.editor:current_orientation(self._offset_move_vec, self._selected_unit)
+
 		self._current_pos = current_pos or self._current_pos
 		self._current_rot = current_rot
 
@@ -608,7 +615,7 @@ function InstancesLayer:update_move_triggers(t, dt)
 	end
 
 	local reference_instance = self._selected_instances[1]
-	local mov_vec = nil
+	local mov_vec
 	local u_rot = reference_instance.data.rotation
 
 	if self._ctrl:down(Idstring("move_forward")) then
@@ -642,7 +649,7 @@ function InstancesLayer:update_rotate_triggers(t, dt)
 		rot_speed = rot_speed / 2
 	end
 
-	local rot_axis = nil
+	local rot_axis
 	local u_rot = self._selected_instances[1].data.rotation
 
 	if self._ctrl:down(Idstring("roll_left")) then
@@ -676,6 +683,7 @@ function InstancesLayer:_draw_instance(t, dt, instance_name, r, g, b)
 	r = r or 1
 	g = g or 1
 	b = b or 1
+
 	local unit_brush = Draw:brush(Color(0.15, r, g, b))
 	local instance_units = self:get_instance_units_by_name(instance_name)
 
@@ -735,10 +743,12 @@ end
 
 -- Lines 687-698
 function InstancesLayer:draw_rotation(t, dt)
+	return
 end
 
 -- Lines 700-722
 function InstancesLayer:draw_units(t, dt)
+	return
 end
 
 -- Lines 724-726
@@ -805,6 +815,7 @@ function InstancesLayer:set_instance_rotations(rot)
 
 		if idx > 1 then
 			local local_pos = instance_data.data.position - reference_instance.data.position
+
 			instance_data.data.position = reference_instance.data.position + local_pos:rotate_with(rot)
 		end
 
@@ -944,6 +955,7 @@ end
 -- Lines 920-930
 function InstancesLayer:_build_predefined_instances_notebook()
 	local notebook_sizer = EWS:BoxSizer("VERTICAL")
+
 	self._predefined_instances_notebook = EWS:Notebook(self._ews_panel, "", "NB_TOP,NB_MULTILINE")
 
 	self._predefined_instances_notebook:connect("EVT_COMMAND_NOTEBOOK_PAGE_CHANGING", callback(self, self, "_on_gui_instances_page_changed"), nil)
@@ -956,7 +968,9 @@ end
 -- Lines 932-980
 function InstancesLayer:_add_predefined_instances_notebook_pages()
 	local style = "LC_REPORT,LC_NO_HEADER,LC_SORT_ASCENDING,LC_SINGLE_SEL"
+
 	self._predefined_instances_notebook_lists = {}
+
 	local predefined_data_by_category = self:_predefined_data_by_category()
 	local sorted_categories = table.map_keys(predefined_data_by_category)
 
@@ -993,6 +1007,7 @@ function InstancesLayer:_add_predefined_instances_notebook_pages()
 		})
 
 		local page_name = category_name
+
 		self._predefined_instances_notebook_lists[page_name] = {
 			instances = instances,
 			filter = instance_filter
@@ -1019,6 +1034,7 @@ function InstancesLayer:_predefined_data_by_category()
 
 	for name, data in pairs(self._predefined_instances) do
 		local category = data.category or "N/A"
+
 		t[category] = t[category] or {}
 
 		table.insert(t[category], name)
@@ -1083,6 +1099,7 @@ function InstancesLayer:_on_gui_rename_instance()
 
 		if new_name then
 			local instance_units = self:get_instance_units_by_name(name)
+
 			self._stashed_instance_units[name] = nil
 
 			managers.world_instance:rename_instance(name, new_name)
@@ -1147,6 +1164,7 @@ function InstancesLayer:_on_gui_reindex_instances()
 		local id, amount = managers.world_instance:check_highest_id({
 			folder = data.folder
 		})
+
 		data.start_index = current_index
 		data.index_size = id + 10
 		current_index = current_index + data.index_size
@@ -1223,6 +1241,7 @@ end
 -- Lines 1167-1174
 function InstancesLayer:_get_selection_predefined_instances_listbox(predefined_instances_list_box)
 	predefined_instances_list_box = predefined_instances_list_box or self._predefined_instances_listbox
+
 	local i = predefined_instances_list_box:selected_item()
 
 	if i > -1 then
@@ -1322,9 +1341,9 @@ end
 -- Lines 1247-1271
 function InstancesLayer:_on_gui_reload_predefined_instances_file()
 	local t = {
-		target_db_name = "all",
-		send_idstrings = false,
 		preprocessor_definitions = "preprocessor_definitions",
+		send_idstrings = false,
+		target_db_name = "all",
 		verbose = false,
 		platform = string.lower(SystemInfo:platform():s()),
 		source_root = managers.database:base_path(),
@@ -1410,6 +1429,7 @@ function InstancesLayer:_create_overlay_gui()
 	end
 
 	local height = 10
+
 	self._gui_panel = self._workspace:panel():panel({
 		halign = "scale",
 		valign = "scale",
@@ -1422,8 +1442,8 @@ end
 function InstancesLayer:_update_overlay_gui()
 	self._gui_panel:clear()
 	self._gui_panel:rect({
-		valign = "scale",
 		halign = "scale",
+		valign = "scale",
 		color = Color.black
 	})
 
@@ -1433,8 +1453,8 @@ function InstancesLayer:_update_overlay_gui()
 	local start_indices, end_indices = managers.world_instance:get_used_indices(managers.editor:current_continent():name())
 
 	for i, start_index in ipairs(start_indices) do
-		local x = start_index * tot_w / tot_indices
-		local w = end_indices[i] * tot_w / tot_indices - x
+		local x = start_index * (tot_w / tot_indices)
+		local w = end_indices[i] * (tot_w / tot_indices) - x
 
 		self._gui_panel:rect({
 			layer = 2,
@@ -1445,8 +1465,8 @@ function InstancesLayer:_update_overlay_gui()
 	end
 
 	if instance_data then
-		local x = instance_data.start_index * tot_w / tot_indices
-		local w = instance_data.index_size * tot_w / tot_indices
+		local x = instance_data.start_index * (tot_w / tot_indices)
+		local w = instance_data.index_size * (tot_w / tot_indices)
 
 		self._gui_panel:rect({
 			layer = 3,

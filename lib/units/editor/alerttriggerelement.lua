@@ -17,6 +17,7 @@ function AlertTriggerElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local opt_sizer = panel_sizer
 	local alert_type_sizer = EWS:BoxSizer("VERTICAL")
 	local alert_type_table = {
@@ -29,6 +30,7 @@ function AlertTriggerElement:_build_panel(panel, panel_sizer)
 		"aggression",
 		"explosion"
 	}
+
 	self._alert_type_check_boxes = {}
 
 	for i, o in ipairs(alert_type_table) do
@@ -48,10 +50,10 @@ function AlertTriggerElement:_build_panel(panel, panel_sizer)
 	opt_sizer:add(alert_type_sizer, 1, 0, "EXPAND")
 
 	local filter_preset_params = {
-		sorted = true,
+		ctrlr_proportions = 2,
 		name = "Preset:",
 		name_proportions = 1,
-		ctrlr_proportions = 2,
+		sorted = true,
 		tooltip = "Select a preset.",
 		panel = panel,
 		sizer = opt_sizer,
@@ -72,6 +74,7 @@ function AlertTriggerElement:_build_panel(panel, panel_sizer)
 	local opt3_sizer = EWS:BoxSizer("VERTICAL")
 	local opt = NavigationManager.ACCESS_FLAGS
 	local filter_table = managers.navigation:convert_access_filter_to_table(self._hed.filter)
+
 	self._filter_check_boxes = {}
 
 	for i, o in ipairs(opt) do
@@ -152,6 +155,7 @@ function AlertTriggerElement:on_filter_checkbox_changed(params)
 	end
 
 	self._hed.filter = managers.navigation:convert_access_filter_to_string(filter_table)
+
 	local filter = managers.navigation:convert_access_filter_to_number(self._hed.filter)
 end
 

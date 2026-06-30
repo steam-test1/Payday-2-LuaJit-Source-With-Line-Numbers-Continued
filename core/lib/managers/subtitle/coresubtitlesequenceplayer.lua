@@ -14,7 +14,7 @@ end
 
 -- Lines 14-16
 function SubtitleSequencePlayer:is_done()
-	return self.__sequence:duration() <= (self.__time or 0)
+	return (self.__time or 0) >= self.__sequence:duration()
 end
 
 -- Lines 18-21
@@ -27,7 +27,7 @@ end
 -- Lines 23-33
 function SubtitleSequencePlayer:evaluate_at_time(time)
 	if time ~= self._last_evaluated_time then
-		local subtitle = table.inject(self.__sequence:subtitles(), nil, function (latest, subtitle)
+		local subtitle = table.inject(self.__sequence:subtitles(), nil, function(latest, subtitle)
 			return subtitle:is_active_at_time(time) and subtitle or latest
 		end)
 

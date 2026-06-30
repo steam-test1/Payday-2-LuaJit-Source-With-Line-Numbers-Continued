@@ -1,7 +1,10 @@
 local tmp_vec1 = Vector3()
+
 QuickFlashGrenade = QuickFlashGrenade or class()
+
 local VALUE_FUNC = 1
 local VALUE_TIME = 2
+
 QuickFlashGrenade.States = {
 	{
 		"_state_launched",
@@ -19,15 +22,17 @@ QuickFlashGrenade.States = {
 	}
 }
 QuickFlashGrenade.Events = {
-	DestroyedByPlayer = 1,
-	[1.0] = "on_flashbang_destroyed"
+	[1] = "on_flashbang_destroyed",
+	DestroyedByPlayer = 1
 }
 
 -- Lines 24-50
 function QuickFlashGrenade:init(unit)
 	self._unit = unit
 	self._state = 0
+
 	local flash_grenade_data = tweak_data.group_ai.flash_grenade
+
 	self._range = flash_grenade_data.range
 	self._light_range = flash_grenade_data.light_range
 	self._light_color = flash_grenade_data.light_color
@@ -55,6 +60,7 @@ function QuickFlashGrenade:update(unit, t, dt)
 
 		if self._timer <= 0 then
 			self._state = self._state + 1
+
 			local state = QuickFlashGrenade.States[self._state]
 
 			if state then
@@ -176,6 +182,7 @@ end
 -- Lines 181-195
 function QuickFlashGrenade:_state_detonated()
 	self._beep_t = nil
+
 	local detonate_pos = self._unit:position()
 
 	self:make_flash(detonate_pos, self._range)
@@ -185,7 +192,7 @@ function QuickFlashGrenade:_state_detonated()
 			"aggression",
 			detonate_pos,
 			10000,
-			managers.groupai:state():get_unit_type_filter("civilians_enemies")
+			(managers.groupai:state():get_unit_type_filter("civilians_enemies"))
 		})
 	end
 
@@ -201,9 +208,9 @@ function QuickFlashGrenade:make_flash(detonate_pos, range, ignore_units)
 	table.insert(ignore_units, self._unit)
 
 	local effect_params = {
-		sound_event = "flashbang_explosion",
-		effect = "effects/particles/explosions/explosion_flash_grenade",
 		camera_shake_max_mul = 4,
+		effect = "effects/particles/explosions/explosion_flash_grenade",
+		sound_event = "flashbang_explosion",
 		feedback_range = range * 2
 	}
 
@@ -283,7 +290,7 @@ function QuickFlashGrenade:_chk_dazzle_local_player(detonate_pos, range, ignore_
 				if not return_ray then
 					local travel_dis = bounce_ray.distance + mvector3.distance(m_pl_head_pos, bounce_pos)
 
-					if range > travel_dis then
+					if travel_dis < range then
 						return true, false, travel_dis, linear_dis
 					end
 				end
@@ -294,6 +301,7 @@ end
 
 -- Lines 305-307
 function QuickFlashGrenade:sound_playback_complete_clbk(event_instance, sound_source, event_type, sound_source_again)
+	return
 end
 
 -- Lines 310-312

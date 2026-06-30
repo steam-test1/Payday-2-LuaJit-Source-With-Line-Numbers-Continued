@@ -7,10 +7,12 @@ function ElementCharacterDamage:init(...)
 	ElementCharacterDamage.super.init(self, ...)
 
 	self._units = {}
+
 	local dmg_filter = self:value("damage_types")
 
 	if dmg_filter and dmg_filter ~= "" then
 		self._allow_damage_types = {}
+
 		local dmgs = string.split(dmg_filter, " ")
 
 		for _, dmg_type in ipairs(dmgs) do
@@ -21,10 +23,12 @@ end
 
 -- Lines 25-26
 function ElementCharacterDamage:destroy()
+	return
 end
 
 -- Lines 28-29
 function ElementCharacterDamage:on_created()
+	return
 end
 
 -- Lines 31-38

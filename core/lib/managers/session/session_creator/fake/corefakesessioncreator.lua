@@ -5,6 +5,7 @@ Creator = Creator or class()
 
 -- Lines 6-7
 function Creator:init()
+	return
 end
 
 -- Lines 9-18

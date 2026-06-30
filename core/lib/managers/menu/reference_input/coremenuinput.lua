@@ -14,15 +14,13 @@ function MenuInput:init(logic, menu_name)
 
 	self._logic:register_callback("input_accept_input", callback(self, self, "accept_input"))
 
-	self._axis_delay_timer = {
-		x = 0,
-		y = 0
-	}
-	self._item_input_action_map = {
-		[CoreMenuItem.Item.TYPE] = callback(self, self, "input_item"),
-		[CoreMenuItemSlider.ItemSlider.TYPE] = callback(self, self, "input_slider"),
-		[CoreMenuItemToggle.ItemToggle.TYPE] = callback(self, self, "input_toggle")
-	}
+	self._axis_delay_timer = {}
+	self._axis_delay_timer.x = 0
+	self._axis_delay_timer.y = 0
+	self._item_input_action_map = {}
+	self._item_input_action_map[CoreMenuItem.Item.TYPE] = callback(self, self, "input_item")
+	self._item_input_action_map[CoreMenuItemSlider.ItemSlider.TYPE] = callback(self, self, "input_slider")
+	self._item_input_action_map[CoreMenuItemToggle.ItemToggle.TYPE] = callback(self, self, "input_toggle")
 end
 
 -- Lines 26-28
@@ -361,6 +359,7 @@ end
 
 -- Lines 383-384
 function MenuInput:logic_changed()
+	return
 end
 
 -- Lines 386-415
@@ -374,7 +373,7 @@ function MenuInput:next_item()
 	if current_item then
 		local current_item_name = current_item:parameters().name
 		local items = self._logic:selected_node():items()
-		local done = nil
+		local done
 
 		for i, v in ipairs(items) do
 			if v:parameters().name == current_item_name then
@@ -405,7 +404,7 @@ function MenuInput:prev_item()
 	if current_item then
 		local current_item_name = current_item:parameters().name
 		local items = self._logic:selected_node():items()
-		local done = nil
+		local done
 
 		for i, v in ipairs(items) do
 			if v:parameters().name == current_item_name then

@@ -24,7 +24,7 @@ end
 
 -- Lines 22-24
 function CoreUnitCallbackCutsceneKey:arguments_string()
-	return string.join(", ", table.collect(self._method_params and self._method_params[self:method()] or {}, function (p)
+	return string.join(", ", table.collect(self._method_params and self._method_params[self:method()] or {}, function(p)
 		return p:inspect()
 	end))
 end
@@ -34,6 +34,7 @@ function CoreUnitCallbackCutsceneKey:load(key_node, loading_class)
 	self.super.load(self, key_node, loading_class)
 
 	self._method_params = {}
+
 	local params = {}
 
 	for param_node in key_node:children() do
@@ -99,7 +100,7 @@ function CoreUnitCallbackCutsceneKey:refresh_control_for_extension(control)
 	control:freeze()
 	control:clear()
 
-	local unit_extensions = table.find_all_values(table.map_keys(self:_unit_extension_info(self:unit_name())), function (e)
+	local unit_extensions = table.find_all_values(table.map_keys(self:_unit_extension_info(self:unit_name())), function(e)
 		return self:is_valid_extension(e)
 	end)
 
@@ -170,7 +171,7 @@ function CoreUnitCallbackCutsceneKey:refresh_control_for_arguments(panel)
 			local value_field = EWS:TextCtrl(panel, "")
 
 			value_field:set_min_size(value_field:get_min_size():with_x(0))
-			value_field:connect("EVT_COMMAND_TEXT_UPDATED", function ()
+			value_field:connect("EVT_COMMAND_TEXT_UPDATED", function()
 				param.string_value = value_field:get_value()
 			end)
 			value_field:set_value(param.string_value)
@@ -185,7 +186,7 @@ function CoreUnitCallbackCutsceneKey:refresh_control_for_arguments(panel)
 			}
 			local type_selector = EWS:ComboBox(panel, "", "", "CB_DROPDOWN,CB_READONLY")
 
-			type_selector:connect("EVT_COMMAND_COMBOBOX_SELECTED", function ()
+			type_selector:connect("EVT_COMMAND_COMBOBOX_SELECTED", function()
 				param.value_type = type_selector:get_value()
 
 				value_field:set_enabled(param.value_type ~= "nil")
@@ -244,7 +245,7 @@ function CoreUnitCallbackCutsceneKey:_invoke_if_exists(method_name, player)
 		local value = param:value(self, player)
 
 		if value == nil and not param:is_nil() then
-			local parameter_names = string.join(", ", table.collect(params, function (p)
+			local parameter_names = string.join(", ", table.collect(params, function(p)
 				return p.name
 			end))
 
@@ -271,7 +272,7 @@ function CoreUnitCallbackCutsceneKey:_param_with_name(param_name)
 		self._method_params[self:method()] = params
 	end
 
-	local param = table.find_value(params, function (p)
+	local param = table.find_value(params, function(p)
 		return p.name == param_name
 	end)
 

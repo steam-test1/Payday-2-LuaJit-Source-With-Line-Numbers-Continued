@@ -16,10 +16,12 @@ end
 
 -- Lines 20-22
 function BaseVehicleState:enter(state_data, enter_data)
+	return
 end
 
 -- Lines 26-28
 function BaseVehicleState:exit(state_data)
+	return
 end
 
 -- Lines 32-61
@@ -99,6 +101,7 @@ function BaseVehicleState:create_name_hud()
 			name = utf8.to_upper(managers.localization:text(name_id)),
 			unit = self._unit
 		})
+
 		self._unit:unit_data().name_label_id = id
 	end
 end

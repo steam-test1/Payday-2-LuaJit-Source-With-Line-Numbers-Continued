@@ -4,6 +4,7 @@ CoreTableEditorPanel = CoreTableEditorPanel or class()
 function CoreTableEditorPanel:init(parent)
 	self.__column_names = {}
 	self.__panel = EWS:Panel(parent)
+
 	local panel_sizer = EWS:BoxSizer("VERTICAL")
 
 	self.__panel:set_sizer(panel_sizer)
@@ -140,6 +141,7 @@ end
 -- Lines 110-125
 function CoreTableEditorPanel:_create_buttons_panel(parent)
 	self.__buttons_panel = EWS:Panel(parent)
+
 	local panel_sizer = EWS:BoxSizer("HORIZONTAL")
 
 	self.__buttons_panel:set_sizer(panel_sizer)
@@ -193,10 +195,11 @@ end
 -- Lines 154-169
 function CoreTableEditorPanel:_sizer_with_editable_fields(parent)
 	local sizer = EWS:BoxSizer("VERTICAL")
-	local first_control = nil
+	local first_control
 
 	for _, column_name in ipairs(self.__column_names) do
 		local control = self:_create_labeled_text_field(column_name, parent, sizer)
+
 		first_control = first_control or control
 	end
 
@@ -244,7 +247,7 @@ end
 
 -- Lines 202-206
 function CoreTableEditorPanel:_make_control_edited_callback(control, column_name, value_method_name)
-	return function ()
+	return function()
 		self:_on_control_edited(control, column_name, value_method_name)
 	end
 end
@@ -275,6 +278,7 @@ end
 -- Lines 227-231
 function CoreTableEditorPanel:_on_control_edited(control, column_name, value_method_name)
 	value_method_name = value_method_name or "get_value"
+
 	local value = control[value_method_name](control)
 
 	self:set_selected_item_value(column_name, value)

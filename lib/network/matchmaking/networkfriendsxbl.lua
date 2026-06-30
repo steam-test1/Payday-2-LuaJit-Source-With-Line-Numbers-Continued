@@ -7,10 +7,12 @@ end
 
 -- Lines 59-60
 function NetworkFriendsXBL:destroy()
+	return
 end
 
 -- Lines 62-63
 function NetworkFriendsXBL:set_visible(set)
+	return
 end
 
 -- Lines 65-79
@@ -62,10 +64,12 @@ end
 
 -- Lines 102-103
 function NetworkFriendsXBL:send_friend_request(nickname)
+	return
 end
 
 -- Lines 105-106
 function NetworkFriendsXBL:remove_friend(id)
+	return
 end
 
 -- Lines 108-110
@@ -75,10 +79,12 @@ end
 
 -- Lines 112-113
 function NetworkFriendsXBL:accept_friend_request(player_id)
+	return
 end
 
 -- Lines 115-116
 function NetworkFriendsXBL:ignore_friend_request(player_id)
+	return
 end
 
 -- Lines 118-120

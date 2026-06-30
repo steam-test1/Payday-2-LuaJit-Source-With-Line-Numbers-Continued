@@ -23,26 +23,24 @@ function LootDropScreenGui:init(saferect_ws, fullrect_ws, lootscreen_hud, saved_
 		local mutator_class = managers.mutators:get_mass_drop_mutator()
 
 		if mutator_class then
-			if mutator_class then
-				is_mass_drop = true
-			else
-				is_mass_drop = false
-			end
+			is_mass_drop = mutator_class and true or false
 		end
 	end
 
 	local waiting_text_string = managers.localization:to_upper_text(is_mass_drop and "menu_l_waiting_for_cards" or "menu_l_waiting_for_all")
+
 	self._continue_button = self._panel:text({
+		align = "right",
+		h = 32,
+		layer = 2,
 		name = "ready_button",
 		vertical = "center",
-		h = 32,
-		align = "right",
-		layer = 2,
 		text = waiting_text_string,
 		font_size = tweak_data.menu.pd2_large_font_size,
 		font = tweak_data.menu.pd2_large_font,
 		color = tweak_data.screen_colors.button_stage_3
 	})
+
 	local _, _, w, h = self._continue_button:text_rect()
 
 	self._continue_button:set_size(w, h)
@@ -54,12 +52,12 @@ function LootDropScreenGui:init(saferect_ws, fullrect_ws, lootscreen_hud, saved_
 	self._continue_button:set_color(tweak_data.screen_colors.item_stage_1)
 
 	local big_text = self._fullscreen_panel:text({
+		align = "right",
+		alpha = 0.4,
+		h = 90,
+		layer = 1,
 		name = "continue_big_text",
 		vertical = "bottom",
-		h = 90,
-		alpha = 0.4,
-		align = "right",
-		layer = 1,
 		text = waiting_text_string,
 		font_size = tweak_data.menu.pd2_massive_font_size,
 		font = tweak_data.menu.pd2_massive_font,
@@ -76,11 +74,11 @@ function LootDropScreenGui:init(saferect_ws, fullrect_ws, lootscreen_hud, saved_
 	end
 
 	self._time_left_text = self._panel:text({
-		text = "30",
-		vertical = "bottom",
-		name = "time_left",
 		align = "right",
 		layer = 1,
+		name = "time_left",
+		text = "30",
+		vertical = "bottom",
 		font_size = tweak_data.menu.pd2_small_font_size,
 		font = tweak_data.menu.pd2_small_font,
 		color = tweak_data.screen_colors.text
@@ -436,10 +434,12 @@ end
 
 -- Lines 362-364
 function LootDropScreenGui:move_up()
+	return
 end
 
 -- Lines 366-368
 function LootDropScreenGui:move_down()
+	return
 end
 
 -- Lines 370-381

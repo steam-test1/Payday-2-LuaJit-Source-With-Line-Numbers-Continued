@@ -6,6 +6,7 @@ OverlayEffectManager = OverlayEffectManager or class()
 -- Lines 10-31
 function OverlayEffectManager:init()
 	local gui = Overlay:newgui()
+
 	self._vp_overlay = Application:create_scene_viewport(0, 0, 1, 1)
 	self._overlay_camera = Overlay:create_camera()
 
@@ -23,8 +24,8 @@ function OverlayEffectManager:init()
 	self:add_preset("custom", {
 		blend_mode = "normal",
 		fade_in = 0,
-		sustain = 0,
 		fade_out = 0,
+		sustain = 0,
 		color = Color(1, 0, 0, 0)
 	})
 	self:set_default_layer(30)
@@ -96,7 +97,7 @@ function OverlayEffectManager:progress_effects(t, dt, paused)
 			local fade_in_end_t = effect.start_t + data.fade_in
 			local sustain_end_t = data.sustain and fade_in_end_t + data.sustain
 			local effect_end_t = sustain_end_t and sustain_end_t + data.fade_out
-			local new_alpha = nil
+			local new_alpha
 
 			if eff_t < fade_in_end_t then
 				new_alpha = (eff_t - effect.start_t) / data.fade_in
@@ -168,7 +169,7 @@ end
 function OverlayEffectManager:play_effect(data)
 	if data then
 		local spawn_alpha = data.color.alpha * (data.fade_in > 0 and 0 or 1)
-		local rectangle = nil
+		local rectangle
 
 		if data.gradient_points then
 			rectangle = self._ws:panel():gradient({
@@ -206,10 +207,10 @@ function OverlayEffectManager:play_effect(data)
 		end
 
 		local text = self._ws:panel():text({
-			vertical = "center",
-			valign = "center",
 			align = "center",
 			halign = "center",
+			valign = "center",
+			vertical = "center",
 			text = text_string,
 			font = data.font or "core/fonts/system_font",
 			font_size = data.font_size or 21,
@@ -228,11 +229,11 @@ function OverlayEffectManager:play_effect(data)
 
 		if data.video then
 			effect.video = self._ws:panel():video({
+				align = "center",
+				halign = "center",
+				loop = false,
 				valign = "center",
 				vertical = "center",
-				align = "center",
-				loop = false,
-				halign = "center",
 				video = data.video,
 				width = data.video_width,
 				height = data.video_height,
@@ -335,7 +336,7 @@ function OverlayEffectManager:add_effect_external(data)
 
 	local spawn_alpha = data.alpha_start or 0
 	local spawn_show = spawn_alpha > 0
-	local rectangle = nil
+	local rectangle
 
 	if data.gradient_points then
 		rectangle = self._ws:panel():gradient({
@@ -372,14 +373,14 @@ function OverlayEffectManager:add_effect_external(data)
 		text_string = utf8.to_upper(text_string)
 	end
 
-	local text = nil
+	local text
 
 	if text_string then
 		text = self._ws:panel():text({
-			vertical = "center",
-			valign = "center",
 			align = "center",
 			halign = "center",
+			valign = "center",
+			vertical = "center",
 			text = text_string,
 			font = data.font or "core/fonts/system_font",
 			font_size = data.font_size or 21,
@@ -407,11 +408,11 @@ function OverlayEffectManager:add_effect_external(data)
 
 	if data.video then
 		effect.video = self._ws:panel():video({
+			align = "center",
+			halign = "center",
+			loop = false,
 			valign = "center",
 			vertical = "center",
-			align = "center",
-			loop = false,
-			halign = "center",
 			video = data.video,
 			width = data.video_width,
 			height = data.video_height,
@@ -502,6 +503,7 @@ function OverlayEffectManager:progress_effect_external(id, new_alpha)
 	end
 
 	local data = effect.data
+
 	new_alpha = new_alpha * data.color.alpha
 	effect.current_alpha = new_alpha
 

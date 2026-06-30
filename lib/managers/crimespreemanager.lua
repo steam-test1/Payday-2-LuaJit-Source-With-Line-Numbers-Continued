@@ -154,12 +154,14 @@ function CrimeSpreeManager:save(data)
 		winning_streak = self._global.winning_streak or 0,
 		cs_version = CrimeSpreeManager.CS_VERSION
 	}
+
 	data.crime_spree = save_data
 end
 
 -- Lines 184-218
 function CrimeSpreeManager:load(data, version)
 	local save_data = data.crime_spree or {}
+
 	save_data.highest_level = save_data.highest_level or data.highest_level
 
 	if save_data.cs_version == CrimeSpreeManager.CS_VERSION then
@@ -193,12 +195,11 @@ end
 
 -- Lines 222-228
 function CrimeSpreeManager:sync_save(data)
-	data.crime_spree = {
-		level = self:spree_level(),
-		mission_id = self:current_mission(),
-		unlocked_assets = self._unlocked_assets,
-		unlocked_assets_peers = self._unlocked_assets_peers
-	}
+	data.crime_spree = {}
+	data.crime_spree.level = self:spree_level()
+	data.crime_spree.mission_id = self:current_mission()
+	data.crime_spree.unlocked_assets = self._unlocked_assets
+	data.crime_spree.unlocked_assets_peers = self._unlocked_assets_peers
 end
 
 -- Lines 230-258
@@ -236,6 +237,7 @@ function CrimeSpreeManager:update(t, dt)
 
 	if self._frame_callbacks then
 		local clbks = self._frame_callbacks
+
 		self._frame_callbacks = nil
 
 		for _, clbk in ipairs(clbks) do
@@ -300,7 +302,7 @@ end
 
 -- Lines 338-340
 function CrimeSpreeManager:unlocked()
-	return tweak_data.crime_spree.unlock_level <= managers.experience:current_level() or managers.experience:current_rank() > 0
+	return managers.experience:current_level() >= tweak_data.crime_spree.unlock_level or managers.experience:current_rank() > 0
 end
 
 -- Lines 342-344
@@ -512,7 +514,7 @@ end
 -- Lines 524-570
 function CrimeSpreeManager:get_narrative_tweak_data_for_mission_level(mission_id)
 	local mission = self:get_mission(mission_id)
-	local narrative_id, narrative_data, day, variant = nil
+	local narrative_id, narrative_data, day, variant
 
 	for job_id, data in pairs(tweak_data.narrative.jobs) do
 		for idx, level_data in ipairs(data.chain or {}) do
@@ -677,6 +679,7 @@ function CrimeSpreeManager:_get_modifiers(table_name, max_count, add_repeating)
 				local idx = i % #repeating_modifiers_table + 1
 				local mod_data = repeating_modifiers_table[idx]
 				local new_mod = deep_clone(mod_data)
+
 				new_mod.id = new_mod.id .. tostring(math.floor(self:server_spree_level() / new_mod.level) * i)
 
 				table.insert(modifiers, new_mod)
@@ -875,6 +878,7 @@ function CrimeSpreeManager:calculate_rewards()
 
 	for _, reward in ipairs(tweak_data.crime_spree.rewards) do
 		local amt = math.floor(reward.amount * self:reward_level())
+
 		rewards[reward.id] = amt or 0
 	end
 
@@ -895,7 +899,7 @@ end
 -- Lines 991-1010
 function CrimeSpreeManager:_give_all_cosmetics_reward(amount)
 	local all_cosmetics_reward = tweak_data.crime_spree.all_cosmetics_reward
-	local type, amt = nil
+	local type, amt
 
 	if all_cosmetics_reward then
 		type = all_cosmetics_reward.type
@@ -942,6 +946,7 @@ function CrimeSpreeManager:generate_cosmetic_drops(amount)
 			if td.is_a_color_skin then
 				local dlc = td.dlc or managers.dlc:global_value_to_dlc(td.global_value)
 				local global_value = td.global_value or managers.dlc:dlc_to_global_value(dlc)
+
 				unlocked = global_value and managers.blackmarket:has_item(global_value, "weapon_skins", reward.id)
 			end
 		end
@@ -1021,6 +1026,7 @@ function CrimeSpreeManager:can_start_spree(starting_level)
 
 	local cost = self:get_start_cost(starting_level)
 	local coins = 0
+
 	coins = managers.custom_safehouse:coins()
 
 	if coins < cost then
@@ -1088,6 +1094,7 @@ function CrimeSpreeManager:can_continue_spree()
 
 	local cost = self:get_continue_cost(self:spree_level())
 	local coins = 0
+
 	coins = managers.custom_safehouse:coins()
 
 	if coins < cost then
@@ -1100,8 +1107,8 @@ function CrimeSpreeManager:can_continue_spree()
 end
 
 CrimeSpreeManager.GageAssetEvents = {
-	Unlock = 2,
-	SendAlreadyUnlocked = 1
+	SendAlreadyUnlocked = 1,
+	Unlock = 2
 }
 
 -- Lines 1236-1238
@@ -1152,7 +1159,7 @@ function CrimeSpreeManager:unlock_gage_asset(asset_id)
 		return false
 	end
 
-	if self._unlocked_assets and tweak_data.crime_spree.max_assets_unlocked <= #self._unlocked_assets then
+	if self._unlocked_assets and #self._unlocked_assets >= tweak_data.crime_spree.max_assets_unlocked then
 		Application:error("Attempting to unlock a gage asset when the limit to gage assets has already been reached!", asset_id)
 
 		return false
@@ -1181,6 +1188,7 @@ end
 -- Lines 1312-1364
 function CrimeSpreeManager:_on_asset_unlocked(asset_id, peer, forced)
 	local asset_tweak_data = tweak_data.crime_spree.assets[asset_id]
+
 	peer = peer or managers.network:session():local_peer()
 
 	if not asset_tweak_data then
@@ -1189,7 +1197,7 @@ function CrimeSpreeManager:_on_asset_unlocked(asset_id, peer, forced)
 		return false
 	end
 
-	if self._unlocked_assets and tweak_data.crime_spree.max_assets_unlocked <= #self._unlocked_assets then
+	if self._unlocked_assets and #self._unlocked_assets >= tweak_data.crime_spree.max_assets_unlocked then
 		Application:error("Attempting to unlock a gage asset when the limit to gage assets has already been reached!", asset_id, peer)
 
 		return false
@@ -1245,7 +1253,8 @@ end
 -- Lines 1376-1392
 function CrimeSpreeManager:_setup_mission_lists()
 	self._global.mission_lists = {}
-	local dlc_unlocked, should_hide_unavailable = nil
+
+	local dlc_unlocked, should_hide_unavailable
 
 	for index, mission_list in ipairs(tweak_data.crime_spree.missions) do
 		self._global.mission_lists[index] = {}
@@ -1276,6 +1285,7 @@ function CrimeSpreeManager:_setup_temporary_job()
 	end
 
 	local mission_data = self:get_mission(self:current_mission())
+
 	tweak_data.narrative.jobs.crime_spree.chain = {
 		mission_data and mission_data.level
 	}
@@ -1309,6 +1319,7 @@ function CrimeSpreeManager:on_mission_completed(mission_id)
 	if not self:has_failed() then
 		local mission_data = self:get_mission(mission_id)
 		local spree_add = mission_data.add
+
 		self._mission_completion_gain = mission_data.add
 
 		if not self:_is_host() and self._global.start_data and self._global.start_data.server_spree_level then
@@ -1321,22 +1332,25 @@ function CrimeSpreeManager:on_mission_completed(mission_id)
 			self:set_peer_spree_level(1, server_level + spree_add)
 		end
 
-		if not self:_is_host() and self:spree_level() < self:server_spree_level() and tweak_data.crime_spree.catchup_min_level <= managers.experience:current_level() then
+		if not self:_is_host() and self:server_spree_level() > self:spree_level() and managers.experience:current_level() >= tweak_data.crime_spree.catchup_min_level then
 			local diff = self:server_spree_level() - self:spree_level()
+
 			self._catchup_bonus = math.min(tweak_data.crime_spree.catchup_limit, math.floor(diff * tweak_data.crime_spree.catchup_bonus))
 			spree_add = spree_add + self._catchup_bonus
 		end
 
 		if not self:_is_host() and self:server_spree_level() < self:spree_level() then
 			local diff = self:spree_level() - self:server_spree_level()
+
 			spree_add = spree_add - diff
 		end
 
 		spree_add = math.max(math.floor(spree_add), 0)
 		self._spree_add = spree_add
+
 		local reward_add = spree_add
 
-		if self:spree_level() <= self:server_spree_level() then
+		if self:server_spree_level() >= self:spree_level() then
 			self._global.winning_streak = (self._global.winning_streak or 1) + spree_add * tweak_data.crime_spree.winning_streak
 
 			if self._global.winning_streak < 1 then
@@ -1344,6 +1358,7 @@ function CrimeSpreeManager:on_mission_completed(mission_id)
 			end
 
 			local pre_winning = reward_add
+
 			reward_add = reward_add * self._global.winning_streak
 			self._winning_streak = reward_add - pre_winning
 		end
@@ -1526,7 +1541,7 @@ function CrimeSpreeManager:on_entered_lobby()
 			local spree_level = tonumber(lobby_data.crime_spree)
 
 			if spree_level and spree_level >= 0 then
-				local peer_id = nil
+				local peer_id
 
 				for id, peer in pairs(managers.network:session():peers()) do
 					if peer:is_host() then
@@ -1750,6 +1765,7 @@ function CrimeSpreeManager:consumable_value(name)
 
 	if self._consumable_values[name] ~= nil then
 		local value = self._consumable_values[name]
+
 		self._consumable_values[name] = nil
 
 		return value

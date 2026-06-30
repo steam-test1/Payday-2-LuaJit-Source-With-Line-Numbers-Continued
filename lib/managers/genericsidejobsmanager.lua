@@ -7,7 +7,7 @@ end
 
 -- Lines 13-19
 function GenericSideJobsManager:register(manager)
-	if table.find_value(self._side_jobs, function (v)
+	if table.find_value(self._side_jobs, function(v)
 		return v.manager == manager
 	end) then
 		return

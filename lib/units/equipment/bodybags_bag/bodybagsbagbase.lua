@@ -83,13 +83,12 @@ function BodyBagsBagBase:setup()
 		local ray = self._unit:raycast("ray", from_pos, to_pos, "slot_mask", managers.slot:get_mask("world_geometry"))
 
 		if ray then
-			self._attached_data = {
-				body = ray.body,
-				position = ray.body:position(),
-				rotation = ray.body:rotation(),
-				index = 1,
-				max_index = 3
-			}
+			self._attached_data = {}
+			self._attached_data.body = ray.body
+			self._attached_data.position = ray.body:position()
+			self._attached_data.rotation = ray.body:rotation()
+			self._attached_data.index = 1
+			self._attached_data.max_index = 3
 
 			self._unit:set_extension_update_enabled(Idstring("base"), true)
 		end
@@ -222,16 +221,17 @@ end
 
 -- Lines 225-230
 function BodyBagsBagBase:save(data)
-	local state = {
-		bodybag_amount = self._bodybag_amount,
-		is_dynamic = self._is_dynamic
-	}
+	local state = {}
+
+	state.bodybag_amount = self._bodybag_amount
+	state.is_dynamic = self._is_dynamic
 	data.BodyBagsBagBase = state
 end
 
 -- Lines 232-245
 function BodyBagsBagBase:load(data)
 	local state = data.BodyBagsBagBase
+
 	self._bodybag_amount = state.bodybag_amount
 
 	if state.is_dynamic then

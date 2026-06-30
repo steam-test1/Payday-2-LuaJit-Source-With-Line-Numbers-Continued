@@ -6,7 +6,9 @@ Start = Start or class()
 -- Lines 6-15
 function Start:init()
 	self._start_time = TimerManager:game():time()
+
 	local player_slots = self.pre_front_end.menu_state._player_slots
+
 	self._primary_slot = player_slots:primary_slot()
 
 	self._primary_slot:request_local_user_binding()

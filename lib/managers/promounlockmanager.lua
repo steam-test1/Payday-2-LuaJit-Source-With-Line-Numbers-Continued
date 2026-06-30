@@ -15,6 +15,7 @@ end
 
 -- Lines 23-51
 function PromoUnlockManager:check_unlocks()
+	return
 end
 
 -- Lines 53-60
@@ -68,10 +69,10 @@ end
 
 -- Lines 92-104
 function PromoUnlockManager:save(cache)
-	local data = {
-		version = self.save_version,
-		items = {}
-	}
+	local data = {}
+
+	data.version = self.save_version
+	data.items = {}
 
 	for item_id, item in pairs(self._items) do
 		data.items[item_id] = item.unlocked or false

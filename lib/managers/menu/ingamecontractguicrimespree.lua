@@ -3,6 +3,7 @@ IngameContractGuiCrimeSpree = IngameContractGuiCrimeSpree or class()
 -- Lines 4-116
 function IngameContractGuiCrimeSpree:init(ws, node)
 	local padding = SystemInfo:platform() == Idstring("WIN32") and 10 or 5
+
 	self._ws = ws
 	self._panel = ws:panel():panel({
 		w = math.round(ws:panel():w() * 0.6),
@@ -13,6 +14,7 @@ function IngameContractGuiCrimeSpree:init(ws, node)
 	self._panel:grow(0, -(self._panel:y() + tweak_data.menu.pd2_medium_font_size))
 
 	self._node = node
+
 	local job_data = managers.job:current_job_data()
 	local job_chain = managers.job:current_job_chain_data()
 	local mission = managers.crime_spree:get_mission(managers.crime_spree:current_played_mission())
@@ -22,10 +24,10 @@ function IngameContractGuiCrimeSpree:init(ws, node)
 	end
 
 	local contract_text = self._panel:text({
+		layer = 1,
+		rotation = 360,
 		text = "",
 		vertical = "bottom",
-		rotation = 360,
-		layer = 1,
 		font = tweak_data.menu.pd2_large_font,
 		font_size = tweak_data.menu.pd2_large_font_size,
 		color = tweak_data.screen_colors.text
@@ -78,12 +80,12 @@ function IngameContractGuiCrimeSpree:init(ws, node)
 	local font_size = tweak_data.menu.pd2_small_font_size
 	local text = managers.localization:text(tweak_data.levels[mission.level.level_id].briefing_id) or ""
 	local briefing_description = text_panel:text({
+		align = "left",
+		h = 128,
 		name = "briefing_description",
 		vertical = "top",
-		h = 128,
-		wrap = true,
-		align = "left",
 		word_wrap = true,
+		wrap = true,
 		text = text,
 		font = tweak_data.menu.pd2_small_font,
 		font_size = font_size,
@@ -166,10 +168,12 @@ end
 
 -- Lines 143-144
 function IngameContractGuiCrimeSpree:mouse_moved(o, x, y)
+	return
 end
 
 -- Lines 146-147
 function IngameContractGuiCrimeSpree:mouse_pressed(button, x, y)
+	return
 end
 
 -- Lines 149-151

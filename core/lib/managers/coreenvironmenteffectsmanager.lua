@@ -229,18 +229,22 @@ end
 
 -- Lines 221-223
 function EnvironmentEffect:load_effects()
+	return
 end
 
 -- Lines 225-227
 function EnvironmentEffect:update(t, dt)
+	return
 end
 
 -- Lines 230-232
 function EnvironmentEffect:start()
+	return
 end
 
 -- Lines 235-237
 function EnvironmentEffect:stop()
+	return
 end
 
 -- Lines 239-241

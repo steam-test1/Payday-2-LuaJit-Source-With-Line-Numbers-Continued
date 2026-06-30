@@ -1,4 +1,5 @@
 local tmp_vec1 = Vector3()
+
 QuickCsGrenade = QuickCsGrenade or class(GrenadeBase)
 
 -- Lines 7-15
@@ -14,6 +15,7 @@ end
 -- Lines 17-25
 function QuickCsGrenade:_setup_from_tweak_data()
 	local grenade_entry = self._tweak_projectile_entry or "cs_grenade_quick"
+
 	self._tweak_data = tweak_data.projectiles[grenade_entry]
 	self._radius = self._tweak_data.radius or 300
 	self._radius_blurzone_multiplier = self._tweak_data.radius_blurzone_multiplier or 1.3
@@ -55,7 +57,7 @@ function QuickCsGrenade:update(unit, t, dt)
 		self._last_damage_tick = t
 	end
 
-	if self._remove_t and self._remove_t < t then
+	if self._remove_t and t > self._remove_t then
 		self._unit:set_slot(0)
 	end
 end
@@ -94,6 +96,7 @@ end
 
 -- Lines 96-98
 function QuickCsGrenade:sound_playback_complete_clbk(event_instance, sound_source, event_type, sound_source_again)
+	return
 end
 
 -- Lines 100-103
@@ -158,11 +161,13 @@ function QuickCsGrenade:_play_sound_and_effects()
 		self._unit:sound_source():post_event("grenade_gas_explode")
 
 		local parent = self._unit:orientation_object()
+
 		self._smoke_effect = World:effect_manager():spawn({
 			effect = Idstring("effects/payday2/environment/cs_gas_damage_area"),
 			parent = parent
 		})
 		self._set_blurzone = true
+
 		local blurzone_radius = self._radius * self._radius_blurzone_multiplier
 
 		managers.environment_controller:set_blurzone(self._unit:key(), 1, self._unit:position(), blurzone_radius, 0, true)

@@ -59,6 +59,7 @@ if Application:ews_enabled() then
 end
 
 CoreSetup = CoreSetup or class()
+
 local _CoreSetup = CoreSetup
 
 -- Lines 114-128
@@ -73,30 +74,37 @@ end
 
 -- Lines 130-131
 function CoreSetup:init_category_print()
+	return
 end
 
 -- Lines 133-134
 function CoreSetup:load_packages()
+	return
 end
 
 -- Lines 136-137
 function CoreSetup:unload_packages()
+	return
 end
 
 -- Lines 139-140
 function CoreSetup:start_boot_loading_screen()
+	return
 end
 
 -- Lines 142-143
 function CoreSetup:init_managers(managers)
+	return
 end
 
 -- Lines 145-146
 function CoreSetup:init_toolhub(toolhub)
+	return
 end
 
 -- Lines 148-149
 function CoreSetup:init_game()
+	return
 end
 
 -- Lines 151-153
@@ -106,50 +114,62 @@ end
 
 -- Lines 155-156
 function CoreSetup:start_loading_screen()
+	return
 end
 
 -- Lines 158-159
 function CoreSetup:stop_loading_screen()
+	return
 end
 
 -- Lines 161-162
 function CoreSetup:update(t, dt)
+	return
 end
 
 -- Lines 164-165
 function CoreSetup:paused_update(t, dt)
+	return
 end
 
 -- Lines 167-168
 function CoreSetup:pre_render()
+	return
 end
 
 -- Lines 170-171
 function CoreSetup:render()
+	return
 end
 
 -- Lines 173-174
 function CoreSetup:end_frame(t, dt)
+	return
 end
 
 -- Lines 176-177
 function CoreSetup:end_update(t, dt)
+	return
 end
 
 -- Lines 179-180
 function CoreSetup:paused_end_update(t, dt)
+	return
 end
 
 -- Lines 182-183
 function CoreSetup:save(data)
+	return
 end
 
 -- Lines 185-186
 function CoreSetup:load(data)
+	return
 end
 
 -- Lines 188-189
 function CoreSetup:destroy()
+	return
 end
 
 -- Lines 195-197
@@ -189,6 +209,7 @@ end
 function CoreSetup:__pre_init()
 	if Application:editor() then
 		managers.global_texture = CoreGTextureManager.GTextureManager:new()
+
 		local frame_resolution = SystemInfo:desktop_resolution()
 		local appwin_resolution = Vector3(frame_resolution.x * 0.75, frame_resolution.y * 0.75, 0)
 		local frame = EWS:Frame("World Editor", Vector3(0, 0, 0), frame_resolution, "CAPTION,CLOSE_BOX,MINIMIZE_BOX,MAXIMIZE_BOX,MAXIMIZE,SYSTEM_MENU,RESIZE_BORDER")
@@ -228,13 +249,13 @@ function CoreSetup:__pre_init()
 	end
 end
 
-local lang_mods = {
-	[Idstring("japanese"):key()] = "japanese",
-	[Idstring("schinese"):key()] = "schinese",
-	[Idstring("korean"):key()] = "korean",
-	[Idstring("polish"):key()] = "polish",
-	[Idstring("turkish"):key()] = "turkish"
-}
+local lang_mods = {}
+
+lang_mods[Idstring("japanese"):key()] = "japanese"
+lang_mods[Idstring("schinese"):key()] = "schinese"
+lang_mods[Idstring("korean"):key()] = "korean"
+lang_mods[Idstring("polish"):key()] = "polish"
+lang_mods[Idstring("turkish"):key()] = "turkish"
 
 -- Lines 295-445
 function CoreSetup:__init()
@@ -265,10 +286,11 @@ function CoreSetup:__init()
 	rawset(_G, "UnitDamage", rawget(_G, "UnitDamage") or CoreUnitDamage)
 	rawset(_G, "EditableGui", rawget(_G, "EditableGui") or CoreEditableGui)
 
-	local aspect_ratio = nil
+	local aspect_ratio
 
 	if Application:editor() then
 		local frame_resolution = SystemInfo:desktop_resolution()
+
 		aspect_ratio = frame_resolution.x / frame_resolution.y
 	elseif SystemInfo:platform() == Idstring("WIN32") then
 		aspect_ratio = RenderSettings.aspect_ratio
@@ -367,6 +389,7 @@ end
 
 -- Lines 478-479
 function CoreSetup:loading_update(t, dt)
+	return
 end
 
 -- Lines 481-560
@@ -513,10 +536,12 @@ end
 
 -- Lines 696-697
 function CoreSetup:__animations_reloaded()
+	return
 end
 
 -- Lines 699-700
 function CoreSetup:__script_reloaded()
+	return
 end
 
 -- Lines 702-707

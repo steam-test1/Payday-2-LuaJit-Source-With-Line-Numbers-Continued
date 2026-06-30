@@ -42,10 +42,12 @@ end
 
 -- Lines 40-42
 function ElementHeatTrigger:add_callback()
+	return
 end
 
 -- Lines 44-46
 function ElementHeatTrigger:remove_callback()
+	return
 end
 
 -- Lines 48-56

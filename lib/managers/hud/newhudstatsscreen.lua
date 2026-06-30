@@ -8,6 +8,7 @@ local large_font_size = tweak_data.menu.pd2_large_font_size
 local medium_font_size = tweak_data.menu.pd2_medium_font_size
 local small_font_size = tweak_data.menu.pd2_small_font_size
 local tiny_font_size = tweak_data.menu.pd2_tiny_font_size
+
 HudTrackedAchievement = HudTrackedAchievement or class(GrowPanel)
 
 -- Lines 17-50
@@ -21,11 +22,12 @@ function HudTrackedAchievement:init(parent, id, black_bg)
 	self._info = managers.achievment:get_info(id)
 	self._visual = tweak_data.achievement.visual[id]
 	self._progress = self._visual and self._visual.progress
+
 	local placer = self:placer()
 	local texture, texture_rect = tweak_data.hud_icons:get_icon_or(self._visual.icon_id, "guis/dlcs/unfinished/textures/placeholder")
 	local bitmap = placer:add_bottom(self:bitmap({
-		w = 50,
 		h = 50,
+		w = 50,
 		texture = texture,
 		texture_rect = texture_rect
 	}))
@@ -52,8 +54,8 @@ function HudTrackedAchievement:init(parent, id, black_bg)
 	}))
 
 	local desc = self:text({
-		wrap = true,
 		word_wrap = true,
+		wrap = true,
 		text = desc_text,
 		font = tiny_font,
 		font_size = tiny_font_size,
@@ -66,8 +68,8 @@ function HudTrackedAchievement:init(parent, id, black_bg)
 
 	if self._progress then
 		self._bar = placer:add_bottom(TextProgressBar:new(self, {
-			w = 300,
 			h = 10,
+			w = 300,
 			back_color = Color(255, 60, 60, 65) / 255,
 			max = type(self._progress.max) == "function" and self._progress:max() or self._progress.max
 		}, {
@@ -107,6 +109,7 @@ function HUDStatsScreen:init()
 	self:clear()
 
 	local padding = 10
+
 	self._leftpos = {
 		padding,
 		padding
@@ -135,9 +138,9 @@ end
 function HUDStatsScreen:recreate_left()
 	self._left:clear()
 	self._left:bitmap({
-		texture = "guis/textures/test_blur_df",
 		layer = -1,
 		render_template = "VertexColorTexturedBlur3D",
+		texture = "guis/textures/test_blur_df",
 		valign = "grow",
 		w = self._left:w(),
 		h = self._left:h()
@@ -211,10 +214,10 @@ function HUDStatsScreen:recreate_left()
 			if managers.job:is_level_ghostable(managers.job:current_level_id()) then
 				local ghost_color = is_whisper_mode and Color.white or tweak_data.screen_colors.important_1
 				local ghost = placer:add_right(self._left:bitmap({
-					texture = "guis/textures/pd2/cn_minighost",
-					name = "ghost_icon",
-					h = 16,
 					blend_mode = "add",
+					h = 16,
+					name = "ghost_icon",
+					texture = "guis/textures/pd2/cn_minighost",
 					w = 16,
 					color = ghost_color
 				}))
@@ -284,8 +287,8 @@ function HUDStatsScreen:recreate_left()
 	end
 
 	placer:add_bottom(self._left:fine_text({
-		vertical = "top",
 		align = "left",
+		vertical = "top",
 		font_size = tweak_data.hud_stats.objectives_title_size,
 		font = tweak_data.hud_stats.objectives_font,
 		text = managers.localization:to_upper_text("hud_objective")
@@ -296,19 +299,19 @@ function HUDStatsScreen:recreate_left()
 
 	for i, data in pairs(managers.objectives:get_active_objectives()) do
 		placer:add_bottom(self._left:fine_text({
+			align = "left",
 			word_wrap = true,
 			wrap = true,
-			align = "left",
 			text = utf8.to_upper(data.text),
 			font = tweak_data.hud.medium_font,
 			font_size = tweak_data.hud.active_objective_title_font_size,
 			w = row_w
 		}))
 		placer:add_bottom(self._left:fine_text({
+			align = "left",
+			font_size = 24,
 			word_wrap = true,
 			wrap = true,
-			font_size = 24,
-			align = "left",
 			text = data.description,
 			font = tweak_data.hud_stats.objective_desc_font,
 			w = row_w
@@ -318,6 +321,7 @@ function HUDStatsScreen:recreate_left()
 	local loot_panel = ExtendedPanel:new(self._left, {
 		w = self._left:w() - 16 - 8
 	})
+
 	placer = UiPlacer:new(16, 0, 8, 4)
 
 	if not is_whisper_mode and managers.player:has_category_upgrade("player", "convert_enemies") then
@@ -332,8 +336,8 @@ function HUDStatsScreen:recreate_left()
 
 		local minion_texture, minion_rect = tweak_data.hud_icons:get_icon_data("minions_converted")
 		local minion_icon = placer:add_left(loot_panel:fit_bitmap({
-			w = 17,
 			h = 17,
+			w = 17,
 			texture = minion_texture,
 			texture_rect = minion_rect
 		}))
@@ -371,8 +375,8 @@ function HUDStatsScreen:recreate_left()
 
 		local pagers_texture, pagers_rect = tweak_data.hud_icons:get_icon_data("pagers_used")
 		local pagers_icon = placer:add_left(loot_panel:fit_bitmap({
-			w = 17,
 			h = 17,
+			w = 17,
 			texture = pagers_texture,
 			texture_rect = pagers_rect
 		}))
@@ -401,8 +405,8 @@ function HUDStatsScreen:recreate_left()
 
 	local bag_texture, bag_rect = tweak_data.hud_icons:get_icon_data("bag_icon")
 	local bag_icon = placer:add_left(loot_panel:fit_bitmap({
-		w = 16,
 		h = 16,
+		w = 16,
 		texture = bag_texture,
 		texture_rect = bag_rect
 	}))
@@ -438,8 +442,8 @@ function HUDStatsScreen:recreate_left()
 
 	local body_texture, body_rect = tweak_data.hud_icons:get_icon_data("equipment_body_bag")
 	local body_icon = placer:add_left(loot_panel:fit_bitmap({
-		w = 17,
 		h = 17,
+		w = 17,
 		texture = body_texture,
 		texture_rect = body_rect
 	}))
@@ -490,9 +494,9 @@ end
 function HUDStatsScreen:recreate_right()
 	self._right:clear()
 	self._right:bitmap({
-		texture = "guis/textures/test_blur_df",
 		layer = -1,
 		render_template = "VertexColorTexturedBlur3D",
+		texture = "guis/textures/test_blur_df",
 		valign = "grow",
 		w = self._right:w(),
 		h = self._right:h()
@@ -536,9 +540,9 @@ function HUDStatsScreen:_create_tracked_list(panel)
 
 	if #tracked == 0 then
 		placer:add_bottom(self._right:fine_text({
-			wrap = true,
-			word_wrap = true,
 			text_id = "hud_stats_no_tracked",
+			word_wrap = true,
+			wrap = true,
 			font = medium_font,
 			font_size = medium_font_size,
 			w = self._right:w() - placer:current_left() * 2
@@ -546,6 +550,7 @@ function HUDStatsScreen:_create_tracked_list(panel)
 	end
 
 	self._tracked_items = {}
+
 	local placer = UiPlacer:new(0, placer:most().bottom, 0, 0)
 	local with_bg = true
 
@@ -648,12 +653,14 @@ end
 function HUDStatsScreen:_animate_show_stats_left_panel(left_panel, right_panel, bottom_panel, teammates_panel, objectives_panel, chat_panel)
 	local start_x = left_panel:x()
 	local start_a = 1 - start_x / -left_panel:w()
-	local TOTAL_T = 0.33 * start_x / -left_panel:w()
+	local TOTAL_T = 0.33 * (start_x / -left_panel:w())
 	local t = 0
 
-	while TOTAL_T > t do
-		local dt = coroutine.yield() * 1 / TimerManager:game():multiplier()
+	while t < TOTAL_T do
+		local dt = coroutine.yield() * (1 / TimerManager:game():multiplier())
+
 		t = t + dt
+
 		local a = math.lerp(start_a, 1, t / TOTAL_T)
 
 		left_panel:set_alpha(a)
@@ -691,9 +698,11 @@ function HUDStatsScreen:_animate_hide_stats_left_panel(left_panel, right_panel, 
 	local TOTAL_T = 0.33 * (1 - start_x / -left_panel:w())
 	local t = 0
 
-	while TOTAL_T > t do
-		local dt = coroutine.yield() * 1 / TimerManager:game():multiplier()
+	while t < TOTAL_T do
+		local dt = coroutine.yield() * (1 / TimerManager:game():multiplier())
+
 		t = t + dt
+
 		local a = math.lerp(start_a, 0, t / TOTAL_T)
 
 		left_panel:set_alpha(a)

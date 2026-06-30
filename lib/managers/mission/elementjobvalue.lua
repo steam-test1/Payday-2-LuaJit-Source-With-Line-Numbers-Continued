@@ -42,6 +42,7 @@ end
 
 -- Lines 43-45
 function ElementJobValueFilter:client_on_executed(...)
+	return
 end
 
 -- Lines 47-64
@@ -50,7 +51,7 @@ function ElementJobValueFilter:on_executed(instigator)
 		return
 	end
 
-	local value = nil
+	local value
 
 	if self._values.save then
 		value = managers.mission:get_saved_job_value(self._values.key)
@@ -88,7 +89,7 @@ function ElementJobValueFilter:_check_value(value)
 	end
 
 	if self._values.check_type == "greater_or_equal" then
-		return self._values.value <= value
+		return value >= self._values.value
 	end
 
 	if self._values.check_type == "less_than" then
@@ -96,7 +97,7 @@ function ElementJobValueFilter:_check_value(value)
 	end
 
 	if self._values.check_type == "greater_than" then
-		return self._values.value < value
+		return value > self._values.value
 	end
 end
 
@@ -109,6 +110,7 @@ end
 
 -- Lines 110-114
 function ElementApplyJobValue:client_on_executed(...)
+	return
 end
 
 -- Lines 116-136
@@ -117,7 +119,7 @@ function ElementApplyJobValue:on_executed(instigator)
 		return
 	end
 
-	local value = nil
+	local value
 
 	if self._values.save then
 		value = managers.mission:get_saved_job_value(self._values.key)

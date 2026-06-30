@@ -98,7 +98,7 @@ end
 function ControllerWrapper:reset_cache(check_time)
 	local reset_cache_time = TimerManager:wall_running():time()
 
-	if not check_time or self._reset_cache_time < reset_cache_time then
+	if not check_time or reset_cache_time > self._reset_cache_time then
 		self._input_any_cache = nil
 		self._input_any_pressed_cache = nil
 		self._input_any_released_cache = nil
@@ -171,7 +171,7 @@ function ControllerWrapper:update_multi_input()
 	if self._enabled and self._virtual_controller then
 		for connection_name, single_connection_name_list in pairs(self._multi_input_map) do
 			if self:get_connection_enabled(connection_name) then
-				local bool = nil
+				local bool
 
 				for _, single_connection_name in ipairs(single_connection_name_list) do
 					bool = self._virtual_controller:down(Idstring(single_connection_name))
@@ -190,7 +190,7 @@ function ControllerWrapper:update_multi_input()
 					self._input_axis_cache[connection_name] = Vector3()
 				end
 
-				local touch = nil
+				local touch
 
 				for _, single_connection_name in ipairs(single_connection_name_list) do
 					touch = self._virtual_controller:touch(Idstring(single_connection_name))
@@ -226,7 +226,7 @@ function ControllerWrapper:update_delay_input()
 					if not self:get_input_bool(connection_name) then
 						for delay_connection_name, delay_time in pairs(delay_time_map) do
 							local down = self:get_input_bool(delay_connection_name)
-							local allow = nil
+							local allow
 
 							if down then
 								if not delay_time then
@@ -314,6 +314,7 @@ end
 function ControllerWrapper:setup(setup)
 	if setup then
 		self._setup = setup
+
 		local connection_map = setup:get_connection_map()
 
 		for _, connection_name in ipairs(setup:get_connection_list()) do
@@ -335,7 +336,7 @@ function ControllerWrapper:setup_connection(connection_name, connection, control
 			self:connect(controller_id, input_name, connection_name, connection, index ~= 1, #input_name_list > 0 and not connection:get_any_input())
 		end
 
-		local delay_data = nil
+		local delay_data
 		local delay_connection_list = connection:get_delay_connection_list()
 
 		for index, delay_connection_referer in ipairs(delay_connection_list) do
@@ -344,7 +345,7 @@ function ControllerWrapper:setup_connection(connection_name, connection, control
 
 			if delay_connection then
 				local delay_input_name_list = delay_connection:get_input_name_list()
-				local can_delay = nil
+				local can_delay
 
 				for _, delay_input_name in ipairs(delay_input_name_list) do
 					for _, input_name in ipairs(input_name_list) do
@@ -427,47 +428,47 @@ function ControllerWrapper:virtual_connect2(controller_id, controller, input_nam
 	local connect_dest_type = connection:get_connect_dest_type()
 
 	if connection._btn_connections and input_name == "buttons" then
-		local btn_data = {
-			up = {
-				1,
-				0,
-				1
-			},
-			down = {
-				1,
-				0,
-				-1
-			},
-			left = {
-				0,
-				0,
-				-1
-			},
-			right = {
-				0,
-				0,
-				1
-			},
-			accelerate = {
-				1,
-				0,
-				1
-			},
-			brake = {
-				1,
-				0,
-				-1
-			},
-			turn_left = {
-				0,
-				0,
-				-1
-			},
-			turn_right = {
-				0,
-				0,
-				1
-			}
+		local btn_data = {}
+
+		btn_data.up = {
+			1,
+			0,
+			1
+		}
+		btn_data.down = {
+			1,
+			0,
+			-1
+		}
+		btn_data.left = {
+			0,
+			0,
+			-1
+		}
+		btn_data.right = {
+			0,
+			0,
+			1
+		}
+		btn_data.accelerate = {
+			1,
+			0,
+			1
+		}
+		btn_data.brake = {
+			1,
+			0,
+			-1
+		}
+		btn_data.turn_left = {
+			0,
+			0,
+			-1
+		}
+		btn_data.turn_right = {
+			0,
+			0,
+			1
 		}
 
 		if not self._virtual_controller:has_axis(Idstring(connection_name)) then
@@ -644,6 +645,7 @@ end
 -- Lines 546-564
 function ControllerWrapper:add_trigger(connection_name, func)
 	local trigger = {}
+
 	self._trigger_map[connection_name] = self._trigger_map[connection_name] or {}
 
 	if self._trigger_map[connection_name][func] then
@@ -665,6 +667,7 @@ end
 -- Lines 566-578
 function ControllerWrapper:add_release_trigger(connection_name, func)
 	local trigger = {}
+
 	self._release_trigger_map[connection_name] = self._release_trigger_map[connection_name] or {}
 	trigger.original_func = func
 	trigger.func = self:get_release_trigger_func(connection_name, func)
@@ -681,7 +684,7 @@ function ControllerWrapper:get_trigger_func(connection_name, func)
 	local wrapper = self
 
 	if self._delay_bool_map[connection_name] or self._multi_input_map[connection_name] then
-		return function (...)
+		return function(...)
 			wrapper:reset_cache(true)
 
 			if wrapper:get_input_bool(connection_name) then
@@ -691,7 +694,7 @@ function ControllerWrapper:get_trigger_func(connection_name, func)
 			end
 		end
 	else
-		return function (...)
+		return function(...)
 			wrapper:reset_cache(true)
 			func(...)
 		end
@@ -703,7 +706,7 @@ function ControllerWrapper:get_release_trigger_func(connection_name, func)
 	local wrapper = self
 
 	if self._delay_bool_map[connection_name] or self._multi_input_map[connection_name] then
-		return function (...)
+		return function(...)
 			wrapper:reset_cache(true)
 
 			if wrapper:get_input_bool(connection_name) then
@@ -711,7 +714,7 @@ function ControllerWrapper:get_release_trigger_func(connection_name, func)
 			end
 		end
 	else
-		return function (...)
+		return function(...)
 			wrapper:reset_cache(true)
 			func(...)
 		end
@@ -928,7 +931,9 @@ function ControllerWrapper:get_input_pressed(connection_name)
 	if cache == nil then
 		if self._connection_map[connection_name] then
 			id_strings[connection_name] = id_strings[connection_name] or Idstring(connection_name)
+
 			local ids = id_strings[connection_name]
+
 			cache = self._enabled and self._virtual_controller and self:get_connection_enabled(connection_name) and self._virtual_controller:pressed(ids) or false
 			cache = not not cache
 		else
@@ -961,7 +966,9 @@ function ControllerWrapper:get_input_bool(connection_name)
 	if cache == nil then
 		if self._connection_map[connection_name] then
 			id_strings[connection_name] = id_strings[connection_name] or Idstring(connection_name)
+
 			local ids = id_strings[connection_name]
+
 			cache = self._enabled and self._virtual_controller and self:get_connection_enabled(connection_name) and self._virtual_controller:down(ids) or false
 			cache = not not cache
 		else
@@ -983,7 +990,9 @@ function ControllerWrapper:get_input_touch_bool(connection_name)
 	if cache == nil then
 		if self._connection_map[connection_name] then
 			id_strings[connection_name] = id_strings[connection_name] or Idstring(connection_name)
+
 			local ids = id_strings[connection_name]
+
 			cache = self._enabled and self._virtual_controller and self:get_connection_enabled(connection_name) and self._virtual_controller:touch(ids) or false
 			cache = not not cache
 		else
@@ -1005,7 +1014,9 @@ function ControllerWrapper:get_input_touch_pressed(connection_name)
 	if cache == nil then
 		if self._connection_map[connection_name] then
 			id_strings[connection_name] = id_strings[connection_name] or Idstring(connection_name)
+
 			local ids = id_strings[connection_name]
+
 			cache = self._enabled and self._virtual_controller and self:get_connection_enabled(connection_name) and self._virtual_controller:touch_pressed(ids) or false
 			cache = not not cache
 		else
@@ -1027,7 +1038,9 @@ function ControllerWrapper:get_input_touch_released(connection_name)
 	if cache == nil then
 		if self._connection_map[connection_name] then
 			id_strings[connection_name] = id_strings[connection_name] or Idstring(connection_name)
+
 			local ids = id_strings[connection_name]
+
 			cache = self._enabled and self._virtual_controller and self:get_connection_enabled(connection_name) and self._virtual_controller:touch_released(ids) or false
 			cache = not not cache
 		else
@@ -1049,7 +1062,9 @@ function ControllerWrapper:get_input_float(connection_name)
 	if cache == nil then
 		if self._connection_map[connection_name] then
 			id_strings[connection_name] = id_strings[connection_name] or Idstring(connection_name)
+
 			local ids = id_strings[connection_name]
+
 			cache = self._enabled and self._virtual_controller and self:get_connection_enabled(connection_name) and self._virtual_controller:button(ids) or 0
 		else
 			self:print_invalid_connection_error(connection_name)
@@ -1095,11 +1110,14 @@ function ControllerWrapper:get_input_axis(connection_name)
 	if cache == nil then
 		if self._connection_map[connection_name] then
 			id_strings[connection_name] = id_strings[connection_name] or Idstring(connection_name)
+
 			local ids = id_strings[connection_name]
+
 			cache = self._enabled and self._virtual_controller and self:get_connection_enabled(connection_name) and self._virtual_controller:axis(ids)
 
 			if cache then
 				local connection = self._setup:get_connection(connection_name)
+
 				cache = self:get_modified_axis(connection_name, connection, cache)
 			else
 				cache = Vector3()

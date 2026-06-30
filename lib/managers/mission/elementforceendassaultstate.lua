@@ -9,6 +9,7 @@ end
 
 -- Lines 9-10
 function ElementForceEndAssaultState:client_on_executed(...)
+	return
 end
 
 -- Lines 12-22

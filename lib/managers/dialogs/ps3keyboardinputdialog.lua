@@ -5,13 +5,13 @@ PS3KeyboardInputDialog = PS3KeyboardInputDialog or class(KeyboardInputDialog)
 
 -- Lines 7-24
 function PS3KeyboardInputDialog:show()
-	local data = {
-		title = self:title(),
-		text = self:input_text(),
-		filter = self:filter(),
-		limit = self:max_count() or 0,
-		callback = callback(self, self, "done_callback")
-	}
+	local data = {}
+
+	data.title = self:title()
+	data.text = self:input_text()
+	data.filter = self:filter()
+	data.limit = self:max_count() or 0
+	data.callback = callback(self, self, "done_callback")
 
 	PS3:display_keyboard(data)
 

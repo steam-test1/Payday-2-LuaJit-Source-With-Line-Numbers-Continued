@@ -1,4 +1,5 @@
 PlayerDrivingVR = PlayerDriving or Application:error("PlayerDrivingVR needs PlayerDriving!")
+
 local __enter = PlayerDriving.enter
 
 -- Lines 5-39
@@ -47,7 +48,9 @@ function PlayerDrivingVR:_setup_help_text(is_driver)
 
 	if is_driver then
 		local throttle = driving_tweak.throttle
-		local steering = type(driving_tweak.steering_pos) == "table" and driving_tweak.steering_pos or driving_tweak.steering_pos
+		local steering = type(driving_tweak.steering_pos) == "table" and driving_tweak.steering_pos or {
+			driving_tweak.steering_pos
+		}
 
 		for key, offset in pairs(steering) do
 			local id = "steering"
@@ -74,12 +77,13 @@ end
 -- Lines 71-149
 function PlayerDrivingVR:_add_help_text(tweak, type, subtype)
 	local rot = self._vehicle_unit:rotation()
-	local offset = nil
+	local offset
 	local dir = math.Y
 	local up = math.UP
 
 	if type == "steering" or type == "throttle" and subtype == "twist_grip" then
 		local hand = type == "throttle" and tweak.throttle.hand or subtype
+
 		offset = hand and tweak.steering_pos[hand] or tweak.steering_pos
 		dir = tweak.steering_dir or dir
 		up = tweak.steering_up or up
@@ -99,18 +103,20 @@ function PlayerDrivingVR:_add_help_text(tweak, type, subtype)
 
 	dir = dir:rotate_with(rot)
 	up = up:rotate_with(rot)
-	local w = 128
-	local h = 128
+
+	local w, h = 128, 128
 
 	if type == "throttle" then
 		h = 384
 	end
 
 	local ws = managers.hud:create_vehicle_interaction_ws(type, self._vehicle_unit, offset, dir, up, w, h)
+
 	self._vehicle_ws[type] = ws
+
 	local panel = ws:panel():panel({
-		w = 128,
 		h = 128,
+		w = 128,
 		name = type
 	})
 
@@ -126,9 +132,10 @@ function PlayerDrivingVR:_add_help_text(tweak, type, subtype)
 
 	if type == "throttle" then
 		self._throttle_panel = ws:panel()
+
 		local throttle_up_outline = self._throttle_panel:bitmap({
-			texture = "guis/dlcs/vr/textures/pd2/icon_belt_arrow",
 			name = "up_outline",
+			texture = "guis/dlcs/vr/textures/pd2/icon_belt_arrow",
 			texture_rect = {
 				128,
 				0,
@@ -137,8 +144,8 @@ function PlayerDrivingVR:_add_help_text(tweak, type, subtype)
 			}
 		})
 		local throttle_up = self._throttle_panel:bitmap({
-			texture = "guis/dlcs/vr/textures/pd2/icon_belt_arrow",
 			name = "up",
+			texture = "guis/dlcs/vr/textures/pd2/icon_belt_arrow",
 			texture_rect = {
 				0,
 				0,
@@ -147,10 +154,10 @@ function PlayerDrivingVR:_add_help_text(tweak, type, subtype)
 			}
 		})
 		local throttle_down_outline = self._throttle_panel:bitmap({
-			texture = "guis/dlcs/vr/textures/pd2/icon_belt_arrow",
 			name = "down_outline",
-			y = 256,
 			rotation = 180,
+			texture = "guis/dlcs/vr/textures/pd2/icon_belt_arrow",
+			y = 256,
 			texture_rect = {
 				128,
 				0,
@@ -159,10 +166,10 @@ function PlayerDrivingVR:_add_help_text(tweak, type, subtype)
 			}
 		})
 		local throttle_down = self._throttle_panel:bitmap({
-			texture = "guis/dlcs/vr/textures/pd2/icon_belt_arrow",
 			name = "down",
-			y = 256,
 			rotation = 180,
+			texture = "guis/dlcs/vr/textures/pd2/icon_belt_arrow",
+			y = 256,
 			texture_rect = {
 				0,
 				0,
@@ -170,6 +177,7 @@ function PlayerDrivingVR:_add_help_text(tweak, type, subtype)
 				128
 			}
 		})
+
 		self._throttle_arrows = {
 			up = throttle_up,
 			down = throttle_down
@@ -313,6 +321,7 @@ function PlayerDrivingVR:set_throttle(value)
 			end
 
 			local mul = range * 2
+
 			val = math.abs(val)
 
 			return (val - 0.5) * mul + 0.5
@@ -321,6 +330,7 @@ function PlayerDrivingVR:set_throttle(value)
 		-- Lines 265-274
 		local function set_arrow_size(arrow, val, inverse)
 			val = stretch_value(val, 0.4)
+
 			local size = 128
 			local new_size = size * val
 

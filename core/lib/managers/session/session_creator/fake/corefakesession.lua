@@ -5,6 +5,7 @@ Session = Session or class()
 
 -- Lines 6-7
 function Session:init()
+	return
 end
 
 -- Lines 9-11

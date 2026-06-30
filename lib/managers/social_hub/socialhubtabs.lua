@@ -4,10 +4,12 @@ SocialHubTab = SocialHubTab or class()
 
 -- Lines 5-6
 function SocialHubTab:init(parent_panel)
+	return
 end
 
 -- Lines 8-9
 function SocialHubTab:on_selected()
+	return
 end
 
 -- Lines 11-61
@@ -22,7 +24,7 @@ function SocialHubTab:on_user_item_pressed(action, user_id)
 		managers.menu:show_socialhub_action_dialog({
 			action = "add",
 			user_id = user_id,
-			callback = function ()
+			callback = function()
 				managers.socialhub:add_user_friend(user_id)
 				MenuCallbackHandler:save_progress()
 				managers.menu_component:social_hub_gui_reset_tab_by_name("friend")
@@ -33,7 +35,7 @@ function SocialHubTab:on_user_item_pressed(action, user_id)
 		managers.menu:show_socialhub_action_dialog({
 			action = "remove",
 			user_id = user_id,
-			callback = function ()
+			callback = function()
 				managers.socialhub:remove_user_friend(user_id)
 				MenuCallbackHandler:save_progress()
 				managers.menu_component:social_hub_gui_reset_tab_by_name("friend")
@@ -44,7 +46,7 @@ function SocialHubTab:on_user_item_pressed(action, user_id)
 		managers.menu:show_socialhub_action_dialog({
 			action = "block",
 			user_id = user_id,
-			callback = function ()
+			callback = function()
 				managers.socialhub:add_user_blocked(user_id)
 				MenuCallbackHandler:save_progress()
 				managers.menu_component:social_hub_gui_reset_tab_by_name("friend")
@@ -56,7 +58,7 @@ function SocialHubTab:on_user_item_pressed(action, user_id)
 		managers.menu:show_socialhub_action_dialog({
 			action = "unblock",
 			user_id = user_id,
-			callback = function ()
+			callback = function()
 				managers.socialhub:remove_user_blocked(user_id)
 				MenuCallbackHandler:save_progress()
 				managers.menu_component:social_hub_gui_reset_tab_by_name("friend")
@@ -68,7 +70,7 @@ function SocialHubTab:on_user_item_pressed(action, user_id)
 		managers.menu:show_socialhub_action_dialog({
 			action = "invite",
 			user_id = user_id,
-			callback = function ()
+			callback = function()
 				managers.socialhub:invite_user_to_lobby(user_id)
 				MenuCallbackHandler:save_progress()
 				managers.menu_component:social_hub_gui_reset_tab_by_name("friend")
@@ -102,8 +104,8 @@ function SocialHubFriendTab:init(parent_panel)
 
 	self.scroll = ScrollItemList:new(parent_panel, {
 		input_focus = true,
-		scrollbar_padding = 10,
-		padding = 0
+		padding = 0,
+		scrollbar_padding = 10
 	}, {
 		layer = 100
 	})
@@ -115,12 +117,14 @@ end
 -- Lines 89-181
 function SocialHubFriendTab:setup_panel(parent_panel)
 	self.open_friend_categories = {}
+
 	local friends = managers.socialhub:get_platform_friends()
 	local platform_name = SystemInfo:distribution() == Idstring("STEAM") and managers.localization:text("socialhub_friends_platform_title_steam") or SystemInfo:distribution() == Idstring("EPIC") and managers.localization:text("socialhub_friends_platform_title_epic") or managers.localization:text("socialhub_friends_platform_title")
 	local category_header = SocialHubUserCategoryHeader:new(self.scroll:canvas(), {
 		text = platform_name .. " [" .. managers.socialhub:get_number_of_platform_friends() .. "]",
 		press_callback = callback(self, self, "on_user_filter_pressed", 2)
 	})
+
 	category_header.sort_category_prio = 2
 	category_header.sort_type_prio = 1
 
@@ -132,6 +136,7 @@ function SocialHubFriendTab:setup_panel(parent_panel)
 			id = item,
 			buttons = managers.socialhub:get_actions_for_user(self, "on_user_item_pressed", item)
 		})
+
 		friend_item.sort_category_prio = 2
 		friend_item.sort_type_prio = 2
 
@@ -139,6 +144,7 @@ function SocialHubFriendTab:setup_panel(parent_panel)
 	end
 
 	local offline_separator_item = SocialHubUserSeparator:new(self.scroll:canvas())
+
 	offline_separator_item.sort_category_prio = 2
 	offline_separator_item.sort_type_prio = 2
 
@@ -150,6 +156,7 @@ function SocialHubFriendTab:setup_panel(parent_panel)
 		text = managers.localization:text("socialhub_friends_cross_title") .. " [" .. managers.socialhub:get_number_of_cross_friends() .. "]",
 		press_callback = callback(self, self, "on_user_filter_pressed", 1)
 	})
+
 	category_header.sort_category_prio = 1
 	category_header.sort_type_prio = 1
 
@@ -162,6 +169,7 @@ function SocialHubFriendTab:setup_panel(parent_panel)
 				id = item,
 				buttons = managers.socialhub:get_actions_for_user(self, "on_user_item_pressed", item)
 			})
+
 			friend_item.sort_category_prio = 1
 			friend_item.sort_type_prio = 2
 
@@ -170,28 +178,29 @@ function SocialHubFriendTab:setup_panel(parent_panel)
 	end
 
 	local offline_separator_item = SocialHubUserSeparator:new(self.scroll:canvas())
+
 	offline_separator_item.sort_category_prio = 1
 	offline_separator_item.sort_type_prio = 2
 
 	self.scroll:add_item(offline_separator_item)
 	table.insert(self.open_friend_categories, true)
-	self.scroll:sort_items(function (lhs, rhs)
+	self.scroll:sort_items(function(lhs, rhs)
 		if lhs.sort_category_prio < rhs.sort_category_prio then
 			return true
-		elseif rhs.sort_category_prio < lhs.sort_category_prio then
+		elseif lhs.sort_category_prio > rhs.sort_category_prio then
 			return false
 		end
 
 		if lhs.sort_type_prio < rhs.sort_type_prio then
 			return true
-		elseif rhs.sort_type_prio < lhs.sort_type_prio then
+		elseif lhs.sort_type_prio > rhs.sort_type_prio then
 			return false
 		end
 
 		if lhs.get_status_prio and lhs.get_status_prio then
 			if lhs:get_status_prio() < rhs:get_status_prio() then
 				return true
-			elseif rhs:get_status_prio() < lhs:get_status_prio() then
+			elseif lhs:get_status_prio() > rhs:get_status_prio() then
 				return false
 			end
 		end
@@ -203,14 +212,14 @@ function SocialHubFriendTab:setup_panel(parent_panel)
 			for i = 1, math.min(string.len(lhs_name), string.len(rhs_name)) do
 				if string.byte(string.sub(lhs_name, i, i)) < string.byte(string.sub(rhs_name, i, i)) then
 					return true
-				elseif string.byte(string.sub(rhs_name, i, i)) < string.byte(string.sub(lhs_name, i, i)) then
+				elseif string.byte(string.sub(lhs_name, i, i)) > string.byte(string.sub(rhs_name, i, i)) then
 					return false
 				end
 			end
 
 			if string.len(lhs_name) < string.len(rhs_name) then
 				return true
-			elseif string.len(rhs_name) < string.len(lhs_name) then
+			elseif string.len(lhs_name) > string.len(rhs_name) then
 				return false
 			end
 		end
@@ -232,7 +241,7 @@ end
 function SocialHubFriendTab:on_user_filter_pressed(filter_category)
 	self.open_friend_categories[filter_category] = not self.open_friend_categories[filter_category]
 
-	self.scroll:filter_items(function (item)
+	self.scroll:filter_items(function(item)
 		if item.sort_type_prio > 1 then
 			return self.open_friend_categories[item.sort_category_prio]
 		end
@@ -330,8 +339,8 @@ function SocialHubInviteTab:init(parent_panel, ws)
 	self._searchbox.panel:set_center_x(parent_panel:center_x())
 
 	self._paste_icon = parent_panel:bitmap({
-		texture = "guis/dlcs/shub/textures/paste_icon",
 		layer = 10,
+		texture = "guis/dlcs/shub/textures/paste_icon",
 		x = self._searchbox.panel:right() + 2,
 		w = self._searchbox.panel:h(),
 		h = self._searchbox.panel:h()
@@ -339,8 +348,8 @@ function SocialHubInviteTab:init(parent_panel, ws)
 
 	if not managers.menu:is_pc_controller() then
 		self._paste_button_prompt = parent_panel:text({
-			name = "paste_button_prompt",
 			layer = 1,
+			name = "paste_button_prompt",
 			font = tweak_data.menu.pd2_medium_font,
 			font_size = tweak_data.menu.pd2_medium_font_size,
 			text = utf8.to_upper(managers.localization:btn_macro("menu_respec_tree") .. " " .. managers.localization:text("menu_socialhub_controller_paste"))
@@ -356,8 +365,8 @@ function SocialHubInviteTab:init(parent_panel, ws)
 	})
 	self.scroll = ScrollItemList:new(self._scroll_panel, {
 		input_focus = true,
-		scrollbar_padding = 10,
-		padding = 0
+		padding = 0,
+		scrollbar_padding = 10
 	}, {
 		layer = 100
 	})
@@ -366,12 +375,12 @@ function SocialHubInviteTab:init(parent_panel, ws)
 	self:setup_panel(parent_panel)
 
 	self._loading_icon = parent_panel:bitmap({
-		texture = "guis/textures/icon_loading",
-		name = "loading_icon",
 		h = 32,
+		layer = 100,
+		name = "loading_icon",
+		texture = "guis/textures/icon_loading",
 		visible = false,
-		w = 32,
-		layer = 100
+		w = 32
 	})
 end
 
@@ -426,6 +435,7 @@ function SocialHubInviteTab:setup_panel(parent_panel)
 				press_callback = callback(self, self, "on_user_lobby_pressed", "join")
 			}
 		}
+
 		local lobby_item = SocialHubLobbyItem:new(self.scroll:canvas(), item)
 
 		self.scroll:add_item(lobby_item, nil, 1)
@@ -549,6 +559,7 @@ function SocialHubInviteTab:on_refresh_lobby_fetched(lobby_id, host_user_id, lob
 
 			while alpha > 0 do
 				local dt = coroutine.yield()
+
 				alpha = alpha - 2 * dt
 
 				o:set_alpha(alpha)
@@ -688,8 +699,8 @@ function SocialHubBlockedTab:init(parent_panel)
 
 	self.scroll = ScrollItemList:new(parent_panel, {
 		input_focus = true,
-		scrollbar_padding = 10,
-		padding = 0
+		padding = 0,
+		scrollbar_padding = 10
 	}, {
 		layer = 100
 	})
@@ -702,8 +713,8 @@ function SocialHubBlockedTab:setup_panel()
 	for index, item in ipairs(managers.socialhub:get_blocked_users()) do
 		if managers.socialhub:user_exists(item) then
 			local user = SocialHubUserItem:new(self.scroll:canvas(), {
-				right_display_icon = "guis/dlcs/shub/textures/blocked_player_icon",
 				right_display = "icon",
+				right_display_icon = "guis/dlcs/shub/textures/blocked_player_icon",
 				id = item,
 				buttons = managers.socialhub:get_actions_for_user(self, "on_user_item_pressed", item)
 			})

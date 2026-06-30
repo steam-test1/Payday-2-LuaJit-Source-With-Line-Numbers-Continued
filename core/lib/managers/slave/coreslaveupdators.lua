@@ -13,6 +13,7 @@ Updator = Updator or class()
 
 -- Lines 21-23
 function Updator:init()
+	return
 end
 
 -- Lines 25-27
@@ -22,10 +23,12 @@ end
 
 -- Lines 29-31
 function Updator:update()
+	return
 end
 
 -- Lines 33-35
 function Updator:set_batch_count()
+	return
 end
 
 SlaveUpdator = SlaveUpdator or class(Updator)
@@ -150,7 +153,7 @@ function MasterUpdator:update(t, dt)
 			self._ready_to_send = false
 			num_sent = num_sent + 1
 
-			if self._units_per_frame <= num_sent then
+			if num_sent >= self._units_per_frame then
 				break
 			end
 		end

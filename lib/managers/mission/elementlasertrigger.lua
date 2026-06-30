@@ -119,6 +119,7 @@ function ElementLaserTrigger:init(...)
 
 	if self._values.cycle_random then
 		local cycle_order = clone(self._cycle_order)
+
 		self._cycle_order = {}
 
 		while #cycle_order > 0 do
@@ -150,7 +151,7 @@ function ElementLaserTrigger:_chk_setup_local_client_on_execute_elements()
 	for _, params in ipairs(self._values.on_executed) do
 		local element = self:get_mission_element(params.id)
 
-		if element and element.client_local_on_executed and self:_calc_element_delay(params) <= 0 then
+		if element and element.client_local_on_executed and not (self:_calc_element_delay(params) > 0) then
 			self._local_client_execute_elements = self._local_client_execute_elements or {}
 
 			table.insert(self._local_client_execute_elements, {
@@ -205,6 +206,7 @@ end
 
 -- Lines 204-206
 function ElementLaserTrigger:client_on_executed(...)
+	return
 end
 
 -- Lines 208-219
@@ -344,7 +346,7 @@ end
 function ElementLaserTrigger:_check_state(unit)
 	if alive(unit) then
 		local rule_ok = self:_check_instigator_rules(unit)
-		local inside = nil
+		local inside
 		local mover = unit:mover()
 
 		if mover then
@@ -463,7 +465,7 @@ end
 -- Lines 462-496
 function ElementLaserTrigger:_client_check_state(unit)
 	local rule_ok = self:_check_instigator_rules(unit)
-	local inside = nil
+	local inside
 	local mover = unit:mover()
 
 	if mover then

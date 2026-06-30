@@ -116,7 +116,7 @@ end
 
 -- Lines 99-109
 function CoreMaterialEditor:_remot_compile()
-	local defines = nil
+	local defines
 
 	for k, v in pairs(self._shader_defines) do
 		if v._checked then
@@ -142,7 +142,7 @@ function CoreMaterialEditor:_create_make_file(rebuild)
 	else
 		file:write("\t<compile shader=\"" .. self._compilable_shader_combo_box:get_value() .. "\" defines=\"")
 
-		local defines = nil
+		local defines
 
 		for k, v in pairs(self._shader_defines) do
 			if v._checked then
@@ -195,6 +195,7 @@ function CoreMaterialEditor:_get_make_params()
 	local tmppath = managers.database:base_path() .. self.TEMP_PATH
 	local make_params = {}
 	local temp_params = {}
+
 	make_params.source = managers.database:base_path() .. shader._entry .. ".shader_source"
 	make_params.working_directory = tmppath
 	make_params.render_templates = srcpath .. ".render_template_database"
@@ -232,6 +233,7 @@ end
 
 -- Lines 204-206
 function CoreMaterialEditor:_copy_to_remote_client()
+	return
 end
 
 -- Lines 208-214
@@ -249,6 +251,7 @@ function CoreMaterialEditor:_find_selected_unit()
 	if managers.editor and managers.editor:selected_unit() and managers.editor:selected_unit() ~= self._selected_unit and not self._material_lock then
 		self._selected_unit = managers.editor:selected_unit()
 		self._live_update_parameter_list = {}
+
 		local unit_material_node, unit_material_path = self:_find_unit_material(self._selected_unit)
 
 		if unit_material_node and (not self._material_config_path or unit_material_path ~= self._material_config_path) and unit_material_node:parameter("version") == self.MATERIAL_CONFIG_VERSION_TAG and EWS:message_box(self._main_frame, "Do you want to open: " .. unit_material_path, "Open", "OK,CANCEL", Vector3(-1, -1, -1)) == "OK" then
@@ -352,7 +355,7 @@ end
 
 -- Lines 308-318
 function CoreMaterialEditor:_check_valid_xml_on_save(node)
-	local str = nil
+	local str
 
 	for mat in node:children() do
 		for var in mat:children() do

@@ -9,6 +9,7 @@ end
 
 -- Lines 8-9
 function MenuPauseRenderer:_setup_bg()
+	return
 end
 
 -- Lines 11-42
@@ -24,8 +25,8 @@ function MenuPauseRenderer:show_node(node)
 	end
 
 	local parameters = {
-		marker_alpha = 0.6,
 		align = "right",
+		marker_alpha = 0.6,
 		row_item_blend_mode = "add",
 		to_upper = true,
 		font = tweak_data.menu.pd2_medium_font,
@@ -46,9 +47,9 @@ function MenuPauseRenderer:open(...)
 
 	self._menu_bg = self._fullscreen_panel:gradient({
 		blend_mode = "normal",
-		visible = true,
 		orientation = "vertical",
 		valign = "center",
+		visible = true,
 		y = managers.gui_data:y_safe_to_full(0),
 		w = self._fullscreen_panel:w(),
 		h = managers.gui_data:scaled_size().height,
@@ -62,18 +63,18 @@ function MenuPauseRenderer:open(...)
 		}
 	})
 	self._blur_bg = self._fullscreen_panel:bitmap({
-		texture = "guis/textures/test_blur_df",
-		name = "blur_bg",
 		layer = -1,
+		name = "blur_bg",
 		render_template = "VertexColorTexturedBlur3D",
+		texture = "guis/textures/test_blur_df",
 		valign = "center",
 		y = managers.gui_data:y_safe_to_full(0),
 		w = self._fullscreen_panel:w(),
 		h = managers.gui_data:scaled_size().height
 	})
 	self._top_rect = self._fullscreen_panel:rect({
-		y = -2,
 		rotation = 360,
+		y = -2,
 		valign = {
 			0,
 			0.5
@@ -99,6 +100,7 @@ end
 
 -- Lines 59-60
 function MenuPauseRenderer:_layout_menu_bg()
+	return
 end
 
 -- Lines 62-71
@@ -106,6 +108,7 @@ function MenuPauseRenderer:update(t, dt)
 	MenuPauseRenderer.super.update(self, t, dt)
 
 	local x, y = managers.mouse_pointer:modified_mouse_pos()
+
 	y = math.clamp(y, 0, managers.gui_data:scaled_size().height)
 	y = y / managers.gui_data:scaled_size().height
 

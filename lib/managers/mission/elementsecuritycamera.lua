@@ -26,7 +26,7 @@ function ElementSecurityCamera:on_executed(instigator)
 	end
 
 	local ai_state = self._values.ai_enabled and true or false
-	local settings = nil
+	local settings
 
 	if ai_state or self._values.apply_settings then
 		settings = {
@@ -48,11 +48,12 @@ end
 
 -- Lines 47-49
 function ElementSecurityCamera:client_on_executed(...)
+	return
 end
 
 -- Lines 53-61
 function ElementSecurityCamera:_fetch_unit_by_unit_id(unit_id)
-	local unit = nil
+	local unit
 
 	if Application:editor() then
 		unit = managers.editor:unit_with_id(tonumber(unit_id))
@@ -65,6 +66,7 @@ end
 
 -- Lines 65-66
 function ElementSecurityCamera._load_unit(unit)
+	return
 end
 
 -- Lines 70-72

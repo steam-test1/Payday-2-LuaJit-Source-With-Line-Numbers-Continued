@@ -3,6 +3,7 @@ CoreBaseTreeNode = CoreBaseTreeNode or class()
 -- Lines 3-12
 function CoreBaseTreeNode:path(separator)
 	separator = separator or "/"
+
 	local parent = self:parent()
 
 	if parent then
@@ -29,6 +30,7 @@ end
 -- Lines 26-37
 function CoreBaseTreeNode:child_at_path(path, separator)
 	separator = separator or "/"
+
 	local first_path_component, remaining_path = string.split(path, separator, false, 1)
 	local child = self:child(first_path_component)
 
@@ -42,6 +44,7 @@ end
 -- Lines 39-50
 function CoreBaseTreeNode:append_path(path, separator)
 	separator = separator or "/"
+
 	local first_path_component, remaining_path = unpack(string.split(path, separator, false, 1))
 	local node = self:child(first_path_component) or self:append(first_path_component)
 

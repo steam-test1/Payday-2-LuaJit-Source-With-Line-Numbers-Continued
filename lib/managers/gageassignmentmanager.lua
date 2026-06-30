@@ -16,9 +16,8 @@ function GageAssignmentManager:_setup()
 	self._tweak_data = tweak_data.gage_assignment
 
 	if not Global.gage_assignment then
-		Global.gage_assignment = {
-			visited_gage_crimenet = false
-		}
+		Global.gage_assignment = {}
+		Global.gage_assignment.visited_gage_crimenet = false
 
 		self:_setup_assignments()
 	end
@@ -28,10 +27,10 @@ end
 
 -- Lines 23-34
 function GageAssignmentManager:_setup_assignments()
-	local assignments = {
-		active_assignments = {},
-		completed_assignments = {}
-	}
+	local assignments = {}
+
+	assignments.active_assignments = {}
+	assignments.completed_assignments = {}
 	Global.gage_assignment = assignments
 
 	for assignment, data in pairs(self._tweak_data:get_assignments()) do
@@ -203,9 +202,8 @@ end
 
 -- Lines 183-198
 function GageAssignmentManager:debug_test_dialog_params(show_items)
-	self._global.dialog_params = {
-		assignments = {}
-	}
+	self._global.dialog_params = {}
+	self._global.dialog_params.assignments = {}
 
 	for assignemnt, data in pairs(self._tweak_data:get_assignments()) do
 		self._global.dialog_params.assignments[assignemnt] = math.random(10) - 5
@@ -234,11 +232,11 @@ function GageAssignmentManager:dialog_show_completed_assignments(show_items)
 		table.insert(assignment_list, assignment)
 	end
 
-	table.sort(assignment_list, function (x, y)
+	table.sort(assignment_list, function(x, y)
 		return self._tweak_data:get_value(x, "aquire") < self._tweak_data:get_value(y, "aquire")
 	end)
 
-	local num, item = nil
+	local num, item
 	local completed = ""
 
 	for i, assignment in ipairs(assignment_list) do
@@ -264,12 +262,14 @@ function GageAssignmentManager:dialog_show_completed_assignments(show_items)
 
 						if reward[2] == "weapon_mods" then
 							fits = " ("
+
 							local weapon_uses_part = managers.weapon_factory:get_weapons_uses_part(reward[3]) or {}
 
 							if managers.localization:exists(item .. "_fits") then
 								fits = fits .. managers.localization:text(item .. "_fits")
 							elseif #weapon_uses_part == 1 then
 								local weapon_id = managers.weapon_factory:get_weapon_id_by_factory_id(weapon_uses_part[1])
+
 								fits = fits .. managers.weapon_factory:get_weapon_name_by_weapon_id(weapon_id)
 							end
 
@@ -295,11 +295,11 @@ function GageAssignmentManager:dialog_show_completed_assignments(show_items)
 		end
 	end
 
-	local params = {
-		date = self._global.dialog_params.date,
-		time = self._global.dialog_params.time,
-		completed = completed
-	}
+	local params = {}
+
+	params.date = self._global.dialog_params.date
+	params.time = self._global.dialog_params.time
+	params.completed = completed
 
 	managers.menu:dialog_gage_assignment_completed(params)
 
@@ -362,6 +362,7 @@ function GageAssignmentManager:on_unit_spawned(unit)
 	if is_host then
 		local max_units = self._tweak_data:get_num_assignment_units()
 		local counted_units = 0
+
 		counted_units = counted_units + (self._spawned_units and #self._spawned_units or 0)
 		counted_units = counted_units + (self._queued_spawned_units and #self._queued_spawned_units or 0)
 
@@ -398,8 +399,7 @@ function GageAssignmentManager:do_spawn(position, rotation)
 	end
 
 	local weighted_assignments = {}
-	local weight = 0
-	local total_weight = 0
+	local weight, total_weight = 0, 0
 
 	for i, assignment in ipairs(self._active_assignments) do
 		weight = self._tweak_data:get_value(assignment, "weight") or 1
@@ -409,7 +409,7 @@ function GageAssignmentManager:do_spawn(position, rotation)
 	end
 
 	local r = math.rand(total_weight)
-	local assignment = nil
+	local assignment
 
 	for i, weight in ipairs(weighted_assignments) do
 		r = r - weight
@@ -540,7 +540,7 @@ function GageAssignmentManager:_present_completed(assignment, collected, to_aqui
 		collected = collected,
 		aquire = to_aquire
 	})
-	local icon = nil
+	local icon
 
 	managers.hud:present_mid_text({
 		time = 4,
@@ -554,7 +554,9 @@ end
 -- Lines 494-520
 function GageAssignmentManager:_give_rewards(assignment)
 	local completed = Application:digest_value(self._global.completed_assignments[assignment], false) + 1
+
 	self._global.completed_assignments[assignment] = Application:digest_value(completed, true)
+
 	local rewards = self._tweak_data:get_value(assignment, "rewards")
 
 	if rewards then
@@ -649,6 +651,7 @@ function GageAssignmentManager:sync_load(data)
 
 				if max_units < counted_units then
 					local diff = counted_units - max_units
+
 					self._progressed_assignments[assignment] = math.max(self._progressed_assignments[assignment] - diff, 0)
 
 					Application:error("[GageAssignmentManager:sync_load] Max num units reached, capping pickup.", assignment)
@@ -660,12 +663,12 @@ end
 
 -- Lines 596-605
 function GageAssignmentManager:save(data)
-	local save_data = {
-		active_assignments = deep_clone(self._global.active_assignments),
-		completed_assignments = deep_clone(self._global.completed_assignments),
-		visited_gage_crimenet = self._global.visited_gage_crimenet or false,
-		dialog_params = self._global.dialog_params
-	}
+	local save_data = {}
+
+	save_data.active_assignments = deep_clone(self._global.active_assignments)
+	save_data.completed_assignments = deep_clone(self._global.completed_assignments)
+	save_data.visited_gage_crimenet = self._global.visited_gage_crimenet or false
+	save_data.dialog_params = self._global.dialog_params
 	data.gage_assignment = save_data
 end
 
@@ -676,6 +679,7 @@ function GageAssignmentManager:load(data, version)
 		self._global = Global.gage_assignment
 		Global.gage_assignment.active_assignments = Global.gage_assignment.active_assignments or {}
 		Global.gage_assignment.completed_assignments = Global.gage_assignment.completed_assignments or {}
+
 		local assignments_data = self._tweak_data:get_assignments()
 		local deleted_assignments = {}
 
@@ -714,4 +718,5 @@ end
 
 -- Lines 652-667
 function GageAssignmentManager:debug_show_units(persistance)
+	return
 end

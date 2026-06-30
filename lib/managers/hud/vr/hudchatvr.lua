@@ -4,6 +4,7 @@ HUDChatVR.old_init = HUDChat.init
 -- Lines 6-16
 function HUDChatVR:init(ws, hud)
 	local old_panel = hud.panel
+
 	hud.panel = managers.hud:tablet_page("left_page")
 
 	managers.hud:add_page_callback("left", "on_interact", callback(self, self, "_on_interact"))
@@ -41,6 +42,7 @@ end
 
 -- Lines 42-43
 function HUDChatVR:_animate_fade_output()
+	return
 end
 
 -- Lines 46-48

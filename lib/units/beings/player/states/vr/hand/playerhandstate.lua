@@ -10,6 +10,7 @@ end
 
 -- Lines 11-12
 function PlayerHandState:destroy()
+	return
 end
 
 -- Lines 14-16
@@ -31,6 +32,7 @@ end
 
 -- Lines 34-35
 function PlayerHandState:at_exit(next_state)
+	return
 end
 
 -- Lines 37-40
@@ -41,4 +43,5 @@ end
 
 -- Lines 42-43
 function PlayerHandState:set_controller_enabled(enabled)
+	return
 end

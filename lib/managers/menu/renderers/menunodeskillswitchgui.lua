@@ -28,9 +28,10 @@ function MenuNodeSkillSwitchGui:_create_menu_item(row_item)
 
 	if row_item.type == "divider" and row_item.name == "divider_title" then
 		local w = row_item.gui_panel:w()
+
 		row_item.skill_points_gui = self.item_panel:text({
-			name = "skill_points",
 			layer = 52,
+			name = "skill_points",
 			text = managers.localization:to_upper_text("menu_st_skill_switch_title_skills"),
 			font = self.small_font,
 			font_size = self.small_font_size
@@ -41,8 +42,8 @@ function MenuNodeSkillSwitchGui:_create_menu_item(row_item)
 		row_item.skill_points_gui:hide()
 
 		row_item.status_gui = self.item_panel:text({
-			name = "status",
 			layer = 52,
+			name = "status",
 			text = managers.localization:to_upper_text("menu_st_skill_switch_title_status"),
 			font = self.small_font,
 			font_size = self.small_font_size
@@ -69,6 +70,7 @@ function MenuNodeSkillSwitchGui:_create_menu_item(row_item)
 				status_text = managers.localization:to_upper_text("menu_st_unsuspend_skill_switch")
 			else
 				local points = managers.skilltree:points(gd)
+
 				distribution_text = distribution_text .. managers.localization:to_upper_text(points > 0 and "menu_st_points_unspent_skill_switch" or "menu_st_points_all_spent_skill_switch", {
 					points = string.format("%.3d", points)
 				})
@@ -84,7 +86,7 @@ function MenuNodeSkillSwitchGui:_create_menu_item(row_item)
 			status_text = managers.localization:to_upper_text("menu_st_unlock_skill_switch")
 			distribution_after_text = true
 		else
-			local reasons_text = nil
+			local reasons_text
 
 			for _, reason in ipairs(reasons) do
 				reasons_text = not reasons_text and "" or reasons_text .. " + "
@@ -109,10 +111,10 @@ function MenuNodeSkillSwitchGui:_create_menu_item(row_item)
 		end
 
 		row_item.skill_points_gui = row_item.gui_panel:parent():text({
-			name = "skill_points",
 			blend_mode = "add",
-			rotation = 360,
 			layer = 52,
+			name = "skill_points",
+			rotation = 360,
 			text = distribution_text,
 			font = self.small_font,
 			font_size = self.small_font_size,
@@ -123,9 +125,9 @@ function MenuNodeSkillSwitchGui:_create_menu_item(row_item)
 		row_item.skill_points_gui:grow(-row_item.skill_points_gui:w() * self.SKILL_POINTS_X, 0)
 
 		row_item.status_gui = self.item_panel:text({
-			name = "status",
 			blend_mode = "add",
 			layer = 52,
+			name = "status",
 			text = status_text,
 			font = self.small_font,
 			font_size = self.small_font_size
@@ -206,7 +208,7 @@ end
 function MenuNodeSkillSwitchGui:_set_item_positions()
 	MenuNodeSkillSwitchGui.super._set_item_positions(self)
 
-	local x, y, w, h = nil
+	local x, y, w, h
 
 	for i, row_item in ipairs(self.row_items) do
 		if alive(row_item.skill_points_gui) then
@@ -233,7 +235,7 @@ function MenuNodeSkillSwitchGui:reload_item(item)
 	MenuNodeSkillSwitchGui.super.reload_item(self, item)
 
 	local row_item = self:row_item(item)
-	local x, y, w, h = nil
+	local x, y, w, h
 
 	if row_item and alive(row_item.gui_panel) then
 		row_item.gui_panel:set_halign("right")
@@ -340,7 +342,7 @@ function MenuNodeSkillSwitchGui:_setup_item_panel(safe_rect, res)
 	self.box_panel:set_x(self.item_panel:x())
 	self.box_panel:set_w(self.item_panel:w())
 
-	if self._align_data.panel:h() < self.item_panel:h() then
+	if self.item_panel:h() > self._align_data.panel:h() then
 		self.box_panel:set_y(0)
 		self.box_panel:set_h(self.item_panel:parent():h())
 	else
@@ -375,8 +377,8 @@ function MenuNodeSkillSwitchGui:_setup_item_panel(safe_rect, res)
 	end
 
 	self.title_text = self.item_panel:parent():text({
-		name = "title_text",
 		layer = 52,
+		name = "title_text",
 		text = managers.localization:to_upper_text("menu_st_skill_switch_title"),
 		font = self.medium_font,
 		font_size = self.medium_font_size

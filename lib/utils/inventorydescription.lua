@@ -85,7 +85,11 @@ function InventoryDescription._create_list(list, ingame_format, dont_sort)
 	end
 
 	for i, text in ipairs(list) do
-		list_text = ingame_format and list_text .. (i > 1 and ", " or "") .. text or list_text .. "[*]" .. text
+		if ingame_format then
+			list_text = list_text .. (i > 1 and ", " or "") .. text
+		else
+			list_text = list_text .. "[*]" .. text
+		end
 	end
 
 	return ingame_format and list_text or "[list]" .. list_text .. "[/list]"
@@ -111,7 +115,9 @@ function InventoryDescription.create_description_safe(safe_entry, ingame_format)
 	end
 
 	local text = ""
+
 	color_ranges = {}
+
 	local items_list = {}
 
 	for category, items in pairs(content_td.contains) do
@@ -123,7 +129,7 @@ function InventoryDescription.create_description_safe(safe_entry, ingame_format)
 		end
 	end
 
-	local x_td, y_td, xr_td, yr_td = nil
+	local x_td, y_td, xr_td, yr_td
 
 	-- Lines 115-126
 	local function sort_func(x, y)
@@ -141,10 +147,11 @@ function InventoryDescription.create_description_safe(safe_entry, ingame_format)
 
 	table.sort(items_list, sort_func)
 
-	local td = nil
+	local td
 
 	for i, item in ipairs(items_list) do
 		td = (tweak_data.economy[item.category] or tweak_data.blackmarket[item.category])[item.entry]
+
 		local item_text = ""
 
 		if item.category == "contents" and td.rarity == "legendary" then
@@ -170,7 +177,9 @@ end
 -- Lines 158-334
 function InventoryDescription.create_description_item(item, tweak, colors, ingame_format)
 	local desc = ""
+
 	color_ranges = {}
+
 	local color_default = colors and func_hex_color(colors.default) or "cccccc"
 	local color_bonus = colors and func_hex_color(colors.bonus) or "4c4cff"
 	local color_collection = colors and func_hex_color(colors.collection) or "ffff00"
@@ -182,11 +191,13 @@ function InventoryDescription.create_description_item(item, tweak, colors, ingam
 		local rarity_tweak = tweak_data.economy.rarities[tweak.rarity]
 		local rarity_title = func_color_text(managers.localization:text("steam_inventory_rarity"), color_default, ingame_format)
 		local rarity_string = func_color_text(managers.localization:text(rarity_tweak.name_id), func_hex_color(rarity_tweak.color), ingame_format)
+
 		desc = desc .. rarity_title .. " " .. rarity_string
 	end
 
 	if item.quality then
 		local quality_title = func_color_text(managers.localization:text("steam_inventory_quality") .. " " .. managers.localization:text(tweak_data.economy.qualities[item.quality].name_id), color_default, ingame_format)
+
 		desc = desc .. func_add_lb(ingame_format) .. quality_title
 	end
 
@@ -205,17 +216,20 @@ function InventoryDescription.create_description_item(item, tweak, colors, ingam
 		if bonus_data.exp_multiplier and bonus_data.money_multiplier then
 			local xp_boost = "+" .. bonus_data.exp_multiplier * 100 - 100 .. "%"
 			local cash_boost = bonus_data.money_multiplier == bonus_data.exp_multiplier and "" or "+" .. bonus_data.money_multiplier * 100 - 100 .. "% "
+
 			bonus_string = bonus_string .. (not ingame_format and func_add_lb(ingame_format) or "") .. func_add_lb(ingame_format) .. managers.localization:text("steam_inventory_team_boost") .. " " .. managers.localization:text("steam_inventory_boost_xp_cash", {
 				xp = xp_boost,
 				cash = cash_boost
 			})
 		elseif bonus_data.exp_multiplier then
 			local xp_boost = "+" .. bonus_data.exp_multiplier * 100 - 100 .. "%"
+
 			bonus_string = bonus_string .. (not ingame_format and func_add_lb(ingame_format) or "") .. func_add_lb(ingame_format) .. managers.localization:text("steam_inventory_team_boost") .. " " .. managers.localization:text("steam_inventory_boost_xp", {
 				xp = xp_boost
 			})
 		elseif bonus_data.money_multiplier then
 			local cash_boost = "+" .. bonus_data.money_multiplier * 100 - 100 .. "%"
+
 			bonus_string = bonus_string .. (not ingame_format and func_add_lb(ingame_format) or "") .. func_add_lb(ingame_format) .. managers.localization:text("steam_inventory_team_boost") .. " " .. managers.localization:text("steam_inventory_boost_cash", {
 				cash = cash_boost
 			})
@@ -234,6 +248,7 @@ function InventoryDescription.create_description_item(item, tweak, colors, ingam
 		end
 
 		local desc_string = func_color_text(formatted_text, color_default, ingame_format)
+
 		desc = desc .. func_add_lb(ingame_format) .. func_add_lb(ingame_format) .. desc_string
 	end
 
@@ -273,6 +288,7 @@ function InventoryDescription.create_description_item(item, tweak, colors, ingam
 				local dlc_string = func_color_text(managers.localization:text("steam_inventory_dlc_required", {
 					dlc = managers.localization:text(dlc_string_id)
 				}), color_dlc, ingame_format)
+
 				desc = desc .. func_add_lb(ingame_format) .. func_add_lb(ingame_format) .. dlc_string
 			end
 		end
@@ -311,6 +327,7 @@ function InventoryDescription.create_description_item(item, tweak, colors, ingam
 
 		if #default_parts > 0 then
 			local mods_string = (ingame_format and "\n" or "") .. func_color_text(func_create_list(default_parts, ingame_format, true), color_mods, ingame_format)
+
 			desc = desc .. func_add_lb(ingame_format) .. func_add_lb(ingame_format) .. mods_title .. mods_string
 		end
 	end
@@ -325,32 +342,32 @@ end
 WeaponDescription = WeaponDescription or class()
 WeaponDescription._stats_shown = {
 	{
-		round_value = true,
 		name = "magazine",
+		round_value = true,
 		stat_name = "extra_ammo"
 	},
 	{
-		round_value = true,
 		name = "totalammo",
+		round_value = true,
 		stat_name = "total_ammo_mod"
 	},
 	{
-		round_value = true,
-		name = "fire_rate"
+		name = "fire_rate",
+		round_value = true
 	},
 	{
 		name = "damage"
 	},
 	{
-		percent = true,
 		name = "spread",
 		offset = true,
+		percent = true,
 		revert = true
 	},
 	{
-		percent = true,
 		name = "recoil",
 		offset = true,
+		percent = true,
 		revert = true
 	},
 	{
@@ -358,9 +375,9 @@ WeaponDescription._stats_shown = {
 		name = "concealment"
 	},
 	{
-		percent = false,
 		name = "suppression",
-		offset = true
+		offset = true,
+		percent = false
 	}
 }
 
@@ -446,12 +463,14 @@ function WeaponDescription.get_weapon_ammo_info(weapon_id, extra_ammo, total_amm
 	local ammo_max_per_clip = get_ammo_max_per_clip(weapon_id)
 	local ammo_max = tweak_data.weapon[weapon_id].AMMO_MAX
 	local ammo_from_mods = ammo_max * (total_ammo_mod and tweak_data.weapon.stats.total_ammo_mod[total_ammo_mod] or 0)
+
 	ammo_max = (ammo_max + ammo_from_mods + managers.player:upgrade_value(weapon_id, "clip_amount_increase") * ammo_max_per_clip) * ammo_max_multiplier
 	ammo_max_per_clip = math.min(ammo_max_per_clip, ammo_max)
-	local ammo_data = {
-		base = tweak_data.weapon[weapon_id].AMMO_MAX,
-		mod = ammo_from_mods + managers.player:upgrade_value(weapon_id, "clip_amount_increase") * ammo_max_per_clip
-	}
+
+	local ammo_data = {}
+
+	ammo_data.base = tweak_data.weapon[weapon_id].AMMO_MAX
+	ammo_data.mod = ammo_from_mods + managers.player:upgrade_value(weapon_id, "clip_amount_increase") * ammo_max_per_clip
 	ammo_data.skill = (ammo_data.base + ammo_data.mod) * ammo_max_multiplier - ammo_data.base - ammo_data.mod
 	ammo_data.skill_in_effect = managers.player:has_category_upgrade("player", "extra_ammo_multiplier") or category_skill_in_effect or managers.player:has_category_upgrade("player", "add_armor_stat_skill_ammo_mul")
 
@@ -464,22 +483,21 @@ function WeaponDescription._get_skill_stats(name, category, slot, base_stats, mo
 	local tweak_stats = tweak_data.weapon.stats
 
 	for _, stat in pairs(WeaponDescription._stats_shown) do
-		skill_stats[stat.name] = {
-			value = 0
-		}
+		skill_stats[stat.name] = {}
+		skill_stats[stat.name].value = 0
 	end
 
 	local detection_risk = 0
 
 	if category then
-		local custom_data = {
-			[category] = managers.blackmarket:get_crafted_category_slot(category, slot)
-		}
+		local custom_data = {}
+
+		custom_data[category] = managers.blackmarket:get_crafted_category_slot(category, slot)
 		detection_risk = managers.blackmarket:get_suspicion_offset_from_custom_data(custom_data, tweak_data.player.SUSPICION_OFFSET_LERP or 0.75)
 		detection_risk = detection_risk * 100
 	end
 
-	local base_value, base_index, modifier, multiplier = nil
+	local base_value, base_index, modifier, multiplier
 	local factory_id = managers.weapon_factory:get_factory_id_by_weapon_id(name)
 	local weapon_tweak = tweak_data.weapon[name]
 	local primary_category = weapon_tweak.categories[1]
@@ -488,6 +506,7 @@ function WeaponDescription._get_skill_stats(name, category, slot, base_stats, mo
 		if weapon_tweak.stats[stat.stat_name or stat.name] or stat.name == "totalammo" or stat.name == "fire_rate" then
 			if stat.name == "magazine" then
 				skill_stats[stat.name].value = managers.player:upgrade_value(name, "clip_ammo_increase", 0)
+
 				local has_magazine = weapon_tweak.has_magazine
 				local add_modifier = false
 
@@ -532,13 +551,15 @@ function WeaponDescription._get_skill_stats(name, category, slot, base_stats, mo
 
 				for _, category in ipairs(weapon_tweak.categories) do
 					if managers.player:has_category_upgrade(category, "reload_speed_multiplier") then
-						mult = mult + 1 - managers.player:upgrade_value(category, "reload_speed_multiplier", 1)
+						mult = mult + (1 - managers.player:upgrade_value(category, "reload_speed_multiplier", 1))
 						skill_in_effect = true
 					end
 				end
 
 				mult = 1 / managers.blackmarket:_convert_add_to_mul(mult)
+
 				local diff = base_stats[stat.name].value * mult - base_stats[stat.name].value
+
 				skill_stats[stat.name].value = skill_stats[stat.name].value + diff
 				skill_stats[stat.name].skill_in_effect = skill_in_effect
 			else
@@ -550,6 +571,7 @@ function WeaponDescription._get_skill_stats(name, category, slot, base_stats, mo
 
 				multiplier = 1
 				modifier = 0
+
 				local is_single_shot = managers.weapon_factory:has_perk("fire_mode_single", factory_id, blueprint)
 
 				if stat.name == "damage" then
@@ -557,6 +579,7 @@ function WeaponDescription._get_skill_stats(name, category, slot, base_stats, mo
 					modifier = math.floor(managers.blackmarket:damage_addend(name, weapon_tweak.categories, silencer, detection_risk, nil, blueprint) * tweak_data.gui.stats_present_multiplier * multiplier)
 				elseif stat.name == "spread" then
 					local fire_mode = single_mod and "single" or auto_mod and "auto" or weapon_tweak.FIRE_MODE or "single"
+
 					multiplier = managers.blackmarket:accuracy_multiplier(name, weapon_tweak.categories, silencer, nil, nil, fire_mode, blueprint, nil, is_single_shot)
 					modifier = managers.blackmarket:accuracy_addend(name, weapon_tweak.categories, base_index, silencer, nil, fire_mode, blueprint, nil, is_single_shot) * tweak_data.gui.stats_present_multiplier
 				elseif stat.name == "recoil" then
@@ -601,6 +624,7 @@ function WeaponDescription._get_skill_stats(name, category, slot, base_stats, mo
 						end
 
 						local ratio = modifier / max_stat
+
 						modifier = ratio * 100
 					end
 				end
@@ -625,10 +649,9 @@ function WeaponDescription._get_mods_stats(name, base_stats, equipped_mods, bonu
 	local modifier_stats = weapon_tweak.stats_modifiers
 
 	for _, stat in pairs(WeaponDescription._stats_shown) do
-		mods_stats[stat.name] = {
-			index = 0,
-			value = 0
-		}
+		mods_stats[stat.name] = {}
+		mods_stats[stat.name].index = 0
+		mods_stats[stat.name].value = 0
 	end
 
 	if equipped_mods then
@@ -641,10 +664,12 @@ function WeaponDescription._get_mods_stats(name, base_stats, equipped_mods, bonu
 			for _, stat in pairs(WeaponDescription._stats_shown) do
 				if stat.name == "magazine" then
 					local ammo = mods_stats[stat.name].index
+
 					ammo = ammo and ammo + (tweak_data.weapon[name].stats.extra_ammo or 0)
 					mods_stats[stat.name].value = mods_stats[stat.name].value + (ammo and tweak_data.weapon.stats.extra_ammo[ammo] or 0)
 				elseif stat.name == "totalammo" then
 					local ammo = bonus_stats.total_ammo_mod
+
 					mods_stats[stat.name].index = mods_stats[stat.name].index + (ammo or 0)
 				else
 					mods_stats[stat.name].index = mods_stats[stat.name].index + (bonus_stats[stat.name] or 0)
@@ -652,7 +677,7 @@ function WeaponDescription._get_mods_stats(name, base_stats, equipped_mods, bonu
 			end
 		end
 
-		local part_data = nil
+		local part_data
 
 		for _, mod in ipairs(equipped_mods) do
 			part_data = managers.weapon_factory:get_part_data_by_part_id_from_weapon(mod, factory_id, default_blueprint)
@@ -662,6 +687,7 @@ function WeaponDescription._get_mods_stats(name, base_stats, equipped_mods, bonu
 					if part_data.stats then
 						if stat.name == "magazine" then
 							local ammo = part_data.stats.extra_ammo
+
 							ammo = ammo and ammo + (tweak_data.weapon[name].stats.extra_ammo or 0)
 							mods_stats[stat.name].value = mods_stats[stat.name].value + (ammo and tweak_data.weapon.stats.extra_ammo[ammo] or 0)
 
@@ -670,6 +696,7 @@ function WeaponDescription._get_mods_stats(name, base_stats, equipped_mods, bonu
 							end
 						elseif stat.name == "totalammo" then
 							local ammo = part_data.stats.total_ammo_mod
+
 							mods_stats[stat.name].index = mods_stats[stat.name].index + (ammo or 0)
 						elseif stat.name == "reload" then
 							if not base_stats[stat.name].index then
@@ -679,10 +706,11 @@ function WeaponDescription._get_mods_stats(name, base_stats, equipped_mods, bonu
 							mods_stats[stat.name].index = mods_stats[stat.name].index + (part_data.stats[stat.name] or 0)
 						elseif stat.name == "fire_rate" then
 							if part_data.custom_stats and part_data.custom_stats.fire_rate_multiplier then
-								mods_stats[stat.name].value = mods_stats[stat.name].value + part_data.custom_stats.fire_rate_multiplier - 1
+								mods_stats[stat.name].value = mods_stats[stat.name].value + (part_data.custom_stats.fire_rate_multiplier - 1)
 							end
 						elseif stat.name == "damage" and part_data.custom_stats and part_data.custom_stats.launcher_grenade then
 							local projectile_type = weapon_tweak.projectile_types and weapon_tweak.projectile_types[part_data.custom_stats.launcher_grenade] or part_data.custom_stats.launcher_grenade
+
 							mods_stats[stat.name].projectile_type = projectile_type
 						else
 							mods_stats[stat.name].index = mods_stats[stat.name].index + (part_data.stats[stat.name] or 0)
@@ -692,7 +720,7 @@ function WeaponDescription._get_mods_stats(name, base_stats, equipped_mods, bonu
 			end
 		end
 
-		local index, stat_name = nil
+		local index, stat_name
 
 		for _, stat in pairs(WeaponDescription._stats_shown) do
 			stat_name = stat.name
@@ -703,10 +731,12 @@ function WeaponDescription._get_mods_stats(name, base_stats, equipped_mods, bonu
 					local reload_time = managers.blackmarket:get_reload_time(name)
 					local mult = 1 / tweak_stats[stat_name][chosen_index]
 					local mod_value = reload_time * mult
+
 					mods_stats[stat.name].value = mod_value - base_stats[stat.name].value
 				elseif stat.name == "damage" and mods_stats[stat.name].projectile_type then
 					local mod = modifier_stats and modifier_stats[stat.name] or 1
 					local projectile_tweak = tweak_data.projectiles[mods_stats[stat.name].projectile_type]
+
 					mods_stats[stat.name].value = projectile_tweak.damage * mod - base_stats[stat.name].value
 				else
 					if stat_name == "concealment" then
@@ -716,6 +746,7 @@ function WeaponDescription._get_mods_stats(name, base_stats, equipped_mods, bonu
 					end
 
 					mods_stats[stat.name].value = stat.index and index or tweak_stats[stat_name][index] * tweak_data.gui.stats_present_multiplier
+
 					local offset = math.min(tweak_stats[stat_name][1], tweak_stats[stat_name][#tweak_stats[stat_name]]) * tweak_data.gui.stats_present_multiplier
 
 					if stat.offset then
@@ -752,7 +783,7 @@ function WeaponDescription._get_mods_stats(name, base_stats, equipped_mods, bonu
 
 							local new_value = (max_stat - modded_value) * tweak_data.gui.stats_present_multiplier
 
-							if mod ~= 0 and (tweak_stats[stat_name][1] < modded_value or modded_value < tweak_stats[stat_name][#tweak_stats[stat_name]]) then
+							if mod ~= 0 and (modded_value > tweak_stats[stat_name][1] or modded_value < tweak_stats[stat_name][#tweak_stats[stat_name]]) then
 								new_value = (new_value + mods_stats[stat.name].value / mod) / 2
 							end
 
@@ -770,6 +801,7 @@ function WeaponDescription._get_mods_stats(name, base_stats, equipped_mods, bonu
 						end
 
 						local ratio = mods_stats[stat.name].value / max_stat
+
 						mods_stats[stat.name].value = ratio * 100
 					end
 
@@ -787,7 +819,7 @@ end
 -- Lines 748-838
 function WeaponDescription._get_base_stats(name)
 	local base_stats = {}
-	local index = nil
+	local index
 	local tweak_stats = tweak_data.weapon.stats
 	local weapon_tweak = tweak_data.weapon[name]
 	local modifier_stats = weapon_tweak.stats_modifiers
@@ -804,17 +836,21 @@ function WeaponDescription._get_base_stats(name)
 			base_stats[stat.name].value = tweak_data.weapon[name].AMMO_MAX
 		elseif stat.name == "fire_rate" then
 			local fire_rate = 60 / tweak_data.weapon[name].fire_mode_data.fire_rate
+
 			base_stats[stat.name].value = fire_rate / 10 * 10
 		elseif stat.name == "reload" then
 			index = math.clamp(tweak_data.weapon[name].stats[stat.name], 1, #tweak_stats[stat.name])
 			base_stats[stat.name].index = tweak_data.weapon[name].stats[stat.name]
+
 			local reload_time = managers.blackmarket:get_reload_time(name)
 			local mult = 1 / tweak_data.weapon.stats[stat.name][index]
+
 			base_stats[stat.name].value = reload_time * mult
 		elseif tweak_stats[stat.name] then
 			index = math.clamp(tweak_data.weapon[name].stats[stat.name], 1, #tweak_stats[stat.name])
 			base_stats[stat.name].index = index
 			base_stats[stat.name].value = stat.index and index or tweak_stats[stat.name][index] * tweak_data.gui.stats_present_multiplier
+
 			local offset = math.min(tweak_stats[stat.name][1], tweak_stats[stat.name][#tweak_stats[stat.name]]) * tweak_data.gui.stats_present_multiplier
 
 			if stat.offset then
@@ -851,7 +887,7 @@ function WeaponDescription._get_base_stats(name)
 
 					local new_value = (max_stat - modded_value) * tweak_data.gui.stats_present_multiplier
 
-					if mod ~= 0 and (tweak_stats[stat.name][1] < modded_value or modded_value < tweak_stats[stat.name][#tweak_stats[stat.name]]) then
+					if mod ~= 0 and (modded_value > tweak_stats[stat.name][1] or modded_value < tweak_stats[stat.name][#tweak_stats[stat.name]]) then
 						new_value = (new_value + base_stats[stat.name].value / mod) / 2
 					end
 
@@ -869,6 +905,7 @@ function WeaponDescription._get_base_stats(name)
 				end
 
 				local ratio = base_stats[stat.name].value / max_stat
+
 				base_stats[stat.name].value = ratio * 100
 			end
 		end
@@ -879,7 +916,7 @@ end
 
 -- Lines 840-885
 function WeaponDescription._get_stats(name, category, slot, blueprint)
-	local equipped_mods = nil
+	local equipped_mods
 	local silencer = false
 	local single_mod = false
 	local auto_mod = false
@@ -894,6 +931,7 @@ function WeaponDescription._get_stats(name, category, slot, blueprint)
 
 	if blueprint then
 		equipped_mods = deep_clone(blueprint)
+
 		local factory_id = managers.weapon_factory:get_factory_id_by_weapon_id(name)
 		local default_blueprint = managers.weapon_factory:get_default_blueprint_by_factory_id(factory_id)
 
@@ -908,14 +946,16 @@ function WeaponDescription._get_stats(name, category, slot, blueprint)
 	local mods_stats = WeaponDescription._get_mods_stats(name, base_stats, equipped_mods, bonus_stats)
 	local skill_stats = WeaponDescription._get_skill_stats(name, category, slot, base_stats, mods_stats, silencer, single_mod, auto_mod, blueprint)
 	local clip_ammo, max_ammo, ammo_data = WeaponDescription.get_weapon_ammo_info(name, tweak_data.weapon[name].stats.extra_ammo, base_stats.totalammo.index + mods_stats.totalammo.index)
+
 	base_stats.totalammo.value = ammo_data.base
 	mods_stats.totalammo.value = ammo_data.mod
 	skill_stats.totalammo.value = ammo_data.skill
 	skill_stats.totalammo.skill_in_effect = ammo_data.skill_in_effect
+
 	local my_clip = base_stats.magazine.value + mods_stats.magazine.value + skill_stats.magazine.value
 
 	if max_ammo < my_clip then
-		mods_stats.magazine.value = mods_stats.magazine.value + max_ammo - my_clip
+		mods_stats.magazine.value = mods_stats.magazine.value + (max_ammo - my_clip)
 	end
 
 	return base_stats, mods_stats, skill_stats
@@ -923,11 +963,12 @@ end
 
 -- Lines 887-906
 function WeaponDescription.get_stats_for_mod(mod_name, weapon_name, category, slot)
-	local equipped_mods = nil
+	local equipped_mods
 	local blueprint = managers.blackmarket:get_weapon_blueprint(category, slot)
 
 	if blueprint then
 		equipped_mods = deep_clone(blueprint)
+
 		local factory_id = managers.weapon_factory:get_factory_id_by_weapon_id(weapon_name)
 		local default_blueprint = managers.weapon_factory:get_default_blueprint_by_factory_id(factory_id)
 
@@ -950,11 +991,11 @@ function WeaponDescription._get_weapon_mod_stats(mod_name, weapon_name, base_sta
 	local modifier_stats = weapon_tweak.stats_modifiers
 	local factory_id = managers.weapon_factory:get_factory_id_by_weapon_id(weapon_name)
 	local default_blueprint = managers.weapon_factory:get_default_blueprint_by_factory_id(factory_id)
-	local part_data = nil
-	local mod_stats = {
-		chosen = {},
-		equip = {}
-	}
+	local part_data
+	local mod_stats = {}
+
+	mod_stats.chosen = {}
+	mod_stats.equip = {}
 
 	for _, stat in pairs(WeaponDescription._stats_shown) do
 		mod_stats.chosen[stat.name] = 0
@@ -974,7 +1015,7 @@ function WeaponDescription._get_weapon_mod_stats(mod_name, weapon_name, base_sta
 	end
 
 	local curr_stats = base_stats
-	local index, wanted_index = nil
+	local index, wanted_index
 
 	for _, mod in pairs(mod_stats) do
 		part_data = nil
@@ -993,6 +1034,7 @@ function WeaponDescription._get_weapon_mod_stats(mod_name, weapon_name, base_sta
 			if part_data and part_data.stats then
 				if stat.name == "magazine" then
 					local ammo = part_data.stats.extra_ammo
+
 					ammo = ammo and ammo + (tweak_data.weapon[weapon_name].stats.extra_ammo or 0)
 					mod[stat.name] = ammo and tweak_data.weapon.stats.extra_ammo[ammo] or 0
 
@@ -1001,14 +1043,18 @@ function WeaponDescription._get_weapon_mod_stats(mod_name, weapon_name, base_sta
 					end
 				elseif stat.name == "totalammo" then
 					local chosen_index = part_data.stats.total_ammo_mod or 0
+
 					chosen_index = math.clamp(base_stats[stat.name].index + chosen_index, 1, #tweak_stats.total_ammo_mod)
 					mod[stat.name] = base_stats[stat.name].value * tweak_stats.total_ammo_mod[chosen_index]
 				elseif stat.name == "reload" then
 					local chosen_index = part_data.stats.reload or 0
+
 					chosen_index = math.clamp(base_stats[stat.name].index + chosen_index, 1, #tweak_stats[stat.name])
+
 					local reload_time = managers.blackmarket:get_reload_time(weapon_name)
 					local mult = 1 / tweak_data.weapon.stats[stat.name][chosen_index]
 					local mod_value = reload_time * mult
+
 					mod[stat.name] = mod_value - base_stats[stat.name].value
 				elseif stat.name == "fire_rate" then
 					if part_data.custom_stats and part_data.custom_stats.fire_rate_multiplier then
@@ -1018,6 +1064,7 @@ function WeaponDescription._get_weapon_mod_stats(mod_name, weapon_name, base_sta
 					local projectile_type = weapon_tweak.projectile_types and weapon_tweak.projectile_types[part_data.custom_stats.launcher_grenade] or part_data.custom_stats.launcher_grenade
 					local modifier = modifier_stats and modifier_stats[stat.name] or 1
 					local projectile_tweak = tweak_data.projectiles[projectile_type]
+
 					mod[stat.name] = projectile_tweak.damage * modifier - base_stats[stat.name].value
 				else
 					local chosen_index = part_data.stats[stat.name] or 0
@@ -1037,6 +1084,7 @@ function WeaponDescription._get_weapon_mod_stats(mod_name, weapon_name, base_sta
 								local diff_value = tweak_stats[stat.name][index] - tweak_stats[stat.name][curr_stats[stat.name].index]
 								local diff_index = index - curr_stats[stat.name].index
 								local diff_ratio = diff_value / diff_index
+
 								diff_index = wanted_index - index
 								diff_value = diff_index * diff_ratio
 								mod[stat.name] = mod[stat.name] + diff_value * tweak_data.gui.stats_present_multiplier
@@ -1079,7 +1127,7 @@ function WeaponDescription._get_weapon_mod_stats(mod_name, weapon_name, base_sta
 
 								local new_value = (max_stat - modded_value) * tweak_data.gui.stats_present_multiplier
 
-								if mod_stat ~= 0 and (tweak_stats[stat.name][1] < modded_value or modded_value < tweak_stats[stat.name][#tweak_stats[stat.name]]) then
+								if mod_stat ~= 0 and (modded_value > tweak_stats[stat.name][1] or modded_value < tweak_stats[stat.name][#tweak_stats[stat.name]]) then
 									new_value = (new_value + mod[stat.name] / mod_stat) / 2
 								end
 
@@ -1097,6 +1145,7 @@ function WeaponDescription._get_weapon_mod_stats(mod_name, weapon_name, base_sta
 							end
 
 							local ratio = mod[stat.name] / max_stat
+
 							mod[stat.name] = ratio * 100
 						end
 

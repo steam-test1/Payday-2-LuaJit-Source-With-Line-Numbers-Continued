@@ -1,5 +1,6 @@
 local ids_unit = Idstring("unit")
 local sky_orientation_data_key = Idstring("sky_orientation/rotation"):key()
+
 MenuSceneManager = MenuSceneManager or class()
 
 -- Lines 6-163
@@ -303,30 +304,29 @@ end
 
 -- Lines 165-178
 function MenuSceneManager:_init_lobby_poses()
-	self._lobby_poses = {
-		generic = {
-			{
-				"lobby_generic_idle1"
-			},
-			{
-				"lobby_generic_idle2"
-			},
-			{
-				"lobby_generic_idle3"
-			},
-			{
-				"lobby_generic_idle4"
-			}
+	self._lobby_poses = {}
+	self._lobby_poses.generic = {
+		{
+			"lobby_generic_idle1"
 		},
-		m134 = {
-			"lobby_minigun_idle1"
+		{
+			"lobby_generic_idle2"
 		},
-		kacchainsaw = {
-			"lobby_idle_minigun_2"
+		{
+			"lobby_generic_idle3"
 		},
-		bessy = {
-			"lobby_idle_bessy"
+		{
+			"lobby_generic_idle4"
 		}
+	}
+	self._lobby_poses.m134 = {
+		"lobby_minigun_idle1"
+	}
+	self._lobby_poses.kacchainsaw = {
+		"lobby_idle_minigun_2"
+	}
+	self._lobby_poses.bessy = {
+		"lobby_idle_bessy"
 	}
 end
 
@@ -336,6 +336,7 @@ function MenuSceneManager:_setup_gui()
 	self._main_panel = self._workspace:panel():panel({
 		layer = 0
 	})
+
 	local scaled_size = managers.gui_data:scaled_size()
 
 	self._main_panel:set_shape(0, 0, scaled_size.width, scaled_size.height)
@@ -362,17 +363,19 @@ function MenuSceneManager:_set_up_templates()
 	local c_ref = self._bg_unit:get_object(Idstring("a_reference"))
 	local target_pos = Vector3(0, 0, ref:position().z)
 	local offset = Vector3(ref:position().x, ref:position().y, 0)
-	self._scene_templates = {
-		standard = {}
-	}
+
+	self._scene_templates = {}
+	self._scene_templates.standard = {}
 	self._scene_templates.standard.use_character_grab = true
 	self._scene_templates.standard.character_visible = true
 	self._scene_templates.standard.camera_pos = ref:position()
 	self._scene_templates.standard.target_pos = target_pos
 	self._scene_templates.standard.character_pos = c_ref:position()
+
 	local l_pos = self._scene_templates.standard.camera_pos
 	local rot = Rotation(self._scene_templates.standard.target_pos - l_pos, math.UP)
 	local l1_pos = l_pos + rot:x() * -200 + rot:y() * 200
+
 	self._scene_templates.standard.lights = {
 		self:_create_light({
 			far_range = 400,
@@ -393,25 +396,25 @@ function MenuSceneManager:_set_up_templates()
 		})
 	}
 	self._scene_templates.standard.show_event_units = true
-	self._scene_templates.blackmarket = {
-		fov = 20,
-		use_item_grab = true,
-		camera_pos = offset:rotate_with(Rotation(90)),
-		target_pos = Vector3(-100, -100, 0) + self._camera_start_rot:x() * 100 + self._camera_start_rot:y() * 6 + self._camera_start_rot:z() * 0,
-		lights = {}
-	}
-	self._scene_templates.blackmarket_item = {
-		fov = 40,
-		can_change_fov = true,
-		use_item_grab = true,
-		camera_pos = offset:rotate_with(Rotation(90)) + Vector3(0, 0, 202),
-		target_pos = target_pos + Vector3(0, 0, 200),
-		character_pos = c_ref:position() + Vector3(0, 500, 0)
-	}
+	self._scene_templates.blackmarket = {}
+	self._scene_templates.blackmarket.fov = 20
+	self._scene_templates.blackmarket.use_item_grab = true
+	self._scene_templates.blackmarket.camera_pos = offset:rotate_with(Rotation(90))
+	self._scene_templates.blackmarket.target_pos = Vector3(-100, -100, 0) + self._camera_start_rot:x() * 100 + self._camera_start_rot:y() * 6 + self._camera_start_rot:z() * 0
+	self._scene_templates.blackmarket.lights = {}
+	self._scene_templates.blackmarket_item = {}
+	self._scene_templates.blackmarket_item.fov = 40
+	self._scene_templates.blackmarket_item.can_change_fov = true
+	self._scene_templates.blackmarket_item.use_item_grab = true
+	self._scene_templates.blackmarket_item.camera_pos = offset:rotate_with(Rotation(90)) + Vector3(0, 0, 202)
+	self._scene_templates.blackmarket_item.target_pos = target_pos + Vector3(0, 0, 200)
+	self._scene_templates.blackmarket_item.character_pos = c_ref:position() + Vector3(0, 500, 0)
+
 	local l_pos = self._scene_templates.blackmarket_item.camera_pos
 	local rot = Rotation(self._scene_templates.blackmarket_item.target_pos - l_pos, math.UP)
 	local l1_pos = l_pos + rot:x() * 50 + rot:y() * 50
 	local l2_pos = l_pos + rot:x() * -50 + rot:y() * 100
+
 	self._scene_templates.blackmarket_item.lights = {
 		self:_create_light({
 			far_range = 270,
@@ -444,18 +447,19 @@ function MenuSceneManager:_set_up_templates()
 			position = Vector3(200, 60, 180)
 		})
 	}
-	self._scene_templates.blackmarket_mask = {
-		fov = 40,
-		can_change_fov = true,
-		use_item_grab = true,
-		camera_pos = offset:rotate_with(Rotation(90)) + Vector3(0, 0, 202),
-		target_pos = target_pos + Vector3(0, 0, 200),
-		character_pos = c_ref:position() + Vector3(0, 500, 0)
-	}
+	self._scene_templates.blackmarket_mask = {}
+	self._scene_templates.blackmarket_mask.fov = 40
+	self._scene_templates.blackmarket_mask.can_change_fov = true
+	self._scene_templates.blackmarket_mask.use_item_grab = true
+	self._scene_templates.blackmarket_mask.camera_pos = offset:rotate_with(Rotation(90)) + Vector3(0, 0, 202)
+	self._scene_templates.blackmarket_mask.target_pos = target_pos + Vector3(0, 0, 200)
+	self._scene_templates.blackmarket_mask.character_pos = c_ref:position() + Vector3(0, 500, 0)
+
 	local l_pos = self._scene_templates.blackmarket_mask.camera_pos
 	local rot = Rotation(self._scene_templates.blackmarket_mask.target_pos - l_pos, math.UP)
 	local l1_pos = l_pos + rot:x() * 50 + rot:y() * 50
 	local l2_pos = l_pos + rot:x() * -50 + rot:y() * 100
+
 	self._scene_templates.blackmarket_mask.lights = {
 		self:_create_light({
 			far_range = 250,
@@ -476,142 +480,132 @@ function MenuSceneManager:_set_up_templates()
 			position = Vector3(160, -130, 220)
 		})
 	}
-	self._scene_templates.infamy_preview = {
-		fov = 40,
-		can_change_fov = false,
-		use_item_grab = true,
-		camera_pos = offset:rotate_with(Rotation(90)) + Vector3(0, 0, 202),
-		target_pos = target_pos + Vector3(0, 0, 200),
-		character_pos = Vector3(-75, 10, 100),
-		hide_armor = true,
-		hide_mask = true,
-		hide_weapons = true,
-		disable_rotate = true,
-		character_visible = true,
-		use_character_grab2 = false,
-		use_character_pan = false,
-		lights = {
-			self:_create_light({
-				far_range = 250,
-				specular_multiplier = 55,
-				color = Vector3(0.2, 0.5, 1) * 4.3,
-				position = Vector3(0, -200, 280)
-			}),
-			self:_create_light({
-				far_range = 370,
-				specular_multiplier = 55,
-				color = Vector3(1, 0.7, 0.5) * 2.3,
-				position = Vector3(200, 60, 280)
-			}),
-			self:_create_light({
-				far_range = 270,
-				specular_multiplier = 0,
-				color = Vector3(1, 1, 1) * 0.8,
-				position = Vector3(160, -130, 220)
-			}),
-			self:_create_light({
-				far_range = 270,
-				specular_multiplier = 155,
-				color = Vector3(0.86, 0.67, 0.41) * 2,
-				position = Vector3(160, 0, 220)
-			})
-		}
+	self._scene_templates.infamy_preview = {}
+	self._scene_templates.infamy_preview.fov = 40
+	self._scene_templates.infamy_preview.can_change_fov = false
+	self._scene_templates.infamy_preview.use_item_grab = true
+	self._scene_templates.infamy_preview.camera_pos = offset:rotate_with(Rotation(90)) + Vector3(0, 0, 202)
+	self._scene_templates.infamy_preview.target_pos = target_pos + Vector3(0, 0, 200)
+	self._scene_templates.infamy_preview.character_pos = Vector3(-75, 10, 100)
+	self._scene_templates.infamy_preview.hide_armor = true
+	self._scene_templates.infamy_preview.hide_mask = true
+	self._scene_templates.infamy_preview.hide_weapons = true
+	self._scene_templates.infamy_preview.disable_rotate = true
+	self._scene_templates.infamy_preview.character_visible = true
+	self._scene_templates.infamy_preview.use_character_grab2 = false
+	self._scene_templates.infamy_preview.use_character_pan = false
+	self._scene_templates.infamy_preview.lights = {
+		self:_create_light({
+			far_range = 250,
+			specular_multiplier = 55,
+			color = Vector3(0.2, 0.5, 1) * 4.3,
+			position = Vector3(0, -200, 280)
+		}),
+		self:_create_light({
+			far_range = 370,
+			specular_multiplier = 55,
+			color = Vector3(1, 0.7, 0.5) * 2.3,
+			position = Vector3(200, 60, 280)
+		}),
+		self:_create_light({
+			far_range = 270,
+			specular_multiplier = 0,
+			color = Vector3(1, 1, 1) * 0.8,
+			position = Vector3(160, -130, 220)
+		}),
+		self:_create_light({
+			far_range = 270,
+			specular_multiplier = 155,
+			color = Vector3(0.86, 0.67, 0.41) * 2,
+			position = Vector3(160, 0, 220)
+		})
 	}
-	self._scene_templates.character_customization = {
-		use_character_grab = true,
-		camera_pos = Vector3(-73.1618, -168.021, -35.0786),
-		target_pos = Vector3(-73.1618, -168.021, -35.0786) + Vector3(0.31113, 0.944697, -0.103666) * 100,
-		lights = {}
+	self._scene_templates.character_customization = {}
+	self._scene_templates.character_customization.use_character_grab = true
+	self._scene_templates.character_customization.camera_pos = Vector3(-73.1618, -168.021, -35.0786)
+	self._scene_templates.character_customization.target_pos = Vector3(-73.1618, -168.021, -35.0786) + Vector3(0.31113, 0.944697, -0.103666) * 100
+	self._scene_templates.character_customization.lights = {}
+	self._scene_templates.play_online = {}
+	self._scene_templates.play_online.camera_pos = offset:rotate_with(Rotation(90))
+	self._scene_templates.play_online.target_pos = Vector3(-206.4, 56.0677, -135.539) + Vector3(-0.418134, 0.889918, 0.182234) * 100
+	self._scene_templates.play_online.lights = {}
+	self._scene_templates.options = {}
+	self._scene_templates.options.use_character_grab = true
+	self._scene_templates.options.camera_pos = Vector3(0, 60, -60)
+	self._scene_templates.options.target_pos = self._camera_start_rot:y() * 100 + self._camera_start_rot:x() * -6 + self._camera_start_rot:z() * -60
+	self._scene_templates.options.lights = {}
+	self._scene_templates.lobby = {}
+	self._scene_templates.lobby.use_character_grab = false
+	self._scene_templates.lobby.camera_pos = offset:rotate_with(Rotation(90))
+	self._scene_templates.lobby.target_pos = target_pos
+	self._scene_templates.lobby.character_pos = c_ref:position() + Vector3(0, 500, 0)
+	self._scene_templates.lobby.lobby_characters_visible = true
+	self._scene_templates.lobby.fov = 40
+	self._scene_templates.lobby.lights = {
+		self:_create_light({
+			far_range = 300,
+			color = Vector3(0.86, 0.57, 0.31) * 3,
+			position = Vector3(56, 100, -10)
+		}),
+		self:_create_light({
+			far_range = 3000,
+			specular_multiplier = 6,
+			color = Vector3(1, 2.5, 4.5) * 3,
+			position = Vector3(-1000, -300, 800)
+		}),
+		self:_create_light({
+			far_range = 800,
+			specular_multiplier = 0,
+			color = Vector3(1, 1, 1) * 0.35,
+			position = Vector3(300, 100, 0)
+		})
 	}
-	self._scene_templates.play_online = {
-		camera_pos = offset:rotate_with(Rotation(90)),
-		target_pos = Vector3(-206.4, 56.0677, -135.539) + Vector3(-0.418134, 0.889918, 0.182234) * 100,
-		lights = {}
-	}
-	self._scene_templates.options = {
-		use_character_grab = true,
-		camera_pos = Vector3(0, 60, -60),
-		target_pos = self._camera_start_rot:y() * 100 + self._camera_start_rot:x() * -6 + self._camera_start_rot:z() * -60,
-		lights = {}
-	}
-	self._scene_templates.lobby = {
-		use_character_grab = false,
-		camera_pos = offset:rotate_with(Rotation(90)),
-		target_pos = target_pos,
-		character_pos = c_ref:position() + Vector3(0, 500, 0),
-		lobby_characters_visible = true,
-		fov = 40,
-		lights = {
-			self:_create_light({
-				far_range = 300,
-				color = Vector3(0.86, 0.57, 0.31) * 3,
-				position = Vector3(56, 100, -10)
-			}),
-			self:_create_light({
-				far_range = 3000,
-				specular_multiplier = 6,
-				color = Vector3(1, 2.5, 4.5) * 3,
-				position = Vector3(-1000, -300, 800)
-			}),
-			self:_create_light({
-				far_range = 800,
-				specular_multiplier = 0,
-				color = Vector3(1, 1, 1) * 0.35,
-				position = Vector3(300, 100, 0)
-			})
-		}
-	}
-	self._scene_templates.lobby1 = {
-		use_character_grab = false,
-		lobby_characters_visible = true,
-		camera_pos = Vector3(-90.5634, -157.226, -28.6729),
-		target_pos = Vector3(-90.5634, -157.226, -28.6729) + Vector3(-0.58315, 0.781811, 0.220697) * 100,
-		fov = 30,
-		lights = clone(self._scene_templates.lobby.lights)
-	}
-	self._scene_templates.lobby2 = {
-		use_character_grab = false,
-		lobby_characters_visible = true,
-		camera_pos = Vector3(-21.2779, -264.36, -56.7304),
-		target_pos = Vector3(-21.2779, -264.36, -56.7304) + Vector3(-0.633319, 0.758269, 0.154709) * 100,
-		fov = 30,
-		lights = clone(self._scene_templates.lobby.lights)
-	}
-	self._scene_templates.lobby3 = {
-		use_character_grab = false,
-		lobby_characters_visible = true,
-		camera_pos = Vector3(149.695, -363.069, -110.613),
-		target_pos = Vector3(149.695, -363.069, -110.613) + Vector3(-0.648856, 0.748553, 0.136579) * 100,
-		fov = 30,
-		lights = clone(self._scene_templates.lobby.lights)
-	}
-	self._scene_templates.lobby4 = {
-		use_character_grab = false,
-		lobby_characters_visible = true,
-		camera_pos = Vector3(210.949, -449.61, -126.709),
-		target_pos = Vector3(210.949, -449.61, -126.709) + Vector3(-0.668524, 0.734205, 0.118403) * 100,
-		fov = 30,
-		lights = clone(self._scene_templates.lobby.lights)
-	}
-	self._scene_templates.inventory = {
-		fov = 50,
-		can_change_fov = true,
-		change_fov_sensitivity = 3,
-		use_character_grab2 = true,
-		use_character_pan = true,
-		character_visible = true,
-		recreate_character = true,
-		lobby_characters_visible = false,
-		hide_menu_logo = true,
-		camera_pos = ref:position(),
-		target_pos = target_pos - self._camera_start_rot:x() * 40 - self._camera_start_rot:z() * 5 + self._camera_start_rot:y() * 20,
-		character_pos = c_ref:position(),
-		remove_infamy_card = true
-	}
-	self._scene_templates.blackmarket_crafting = {
-		camera_pos = Vector3(1500, -2000, 0)
-	}
+	self._scene_templates.lobby1 = {}
+	self._scene_templates.lobby1.use_character_grab = false
+	self._scene_templates.lobby1.lobby_characters_visible = true
+	self._scene_templates.lobby1.camera_pos = Vector3(-90.5634, -157.226, -28.6729)
+	self._scene_templates.lobby1.target_pos = Vector3(-90.5634, -157.226, -28.6729) + Vector3(-0.58315, 0.781811, 0.220697) * 100
+	self._scene_templates.lobby1.fov = 30
+	self._scene_templates.lobby1.lights = clone(self._scene_templates.lobby.lights)
+	self._scene_templates.lobby2 = {}
+	self._scene_templates.lobby2.use_character_grab = false
+	self._scene_templates.lobby2.lobby_characters_visible = true
+	self._scene_templates.lobby2.camera_pos = Vector3(-21.2779, -264.36, -56.7304)
+	self._scene_templates.lobby2.target_pos = Vector3(-21.2779, -264.36, -56.7304) + Vector3(-0.633319, 0.758269, 0.154709) * 100
+	self._scene_templates.lobby2.fov = 30
+	self._scene_templates.lobby2.lights = clone(self._scene_templates.lobby.lights)
+	self._scene_templates.lobby3 = {}
+	self._scene_templates.lobby3.use_character_grab = false
+	self._scene_templates.lobby3.lobby_characters_visible = true
+	self._scene_templates.lobby3.camera_pos = Vector3(149.695, -363.069, -110.613)
+	self._scene_templates.lobby3.target_pos = Vector3(149.695, -363.069, -110.613) + Vector3(-0.648856, 0.748553, 0.136579) * 100
+	self._scene_templates.lobby3.fov = 30
+	self._scene_templates.lobby3.lights = clone(self._scene_templates.lobby.lights)
+	self._scene_templates.lobby4 = {}
+	self._scene_templates.lobby4.use_character_grab = false
+	self._scene_templates.lobby4.lobby_characters_visible = true
+	self._scene_templates.lobby4.camera_pos = Vector3(210.949, -449.61, -126.709)
+	self._scene_templates.lobby4.target_pos = Vector3(210.949, -449.61, -126.709) + Vector3(-0.668524, 0.734205, 0.118403) * 100
+	self._scene_templates.lobby4.fov = 30
+	self._scene_templates.lobby4.lights = clone(self._scene_templates.lobby.lights)
+	self._scene_templates.inventory = {}
+	self._scene_templates.inventory.fov = 50
+	self._scene_templates.inventory.can_change_fov = true
+	self._scene_templates.inventory.change_fov_sensitivity = 3
+	self._scene_templates.inventory.use_character_grab2 = true
+	self._scene_templates.inventory.use_character_pan = true
+	self._scene_templates.inventory.character_visible = true
+	self._scene_templates.inventory.recreate_character = true
+	self._scene_templates.inventory.lobby_characters_visible = false
+	self._scene_templates.inventory.hide_menu_logo = true
+	self._scene_templates.inventory.camera_pos = ref:position()
+	self._scene_templates.inventory.target_pos = target_pos - self._camera_start_rot:x() * 40 - self._camera_start_rot:z() * 5 + self._camera_start_rot:y() * 20
+	self._scene_templates.inventory.character_pos = c_ref:position()
+	self._scene_templates.inventory.remove_infamy_card = true
+	self._scene_templates.blackmarket_crafting = {}
+	self._scene_templates.blackmarket_crafting.camera_pos = Vector3(1500, -2000, 0)
 	self._scene_templates.blackmarket_crafting.target_pos = self._scene_templates.blackmarket_crafting.camera_pos + Vector3(0, 1, 0) * 100
+
 	local camera_look = (self._scene_templates.blackmarket_crafting.target_pos - self._scene_templates.blackmarket_crafting.camera_pos):normalized()
 
 	mvector3.rotate_with(camera_look, Rotation(4, 2.25, 0))
@@ -632,17 +626,18 @@ function MenuSceneManager:_set_up_templates()
 	self._scene_templates.blackmarket_weapon_color = deep_clone(self._scene_templates.blackmarket_crafting)
 	self._scene_templates.blackmarket_weapon_color.camera_pos = self._scene_templates.blackmarket_crafting.item_pos - Vector3(-0, 240, 18)
 	self._scene_templates.blackmarket_weapon_color.target_pos = self._scene_templates.blackmarket_crafting.item_pos + Vector3(0, 0, -18)
-	self._scene_templates.safe = {
-		camera_pos = Vector3(1500, -2000, 0)
-	}
+	self._scene_templates.safe = {}
+	self._scene_templates.safe.camera_pos = Vector3(1500, -2000, 0)
 	self._scene_templates.safe.target_pos = self._scene_templates.safe.camera_pos + Vector3(0, 1, 0) * 100
 	self._scene_templates.safe.fov = 40
 	self._scene_templates.safe.use_item_grab = true
 	self._scene_templates.safe.environment = "safe"
 	self._scene_templates.safe.ambience_event = "cash_ambience"
+
 	local l_pos = self._scene_templates.inventory.camera_pos
 	local rot = Rotation(self._scene_templates.inventory.target_pos - l_pos, math.UP)
 	local l1_pos = l_pos + rot:x() * -200 + rot:y() * 200
+
 	self._scene_templates.inventory.lights = {
 		self:_create_light({
 			far_range = 400,
@@ -662,17 +657,17 @@ function MenuSceneManager:_set_up_templates()
 			position = Vector3(160, -250, -40)
 		})
 	}
-	self._scene_templates.blackmarket_customize = {
-		fov = 40,
-		use_item_grab = true,
-		disable_rotate = true,
-		disable_item_updates = true,
-		can_change_fov = true,
-		can_move_item = true,
-		change_fov_sensitivity = 2,
-		camera_pos = Vector3(1500, -2000, 0)
-	}
+	self._scene_templates.blackmarket_customize = {}
+	self._scene_templates.blackmarket_customize.fov = 40
+	self._scene_templates.blackmarket_customize.use_item_grab = true
+	self._scene_templates.blackmarket_customize.disable_rotate = true
+	self._scene_templates.blackmarket_customize.disable_item_updates = true
+	self._scene_templates.blackmarket_customize.can_change_fov = true
+	self._scene_templates.blackmarket_customize.can_move_item = true
+	self._scene_templates.blackmarket_customize.change_fov_sensitivity = 2
+	self._scene_templates.blackmarket_customize.camera_pos = Vector3(1500, -2000, 0)
 	self._scene_templates.blackmarket_customize.target_pos = self._scene_templates.blackmarket_customize.camera_pos + Vector3(0, 1, 0) * 100
+
 	local camera_look = (self._scene_templates.blackmarket_customize.target_pos - self._scene_templates.blackmarket_customize.camera_pos):normalized()
 
 	mvector3.rotate_with(camera_look, Rotation(4, 2.25, 0))
@@ -680,10 +675,12 @@ function MenuSceneManager:_set_up_templates()
 	self._scene_templates.blackmarket_customize.item_pos = self._scene_templates.blackmarket_customize.camera_pos + camera_look * 240
 	self._scene_templates.blackmarket_customize.environment = "crafting"
 	self._scene_templates.blackmarket_customize.use_workbench_room = true
+
 	local l_pos = self._scene_templates.blackmarket_customize.camera_pos
 	local rot = Rotation(self._scene_templates.blackmarket_customize.target_pos - l_pos, math.UP)
 	local l1_pos = l_pos + rot:x() * 50 + rot:y() * 50
 	local l2_pos = l_pos + rot:x() * -50 + rot:y() * 100
+
 	self._scene_templates.blackmarket_customize.lights = {}
 	self._scene_templates.blackmarket_character = deep_clone(self._scene_templates.inventory)
 	self._scene_templates.blackmarket_character.character_pos = c_ref:position() + Vector3(-10, 100, 20)
@@ -715,25 +712,25 @@ function MenuSceneManager:_set_up_templates()
 			position = Vector3(-120, -6, 32)
 		})
 	}
-	self._scene_templates.blackmarket_armor = {
-		fov = 20,
-		can_change_fov = false,
-		use_character_grab2 = true,
-		use_character_pan = false,
-		character_visible = true,
-		recreate_character = true,
-		hide_weapons = true,
-		hide_mask = true,
-		character_customization = true,
-		scene_poses = {
-			"cvc_var1",
-			"cvc_var2"
-		},
-		lobby_characters_visible = false,
-		hide_menu_logo = true,
-		camera_pos = Vector3(1420, -2200, 0)
+	self._scene_templates.blackmarket_armor = {}
+	self._scene_templates.blackmarket_armor.fov = 20
+	self._scene_templates.blackmarket_armor.can_change_fov = false
+	self._scene_templates.blackmarket_armor.use_character_grab2 = true
+	self._scene_templates.blackmarket_armor.use_character_pan = false
+	self._scene_templates.blackmarket_armor.character_visible = true
+	self._scene_templates.blackmarket_armor.recreate_character = true
+	self._scene_templates.blackmarket_armor.hide_weapons = true
+	self._scene_templates.blackmarket_armor.hide_mask = true
+	self._scene_templates.blackmarket_armor.character_customization = true
+	self._scene_templates.blackmarket_armor.scene_poses = {
+		"cvc_var1",
+		"cvc_var2"
 	}
+	self._scene_templates.blackmarket_armor.lobby_characters_visible = false
+	self._scene_templates.blackmarket_armor.hide_menu_logo = true
+	self._scene_templates.blackmarket_armor.camera_pos = Vector3(1420, -2200, 0)
 	self._scene_templates.blackmarket_armor.target_pos = self._scene_templates.blackmarket_armor.camera_pos + Vector3(0.15, 1, -0.105) * 100
+
 	local camera_look = (self._scene_templates.blackmarket_armor.target_pos - self._scene_templates.blackmarket_armor.camera_pos):normalized()
 
 	mvector3.rotate_with(camera_look, Rotation(6, 2.75, 0))
@@ -754,24 +751,24 @@ function MenuSceneManager:_set_up_templates()
 			position = Vector3(1710, -1500, -25)
 		})
 	}
-	self._scene_templates.blackmarket_armor_workshop = {
-		fov = 20,
-		can_change_fov = true,
-		use_character_grab2 = true,
-		use_character_pan = true,
-		character_visible = true,
-		recreate_character = true,
-		hide_weapons = true,
-		hide_mask = true,
-		scene_poses = {
-			"cvc_var1",
-			"cvc_var2"
-		},
-		lobby_characters_visible = false,
-		hide_menu_logo = true,
-		camera_pos = Vector3(1460, -2200, 0)
+	self._scene_templates.blackmarket_armor_workshop = {}
+	self._scene_templates.blackmarket_armor_workshop.fov = 20
+	self._scene_templates.blackmarket_armor_workshop.can_change_fov = true
+	self._scene_templates.blackmarket_armor_workshop.use_character_grab2 = true
+	self._scene_templates.blackmarket_armor_workshop.use_character_pan = true
+	self._scene_templates.blackmarket_armor_workshop.character_visible = true
+	self._scene_templates.blackmarket_armor_workshop.recreate_character = true
+	self._scene_templates.blackmarket_armor_workshop.hide_weapons = true
+	self._scene_templates.blackmarket_armor_workshop.hide_mask = true
+	self._scene_templates.blackmarket_armor_workshop.scene_poses = {
+		"cvc_var1",
+		"cvc_var2"
 	}
+	self._scene_templates.blackmarket_armor_workshop.lobby_characters_visible = false
+	self._scene_templates.blackmarket_armor_workshop.hide_menu_logo = true
+	self._scene_templates.blackmarket_armor_workshop.camera_pos = Vector3(1460, -2200, 0)
 	self._scene_templates.blackmarket_armor_workshop.target_pos = self._scene_templates.blackmarket_armor_workshop.camera_pos + Vector3(0.15, 1, -0.105) * 100
+
 	local camera_look = (self._scene_templates.blackmarket_armor_workshop.target_pos - self._scene_templates.blackmarket_armor_workshop.camera_pos):normalized()
 
 	mvector3.rotate_with(camera_look, Rotation(6, 2.75, 0))
@@ -803,6 +800,7 @@ function MenuSceneManager:_set_up_templates()
 		"cvc_var1",
 		"cvc_var2"
 	}
+
 	local camera_look = (self._scene_templates.blackmarket_armor_screenshot.target_pos - self._scene_templates.blackmarket_armor_screenshot.camera_pos):normalized()
 
 	mvector3.rotate_with(camera_look, Rotation(6, 2.75, 0))
@@ -820,26 +818,27 @@ function MenuSceneManager:_set_up_templates()
 			position = Vector3(1600, -1750, -25)
 		})
 	}
-	self._scene_templates.blackmarket_screenshot = {
-		fov = 40,
-		can_change_fov = true,
-		use_item_grab = true,
-		disable_rotate = true,
-		disable_item_updates = true,
-		hide_weapons = true,
-		hide_mask = true,
-		scene_poses = {
-			"cvc_var1",
-			"cvc_var2"
-		},
-		camera_pos = offset:rotate_with(Rotation(45)) + Vector3(0, 0, 200),
-		target_pos = target_pos + Vector3(0, 50, 200)
+	self._scene_templates.blackmarket_screenshot = {}
+	self._scene_templates.blackmarket_screenshot.fov = 40
+	self._scene_templates.blackmarket_screenshot.can_change_fov = true
+	self._scene_templates.blackmarket_screenshot.use_item_grab = true
+	self._scene_templates.blackmarket_screenshot.disable_rotate = true
+	self._scene_templates.blackmarket_screenshot.disable_item_updates = true
+	self._scene_templates.blackmarket_screenshot.hide_weapons = true
+	self._scene_templates.blackmarket_screenshot.hide_mask = true
+	self._scene_templates.blackmarket_screenshot.scene_poses = {
+		"cvc_var1",
+		"cvc_var2"
 	}
+	self._scene_templates.blackmarket_screenshot.camera_pos = offset:rotate_with(Rotation(45)) + Vector3(0, 0, 200)
+	self._scene_templates.blackmarket_screenshot.target_pos = target_pos + Vector3(0, 50, 200)
 	self._scene_templates.blackmarket_screenshot.item_pos = self._scene_templates.blackmarket_screenshot.target_pos
+
 	local l_pos = self._scene_templates.blackmarket_screenshot.camera_pos
 	local rot = Rotation(self._scene_templates.blackmarket_screenshot.target_pos - l_pos, math.UP)
 	local l1_pos = l_pos + rot:x() * 50 + rot:y() * 50
 	local l2_pos = l_pos + rot:x() * -50 + rot:y() * 100
+
 	self._scene_templates.blackmarket_screenshot.lights = {
 		self:_create_light({
 			far_range = 270,
@@ -872,99 +871,95 @@ function MenuSceneManager:_set_up_templates()
 			position = Vector3(200, 60, 180)
 		})
 	}
-	self._scene_templates.crime_spree_lobby = {
-		use_character_grab = false,
-		camera_pos = offset:rotate_with(Rotation(90)),
-		target_pos = target_pos,
-		character_pos = c_ref:position() + Vector3(0, 500, 0),
-		lobby_characters_visible = true,
-		fov = 40,
-		lights = {
-			self:_create_light({
-				far_range = 300,
-				color = Vector3(0.86, 0.57, 0.31) * 3,
-				position = Vector3(56, 100, -10)
-			}),
-			self:_create_light({
-				far_range = 3000,
-				specular_multiplier = 6,
-				color = Vector3(1, 2.5, 4.5) * 3,
-				position = Vector3(-1000, -300, 800)
-			}),
-			self:_create_light({
-				far_range = 800,
-				specular_multiplier = 0,
-				color = Vector3(1, 1, 1) * 0.35,
-				position = Vector3(300, 100, 0)
-			})
-		}
+	self._scene_templates.crime_spree_lobby = {}
+	self._scene_templates.crime_spree_lobby.use_character_grab = false
+	self._scene_templates.crime_spree_lobby.camera_pos = offset:rotate_with(Rotation(90))
+	self._scene_templates.crime_spree_lobby.target_pos = target_pos
+	self._scene_templates.crime_spree_lobby.character_pos = c_ref:position() + Vector3(0, 500, 0)
+	self._scene_templates.crime_spree_lobby.lobby_characters_visible = true
+	self._scene_templates.crime_spree_lobby.fov = 40
+	self._scene_templates.crime_spree_lobby.lights = {
+		self:_create_light({
+			far_range = 300,
+			color = Vector3(0.86, 0.57, 0.31) * 3,
+			position = Vector3(56, 100, -10)
+		}),
+		self:_create_light({
+			far_range = 3000,
+			specular_multiplier = 6,
+			color = Vector3(1, 2.5, 4.5) * 3,
+			position = Vector3(-1000, -300, 800)
+		}),
+		self:_create_light({
+			far_range = 800,
+			specular_multiplier = 0,
+			color = Vector3(1, 1, 1) * 0.35,
+			position = Vector3(300, 100, 0)
+		})
 	}
-	self._scene_templates.crew_management = {
-		use_character_grab = false,
-		camera_pos = offset:rotate_with(Rotation(90)),
-		target_pos = target_pos,
-		character_pos = c_ref:position() + Vector3(0, 500, 0),
-		character_visible = false,
-		lobby_characters_visible = false,
-		henchmen_characters_visible = true,
-		fov = 40,
-		lights = {
-			self:_create_light({
-				far_range = 300,
-				color = Vector3(0.86, 0.57, 0.31) * 3,
-				position = Vector3(56, 100, -10)
-			}),
-			self:_create_light({
-				far_range = 3000,
-				specular_multiplier = 6,
-				color = Vector3(1, 2.5, 4.5) * 3,
-				position = Vector3(-1000, -300, 800)
-			}),
-			self:_create_light({
-				far_range = 800,
-				specular_multiplier = 0,
-				color = Vector3(1, 1, 1) * 0.35,
-				position = Vector3(300, 100, 0)
-			})
-		}
+	self._scene_templates.crew_management = {}
+	self._scene_templates.crew_management.use_character_grab = false
+	self._scene_templates.crew_management.camera_pos = offset:rotate_with(Rotation(90))
+	self._scene_templates.crew_management.target_pos = target_pos
+	self._scene_templates.crew_management.character_pos = c_ref:position() + Vector3(0, 500, 0)
+	self._scene_templates.crew_management.character_visible = false
+	self._scene_templates.crew_management.lobby_characters_visible = false
+	self._scene_templates.crew_management.henchmen_characters_visible = true
+	self._scene_templates.crew_management.fov = 40
+	self._scene_templates.crew_management.lights = {
+		self:_create_light({
+			far_range = 300,
+			color = Vector3(0.86, 0.57, 0.31) * 3,
+			position = Vector3(56, 100, -10)
+		}),
+		self:_create_light({
+			far_range = 3000,
+			specular_multiplier = 6,
+			color = Vector3(1, 2.5, 4.5) * 3,
+			position = Vector3(-1000, -300, 800)
+		}),
+		self:_create_light({
+			far_range = 800,
+			specular_multiplier = 0,
+			color = Vector3(1, 1, 1) * 0.35,
+			position = Vector3(300, 100, 0)
+		})
 	}
-	self._scene_templates.raid_menu = {
-		use_character_grab = false,
-		camera_pos = offset:rotate_with(Rotation(90)),
-		target_pos = target_pos,
-		character_pos = c_ref:position() + Vector3(0, 500, 0),
-		character_visible = false,
-		lobby_characters_visible = false,
-		henchmen_characters_visible = true,
-		fov = 40,
-		lights = {
-			self:_create_light({
-				far_range = 300,
-				color = Vector3(0.86, 0.57, 0.31) * 3,
-				position = Vector3(56, 100, -10)
-			}),
-			self:_create_light({
-				far_range = 3000,
-				specular_multiplier = 6,
-				color = Vector3(1, 2.5, 4.5) * 3,
-				position = Vector3(-1000, -300, 800)
-			}),
-			self:_create_light({
-				far_range = 800,
-				specular_multiplier = 0,
-				color = Vector3(1, 1, 1) * 0.35,
-				position = Vector3(300, 100, 0)
-			})
-		}
+	self._scene_templates.raid_menu = {}
+	self._scene_templates.raid_menu.use_character_grab = false
+	self._scene_templates.raid_menu.camera_pos = offset:rotate_with(Rotation(90))
+	self._scene_templates.raid_menu.target_pos = target_pos
+	self._scene_templates.raid_menu.character_pos = c_ref:position() + Vector3(0, 500, 0)
+	self._scene_templates.raid_menu.character_visible = false
+	self._scene_templates.raid_menu.lobby_characters_visible = false
+	self._scene_templates.raid_menu.henchmen_characters_visible = true
+	self._scene_templates.raid_menu.fov = 40
+	self._scene_templates.raid_menu.lights = {
+		self:_create_light({
+			far_range = 300,
+			color = Vector3(0.86, 0.57, 0.31) * 3,
+			position = Vector3(56, 100, -10)
+		}),
+		self:_create_light({
+			far_range = 3000,
+			specular_multiplier = 6,
+			color = Vector3(1, 2.5, 4.5) * 3,
+			position = Vector3(-1000, -300, 800)
+		}),
+		self:_create_light({
+			far_range = 800,
+			specular_multiplier = 0,
+			color = Vector3(1, 1, 1) * 0.35,
+			position = Vector3(300, 100, 0)
+		})
 	}
-	self._scene_templates.movie_theater = {
-		use_character_grab = false,
-		camera_pos = offset:rotate_with(Rotation(90)),
-		target_pos = target_pos,
-		character_visible = false,
-		lobby_characters_visible = false,
-		fov = 40
-	}
+	self._scene_templates.movie_theater = {}
+	self._scene_templates.movie_theater.use_character_grab = false
+	self._scene_templates.movie_theater.camera_pos = offset:rotate_with(Rotation(90))
+	self._scene_templates.movie_theater.target_pos = target_pos
+	self._scene_templates.movie_theater.character_visible = false
+	self._scene_templates.movie_theater.lobby_characters_visible = false
+	self._scene_templates.movie_theater.fov = 40
 end
 
 -- Lines 703-705
@@ -1031,7 +1026,7 @@ function MenuSceneManager:update(t, dt)
 	if self._delayed_callbacks then
 		local callbacks = self._delayed_callbacks
 
-		if callbacks[1] and callbacks[1][1] < t then
+		if callbacks[1] and t > callbacks[1][1] then
 			local clbk_data = table.remove(callbacks, 1)
 			local clbk = clbk_data[2]
 
@@ -1045,6 +1040,7 @@ function MenuSceneManager:update(t, dt)
 
 	if self._camera_values and self._transition_time then
 		self._transition_time = math.min(self._transition_time + dt, 1)
+
 		local bezier_value = math.bezier(self._transition_bezier, self._transition_time)
 
 		if self._transition_time == 1 then
@@ -1058,6 +1054,7 @@ function MenuSceneManager:update(t, dt)
 		local camera_pos = math.lerp(self._camera_values.camera_pos_current, self._camera_values.camera_pos_target, bezier_value)
 		local target_pos = math.lerp(self._camera_values.target_pos_current, self._camera_values.target_pos_target, bezier_value)
 		local fov = math.lerp(self._camera_values.fov_current, self._camera_values.fov_target, bezier_value)
+
 		self._current_fov = fov
 
 		self:_set_camera_position(camera_pos)
@@ -1087,6 +1084,7 @@ function MenuSceneManager:update(t, dt)
 
 	if self._weapon_transition_time then
 		self._weapon_transition_time = math.min(self._weapon_transition_time + dt, 1)
+
 		local bezier_value = math.bezier(self._transition_bezier, self._weapon_transition_time)
 
 		if self._item_offset_target then
@@ -1141,11 +1139,13 @@ function MenuSceneManager:add_callback(clbk, delay, param)
 		clbk,
 		param
 	}
+
 	self._delayed_callbacks = self._delayed_callbacks or {}
+
 	local callbacks = self._delayed_callbacks
 	local i = #callbacks
 
-	while i > 0 and clbk_data[1] < callbacks[i][1] do
+	while i > 0 and callbacks[i][1] > clbk_data[1] do
 		i = i - 1
 	end
 
@@ -1161,6 +1161,7 @@ end
 -- Lines 888-907
 function MenuSceneManager:_setup_bg()
 	local yaw = 180
+
 	self._bg_unit = World:spawn_unit(Idstring("units/menu/menu_scene/menu_cylinder"), Vector3(0, 0, 0), Rotation(yaw, 0, 0))
 
 	World:spawn_unit(Idstring("units/menu/menu_scene/menu_cylinder_pattern"), Vector3(0, 0, 0), Rotation(yaw, 0, 0))
@@ -1228,7 +1229,7 @@ function MenuSceneManager:setup_event_units()
 	local no_rotation = Rotation()
 
 	if event_menu_scene.event_units then
-		local unit_name, position, rotation, unit = nil
+		local unit_name, position, rotation, unit
 
 		for _, data in ipairs(event_menu_scene.event_units) do
 			unit_name = data.unit_name and Idstring(data.unit_name)
@@ -1244,7 +1245,7 @@ function MenuSceneManager:setup_event_units()
 	end
 
 	if event_menu_scene.event_effects then
-		local effect_name, position, rotation, effect = nil
+		local effect_name, position, rotation, effect
 
 		for _, data in ipairs(event_menu_scene.event_effects) do
 			effect_name = data.effect_name and Idstring(data.effect_name)
@@ -1300,7 +1301,7 @@ function MenuSceneManager:_setup_event_presents()
 		Idstring("units/pd2_dlc_a10th/props/a10th_gifts/a10th_gifts_zigzag"),
 		Idstring("units/pd2_dlc_a10th/props/a10th_gifts/a10th_gifts_zigzag")
 	}
-	local rotation, unit_index = nil
+	local rotation, unit_index
 
 	for i, position in ipairs(positions) do
 		rotation = Rotation((math.random(2) - 1) * 25, 0, 0)
@@ -1352,6 +1353,7 @@ end
 -- Lines 1062-1071
 function MenuSceneManager:_setup_character_dynamic_bodies(unit)
 	self._character_dynamic_bodies = {}
+
 	local bodies = self._character_dynamic_bodies
 
 	for i = 0, unit:num_bodies() - 1 do
@@ -1374,7 +1376,7 @@ end
 
 -- Lines 1080-1103
 function MenuSceneManager:_set_character_unit(unit_name, unit, pos_override)
-	local pos, rot = nil
+	local pos, rot
 
 	if alive(unit) then
 		self:_set_character_and_outfit_visibility(unit, false)
@@ -1388,6 +1390,7 @@ function MenuSceneManager:_set_character_unit(unit_name, unit, pos_override)
 	end
 
 	local a = self._bg_unit:get_object(Idstring("a_reference"))
+
 	unit = World:spawn_unit(Idstring(unit_name), pos_override or pos or a:position(), rot or a:rotation())
 	self._character_yaw = (rot or a:rotation()):yaw()
 	self._character_pitch = (rot or a:rotation()):pitch()
@@ -1422,6 +1425,7 @@ function MenuSceneManager:_select_character_pose(unit, secondary, primary)
 	unit = unit or self._character_unit
 	secondary = secondary or unit == self._character_unit and managers.blackmarket:equipped_secondary()
 	primary = primary or unit == self._character_unit and managers.blackmarket:equipped_primary()
+
 	local current_scene_template = self._scene_templates and self._scene_templates[self._current_scene_template] or {}
 
 	if current_scene_template.character_customization then
@@ -1447,60 +1451,65 @@ function MenuSceneManager:_select_character_pose(unit, secondary, primary)
 		return
 	end
 
-	local poses = {}
-	local template_pose, template_required_poses = tweak_data:get_scene_pose("template", self._current_scene_template)
-	poses.template = {
-		pose = template_pose,
-		required_poses = template_required_poses
-	}
+	do
+		local poses = {}
+		local template_pose, template_required_poses = tweak_data:get_scene_pose("template", self._current_scene_template)
 
-	if primary then
-		local categories = tweak_data.weapon[primary.weapon_id].categories
-		local primary_pose, primary_required_poses = tweak_data:get_scene_pose("weapon", "primary", primary.weapon_id, unpack(categories))
-		poses.primary = {
-			pose = primary_pose,
-			required_poses = primary_required_poses
+		poses.template = {
+			pose = template_pose,
+			required_poses = template_required_poses
 		}
-	end
 
-	if secondary then
-		local categories = tweak_data.weapon[secondary.weapon_id].categories
-		local secondary_pose, secondary_required_poses = tweak_data:get_scene_pose("weapon", "secondary", secondary.weapon_id, unpack(categories))
-		poses.secondary = {
-			pose = secondary_pose,
-			required_poses = secondary_required_poses
-		}
-	end
+		if primary then
+			local categories = tweak_data.weapon[primary.weapon_id].categories
+			local primary_pose, primary_required_poses = tweak_data:get_scene_pose("weapon", "primary", primary.weapon_id, unpack(categories))
 
-	local wanted_pose, items = nil
-	local allowed_poses = table.filter(poses, function (data, key)
-		wanted_pose = data.pose
-		items = tweak_data:get_scene_pose_items(wanted_pose)
-
-		for _, cat in pairs(items) do
-			if cat ~= key and poses[cat] and poses[cat].required_poses and not table.contains(poses[cat].required_poses, wanted_pose) then
-				return false
-			end
+			poses.primary = {
+				pose = primary_pose,
+				required_poses = primary_required_poses
+			}
 		end
 
-		return true
-	end)
+		if secondary then
+			local categories = tweak_data.weapon[secondary.weapon_id].categories
+			local secondary_pose, secondary_required_poses = tweak_data:get_scene_pose("weapon", "secondary", secondary.weapon_id, unpack(categories))
 
-	if next(allowed_poses) then
-		local pose = allowed_poses[table.random_key(allowed_poses)].pose
-		local items = tweak_data:get_scene_pose_items(pose)
+			poses.secondary = {
+				pose = secondary_pose,
+				required_poses = secondary_required_poses
+			}
+		end
 
-		if pose then
-			self:_set_character_unit_pose(pose, unit)
+		local wanted_pose, items
+		local allowed_poses = table.filter(poses, function(data, key)
+			wanted_pose = data.pose
+			items = tweak_data:get_scene_pose_items(wanted_pose)
 
-			return
+			for _, cat in pairs(items) do
+				if cat ~= key and poses[cat] and poses[cat].required_poses and not table.contains(poses[cat].required_poses, wanted_pose) then
+					return false
+				end
+			end
+
+			return true
+		end)
+
+		if next(allowed_poses) then
+			local pose = allowed_poses[table.random_key(allowed_poses)].pose
+			local items = tweak_data:get_scene_pose_items(pose)
+
+			if pose then
+				self:_set_character_unit_pose(pose, unit)
+
+				return
+			end
 		end
 	end
 
 	local poses = current_scene_template and current_scene_template.poses
 
 	if poses then
-		local pose = nil
+		local pose
 
 		if primary then
 			local weapon_id_poses = poses[primary.weapon_id]
@@ -1543,7 +1552,7 @@ function MenuSceneManager:_select_character_pose(unit, secondary, primary)
 		end
 	end
 
-	local pose = nil
+	local pose
 
 	if secondary and (math.rand(1) < 0.12 or table.contains(self._forced_secondaries, secondary.weapon_id)) then
 		local primary_category = tweak_data.weapon[secondary.weapon_id].categories[1]
@@ -1552,6 +1561,7 @@ function MenuSceneManager:_select_character_pose(unit, secondary, primary)
 			pose = self._global_poses.pistol[math.random(#self._global_poses.pistol)]
 		elseif self._global_poses[secondary.weapon_id] then
 			local wep_poses = self._global_poses[secondary.weapon_id]
+
 			pose = wep_poses[math.random(#wep_poses)]
 		end
 
@@ -1625,9 +1635,11 @@ function MenuSceneManager:_select_henchmen_pose(unit, weapon_id, index)
 
 	local category = tweak_data.weapon[weapon_id].categories[1]
 	local lobby_poses = self._lobby_poses[weapon_id]
+
 	lobby_poses = lobby_poses or self._lobby_poses[category]
 	lobby_poses = lobby_poses or self._lobby_poses.generic
-	local pose = nil
+
+	local pose
 
 	if type(lobby_poses[1]) == "string" then
 		pose = lobby_poses[math.random(#lobby_poses)]
@@ -1647,11 +1659,11 @@ function MenuSceneManager:_set_character_equipment()
 		return
 	end
 
-	local mask_id, mask_blueprint = nil
+	local mask_id, mask_blueprint
 	local armor_id = "level_1"
-	local armor_skin_id, player_style, suit_variation, glove_id = nil
+	local armor_skin_id, player_style, suit_variation, glove_id
 	local rank = 0
-	local secondary, primary, deployable = nil
+	local secondary, primary, deployable
 
 	if self._henchmen_player_override then
 		local loadout = managers.blackmarket:henchman_loadout(self._henchmen_player_override)
@@ -1665,6 +1677,7 @@ function MenuSceneManager:_set_character_equipment()
 		player_style = loadout.player_style
 		suit_variation = loadout.suit_variation
 		glove_id = loadout.glove_id
+
 		local crafted_primary = managers.blackmarket:get_crafted_category_slot("primaries", loadout.primary_slot)
 
 		if crafted_primary then
@@ -1672,6 +1685,7 @@ function MenuSceneManager:_set_character_equipment()
 		end
 	else
 		local equipped_mask = managers.blackmarket:equipped_mask()
+
 		mask_id = equipped_mask and equipped_mask.mask_id
 		mask_blueprint = equipped_mask and equipped_mask.blueprint
 		armor_id = managers.blackmarket:equipped_armor()
@@ -1734,6 +1748,7 @@ function MenuSceneManager:_setup_henchmen_characters()
 	end
 
 	self._henchmen_characters = {}
+
 	local masks = {
 		"dallas",
 		"dallas",
@@ -1849,6 +1864,7 @@ function MenuSceneManager:set_henchmen_loadout(index, character, loadout)
 	end
 
 	self._picked_character_position[index] = character
+
 	local character_id = managers.blackmarket:get_character_id_by_character_name(character)
 	local unit = self._henchmen_characters[index]
 
@@ -1891,7 +1907,7 @@ function MenuSceneManager:set_henchmen_loadout(index, character, loadout)
 		self:update_mask_offset(mask_data)
 	end
 
-	local weapon_id = nil
+	local weapon_id
 	local crafted_primary = managers.blackmarket:get_crafted_category_slot("primaries", loadout.primary_slot)
 
 	if crafted_primary then
@@ -1905,7 +1921,9 @@ function MenuSceneManager:set_henchmen_loadout(index, character, loadout)
 		weapon_id = primary_id
 	else
 		local primary = tweak_data.character[character].weapon.weapons_of_choice.primary
+
 		primary = string.gsub(primary, "_npc", "")
+
 		local blueprint = managers.weapon_factory:get_default_blueprint_by_factory_id(primary)
 
 		self:set_character_equipped_weapon(unit, primary, blueprint, "primary", nil)
@@ -1945,6 +1963,7 @@ function MenuSceneManager:_setup_lobby_characters()
 		-35,
 		-115
 	}
+
 	local masks = {}
 
 	for i = 1, tweak_data.max_players do
@@ -2022,6 +2041,7 @@ end
 -- Lines 1923-1938
 function MenuSceneManager:set_lobby_character_visible(i, visible, no_state)
 	local unit = self._lobby_characters[i]
+
 	self._character_visibilities[unit:key()] = visible
 
 	if not visible then
@@ -2130,7 +2150,8 @@ function MenuSceneManager:_get_lobby_character_prio_item(rank, outfit)
 				else
 					local rarity = cosmetics_tweak.rarity
 					local rarity_index = tweak_data.economy.rarities[rarity].index
-					weight = 10 * rarity_index * rarity_index
+
+					weight = 10 * (rarity_index * rarity_index)
 				end
 			end
 		end
@@ -2151,6 +2172,7 @@ function MenuSceneManager:_select_lobby_character_pose(peer_id, unit, weapon_inf
 	local weapon_id = managers.weapon_factory:get_weapon_id_by_factory_id(weapon_info.factory_id)
 	local category = tweak_data.weapon[weapon_id].categories[1]
 	local lobby_poses = self._lobby_poses[weapon_id]
+
 	lobby_poses = lobby_poses or self._lobby_poses[category]
 	lobby_poses = lobby_poses or self._lobby_poses.generic
 
@@ -2176,6 +2198,7 @@ end
 -- Lines 2131-2151
 function MenuSceneManager:set_character_mask_by_id(mask_id, blueprint, unit, peer_id, character_name)
 	mask_id = managers.blackmarket:get_real_mask_id(mask_id, peer_id, character_name)
+
 	local unit_name = managers.blackmarket:mask_unit_name_by_mask_id(mask_id, peer_id, character_name)
 
 	self:set_character_mask(unit_name, unit, peer_id or character_name, mask_id, callback(self, self, "clbk_mask_loaded", {
@@ -2213,7 +2236,7 @@ function MenuSceneManager:clbk_character_mask_unit_assembled(data)
 
 	data.mask_unit:set_enabled(true)
 	data.mask_unit:set_moving()
-	self:add_one_frame_delayed_clbk(function ()
+	self:add_one_frame_delayed_clbk(function()
 		if not alive(data.mask_unit) then
 			return
 		end
@@ -2232,7 +2255,9 @@ end
 function MenuSceneManager:set_character_mask(mask_name_str, unit, peer_id_or_char, mask_id, ready_clbk)
 	local character_name = type(peer_id_or_char) == "string" and peer_id_or_char
 	local peer_id = type(peer_id_or_char) == "number" and peer_id_or_char
+
 	unit = unit or self._character_unit
+
 	local mask_name = Idstring(mask_name_str)
 	local old_mask_data = self._mask_units[unit:key()]
 
@@ -2262,6 +2287,7 @@ function MenuSceneManager:set_character_mask(mask_name_str, unit, peer_id_or_cha
 		mask_id = mask_id,
 		ready_clbk = ready_clbk
 	}
+
 	self._mask_units[unit:key()] = mask_data
 
 	unit:base():set_mask_id(mask_data.mask_id)
@@ -2291,6 +2317,7 @@ function MenuSceneManager:clbk_mask_unit_loaded(mask_data_param, status, asset_t
 
 	local mask_align = mask_data.unit:get_object(Idstring("Head"))
 	local mask_unit = self:_spawn_mask(mask_data.mask_name, false, mask_align:position(), mask_align:rotation(), mask_data.mask_id)
+
 	mask_data.mask_align = mask_align
 	mask_data.mask_unit = mask_unit
 	mask_data.ready = true
@@ -2339,6 +2366,7 @@ end
 -- Lines 2305-2319
 function MenuSceneManager:set_character_armor(armor_id, unit)
 	unit = unit or self._character_unit
+
 	local same_armor_id = unit:base():armor_id() == armor_id
 
 	unit:base():set_armor_id(armor_id)
@@ -2373,7 +2401,7 @@ function MenuSceneManager:set_character_player_style(player_style, material_vari
 	unit:base():set_player_style(player_style, material_variation)
 
 	if not same_player_style and unit == self._character_unit then
-		unit:base():add_clbk_listener("done", function ()
+		unit:base():add_clbk_listener("done", function()
 			local current_scene_template = self._scene_templates and self._scene_templates[self._current_scene_template] or {}
 
 			if current_scene_template.character_customization then
@@ -2414,6 +2442,7 @@ end
 -- Lines 2388-2412
 function MenuSceneManager:set_character_equipped_weapon(unit, factory_id, blueprint, type, cosmetics)
 	unit = unit or self._character_unit
+
 	local current_scene_template = self._scene_templates and self._scene_templates[self._current_scene_template] or {}
 
 	if current_scene_template.hide_weapons and unit == self._character_unit then
@@ -2425,12 +2454,14 @@ function MenuSceneManager:set_character_equipped_weapon(unit, factory_id, bluepr
 	if factory_id then
 		local factory_weapon = tweak_data.weapon.factory[factory_id]
 		local ids_unit_name = Idstring(factory_weapon.unit)
+
 		self._weapon_units[unit:key()] = self._weapon_units[unit:key()] or {}
 		self._weapon_units[unit:key()][type] = {
-			unit = false,
 			assembly_complete = false,
+			unit = false,
 			name = ids_unit_name
 		}
+
 		local clbk = callback(self, self, "clbk_weapon_base_unit_loaded", {
 			owner = unit,
 			factory_id = factory_id,
@@ -2567,8 +2598,11 @@ function MenuSceneManager:clbk_weapon_base_unit_loaded(params, status, asset_typ
 	end
 
 	owner_weapon_data = owner_weapon_data[params.type]
+
 	local weapon_unit = World:spawn_unit(asset_name, null_vector, null_rotation)
+
 	owner_weapon_data.unit = weapon_unit
+
 	local align_name = params.type == "primary" and Idstring("a_weapon_right_front") or Idstring("a_weapon_left_front")
 
 	owner:link(align_name, weapon_unit, weapon_unit:orientation_object():name())
@@ -2614,6 +2648,7 @@ end
 -- Lines 2599-2610
 function MenuSceneManager:set_character_equipped_card(unit, rank)
 	unit = unit or self._character_unit
+
 	local card_unit = self:_spawn_infamy_card_unit(Vector3(0, 0, 0), Rotation(0, 0, 0), rank)
 
 	unit:link(Idstring("a_weapon_left_front"), card_unit, card_unit:orientation_object():name())
@@ -2667,6 +2702,7 @@ function MenuSceneManager:_delete_character_mask(owner)
 	end
 
 	self._mask_units[owner_key] = nil
+
 	local unload = true
 
 	for u_key, mask_data in pairs(self._mask_units) do
@@ -2683,6 +2719,7 @@ end
 -- Lines 2664-2698
 function MenuSceneManager:_delete_character_weapon(owner, type)
 	local weapons = {}
+
 	self._weapon_units[owner:key()] = self._weapon_units[owner:key()] or {}
 
 	if type == "all" then
@@ -2752,12 +2789,11 @@ end
 
 -- Lines 2732-2749
 function MenuSceneManager:set_character(character_name, force_recreate)
-	if self._henchmen_player_override then
-		character_name = managers.menu_scene:get_henchmen_character(self._henchmen_player_override) or managers.blackmarket:preferred_henchmen(self._henchmen_player_override) or character_name
-	end
+	character_name = self._henchmen_player_override and (managers.menu_scene:get_henchmen_character(self._henchmen_player_override) or managers.blackmarket:preferred_henchmen(self._henchmen_player_override)) or character_name
 
 	local character_id = managers.blackmarket:get_character_id_by_character_name(character_name)
 	local unit_name = tweak_data.blackmarket.characters[character_id].menu_unit
+
 	self._player_character_name = character_name
 
 	if force_recreate or not alive(self._character_unit) or Idstring(unit_name) ~= self._character_unit:name() then
@@ -2789,9 +2825,9 @@ function MenuSceneManager:setup_camera()
 
 	local ref = self._bg_unit:get_object(Idstring("a_camera_reference"))
 	local target_pos = Vector3(0, 0, ref:position().z)
-	self._camera_values = {
-		camera_pos_current = ref:position():rotate_with(Rotation(90))
-	}
+
+	self._camera_values = {}
+	self._camera_values.camera_pos_current = ref:position():rotate_with(Rotation(90))
 	self._camera_values.camera_pos_target = self._camera_values.camera_pos_current
 	self._camera_values.target_pos_current = target_pos
 	self._camera_values.target_pos_target = self._camera_values.target_pos_current
@@ -2827,7 +2863,7 @@ function MenuSceneManager:setup_camera()
 
 	self._resolution_changed_callback_id = managers.viewport:add_resolution_changed_func(callback(self, self, "_resolution_changed"))
 	self._sky_rotation_angle = 0
-	self._environment_modifier_id = managers.viewport:create_global_environment_modifier(sky_orientation_data_key, true, function ()
+	self._environment_modifier_id = managers.viewport:create_global_environment_modifier(sky_orientation_data_key, true, function()
 		return self:_sky_rotation_modifier()
 	end)
 end
@@ -2855,10 +2891,8 @@ function MenuSceneManager:_set_dimensions()
 	local aspect_ratio = self:_real_aspect_ratio()
 	local screen_aspect = 1.77778
 	local width_mul = 1.7777777777777777
-	local x = 0
-	local y = 0
-	local w = 1
-	local h = 1
+	local x, y = 0, 0
+	local w, h = 1, 1
 
 	if SystemInfo:platform() == Idstring("WIN32") then
 		local screen_res = Application:screen_resolution()
@@ -2880,11 +2914,13 @@ function MenuSceneManager:_set_dimensions()
 			end
 
 			local screen_ratio = wanted_height / screen_height
+
 			y = (1 - screen_ratio) / 2
 			h = screen_ratio
 		end
 	else
 		local width_ratio = aspect_ratio / width_mul
+
 		y = (1 - width_ratio) / 2
 		h = width_ratio
 	end
@@ -2929,7 +2965,7 @@ function MenuSceneManager:set_scene_template(template, data, custom_name, skip_t
 		return
 	end
 
-	local template_data = nil
+	local template_data
 
 	if not skip_transition then
 		managers.menu_component:play_transition()
@@ -3135,8 +3171,10 @@ function MenuSceneManager:_change_workbench_room_lights()
 	local l_omni_09 = Idstring("l_omni_09")
 	local indexed_lights = {}
 	local loaded_lights = 0
+
 	loaded_lights = 0
 	indexed_lights = {}
+
 	local lights = self._workbench_room:get_objects_by_type(Idstring("light"))
 
 	while loaded_lights < 5 do
@@ -3190,8 +3228,8 @@ end
 -- Lines 3188-3194
 function MenuSceneManager:clicked_masks()
 	managers.menu_scene:set_scene_template(nil, {
-		use_character_grab = true,
 		fov = 50,
+		use_character_grab = true,
 		camera_pos = Vector3(-24.0303, 63.8565, 1.49128),
 		target_pos = Vector3(-24.0303, 63.8565, 2.49128) + Vector3(0.5091, 0.852881, 0.115804) * 100,
 		lights = self._scene_templates.character_customization.lights
@@ -3201,8 +3239,8 @@ end
 -- Lines 3196-3202
 function MenuSceneManager:clicked_armor()
 	managers.menu_scene:set_scene_template(nil, {
-		use_character_grab = true,
 		fov = 50,
+		use_character_grab = true,
 		camera_pos = Vector3(-44.5502, 18.1584, -40.7396),
 		target_pos = Vector3(-44.5502, 18.1584, -40.7396) + Vector3(0.5091, 0.852881, 0.115804) * 100,
 		lights = self._scene_templates.character_customization.lights
@@ -3212,8 +3250,8 @@ end
 -- Lines 3204-3210
 function MenuSceneManager:clicked_upper_body()
 	managers.menu_scene:set_scene_template(nil, {
-		use_character_grab = true,
 		fov = 50,
+		use_character_grab = true,
 		camera_pos = Vector3(-75.5435, -27.7427, -42.5198),
 		target_pos = Vector3(-75.5435, -27.7427, -42.5198) + Vector3(0.525678, 0.845068, 0.0975835) * 100,
 		lights = self._scene_templates.character_customization.lights
@@ -3223,8 +3261,8 @@ end
 -- Lines 3212-3218
 function MenuSceneManager:clicked_lower_body()
 	managers.menu_scene:set_scene_template(nil, {
-		use_character_grab = true,
 		fov = 50,
+		use_character_grab = true,
 		camera_pos = Vector3(-87.9057, -49.0395, -106.341),
 		target_pos = Vector3(-87.9057, -49.0395, -106.341) + Vector3(0.548727, 0.83587, 0.0148322) * 100,
 		lights = self._scene_templates.character_customization.lights
@@ -3339,6 +3377,7 @@ function MenuSceneManager:_spawn_infamy_card(rank)
 	self._disable_rotate = true
 	self._disable_dragging = true
 	self._infamy_card_shown = true
+
 	local unit = self:_spawn_infamy_card_unit(self._item_pos, self._item_rot, rank)
 
 	unit:damage():run_sequence_simple("card_flip_01")
@@ -3523,6 +3562,7 @@ end
 
 -- Lines 3489-3490
 function MenuSceneManager:destroy_melee_weapon()
+	return
 end
 
 -- Lines 3492-3497
@@ -3564,7 +3604,7 @@ function MenuSceneManager:spawn_item_weapon(factory_id, blueprint, cosmetics, te
 				local charm_parts = managers.weapon_factory:get_parts_from_weapon_by_type_or_perk("charm", factory_id, blueprint)
 
 				if next(charm_parts) then
-					local part_id = nil
+					local part_id
 					local filtered_bp = {}
 					local t_cont = table.contains
 
@@ -3589,7 +3629,7 @@ function MenuSceneManager:spawn_item_weapon(factory_id, blueprint, cosmetics, te
 	end
 
 	local new_unit = spawn_weapon(self._item_pos, self._item_rot, false)
-	local second_unit = nil
+	local second_unit
 
 	if new_unit:base().AKIMBO then
 		second_unit = spawn_weapon(self._item_pos + self._item_rot:x() * -10 + self._item_rot:z() * -7 + self._item_rot:y() * -5, self._item_rot * Rotation(0, 8, -10), true)
@@ -3626,7 +3666,9 @@ function MenuSceneManager:_set_item_unit(unit, oobb_object, max_mod, type, secon
 	self:remove_item()
 
 	self._current_weapon_id = nil
+
 	local scene_template = custom_data and custom_data.scene_template and self._scene_templates[custom_data.scene_template] or type == "mask" and self._scene_templates.blackmarket_mask or self._scene_templates.blackmarket_item
+
 	self._item_pos = custom_data and custom_data.item_pos or Vector3(0, 0, 200)
 
 	if custom_data and custom_data.item_offset then
@@ -3636,6 +3678,7 @@ function MenuSceneManager:_set_item_unit(unit, oobb_object, max_mod, type, secon
 	local item_yaw = self._item_yaw
 	local item_pitch = self._item_pitch
 	local item_roll = self._item_roll
+
 	self._item_yaw = 0
 	self._item_pitch = 0
 	self._item_roll = 0
@@ -3654,13 +3697,20 @@ function MenuSceneManager:_set_item_unit(unit, oobb_object, max_mod, type, secon
 	unit:set_moving(2)
 
 	local oobb = oobb_object and unit:get_object(Idstring(oobb_object)):oobb() or unit:oobb()
+
 	self._current_item_oobb_object = oobb_object and unit:get_object(Idstring(oobb_object)) or unit
+
 	local oobb_size = oobb:size()
 	local max = math.max(oobb_size.x, oobb_size.y)
+
 	max = math.max(max, oobb_size.z)
+
 	local offset_dir = (scene_template.target_pos - scene_template.camera_pos):normalized()
+
 	self._item_max_size = math.max(max * (max_mod or 1), 20)
+
 	local pos = Vector3(self._item_pos.x, self._item_pos.y, self._item_pos.z)
+
 	pos = pos - offset_dir * (150 - self._item_max_size)
 	self._item_rot_pos = pos
 
@@ -3701,7 +3751,7 @@ function MenuSceneManager:_spawn_item(unit_name, oobb_object, max_mod, type, mas
 
 	mrotation.set_zero(self._item_rot)
 
-	local unit = nil
+	local unit
 
 	if type == "mask" then
 		unit = self:_spawn_mask(unit_name, true, self._item_pos, self._item_rot, mask_id)
@@ -3759,6 +3809,7 @@ function MenuSceneManager:_set_item_offset(oobb, instant)
 	end
 
 	local offset = (self._item_unit.unit:orientation_object():position() - center):rotate_with(self._item_rot:inverse())
+
 	self._weapon_transition_time = self._weapon_transition_time and (self._weapon_transition_time == 1 and 0 or 1 - self._weapon_transition_time) or 0
 
 	if instant then
@@ -3792,9 +3843,10 @@ function MenuSceneManager:spawn_mask(mask_id, blueprint, offset)
 	self:remove_item()
 
 	local backstrap_unit_name = Idstring("units/payday2/masks/msk_fps_back_straps/msk_fps_back_straps")
+
 	self._item_unit = {
-		mask_loaded = false,
 		backstrap_loaded = false,
+		mask_loaded = false,
 		unit = false,
 		name = mask_unit_name,
 		backstrap_unit_name = backstrap_unit_name,
@@ -3833,6 +3885,7 @@ function MenuSceneManager:clbk_mask_item_unit_loaded(status, asset_type, asset_n
 	end
 
 	local item = self._item_unit
+
 	self._item_unit = nil
 
 	self:_spawn_item(item.name, item.oobb_object, nil, "mask", item.mask_id, {
@@ -3840,6 +3893,7 @@ function MenuSceneManager:clbk_mask_item_unit_loaded(status, asset_type, asset_n
 	})
 
 	local new_unit = self._item_unit.unit
+
 	self._item_unit = item
 	self._item_unit.unit = new_unit
 
@@ -3857,6 +3911,7 @@ function MenuSceneManager:clbk_mask_item_unit_loaded(status, asset_type, asset_n
 
 	if self._item_unit.scene_template then
 		local scene_template = self._item_unit.scene_template
+
 		self._item_unit.scene_template = nil
 
 		self:set_scene_template(scene_template.template, scene_template.data, scene_template.custom_name, true)
@@ -3871,7 +3926,7 @@ function MenuSceneManager:clbk_mask_item_unit_assembled()
 
 	self._item_unit.unit:set_enabled(true)
 	self._item_unit.unit:set_moving()
-	self:add_one_frame_delayed_clbk(function ()
+	self:add_one_frame_delayed_clbk(function()
 		if not self._item_unit or not alive(self._item_unit.unit) then
 			return
 		end
@@ -3897,7 +3952,8 @@ end
 function MenuSceneManager:update_mask(blueprint)
 	if self._item_unit and blueprint then
 		if self._item_unit.unit then
-			self._item_unit.unit:base():apply_blueprint(blueprint, function ()
+			self._item_unit.unit:base():apply_blueprint(blueprint, function()
+				return
 			end)
 		else
 			self._item_unit.blueprint = blueprint
@@ -3918,7 +3974,7 @@ end
 
 -- Lines 3912-3921
 function MenuSceneManager:on_setup_infamy_menu()
-	self:add_one_frame_delayed_clbk(function ()
+	self:add_one_frame_delayed_clbk(function()
 		if not _G.IS_VR then
 			self._character_unit:set_position(Vector3(500, 0, -500))
 
@@ -3943,7 +3999,7 @@ end
 
 -- Lines 3931-3949
 function MenuSceneManager:spawn_infamy_outfit_preview(outfit_id, material_variation)
-	self:add_one_frame_delayed_clbk(function ()
+	self:add_one_frame_delayed_clbk(function()
 		self:set_character_player_style(outfit_id, material_variation, self._character_unit)
 
 		local asset_id = Idstring(tweak_data.blackmarket.player_styles[outfit_id].unit)
@@ -3982,7 +4038,7 @@ end
 
 -- Lines 3963-3973
 function MenuSceneManager:spawn_outfit_done(asset_id)
-	self:add_one_frame_delayed_clbk(function ()
+	self:add_one_frame_delayed_clbk(function()
 		if self._infamy_item_spawned and self._infamy_item_spawned == asset_id then
 			self._character_unit:spawn_manager():remove_unit("char_gloves")
 			self._character_unit:spawn_manager():remove_unit("char_glove_adapter")
@@ -3995,7 +4051,7 @@ end
 
 -- Lines 3975-3994
 function MenuSceneManager:spawn_infamy_gloves_preview(glove_id)
-	self:add_one_frame_delayed_clbk(function ()
+	self:add_one_frame_delayed_clbk(function()
 		self:set_character_player_style("default", nil, self._character_unit)
 		self:set_character_gloves(glove_id, self._character_unit)
 
@@ -4033,7 +4089,7 @@ end
 
 -- Lines 4007-4016
 function MenuSceneManager:spawn_gloves_done(asset_id)
-	self:add_one_frame_delayed_clbk(function ()
+	self:add_one_frame_delayed_clbk(function()
 		if self._infamy_item_spawned and self._infamy_item_spawned == asset_id then
 			self._character_unit:spawn_manager():remove_unit("char_glove_adapter")
 			self._character_unit:anim_state_machine():set_speed(self._outfit_state, 0)
@@ -4045,7 +4101,7 @@ end
 
 -- Lines 4018-4034
 function MenuSceneManager:spawn_infamy_card_preview(card_sqeuence_name, show_front)
-	self:add_one_frame_delayed_clbk(function ()
+	self:add_one_frame_delayed_clbk(function()
 		self._item_pos = Vector3(0, 0, 0)
 
 		mrotation.set_zero(self._item_rot)
@@ -4057,6 +4113,7 @@ function MenuSceneManager:spawn_infamy_card_preview(card_sqeuence_name, show_fro
 		mrotation.set_zero(self._item_rot_mod)
 
 		self._use_item_grab = show_front
+
 		local unit = World:spawn_unit(Idstring("units/menu/menu_scene/infamy_card"), self._item_pos, self._item_rot)
 
 		if card_sqeuence_name then
@@ -4072,15 +4129,16 @@ end
 -- Lines 4036-4047
 function MenuSceneManager:spawn_infamy_weapon_preview(color_id)
 	Application:stack_dump()
-	self:add_one_frame_delayed_clbk(function ()
+	self:add_one_frame_delayed_clbk(function()
 		self._use_item_grab = true
+
 		local blueprint = clone(tweak_data.weapon.factory.wpn_fps_pis_g17.default_blueprint)
 
 		managers.menu_scene:spawn_item_weapon("wpn_fps_pis_g17", blueprint, {
-			instance_id = "color_tan_khaki",
-			quality = "mint",
 			color_index = 10,
+			instance_id = "color_tan_khaki",
 			pattern_scale = 1,
+			quality = "mint",
 			id = color_id
 		}, nil, {
 			item_yaw = 220,
@@ -4098,33 +4156,17 @@ function MenuSceneManager:character_screen_position(peer_id)
 		local peer_3_x_offset = 0
 
 		if peer_id == 3 then
-			if is_me then
-				peer_3_x_offset = -20
-			else
-				peer_3_x_offset = -40
-			end
+			peer_3_x_offset = is_me and -20 or -40
 		end
 
 		local peer_y_offset = 0
 
 		if peer_id == 2 then
-			if is_me then
-				peer_y_offset = -3
-			else
-				peer_y_offset = 0
-			end
+			peer_y_offset = is_me and -3 or 0
 		elseif peer_id == 3 then
-			if is_me then
-				peer_y_offset = -7
-			else
-				peer_y_offset = 0
-			end
+			peer_y_offset = is_me and -7 or 0
 		elseif peer_id == 4 then
-			if is_me then
-				peer_y_offset = 5
-			else
-				peer_y_offset = 0
-			end
+			peer_y_offset = is_me and 5 or 0
 		end
 
 		local spine_pos = unit:get_object(Idstring("Spine")):position() + Vector3(peer_3_x_offset, 0, -5 + 15 * (peer_id % 4) + peer_y_offset)
@@ -4152,16 +4194,22 @@ end
 function MenuSceneManager:controller_move(x, y)
 	if self._item_unit and alive(self._item_unit.unit) then
 		local diff = -y * 90
+
 		self._item_yaw = (self._item_yaw + x * 75) % 360
+
 		local yaw_sin = math.sin(self._item_yaw)
 		local yaw_cos = math.cos(self._item_yaw)
 		local treshhold = math.sin(45)
 
-		if yaw_cos <= -treshhold or yaw_cos >= treshhold then
+		if yaw_cos > -treshhold and yaw_cos < treshhold then
+			-- Nothing
+		else
 			self._item_pitch = math.clamp(self._item_pitch + diff * yaw_cos, -30, 30)
 		end
 
-		if yaw_sin <= -treshhold or yaw_sin >= treshhold then
+		if yaw_sin > -treshhold and yaw_sin < treshhold then
+			-- Nothing
+		else
 			self._item_roll = math.clamp(self._item_roll - diff * yaw_sin, -30, 30)
 		end
 
@@ -4252,7 +4300,7 @@ function MenuSceneManager:mouse_pressed(o, button, x, y)
 		local data = World:raycast("ray", pos, to, "slot_mask", 16)
 
 		if data and data.unit then
-			local slot = nil
+			local slot
 
 			for i, unit in ipairs(self._lobby_characters) do
 				if unit == data.unit and unit:visible() then
@@ -4267,6 +4315,7 @@ function MenuSceneManager:mouse_pressed(o, button, x, y)
 					self._current_profile_slot = 0
 				else
 					local pos = data.unit:get_object(Idstring("Spine")):position()
+
 					pos = self._workspace:world_to_screen(self._camera_object, pos)
 					self._current_profile_slot = slot
 				end
@@ -4333,6 +4382,7 @@ function MenuSceneManager:mouse_moved(o, x, y)
 		if self._use_character_pan and self._character_values and self._scene_templates and self._scene_templates[self._current_scene_template] then
 			local new_z = mvector3.z(self._character_values.pos_target) - (y - self._character_grabbed_current_y) / 12
 			local default_z = mvector3.z(self._scene_templates and self._scene_templates[self._current_scene_template].character_pos or self._character_values.pos_current)
+
 			new_z = math.clamp(new_z, default_z - 20, default_z + 10)
 
 			mvector3.set_z(self._character_values.pos_target, new_z)
@@ -4349,16 +4399,18 @@ function MenuSceneManager:mouse_moved(o, x, y)
 	if self._item_grabbed then
 		if self._item_unit and alive(self._item_unit.unit) then
 			local diff = (y - self._item_grabbed_current_y) / 4
+
 			self._item_yaw = (self._item_yaw + (x - self._item_grabbed_current_x) / 4) % 360
+
 			local yaw_sin = math.sin(self._item_yaw)
 			local yaw_cos = math.cos(self._item_yaw)
 			local treshhold = math.sin(45)
 
-			if yaw_cos <= -treshhold or yaw_cos >= treshhold then
+			if not (yaw_cos > -treshhold) or not (yaw_cos < treshhold) then
 				self._item_pitch = math.clamp(self._item_pitch + diff * yaw_cos, -50, 50)
 			end
 
-			if yaw_sin <= -treshhold or yaw_sin >= treshhold then
+			if not (yaw_sin > -treshhold) or not (yaw_sin < treshhold) then
 				self._item_roll = math.clamp(self._item_roll - diff * yaw_sin, -50, 50)
 			end
 
@@ -4472,6 +4524,7 @@ function MenuSceneManager:spawn_workbench_room(workbench_name)
 	end
 
 	local pos = self._scene_templates.blackmarket_crafting.camera_pos
+
 	self._workbench_room = World:spawn_unit(ids_unit_workbench_room_name, pos)
 end
 
@@ -4520,6 +4573,7 @@ end
 
 -- Lines 4507-4512
 function MenuSceneManager:set_server_loading()
+	return
 end
 
 -- Lines 4514-4517
@@ -4549,6 +4603,7 @@ function MenuSceneManager:_update_safe_scene(t, dt)
 
 	if self._safe_explosion_blur then
 		self._safe_explosion_blur.lerp = math.min(1, self._safe_explosion_blur.lerp + dt / self._safe_explosion_blur.duration)
+
 		local dof_setting = self._safe_explosion_blur.max_value * math.bezier({
 			1,
 			1,
@@ -4602,6 +4657,7 @@ end
 function MenuSceneManager:fetch_safe_result()
 	if self._safe_result_recieved_data then
 		local data = self._safe_result_recieved_data
+
 		self._safe_result_recieved_data = nil
 
 		return data
@@ -4623,10 +4679,9 @@ function MenuSceneManager:start_open_economy_safe()
 
 			self._shaker:set_parameter(self._safe_shake, "amplitude", 1)
 
-			self._safe_shake_transition = {
-				lerp = 0,
-				speed = 0.05
-			}
+			self._safe_shake_transition = {}
+			self._safe_shake_transition.lerp = 0
+			self._safe_shake_transition.speed = 0.05
 			self._safe_shake_transition.target_speed = self._safe_shake_transition.speed
 		end
 
@@ -4657,16 +4712,16 @@ function MenuSceneManager:_load_economy_safe(safe_entry, ready_clbk)
 		drill_name = drill_name
 	}
 	local saferoom_data = {
-		saferoom_unit = false,
 		ready = false,
+		saferoom_unit = false,
 		saferoom_name = saferoom_name
 	}
-	self._safe_scene_data = {
-		safe_data = safe_data,
-		drill_data = drill_data,
-		saferoom_data = saferoom_data,
-		ready_clbk = ready_clbk
-	}
+
+	self._safe_scene_data = {}
+	self._safe_scene_data.safe_data = safe_data
+	self._safe_scene_data.drill_data = drill_data
+	self._safe_scene_data.saferoom_data = saferoom_data
+	self._safe_scene_data.ready_clbk = ready_clbk
 
 	managers.blackmarket:load_economy_safe(safe_entry, self._safe_scene_data)
 end
@@ -4741,6 +4796,7 @@ end
 -- Lines 4697-4705
 function MenuSceneManager:_create_economy_safe_scene()
 	local pos = self._scene_templates.safe.camera_pos + self:_scene_offset_from_camera()
+
 	self._economy_safe = World:spawn_unit(self._safe_scene_data.safe_data.safe_name, pos)
 	self._economy_drill = World:spawn_unit(self._safe_scene_data.drill_data.drill_name, self._economy_safe:get_object(Idstring("spawn_drill")):position())
 	self._economy_saferoom = World:spawn_unit(self._safe_scene_data.saferoom_data.saferoom_name, pos)
@@ -4769,6 +4825,7 @@ end
 -- Lines 4722-4785
 function MenuSceneManager:load_safe_result_content(result, ready_clbk)
 	local item_data = (tweak_data.economy[result.category] or tweak_data.blackmarket[result.category])[result.entry]
+
 	self._safe_result_content_data = {
 		result = result,
 		item_data = item_data,
@@ -4781,6 +4838,7 @@ function MenuSceneManager:load_safe_result_content(result, ready_clbk)
 		local factory_id = managers.weapon_factory:get_factory_id_by_weapon_id(weapon_id)
 		local blueprint = item_data.default_blueprint or deep_clone(managers.weapon_factory:get_default_blueprint_by_factory_id(factory_id))
 		local weapon_name = Idstring(tweak_data.weapon.factory[factory_id].unit)
+
 		self._safe_result_content_data.weapon_name = weapon_name
 		self._safe_result_content_data.factory_id = factory_id
 		self._safe_result_content_data.ready_flags.parts_ready = false
@@ -4811,6 +4869,7 @@ function MenuSceneManager:load_safe_result_content(result, ready_clbk)
 		self._economy_character:set_rotation(Rotation(180, 0, 0))
 
 		self._safe_result_content_data.ready_flags.armor_ready = false
+
 		local armors = managers.blackmarket:get_sorted_armors()
 
 		self:set_character_armor(armors[#armors], unit)
@@ -4936,11 +4995,10 @@ end
 
 -- Lines 4886-4891
 function MenuSceneManager:_start_safe_explosion_blur()
-	self._safe_explosion_blur = {
-		max_value = Vector3(0, 1, 4),
-		lerp = 0,
-		duration = 1
-	}
+	self._safe_explosion_blur = {}
+	self._safe_explosion_blur.max_value = Vector3(0, 1, 4)
+	self._safe_explosion_blur.lerp = 0
+	self._safe_explosion_blur.duration = 1
 end
 
 -- Lines 4893-4895
@@ -5016,6 +5074,7 @@ end
 
 -- Lines 4949-4959
 function MenuSceneManager:set_blackmarket_tradable_loaded()
+	return
 end
 
 -- Lines 4961-4963

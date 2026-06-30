@@ -106,15 +106,17 @@ function PlayerFreefall:_update_movement(t, dt)
 	end
 
 	local current_rot = self._unit:movement().fall_rotation
-	local new_rot = nil
+	local new_rot
 	local delta = self._tweak_data.movement.rotation_speed * dt
 
 	if direction.x > 0 then
 		local yaw = current_rot:yaw() - delta
+
 		new_rot = Rotation(yaw, current_rot:pitch(), current_rot:roll())
 		self._unit:movement().fall_rotation = new_rot
 	elseif direction.x < 0 then
 		local yaw = current_rot:yaw() + delta
+
 		new_rot = Rotation(yaw, current_rot:pitch(), current_rot:roll())
 		self._unit:movement().fall_rotation = new_rot
 	end
@@ -132,12 +134,14 @@ end
 -- Lines 158-201
 function PlayerFreefall:_update_check_actions(t, dt)
 	local input = self:_get_input(t, dt)
+
 	self._stick_move = self._controller:get_input_axis("move")
 
 	if mvector3.length(self._stick_move) < 0.1 then
 		self._move_dir = nil
 	else
 		self._move_dir = mvector3.copy(self._stick_move)
+
 		local cam_flat_rot = Rotation(self._cam_fwd_flat, math.UP)
 
 		mvector3.rotate_with(self._move_dir, cam_flat_rot)
@@ -151,7 +155,7 @@ function PlayerFreefall:_update_check_actions(t, dt)
 
 	self:_update_foley(t, input)
 
-	local new_action = nil
+	local new_action
 
 	if not new_action then
 		-- Nothing
@@ -181,7 +185,7 @@ end
 
 -- Lines 230-243
 function PlayerFreefall:_check_action_interact(t, input)
-	local new_action = nil
+	local new_action
 	local interaction_wanted = input.btn_interact_press
 
 	if interaction_wanted then
@@ -204,4 +208,5 @@ end
 
 -- Lines 254-256
 function PlayerFreefall:tweak_data_clbk_reload()
+	return
 end

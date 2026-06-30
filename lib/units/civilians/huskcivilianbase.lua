@@ -1,6 +1,7 @@
 local ids_lod = Idstring("lod")
 local ids_lod1 = Idstring("lod1")
 local ids_ik_aim = Idstring("ik_aim")
+
 HuskCivilianBase = HuskCivilianBase or class(HuskCopBase)
 
 -- Lines 7-36
@@ -12,7 +13,8 @@ function HuskCivilianBase:post_init()
 	self:set_anim_lod(1)
 
 	self._lod_stage = 1
-	local spawn_state = nil
+
+	local spawn_state
 
 	if self._spawn_state then
 		if self._spawn_state ~= "" then
@@ -35,6 +37,7 @@ end
 
 -- Lines 40-40
 function HuskCivilianBase:default_weapon_name()
+	return
 end
 
 -- Lines 44-54
@@ -55,9 +58,10 @@ HuskCivilianBaseResetSpawnPos = HuskCivilianBaseResetSpawnPos or class(HuskCivil
 -- Lines 62-75
 function HuskCivilianBaseResetSpawnPos:init(unit)
 	local spawn_position = unit:position()
+
 	self._reset_spawn_pos_clbk_id = "HuskResetSpawnPos" .. tostring(unit:key())
 
-	managers.enemy:add_delayed_clbk(self._reset_spawn_pos_clbk_id, function ()
+	managers.enemy:add_delayed_clbk(self._reset_spawn_pos_clbk_id, function()
 		if alive(unit) then
 			unit:movement():set_position(spawn_position)
 		end

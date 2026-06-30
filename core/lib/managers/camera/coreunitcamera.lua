@@ -12,15 +12,18 @@ end
 
 -- Lines 12-13
 function UnitCamera:destroy()
+	return
 end
 
 -- Lines 15-16
 function UnitCamera:create_layers()
+	return
 end
 
 -- Lines 18-24
 function UnitCamera:activate()
 	local is_deactivated = self._active_count == 0
+
 	self._active_count = self._active_count + 1
 
 	if is_deactivated then
@@ -33,6 +36,7 @@ function UnitCamera:deactivate()
 	assert(self._active_count > 0)
 
 	self._active_count = self._active_count - 1
+
 	local should_deactivate = self._active_count == 0
 
 	if should_deactivate then
@@ -44,6 +48,7 @@ end
 
 -- Lines 36-37
 function UnitCamera:on_activate(active)
+	return
 end
 
 -- Lines 39-41
@@ -53,4 +58,5 @@ end
 
 -- Lines 48-50
 function UnitCamera:apply_camera(camera_manager)
+	return
 end

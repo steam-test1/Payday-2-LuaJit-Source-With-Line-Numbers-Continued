@@ -4,6 +4,7 @@ if core then
 end
 
 nice = math.nice
+
 local temp_vec = Vector3()
 
 -- Lines 21-43
@@ -25,6 +26,7 @@ function rgb_to_hsv(r, g, b)
 	end
 
 	hue = math.fmod(hue, 360)
+
 	local saturation = max == 0 and 0 or 1 - min / max
 	local value = max
 
@@ -169,7 +171,7 @@ function get_fit_size(width, height, bounding_width, bounding_height)
 	local bounding_aspect = bounding_width / bounding_height
 	local aspect = width / height
 
-	if bounding_aspect >= aspect then
+	if aspect <= bounding_aspect then
 		return bounding_width * aspect / bounding_aspect, bounding_height
 	else
 		return bounding_width, bounding_height * bounding_aspect / aspect
@@ -178,23 +180,23 @@ end
 
 -- Lines 154-178
 function os.get_oldest_date(date1, date2)
-	if date2.year < date1.year then
+	if date1.year > date2.year then
 		return date1
 	elseif date1.year < date2.year then
 		return date2
-	elseif date2.yday < date1.yday then
+	elseif date1.yday > date2.yday then
 		return date1
 	elseif date1.yday < date2.yday then
 		return date2
-	elseif date2.hour < date1.hour then
+	elseif date1.hour > date2.hour then
 		return date1
 	elseif date1.hour < date2.hour then
 		return date2
-	elseif date2.min < date1.min then
+	elseif date1.min > date2.min then
 		return date1
 	elseif date1.min < date2.min then
 		return date2
-	elseif date2.sec < date1.sec then
+	elseif date1.sec > date2.sec then
 		return date1
 	elseif date1.sec < date2.sec then
 		return date2
@@ -241,6 +243,7 @@ end
 -- Lines 216-220
 function math.truncate(n, precision)
 	precision = precision or 0
+
 	local prec_mul = math.pow(10, precision)
 
 	return math.floor(n * prec_mul) / prec_mul
@@ -329,6 +332,7 @@ function math.spline_len(points, n)
 
 	for i = 1, n do
 		local p = math.spline(points, i / n)
+
 		len = len + (p - old_p):length()
 		old_p = p
 	end
@@ -344,7 +348,7 @@ function math.bezier(points, t)
 	local p4 = points[4]
 	local t_squared = t * t
 	local t_cubed = t_squared * t
-	local a1 = p1 * (1 - t) * (1 - t) * (1 - t)
+	local a1 = p1 * ((1 - t) * (1 - t) * (1 - t))
 	local a2 = 3 * p2 * t * (1 - t) * (1 - t)
 	local a3 = 3 * p3 * t_squared * (1 - t)
 	local a4 = p4 * t_cubed
@@ -366,7 +370,7 @@ function math.quadratic_bezier(points, t)
 	local p2 = points[2]
 	local p3 = points[3]
 
-	return p1 * (1 - t) * (1 - t) + p2 * 2 * t * (1 - t) + p3 * t * t
+	return p1 * ((1 - t) * (1 - t)) + p2 * (2 * t * (1 - t)) + p3 * (t * t)
 end
 
 -- Lines 332-341
@@ -376,6 +380,7 @@ function math.bezier_len(points, n)
 
 	for i = 1, n do
 		local p = math.bezier(points, i / n)
+
 		len = len + (p - old_p):length()
 		old_p = p
 	end

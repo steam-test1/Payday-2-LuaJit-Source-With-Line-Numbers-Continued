@@ -52,6 +52,7 @@ function CoreHubElement:_createicon()
 	self._icon_gui:preload("core/guis/core_edit_icon")
 
 	local pos = self._unit:position() - Vector3(iconsize / 2, iconsize / 2, 0)
+
 	self._icon_ws = self._icon_gui:create_linked_workspace(64, 64, root, pos, Vector3(iconsize, 0, 0), Vector3(0, iconsize, 0))
 
 	self._icon_ws:set_billboard(self._icon_ws.BILLBOARD_BOTH)
@@ -139,30 +140,37 @@ end
 
 -- Lines 156-157
 function CoreHubElement:selected()
+	return
 end
 
 -- Lines 160-161
 function CoreHubElement:update_selected()
+	return
 end
 
 -- Lines 164-165
 function CoreHubElement:update_unselected()
+	return
 end
 
 -- Lines 167-169
 function CoreHubElement:begin_editing()
+	return
 end
 
 -- Lines 171-173
 function CoreHubElement:end_editing()
+	return
 end
 
 -- Lines 176-177
 function CoreHubElement:clone_data()
+	return
 end
 
 -- Lines 193-194
 function CoreHubElement:layer_finished()
+	return
 end
 
 -- Lines 197-199
@@ -266,6 +274,7 @@ end
 
 -- Lines 281-282
 function CoreHubElement:load_data(data)
+	return
 end
 
 -- Lines 285-294
@@ -284,9 +293,7 @@ end
 -- Lines 297-302
 function CoreHubElement:draw_connections_selected()
 	for _, hub in ipairs(self._hed.hubs) do
-		local r = 1
-		local g = 0.6
-		local b = 0.2
+		local r, g, b = 1, 0.6, 0.2
 
 		self:draw_arrow(self._unit, hub, r, g, b, true)
 	end
@@ -294,6 +301,7 @@ end
 
 -- Lines 305-307
 function CoreHubElement:draw_connections_unselected()
+	return
 end
 
 -- Lines 309-329
@@ -301,13 +309,16 @@ function CoreHubElement:draw_arrow(from, to, r, g, b, thick)
 	self._arrow_brush:set_color(Color(r, g, b))
 
 	local mul = 1.2
+
 	r = math.clamp(r * mul, 0, 1)
 	g = math.clamp(g * mul, 0, 1)
 	b = math.clamp(b * mul, 0, 1)
 	from = from:position()
 	to = to:position()
+
 	local len = (from - to):length()
 	local dir = (to - from):normalized()
+
 	len = len - 50
 
 	if thick then
@@ -323,6 +334,7 @@ end
 
 -- Lines 333-334
 function CoreHubElement:clear()
+	return
 end
 
 -- Lines 338-340
@@ -337,10 +349,12 @@ end
 
 -- Lines 347-348
 function CoreHubElement:add_triggers()
+	return
 end
 
 -- Lines 351-352
 function CoreHubElement:clear_triggers()
+	return
 end
 
 -- Lines 355-357
@@ -355,10 +369,12 @@ end
 
 -- Lines 367-368
 function CoreHubElement:set_enabled()
+	return
 end
 
 -- Lines 373-374
 function CoreHubElement:set_disabled()
+	return
 end
 
 -- Lines 377-379

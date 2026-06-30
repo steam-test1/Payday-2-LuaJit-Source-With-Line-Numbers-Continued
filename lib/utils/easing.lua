@@ -1,4 +1,5 @@
 Easing = {}
+
 local mlerp = math.lerp
 local mpow = math.pow
 local msin = math.sin
@@ -15,7 +16,7 @@ end
 
 -- Lines 25-27
 function Easing.in_quad(a, b, t)
-	return (b - a) * t * t + a
+	return (b - a) * (t * t) + a
 end
 
 -- Lines 29-31
@@ -28,7 +29,7 @@ function Easing.inout_quad(a, b, t)
 	t = t * 2
 
 	if t < 1 then
-		return (b - a) * 0.5 * t * t + a
+		return (b - a) * 0.5 * (t * t) + a
 	else
 		return -(b - a) * 0.5 * ((t - 1) * (t - 3) - 1) + a
 	end
@@ -37,6 +38,7 @@ end
 -- Lines 42-50
 function Easing.outin_quad(a, b, t)
 	t = t * 2
+
 	local c = (b - a) * 0.5
 
 	if t < 1 then
@@ -48,7 +50,7 @@ end
 
 -- Lines 54-56
 function Easing.in_cubic(a, b, t)
-	return (b - a) * t * t * t + a
+	return (b - a) * (t * t * t) + a
 end
 
 -- Lines 58-61
@@ -63,7 +65,7 @@ function Easing.inout_cubic(a, b, t)
 	t = t * 2
 
 	if t < 1 then
-		return (b - a) * 0.5 * t * t * t + a
+		return (b - a) * 0.5 * (t * t * t) + a
 	else
 		t = t - 2
 
@@ -74,6 +76,7 @@ end
 -- Lines 73-81
 function Easing.outin_cubic(a, b, t)
 	t = t * 2
+
 	local c = (b - a) * 0.5
 
 	if t < 1 then
@@ -85,7 +88,7 @@ end
 
 -- Lines 85-87
 function Easing.in_quart(a, b, t)
-	return (b - a) * t * t * t * t + a
+	return (b - a) * (t * t * t * t) + a
 end
 
 -- Lines 89-92
@@ -100,7 +103,7 @@ function Easing.inout_quart(a, b, t)
 	t = t * 2
 
 	if t < 1 then
-		return (b - a) * 0.5 * t * t * t * t + a
+		return (b - a) * 0.5 * (t * t * t * t) + a
 	else
 		t = t - 2
 
@@ -111,6 +114,7 @@ end
 -- Lines 104-112
 function Easing.outin_quart(a, b, t)
 	t = t * 2
+
 	local c = (b - a) * 0.5
 
 	if t < 1 then
@@ -122,7 +126,7 @@ end
 
 -- Lines 116-118
 function Easing.in_quint(a, b, t)
-	return (b - a) * t * t * t * t * t + a
+	return (b - a) * (t * t * t * t * t) + a
 end
 
 -- Lines 120-123
@@ -137,7 +141,7 @@ function Easing.inout_quint(a, b, t)
 	t = t * 2
 
 	if t < 1 then
-		return (b - a) * 0.5 * t * t * t * t * t + a
+		return (b - a) * 0.5 * (t * t * t * t * t) + a
 	else
 		t = t - 2
 
@@ -148,6 +152,7 @@ end
 -- Lines 135-143
 function Easing.outin_quint(a, b, t)
 	t = t * 2
+
 	local c = (b - a) * 0.5
 
 	if t < 1 then
@@ -195,6 +200,7 @@ function Easing.inout_expo(a, b, t)
 		return c * 0.5 * mpow(2, 10 * (t - 1)) - c * 0.0005 + a
 	else
 		t = t - 1
+
 		local c = b - a
 
 		return c * 0.5 * 1.0005 * (-mpow(2, -10 * t) + 2) + a
@@ -204,6 +210,7 @@ end
 -- Lines 185-193
 function Easing.outin_expo(a, b, t)
 	t = t * 2
+
 	local c = (b - a) * 0.5
 
 	if t < 1 then

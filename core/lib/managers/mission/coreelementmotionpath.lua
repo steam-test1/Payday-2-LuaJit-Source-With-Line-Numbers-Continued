@@ -64,6 +64,7 @@ end
 
 -- Lines 66-68
 function ElementMotionPathTrigger:client_on_executed(...)
+	return
 end
 
 -- Lines 70-76

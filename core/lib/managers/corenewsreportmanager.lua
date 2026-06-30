@@ -7,21 +7,14 @@ NewsReportManager = NewsReportManager or CoreClass.class()
 NewsReportManager.NEWS_FILE = "settings/news"
 NewsReportManager.OLD_NEWS_FILE = "settings/old_news"
 NewsReportManager.KEYWORDS = {
-	WIKI_URL = "http://ganonbackup/wiki_artistwiki/index.php/Main_Page",
-	GANON_URL = "http://ganonbackup",
 	CT_WIKI_URL = "http://ganonbackup/wiki_artistwiki/index.php/Core_Team",
-	GRIN = [[
-
-  _|_|_|  _|_|_|    _|_|_|  _|      _|
-_|        _|    _|    _|    _|_|    _|
-_|  _|_|  _|_|_|      _|    _|  _|  _|
-_|    _|  _|    _|    _|    _|    _|_|
-  _|_|_|  _|    _|  _|_|_|  _|      _|
-]],
-	NL = "\n",
+	GANON_URL = "http://ganonbackup",
+	GRIN = "\n  _|_|_|  _|_|_|    _|_|_|  _|      _|\n_|        _|    _|    _|    _|_|    _|\n_|  _|_|  _|_|_|      _|    _|  _|  _|\n_|    _|  _|    _|    _|    _|    _|_|\n  _|_|_|  _|    _|  _|_|_|  _|      _|\n",
 	GRIN_URL = "http://www.grin.se",
+	NL = "\n",
 	SP = " ",
 	TB = "\t",
+	WIKI_URL = "http://ganonbackup/wiki_artistwiki/index.php/Main_Page",
 	ENV = {
 		os.getenv,
 		true
@@ -31,6 +24,7 @@ _|    _|  _|    _|    _|    _|    _|_|
 -- Lines 23-43
 function NewsReportManager:init()
 	self._news_dates = {}
+
 	local news_file = self.NEWS_FILE .. ".xml"
 	local old_news_file = self.OLD_NEWS_FILE .. ".xml"
 
@@ -75,7 +69,7 @@ end
 -- Lines 63-89
 function NewsReportManager:format_news(news, format, ...)
 	if format == "TEXT" then
-		local output = nil
+		local output
 
 		for _, v in ipairs(news) do
 			output = output and string.format("%s\nDate: %s%s", output, v.date, v.text) or string.format("Date: %s%s", v.date, v.text)
@@ -134,7 +128,7 @@ function NewsReportManager:check_min_date(min_date, date)
 	assert(#d0 == #d1, "Bad date format!")
 
 	for i, n in ipairs(d0) do
-		if d1[i] < n then
+		if n > d1[i] then
 			break
 		elseif n < d1[i] then
 			return true

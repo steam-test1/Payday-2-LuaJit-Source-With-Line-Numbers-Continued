@@ -104,7 +104,7 @@ end
 
 -- Lines 100-119
 function Manager:close_menu(menu_name)
-	local menu = nil
+	local menu
 
 	if menu_name then
 		for _, open_menu in ipairs(self._open_menus) do
@@ -146,6 +146,7 @@ end
 
 -- Lines 139-140
 function Manager:_node_selected(menu_name, node)
+	return
 end
 
 -- Lines 142-148

@@ -29,6 +29,7 @@ end
 
 -- Lines 47-48
 function DisconnectedState:on_server_left_ok_pressed()
+	return
 end
 
 -- Lines 50-54

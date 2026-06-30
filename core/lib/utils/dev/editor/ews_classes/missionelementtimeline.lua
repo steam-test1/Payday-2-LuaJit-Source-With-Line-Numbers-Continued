@@ -211,6 +211,7 @@ end
 -- Lines 194-203
 function MissionElementTimeline:_on_mouse_left_down(sender, event)
 	self._dragging = true
+
 	local key = self._sequence_track:clip_at_event(event)
 
 	if key then
@@ -252,6 +253,7 @@ function MissionElementTimeline:_on_mouse_motion(sender, event)
 		key:set_range(coor, coor)
 
 		local delay = coor / self._multiplier
+
 		key:metadata().params.delay = delay
 
 		self._mission_unit:mission_element():set_on_executed_element(key:metadata().unit)

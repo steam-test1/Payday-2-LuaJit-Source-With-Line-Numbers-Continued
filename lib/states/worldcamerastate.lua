@@ -9,8 +9,10 @@ end
 
 -- Lines 9-10
 function WorldCameraState:at_enter()
+	return
 end
 
 -- Lines 12-13
 function WorldCameraState:at_exit()
+	return
 end

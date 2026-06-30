@@ -9,11 +9,10 @@ end
 -- Lines 8-30
 function InfamyManager:_setup(reset)
 	if not Global.infamy_manager or reset then
-		Global.infamy_manager = {
-			points = Application:digest_value(0, true),
-			VERSION = InfamyManager.VERSION,
-			reset_message = false
-		}
+		Global.infamy_manager = {}
+		Global.infamy_manager.points = Application:digest_value(0, true)
+		Global.infamy_manager.VERSION = InfamyManager.VERSION
+		Global.infamy_manager.reset_message = false
 		self._global = Global.infamy_manager
 		self._global.unlocks = {}
 
@@ -51,6 +50,7 @@ end
 
 -- Lines 45-47
 function InfamyManager:aquire_point()
+	return
 end
 
 -- Lines 49-51
@@ -91,6 +91,7 @@ end
 -- Lines 83-89
 function InfamyManager:reward_item(global_value, category, item_id)
 	local item_tweak = tweak_data.blackmarket[category][item_id]
+
 	global_value = global_value or item_tweak.global_value or managers.dlc:dlc_to_global_value(item_tweak.dlc) or "normal"
 
 	managers.blackmarket:add_to_inventory(global_value, category, item_id)
@@ -99,7 +100,9 @@ end
 -- Lines 92-124
 function InfamyManager:missing_item(global_value, category, item_id)
 	local item_tweak = tweak_data.blackmarket[category][item_id]
+
 	global_value = global_value or item_tweak.global_value or managers.dlc:dlc_to_global_value(item_tweak.dlc) or "normal"
+
 	local has_item = managers.blackmarket:get_item_amount(global_value, category, item_id, true) > 0
 
 	if not has_item then
@@ -117,7 +120,7 @@ function InfamyManager:missing_item(global_value, category, item_id)
 				materials = "material",
 				textures = "pattern"
 			}
-			local name = nil
+			local name
 
 			for slot, crafted in pairs(Global.blackmarket_manager.crafted_items.masks) do
 				if slot ~= 1 then
@@ -244,7 +247,7 @@ end
 -- Lines 216-228
 function InfamyManager:get_unlocked_join_stingers()
 	local unlocked_stingers = {}
-	local stinger_data = nil
+	local stinger_data
 
 	for index = 0, tweak_data.infamy.join_stingers do
 		stinger_data = self._global.join_stingers[index]
@@ -260,7 +263,7 @@ end
 -- Lines 230-240
 function InfamyManager:get_all_join_stingers()
 	local all_stingers = {}
-	local join_stinger_data = nil
+	local join_stinger_data
 
 	for index = 0, tweak_data.infamy.join_stingers do
 		join_stinger_data = self._global.join_stingers[index]
@@ -327,6 +330,7 @@ function InfamyManager:save(data)
 		VERSION = self._global.VERSION or 0,
 		reset_message = self._global.reset_message
 	}
+
 	data.InfamyManager = state
 end
 
@@ -337,7 +341,8 @@ function InfamyManager:load(data, version)
 	if state then
 		self._global.points = state.points
 		self._global.selected_join_stinger = state.selected_join_stinger
-		local infamy_item = nil
+
+		local infamy_item
 
 		for item_id, unlocked in pairs(state.unlocks) do
 			self._global.unlocks[item_id] = unlocked

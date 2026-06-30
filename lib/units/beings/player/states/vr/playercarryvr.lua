@@ -33,7 +33,7 @@ end
 
 -- Lines 33-51
 function PlayerCarryVR:_check_use_item(t, input)
-	local new_action = nil
+	local new_action
 
 	if not input.btn_throw_bag_press then
 		return PlayerStandard._check_use_item(self, t, input)

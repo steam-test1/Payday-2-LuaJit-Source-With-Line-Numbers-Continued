@@ -5,6 +5,7 @@ BlackBorders = BlackBorders or class(GUIObjectWrapper)
 -- Lines 4-44
 function BlackBorders:init(parent, config)
 	config = config or {}
+
 	local blackborder_panel = parent:panel({
 		name = "blackborders",
 		layer = config and config.layer or 1000

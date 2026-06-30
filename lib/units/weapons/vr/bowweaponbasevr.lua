@@ -91,4 +91,5 @@ end
 
 -- Lines 88-89
 function BowWeaponBaseVR:_adjust_throw_z(vec)
+	return
 end

@@ -490,6 +490,7 @@ function CoreSoundEnvironmentManager:add_listener(data)
 	Application:throw_exception("add_listener function is no longer working because of new sound implementation. Use add_check_object instead.")
 
 	local distance, orientation, occlusion = Sound:listener(data.listener)
+
 	data.object = distance
 
 	return self:add_check_object(data)
@@ -506,6 +507,7 @@ function CoreSoundEnvironmentManager:add_check_object(data)
 	self:_disable_fallback()
 
 	self._check_object_id = self._check_object_id + 1
+
 	local soundsource = SoundDevice:create_source("ambience_source")
 
 	soundsource:enable_env(false)
@@ -631,7 +633,7 @@ end
 
 -- Lines 546-548
 function CoreSoundEnvironmentManager:_next_occasional()
-	return Application:time() + 6 + math.rand(4)
+	return Application:time() + (6 + math.rand(4))
 end
 
 local check_pos = Vector3()
@@ -641,7 +643,7 @@ local mvec_surround_pos = Vector3()
 function CoreSoundEnvironmentManager:_update_object(t, dt, id, data)
 	data.object:m_position(check_pos)
 
-	local still_inside = nil
+	local still_inside
 
 	if data.surround then
 		local surround_data = data.surround[data.surround_iterator + 1]
@@ -653,7 +655,7 @@ function CoreSoundEnvironmentManager:_update_object(t, dt, id, data)
 		data.surround_iterator = math.mod(data.surround_iterator + 1, self._ambience_sources_count)
 	end
 
-	if data.next_occasional < t then
+	if t > data.next_occasional then
 		data.next_occasional = self:_next_occasional()
 
 		if self._ambience_enabled and not self._occasional_blocked_by_platform then
@@ -718,8 +720,8 @@ function CoreSoundEnvironmentManager:_fallback_on_camera()
 		end
 	elseif not next(self._check_objects) then
 		self._fallback_id = self:add_check_object({
-			primary = true,
 			active = true,
+			primary = true,
 			object = camera
 		})
 		self:check_object(self._fallback_id).fallback = true
@@ -783,6 +785,7 @@ function CoreSoundEnvironmentManager:_check_inside(data)
 
 		for i = 1, self._areas_per_frame do
 			local area = self._areas[data.sound_area_counter]
+
 			data.sound_area_counter = math.mod(data.sound_area_counter, #self._areas) + 1
 
 			if area:is_inside(check_pos) then
@@ -1145,6 +1148,7 @@ function SoundEnvironmentEmitter:init(params)
 	self._rotation = params.rotation or Rotation()
 	self._name = params.name or ""
 	self._soundsource = SoundDevice:create_source(self._name)
+
 	local emitter_path = managers.sound_environment:game_default_emitter_path()
 
 	self:set_emitter_event(params.emitter_event or managers.sound_environment:emitter_events(emitter_path)[1])
@@ -1152,12 +1156,12 @@ end
 
 -- Lines 1021-1028
 function SoundEnvironmentEmitter:save_xml(t)
-	local properties = {
-		name = self:name(),
-		position = self:position(),
-		rotation = self:rotation(),
-		emitter_event = self._emitter_event
-	}
+	local properties = {}
+
+	properties.name = self:name()
+	properties.position = self:position()
+	properties.rotation = self:rotation()
+	properties.emitter_event = self._emitter_event
 
 	return simple_value_string("properties", properties, t)
 end
@@ -1287,6 +1291,7 @@ function SoundEnvironmentAreaEmitter:init(params)
 
 	self._properties.name = params.name or ""
 	self._soundsource = SoundDevice:create_source(self._properties.name)
+
 	local emitter_path = managers.sound_environment:game_default_emitter_path()
 
 	self:set_emitter_event(params.emitter_event or managers.sound_environment:emitter_events(emitter_path)[1])
@@ -1361,6 +1366,7 @@ end
 
 -- Lines 1198-1203
 function SoundEnvironmentAreaEmitter:set_extent()
+	return
 end
 
 -- Lines 1205-1207

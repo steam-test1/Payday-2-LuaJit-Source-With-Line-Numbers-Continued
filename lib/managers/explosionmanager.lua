@@ -1,4 +1,5 @@
 ExplosionManager = ExplosionManager or class()
+
 local idstr_small_light_fire = Idstring("effects/particles/fire/small_light_fire")
 local idstr_explosion_std = Idstring("explosion_std")
 local empty_idstr = Idstring("")
@@ -13,7 +14,7 @@ end
 -- Lines 14-21
 function ExplosionManager:update(t, dt)
 	for i, effect in ipairs(self._sustain_effects) do
-		if effect.expire_t < t then
+		if t > effect.expire_t then
 			World:effect_manager():fade_kill(effect.id)
 			table.remove(self._sustain_effects, i)
 		end
@@ -57,7 +58,7 @@ function ExplosionManager:units_to_push(units_to_push, hit_pos, range)
 				local rot_acc = Vector3(1 - math.rand(2), 1 - math.rand(2), 1 - math.rand(2)) * 10
 				local i_u_body = 0
 
-				while nr_u_bodies > i_u_body do
+				while i_u_body < nr_u_bodies do
 					local u_body = unit:body(i_u_body)
 
 					if u_body:enabled() and u_body:dynamic() then
@@ -111,6 +112,7 @@ function ExplosionManager:_apply_body_damage(is_server, hit_body, user_unit, dir
 		local local_damage = is_server or hit_unit:id() == -1
 		local sync_damage = is_server and hit_unit:id() ~= -1
 		local network_damage = math.ceil(prop_damage * 163.84)
+
 		prop_damage = network_damage / 163.84
 
 		if local_damage then
@@ -141,9 +143,11 @@ function ExplosionManager:client_damage_and_push(position, normal, user_unit, dm
 
 	for _, hit_body in ipairs(bodies) do
 		local hit_unit = hit_body:unit()
+
 		units_to_push[hit_body:unit():key()] = hit_unit
+
 		local apply_dmg = hit_body:extension() and hit_body:extension().damage and hit_unit:id() == -1
-		local dir, len, damage = nil
+		local dir, len, damage
 
 		if apply_dmg then
 			dir = hit_body:center_of_mass()
@@ -232,7 +236,8 @@ local decal_ray_to = Vector3()
 -- Lines 624-704
 function ExplosionManager:spawn_sound_and_effects(position, normal, range, effect_name, sound_event, on_unit, idstr_decal, idstr_effect, molotov_damage_effect_table)
 	effect_name = effect_name or "effects/particles/explosions/explosion_grenade_launcher"
-	local effect_id = nil
+
+	local effect_id
 	local slotmask_world_geometry = managers.slot:get_mask("world_geometry")
 
 	if on_unit then
@@ -254,6 +259,7 @@ function ExplosionManager:spawn_sound_and_effects(position, normal, range, effec
 	if effect_name ~= "none" then
 		if ray and ray.body and ray.body:root_object() then
 			local pos = ray.body:root_object():to_local(ray.position)
+
 			effect_id = World:effect_manager():spawn({
 				effect = Idstring(effect_name),
 				position = pos,
@@ -277,10 +283,11 @@ function ExplosionManager:spawn_sound_and_effects(position, normal, range, effec
 		})
 	end
 
-	local sound_switch_name = nil
+	local sound_switch_name
 
 	if ray then
 		local material_name, _, _ = World:pick_decal_material(ray.unit, decal_ray_from, decal_ray_to, slotmask_world_geometry)
+
 		sound_switch_name = material_name ~= empty_idstr and material_name
 	end
 
@@ -336,10 +343,11 @@ function ExplosionManager:project_decal(ray, from, to, on_unit, idstr_decal, ids
 		end
 
 		if not idstr_effect or idstr_effect ~= empty_idstr then
-			local id = nil
+			local id
 
 			if ray and ray.body and ray.body:root_object() then
 				local pos = ray.body:root_object():to_local(ray.position)
+
 				id = World:effect_manager():spawn({
 					effect = idstr_effect or idstr_small_light_fire,
 					position = pos,
@@ -382,7 +390,7 @@ function ExplosionManager:_detect_hits(params)
 		mvector3.set(pos, dir)
 		mvector3.add(pos, hit_pos)
 
-		local splinter_ray = nil
+		local splinter_ray
 
 		if ignore_unit then
 			splinter_ray = World:raycast("ray", hit_pos, pos, "ignore_unit", ignore_unit, "slot_mask", slotmask)
@@ -391,6 +399,7 @@ function ExplosionManager:_detect_hits(params)
 		end
 
 		pos = (splinter_ray and splinter_ray.position or pos) - dir:normalized() * math.min(splinter_ray and splinter_ray.distance or 0, 10)
+
 		local near_splinter = false
 
 		for _, s_pos in ipairs(splinters) do
@@ -411,7 +420,7 @@ function ExplosionManager:_detect_hits(params)
 		return unit:character_damage() and unit:character_damage().dead and not unit:character_damage():dead()
 	end
 
-	local bodies = nil
+	local bodies
 
 	if params.shape ~= "cylinder" then
 		bodies = World:find_bodies("intersect", "sphere", hit_pos, range, slotmask)
@@ -448,6 +457,7 @@ function ExplosionManager:_detect_hits(params)
 
 		if unit ~= ignore_unit then
 			results.units_detected[unit_key] = unit
+
 			local character_hit = false
 
 			if is_alive_character(unit) and not results.characters_hit[unit_key] then
@@ -494,23 +504,25 @@ function ExplosionManager:_damage_characters(detect_results, params, variant, da
 	local range = params.range
 	local curve_pow = params.curve_pow
 	local verify_callback = params.verify_callback
+
 	damage_func_name = damage_func_name or "damage_explosion"
+
 	local counts = {
 		cops = {
-			kills = 0,
-			hits = 0
+			hits = 0,
+			kills = 0
 		},
 		gangsters = {
-			kills = 0,
-			hits = 0
+			hits = 0,
+			kills = 0
 		},
 		civilians = {
-			kills = 0,
-			hits = 0
+			hits = 0,
+			kills = 0
 		},
 		criminals = {
-			kills = 0,
-			hits = 0
+			hits = 0,
+			kills = 0
 		}
 	}
 	local criminal_names = CriminalsManager.character_names()
@@ -524,16 +536,18 @@ function ExplosionManager:_damage_characters(detect_results, params, variant, da
 		end
 	end
 
-	local dir, len, type, count_table, hit_body = nil
+	local dir, len, type, count_table, hit_body
 	local characters_hit_list = table.map_values(detect_results.characters_hit)
 
 	ExplosionManager.sort_units_target_prio(characters_hit_list)
 
 	for i, unit in ipairs(characters_hit_list) do
 		local key = unit:key()
+
 		hit_body = get_first_body_hit(detect_results.bodies_hit[key])
 		dir = hit_body and hit_body:center_of_mass() or alive(unit) and unit:position()
 		len = mvector3.direction(dir, hit_pos, dir)
+
 		local can_damage = not verify_callback
 
 		if verify_callback then
@@ -587,16 +601,16 @@ function ExplosionManager:_damage_characters(detect_results, params, variant, da
 		end
 	end
 
-	local results = {
-		count_cops = counts.cops.hits,
-		count_gangsters = counts.gangsters.hits,
-		count_civilians = counts.civilians.hits,
-		count_criminals = counts.criminals.hits,
-		count_cop_kills = counts.cops.kills,
-		count_gangster_kills = counts.gangsters.kills,
-		count_civilian_kills = counts.civilians.kills,
-		count_criminal_kills = counts.criminals.kills
-	}
+	local results = {}
+
+	results.count_cops = counts.cops.hits
+	results.count_gangsters = counts.gangsters.hits
+	results.count_civilians = counts.civilians.hits
+	results.count_criminals = counts.criminals.hits
+	results.count_cop_kills = counts.cops.kills
+	results.count_gangster_kills = counts.gangsters.kills
+	results.count_civilian_kills = counts.civilians.kills
+	results.count_criminal_kills = counts.criminals.kills
 
 	return results
 end
@@ -617,6 +631,7 @@ function ExplosionManager:_damage_bodies(detect_results, params)
 				local dir = hit_body:center_of_mass()
 				local len = mvector3.direction(dir, hit_pos, dir)
 				local prop_damage = damage * math.pow(math.clamp(1 - len / range, 0, 1), curve_pow)
+
 				prop_damage = math.max(prop_damage, math.min(damage, 1))
 
 				self:_apply_body_damage(true, hit_body, user_unit, dir, prop_damage)
@@ -768,7 +783,7 @@ end
 
 -- Lines 1123-1144
 function ExplosionManager.sort_units_target_prio(units)
-	table.sort(units, function (unit_a, unit_b)
+	table.sort(units, function(unit_a, unit_b)
 		local base_a_ext = alive(unit_a) and unit_a:base()
 		local base_b_ext = alive(unit_b) and unit_b:base()
 
@@ -778,7 +793,7 @@ function ExplosionManager.sort_units_target_prio(units)
 			local priority_a = char_a_tweak and char_a_tweak.target_priority or 0
 			local priority_b = char_b_tweak and char_b_tweak.target_priority or 0
 
-			return priority_a > priority_b
+			return priority_b < priority_a
 		end
 
 		return false

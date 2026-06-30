@@ -8,8 +8,10 @@ MultiProfileItemGui.padding = 5
 -- Lines 9-79
 function MultiProfileItemGui:init(ws, panel)
 	self._ws = ws
+
 	local panel_w = self.profile_panel_w
 	local panel_h = self.profile_panel_h
+
 	panel_w = self.quick_panel_w + self.padding + self.profile_panel_w
 	panel_h = math.max(self.quick_panel_h, self.profile_panel_h)
 	self._panel = self._panel or panel:panel({
@@ -29,6 +31,7 @@ function MultiProfileItemGui:init(ws, panel)
 	self._profile_panel:set_top(math.round(self._profile_panel:top()))
 
 	local box_panel_w = self._profile_panel:w()
+
 	self._quick_select_panel = self._quick_select_panel or self._panel:panel({
 		w = self.quick_panel_w,
 		h = self.quick_panel_h
@@ -43,70 +46,70 @@ function MultiProfileItemGui:init(ws, panel)
 
 		table.insert(self._quick_select_panel_elements, self._quick_select_panel:rect({
 			h = 3,
+			w = 5,
+			x = 5,
 			y = 7,
-			w = 5,
-			x = 5,
 			color = tweak_data.screen_colors.button_stage_3
 		}))
 		table.insert(self._quick_select_panel_elements, self._quick_select_panel:rect({
 			h = 3,
+			w = 16,
+			x = 12,
 			y = 7,
-			w = 16,
-			x = 12,
 			color = tweak_data.screen_colors.button_stage_3
 		}))
 		table.insert(self._quick_select_panel_elements, self._quick_select_panel:rect({
 			h = 3,
+			w = 5,
+			x = 5,
 			y = 13,
-			w = 5,
-			x = 5,
 			color = tweak_data.screen_colors.button_stage_3
 		}))
 		table.insert(self._quick_select_panel_elements, self._quick_select_panel:rect({
 			h = 3,
+			w = 16,
+			x = 12,
 			y = 13,
-			w = 16,
-			x = 12,
 			color = tweak_data.screen_colors.button_stage_3
 		}))
 		table.insert(self._quick_select_panel_elements, self._quick_select_panel:rect({
 			h = 3,
-			y = 19,
 			w = 5,
 			x = 5,
+			y = 19,
 			color = tweak_data.screen_colors.button_stage_3
 		}))
 		table.insert(self._quick_select_panel_elements, self._quick_select_panel:rect({
 			h = 3,
-			y = 19,
 			w = 16,
 			x = 12,
+			y = 19,
 			color = tweak_data.screen_colors.button_stage_3
 		}))
 		table.insert(self._quick_select_panel_elements, self._quick_select_panel:rect({
 			h = 3,
-			y = 25,
 			w = 5,
 			x = 5,
+			y = 25,
 			color = tweak_data.screen_colors.button_stage_3
 		}))
 		table.insert(self._quick_select_panel_elements, self._quick_select_panel:rect({
 			h = 3,
-			y = 25,
 			w = 16,
 			x = 12,
+			y = 25,
 			color = tweak_data.screen_colors.button_stage_3
 		}))
 
 		if not managers.menu:is_pc_controller() then
 			local BTN_STICK_R = managers.localization:get_default_macro("STICK_R")
 			local right_stick = self._quick_select_panel:text({
+				align = "center",
+				h = 24,
+				layer = 1,
 				name = "right_stick",
 				vertical = "center",
-				h = 24,
 				w = 24,
-				align = "center",
-				layer = 1,
 				text = BTN_STICK_R,
 				font = tweak_data.menu.pd2_small_font,
 				font_size = tweak_data.menu.pd2_small_font_size
@@ -136,11 +139,11 @@ function MultiProfileItemGui:init(ws, panel)
 	})
 	self._caret = self._profile_panel:rect({
 		blend_mode = "add",
-		name = "caret",
 		h = 0,
-		y = 0,
+		name = "caret",
 		w = 0,
 		x = 0,
+		y = 0,
 		color = Color(0.1, 1, 1, 1)
 	})
 	self._max_length = 15
@@ -168,6 +171,7 @@ end
 function MultiProfileItemGui:update()
 	local mult = managers.multi_profile
 	local name = mult:current_profile_name()
+
 	self._name_text = self._profile_panel:child("name")
 
 	if alive(self._name_text) then
@@ -175,14 +179,15 @@ function MultiProfileItemGui:update()
 	end
 
 	self._name_text = self._profile_panel:text({
+		align = "center",
 		name = "name",
 		vertical = "center",
-		align = "center",
 		text = name,
 		font = tweak_data.menu.pd2_small_font,
 		font_size = tweak_data.menu.pd2_medium_font_size,
 		color = tweak_data.screen_colors.button_stage_3
 	})
+
 	local text_width = self._name_text:w()
 
 	self._name_text:set_w(text_width * 0.8)
@@ -193,8 +198,8 @@ function MultiProfileItemGui:update()
 	if not arrow_left then
 		if managers.menu:is_pc_controller() and not managers.menu:is_steam_controller() then
 			arrow_left = self._profile_panel:bitmap({
-				texture = "guis/textures/menu_arrows",
 				name = "arrow_left",
+				texture = "guis/textures/menu_arrows",
 				texture_rect = {
 					24,
 					0,
@@ -205,12 +210,13 @@ function MultiProfileItemGui:update()
 			})
 		else
 			local BTN_TOP_L = managers.menu:is_steam_controller() and managers.localization:steam_btn("trigger_l") or managers.localization:get_default_macro("BTN_TOP_L")
+
 			arrow_left = self._profile_panel:text({
-				name = "arrow_left",
+				align = "center",
 				h = 24,
+				name = "arrow_left",
 				vertical = "center",
 				w = 24,
-				align = "center",
 				text = BTN_TOP_L,
 				color = not mult:has_previous() and Color(0, 0, 0, 0),
 				font = tweak_data.menu.pd2_small_font,
@@ -224,10 +230,10 @@ function MultiProfileItemGui:update()
 	if not arrow_right then
 		if managers.menu:is_pc_controller() and not managers.menu:is_steam_controller() then
 			arrow_right = self._profile_panel:bitmap({
-				texture = "guis/textures/menu_arrows",
 				name = "arrow_right",
-				size = 32,
 				rotation = 180,
+				size = 32,
+				texture = "guis/textures/menu_arrows",
 				texture_rect = {
 					24,
 					0,
@@ -238,12 +244,13 @@ function MultiProfileItemGui:update()
 			})
 		else
 			local BTN_TOP_R = managers.menu:is_steam_controller() and managers.localization:steam_btn("trigger_r") or managers.localization:get_default_macro("BTN_TOP_R")
+
 			arrow_right = self._profile_panel:text({
-				name = "arrow_right",
+				align = "center",
 				h = 24,
+				name = "arrow_right",
 				vertical = "center",
 				w = 24,
-				align = "center",
 				text = BTN_TOP_R,
 				color = not mult:has_next() and Color(0, 0, 0, 0),
 				font = tweak_data.menu.pd2_small_font,
@@ -269,15 +276,16 @@ function MultiProfileItemGui:mouse_moved(x, y)
 		local end_height = end_width
 		local cx, cy = o:center()
 
-		over(0.2, function (p)
+		over(0.2, function(p)
 			o:set_size(math.lerp(current_width, end_width, p), math.lerp(current_height, end_height, p))
 			o:set_center(cx, cy)
 		end)
 	end
 
 	local mult = managers.multi_profile
-	local pointer, used = nil
+	local pointer, used
 	local arrow_left = self._profile_panel:child("arrow_left")
+
 	self._arrow_selection = nil
 
 	if arrow_left and mult:has_previous() then
@@ -508,6 +516,7 @@ function MultiProfileItemGui:key_press(o, k)
 	end
 
 	local text = self._name_text
+
 	self._key_pressed = k
 
 	text:stop()
@@ -557,6 +566,7 @@ function MultiProfileItemGui:enter_text(o, s)
 		self._name_text:set_text(s)
 	else
 		local s_len = utf8.len(self._name_text:text())
+
 		s = utf8.sub(s, 1, self._max_length - s_len)
 
 		self._name_text:replace_text(s)

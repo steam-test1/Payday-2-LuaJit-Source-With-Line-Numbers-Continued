@@ -13,6 +13,7 @@ end
 
 -- Lines 12-14
 function ElementLogicChance:client_on_executed(...)
+	return
 end
 
 -- Lines 16-32
@@ -23,7 +24,7 @@ function ElementLogicChance:on_executed(instigator)
 
 	local roll = math.random(100)
 
-	if self._chance < roll then
+	if roll > self._chance then
 		self:_trigger_outcome("fail")
 
 		return
@@ -84,6 +85,7 @@ end
 
 -- Lines 74-76
 function ElementLogicChanceOperator:client_on_executed(...)
+	return
 end
 
 -- Lines 78-99
@@ -129,6 +131,7 @@ end
 
 -- Lines 116-118
 function ElementLogicChanceTrigger:client_on_executed(...)
+	return
 end
 
 -- Lines 120-126

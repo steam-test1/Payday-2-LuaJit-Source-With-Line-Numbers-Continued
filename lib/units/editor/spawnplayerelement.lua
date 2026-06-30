@@ -22,4 +22,5 @@ end
 
 -- Lines 21-23
 function SpawnPlayerElement:add_to_mission_package()
+	return
 end

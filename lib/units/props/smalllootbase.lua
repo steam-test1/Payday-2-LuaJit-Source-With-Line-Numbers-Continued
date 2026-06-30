@@ -11,6 +11,7 @@ end
 
 -- Lines 14-18
 function SmallLootBase:_setup()
+	return
 end
 
 -- Lines 22-38

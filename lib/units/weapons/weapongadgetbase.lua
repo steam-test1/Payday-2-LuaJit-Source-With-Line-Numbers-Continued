@@ -10,6 +10,7 @@ end
 
 -- Lines 9-10
 function WeaponGadgetBase:set_npc()
+	return
 end
 
 -- Lines 12-25
@@ -68,6 +69,7 @@ end
 
 -- Lines 63-64
 function WeaponGadgetBase:_check_state(current_state)
+	return
 end
 
 -- Lines 66-68

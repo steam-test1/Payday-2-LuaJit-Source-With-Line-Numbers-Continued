@@ -57,6 +57,7 @@ function SideJobEventManager:_fetch_done_clbk(event_id, success, s)
 	if success then
 		local challenge_tweak = self._tweak_data.community_challenges[event_id]
 		local json_data = json.decode(s) or {}
+
 		self._fetched_event_data[event_id] = self._fetched_event_data[event_id] or {}
 
 		for key, json_id in pairs(challenge_tweak.event_data) do
@@ -78,6 +79,7 @@ function SideJobEventManager:_apply_fetched_event_data()
 	for event_id, event_data in pairs(self._global.event_data) do
 		local event_info = self._tweak_data.event_info[event_id] or {}
 		local event_stage = (event_data.stage or 0) + event_info.stage_offset
+
 		event_data.stage = event_stage
 
 		if self._global.event_stage[event_id] ~= event_stage then
@@ -140,12 +142,12 @@ function SideJobEventManager:save(cache)
 	local challenges = {}
 
 	for idx, challenge in ipairs(self._global.challenges) do
-		local challenge_data = {
-			id = challenge.id,
-			objectives = {},
-			rewards = {},
-			completed = challenge.completed
-		}
+		local challenge_data = {}
+
+		challenge_data.id = challenge.id
+		challenge_data.objectives = {}
+		challenge_data.rewards = {}
+		challenge_data.completed = challenge.completed
 
 		for _, objective in ipairs(challenge.objectives) do
 			local objective_data = {}
@@ -184,6 +186,7 @@ function SideJobEventManager:save(cache)
 		collective_stats = collective_stats,
 		event_data = self._global.event_data
 	}
+
 	cache[self.save_table_name] = save_data
 end
 
@@ -292,6 +295,7 @@ function SideJobEventManager:load(cache, version)
 				end
 
 				challenge.completed = objectives_complete
+
 				local all_rewarded = true
 
 				for i, reward in ipairs(saved_challenge.rewards) do
@@ -453,7 +457,7 @@ end
 
 -- Lines 449-469
 function SideJobEventManager:get_challenge_from_reward(type_items, item_entry)
-	local type_pass, entry_pass = nil
+	local type_pass, entry_pass
 
 	for _, challenge in ipairs(self:challenges()) do
 		for _, reward in ipairs(challenge.rewards) do
@@ -564,8 +568,9 @@ function SideJobEventManager:_update_challenge_progress(challenge, key, id, amou
 				print("[SideJobEventManager][Progress] awarding:", id)
 
 				local pass = true
+
 				objective.progress = math.floor(math.min((objective.progress or 0) + amount, objective.max_progress))
-				objective.completed = objective.max_progress <= objective.progress
+				objective.completed = objective.progress >= objective.max_progress
 
 				for _, objective in ipairs(challenge.objectives) do
 					if not objective.completed then
@@ -604,8 +609,9 @@ function SideJobEventManager:_update_challenge_collective(challenge, key, stat_i
 				print("[SideJobEventManager][Collective] awarding:", item_id)
 
 				local pass = true
+
 				objective.progress = math.floor(math.min(table.size(self._global.collective_stats[objective.collective_id].found), objective.max_progress))
-				objective.completed = objective.max_progress <= objective.progress
+				objective.completed = objective.progress >= objective.max_progress
 
 				for _, objective in ipairs(challenge.objectives) do
 					if not objective.completed then
@@ -644,8 +650,9 @@ function SideJobEventManager:_update_challenge_tracking(challenge, key, stat_id,
 				print("[SideJobEventManager][Tracking] awarding:", stat_id)
 
 				local pass = true
+
 				objective.progress = math.floor(math.min(callback(self, self, objective.track_func)(), objective.max_progress))
-				objective.completed = objective.max_progress <= objective.progress
+				objective.completed = objective.progress >= objective.max_progress
 
 				for _, objective in ipairs(challenge.objectives) do
 					if not objective.completed then
@@ -679,8 +686,9 @@ function SideJobEventManager:_update_challenge_stages(challenge, key, stat_id, s
 				print("[SideJobEventManager][Stages] awarding:", stat_id, stage)
 
 				local pass = true
+
 				objective.progress = table.contains(objective.stages, stage) and 1 or 0
-				objective.completed = objective.max_progress <= objective.progress
+				objective.completed = objective.progress >= objective.max_progress
 
 				for _, objective in ipairs(challenge.objectives) do
 					if not objective.completed then
@@ -718,11 +726,11 @@ function SideJobEventManager:_update_challenge_choice(challenge, objective, key,
 		}
 
 		if key == "collective_id" then
-			self:_update_challenge_collective(fake_challenge, key, params.stat_id, params.item_id, function ()
+			self:_update_challenge_collective(fake_challenge, key, params.stat_id, params.item_id, function()
 				choice_pass = true
 			end)
 		elseif key == "progress_id" then
-			self:_update_challenge_progress(fake_challenge, key, params.id, params.amount, function ()
+			self:_update_challenge_progress(fake_challenge, key, params.id, params.amount, function()
 				choice_pass = true
 			end)
 		end
@@ -735,8 +743,9 @@ function SideJobEventManager:_update_challenge_choice(challenge, objective, key,
 		print("[SideJobEventManager][Collective][Choice] awarding:", params.item_id)
 
 		local pass = true
+
 		objective.progress = objective.max_progress
-		objective.completed = objective.max_progress <= objective.progress
+		objective.completed = objective.progress >= objective.max_progress
 
 		for _, objective in ipairs(challenge.objectives) do
 			if not objective.completed then
@@ -821,6 +830,7 @@ function SideJobEventManager:claim_reward(challenge_id, reward_id)
 	self:_award_reward(reward, challenge_id)
 
 	reward.rewarded = true
+
 	local all_rewarded = true
 
 	for _, r in ipairs(challenge.rewards) do
@@ -951,7 +961,8 @@ function SideJobEventManager:set_event_stage(event_id, stage)
 	print("SideJobEventManager:set_event_stage", event_id, stage)
 
 	self._global.event_stage[event_id] = stage
-	local identifier, is_upgrade_locked, is_upgrade_aquired = nil
+
+	local identifier, is_upgrade_locked, is_upgrade_aquired
 
 	for _, challenge in ipairs(self:challenges()) do
 		self:_update_challenge_stages(challenge, "stage_id", event_id .. "_stages", self._global.event_stage[event_id], self.completed_challenge)

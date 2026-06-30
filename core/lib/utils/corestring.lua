@@ -21,7 +21,7 @@ end
 -- Lines 35-41
 function string.ends(s, ending)
 	if s and ending then
-		return #ending == 0 or s:sub(-(#ending)) == ending
+		return #ending == 0 or s:sub(-#ending) == ending
 	end
 
 	return false
@@ -53,6 +53,7 @@ function string.split(s, separator_pattern, keep_empty, max_splits)
 	end
 
 	local remainder = string.sub(s, final_match_end_index)
+
 	result[count + 1] = (keep_empty or remainder ~= "") and remainder or nil
 
 	return result
@@ -60,7 +61,7 @@ end
 
 -- Lines 78-87
 function string.join(separator, elements, keep_empty)
-	local strings = table.collect(elements, function (element)
+	local strings = table.collect(elements, function(element)
 		local as_string = tostring(element)
 
 		if as_string ~= "" or keep_empty then
@@ -80,7 +81,7 @@ end
 
 -- Lines 94-96
 function string.capitalize(s)
-	return string.gsub(s, "(%w)(%w*)", function (first_letter, remaining_letters)
+	return string.gsub(s, "(%w)(%w*)", function(first_letter, remaining_letters)
 		return string.upper(first_letter) .. string.lower(remaining_letters)
 	end)
 end

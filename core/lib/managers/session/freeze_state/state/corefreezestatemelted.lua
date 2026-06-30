@@ -14,4 +14,5 @@ end
 
 -- Lines 13-14
 function Melted:transition()
+	return
 end

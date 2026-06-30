@@ -33,7 +33,7 @@ function CoreTextureReport.ASCENDING_ORDER(index, item1, item2)
 
 	if item1[index] < item2[index] then
 		return -1
-	elseif item2[index] < item1[index] then
+	elseif item1[index] > item2[index] then
 		return 1
 	end
 
@@ -48,19 +48,19 @@ end
 CoreTextureReport.STATUSBARFIELDS = {
 	{
 		width = 100,
-		on_updating = function (report_data)
+		on_updating = function(report_data)
 			return "Updating..."
 		end,
-		on_ready = function (report_data)
+		on_ready = function(report_data)
 			return "Ready!"
 		end
 	},
 	{
 		width = 200,
-		on_updating = function (report_data)
+		on_updating = function(report_data)
 			return "Number of Textures: Updating..."
 		end,
-		on_ready = function (report_data)
+		on_ready = function(report_data)
 			local count = 0
 
 			for _ in pairs(report_data) do
@@ -72,10 +72,10 @@ CoreTextureReport.STATUSBARFIELDS = {
 	},
 	{
 		width = 200,
-		on_updating = function (report_data)
+		on_updating = function(report_data)
 			return "Total Size: Updating..."
 		end,
-		on_ready = function (report_data)
+		on_ready = function(report_data)
 			local sum = 0
 
 			for i, texture_meta in pairs(report_data) do
@@ -109,10 +109,12 @@ end
 
 -- Lines 98-99
 function CoreTextureReport:set_position(newpos)
+	return
 end
 
 -- Lines 101-102
 function CoreTextureReport:update(time, delta_time)
+	return
 end
 
 -- Lines 104-106
@@ -140,6 +142,7 @@ function CoreTextureReport:_get_all_units_by_layer()
 
 	for continent_idx, data in pairs(CoreTextureReport:_get_all_continents()) do
 		layer_units[data.name] = {}
+
 		local continent_units = layer_units[data.name]
 
 		for layer_name, layer in pairs(managers.editor:layers()) do
@@ -205,12 +208,12 @@ function CoreTextureReport:_get_all_textures()
 		local current_texture = getFilename(texture_cache_report_raw[line * 6 + 1])
 
 		if current_texture ~= "Total memory usage" and current_texture ~= "Texture Name" then
-			texture_cache_report[current_texture] = {
-				texture_name_from_cache = current_texture
-			}
+			texture_cache_report[current_texture] = {}
+			texture_cache_report[current_texture].texture_name_from_cache = current_texture
 
 			for column = 2, 6 do
 				local try_number = tonumber(texture_cache_report_raw[line * 6 + column]) or texture_cache_report_raw[line * 6 + column]
+
 				texture_cache_report[current_texture][CoreTextureReport.TEXTURE_CACHE_REPORT_FIELDS[column]] = try_number
 			end
 		end
@@ -268,6 +271,7 @@ function CoreTextureReport:start_dialog()
 	print("Starting dialog")
 
 	local top_sizer = EWS:BoxSizer("VERTICAL")
+
 	self._main_frame = EWS:Frame(CoreTextureReport.EDITOR_TITLE, Vector3(-1, -1, -1), Vector3(1733.3333333333333, 1300, -1), "DEFAULT_FRAME_STYLE,FRAME_FLOAT_ON_PARENT,MAXIMIZE", Global.frame)
 
 	self._main_frame:connect("EXIT", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "on_close"), "")
@@ -380,6 +384,7 @@ function CoreTextureReport:draw_table(report_data)
 		end
 
 		local new_t = deep_clone(texture)
+
 		new_t[CoreTextureReport.ORDER_META_NAME] = texture_key
 		new_t.name = tostring(texture_key)
 
@@ -400,7 +405,7 @@ function CoreTextureReport:draw_table(report_data)
 	end
 
 	self._status_bar:update()
-	self._list:sort(function (item1, item2)
+	self._list:sort(function(item1, item2)
 		return CoreTextureReport.ASCENDING_ORDER(CoreTextureReport.DEFAULT_ORDER_FIELD_NAME, item1, item2)
 	end)
 	self._list:thaw()
@@ -441,12 +446,7 @@ function CoreTextureReport:column_click_list(data, event)
 		s = "random"
 	end
 
-	if state == "ascending" then
-		state = "descending"
-	else
-		state = "ascending"
-	end
-
+	state = state == "ascending" and "descending" or "ascending"
 	self._column_states[column].state = state
 
 	-- Lines 377-379

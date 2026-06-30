@@ -16,6 +16,7 @@ end
 -- Lines 18-26
 function BaseNetworkHandler._verify_in_server_session()
 	local session = managers.network:session()
+
 	session = session and session:is_host()
 
 	if not session then
@@ -29,6 +30,7 @@ end
 -- Lines 30-38
 function BaseNetworkHandler._verify_in_client_session()
 	local session = managers.network:session()
+
 	session = session and session:is_client()
 
 	if not session then
@@ -42,7 +44,7 @@ end
 -- Lines 42-58
 function BaseNetworkHandler._verify_sender(rpc)
 	local session = managers.network:session()
-	local peer = nil
+	local peer
 
 	if session then
 		if rpc:protocol_at_index(0) == "STEAM" then
@@ -149,6 +151,7 @@ function BaseNetworkHandler:_chk_unit_too_early(unit, unit_id_str, fun_name, uni
 		}
 	}
 	local unit_id = tonumber(unit_id_str)
+
 	self._unit_too_early_queue[unit_id] = self._unit_too_early_queue[unit_id] or {}
 
 	table.insert(self._unit_too_early_queue[unit_id], data)

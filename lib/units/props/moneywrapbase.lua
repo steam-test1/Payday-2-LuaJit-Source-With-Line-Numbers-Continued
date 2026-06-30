@@ -69,6 +69,7 @@ end
 -- Lines 70-80
 function MoneyWrapBase:_take_money(unit)
 	local took = self.money_action and tweak_data:get_value("money_manager", "actions", self.money_action) or self._MONEY_MAX / 2
+
 	self._money_amount = math.max(self._money_amount - took, 0)
 
 	if self._money_amount <= 0 then
@@ -102,9 +103,9 @@ end
 function MoneyWrapBase:save(data)
 	MoneyWrapBase.super.save(self, data)
 
-	local state = {
-		money_amount = self._money_amount
-	}
+	local state = {}
+
+	state.money_amount = self._money_amount
 	data.MoneyWrapBase = state
 end
 
@@ -113,6 +114,7 @@ function MoneyWrapBase:load(data)
 	MoneyWrapBase.super.load(self, data)
 
 	local state = data.MoneyWrapBase
+
 	self._money_amount = state.money_amount
 end
 

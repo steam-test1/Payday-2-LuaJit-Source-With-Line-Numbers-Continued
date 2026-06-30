@@ -1,4 +1,5 @@
 PromotionalWeaponPreviewGui = PromotionalWeaponPreviewGui or class(MenuGuiComponent)
+
 local padding = 10
 
 -- Lines 5-9
@@ -37,7 +38,7 @@ end
 -- Lines 34-140
 function PromotionalWeaponPreviewGui:setup()
 	local menu_component_data = self._node:parameters().menu_component_data
-	local item_td, unlocked = nil
+	local item_td, unlocked
 
 	if menu_component_data.category == "primaries" or menu_component_data.category == "secondaries" then
 		item_td = tweak_data.weapon[menu_component_data.item_id]
@@ -71,10 +72,10 @@ function PromotionalWeaponPreviewGui:setup()
 		color = Color.black
 	})
 	self._panel:bitmap({
-		texture = "guis/textures/test_blur_df",
-		layer = -1,
 		halign = "scale",
+		layer = -1,
 		render_template = "VertexColorTexturedBlur3D",
+		texture = "guis/textures/test_blur_df",
 		valign = "scale",
 		w = self._panel:w(),
 		h = self._panel:h()
@@ -91,10 +92,11 @@ function PromotionalWeaponPreviewGui:setup()
 	})
 
 	local img_size = self._panel:h() - padding * 2
-	local img_panel = nil
+	local img_panel
 
 	if unlock_data and unlock_data.achievement_image then
 		local img_size = self._panel:h() - padding * 2
+
 		img_panel = self._panel:panel({
 			x = padding,
 			y = padding,
@@ -114,9 +116,9 @@ function PromotionalWeaponPreviewGui:setup()
 		})
 		img_panel:bitmap({
 			layer = 1,
-			y = 0,
-			x = 0,
 			valign = "top",
+			x = 0,
+			y = 0,
 			texture = unlocked and unlock_data.achievement_image.unlocked or unlock_data.achievement_image.locked,
 			w = img_size,
 			h = img_size
@@ -137,10 +139,10 @@ function PromotionalWeaponPreviewGui:setup()
 	make_fine_text(name)
 
 	local desc = self._panel:text({
-		vertical = "top",
-		wrap = true,
 		align = "left",
+		vertical = "top",
 		word_wrap = true,
+		wrap = true,
 		text = managers.localization:text(unlock_id),
 		font = tweak_data.menu.pd2_small_font,
 		font_size = tweak_data.menu.pd2_small_font_size,

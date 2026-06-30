@@ -1,4 +1,5 @@
 PromotionalMenuButton = PromotionalMenuButton or class()
+
 local padding = 10
 
 -- Lines 5-9
@@ -47,6 +48,7 @@ end
 -- Lines 50-61
 function PromotionalMenuButton:_setup_selection(parent_gui, panel, params, theme)
 	self._corner_rects = {}
+
 	local corner_size = 2
 
 	table.insert(self._corner_rects, self._panel:rect({
@@ -91,6 +93,7 @@ function PromotionalMenuButton:_setup_titles(parent_gui, panel, params, theme)
 	if params.title then
 		local title_font = theme.font[params.title.font or "medium"]
 		local title_font_size = theme.font_size[params.title.font_size or "medium"]
+
 		self._title = self._panel:text({
 			layer = 5,
 			text = params.title.name_id and managers.localization:to_upper_text(params.title.name_id) or "",
@@ -113,6 +116,7 @@ function PromotionalMenuButton:_setup_titles(parent_gui, panel, params, theme)
 	if params.subtitle then
 		local subtitle_font = theme.font[params.subtitle.font or "medium"]
 		local subtitle_font_size = theme.font_size[params.subtitle.font_size or "medium"]
+
 		self._subtitle = self._panel:text({
 			layer = 5,
 			text = params.subtitle.name_id and managers.localization:to_upper_text(params.subtitle.name_id) or "",
@@ -152,6 +156,7 @@ function PromotionalMenuButton:_setup_background(parent_gui, panel, params, them
 				color = params.background.image_color,
 				blend_mode = params.background.image_blend_mode or "normal"
 			})
+
 			local panel_size = math.max(self._panel:w(), self._panel:h())
 			local ratio = math.max(self._panel:w() / self._bg_image:w(), self._panel:h() / self._bg_image:h())
 
@@ -282,8 +287,7 @@ function PromotionalMenuButton:set_selected(selected, force)
 	end
 
 	if alive(self._bg_image) then
-		local w = self._bg_image_size[1]
-		local h = self._bg_image_size[2]
+		local w, h = self._bg_image_size[1], self._bg_image_size[2]
 
 		if selected then
 			w = w * self._zoom_factor
@@ -311,7 +315,7 @@ function PromotionalMenuButton:animate_image_size(img, target_w, target_h, durat
 	local orig_w = img:w()
 	local orig_h = img:h()
 
-	over(duration, function (t)
+	over(duration, function(t)
 		img:set_w(Easing.out_quad(orig_w, target_w, t))
 		img:set_h(Easing.out_quad(orig_h, target_h, t))
 		img:set_center(self._panel:w() * 0.5, self._panel:h() * 0.5)
@@ -323,6 +327,7 @@ RaidPromotionalMenuButton = RaidPromotionalMenuButton or class(PromotionalMenuBu
 -- Lines 300-310
 function RaidPromotionalMenuButton:_setup_selection(parent_gui, panel, params, theme)
 	self._corner_rects = {}
+
 	local config = theme.selection_outline_sides or {
 		sides = {
 			1,
@@ -331,10 +336,13 @@ function RaidPromotionalMenuButton:_setup_selection(parent_gui, panel, params, t
 			1
 		}
 	}
+
 	config.texture = "guis/textures/test_blur_df"
+
 	local unselected_outline = BoxGuiObject:new(self._panel:panel({
 		layer = 99
 	}), config)
+
 	self._selection_outline = BoxGuiObject:new(self._panel:panel({
 		layer = 100
 	}), config)
@@ -344,10 +352,8 @@ RaidPromotionalMenuFloatingButton = RaidPromotionalMenuFloatingButton or class(P
 
 -- Lines 317-337
 function RaidPromotionalMenuFloatingButton:_setup_panel(panel, params)
-	local x = params.x
-	local y = params.y
-	local w = params.w
-	local h = params.h
+	local x, y = params.x, params.y
+	local w, h = params.w, params.h
 
 	if params.floating_position then
 		x = params.floating_position[1]
@@ -369,12 +375,14 @@ end
 
 -- Lines 339-341
 function RaidPromotionalMenuFloatingButton:_setup_selection(parent_gui, panel, params, theme)
+	return
 end
 
 PromotionalMenuUnselectableButton = PromotionalMenuUnselectableButton or class(PromotionalMenuButton)
 
 -- Lines 348-350
 function PromotionalMenuUnselectableButton:_setup_selection(parent_gui, panel, params, theme)
+	return
 end
 
 -- Lines 352-354
@@ -389,10 +397,12 @@ end
 
 -- Lines 360-362
 function PromotionalMenuUnselectableButton:set_selected()
+	return
 end
 
 -- Lines 364-366
 function PromotionalMenuUnselectableButton:trigger()
+	return
 end
 
 PromotionalMenuSeperatorRaid = PromotionalMenuSeperatorRaid or class(PromotionalMenuButton)
@@ -401,6 +411,7 @@ PromotionalMenuSeperatorRaid = PromotionalMenuSeperatorRaid or class(Promotional
 function PromotionalMenuSeperatorRaid:setup(parent_gui, panel, params, theme)
 	local title_font = theme.font[params.title.font or "medium"]
 	local title_font_size = theme.font_size[params.title.font_size or "medium"]
+
 	self._title = self._panel:text({
 		layer = 5,
 		text = params.title.name_id and managers.localization:text(params.title.name_id) or "",
@@ -430,6 +441,7 @@ function PromotionalMenuSeperatorRaid:setup(parent_gui, panel, params, theme)
 	underline:set_bottom(self._panel:h())
 
 	self._underline = underline
+
 	local bottom_line = self._panel:rect({
 		h = 1,
 		layer = -2,
@@ -460,8 +472,10 @@ end
 
 -- Lines 434-436
 function PromotionalMenuSeperatorRaid:set_selected()
+	return
 end
 
 -- Lines 438-440
 function PromotionalMenuSeperatorRaid:trigger()
+	return
 end

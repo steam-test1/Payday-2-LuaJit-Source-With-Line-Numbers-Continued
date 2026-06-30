@@ -2,7 +2,7 @@ core:module("CoreLuaDump")
 
 -- Lines 3-13
 local function string_to_binary(str)
-	local out_str = nil
+	local out_str
 
 	for i = 1, string.len(str) do
 		out_str = out_str and out_str .. " "
@@ -16,7 +16,7 @@ end
 local function dump_collect(tab, t, level, max_level)
 	if level < max_level then
 		for k, v in pairs(tab) do
-			local k_str = nil
+			local k_str
 			local v_type = type(v)
 
 			if type(k) == "userdata" then
@@ -59,6 +59,7 @@ local function dump_collect(tab, t, level, max_level)
 
 				if meta and meta.tostring then
 					local str = meta.tostring(tab)
+
 					t[k_str] = {
 						_type = v_type,
 						_value = str
@@ -108,7 +109,7 @@ local function write_locals(file)
 		local name, value = debug.getlocal(3, i)
 
 		if name and value then
-			local v_str = nil
+			local v_str
 
 			if type(value) == "userdata" then
 				local meta = getmetatable(value)

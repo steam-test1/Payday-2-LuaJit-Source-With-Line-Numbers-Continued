@@ -7,6 +7,7 @@ end
 
 -- Lines 9-10
 function NpcVehicleStateInactive:update(t, dt)
+	return
 end
 
 -- Lines 12-14

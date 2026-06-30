@@ -32,7 +32,7 @@ end
 
 -- Lines 30-125
 function PlayerHandStateBelt:update(t, dt)
-	local belt_state = nil
+	local belt_state
 
 	for _, state in ipairs(managers.hud:belt():valid_interactions()) do
 		if managers.hud:belt():interacting(state, self._hand_unit:position()) then
@@ -130,7 +130,7 @@ function PlayerHandStateBelt:update(t, dt)
 					local mag_unit = weap_base:spawn_belt_magazine_unit(weap_base.akimbo and Vector3(-5, 0, 0) or Vector3())
 
 					if mag_unit then
-						local second_mag = nil
+						local second_mag
 
 						if weap_base.akimbo then
 							second_mag = weap_base:spawn_belt_magazine_unit()

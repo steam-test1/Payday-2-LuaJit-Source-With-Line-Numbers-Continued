@@ -101,4 +101,5 @@ end
 
 -- Lines 86-88
 function CoreEnvEditor:create_simple_interface()
+	return
 end

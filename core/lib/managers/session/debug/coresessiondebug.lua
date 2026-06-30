@@ -11,7 +11,7 @@ end
 
 -- Lines 10-26
 function SessionDebug:_parse_standard_arguments()
-	local level = nil
+	local level
 	local args = Application:argv()
 
 	for i, arg in ipairs(args) do
@@ -19,6 +19,7 @@ function SessionDebug:_parse_standard_arguments()
 			level = true
 		elseif level then
 			level_name = arg
+
 			local session_info = self._session_state:session_info()
 
 			session_info:set_level_name(level_name)

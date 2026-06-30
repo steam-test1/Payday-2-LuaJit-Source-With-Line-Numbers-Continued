@@ -9,10 +9,10 @@ ControllerWrapperPS3.CONTROLLER_TYPE_LIST = {
 
 -- Lines 9-16
 function ControllerWrapperPS3:init(manager, id, name, controller, setup, debug, skip_virtual_controller)
-	local func_map = {
-		confirm = callback(self, self, "virtual_connect_confirm"),
-		cancel = callback(self, self, "virtual_connect_cancel")
-	}
+	local func_map = {}
+
+	func_map.confirm = callback(self, self, "virtual_connect_confirm")
+	func_map.cancel = callback(self, self, "virtual_connect_cancel")
 
 	ControllerWrapperPS3.super.init(self, manager, id, name, {
 		ps3pad = controller

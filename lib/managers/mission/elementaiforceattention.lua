@@ -25,7 +25,7 @@ function ElementAIForceAttention:on_executed(instigator)
 	if self._values.is_spawn then
 		local spawn_element = self:get_mission_element(self._values.att_unit_id)
 
-		spawn_element:add_event_callback("spawn", function (unit)
+		spawn_element:add_event_callback("spawn", function(unit)
 			self:_register_force_attention_unit(unit)
 		end)
 
@@ -43,7 +43,7 @@ function ElementAIForceAttention:on_executed(instigator)
 			return
 		end
 
-		spawn_element:add_event_callback("spawn", function (unit)
+		spawn_element:add_event_callback("spawn", function(unit)
 			managers.groupai:state():add_affected_force_attention_unit(unit)
 		end)
 
@@ -59,7 +59,7 @@ function ElementAIForceAttention:on_executed(instigator)
 			return
 		end
 
-		spawn_element:add_event_callback("spawn", function (unit)
+		spawn_element:add_event_callback("spawn", function(unit)
 			managers.groupai:state():add_excluded_force_attention_unit(unit)
 		end)
 

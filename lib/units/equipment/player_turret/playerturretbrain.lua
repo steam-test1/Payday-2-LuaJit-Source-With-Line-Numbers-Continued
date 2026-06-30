@@ -59,6 +59,7 @@ end
 -- Lines 68-73
 function PlayerTurretBrain:save(save_data)
 	local my_save_data = {}
+
 	save_data.brain = my_save_data
 	my_save_data.is_active = self._active
 end

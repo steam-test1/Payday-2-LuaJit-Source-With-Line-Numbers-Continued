@@ -11,6 +11,7 @@ end
 
 -- Lines 10-12
 function ElementScenarioEvent:client_on_executed(...)
+	return
 end
 
 -- Lines 14-20

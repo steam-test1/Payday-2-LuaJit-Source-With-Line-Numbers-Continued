@@ -1,5 +1,6 @@
 ProjectileBase = ProjectileBase or class(UnitBase)
 ProjectileBase.time_cheat = {}
+
 local mvec1 = Vector3()
 local mvec2 = Vector3()
 local mvec3 = Vector3()
@@ -24,6 +25,7 @@ function ProjectileBase:init(unit)
 	end
 
 	self._variant = "projectile"
+
 	local projectile_entry = self._tweak_projectile_entry
 	local tweak_entry = tweak_data.projectiles[projectile_entry]
 
@@ -125,7 +127,7 @@ end
 function ProjectileBase:set_thrower_unit(unit, proj_ignore_thrower, thrower_ignore_proj)
 	if self._thrower_unit then
 		if not unit or self._thrower_unit:key() ~= unit:key() then
-			local has_destroy_listener = nil
+			local has_destroy_listener
 			local listener_class = self._thrower_unit:base()
 
 			if listener_class and listener_class.add_destroy_listener then
@@ -199,7 +201,7 @@ function ProjectileBase:set_thrower_unit(unit, proj_ignore_thrower, thrower_igno
 		end
 	end
 
-	local has_destroy_listener = nil
+	local has_destroy_listener
 	local listener_class = unit:base()
 
 	if listener_class and listener_class.add_destroy_listener then
@@ -262,7 +264,7 @@ end
 
 -- Lines 276-306
 function ProjectileBase:add_ignore_unit(unit)
-	local has_destroy_listener = nil
+	local has_destroy_listener
 	local listener_class = unit:base()
 
 	if listener_class and listener_class.add_destroy_listener then
@@ -304,7 +306,7 @@ function ProjectileBase:remove_ignore_unit(unit, no_listener_chk)
 	end
 
 	if not no_listener_chk and alive(unit) then
-		local has_destroy_listener = nil
+		local has_destroy_listener
 		local listener_class = unit:base()
 
 		if listener_class and listener_class.add_destroy_listener then
@@ -382,9 +384,8 @@ end
 
 -- Lines 396-404
 function ProjectileBase:create_sweep_data()
-	self._sweep_data = {
-		slot_mask = self._slot_mask
-	}
+	self._sweep_data = {}
+	self._sweep_data.slot_mask = self._slot_mask
 	self._sweep_data.slot_mask = managers.mutators:modify_value("ProjectileBase:create_sweep_data:slot_mask", self._sweep_data.slot_mask)
 	self._sweep_data.current_pos = self._unit:position()
 	self._sweep_data.last_pos = mvector3.copy(self._sweep_data.current_pos)
@@ -393,10 +394,11 @@ end
 -- Lines 408-462
 function ProjectileBase:throw(params)
 	self._owner = params.owner
+
 	local velocity = params.dir
 	local adjust_z = 50
 	local launch_speed = 250
-	local push_at_body_index = nil
+	local push_at_body_index
 
 	if params.projectile_entry and tweak_data.projectiles[params.projectile_entry] then
 		adjust_z = tweak_data.projectiles[params.projectile_entry].adjust_z or adjust_z
@@ -406,6 +408,7 @@ function ProjectileBase:throw(params)
 
 	velocity = velocity * launch_speed
 	velocity = Vector3(velocity.x, velocity.y, velocity.z + adjust_z)
+
 	local mass_look_up_modifier = self._mass_look_up_modifier or 2
 	local mass = math.max(mass_look_up_modifier * (1 + math.min(0, params.dir.z)), 1)
 
@@ -593,6 +596,7 @@ function ProjectileBase:_warning_fx_vfx_progress(unit, t, dt, warning_data)
 	end
 
 	warning_data.virtual_timer = warning_data.virtual_timer - dt
+
 	local light_data = warning_data.light
 
 	if not warning_data.beep_t then
@@ -683,6 +687,7 @@ function ProjectileBase:_warning_fx_vfx_disable(warning_data)
 
 	warning_data.beep_t = nil
 	warning_data.enabled = false
+
 	local light_data = warning_data.light
 	local sound_data = warning_data.sound
 	local effect_data = warning_data.effect
@@ -714,6 +719,7 @@ function ProjectileBase:_warning_fx_vfx_remove()
 	end
 
 	self._warning_fx_vfx_data = nil
+
 	local light_data = warning_data.light
 	local sound_data = warning_data.sound
 	local effect_data = warning_data.effect
@@ -777,16 +783,17 @@ end
 
 -- Lines 821-826
 function ProjectileBase:save(data)
-	local state = {
-		timer = self._timer,
-		destroy_hide_t = self._destroy_clbk_id and managers.enemy:get_delayed_clbk_exec_t(self._destroy_clbk_id) - TimerManager:game():time() or nil
-	}
+	local state = {}
+
+	state.timer = self._timer
+	state.destroy_hide_t = self._destroy_clbk_id and managers.enemy:get_delayed_clbk_exec_t(self._destroy_clbk_id) - TimerManager:game():time() or nil
 	data.ProjectileBase = state
 end
 
 -- Lines 830-839
 function ProjectileBase:load(data)
 	local state = data.ProjectileBase
+
 	self._timer = state.timer
 
 	if state.destroy_hide_t then
@@ -817,7 +824,7 @@ function ProjectileBase:destroy(...)
 	ProjectileBase.super.destroy(self, ...)
 
 	if alive(self._thrower_unit) then
-		local has_destroy_listener = nil
+		local has_destroy_listener
 		local listener_class = self._thrower_unit:base()
 
 		if listener_class and listener_class.add_destroy_listener then
@@ -848,7 +855,7 @@ function ProjectileBase:destroy(...)
 
 		for _, ig_unit in pairs(self._ignore_units) do
 			if alive(ig_unit) then
-				local has_destroy_listener = nil
+				local has_destroy_listener
 				local listener_class = ig_unit:base()
 
 				if listener_class and listener_class.add_destroy_listener then
@@ -939,7 +946,7 @@ function ProjectileBase.throw_projectile_npc(projectile_type, pos, dir, thrower_
 	local tweak_entry = tweak_data.blackmarket.projectiles[projectile_type]
 	local unit_name = Idstring(not Network:is_server() and tweak_entry.local_unit or tweak_entry.unit)
 	local unit = World:spawn_unit(unit_name, pos, Rotation(dir, math.UP))
-	local sync_thrower_unit = nil
+	local sync_thrower_unit
 
 	if alive(thrower_unit) then
 		unit:base():set_thrower_unit(thrower_unit, true, true)
@@ -989,7 +996,7 @@ function ProjectileBase:_hide_and_freeze(skip_bodies)
 		local ids_ray_ignore = Idstring("ignore")
 		local get_body_f = self._unit.body
 		local nr_bodies = self._unit:num_bodies()
-		local body, ray_mode = nil
+		local body, ray_mode
 
 		for i = 0, nr_bodies - 1 do
 			body = get_body_f(self._unit, i)
@@ -1068,7 +1075,7 @@ function ProjectileBase.check_time_cheat(projectile_type, owner_peer_id)
 	if tweak_data.blackmarket.projectiles[projectile_type].time_cheat then
 		ProjectileBase.time_cheat[projectile_type_index] = ProjectileBase.time_cheat[projectile_type_index] or {}
 
-		if ProjectileBase.time_cheat[projectile_type_index][owner_peer_id] and Application:time() < ProjectileBase.time_cheat[projectile_type_index][owner_peer_id] then
+		if ProjectileBase.time_cheat[projectile_type_index][owner_peer_id] and ProjectileBase.time_cheat[projectile_type_index][owner_peer_id] > Application:time() then
 			return false
 		end
 
@@ -1087,23 +1094,25 @@ end
 
 -- Lines 1149-1150
 function ProjectileBase._dispose_of_sound(...)
+	return
 end
 
 -- Lines 1152-1168
 function ProjectileBase:_detect_and_give_dmg(hit_pos)
-	local params = {
-		hit_pos = hit_pos,
-		collision_slotmask = self._collision_slotmask,
-		user = self._user,
-		damage = self._damage,
-		player_damage = self._player_damage or self._damage,
-		range = self._range,
-		ignore_unit = self._ignore_unit,
-		curve_pow = self._curve_pow,
-		col_ray = self._col_ray,
-		alert_filter = self._alert_filter,
-		owner = self._owner
-	}
+	local params = {}
+
+	params.hit_pos = hit_pos
+	params.collision_slotmask = self._collision_slotmask
+	params.user = self._user
+	params.damage = self._damage
+	params.player_damage = self._player_damage or self._damage
+	params.range = self._range
+	params.ignore_unit = self._ignore_unit
+	params.curve_pow = self._curve_pow
+	params.col_ray = self._col_ray
+	params.alert_filter = self._alert_filter
+	params.owner = self._owner
+
 	local hit_units, splinters = managers.explosion:detect_and_give_dmg(params)
 
 	return hit_units, splinters

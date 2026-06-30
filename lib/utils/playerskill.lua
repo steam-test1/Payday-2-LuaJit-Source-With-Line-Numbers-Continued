@@ -1,23 +1,28 @@
-PlayerSkill = {
-	has_skill = function (category, skill, player)
-		if player then
-			return player:base():upgrade_value(category, skill) ~= nil
-		else
-			return managers.player:has_category_upgrade(category, skill)
-		end
-	end,
-	skill_data = function (category, skill, default, player)
-		if player then
-			return player:base():upgrade_value(category, skill) or default
-		else
-			return managers.player:upgrade_value(category, skill, default)
-		end
-	end,
-	skill_level = function (category, skill, default, player)
-		if player then
-			return player:base():upgrade_level(category, skill) or 0
-		else
-			return managers.player:upgrade_level(category, skill, default)
-		end
+PlayerSkill = {}
+
+-- Lines 6-12
+function PlayerSkill.has_skill(category, skill, player)
+	if player then
+		return player:base():upgrade_value(category, skill) ~= nil
+	else
+		return managers.player:has_category_upgrade(category, skill)
 	end
-}
+end
+
+-- Lines 14-20
+function PlayerSkill.skill_data(category, skill, default, player)
+	if player then
+		return player:base():upgrade_value(category, skill) or default
+	else
+		return managers.player:upgrade_value(category, skill, default)
+	end
+end
+
+-- Lines 22-28
+function PlayerSkill.skill_level(category, skill, default, player)
+	if player then
+		return player:base():upgrade_level(category, skill) or 0
+	else
+		return managers.player:upgrade_level(category, skill, default)
+	end
+end

@@ -5,7 +5,9 @@ function BookBoxGui:init(ws, title, config)
 	config = config or {}
 	config.h = config.h or 310
 	config.w = config.w or 360
+
 	local x, y = ws:size()
+
 	config.x = config.x or x - config.w
 	config.y = config.y or y - config.h - CoreMenuRenderer.Renderer.border_height
 	self._header_type = config.header_type or "event"
@@ -20,26 +22,26 @@ end
 function BookBoxGui:add_page(name, box_gui, visible)
 	local panel = self._panel:panel({
 		h = 20,
+		layer = 10,
 		w = 40,
 		x = 0,
-		layer = 10,
 		name = name
 	})
 
 	panel:rect({
-		name = "bg_rect",
 		layer = 0,
+		name = "bg_rect",
 		color = Color(1, 0.5, 0.5, 0.5)
 	})
 	panel:text({
-		y = 0,
-		name = "name_text",
-		vertical = "center",
-		hvertical = "center",
 		align = "center",
 		halign = "center",
-		x = 0,
+		hvertical = "center",
 		layer = 1,
+		name = "name_text",
+		vertical = "center",
+		x = 0,
+		y = 0,
 		text = string.upper(name),
 		font = tweak_data.menu.pd2_medium_font,
 		font_size = tweak_data.menu.pd2_medium_font_size
@@ -75,6 +77,7 @@ function BookBoxGui:_layout_page_panels()
 	for _, p in ipairs(self._page_panels) do
 		local name_text = p:child("name_text")
 		local _, _, wt, ht = name_text:text_rect()
+
 		total_w = total_w + wt + 1
 	end
 
@@ -119,6 +122,7 @@ function BookBoxGui:remove_page(name)
 
 	if self._active_page_name == name then
 		self._active_page_name = nil
+
 		local n, _ = next(self._pages)
 
 		print("change to", n)
@@ -345,7 +349,7 @@ end
 
 -- Lines 288-320
 function BookBoxGui:mouse_moved(x, y)
-	local pointer = nil
+	local pointer
 
 	if not self:can_take_input() then
 		return false, pointer
@@ -356,6 +360,7 @@ function BookBoxGui:mouse_moved(x, y)
 	end
 
 	local used, wpointer = self._pages[self._active_page_name].box_gui:mouse_moved(x, y)
+
 	pointer = wpointer or pointer
 
 	if used then

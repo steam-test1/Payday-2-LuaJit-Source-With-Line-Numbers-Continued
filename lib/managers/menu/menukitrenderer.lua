@@ -14,6 +14,7 @@ end
 
 -- Lines 12-13
 function MenuKitRenderer:_setup_bg()
+	return
 end
 
 -- Lines 15-39
@@ -25,8 +26,8 @@ function MenuKitRenderer:show_node(node)
 	end
 
 	local parameters = {
-		marker_alpha = 0.6,
 		align = "right",
+		marker_alpha = 0.6,
 		row_item_blend_mode = "add",
 		to_upper = true,
 		row_item_color = tweak_data.screen_colors.button_stage_3,
@@ -105,6 +106,7 @@ end
 function MenuKitRenderer:_set_player_slot(nr, params)
 	local peer = managers.network:session():peer(nr)
 	local ready = peer:waiting_for_player_ready()
+
 	params.status = string.upper(managers.localization:text(ready and "menu_waiting_is_ready" or "menu_waiting_is_not_ready"))
 	params.kit_panel_visible = true
 

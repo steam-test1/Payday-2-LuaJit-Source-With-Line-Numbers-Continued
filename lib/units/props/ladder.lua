@@ -19,6 +19,7 @@ Ladder.DEBUG = false
 function Ladder.set_debug(state)
 	state = state or false
 	Ladder.DEBUG = state
+
 	local ext_ids = Idstring("ladder")
 
 	for i, ladder_unit in ipairs(Ladder.ladders) do
@@ -68,8 +69,10 @@ end
 -- Lines 69-149
 function Ladder:set_config(check_ground_clipping)
 	self._ladder_orientation_obj = self._unit:get_object(Idstring(self._ladder_orientation_obj_name))
+
 	local rotation = self._ladder_orientation_obj:rotation()
 	local position = self._ladder_orientation_obj:position()
+
 	self._normal = rotation[self.normal_axis](rotation)
 
 	if self.invert_normal_axis then
@@ -79,6 +82,7 @@ function Ladder:set_config(check_ground_clipping)
 	self._up = rotation[self.up_axis](rotation)
 	self._w_dir = math.cross(self._up, self._normal)
 	position = position + self._up * self._offset
+
 	local top = position + self._up * self._height
 
 	if check_ground_clipping then
@@ -107,6 +111,7 @@ function Ladder:set_config(check_ground_clipping)
 		top + self._w_dir * self._width / 2,
 		top - self._w_dir * self._width / 2
 	}
+
 	local snap_start = Ladder.SNAP_LENGTH
 
 	if self._height > 2 * Ladder.SNAP_LENGTH then
@@ -117,10 +122,12 @@ function Ladder:set_config(check_ground_clipping)
 	end
 
 	self._start_point = self._bottom + self._up * snap_start + self._normal * Ladder.MOVER_NORMAL_OFFSET
+
 	local segments = 1
 
 	if Ladder.SEGMENT_LENGTH < self._climb_distance then
 		segments = self._climb_distance / Ladder.SEGMENT_LENGTH
+
 		local percent = (segments - math.floor(segments)) / math.floor(segments)
 
 		if percent > 0.1 then
@@ -142,7 +149,7 @@ function Ladder:set_config(check_ground_clipping)
 	mvector3.add(self._bottom_exit, self._bottom)
 
 	self._up_dot = math.dot(self._up, math.UP)
-	self._w_dir_half = self._w_dir * self._width * 0.5
+	self._w_dir_half = self._w_dir * (self._width * 0.5)
 
 	self:set_enabled(self._enabled)
 end
@@ -188,13 +195,13 @@ function Ladder:can_access(pos, move_dir)
 
 	local w_dot = mvector3.dot(self._w_dir, mvec1)
 
-	if w_dot < 0 or self._width < w_dot then
+	if w_dot < 0 or w_dot > self._width then
 		return false
 	end
 
 	local h_dot = mvector3.dot(self._up, mvec1)
 
-	if h_dot < 0 or self._height < h_dot then
+	if h_dot < 0 or h_dot > self._height then
 		return false
 	end
 
@@ -217,7 +224,7 @@ function Ladder:_can_access_vr(pos, move_dir)
 
 	local min_dis = tweak_data.vr.ladder.distance * tweak_data.vr.ladder.distance
 
-	if mvector3.distance_sq(pos, self:bottom()) < min_dis or mvector3.distance_sq(pos, self:top()) < min_dis then
+	if min_dis > mvector3.distance_sq(pos, self:bottom()) or min_dis > mvector3.distance_sq(pos, self:top()) then
 		return true
 	end
 end
@@ -232,7 +239,7 @@ function Ladder:_check_end_climbing_vr(pos, move_dir, gnd_ray)
 
 	if w_dot < 100 or w_dot > self._width + 100 then
 		return true
-	elseif h_dot < 0 or self._height < h_dot then
+	elseif h_dot < 0 or h_dot > self._height then
 		return true
 	elseif gnd_ray and move_dir then
 		local towards_dot = mvector3.dot(move_dir, self._normal)
@@ -285,9 +292,9 @@ function Ladder:check_end_climbing(pos, move_dir, gnd_ray)
 	local w_dot = mvector3.dot(self._w_dir, mvec1)
 	local h_dot = mvector3.dot(self._up, mvec1)
 
-	if w_dot < 0 or self._width < w_dot then
+	if w_dot < 0 or w_dot > self._width then
 		return true
-	elseif h_dot < 0 or self._height < h_dot then
+	elseif h_dot < 0 or h_dot > self._height then
 		return true
 	elseif gnd_ray and move_dir then
 		local towards_dot = mvector3.dot(move_dir, self._normal)
@@ -308,6 +315,7 @@ function Ladder:get_normal_move_offset(pos)
 	mvector3.subtract(mvec1, self._corners[1])
 
 	local normal_move_offset = math.dot(self._normal, mvec1)
+
 	normal_move_offset = math.lerp(0, self._normal_target_offset - normal_move_offset, 0.1)
 
 	return normal_move_offset
@@ -336,13 +344,13 @@ function Ladder:on_ladder(pos, t)
 
 	local w_dot = math.dot(self._w_dir, mvec1)
 
-	if w_dot < 0 or self._width < w_dot then
+	if w_dot < 0 or w_dot > self._width then
 		return false
 	end
 
 	local n_dot = math.dot(self._normal, mvec1)
 
-	if Ladder.ON_LADDER_NORMAL_OFFSET < n_dot then
+	if n_dot > Ladder.ON_LADDER_NORMAL_OFFSET then
 		return false
 	end
 
@@ -450,6 +458,7 @@ end
 
 -- Lines 422-424
 function Ladder:set_upd_state(enabled)
+	return
 end
 
 -- Lines 426-435
@@ -483,13 +492,13 @@ end
 
 -- Lines 459-471
 function Ladder:save(data)
-	local state = {
-		enabled = self._enabled,
-		height = self._height,
-		width = self._width,
-		pc_disabled = self._pc_disabled,
-		vr_disabled = self._vr_disabled
-	}
+	local state = {}
+
+	state.enabled = self._enabled
+	state.height = self._height
+	state.width = self._width
+	state.pc_disabled = self._pc_disabled
+	state.vr_disabled = self._vr_disabled
 	data.Ladder = state
 end
 

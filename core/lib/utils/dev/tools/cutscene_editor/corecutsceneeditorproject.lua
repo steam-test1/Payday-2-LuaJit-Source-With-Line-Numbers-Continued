@@ -23,7 +23,8 @@ end
 
 -- Lines 18-22
 function CoreCutsceneEditorProject:export_type()
-	local settings_node = self:child_node("settings") or responder(function ()
+	local settings_node = self:child_node("settings") or responder(function()
+		return
 	end)
 	local export_type_node = self:child_node("export_type", settings_node) or responder(nil)
 
@@ -88,14 +89,14 @@ function CoreCutsceneEditorProject:save(audio_clips, film_clips, cutscene_keys, 
 	end
 
 	local film_tracks_node = project_node:make_child("film_tracks")
-	local highest_film_track_index = table.inject(film_clips, 0, function (highest, clip)
+	local highest_film_track_index = table.inject(film_clips, 0, function(highest, clip)
 		return math.max(highest, clip.track_index or 0)
 	end)
 
 	for track_index = 1, highest_film_track_index do
 		local track_node = film_tracks_node:make_child("track")
 
-		for _, clip in ipairs(table.find_all_values(film_clips, function (clip)
+		for _, clip in ipairs(table.find_all_values(film_clips, function(clip)
 			return clip.track_index == track_index
 		end)) do
 			if is_valid(clip.cutscene) and is_valid(clip.camera) and clip.to - clip.from > 0 then
@@ -117,7 +118,8 @@ end
 -- Lines 90-102
 function CoreCutsceneEditorProject:audio_clips()
 	local clips = {}
-	local audio_track_node = self:child_node("audio_track") or responder(function ()
+	local audio_track_node = self:child_node("audio_track") or responder(function()
+		return
 	end)
 
 	for clip_node in audio_track_node:children() do
@@ -160,7 +162,8 @@ end
 -- Lines 129-140
 function CoreCutsceneEditorProject:cutscene_keys(key_collection)
 	local cutscene_keys = {}
-	local key_track_node = self:child_node("key_track") or responder(function ()
+	local key_track_node = self:child_node("key_track") or responder(function()
+		return
 	end)
 
 	for key_node in key_track_node:children() do
@@ -176,9 +179,11 @@ end
 -- Lines 142-158
 function CoreCutsceneEditorProject:animation_patches()
 	local patches = {}
-	local settings_node = self:child_node("settings") or responder(function ()
+	local settings_node = self:child_node("settings") or responder(function()
+		return
 	end)
-	local animation_patches_node = self:child_node("animation_patches", settings_node) or responder(function ()
+	local animation_patches_node = self:child_node("animation_patches", settings_node) or responder(function()
+		return
 	end)
 
 	for actor_node in animation_patches_node:children() do
@@ -187,6 +192,7 @@ function CoreCutsceneEditorProject:animation_patches()
 		for override_node in actor_node:children() do
 			local blend_set = override_node:parameter("blend_set")
 			local animation = override_node:parameter("animation")
+
 			patches[unit_name] = patches[unit_name] or {}
 			patches[unit_name][blend_set] = animation
 		end
@@ -209,7 +215,7 @@ function CoreCutsceneEditorProject:child_node(child_name, parent_node, child_pro
 	parent_node = parent_node or self:root_node()
 
 	for child_node in parent_node:children() do
-		if child_node:name() == child_name and (child_properties == nil or table.true_for_all(child_properties, function (value, key)
+		if child_node:name() == child_name and (child_properties == nil or table.true_for_all(child_properties, function(value, key)
 			return child_node:parameter(key) == value
 		end)) then
 			return child_node

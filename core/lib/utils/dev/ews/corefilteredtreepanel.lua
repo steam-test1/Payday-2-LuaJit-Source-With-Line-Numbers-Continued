@@ -40,6 +40,7 @@ end
 -- Lines 32-46
 function CoreFilteredTreePanel:_create_panel(parent_frame)
 	self._panel = EWS:Panel(parent_frame, "", "")
+
 	local panel_sizer = EWS:BoxSizer("VERTICAL")
 
 	self._panel:set_sizer(panel_sizer)
@@ -51,7 +52,7 @@ function CoreFilteredTreePanel:_create_panel(parent_frame)
 	self._filtered_tree_control = CoreFilteredTreeControl:new(self._panel)
 
 	self._filtered_tree_control:add_to_sizer(panel_sizer, 1, 0, "EXPAND")
-	self._filtered_tree_control:add_filter(function (node)
+	self._filtered_tree_control:add_filter(function(node)
 		return string.find(node:path(), filter_text_ctrl:get_value(), 1, true)
 	end)
 	filter_text_ctrl:connect("EVT_COMMAND_TEXT_UPDATED", callback(self, self, "_on_filter_text_updated"))

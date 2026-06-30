@@ -1,4 +1,5 @@
 HandStatesCommon = HandStatesCommon or {}
+
 local M = HandStatesCommon
 
 -- Lines 4-14

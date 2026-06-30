@@ -100,12 +100,14 @@ end
 -- Lines 101-146
 function PlayerClean:_update_check_actions(t, dt)
 	local input = self:_get_input(t, dt)
+
 	self._stick_move = self._controller:get_input_axis("move")
 
 	if mvector3.length(self._stick_move) < 0.1 then
 		self._move_dir = nil
 	else
 		self._move_dir = mvector3.copy(self._stick_move)
+
 		local cam_flat_rot = Rotation(self._cam_fwd_flat, math.UP)
 
 		mvector3.rotate_with(self._move_dir, cam_flat_rot)
@@ -119,7 +121,7 @@ function PlayerClean:_update_check_actions(t, dt)
 
 	self:_update_foley(t, input)
 
-	local new_action = nil
+	local new_action
 
 	if not new_action then
 		-- Nothing
@@ -137,7 +139,7 @@ end
 
 -- Lines 158-171
 function PlayerClean:_check_action_interact(t, input)
-	local new_action = nil
+	local new_action
 	local interaction_wanted = input.btn_interact_press
 
 	if interaction_wanted then

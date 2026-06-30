@@ -15,6 +15,7 @@ function LootManager:_setup()
 	self._global = Global.loot_manager
 	self._initial_loot = deep_clone(self._global.secured)
 	self._distribution_loot = {}
+
 	local level_id = Global.level_data and Global.level_data.level_id
 	local level_tweak = tweak_data.levels[level_id]
 
@@ -63,7 +64,7 @@ function LootManager:_check_triggers(type)
 		local bag_total_value = self:get_real_total_loot_value()
 
 		for id, cb_data in pairs(self._triggers[type]) do
-			if type ~= "amount" or cb_data.amount <= bag_total_value then
+			if type ~= "amount" or bag_total_value >= cb_data.amount then
 				cb_data.callback()
 			end
 		end
@@ -71,7 +72,7 @@ function LootManager:_check_triggers(type)
 		local total_value = self:get_real_total_value()
 
 		for id, cb_data in pairs(self._triggers[type]) do
-			if cb_data.amount <= total_value then
+			if total_value >= cb_data.amount then
 				cb_data.callback()
 			end
 		end
@@ -187,7 +188,7 @@ function LootManager:_count_achievement_secured(achievement, secured_data)
 
 	for _, data in ipairs(self._global.secured) do
 		local found = false
-		local carry_id = nil
+		local carry_id
 
 		if type(secured_data.carry_id) == "table" then
 			for _, id in ipairs(secured_data.carry_id) do
@@ -210,6 +211,7 @@ function LootManager:_count_achievement_secured(achievement, secured_data)
 			end
 
 			total_amount = total_amount + 1
+
 			local is_small_loot = not not tweak_data.carry.small_loot[carry_id]
 
 			if is_small_loot then
@@ -227,13 +229,13 @@ end
 function LootManager:_check_secured(achievement, secured_data)
 	local total_amount, amount, value = self:_count_achievement_secured(achievement, secured_data)
 
-	return secured_data.total_amount and secured_data.total_amount <= total_amount or secured_data.amount and secured_data.amount <= amount or secured_data.value and secured_data.value <= value
+	return secured_data.total_amount and total_amount >= secured_data.total_amount or secured_data.amount and amount >= secured_data.amount or secured_data.value and value >= secured_data.value
 end
 
 -- Lines 420-505
 function LootManager:check_achievements(carry_id, multiplier)
 	local real_total_value = self:get_real_total_value()
-	local memory, total_memory_value, all_pass, total_value_pass, jobs_pass, levels_pass, difficulties_pass, total_time_pass, no_assets_pass, no_deployable_pass, secured_pass, is_dropin_pass, bag_with_value_pass = nil
+	local memory, total_memory_value, all_pass, total_value_pass, jobs_pass, levels_pass, difficulties_pass, total_time_pass, no_assets_pass, no_deployable_pass, secured_pass, is_dropin_pass, bag_with_value_pass
 
 	for achievement, achievement_data in pairs(tweak_data.achievement.loot_cash_achievements or {}) do
 		jobs_pass = not achievement_data.jobs or table.contains(achievement_data.jobs, managers.job:current_real_job_id())
@@ -261,9 +263,10 @@ function LootManager:check_achievements(carry_id, multiplier)
 		end
 
 		if not achievement_data.timer then
-			total_value_pass = not achievement_data.total_value or achievement_data.total_value <= real_total_value
+			total_value_pass = not achievement_data.total_value or real_total_value >= achievement_data.total_value
 		else
 			memory = managers.job:get_memory(achievement, achievement_data.is_shortterm)
+
 			local t = Application:time()
 			local new_memory = {
 				time = t,
@@ -274,7 +277,7 @@ function LootManager:check_achievements(carry_id, multiplier)
 				table.insert(memory, new_memory)
 
 				for i = #memory, 1, -1 do
-					if achievement_data.timer <= t - memory[i].time then
+					if t - memory[i].time >= achievement_data.timer then
 						table.remove(memory, i)
 					end
 				end
@@ -294,11 +297,12 @@ function LootManager:check_achievements(carry_id, multiplier)
 				total_memory_value = total_memory_value + m_data.value
 			end
 
-			total_value_pass = not achievement_data.total_value or achievement_data.total_value <= total_memory_value
+			total_value_pass = not achievement_data.total_value or total_memory_value >= achievement_data.total_value
 		end
 
 		if not bag_with_value_pass then
 			local carry_td = tweak_data.carry[carry_id]
+
 			bag_with_value_pass = carry_td and carry_td.bag_value and true or false
 		end
 
@@ -341,7 +345,7 @@ function LootManager:check_secured_mandatory_bags()
 
 	local amount = self:get_secured_mandatory_bags_amount()
 
-	return self._global.mandatory_bags.amount <= amount
+	return amount >= self._global.mandatory_bags.amount
 end
 
 -- Lines 535-552
@@ -460,6 +464,7 @@ function LootManager:get_real_value(carry_id, multiplier)
 	if not tweak_data.carry.small_loot[carry_id] then
 		local has_active_job = managers.job:has_active_job()
 		local job_stars = has_active_job and managers.job:current_job_stars() or 1
+
 		mul_value = tweak_data:get_value("carry", "value_multiplier", job_stars)
 		mul_value = mul_value or 1
 	end
@@ -481,7 +486,7 @@ end
 -- Lines 668-683
 function LootManager:get_real_total_loot_value()
 	local value = 0
-	local loot_value = nil
+	local loot_value
 
 	for _, data in ipairs(self._global.secured) do
 		if not tweak_data.carry.small_loot[data.carry_id] then
@@ -503,7 +508,7 @@ end
 -- Lines 686-701
 function LootManager:get_real_total_small_loot_value()
 	local value = 0
-	local loot_value = nil
+	local loot_value
 
 	for _, data in ipairs(self._global.secured) do
 		if tweak_data.carry.small_loot[data.carry_id] then
@@ -627,7 +632,7 @@ function LootManager:_present(carry_id, multiplier)
 		CARRY_TYPE = type_text,
 		AMOUNT = managers.experience:cash_string(real_value)
 	})
-	local icon = nil
+	local icon
 
 	managers.hud:present_mid_text({
 		time = 4,

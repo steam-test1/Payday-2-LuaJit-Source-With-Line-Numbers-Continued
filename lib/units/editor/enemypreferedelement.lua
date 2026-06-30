@@ -41,8 +41,8 @@ function EnemyPreferedAddUnitElement:_private_draw_links(t, dt, selected_unit, a
 
 			if draw then
 				self:_draw_link({
-					g = 0,
 					b = 0.75,
+					g = 0,
 					r = 0,
 					from_unit = self._unit,
 					to_unit = unit
@@ -57,17 +57,18 @@ end
 
 -- Lines 44-45
 function EnemyPreferedAddUnitElement:update_editing()
+	return
 end
 
 -- Lines 47-77
 function EnemyPreferedAddUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit then
-		local is_group, id = nil
+		local is_group, id
 
 		if string.find(ray.unit:name():s(), "ai_spawn_enemy", 1, true) then
 			id = ray.unit:unit_data().unit_id
@@ -181,6 +182,7 @@ function EnemyPreferedAddUnitElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local toolbar = EWS:ToolBar(panel, "", "TB_FLAT,TB_NODIVIDER")
 
 	toolbar:add_tool("ADD_UNIT_LIST", "Add unit from unit list", CoreEws.image_path("world_editor\\unit_by_name_list.png"), nil)
@@ -213,6 +215,7 @@ end
 
 -- Lines 176-177
 function EnemyPreferedRemoveUnitElement:update_editing()
+	return
 end
 
 -- Lines 179-188
@@ -225,8 +228,8 @@ function EnemyPreferedRemoveUnitElement:draw_links(t, dt, selected_unit, all_uni
 
 		if draw then
 			self:_draw_link({
-				g = 0,
 				b = 0,
+				g = 0,
 				r = 0.75,
 				from_unit = self._unit,
 				to_unit = unit
@@ -238,8 +241,8 @@ end
 -- Lines 190-200
 function EnemyPreferedRemoveUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit and string.find(ray.unit:name():s(), "ai_enemy_prefered_add", 1, true) then
@@ -264,6 +267,7 @@ function EnemyPreferedRemoveUnitElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local names = {
 		"ai_enemy_prefered_add"
 	}

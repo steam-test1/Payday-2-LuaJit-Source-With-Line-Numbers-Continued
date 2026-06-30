@@ -30,6 +30,7 @@ end
 
 -- Lines 27-29
 function ElementMotionpathMarker:operation_remove()
+	return
 end
 
 -- Lines 31-34

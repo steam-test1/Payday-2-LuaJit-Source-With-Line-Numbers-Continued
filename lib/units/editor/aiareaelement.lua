@@ -2,9 +2,9 @@ AIAreaElement = AIAreaElement or class(MissionElement)
 AIAreaElement.SAVE_UNIT_ROTATION = false
 AIAreaElement.LINK_VALUES = {
 	{
+		layer = "Ai",
 		output = true,
-		table_value = "nav_segs",
-		layer = "Ai"
+		table_value = "nav_segs"
 	}
 }
 
@@ -54,8 +54,8 @@ function AIAreaElement:draw_links(t, dt, selected_unit, all_units)
 
 	for u_id, unit in pairs(self._nav_seg_units) do
 		self:_draw_link({
-			g = 0.75,
 			b = 0,
+			g = 0.75,
 			r = 0,
 			from_unit = self._unit,
 			to_unit = unit
@@ -95,8 +95,8 @@ end
 -- Lines 104-116
 function AIAreaElement:_raycast()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 19
+		mask = 19,
+		ray_type = "editor"
 	})
 
 	if not ray then
@@ -151,6 +151,7 @@ end
 
 -- Lines 159-162
 function AIAreaElement:add_to_mission_package()
+	return
 end
 
 -- Lines 166-169

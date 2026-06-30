@@ -11,22 +11,27 @@ OverlayPresenter = OverlayPresenter or CoreClass.class(SubtitlePresenter)
 
 -- Lines 17-19
 function SubtitlePresenter:destroy()
+	return
 end
 
 -- Lines 21-23
 function SubtitlePresenter:update(time, delta_time)
+	return
 end
 
 -- Lines 25-27
 function SubtitlePresenter:show()
+	return
 end
 
 -- Lines 29-31
 function SubtitlePresenter:hide()
+	return
 end
 
 -- Lines 33-36
 function SubtitlePresenter:show_text(text, duration)
+	return
 end
 
 -- Lines 38-42
@@ -132,6 +137,7 @@ end
 -- Lines 131-139
 function OverlayPresenter:set_width(pixels)
 	local safe_width = self:_gui_width()
+
 	self.__width = math.min(pixels, safe_width)
 
 	if CoreCode.alive(self.__subtitle_panel) then
@@ -142,28 +148,28 @@ end
 -- Lines 141-146
 function OverlayPresenter:show_text(text, duration)
 	local label = self.__subtitle_panel:child("label") or self.__subtitle_panel:text({
+		align = "center",
+		layer = 1,
 		name = "label",
 		vertical = "bottom",
 		word_wrap = true,
 		wrap = true,
-		align = "center",
-		y = 1,
 		x = 1,
-		layer = 1,
+		y = 1,
 		font = self.__font_name,
 		font_size = self.__font_size,
 		color = Color.white
 	})
 	local shadow = self.__subtitle_panel:child("shadow") or self.__subtitle_panel:text({
-		y = 2,
+		align = "center",
+		layer = 0,
 		name = "shadow",
 		vertical = "bottom",
-		wrap = true,
-		align = "center",
-		word_wrap = true,
 		visible = false,
+		word_wrap = true,
+		wrap = true,
 		x = 2,
-		layer = 0,
+		y = 2,
 		font = self.__font_name,
 		font_size = self.__font_size,
 		color = Color.black:with_alpha(0.5)
@@ -225,7 +231,7 @@ function OverlayPresenter:_auto_word_wrap_string(subtitle_string)
 
 	layout_text_field:set_text(subtitle_string)
 
-	local line_breaks = table.collect(layout_text_field:line_breaks(), function (index)
+	local line_breaks = table.collect(layout_text_field:line_breaks(), function(index)
 		return index + 1
 	end)
 	local wrapped_lines = {}
@@ -246,12 +252,12 @@ function OverlayPresenter:_layout_text_field()
 	assert(self.__subtitle_panel)
 
 	return self.__subtitle_panel:child("layout") or self.__subtitle_panel:text({
+		align = "center",
 		name = "layout",
 		vertical = "bottom",
+		visible = false,
 		word_wrap = true,
 		wrap = true,
-		align = "center",
-		visible = false,
 		width = self.__width,
 		font = self.__font_name,
 		font_size = self.__font_size
@@ -262,8 +268,8 @@ end
 function OverlayPresenter:_string_width(subtitle_string)
 	local string_width_measure_text_field = self.__ws:panel():child("string_width") or self.__ws:panel():text({
 		name = "string_width",
-		wrap = false,
 		visible = false,
+		wrap = false,
 		font = self.__font_name,
 		font_size = self.__font_size
 	})

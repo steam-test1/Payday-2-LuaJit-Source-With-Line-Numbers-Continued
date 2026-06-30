@@ -1,13 +1,14 @@
 local tmp_vec1 = Vector3()
+
 ECMJammerBase = ECMJammerBase or class(UnitBase)
 ECMJammerBase._NET_EVENTS = {
-	feedback_start = 3,
-	feedback_flash = 6,
 	battery_empty = 2,
-	feedback_stop = 4,
+	battery_low = 1,
+	feedback_flash = 6,
 	feedback_restart = 7,
-	jammer_active = 5,
-	battery_low = 1
+	feedback_start = 3,
+	feedback_stop = 4,
+	jammer_active = 5
 }
 ECMJammerBase.battery_life_multiplier = {
 	1,
@@ -18,6 +19,7 @@ ECMJammerBase.battery_life_multiplier = {
 -- Lines 21-32
 function ECMJammerBase.spawn(pos, rot, battery_life_upgrade_lvl, owner, peer_id)
 	battery_life_upgrade_lvl = math.clamp(battery_life_upgrade_lvl, 1, #ECMJammerBase.battery_life_multiplier)
+
 	local unit = World:spawn_unit(Idstring("units/payday2/equipment/gen_equipment_jammer/gen_equipment_jammer"), pos, rot)
 
 	managers.network:session():send_to_peers_synched("sync_equipment_setup", unit, battery_life_upgrade_lvl, peer_id or 0)
@@ -70,6 +72,7 @@ function ECMJammerBase:_setup_glows()
 	local glow_f1_off = Idstring("g_glow_func1_red")
 	local glow_f2_on = Idstring("g_glow_func2_green")
 	local glow_f2_off = Idstring("g_glow_func2_red")
+
 	self._g_glow_jammer_green = self._unit:get_object(glow_f1_on) or nil
 	self._g_glow_jammer_red = self._unit:get_object(glow_f1_off) or nil
 	self._g_glow_feedback_green = self._unit:get_object(glow_f2_on) or nil
@@ -224,7 +227,8 @@ function ECMJammerBase:set_active(active)
 	if Network:is_server() then
 		if active then
 			self._alert_filter = self:owner():movement():SO_access()
-			local jam_cameras, jam_pagers = nil
+
+			local jam_cameras, jam_pagers
 
 			if self._owner_id == 1 then
 				jam_cameras = managers.player:has_category_upgrade("ecm_jammer", "affects_cameras")
@@ -416,11 +420,13 @@ function ECMJammerBase:_set_feedback_active(state)
 			self._unit:interaction():set_active(false, true)
 
 			local t = TimerManager:game():time()
+
 			self._feedback_clbk_id = "ecm_feedback" .. tostring(self._unit:key())
 			self._feedback_interval = tweak_data.upgrades.ecm_feedback_interval or 1.5
 			self._feedback_range = tweak_data.upgrades.ecm_jammer_base_range
 			self._feedback_duration = math.lerp(tweak_data.upgrades.ecm_feedback_min_duration or 15, tweak_data.upgrades.ecm_feedback_max_duration or 20, math.random()) * self._duration_multiplier
 			self._feedback_expire_t = t + self._feedback_duration
+
 			local first_impact_t = t + math.lerp(0.1, 1, math.random())
 
 			managers.enemy:add_delayed_clbk(self._feedback_clbk_id, callback(self, self, "clbk_feedback"), first_impact_t)
@@ -488,6 +494,7 @@ end
 -- Lines 512-540
 function ECMJammerBase:clbk_feedback()
 	local t = TimerManager:game():time()
+
 	self._feedback_clbk_id = "ecm_feedback" .. tostring(self._unit:key())
 
 	if not managers.groupai:state():enemy_weapons_hot() then
@@ -503,7 +510,7 @@ function ECMJammerBase:clbk_feedback()
 	print("PUKING!!!!!")
 	self._detect_and_give_dmg(self._position + self._unit:rotation():y() * 15, self._unit, self:owner(), self._feedback_range)
 
-	if self._feedback_expire_t < t then
+	if t > self._feedback_expire_t then
 		self._feedback_clbk_id = nil
 
 		self:_set_feedback_active(false)
@@ -564,7 +571,9 @@ function ECMJammerBase._detect_and_give_dmg(hit_pos, device_unit, user_unit, ran
 		mvector3.add(pos, hit_pos)
 
 		local splinter_ray = World:raycast("ray", hit_pos, pos, "slot_mask", slotmask)
+
 		pos = (splinter_ray and splinter_ray.position or pos) - dir:normalized() * math.min(splinter_ray and splinter_ray.distance or 0, 10)
+
 		local near_splinter = false
 
 		for _, s_pos in ipairs(splinters) do
@@ -582,6 +591,7 @@ function ECMJammerBase._detect_and_give_dmg(hit_pos, device_unit, user_unit, ran
 
 	local range_sq = range * range
 	local half_range_sq = range * 0.5
+
 	half_range_sq = half_range_sq * half_range_sq
 
 	-- Lines 621-661
@@ -598,14 +608,14 @@ function ECMJammerBase._detect_and_give_dmg(hit_pos, device_unit, user_unit, ran
 			return
 		end
 
-		if u_data.char_tweak.ecm_vulnerability <= math.random() then
+		if math.random() >= u_data.char_tweak.ecm_vulnerability then
 			return
 		end
 
 		local head_pos = u_data.unit:movement():m_head_pos()
 		local dis_sq = mvec3_dis_sq(head_pos, hit_pos)
 
-		if range_sq < dis_sq then
+		if dis_sq > range_sq then
 			return
 		end
 
@@ -653,12 +663,14 @@ function ECMJammerBase:save(data)
 		low_battery = self._battery_low or nil,
 		owner_id = self._owner_id
 	}
+
 	data.ECMJammerBase = state
 end
 
 -- Lines 691-710
 function ECMJammerBase:load(data)
 	local state = data.ECMJammerBase
+
 	self._owner_id = state.owner_id
 
 	if state.jammer_active then

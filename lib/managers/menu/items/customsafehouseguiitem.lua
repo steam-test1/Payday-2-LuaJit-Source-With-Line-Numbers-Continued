@@ -4,6 +4,7 @@ local medium_font = tweak_data.menu.pd2_medium_font
 local medium_font_size = tweak_data.menu.pd2_medium_font_size
 local small_font = tweak_data.menu.pd2_small_font
 local small_font_size = tweak_data.menu.pd2_small_font_size
+
 CustomSafehouseGuiItem = CustomSafehouseGuiItem or class()
 
 -- Lines 12-14
@@ -13,10 +14,12 @@ end
 
 -- Lines 16-17
 function CustomSafehouseGuiItem:refresh()
+	return
 end
 
 -- Lines 19-20
 function CustomSafehouseGuiItem:inside()
+	return
 end
 
 -- Lines 22-24
@@ -59,6 +62,7 @@ end
 
 -- Lines 52-53
 function CustomSafehouseGuiItem:flash()
+	return
 end
 
 CustomSafehouseGuiTabItem = CustomSafehouseGuiTabItem or class(CustomSafehouseGuiItem)
@@ -73,15 +77,16 @@ function CustomSafehouseGuiTabItem:init(index, title_id, page_item, gui, tab_x, 
 	self._selected = false
 	self._gui = gui
 	self._page_item = page_item
+
 	local page_panel = tab_panel:panel({
 		name = "Page" .. string.capitalize(tostring(title_id)),
 		x = tab_x
 	})
 	local page_text = page_panel:text({
-		name = "PageText",
-		vertical = "center",
 		align = "center",
 		layer = 1,
+		name = "PageText",
+		vertical = "center",
 		text = managers.localization:to_upper_text(title_id),
 		font = medium_font,
 		font_size = medium_font_size,
@@ -93,12 +98,13 @@ function CustomSafehouseGuiTabItem:init(index, title_id, page_item, gui, tab_x, 
 	page_text:set_size(page_panel:size())
 
 	local page_tab_bg = page_panel:bitmap({
-		texture = "guis/textures/pd2/shared_tab_box",
 		name = "PageTabBG",
+		texture = "guis/textures/pd2/shared_tab_box",
 		w = page_panel:w(),
 		h = page_panel:h(),
 		color = tweak_data.screen_colors.text
 	})
+
 	self._page_panel = page_panel
 
 	self:refresh()
@@ -172,6 +178,7 @@ end
 
 -- Lines 164-165
 function CustomSafehouseGuiPage:update(t, dt)
+	return
 end
 
 -- Lines 167-169
@@ -196,6 +203,7 @@ end
 
 -- Lines 182-183
 function CustomSafehouseGuiPage:on_notify(tree, msg)
+	return
 end
 
 -- Lines 185-187
@@ -223,46 +231,57 @@ end
 
 -- Lines 206-207
 function CustomSafehouseGuiPage:mouse_clicked(o, button, x, y)
+	return
 end
 
 -- Lines 209-210
 function CustomSafehouseGuiPage:mouse_pressed(button, x, y)
+	return
 end
 
 -- Lines 212-213
 function CustomSafehouseGuiPage:mouse_released(button, x, y)
+	return
 end
 
 -- Lines 215-216
 function CustomSafehouseGuiPage:mouse_moved(button, x, y)
+	return
 end
 
 -- Lines 218-219
 function CustomSafehouseGuiPage:mouse_wheel_up(x, y)
+	return
 end
 
 -- Lines 221-222
 function CustomSafehouseGuiPage:mouse_wheel_down(x, y)
+	return
 end
 
 -- Lines 224-225
 function CustomSafehouseGuiPage:move_up()
+	return
 end
 
 -- Lines 227-228
 function CustomSafehouseGuiPage:move_down()
+	return
 end
 
 -- Lines 230-231
 function CustomSafehouseGuiPage:move_left()
+	return
 end
 
 -- Lines 233-234
 function CustomSafehouseGuiPage:move_right()
+	return
 end
 
 -- Lines 236-237
 function CustomSafehouseGuiPage:confirm_pressed()
+	return
 end
 
 -- Lines 239-255
@@ -299,7 +318,9 @@ function CustomSafehouseGuiButtonItem:init(panel, data, x, priority)
 
 	self._btn_data = data
 	self._callback = data.callback
+
 	local up_font_size = NOT_WIN_32 and RenderSettings.resolution.y < 720 and data.btn == "BTN_STICK_R" and 2 or 0
+
 	self._color = data.color or tweak_data.screen_colors.button_stage_3
 	self._selected_color = data.selected_color or tweak_data.screen_colors.button_stage_2
 	self._custom_data = data.custom
@@ -311,17 +332,18 @@ function CustomSafehouseGuiButtonItem:init(panel, data, x, priority)
 		h = medium_font_size
 	})
 	self._btn_text = self._panel:text({
-		name = "text",
 		blend_mode = "add",
+		layer = 1,
+		name = "text",
 		text = "",
 		x = 0,
-		layer = 1,
 		align = data.align or "right",
 		w = self._panel:w(),
 		font_size = small_font_size + up_font_size,
 		font = small_font,
 		color = self._color
 	})
+
 	local text = data.name_id
 
 	if data.localize == nil or data.localize then
@@ -331,10 +353,10 @@ function CustomSafehouseGuiButtonItem:init(panel, data, x, priority)
 	self:set_text(text)
 
 	self._select_rect = self._panel:rect({
-		blend_mode = "add",
-		name = "select_rect",
-		halign = "scale",
 		alpha = 0.3,
+		blend_mode = "add",
+		halign = "scale",
+		name = "select_rect",
 		valign = "scale",
 		color = self._color
 	})
@@ -368,6 +390,7 @@ function CustomSafehouseGuiButtonItem:set_text(text)
 	self._btn_text:set_text(prefix .. utf8.to_upper(text))
 
 	local _, _, w, h = self._btn_text:text_rect()
+
 	h = math.max(h, small_font_size)
 
 	self._panel:set_h(h)

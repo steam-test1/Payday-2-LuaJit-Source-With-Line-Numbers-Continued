@@ -49,7 +49,7 @@ end
 
 -- Lines 49-55
 function PointOfNoReturnElement:_add_tweak_options()
-	self._tweak_options = table.map_keys(tweak_data.point_of_no_returns, function (x, y)
+	self._tweak_options = table.map_keys(tweak_data.point_of_no_returns, function(x, y)
 		if x == "noreturn" then
 			return true
 		end
@@ -84,6 +84,7 @@ function PointOfNoReturnElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local exact_names = {
 		"core/units/mission_elements/trigger_area/trigger_area"
 	}
@@ -102,12 +103,12 @@ function PointOfNoReturnElement:_build_panel(panel, panel_sizer)
 	panel_sizer:add(text_sizer, 0, 4, "EXPAND,BOTTOM")
 
 	local time_params_easy = {
-		name = "Time left on easy:",
 		ctrlr_proportions = 2,
+		floats = 0,
+		min = 1,
+		name = "Time left on easy:",
 		name_proportions = 1,
 		tooltip = "Set the time left on Easy difficulty (Currently not used on Payday 2)",
-		min = 1,
-		floats = 0,
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.time_easy
@@ -124,12 +125,12 @@ function PointOfNoReturnElement:_build_panel(panel, panel_sizer)
 	})
 
 	local time_params_normal = {
-		name = "Time left on normal:",
 		ctrlr_proportions = 2,
+		floats = 0,
+		min = 1,
+		name = "Time left on normal:",
 		name_proportions = 1,
 		tooltip = "Set the time left on Normal difficulty",
-		min = 1,
-		floats = 0,
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.time_normal
@@ -146,12 +147,12 @@ function PointOfNoReturnElement:_build_panel(panel, panel_sizer)
 	})
 
 	local time_params_hard = {
-		name = "Time left on hard:",
 		ctrlr_proportions = 2,
+		floats = 0,
+		min = 1,
+		name = "Time left on hard:",
 		name_proportions = 1,
 		tooltip = "Set the time left on Hard difficulty",
-		min = 1,
-		floats = 0,
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.time_hard
@@ -168,12 +169,12 @@ function PointOfNoReturnElement:_build_panel(panel, panel_sizer)
 	})
 
 	local time_params_overkill = {
-		name = "Time left on overkill:",
 		ctrlr_proportions = 2,
+		floats = 0,
+		min = 1,
+		name = "Time left on overkill:",
 		name_proportions = 1,
 		tooltip = "Set the time left on Very Hard difficulty",
-		min = 1,
-		floats = 0,
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.time_overkill
@@ -190,12 +191,12 @@ function PointOfNoReturnElement:_build_panel(panel, panel_sizer)
 	})
 
 	local time_params_overkill_145 = {
-		name = "Time left on overkill 145:",
 		ctrlr_proportions = 2,
+		floats = 0,
+		min = 1,
+		name = "Time left on overkill 145:",
 		name_proportions = 1,
 		tooltip = "Set the time left on Overkill difficulty",
-		min = 1,
-		floats = 0,
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.time_overkill_145
@@ -212,12 +213,12 @@ function PointOfNoReturnElement:_build_panel(panel, panel_sizer)
 	})
 
 	local time_params_easy_wish = {
-		name = "Time left on easy wish:",
 		ctrlr_proportions = 2,
+		floats = 0,
+		min = 1,
+		name = "Time left on easy wish:",
 		name_proportions = 1,
 		tooltip = "Set the time left on Easy Wish difficulty",
-		min = 1,
-		floats = 0,
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.time_easy_wish
@@ -234,12 +235,12 @@ function PointOfNoReturnElement:_build_panel(panel, panel_sizer)
 	})
 
 	local time_params_overkill_290 = {
-		name = "Time left on overkill 290:",
 		ctrlr_proportions = 2,
+		floats = 0,
+		min = 1,
+		name = "Time left on overkill 290:",
 		name_proportions = 1,
 		tooltip = "Set the time left on Death Wish difficulty",
-		min = 1,
-		floats = 0,
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.time_overkill_290
@@ -256,12 +257,12 @@ function PointOfNoReturnElement:_build_panel(panel, panel_sizer)
 	})
 
 	local time_params_sm_wish = {
-		name = "Time left on sm wish:",
 		ctrlr_proportions = 2,
+		floats = 0,
+		min = 1,
+		name = "Time left on sm wish:",
 		name_proportions = 1,
 		tooltip = "Set the time left on SM Wish difficulty",
-		min = 1,
-		floats = 0,
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.time_sm_wish
@@ -285,6 +286,7 @@ end
 
 -- Lines 259-260
 function PointOfNoReturnElement:update_editing()
+	return
 end
 
 -- Lines 263-271
@@ -295,8 +297,8 @@ function PointOfNoReturnElement:update_selected(t, dt, selected_unit, all_units)
 
 		if draw then
 			self:_draw_link({
-				g = 0,
 				b = 0.75,
+				g = 0,
 				r = 0.75,
 				from_unit = self._unit,
 				to_unit = unit
@@ -308,8 +310,8 @@ end
 -- Lines 273-283
 function PointOfNoReturnElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit and ray.unit:name():s() == "core/units/mission_elements/trigger_area/trigger_area" then

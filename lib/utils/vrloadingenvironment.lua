@@ -97,6 +97,7 @@ function VRLoadingEnvironment:change_state(state, ...)
 	end
 
 	self._current_state = state
+
 	local enter = self._states[self._current_state].enter
 
 	if enter then
@@ -177,7 +178,7 @@ end
 function VRLoadingEnvironment:_start_update(t, dt)
 	self:_update_progress(t, dt)
 
-	if self._timer_t < t then
+	if t > self._timer_t then
 		self:change_state(VRLoadingEnvironment.STATE_FADEIN)
 	end
 end
@@ -204,7 +205,7 @@ function VRLoadingEnvironment:_stop_update(t, dt)
 	self:_fade_overlays((self._timer_t - t) / self._fade_black_t)
 	self:_update_progress(t, dt)
 
-	if self._timer_t < t then
+	if t > self._timer_t then
 		self:change_state(VRLoadingEnvironment.STATE_NONE)
 	end
 end
@@ -227,17 +228,19 @@ function VRLoadingEnvironment:_fadein_update(t, dt)
 	self:_fade_overlays(1 - (self._timer_t - t) / self._fade_in_t)
 	self:_update_progress(t, dt)
 
-	if self._timer_t < t then
+	if t > self._timer_t then
 		self:change_state(VRLoadingEnvironment.STATE_RESUME)
 	end
 end
 
 -- Lines 248-249
 function VRLoadingEnvironment:_resume_enter()
+	return
 end
 
 -- Lines 251-252
 function VRLoadingEnvironment:_resume_exit()
+	return
 end
 
 -- Lines 254-256
@@ -252,6 +255,7 @@ function VRLoadingEnvironment:_fade_overlays(alpha)
 	for _, o in ipairs(self._overlays) do
 		local c = o.config.color or Color(1, 1, 1, 1)
 		local range = c.alpha
+
 		c = c:with_alpha(range * alpha)
 
 		o.overlay:set_color(c)
@@ -267,6 +271,7 @@ function VRLoadingEnvironment:_update_progress(t, dt)
 	end
 
 	self._loading_spin.t = self._loading_spin.t ~= nil and self._loading_spin.t + dt or 0
+
 	local overlay = self._loading_spin.overlay
 
 	overlay:set_transform_linked(self._loading_spin.parent, Vector3(0, 0, 0), Rotation(0, 0, self._loading_spin.t * 360 % 360))

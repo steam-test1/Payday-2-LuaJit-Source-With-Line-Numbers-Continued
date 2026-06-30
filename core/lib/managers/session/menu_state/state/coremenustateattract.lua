@@ -7,6 +7,7 @@ Attract = Attract or class()
 -- Lines 7-12
 function Attract:init()
 	local menu_handler = self.pre_front_end.menu_state._menu_handler
+
 	self._response = CoreSessionResponse.Done:new()
 
 	menu_handler:attract(self._response)

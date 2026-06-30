@@ -25,6 +25,7 @@ local zero_vector3 = Vector3(0, 0, 0)
 -- Lines 31-36
 function OverlayEffectManager:reset_hmd_orientation()
 	local pos, rot = VRManager:hmd_pose()
+
 	self._hmd_position = pos
 
 	mvector3.set_z(self._hmd_position, OverlayEffectManager.CAMERA_HEIGHT)

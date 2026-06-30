@@ -54,6 +54,7 @@ end
 -- Lines 49-54
 function WorldCameraLayer:toggle_show_framing_gui(layer_toolbar, event)
 	local visible = layer_toolbar:tool_state(event:get_id())
+
 	self._forced_show_framing_gui = visible
 
 	self._workspace:panel():set_alpha(0.5)
@@ -122,6 +123,7 @@ function WorldCameraLayer:build_panel(notebook)
 	self._ews_panel:set_sizer(self._main_sizer)
 
 	self._sizer = EWS:BoxSizer("VERTICAL")
+
 	local layer_toolbar = EWS:ToolBar(self._ews_panel, "", "TB_FLAT,TB_NODIVIDER")
 
 	layer_toolbar:add_check_tool("WC_FORCE_FRAMING_GUI", "Show framing gui", CoreEws.image_path("toolbar\\find_16x16.png"), "Look through camera")
@@ -152,6 +154,7 @@ function WorldCameraLayer:build_panel(notebook)
 	local edit_sizer = EWS:StaticBoxSizer(self._ews_panel, "VERTICAL", "Settings")
 	local in_out_sizer = EWS:BoxSizer("HORIZONTAL")
 	local in_sizer = EWS:StaticBoxSizer(self._ews_panel, "VERTICAL", "In")
+
 	self._in_acc = EWS:ComboBox(self._ews_panel, "", "", "CB_DROPDOWN,CB_READONLY")
 
 	for _, name in ipairs({
@@ -168,6 +171,7 @@ function WorldCameraLayer:build_panel(notebook)
 	in_out_sizer:add(in_sizer, 1, 0, "EXPAND")
 
 	local out_sizer = EWS:StaticBoxSizer(self._ews_panel, "VERTICAL", "Out")
+
 	self._out_acc = EWS:ComboBox(self._ews_panel, "", "", "CB_DROPDOWN,CB_READONLY")
 
 	for _, name in ipairs({
@@ -185,13 +189,13 @@ function WorldCameraLayer:build_panel(notebook)
 	edit_sizer:add(in_out_sizer, 0, 0, "EXPAND")
 
 	self._duration_params = {
-		value = 2.5,
-		name = "Camera Duration [sec]:",
 		ctrlr_proportions = 1,
+		floats = 2,
+		min = 0,
+		name = "Camera Duration [sec]:",
 		name_proportions = 1,
 		tooltip = "Specifies the camera lenght in seconds",
-		min = 0,
-		floats = 2,
+		value = 2.5,
 		panel = self._ews_panel,
 		sizer = edit_sizer,
 		events = {
@@ -209,13 +213,13 @@ function WorldCameraLayer:build_panel(notebook)
 	CoreEws.number_controller(self._duration_params)
 
 	self._delay_params = {
-		value = 0,
-		name = "End Delay [sec]:",
 		ctrlr_proportions = 1,
+		floats = 2,
+		min = 0,
+		name = "End Delay [sec]:",
 		name_proportions = 1,
 		tooltip = "Specifies the delay time after camera has reached the end position, in seconds",
-		min = 0,
-		floats = 2,
+		value = 0,
 		panel = self._ews_panel,
 		sizer = edit_sizer,
 		events = {
@@ -233,12 +237,12 @@ function WorldCameraLayer:build_panel(notebook)
 	CoreEws.number_controller(self._delay_params)
 
 	self._dof_paddding_params = {
-		name = "Dof Padding [cm]:",
 		ctrlr_proportions = 1,
+		floats = 0,
+		min = 0,
+		name = "Dof Padding [cm]:",
 		name_proportions = 1,
 		tooltip = "The fade distance from max dof to no dof",
-		min = 0,
-		floats = 0,
 		panel = self._ews_panel,
 		sizer = edit_sizer,
 		value = managers.worldcamera:default_dof_padding(),
@@ -257,13 +261,13 @@ function WorldCameraLayer:build_panel(notebook)
 	CoreEws.number_controller(self._dof_paddding_params)
 
 	self._dof_clamp_params = {
-		name_proportions = 1,
-		name = "Dof Amount [0-1]:",
 		ctrlr_proportions = 1,
-		tooltip = "A value to specify how much dof it should have",
-		min = 0,
 		floats = 2,
 		max = 1,
+		min = 0,
+		name = "Dof Amount [0-1]:",
+		name_proportions = 1,
+		tooltip = "A value to specify how much dof it should have",
 		panel = self._ews_panel,
 		sizer = edit_sizer,
 		value = managers.worldcamera:default_dof_clamp(),
@@ -419,12 +423,12 @@ function WorldCameraLayer:build_panel(notebook)
 	keys_sizer:add(key_far_dof_sizer, 0, 0, "EXPAND")
 
 	local roll_params = {
-		name_proportions = 1,
-		name = "Roll:",
-		value = 0,
-		tooltip = "An angle value specifying the roll",
-		floats = 0,
 		ctrlr_proportions = 3,
+		floats = 0,
+		name = "Roll:",
+		name_proportions = 1,
+		tooltip = "An angle value specifying the roll",
+		value = 0,
 		panel = self._ews_panel,
 		sizer = keys_sizer,
 		events = {
@@ -441,14 +445,13 @@ function WorldCameraLayer:build_panel(notebook)
 
 	CoreEws.number_controller(roll_params)
 
-	self._key_types = {
-		time = key_time,
-		fov = key_fov,
-		fov_text = key_fov_text,
-		near_dof = key_near_dof,
-		far_dof = key_far_dof,
-		roll = roll_params
-	}
+	self._key_types = {}
+	self._key_types.time = key_time
+	self._key_types.fov = key_fov
+	self._key_types.fov_text = key_fov_text
+	self._key_types.near_dof = key_near_dof
+	self._key_types.far_dof = key_far_dof
+	self._key_types.roll = roll_params
 
 	self._keys_toolbar:set_enabled(false)
 	self._keys:set_enabled(false)
@@ -489,6 +492,7 @@ function WorldCameraLayer:build_sequence()
 
 	local cameras_sizer = EWS:BoxSizer("VERTICAL")
 	local camera_sequence_lists_sizer = EWS:BoxSizer("HORIZONTAL")
+
 	self._availible_sequence_camera_list = EWS:ListBox(self._ews_panel, "", "LB_SINGLE,LB_HSCROLL,LB_NEEDED_SB,LB_SORT")
 
 	camera_sequence_lists_sizer:add(self._availible_sequence_camera_list, 1, 0, "EXPAND")
@@ -531,10 +535,9 @@ function WorldCameraLayer:build_sequence()
 	sequence_camera_stop:connect("EVT_KILL_FOCUS", callback(self, self, "on_sequence_camera_stop"), sequence_camera_stop)
 	cameras_sizer:add(camera_sequence_stop_sizer, 0, 0, "EXPAND")
 
-	self._camera_sequence_settings = {
-		start = sequence_camera_start,
-		stop = sequence_camera_stop
-	}
+	self._camera_sequence_settings = {}
+	self._camera_sequence_settings.start = sequence_camera_start
+	self._camera_sequence_settings.stop = sequence_camera_stop
 
 	sequences_sizer:add(cameras_sizer, 0, 0, "EXPAND")
 	self._sizer:add(sequences_sizer, 0, 0, "EXPAND")
@@ -543,6 +546,7 @@ end
 -- Lines 517-538
 function WorldCameraLayer:select_camera()
 	local name = self:selected_camera()
+
 	self._current_point = nil
 
 	if name then
@@ -826,6 +830,7 @@ end
 -- Lines 746-750
 function WorldCameraLayer:set_time(data)
 	self._current_time = data.slider:get_value() / self._time_precision
+
 	local floats = math.log10(self._time_precision)
 
 	data.text:set_value(string.format("%." .. floats .. "f", self._current_time))
@@ -884,6 +889,7 @@ function WorldCameraLayer:on_key_fov()
 
 	if camera then
 		local key = camera:key(tonumber(self._keys:get_value()))
+
 		key.fov = self._key_types.fov:get_value()
 
 		self._key_types.fov_text:set_value(self._key_types.fov:get_value())
@@ -929,6 +935,7 @@ function WorldCameraLayer:on_set_roll()
 	if camera then
 		local key = camera:key(tonumber(self._keys:get_value()))
 		local roll = self._key_types.roll.value
+
 		key.roll = roll
 	end
 end
@@ -976,6 +983,7 @@ function WorldCameraLayer:populate_keys(index)
 	end
 
 	index = index or 1
+
 	local key = camera:key(index)
 	local time = key.time
 	local fov = key.fov
@@ -1186,6 +1194,7 @@ function WorldCameraLayer:on_move_camera_in_sequence(dir)
 
 	if index ~= -1 then
 		index = index + 1
+
 		local camera_sequence_table = managers.worldcamera:remove_camera_from_sequence(name, index)
 		local new_index = math.clamp(index + dir, 1, self._sequence_camera_list:nr_items())
 
@@ -1208,6 +1217,7 @@ end
 -- Lines 1047-1055
 function WorldCameraLayer:on_sequence_camera_start()
 	local value = tonumber(self._camera_sequence_settings.start:get_value())
+
 	value = math.clamp(value, 0, 1)
 
 	self._camera_sequence_settings.start:change_value(string.format("%.4f", value))
@@ -1222,6 +1232,7 @@ end
 -- Lines 1057-1065
 function WorldCameraLayer:on_sequence_camera_stop()
 	local value = tonumber(self._camera_sequence_settings.stop:get_value())
+
 	value = math.clamp(value, 0, 1)
 
 	self._camera_sequence_settings.stop:change_value(string.format("%.4f", value))
@@ -1290,6 +1301,7 @@ function WorldCameraLayer:selected_sequence_camera()
 
 	if index ~= -1 then
 		index = index + 1
+
 		local sequence = self:selected_sequence()
 
 		if sequence then
@@ -1321,6 +1333,7 @@ end
 
 -- Lines 1150-1152
 function WorldCameraLayer:deselect()
+	return
 end
 
 -- Lines 1154-1163
@@ -1376,6 +1389,7 @@ end
 function WorldCameraLayer:get_help(text)
 	local t = "\t"
 	local n = "\n"
+
 	text = text .. "Create point:        Right mouse btn" .. n
 	text = text .. "Move point:          Thumb mouse btn" .. n
 

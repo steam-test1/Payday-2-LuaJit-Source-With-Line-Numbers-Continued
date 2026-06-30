@@ -4,6 +4,7 @@ ElementPickupCriminalDeployables = ElementPickupCriminalDeployables or class(Cor
 
 -- Lines 5-6
 function ElementPickupCriminalDeployables:client_on_executed(...)
+	return
 end
 
 -- Lines 8-19

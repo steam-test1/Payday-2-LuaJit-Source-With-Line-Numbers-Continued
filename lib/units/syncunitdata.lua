@@ -38,6 +38,7 @@ end
 -- Lines 33-38
 function SyncUnitData:load(data)
 	local state = data.SyncUnitData
+
 	self._unit:unit_data().unit_id = self._unit:editor_id()
 
 	managers.worlddefinition:setup_lights(self._unit, state)

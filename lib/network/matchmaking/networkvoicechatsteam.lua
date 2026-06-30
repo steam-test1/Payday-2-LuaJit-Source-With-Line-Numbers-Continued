@@ -51,9 +51,8 @@ function NetworkVoiceChatSTEAM:_save_globals()
 		Global.steam = {}
 	end
 
-	Global.steam.voip = {
-		handler = self.handler
-	}
+	Global.steam.voip = {}
+	Global.steam.voip.handler = self.handler
 end
 
 -- Lines 81-83

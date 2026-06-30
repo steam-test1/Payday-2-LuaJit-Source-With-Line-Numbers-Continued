@@ -19,6 +19,7 @@ end
 
 -- Lines 23-24
 function Manager:destroy()
+	return
 end
 
 -- Lines 26-28
@@ -51,6 +52,7 @@ function Manager:_parse_arguments(args)
 
 			local name = subarg:sub(1, separator_index - 1)
 			local value = subarg:sub(separator_index + 1, -1)
+
 			suite_arguments[name] = value
 		end
 	end

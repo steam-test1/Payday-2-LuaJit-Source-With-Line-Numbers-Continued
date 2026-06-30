@@ -115,7 +115,7 @@ end
 
 -- Lines 104-125
 function detach_unit_from_network(unit)
-	local ext = nil
+	local ext
 	local extensions = unit:extensions()
 
 	for idx, ext_name in ipairs(extensions) do

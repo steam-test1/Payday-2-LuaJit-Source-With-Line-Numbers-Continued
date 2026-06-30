@@ -28,10 +28,9 @@ require("lib/managers/hud/HUDStatsScreenSkirmish")
 require("lib/managers/hud/HUDLootScreenSkirmish")
 require("lib/managers/hud/HUDMutator")
 
-HUDManager.disabled = {
-	[Idstring("guis/player_hud"):key()] = true,
-	[Idstring("guis/experience_hud"):key()] = true
-}
+HUDManager.disabled = {}
+HUDManager.disabled[Idstring("guis/player_hud"):key()] = true
+HUDManager.disabled[Idstring("guis/experience_hud"):key()] = true
 HUDManager.PLAYER_PANEL = 4
 
 -- Lines 60-80
@@ -83,6 +82,7 @@ end
 
 -- Lines 100-102
 function HUDManager:set_player_location(location_id)
+	return
 end
 
 -- Lines 104-106
@@ -126,6 +126,7 @@ function HUDManager:add_weapon(data)
 	self:_set_weapon(data)
 
 	local teammate_panel = self._teammate_panels[HUDManager.PLAYER_PANEL]:panel()
+
 	self._hud.weapons[data.inventory_index] = {
 		inventory_index = data.inventory_index,
 		unit = data.unit
@@ -155,6 +156,7 @@ end
 -- Lines 179-183
 function HUDManager:_set_weapon_selected(id)
 	self._hud.selected_weapon = id
+
 	local icon = self._hud.weapons[self._hud.selected_weapon].unit:base():weapon_tweak_data().hud_icon
 
 	self:_set_teammate_weapon_selected(HUDManager.PLAYER_PANEL, id, icon)
@@ -232,7 +234,15 @@ function HUDManager:add_waiting(peer_id, override_index)
 	if panel and peer then
 		panel:set_waiting(true, peer)
 
-		local _ = not self._waiting_legend:is_set() and self._waiting_legend:show_on(panel, peer)
+		if not self._waiting_legend:is_set() then
+			local var_1_0 = self._waiting_legend:show_on(panel, peer)
+		else
+			local var_1_1 = false
+		end
+	end
+
+	if false then
+		local _ = true
 	end
 end
 
@@ -243,7 +253,9 @@ function HUDManager:remove_waiting(peer_id)
 	end
 
 	local index = self:get_waiting_index(peer_id)
+
 	self._waiting_index[peer_id] = nil
+
 	local _ = self._teammate_panels[index] and self._teammate_panels[index]:set_waiting(false)
 
 	if self._waiting_legend:peer() and peer_id == self._waiting_legend:peer():id() then
@@ -294,6 +306,7 @@ end
 -- Lines 312-319
 function HUDManager:set_teammate_ammo_amount(id, selection_index, max_clip, current_clip, current_left, max)
 	selection_index = (tonumber(selection_index) - 1) % 2 + 1
+
 	local type = selection_index == 1 and "secondary" or "primary"
 
 	self._teammate_panels[id]:set_ammo_amount_by_type(type, max_clip, current_clip, current_left, max)
@@ -319,6 +332,7 @@ end
 
 -- Lines 340-342
 function HUDManager:_update_second_weapon_ammo_info(i, unit)
+	return
 end
 
 -- Lines 344-346
@@ -665,11 +679,11 @@ function HUDManager:_create_ammo_test()
 	end
 
 	local panel = hud.panel:panel({
-		name = "ammo_test",
 		h = 4,
-		y = 200,
+		name = "ammo_test",
 		w = 100,
-		x = 550
+		x = 550,
+		y = 200
 	})
 
 	panel:set_center_y(hud.panel:h() / 2 - 40)
@@ -679,8 +693,8 @@ function HUDManager:_create_ammo_test()
 		color = Color.black:with_alpha(0.5)
 	})
 	panel:rect({
-		name = "ammo_test_rect",
 		layer = 1,
+		name = "ammo_test_rect",
 		color = Color.white
 	})
 end
@@ -861,7 +875,9 @@ function HUDManager:remove_teammate_panel(id)
 	self._teammate_panels[id]:remove_panel()
 
 	local panel_data = self._hud.teammate_panels_data[id]
+
 	panel_data.taken = false
+
 	local is_ai = self._teammate_panels[HUDManager.PLAYER_PANEL]._ai
 
 	if self._teammate_panels[HUDManager.PLAYER_PANEL]._peer_id and self._teammate_panels[HUDManager.PLAYER_PANEL]._peer_id ~= managers.network:session():local_peer():id() or is_ai then
@@ -875,10 +891,12 @@ function HUDManager:remove_teammate_panel(id)
 			local character_name = managers.criminals:character_name_by_panel_id(HUDManager.PLAYER_PANEL)
 			local name = managers.localization:text("menu_" .. character_name)
 			local panel_id = self:add_teammate_panel(character_name, name, true, nil)
+
 			managers.criminals:character_data_by_name(character_name).panel_id = panel_id
 		else
 			local character_name = managers.criminals:character_name_by_peer_id(peer_id)
 			local panel_id = self:add_teammate_panel(character_name, managers.network:session():peer(peer_id):name(), false, peer_id)
+
 			managers.criminals:character_data_by_name(character_name).panel_id = panel_id
 		end
 	end
@@ -931,10 +949,12 @@ function HUDManager:_create_teammates_panel(hud)
 
 	for i = 1, 4 do
 		local is_player = i == HUDManager.PLAYER_PANEL
+
 		self._hud.teammate_panels_data[i] = {
 			taken = false and is_player,
 			special_equipments = {}
 		}
+
 		local pw = teammate_w + (is_player and 0 or 64)
 		local teammate = HUDTeammate:new(i, teammates_panel, is_player, pw)
 
@@ -970,6 +990,7 @@ end
 
 -- Lines 1064-1065
 function HUDManager:present_done()
+	return
 end
 
 -- Lines 1069-1072
@@ -1214,6 +1235,7 @@ end
 
 -- Lines 1313-1316
 function HUDManager:complete_sub_objective(data)
+	return
 end
 
 -- Lines 1319-1322
@@ -1278,28 +1300,36 @@ end
 
 -- Lines 1383-1392
 function HUDManager:add_buff(data)
-	if not _G.IS_VR then
+	if _G.IS_VR then
+		-- Nothing
+	else
 		self._hud_mutator:add_buff(data)
 	end
 end
 
 -- Lines 1394-1403
 function HUDManager:remove_buff(buff_id)
-	if not _G.IS_VR then
+	if _G.IS_VR then
+		-- Nothing
+	else
 		self._hud_mutator:remove_buff(buff_id)
 	end
 end
 
 -- Lines 1405-1414
 function HUDManager:show_stage_transition(next_level, progress)
-	if not _G.IS_VR then
+	if _G.IS_VR then
+		-- Nothing
+	else
 		self._hud_mutator:show_stage_transition(next_level, progress)
 	end
 end
 
 -- Lines 1416-1425
 function HUDManager:update_mutator_hud(t, dt)
-	if not _G.IS_VR then
+	if _G.IS_VR then
+		-- Nothing
+	else
 		self._hud_mutator:update(t, dt)
 	end
 end
@@ -1308,14 +1338,16 @@ end
 function HUDManager:_create_accessibility(hud)
 	local dot_color = managers.user:get_setting("accessibility_dot")
 	local dot_size = managers.user:get_setting("accessibility_dot_size")
+
 	self._accessibility_dot_enabled = dot_color ~= "off"
 	self._accessibility_dot_visible = self._accessibility_dot_enabled
+
 	local accessibility_dot = hud.panel:bitmap({
-		texture = "guis/textures/pd2/crosshair_dot",
-		name = "accessibility_dot",
 		h = 8,
-		w = 8,
-		layer = 0
+		layer = 0,
+		name = "accessibility_dot",
+		texture = "guis/textures/pd2/crosshair_dot",
+		w = 8
 	})
 
 	accessibility_dot:set_size(dot_size, dot_size)
@@ -1531,17 +1563,20 @@ function HUDManager:_add_name_label(data)
 	local id = last_id + 1
 	local character_name = data.name
 	local rank = 0
-	local peer_id = nil
+	local peer_id
 	local is_husk_player = data.unit:base().is_husk_player
 
 	if is_husk_player then
 		peer_id = data.unit:network():peer():id()
+
 		local level = data.unit:network():peer():level()
+
 		rank = data.unit:network():peer():rank()
 
 		if level then
 			local color_range_offset = utf8.len(data.name) + 2
 			local experience, color_ranges = managers.experience:gui_string(level, rank, color_range_offset)
+
 			data.name_color_ranges = color_ranges
 			data.name = data.name .. " (" .. experience .. ")"
 		end
@@ -1553,8 +1588,8 @@ function HUDManager:_add_name_label(data)
 	local radius = 24
 	local interact = CircleBitmapGuiObject:new(panel, {
 		blend_mode = "add",
-		use_bg = true,
 		layer = 0,
+		use_bg = true,
 		radius = radius,
 		color = Color.white
 	})
@@ -1571,49 +1606,49 @@ function HUDManager:_add_name_label(data)
 	local color_id = managers.criminals:character_color_id_by_unit(data.unit)
 	local crim_color = tweak_data.chat_colors[color_id] or tweak_data.chat_colors[#tweak_data.chat_colors]
 	local text = panel:text({
+		align = "left",
+		h = 18,
+		layer = -1,
 		name = "text",
 		vertical = "top",
-		h = 18,
 		w = 256,
-		align = "left",
-		layer = -1,
 		text = data.name,
 		font = tweak_data.hud.medium_font,
 		font_size = tweak_data.hud.name_label_font_size,
 		color = crim_color
 	})
 	local bag = panel:bitmap({
-		name = "bag",
 		layer = 0,
+		name = "bag",
 		visible = false,
-		y = 1,
 		x = 1,
+		y = 1,
 		texture = tabs_texture,
 		texture_rect = bag_rect,
 		color = (crim_color * 1.1):with_alpha(1)
 	})
 
 	panel:text({
-		w = 256,
-		name = "cheater",
-		h = 18,
 		align = "center",
-		visible = false,
+		h = 18,
 		layer = -1,
+		name = "cheater",
+		visible = false,
+		w = 256,
 		text = utf8.to_upper(managers.localization:text("menu_hud_cheater")),
 		font = tweak_data.hud.medium_font,
 		font_size = tweak_data.hud.name_label_font_size,
 		color = tweak_data.screen_colors.pro_color
 	})
 	panel:text({
-		vertical = "bottom",
-		name = "action",
-		h = 18,
-		w = 256,
 		align = "left",
-		visible = false,
-		rotation = 360,
+		h = 18,
 		layer = -1,
+		name = "action",
+		rotation = 360,
+		vertical = "bottom",
+		visible = false,
+		w = 256,
 		text = utf8.to_upper("Fixing"),
 		font = tweak_data.hud.medium_font,
 		font_size = tweak_data.hud.name_label_font_size,
@@ -1624,9 +1659,9 @@ function HUDManager:_add_name_label(data)
 		local texture, texture_rect = managers.experience:rank_icon_data(rank)
 
 		panel:bitmap({
-			name = "infamy",
 			h = 16,
 			layer = 0,
+			name = "infamy",
 			w = 16,
 			texture = texture,
 			texture_rect = texture_rect,
@@ -1665,8 +1700,8 @@ function HUDManager:add_vehicle_name_label(data)
 	local radius = 24
 	local interact = CircleBitmapGuiObject:new(panel, {
 		blend_mode = "add",
-		use_bg = true,
 		layer = 0,
+		use_bg = true,
 		radius = radius,
 		color = Color.white
 	})
@@ -1682,35 +1717,35 @@ function HUDManager:add_vehicle_name_label(data)
 	}
 	local crim_color = tweak_data.chat_colors[1]
 	local text = panel:text({
+		align = "left",
+		h = 18,
+		layer = -1,
 		name = "text",
 		vertical = "top",
-		h = 18,
 		w = 256,
-		align = "left",
-		layer = -1,
 		text = utf8.to_upper(data.name),
 		font = tweak_data.hud.medium_font,
 		font_size = tweak_data.hud.name_label_font_size,
 		color = crim_color
 	})
 	local bag = panel:bitmap({
-		name = "bag",
 		layer = 0,
+		name = "bag",
 		visible = false,
-		y = 1,
 		x = 1,
+		y = 1,
 		texture = tabs_texture,
 		texture_rect = bag_rect,
 		color = (crim_color * 1.1):with_alpha(1)
 	})
 	local bag_number = panel:text({
+		align = "left",
+		h = 18,
+		layer = -1,
 		name = "bag_number",
 		vertical = "top",
-		h = 18,
-		w = 32,
-		align = "left",
 		visible = false,
-		layer = -1,
+		w = 32,
 		text = utf8.to_upper(""),
 		font = tweak_data.hud.small_font,
 		font_size = tweak_data.hud.small_name_label_font_size,
@@ -1718,26 +1753,26 @@ function HUDManager:add_vehicle_name_label(data)
 	})
 
 	panel:text({
-		w = 256,
-		name = "cheater",
-		h = 18,
 		align = "center",
-		visible = false,
+		h = 18,
 		layer = -1,
+		name = "cheater",
+		visible = false,
+		w = 256,
 		text = utf8.to_upper(managers.localization:text("menu_hud_cheater")),
 		font = tweak_data.hud.medium_font,
 		font_size = tweak_data.hud.name_label_font_size,
 		color = tweak_data.screen_colors.pro_color
 	})
 	panel:text({
-		vertical = "bottom",
-		name = "action",
-		h = 18,
-		w = 256,
 		align = "left",
-		visible = false,
-		rotation = 360,
+		h = 18,
 		layer = -1,
+		name = "action",
+		rotation = 360,
+		vertical = "bottom",
+		visible = false,
+		w = 256,
 		text = utf8.to_upper("Fixing"),
 		font = tweak_data.hud.medium_font,
 		font_size = tweak_data.hud.name_label_font_size,
@@ -1851,6 +1886,7 @@ function HUDManager:teammate_progress(peer_id, type_index, enabled, tweak_data_i
 			if enabled then
 				local equipment_name = managers.localization:text(tweak_data.equipments[tweak_data_id].text_id)
 				local deploying_text = tweak_data.equipments[tweak_data_id].deploying_text_id and managers.localization:text(tweak_data.equipments[tweak_data_id].deploying_text_id) or false
+
 				action_text = deploying_text or managers.localization:text("hud_deploying_equipment", {
 					EQUIPMENT = equipment_name
 				})
@@ -1867,11 +1903,11 @@ function HUDManager:teammate_progress(peer_id, type_index, enabled, tweak_data_i
 		elseif success then
 			local panel = name_label.panel
 			local bitmap = panel:bitmap({
-				blend_mode = "add",
-				texture = "guis/textures/pd2/hud_progress_active",
-				layer = 2,
 				align = "center",
+				blend_mode = "add",
+				layer = 2,
 				rotation = 360,
+				texture = "guis/textures/pd2/hud_progress_active",
 				valign = "center"
 			})
 
@@ -1881,8 +1917,8 @@ function HUDManager:teammate_progress(peer_id, type_index, enabled, tweak_data_i
 			local radius = name_label.interact:radius()
 			local circle = CircleBitmapGuiObject:new(panel, {
 				blend_mode = "normal",
-				rotation = 360,
 				layer = 3,
+				rotation = 360,
 				radius = radius,
 				color = Color.white:with_alpha(1)
 			})
@@ -1903,8 +1939,9 @@ end
 function HUDManager:_animate_label_interact(panel, interact, timer)
 	local t = 0
 
-	while timer >= t do
+	while t <= timer do
 		local dt = coroutine.yield()
+
 		t = t + dt
 
 		interact:set_current(t / timer)
@@ -1940,7 +1977,7 @@ function HUDManager:set_chat_focus(focus)
 		return
 	end
 
-	setup:add_end_frame_callback(function ()
+	setup:add_end_frame_callback(function()
 		self._chat_focus = focus
 	end)
 	self._chatinput_changed_callback_handler:dispatch(focus)
@@ -1956,6 +1993,7 @@ end
 function HUDManager:setup_access_camera_hud()
 	local hud = managers.hud:script(IngameAccessCamera.GUI_SAFERECT)
 	local full_hud = managers.hud:script(IngameAccessCamera.GUI_FULLSCREEN)
+
 	self._hud_access_camera = HUDAccessCamera:new(hud, full_hud)
 end
 
@@ -2017,6 +2055,7 @@ function HUDManager:setup_driving_hud()
 
 	local hud = managers.hud:script(IngameDriving.DRIVING_GUI_SAFERECT)
 	local full_hud = managers.hud:script(IngameDriving.DRIVING_GUI_FULLSCREEN)
+
 	self._hud_driving = HUDDriving:new(hud, full_hud)
 end
 
@@ -2038,6 +2077,7 @@ end
 -- Lines 1995-1999
 function HUDManager:setup_blackscreen_hud()
 	local hud = managers.hud:script(IngameWaitingForPlayersState.LEVEL_INTRO_GUI)
+
 	self._hud_blackscreen = HUDBlackScreen:new(hud)
 end
 
@@ -2074,6 +2114,7 @@ end
 -- Lines 2027-2030
 function HUDManager:setup_mission_briefing_hud()
 	local hud = managers.hud:script(IngameWaitingForPlayersState.GUI_FULLSCREEN)
+
 	self._hud_mission_briefing = HUDMissionBriefing:new(hud, self:workspace("fullscreen_workspace", "menu"))
 end
 
@@ -2254,6 +2295,7 @@ end
 -- Lines 2198-2204
 function HUDManager:setup_lootscreen_hud()
 	local hud = managers.hud:script(IngameLobbyMenuState.GUI_LOOTSCREEN)
+
 	self._hud_lootscreen = HUDLootScreen:new(hud, self:workspace("fullscreen_workspace", "menu"), self._saved_lootdrop, self._saved_selected, self._saved_card_chosen, self._saved_setup)
 	self._saved_lootdrop = nil
 	self._saved_selected = nil
@@ -2343,6 +2385,7 @@ end
 -- Lines 2274-2278
 function HUDManager:setup_lootscreen_skirmish_hud()
 	local hud = managers.hud:script(IngameLobbyMenuState.GUI_LOOTSCREEN)
+
 	self._hud_lootscreen = HUDLootScreenSkirmish:new(hud, self:workspace("fullscreen_workspace", "menu"), self._saved_lootdrop, self._saved_setup)
 	self._saved_lootdrop = nil
 end
@@ -2384,9 +2427,9 @@ function HUDManager:_create_test_circle()
 	end
 
 	self._test_circle = CircleGuiObject:new(managers.hud:script(PlayerBase.PLAYER_INFO_HUD_PD2).panel, {
-		sides = 64,
-		radius = 10,
 		current = 10,
+		radius = 10,
+		sides = 64,
 		total = 10
 	})
 
@@ -2417,7 +2460,7 @@ function HUDManager:set_ai_stopped(ai_id, stopped)
 		return
 	end
 
-	local label = nil
+	local label
 
 	for _, lbl in ipairs(self._hud.name_labels) do
 		if lbl.id == ai_id then
@@ -2499,7 +2542,7 @@ end
 
 -- Lines 2410-2431
 function HUDManager:safe_house_challenge_popup(id, c_type)
-	local d = nil
+	local d
 	local title_id = "hud_trophy_popup"
 
 	if c_type == "daily" then
@@ -2534,6 +2577,7 @@ end
 -- Lines 2444-2454
 function HUDManager:set_accessibility_dot_visible(visible, color_name)
 	self._accessibility_dot_visible = visible
+
 	local dot_panel = self:script(PlayerBase.PLAYER_INFO_HUD_PD2).panel:child("accessibility_dot")
 
 	if dot_panel then

@@ -82,6 +82,7 @@ function FiniteStateMachine:_set_state(new_state_class, ...)
 
 	-- Lines 69-69
 	function new_state_class.init()
+		return
 	end
 
 	self._state = new_state_class:new()

@@ -20,7 +20,7 @@ end
 
 -- Lines 18-21
 function CoreCutsceneExporter:add_clip(clip)
-	table.insert_sorted(self.__clips, clip, function (a, b)
+	table.insert_sorted(self.__clips, clip, function(a, b)
 		return a:start_time() < b:start_time()
 	end)
 	self:_clear_cached_lists()
@@ -28,7 +28,7 @@ end
 
 -- Lines 23-26
 function CoreCutsceneExporter:add_key(cutscene_key)
-	table.insert_sorted(self.__cutscene_keys, cutscene_key, function (a, b)
+	table.insert_sorted(self.__cutscene_keys, cutscene_key, function(a, b)
 		return a:frame() < b:frame()
 	end)
 	self:_clear_cached_lists()
@@ -53,14 +53,14 @@ end
 
 -- Lines 42-44
 function CoreCutsceneExporter:contains_optimized_footage()
-	return table.find_value(self.__clips, function (clip)
+	return table.find_value(self.__clips, function(clip)
 		return clip:metadata():footage()._cutscene:is_optimized()
 	end) ~= nil
 end
 
 -- Lines 46-48
 function CoreCutsceneExporter:contains_unoptimized_footage()
-	return table.find_value(self.__clips, function (clip)
+	return table.find_value(self.__clips, function(clip)
 		return not clip:metadata():footage()._cutscene:is_optimized()
 	end) ~= nil
 end
@@ -98,7 +98,7 @@ function CoreCutsceneExporter:_problem_map()
 		})
 
 		for _, clip in ipairs(self.__clips) do
-			if clip:start_time() < previous_clip:end_time() then
+			if previous_clip:end_time() > clip:start_time() then
 				add_problem("One or more clips overlap.")
 			elseif previous_clip:end_time() ~= clip:start_time() then
 				add_problem("There are gaps between clips.")
@@ -162,7 +162,7 @@ function CoreCutsceneExporter:_all_controlled_unit_types(include_cameras)
 		end
 	end
 
-	return include_cameras and self.__all_controlled_unit_types or table.remap(self.__all_controlled_unit_types, function (unit_name, unit_type)
+	return include_cameras and self.__all_controlled_unit_types or table.remap(self.__all_controlled_unit_types, function(unit_name, unit_type)
 		return unit_name, not string.begins(unit_name, "camera") and unit_type or nil
 	end)
 end
@@ -177,10 +177,12 @@ function CoreCutsceneExporter:_get_final_animation(unit_name)
 	self.__final_animation_cache = self.__final_animation_cache or setmetatable({}, {
 		__mode = "v"
 	})
+
 	local final_animation = self.__final_animation_cache[unit_name]
 
 	if not alive(final_animation) then
 		final_animation = self:_get_joined_animation(unit_name) or false
+
 		local unit_type = self:_all_controlled_unit_types()[unit_name]
 
 		if final_animation and unit_type ~= nil and unit_type ~= "locator" then
@@ -188,13 +190,14 @@ function CoreCutsceneExporter:_get_final_animation(unit_name)
 			local unit_animatable_set = self:_get_animatable_set_name_for_unit_type(unit_type)
 			local original_bones = AnimationManager:animatable_set_bones(unit_animatable_set)
 			local replaced_blend_sets = table.map_keys(patches)
-			local kept_bones = table.inject(replaced_blend_sets, original_bones, function (result, blend_set)
+			local kept_bones = table.inject(replaced_blend_sets, original_bones, function(result, blend_set)
 				local blend_set_bones = AnimationManager:animatable_set_bones(unit_animatable_set, blend_set)
 
-				return table.find_all_values(result, function (bone)
+				return table.find_all_values(result, function(bone)
 					return not table.contains(blend_set_bones, bone)
 				end)
 			end)
+
 			final_animation = self:_process_animation("strip", final_animation, kept_bones)
 
 			for blend_set, animation_name in pairs(patches) do
@@ -206,10 +209,11 @@ function CoreCutsceneExporter:_get_final_animation(unit_name)
 
 				assert(#patch_animation:bones() > 0, string.format("Animation \"%s\" contains no animation for bones in blend set \"%s\".", animation_name, blend_set))
 
-				if final_animation:length() < patch_animation:length() then
+				if patch_animation:length() > final_animation:length() then
 					patch_animation = self:_process_animation("cut", patch_animation, 0, final_animation:length())
 				elseif patch_animation:length() < final_animation:length() then
 					local pause = AnimationCutter:pause(final_animation:length() - patch_animation:length())
+
 					patch_animation = self:_process_animation("join", patch_animation, pause)
 
 					pause:free()
@@ -230,7 +234,8 @@ function CoreCutsceneExporter:_get_joined_animation(unit_name_or_func)
 	self.__joined_animation_cache = self.__joined_animation_cache or setmetatable({}, {
 		__mode = "v"
 	})
-	local unit_name_func = type(unit_name_or_func) ~= "function" and function ()
+
+	local unit_name_func = type(unit_name_or_func) ~= "function" and function()
 		return tostring(unit_name_or_func)
 	end or unit_name_or_func
 	local unit_name = unit_name_func()
@@ -249,7 +254,7 @@ end
 
 -- Lines 202-204
 function CoreCutsceneExporter:_get_joined_camera_animation()
-	return self:_get_joined_animation(function (clip)
+	return self:_get_joined_animation(function(clip)
 		return clip and clip:metadata():camera()
 	end)
 end
@@ -259,11 +264,13 @@ function CoreCutsceneExporter:_get_footage_animation(cutscene, unit_name)
 	self.__footage_animation_cache = self.__footage_animation_cache or setmetatable({}, {
 		__mode = "v"
 	})
+
 	local key = cutscene:name() .. ":" .. unit_name
 	local footage_animation = self.__footage_animation_cache[key]
 
 	if not alive(footage_animation) then
 		local footage_animation_name = cutscene:animation_for_unit(unit_name)
+
 		footage_animation = footage_animation_name and AnimationCutter:load(footage_animation_name) or false
 
 		if footage_animation then
@@ -271,6 +278,7 @@ function CoreCutsceneExporter:_get_footage_animation(cutscene, unit_name)
 
 			if unit_type ~= nil and unit_type ~= "locator" then
 				local animatable_set_name = self:_get_animatable_set_name_for_unit_type(unit_type)
+
 				footage_animation = self:_process_animation("strip", footage_animation, animatable_set_name)
 			end
 		end
@@ -311,7 +319,7 @@ end
 
 -- Lines 254-294
 function CoreCutsceneExporter:_join_animations(unit_name_func)
-	local joined_animation = nil
+	local joined_animation
 
 	for _, clip in ipairs(self.__clips) do
 		local cutscene = clip:metadata():footage()._cutscene
@@ -344,6 +352,7 @@ function CoreCutsceneExporter:_join_animations(unit_name_func)
 		local range_end = clip:end_time_in_source() / cutscene:frames_per_second()
 		local range_duration = clip:length() / cutscene:frames_per_second()
 		local clip_animation = footage_animation and AnimationCutter:cut(footage_animation, range_start, range_end) or AnimationCutter:pause(range_duration)
+
 		joined_animation = joined_animation and self:_process_animation("join", joined_animation, clip_animation) or clip_animation
 
 		if joined_animation ~= clip_animation then

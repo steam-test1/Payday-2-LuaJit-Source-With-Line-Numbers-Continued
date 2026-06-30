@@ -1,6 +1,7 @@
 SentryGunWeapon = SentryGunWeapon or class()
 SentryGunWeapon._AP_ROUNDS_FIRE_RATE = 3.5
 SentryGunWeapon._AP_ROUNDS_DAMAGE_MULTIPLIER = 2.5
+
 local tmp_rot1 = Rotation()
 
 -- Lines 7-52
@@ -43,7 +44,9 @@ function SentryGunWeapon:init(unit)
 	self._slow_fire_rate = false
 	self._fire_rate_reduction = 1
 	self._name_id = self._unit:base():get_name_id()
+
 	local my_tweak_data = tweak_data.weapon[self._name_id]
+
 	self._default_alert_size = my_tweak_data.alert_size
 	self._from = Vector3()
 	self._to = Vector3()
@@ -96,10 +99,13 @@ end
 -- Lines 94-123
 function SentryGunWeapon:_init()
 	self._name_id = self._unit:base():get_name_id()
+
 	local my_tweak_data = tweak_data.weapon[self._name_id]
+
 	self._bullet_slotmask = managers.slot:get_mask(Network:is_server() and "bullet_impact_targets" or "bullet_blank_impact_targets")
 	self._character_slotmask = managers.slot:get_mask("raycastable_characters")
 	self._muzzle_effect = Idstring(my_tweak_data.muzzleflash or "effects/particles/test/muzzleflash_maingun")
+
 	local muzzle_offset = Vector3()
 
 	mvector3.set_static(muzzle_offset, 0, 10, 0)
@@ -187,6 +193,7 @@ end
 -- Lines 182-195
 function SentryGunWeapon:change_ammo(amount)
 	self._ammo_total = math.min(math.ceil(self._ammo_total + amount), self._ammo_max)
+
 	local ammo_percent = self._ammo_total / self._ammo_max
 	local resolution_step = math.ceil(ammo_percent / self._ammo_sync_resolution)
 
@@ -261,13 +268,14 @@ end
 
 -- Lines 260-271
 function SentryGunWeapon:trigger_held(blanks, expend_ammo, shoot_player, target_unit)
-	local fired = nil
+	local fired
 
 	if self._next_fire_allowed <= self._timer:time() then
 		fired = self:fire(blanks, expend_ammo, shoot_player, target_unit)
 
 		if fired then
 			local fire_rate = tweak_data.weapon[self._name_id].auto.fire_rate * self._fire_rate_reduction
+
 			self._next_fire_allowed = self._next_fire_allowed + fire_rate
 			self._interleaving_fire = self._interleaving_fire == 1 and 2 or 1
 		end
@@ -326,7 +334,7 @@ local mvec_to = Vector3()
 -- Lines 320-376
 function SentryGunWeapon:_fire_raycast(from_pos, direction, shoot_player, target_unit)
 	local result = {}
-	local hit_unit, col_ray = nil
+	local hit_unit, col_ray
 
 	mvector3.set(mvec_to, direction)
 	mvector3.multiply(mvec_to, tweak_data.weapon[self._name_id].FIRE_RANGE)
@@ -341,6 +349,7 @@ function SentryGunWeapon:_fire_raycast(from_pos, direction, shoot_player, target
 
 	if self._use_armor_piercing then
 		local col_rays = World:raycast_all("ray", from_pos, mvec_to, "slot_mask", self._bullet_slotmask, "ignore_unit", self._setup.ignore_units)
+
 		col_ray = col_rays[1]
 
 		if col_ray and col_ray.unit:in_slot(8) and alive(col_ray.unit:parent()) then
@@ -350,7 +359,7 @@ function SentryGunWeapon:_fire_raycast(from_pos, direction, shoot_player, target
 		col_ray = World:raycast("ray", from_pos, mvec_to, "slot_mask", self._bullet_slotmask, "ignore_unit", self._setup.ignore_units)
 	end
 
-	local player_hit, player_ray_data = nil
+	local player_hit, player_ray_data
 
 	if shoot_player then
 		player_hit, player_ray_data = RaycastWeaponBase.damage_player(self, col_ray, from_pos, direction)
@@ -364,6 +373,7 @@ function SentryGunWeapon:_fire_raycast(from_pos, direction, shoot_player, target
 
 	if not player_hit and col_ray then
 		local damage = self:_apply_dmg_mul(self._damage, col_ray, from_pos)
+
 		hit_unit = InstantBulletBase:on_collision(col_ray, self._unit, self._unit, damage, self._fires_blanks)
 	end
 
@@ -393,7 +403,7 @@ function SentryGunWeapon:_apply_dmg_mul(damage, col_ray, from_pos)
 	if tweak_data.weapon[self._name_id].DAMAGE_MUL_RANGE then
 		local ray_dis = col_ray.distance or mvector3.distance(from_pos, col_ray.position)
 		local ranges = tweak_data.weapon[self._name_id].DAMAGE_MUL_RANGE
-		local i_range = nil
+		local i_range
 
 		for test_i_range, range_data in ipairs(ranges) do
 			if ray_dis < range_data[1] or test_i_range == #ranges then
@@ -403,10 +413,11 @@ function SentryGunWeapon:_apply_dmg_mul(damage, col_ray, from_pos)
 			end
 		end
 
-		if i_range == 1 or ranges[i_range][1] < ray_dis then
+		if i_range == 1 or ray_dis > ranges[i_range][1] then
 			damage_out = damage_out * ranges[i_range][2]
 		else
 			local dis_lerp = (ray_dis - ranges[i_range - 1][1]) / (ranges[i_range][1] - ranges[i_range - 1][1])
+
 			damage_out = damage_out * math.lerp(ranges[i_range - 1][2], ranges[i_range][2], dis_lerp)
 		end
 	end
@@ -562,6 +573,7 @@ function SentryGunWeapon:_set_laser_state(state)
 		if not alive(self._laser_unit) then
 			local spawn_rot = self._laser_align:rotation()
 			local spawn_pos = self._laser_align:position()
+
 			self._laser_unit = World:spawn_unit(Idstring("units/payday2/weapons/wpn_npc_upg_fl_ass_smg_sho_peqbox/wpn_npc_upg_fl_ass_smg_sho_peqbox"), spawn_pos, spawn_rot)
 
 			self._unit:link(self._laser_align:name(), self._laser_unit)
@@ -590,7 +602,7 @@ function SentryGunWeapon:update_laser()
 		return
 	end
 
-	local laser_mode, blink = nil
+	local laser_mode, blink
 
 	if self._unit:character_damage():dead() then
 		-- Nothing
@@ -604,10 +616,8 @@ function SentryGunWeapon:update_laser()
 	elseif self._unit:movement():rearming() then
 		laser_mode = "turret_module_rearming"
 		blink = true
-	elseif self._unit:movement():team().foes[tweak_data.levels:get_default_team_ID("player")] then
-		laser_mode = "turret_module_active"
 	else
-		laser_mode = "turret_module_mad"
+		laser_mode = self._unit:movement():team().foes[tweak_data.levels:get_default_team_ID("player")] and "turret_module_active" or "turret_module_mad"
 	end
 
 	self:set_laser_enabled(laser_mode, blink)
@@ -616,6 +626,7 @@ end
 -- Lines 605-617
 function SentryGunWeapon:save(save_data)
 	local my_save_data = {}
+
 	save_data.weapon = my_save_data
 
 	if self._spread_mul ~= 1 then
@@ -636,6 +647,7 @@ function SentryGunWeapon:load(save_data)
 	self:_init()
 
 	local my_save_data = save_data.weapon
+
 	self._ammo_ratio = my_save_data.ammo_ratio or self._ammo_ratio
 	self._spread_mul = my_save_data.spread_mul or 1
 	self._foe_teams = my_save_data.foe_teams
@@ -679,8 +691,10 @@ end
 -- Lines 665-672
 function SentryGunWeapon:setup_virtual_ammo(mul)
 	local ammo_amount = tweak_data.upgrades.sentry_gun_base_ammo * mul
+
 	self._virtual_max_ammo = ammo_amount
 	self._virtual_ammo = ammo_amount
+
 	local event_listener = self._unit:event_listener()
 
 	event_listener:add("virtual_ammo_on_fire", {
@@ -726,4 +740,5 @@ end
 
 -- Lines 703-705
 function SentryGunWeapon:gadget_function_override(func, ...)
+	return
 end

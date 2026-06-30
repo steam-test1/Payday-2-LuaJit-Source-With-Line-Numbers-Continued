@@ -15,6 +15,7 @@ end
 
 -- Lines 15-16
 function FreeFlightAction:reset()
+	return
 end
 
 -- Lines 18-20

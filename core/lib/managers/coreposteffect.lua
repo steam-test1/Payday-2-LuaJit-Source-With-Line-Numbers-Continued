@@ -44,6 +44,7 @@ function CorePostEffectModifier:interpolate(postfx, with, scale)
 				self._params[key] = nil
 			else
 				local invscale = 1 - scale
+
 				self._params[key] = postfx._params[key] * invscale + with._params[key] * scale
 			end
 		end
@@ -56,6 +57,7 @@ function CorePostEffectModifier:interpolate_value(postfx, with, key, scale)
 		return
 	else
 		local invscale = 1 - scale
+
 		self._params[key] = postfx._params[key] * invscale + with._params[key] * scale
 	end
 end

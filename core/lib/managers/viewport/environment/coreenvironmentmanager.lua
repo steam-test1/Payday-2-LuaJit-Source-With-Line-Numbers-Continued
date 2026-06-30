@@ -4,6 +4,7 @@ core:import("CoreEnvironmentHandler")
 core:import("CoreEnvironmentFeeder")
 
 EnvironmentManager = EnvironmentManager or CoreClass.class()
+
 local extension = "environment"
 local ids_extension = Idstring(extension)
 
@@ -16,6 +17,7 @@ function EnvironmentManager:init()
 	self._global_environment_modifier_map = {}
 	self._game_default_environment_path = "core/environments/default"
 	self._default_environment_path = self._game_default_environment_path
+
 	local feeder_class_list = {
 		CoreEnvironmentFeeder.UnderlayPathFeeder,
 		CoreEnvironmentFeeder.GlobalLightColorFeeder,
@@ -182,6 +184,7 @@ function EnvironmentManager:init()
 			"post_effect/hdr_post_processor/default/bloom_apply/opacity",
 			"post_effect/hdr_post_processor/default/exposure_sepia_levels/disable_tone_mapping"
 		}
+
 		self._deprecated_data_path_map = {}
 
 		for _, data_path in ipairs(deprecated_data_path_list) do
@@ -256,7 +259,7 @@ end
 
 -- Lines 148-156
 function EnvironmentManager:set_global_environment_modifier(data_path_key, is_override, modifier_func)
-	local global_modifier_data = nil
+	local global_modifier_data
 
 	if modifier_func then
 		global_modifier_data = {
@@ -296,6 +299,7 @@ end
 -- Lines 178-182
 function EnvironmentManager:_set_global_feeder(feeder)
 	local old_feeder = self._global_feeder_map[feeder.DATA_PATH_KEY]
+
 	self._global_feeder_map[feeder.DATA_PATH_KEY] = feeder
 
 	return old_feeder
@@ -321,9 +325,9 @@ function EnvironmentManager:editor_reload(path)
 	end
 
 	local compile_settings = {
-		target_db_name = "all",
-		send_idstrings = false,
 		preprocessor_definitions = "preprocessor_definitions",
+		send_idstrings = false,
+		target_db_name = "all",
 		verbose = false,
 		platform = string.lower(SystemInfo:platform():s()),
 		source_root = managers.database:base_path(),
@@ -377,7 +381,7 @@ end
 
 -- Lines 251-275
 function EnvironmentManager:_load(path)
-	local raw_data = nil
+	local raw_data
 
 	if Application:editor() then
 		if DB:has(ids_extension, path:id()) then

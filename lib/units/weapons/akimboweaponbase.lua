@@ -16,6 +16,7 @@ end
 function AkimboWeaponBase:update(unit, t, dt)
 	for i = #self._fire_callbacks, 1, -1 do
 		local data = self._fire_callbacks[i]
+
 		data.t = data.t - dt
 
 		if data.t <= 0 then
@@ -42,7 +43,7 @@ function AkimboWeaponBase:_create_second_gun(unit_name)
 		local charm_parts = managers.weapon_factory:get_parts_from_weapon_by_type_or_perk("charm", factory_id, blueprint)
 
 		if next(charm_parts) then
-			local part_id = nil
+			local part_id
 			local filtered_bp = {}
 			local t_cont = table.contains
 
@@ -130,7 +131,7 @@ function AkimboWeaponBase:fire(...)
 
 		return result
 	else
-		local result = nil
+		local result
 
 		if self._fire_second_gun_next then
 			if alive(self._second_gun) then
@@ -398,6 +399,7 @@ end
 
 NPCAkimboWeaponBase = NPCAkimboWeaponBase or class(NewNPCRaycastWeaponBase)
 NPCAkimboWeaponBase.AKIMBO = true
+
 local ID_TRYFIRE = 0
 local ID_FIRE_PRIMARY = 1
 local ID_FIRE_SECONDARY = 2
@@ -417,6 +419,7 @@ end
 function NPCAkimboWeaponBase:update(unit, t, dt)
 	for i = #self._fire_callbacks, 1, -1 do
 		local data = self._fire_callbacks[i]
+
 		data.t = data.t - dt
 
 		if data.t <= 0 then
@@ -750,11 +753,10 @@ function EnemyAkimboWeaponBase:create_second_gun(unit_name)
 
 	self._setup.user_unit:link(Idstring("a_weapon_left_front"), self._second_gun, self._second_gun:orientation_object():name())
 
-	self._muzzle_effect_table_second = {
-		effect = self._muzzle_effect_table.effect,
-		force_synch = self._muzzle_effect_table.force_synch,
-		parent = self._second_gun:get_object(Idstring("fire"))
-	}
+	self._muzzle_effect_table_second = {}
+	self._muzzle_effect_table_second.effect = self._muzzle_effect_table.effect
+	self._muzzle_effect_table_second.force_synch = self._muzzle_effect_table.force_synch
+	self._muzzle_effect_table_second.parent = self._second_gun:get_object(Idstring("fire"))
 end
 
 -- Lines 678-681
@@ -780,6 +782,7 @@ end
 function EnemyAkimboWeaponBase:anim_play(anim, speed_multiplier)
 	if anim then
 		local length = self._unit:anim_length(Idstring(anim))
+
 		speed_multiplier = speed_multiplier or 1
 
 		self._second_gun:anim_stop(Idstring(anim))

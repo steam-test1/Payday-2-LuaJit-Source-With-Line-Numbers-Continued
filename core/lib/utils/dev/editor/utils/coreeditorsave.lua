@@ -7,35 +7,36 @@ core:import("CoreDebug")
 
 -- Lines 9-11
 function save_unit(world, level, unit, data)
+	return
 end
 
 -- Lines 13-41
 function save_data_table(unit)
 	local ud = unit:unit_data()
-	local t = {
-		name = unit:name():s(),
-		unit_id = ud.unit_id,
-		name_id = ud.name_id,
-		continent = unit:unit_data().continent and unit:unit_data().continent:name(),
-		position = unit:position(),
-		rotation = unit:rotation(),
-		mesh_variation = ud.mesh_variation,
-		material_variation = ud.material,
-		cutscene_actor = ud.cutscene_actor,
-		disable_shadows = ud.disable_shadows,
-		disable_collision = ud.disable_collision,
-		delayed_load = ud.delayed_load,
-		hide_on_projection_light = ud.hide_on_projection_light,
-		disable_on_ai_graph = ud.disable_on_ai_graph,
-		lights = _light_data_table(unit),
-		triggers = _triggers_data_table(unit),
-		editable_gui = _editable_gui_data_table(unit),
-		projection_light = CoreEditorUtils.has_any_projection_light(unit),
-		projection_lights = ud.projection_lights,
-		projection_textures = ud.projection_textures,
-		ladder = _editable_ladder_table(unit),
-		zipline = _editable_zipline_table(unit)
-	}
+	local t = {}
+
+	t.name = unit:name():s()
+	t.unit_id = ud.unit_id
+	t.name_id = ud.name_id
+	t.continent = unit:unit_data().continent and unit:unit_data().continent:name()
+	t.position = unit:position()
+	t.rotation = unit:rotation()
+	t.mesh_variation = ud.mesh_variation
+	t.material_variation = ud.material
+	t.cutscene_actor = ud.cutscene_actor
+	t.disable_shadows = ud.disable_shadows
+	t.disable_collision = ud.disable_collision
+	t.delayed_load = ud.delayed_load
+	t.hide_on_projection_light = ud.hide_on_projection_light
+	t.disable_on_ai_graph = ud.disable_on_ai_graph
+	t.lights = _light_data_table(unit)
+	t.triggers = _triggers_data_table(unit)
+	t.editable_gui = _editable_gui_data_table(unit)
+	t.projection_light = CoreEditorUtils.has_any_projection_light(unit)
+	t.projection_lights = ud.projection_lights
+	t.projection_textures = ud.projection_textures
+	t.ladder = _editable_ladder_table(unit)
+	t.zipline = _editable_zipline_table(unit)
 
 	return t
 end
@@ -109,7 +110,7 @@ end
 
 -- Lines 98-117
 function _editable_gui_data_table(unit)
-	local t = nil
+	local t
 
 	if unit:editable_gui() then
 		t = {
@@ -133,7 +134,7 @@ end
 
 -- Lines 119-133
 function _editable_ladder_table(unit)
-	local t = nil
+	local t
 
 	if unit:ladder() then
 		t = {
@@ -149,7 +150,7 @@ end
 
 -- Lines 135-147
 function _editable_zipline_table(unit)
-	local t = nil
+	local t
 
 	if unit:zipline() then
 		t = {

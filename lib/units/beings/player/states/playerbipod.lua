@@ -26,10 +26,12 @@ function PlayerBipod:_enter(enter_data)
 
 	if player and self._unit:base().is_local_player then
 		self._bipod = true
+
 		local tweak_data = self._equipped_unit:base():weapon_tweak_data()
 		local speed_multiplier = self._equipped_unit:base():get_property("bipod_deploy_multiplier") or 1
 		local reload_name_id = tweak_data.animations.reload_name_id or self._equipped_unit:base().name_id
 		local equipped_unit_id = self._equipped_unit:base().name_id
+
 		self._camera_pos = self._unit:camera():position()
 		self._shoulder_pos = Vector3(0, 0, 0)
 
@@ -48,6 +50,7 @@ function PlayerBipod:_enter(enter_data)
 
 		local result = self._ext_camera:play_redirect(Idstring(tweak_data.animations.bipod_enter .. "_" .. equipped_unit_id), speed_multiplier)
 		local result_deploy = self._equipped_unit:base():tweak_data_anim_play("deploy", speed_multiplier)
+
 		self._headbob = 0
 		self._target_headbob = 0
 
@@ -88,6 +91,7 @@ function PlayerBipod:exit(state_data, new_state_name)
 	PlayerBipod.super.exit(self, state_data or self._state_data, new_state_name)
 
 	self._bipod = nil
+
 	local tweak_data = self._equipped_unit:base():weapon_tweak_data()
 	local speed_multiplier = self._equipped_unit:base():get_property("bipod_deploy_multiplier") or 1
 	local equipped_unit_id = self._equipped_unit:base().name_id
@@ -100,9 +104,10 @@ function PlayerBipod:exit(state_data, new_state_name)
 	self._unit:camera():camera_unit():base():remove_limits()
 
 	self._unit:camera():camera_unit():base().bipod_location = nil
-	local exit_data = {
-		skip_equip = true
-	}
+
+	local exit_data = {}
+
+	exit_data.skip_equip = true
 	self._dye_risk = nil
 
 	self:set_animation_state("standard")
@@ -125,7 +130,7 @@ function PlayerBipod:_husk_bipod_data()
 	local peer_id = managers.network:session():peer_by_unit(self._unit):id()
 	local weapon = self._unit:inventory():equipped_unit()
 	local bipod_obj = weapon:get_object(Idstring("a_bp"))
-	local bipod_pos = nil
+	local bipod_pos
 
 	if bipod_obj then
 		bipod_pos = bipod_obj:position()
@@ -160,6 +165,7 @@ end
 
 -- Lines 172-175
 function PlayerBipod:set_tweak_data(name)
+	return
 end
 
 -- Lines 182-268
@@ -218,11 +224,12 @@ end
 
 -- Lines 274-275
 function PlayerBipod:_check_step(t)
+	return
 end
 
 -- Lines 277-292
 function PlayerBipod:_check_action_reload(t, input)
-	local new_action = nil
+	local new_action
 	local action_wanted = input.btn_reload_press
 
 	if action_wanted and self._equipped_unit and not self._equipped_unit:base():clip_full() then
@@ -399,11 +406,12 @@ end
 
 -- Lines 454-471
 function PlayerBipod:_check_action_equip(t, input)
-	local new_action = nil
+	local new_action
 	local selection_wanted = input.btn_primary_choice
 
 	if selection_wanted then
 		local action_forbidden = self:chk_action_forbidden("equip")
+
 		action_forbidden = action_forbidden or not self._ext_inventory:is_selection_available(selection_wanted) or self._use_item_expire_t or self:_changing_weapon()
 
 		if not action_forbidden then
@@ -420,22 +428,27 @@ end
 
 -- Lines 473-474
 function PlayerBipod:_check_action_steelsight(t, input)
+	return
 end
 
 -- Lines 478-479
 function PlayerBipod:_update_movement(t, dt)
+	return
 end
 
 -- Lines 483-484
 function PlayerBipod:_start_action_jump(...)
+	return
 end
 
 -- Lines 486-487
 function PlayerBipod:_perform_jump(jump_vec)
+	return
 end
 
 -- Lines 491-492
 function PlayerBipod:_get_max_walk_speed(...)
+	return
 end
 
 -- Lines 494-496

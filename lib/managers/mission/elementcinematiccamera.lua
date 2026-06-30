@@ -18,6 +18,7 @@ end
 
 -- Lines 16-18
 function ElementCinematicCamera:client_on_executed(...)
+	return
 end
 
 -- Lines 20-33

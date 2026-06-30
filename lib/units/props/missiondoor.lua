@@ -11,7 +11,7 @@ end
 
 -- Lines 13-19
 function MissionDoor:update(unit, t, dt)
-	if self._explode_t and self._explode_t < t then
+	if self._explode_t and t > self._explode_t then
 		self:_c4_sequence_done()
 	end
 end
@@ -36,11 +36,12 @@ function MissionDoor:activate()
 
 	for type, device_data in pairs(devices_data) do
 		local amount = #device_data
+
 		self._devices[type] = {
+			completed = false,
+			completed_counter = 0,
 			placed = false,
 			placed_counter = 0,
-			completed_counter = 0,
-			completed = false,
 			units = {},
 			amount = amount
 		}
@@ -68,8 +69,8 @@ function MissionDoor:activate()
 			end
 
 			table.insert(self._devices[type].units, {
-				placed = false,
 				completed = false,
+				placed = false,
 				unit = unit
 			})
 		end
@@ -100,6 +101,7 @@ end
 -- Lines 93-108
 function MissionDoor:set_jammed(jammed)
 	self._jammed = jammed
+
 	local drills = self._devices.drill
 
 	if drills then
@@ -118,6 +120,7 @@ end
 -- Lines 111-126
 function MissionDoor:set_powered(powered)
 	self._powered = powered
+
 	local drills = self._devices.drill
 
 	if drills then
@@ -333,7 +336,7 @@ function MissionDoor:_destroy_devices()
 				if unit_data.unit:timer_gui() and unit_data.unit:timer_gui():is_playing_done_event() then
 					unit_data.unit:set_visible(false)
 					unit_data.unit:timer_gui():hide()
-					unit_data.unit:timer_gui():add_listener_to_done_event(function (unit)
+					unit_data.unit:timer_gui():add_listener_to_done_event(function(unit)
 						if alive(unit) then
 							unit:set_slot(0)
 						end
@@ -446,4 +449,5 @@ end
 
 -- Lines 411-413
 function MissionDoorDevice:destroy()
+	return
 end

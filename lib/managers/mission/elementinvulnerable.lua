@@ -19,6 +19,7 @@ end
 
 -- Lines 21-24
 function ElementInvulnerable:client_on_executed(instigator)
+	return
 end
 
 -- Lines 26-44

@@ -15,6 +15,7 @@ end
 
 -- Lines 16-18
 function CoreMaterialEditorSeparator:update(t, dt)
+	return
 end
 
 -- Lines 20-22

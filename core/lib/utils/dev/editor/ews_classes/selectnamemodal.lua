@@ -27,6 +27,7 @@ function SelectNameModal:init(name, assets_list, settings, ...)
 	self._filter:connect("EVT_COMMAND_TEXT_UPDATED", callback(self, self, "update_filter"), nil)
 
 	local list_style = settings and settings.list_style or "LC_SINGLE_SEL,LC_REPORT,LC_NO_HEADER,LC_SORT_ASCENDING"
+
 	self._list = EWS:ListCtrl(panel, "", list_style)
 
 	self._list:clear_all()
@@ -51,10 +52,12 @@ end
 
 -- Lines 60-61
 function SelectNameModal:_on_mark_assett()
+	return
 end
 
 -- Lines 63-64
 function SelectNameModal:_on_select_asset()
+	return
 end
 
 -- Lines 73-83
@@ -106,8 +109,11 @@ function SelectNameModal:fill_asset_list()
 	self._list:delete_all_items()
 
 	local filter = self._filter:get_value()
+
 	filter = utf8.to_lower(utf8.from_latin1(filter))
+
 	local j = 1
+
 	self._assets = {}
 
 	self._list:freeze()
@@ -117,6 +123,7 @@ function SelectNameModal:fill_asset_list()
 
 		if string.find(l_asset, filter, 1, true) then
 			local i = self._list:append_item(asset)
+
 			self._assets[j] = asset
 
 			self._list:set_item_data(i, j)
@@ -149,6 +156,7 @@ end
 
 -- Lines 151-153
 function SelectNameModal:_on_delete()
+	return
 end
 
 -- Lines 155-163

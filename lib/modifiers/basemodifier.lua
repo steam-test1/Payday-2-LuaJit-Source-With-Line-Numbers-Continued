@@ -12,6 +12,7 @@ end
 
 -- Lines 14-16
 function BaseModifier:destroy()
+	return
 end
 
 -- Lines 18-27

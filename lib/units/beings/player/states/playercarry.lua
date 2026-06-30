@@ -1,6 +1,7 @@
 PlayerCarry = PlayerCarry or class(PlayerStandard)
 PlayerCarry.target_tilt = -5
 PlayerCarry.throw_limit_t = 0.5
+
 local armor_init = tweak_data.player.damage.ARMOR_INIT
 
 -- Lines 6-8
@@ -20,6 +21,7 @@ function PlayerCarry:_enter(enter_data)
 
 	if my_carry_data then
 		local carry_data = tweak_data.carry[my_carry_data.carry_id]
+
 		self._tweak_data_name = carry_data.type
 	else
 		self._tweak_data_name = "light"
@@ -34,6 +36,7 @@ function PlayerCarry:_enter(enter_data)
 	if not self:_changing_weapon() and not skip_equip then
 		if not self._state_data.mask_equipped then
 			self._state_data.mask_equipped = true
+
 			local equipped_mask = managers.blackmarket:equipped_mask()
 			local peer_id = managers.network:session() and managers.network:session():local_peer():id()
 			local mask_id = managers.blackmarket:get_real_mask_id(equipped_mask.mask_id, peer_id)
@@ -56,9 +59,9 @@ function PlayerCarry:exit(state_data, new_state_name)
 	PlayerCarry.super.exit(self, state_data, new_state_name)
 	self._unit:camera():camera_unit():base():set_target_tilt(0)
 
-	local exit_data = {
-		skip_equip = true
-	}
+	local exit_data = {}
+
+	exit_data.skip_equip = true
 	self._dye_risk = nil
 
 	managers.job:set_memory("kill_count_carry", nil, true)
@@ -73,7 +76,7 @@ end
 function PlayerCarry:update(t, dt)
 	PlayerCarry.super.update(self, t, dt)
 
-	if self._dye_risk and self._dye_risk.next_t < t then
+	if self._dye_risk and t > self._dye_risk.next_t then
 		self:_check_dye_explode()
 	end
 end
@@ -90,9 +93,8 @@ function PlayerCarry:_check_dye_pack()
 	local my_carry_data = managers.player:get_my_carry_data()
 
 	if my_carry_data.has_dye_pack then
-		self._dye_risk = {
-			next_t = managers.player:player_timer():time() + 2 + math.random(3)
-		}
+		self._dye_risk = {}
+		self._dye_risk.next_t = managers.player:player_timer():time() + 2 + math.random(3)
 	end
 end
 
@@ -208,7 +210,7 @@ end
 
 -- Lines 282-314
 function PlayerCarry:_check_use_item(t, input)
-	local new_action = nil
+	local new_action
 	local action_wanted = input.btn_use_item_release and self._throw_time and t and t < self._throw_time
 
 	if input.btn_use_item_press then
@@ -233,7 +235,7 @@ function PlayerCarry:_check_use_item(t, input)
 			self._second_press = false
 
 			return PlayerCarry.super._check_use_item(self, t, input)
-		elseif self._throw_time < t then
+		elseif t > self._throw_time then
 			if not self._second_press then
 				input.btn_use_item_press = true
 				self._second_press = true
@@ -268,7 +270,9 @@ end
 
 -- Lines 345-351
 function PlayerCarry:_perform_jump(jump_vec)
-	if not managers.player:has_category_upgrade("carry", "movement_penalty_nullifier") then
+	if managers.player:has_category_upgrade("carry", "movement_penalty_nullifier") then
+		-- Nothing
+	else
 		mvector3.multiply(jump_vec, tweak_data.carry.types[self._tweak_data_name].jump_modifier)
 	end
 
@@ -297,7 +301,7 @@ function PlayerCarry:_get_max_walk_speed(...)
 		multiplier = math.clamp(multiplier, 0, 1)
 	end
 
-	local mutator = nil
+	local mutator
 
 	if managers.mutators:is_mutator_active(MutatorCG22) then
 		mutator = managers.mutators:get_mutator(MutatorCG22)

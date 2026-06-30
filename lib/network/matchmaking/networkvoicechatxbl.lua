@@ -70,7 +70,7 @@ function NetworkVoiceChatXBL:open_channel_to(player_info, context)
 		player_index = 0
 	end
 
-	local session = nil
+	local session
 
 	if context == "game" then
 		session = managers.network.matchmake._session
@@ -83,6 +83,7 @@ function NetworkVoiceChatXBL:open_channel_to(player_info, context)
 	end
 
 	local internal_address = managers.network:session():is_host() and tostring(player_info.external_address) or XboxLive:internal_address(session, player_info.player_id)
+
 	player_info.voice_rpc = Network:handshake(internal_address, managers.network.DEFAULT_PORT, "TCP_IP")
 
 	if player_info.voice_rpc then
@@ -91,17 +92,17 @@ function NetworkVoiceChatXBL:open_channel_to(player_info, context)
 		Application:throw_exception("failed to create voice rpc from here to there")
 	end
 
-	local peer_info = {
-		xuid = player_info.player_id,
-		player_id = tostring(player_info.player_id),
-		rpc = player_info.voice_rpc,
-		team = self.DEFAULT_TEAM,
-		listen = true,
-		talk = true,
-		name = player_info.name,
-		why = "open",
-		dead = false
-	}
+	local peer_info = {}
+
+	peer_info.xuid = player_info.player_id
+	peer_info.player_id = tostring(player_info.player_id)
+	peer_info.rpc = player_info.voice_rpc
+	peer_info.team = self.DEFAULT_TEAM
+	peer_info.listen = true
+	peer_info.talk = true
+	peer_info.name = player_info.name
+	peer_info.why = "open"
+	peer_info.dead = false
 	self._peers[peer_info.player_id] = peer_info
 
 	XboxVoice:register_talker(peer_info.xuid)
@@ -254,10 +255,12 @@ end
 
 -- Lines 337-338
 function NetworkVoiceChatXBL:_peer_update(peer_info)
+	return
 end
 
 -- Lines 341-342
 function NetworkVoiceChatXBL:_peer_flags(peer_info)
+	return
 end
 
 -- Lines 344-353
@@ -277,10 +280,9 @@ function NetworkVoiceChatXBL:_save_globals()
 	cat_print("lobby", "Voice: NetworkVoiceChatXBL:_save_globals ")
 
 	Global.xvoice = nil
-	Global.xvoice = {
-		peers = self._peers,
-		team = self._team
-	}
+	Global.xvoice = {}
+	Global.xvoice.peers = self._peers
+	Global.xvoice.team = self._team
 
 	self:pause()
 end
@@ -305,6 +307,7 @@ end
 -- Lines 384-395
 function NetworkVoiceChatXBL:_update_numberofusers()
 	self._number_of_users = 0
+
 	local xuids = XboxLive:all_user_XUIDs()
 
 	for _, xuid in pairs(xuids) do
@@ -339,7 +342,7 @@ end
 function NetworkVoiceChatXBL:_check_privilege()
 	local cancommunicate = true
 	local friendsonly = false
-	local usercancommunicate, userfriendsonly = nil
+	local usercancommunicate, userfriendsonly
 	local xuids = XboxLive:all_user_XUIDs()
 
 	for _, xuid in pairs(xuids) do
@@ -408,6 +411,7 @@ end
 
 -- Lines 531-532
 function NetworkVoiceChatXBL:user_id_update(id, changed_player_map)
+	return
 end
 
 -- Lines 534-538
@@ -456,6 +460,7 @@ function NetworkVoiceChatXBL:info_script()
 
 	for k, v in pairs(self._peers) do
 		local info = "\t\t" .. v.name
+
 		info = info .. " Team=" .. tostring(v.team)
 		info = info .. ", Listen=" .. tostring(v.listen)
 		info = info .. ", talk=" .. tostring(v.talk)
@@ -473,7 +478,7 @@ function NetworkVoiceChatXBL:info_engine()
 	local talkers = XboxVoice:registered_talkers()
 
 	for k, v in pairs(talkers) do
-		local info = nil
+		local info
 
 		if type(v) == "number" then
 			info = "      " .. tostring(v) .. " - Local Player"
@@ -495,7 +500,7 @@ function NetworkVoiceChatXBL:info_engine()
 
 		local PeerNumber = 0
 
-		while num_peers > PeerNumber do
+		while PeerNumber < num_peers do
 			local ip = v:ip_at_index(PeerNumber)
 
 			cat_print("lobby", "         " .. tostring(ip) .. " - " .. self:ip_to_name(ip))

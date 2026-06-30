@@ -27,6 +27,7 @@ end
 function CoreOverlayFXCutsceneKey:preroll(player)
 	if self:fade_in() == 0 then
 		local effect_data = self:_effect_data()
+
 		effect_data.fade_in = 0
 		effect_data.sustain = nil
 		effect_data.fade_out = 0
@@ -43,6 +44,7 @@ function CoreOverlayFXCutsceneKey:skip(player)
 
 	if full_intensity_start <= cutscene_end and cutscene_end <= full_intensity_end then
 		local effect_data = self:_effect_data()
+
 		effect_data.fade_in = 0
 		effect_data.sustain = math.max(full_intensity_end - cutscene_end, 0)
 
@@ -52,7 +54,7 @@ end
 
 -- Lines 45-48
 function CoreOverlayFXCutsceneKey:evaluate(player, fast_forward)
-	local effect_data = table.remap(self:attribute_names(), function (_, attribute_name)
+	local effect_data = table.remap(self:attribute_names(), function(_, attribute_name)
 		return attribute_name, self:attribute_value(attribute_name)
 	end)
 
@@ -107,12 +109,13 @@ end
 function CoreOverlayFXCutsceneKey:_on_pick_color(sender)
 	if self.__color_picker_dialog == nil then
 		local cutscene_editor_window = self:_top_level_window(sender)
+
 		self.__color_picker_dialog = CoreColorPickerDialog.ColorPickerDialog:new(cutscene_editor_window, true, "HORIZONTAL", true)
 
-		self.__color_picker_dialog:connect("EVT_CLOSE_WINDOW", function ()
+		self.__color_picker_dialog:connect("EVT_CLOSE_WINDOW", function()
 			self.__color_picker_dialog = nil
 		end)
-		self.__color_picker_dialog:connect("EVT_COLOR_CHANGED", function ()
+		self.__color_picker_dialog:connect("EVT_COLOR_CHANGED", function()
 			local color = self.__color_picker_dialog:color()
 
 			sender:set_color(color)
@@ -126,7 +129,7 @@ end
 
 -- Lines 102-104
 function CoreOverlayFXCutsceneKey:_effect_data()
-	return table.remap(self:attribute_names(), function (_, attribute_name)
+	return table.remap(self:attribute_names(), function(_, attribute_name)
 		return attribute_name, self:attribute_value(attribute_name)
 	end)
 end

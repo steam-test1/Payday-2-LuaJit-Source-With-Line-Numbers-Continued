@@ -44,6 +44,7 @@ end
 
 -- Lines 42-43
 function VitHelicopterSync:save(data)
+	return
 end
 
 -- Lines 45-47

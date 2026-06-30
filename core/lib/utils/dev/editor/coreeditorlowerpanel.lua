@@ -3,6 +3,7 @@ core:import("CoreEngineAccess")
 -- Lines 3-13
 function CoreEditor:build_lower_panel(parent)
 	self._lower_panel = EWS:Panel(Global.frame_panel, "", "TAB_TRAVERSAL")
+
 	local lower_sizer = EWS:BoxSizer("HORIZONTAL")
 
 	self._lower_panel:set_sizer(lower_sizer)
@@ -116,6 +117,7 @@ end
 
 -- Lines 131-132
 function CoreEditor:_change_unit_info(notebook)
+	return
 end
 
 -- Lines 134-176
@@ -123,7 +125,7 @@ function CoreEditor:on_open_unit_file(data)
 	if alive(self:selected_unit()) then
 		local unit = self:selected_unit()
 		local u_name = self:selected_unit():name()
-		local lookup = nil
+		local lookup
 
 		if data.type == "unit" then
 			lookup = unit:name():s()
@@ -141,7 +143,9 @@ function CoreEditor:on_open_unit_file(data)
 			return
 		elseif data.type == "folder" then
 			lookup = unit:name():s()
+
 			local fullPath = managers.database:entry_expanded_directory(lookup)
+
 			lookup = string.gsub(fullPath, "/", "\\")
 
 			os.execute("explorer /select, " .. lookup .. ".unit")
@@ -174,7 +178,7 @@ end
 function CoreEditor:sequence_file(unit)
 	if alive(unit) then
 		local object_file = CoreEngineAccess._editor_unit_data(unit:name():id()):model()
-		local node = nil
+		local node
 
 		if DB:has("object", object_file) then
 			node = DB:load_node("object", object_file)
@@ -197,6 +201,7 @@ end
 -- Lines 199-223
 function CoreEditor:build_edit_frame(parent)
 	self._edit_panel = EWS:Panel(parent, "Edit Panel", "TAB_TRAVERSAL")
+
 	local main_sizer = EWS:BoxSizer("HORIZONTAL")
 
 	self._edit_panel:set_sizer(main_sizer)
@@ -237,6 +242,7 @@ function CoreEditor:unit_output(unit)
 		local n = "\n"
 		local t = "\t"
 		local text = "ID / Name:" .. t .. tostring(unit:unit_data().unit_id) .. " / " .. unit:name():s() .. n
+
 		text = text .. "NameID:" .. t .. unit:unit_data().name_id .. n
 		text = text .. "Type / Slot:" .. t .. unit:type():s() .. " / " .. unit:slot() .. n
 		text = text .. "Mass:" .. t .. t .. unit:mass() .. n
@@ -254,7 +260,9 @@ function CoreEditor:unit_output(unit)
 		end
 
 		text = text .. "Last export from:" .. t .. unit:last_export_source() .. n
+
 		local models_text = ""
+
 		models_text = models_text .. "Models:" .. t .. unit:nr_models() .. n
 		models_text = models_text .. "Name" .. t .. t .. t .. t .. t .. "Instanced" .. t .. "Vertecies" .. t .. "Triangles" .. t .. "Atoms" .. t .. "Lod Distance" .. n
 

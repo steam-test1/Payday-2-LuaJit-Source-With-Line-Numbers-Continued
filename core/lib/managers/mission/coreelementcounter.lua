@@ -198,6 +198,7 @@ end
 
 -- Lines 186-188
 function ElementCounterOperator:client_on_executed(...)
+	return
 end
 
 -- Lines 190-213
@@ -245,6 +246,7 @@ end
 
 -- Lines 230-232
 function ElementCounterTrigger:client_on_executed(...)
+	return
 end
 
 -- Lines 234-240
@@ -265,10 +267,12 @@ end
 
 -- Lines 250-252
 function ElementCounterFilter:on_script_activated()
+	return
 end
 
 -- Lines 254-256
 function ElementCounterFilter:client_on_executed(...)
+	return
 end
 
 -- Lines 258-268
@@ -305,10 +309,11 @@ end
 
 -- Lines 290-301
 function ElementCounterFilter:_all_counter_values_equal()
-	local test_value = nil
+	local test_value
 
 	for _, id in ipairs(self._values.elements) do
 		local element = self:get_mission_element(id)
+
 		test_value = test_value or element:counter_value()
 
 		if test_value ~= element:counter_value() then
@@ -352,7 +357,7 @@ function ElementCounterFilter:_check_type(element)
 	end
 
 	if self._values.check_type == "greater_or_equal" then
-		return self._values.value <= element:counter_value()
+		return element:counter_value() >= self._values.value
 	end
 
 	if self._values.check_type == "less_than" then
@@ -360,6 +365,6 @@ function ElementCounterFilter:_check_type(element)
 	end
 
 	if self._values.check_type == "greater_than" then
-		return self._values.value < element:counter_value()
+		return element:counter_value() > self._values.value
 	end
 end

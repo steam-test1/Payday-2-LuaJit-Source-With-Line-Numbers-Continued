@@ -8,7 +8,8 @@ function SettingsManager:init(settings_file_path)
 	assert(type(settings_file_path) == "string")
 
 	self.__path = settings_file_path
-	local script = nil
+
+	local script
 	local file = SystemFS:open(settings_file_path, "r")
 
 	if not file:at_end() then
@@ -45,6 +46,7 @@ end
 -- Lines 75-94
 function SettingsManager:_serialize(value, file, indentation)
 	indentation = indentation or 1
+
 	local t = type(value)
 
 	if t == "table" then

@@ -7,12 +7,11 @@ ShapeManager = ShapeManager or class()
 -- Lines 8-15
 function ShapeManager:init()
 	self._shapes = {}
-	self._shape_types = {
-		box = ShapeBox,
-		sphere = ShapeSphere,
-		cylinder = ShapeCylinder,
-		box_middle = ShapeBoxMiddle
-	}
+	self._shape_types = {}
+	self._shape_types.box = ShapeBox
+	self._shape_types.sphere = ShapeSphere
+	self._shape_types.cylinder = ShapeCylinder
+	self._shape_types.box_middle = ShapeBoxMiddle
 end
 
 -- Lines 17-21
@@ -25,6 +24,7 @@ end
 -- Lines 23-28
 function ShapeManager:add_shape(type, params)
 	params.type = type
+
 	local shape = self._shape_types[type]:new(params)
 
 	table.insert(self._shapes, shape)
@@ -52,15 +52,16 @@ end
 
 -- Lines 45-47
 function ShapeManager:save()
+	return
 end
 
 -- Lines 49-60
 function ShapeManager:parse(shape)
-	local t = {
-		type = shape:parameter("type"),
-		position = math.string_to_vector(shape:parameter("position")),
-		rotation = math.string_to_rotation(shape:parameter("rotation"))
-	}
+	local t = {}
+
+	t.type = shape:parameter("type")
+	t.position = math.string_to_vector(shape:parameter("position"))
+	t.rotation = math.string_to_rotation(shape:parameter("rotation"))
 
 	for properties in shape:children() do
 		for value in properties:children() do
@@ -75,6 +76,7 @@ local mvec1 = Vector3()
 local mvec2 = Vector3()
 local mvec3 = Vector3()
 local mposition = Vector3()
+
 Shape = Shape or class()
 
 -- Lines 69-84
@@ -107,6 +109,7 @@ end
 
 -- Lines 100-102
 function Shape:build_properties_ctrls()
+	return
 end
 
 -- Lines 104-106
@@ -177,6 +180,7 @@ end
 
 -- Lines 160-162
 function Shape:scale()
+	return
 end
 
 -- Lines 164-169
@@ -297,16 +301,17 @@ end
 -- Lines 242-247
 function Shape:update_slider_size(data)
 	data.start_value = data.start_value or data.ctrl:get_value()
+
 	local value = data.start_value
 
-	self:set_property(data.property, value * data.slider:get_value() / 100 * 100)
+	self:set_property(data.property, value * (data.slider:get_value() / 100) * 100)
 end
 
 -- Lines 249-255
 function Shape:update_slider_release(data)
 	local value = data.start_value
 
-	self:set_property(data.property, value * data.slider:get_value() / 100 * 100)
+	self:set_property(data.property, value * (data.slider:get_value() / 100) * 100)
 
 	data.start_value = nil
 
@@ -315,14 +320,17 @@ end
 
 -- Lines 257-258
 function Shape:draw(t, dt, r, g, b)
+	return
 end
 
 -- Lines 260-261
 function Shape:is_inside(pos)
+	return
 end
 
 -- Lines 263-264
 function Shape:is_outside(pos)
+	return
 end
 
 -- Lines 267-277
@@ -331,6 +339,7 @@ function Shape:save(t)
 	local s = t
 	local pos = CoreMath.vector_to_string(self:position(), "%.4f")
 	local rot = CoreMath.rotation_to_string(self:rotation(), "%.4f")
+
 	s = s .. "<shape type=\"" .. self._type .. "\" position=\"" .. pos .. "\" rotation=\"" .. rot .. "\">\n"
 	s = s .. CoreXml.save_value_string(self, "_properties", t .. "\t") .. "\n"
 	s = s .. t .. "</shape>"
@@ -340,11 +349,11 @@ end
 
 -- Lines 280-289
 function Shape:save_level_data()
-	local t = {
-		type = self._type,
-		position = self:position(),
-		rotation = self:rotation()
-	}
+	local t = {}
+
+	t.type = self._type
+	t.position = self:position()
+	t.rotation = self:rotation()
 
 	for name, value in pairs(self._properties) do
 		t[name] = value
@@ -480,6 +489,7 @@ function ShapeBox:draw(t, dt, r, g, b)
 
 	local pos = self:position()
 	local rot = self:rotation()
+
 	pos = pos + rot:x() * self._properties.width / 2 + rot:y() * self._properties.depth / 2 + rot:z() * self._properties.height / 2
 
 	brush:box(pos, rot:x() * self._properties.width / 2, rot:y() * self._properties.depth / 2, rot:z() * self._properties.height / 2)
@@ -603,6 +613,7 @@ function ShapeBoxMiddleBottom:draw(t, dt, r, g, b)
 
 	local pos = self:position()
 	local rot = self:rotation()
+
 	pos = pos + rot:z() * self._properties.height / 2
 
 	brush:box(pos, rot:x() * self._properties.width / 2, rot:y() * self._properties.depth / 2, rot:z() * self._properties.height / 2)

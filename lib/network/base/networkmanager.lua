@@ -216,11 +216,7 @@ function NetworkManager:ps3_determine_voice(lan)
 	if lan == true then
 		voice = "voice_quiet"
 	elseif PSN:is_online() then
-		if PSN:online_chat_allowed() then
-			voice = "voice_psn"
-		else
-			voice = "voice_disabled"
-		end
+		voice = PSN:online_chat_allowed() and "voice_psn" or "voice_disabled"
 	end
 
 	if self.voice_chat and self.voice_chat:voice_type() == voice then
@@ -296,9 +292,8 @@ end
 -- Lines 282-303
 function NetworkManager:save()
 	if self._started then
-		Global.network = {
-			network_bound = self._network_bound
-		}
+		Global.network = {}
+		Global.network.network_bound = self._network_bound
 
 		if self._session then
 			Global.network.session_host = self._session:is_host()
@@ -379,6 +374,7 @@ function NetworkManager:register_handler(name, handler_class)
 	end
 
 	local new_handler = handler_class:new()
+
 	self._handlers[name] = new_handler
 
 	Network:set_receiver(Idstring(name), new_handler)
@@ -517,17 +513,14 @@ function NetworkManager:on_discover_host_received(sender)
 	local peer = managers.network:session():local_peer()
 	local state = peer:in_lobby() and 1 or 2
 	local difficulty = Global.game_settings.difficulty
+
 	level_id = tweak_data.levels:get_index_from_level_id(Global.game_settings.level_id)
 
 	print("on_discover_host_received", level_id)
 
-	local my_name = nil
+	local my_name
 
-	if SystemInfo:platform() == Idstring("PS3") then
-		my_name = "Player 1"
-	else
-		my_name = Network:hostname()
-	end
+	my_name = SystemInfo:platform() == Idstring("PS3") and "Player 1" or Network:hostname()
 
 	sender:discover_host_reply(my_name, level_id, level_name, sender:ip_at_index(0), state, difficulty)
 end
@@ -582,6 +575,7 @@ function NetworkManager:register_spawn_point(id, data)
 		},
 		id = id
 	}
+
 	self._spawn_points[id] = runtime_data
 end
 

@@ -26,6 +26,7 @@ function CoreCutsceneProjectMappingPanel:mappings()
 	for row = 0, row_count - 1 do
 		local project = list_ctrl:get_item(row, 0)
 		local output = list_ctrl:get_item(row, 1)
+
 		mappings[project] = output
 	end
 
@@ -79,7 +80,7 @@ function CoreCutsceneProjectMappingPanel:_create_project_dropdown(parent)
 
 	control:freeze()
 
-	local first_value = nil
+	local first_value
 
 	for _, project in pairs(self:projects()) do
 		first_value = first_value or project

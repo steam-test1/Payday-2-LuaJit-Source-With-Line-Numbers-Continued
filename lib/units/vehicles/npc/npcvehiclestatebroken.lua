@@ -7,6 +7,7 @@ end
 
 -- Lines 9-10
 function NpcVehicleStateBroken:update(t, dt)
+	return
 end
 
 -- Lines 13-15

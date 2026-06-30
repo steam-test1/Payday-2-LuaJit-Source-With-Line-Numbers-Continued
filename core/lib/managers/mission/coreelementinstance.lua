@@ -14,6 +14,7 @@ end
 
 -- Lines 18-20
 function ElementInstanceInput:client_on_executed(...)
+	return
 end
 
 -- Lines 22-30
@@ -39,6 +40,7 @@ end
 
 -- Lines 47-49
 function ElementInstanceOutput:client_on_executed(...)
+	return
 end
 
 -- Lines 51-63
@@ -65,10 +67,12 @@ end
 
 -- Lines 73-77
 function ElementInstanceInputEvent:on_created()
+	return
 end
 
 -- Lines 79-81
 function ElementInstanceInputEvent:client_on_executed(...)
+	return
 end
 
 -- Lines 83-108
@@ -119,6 +123,7 @@ end
 
 -- Lines 128-130
 function ElementInstanceOutputEvent:client_on_executed(...)
+	return
 end
 
 -- Lines 132-140
@@ -134,6 +139,7 @@ ElementInstancePoint = ElementInstancePoint or class(CoreMissionScriptElement.Mi
 
 -- Lines 146-148
 function ElementInstancePoint:client_on_executed(...)
+	return
 end
 
 -- Lines 150-159

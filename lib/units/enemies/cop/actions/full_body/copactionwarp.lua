@@ -4,6 +4,7 @@ CopActionWarp = CopActionWarp or class()
 function CopActionWarp:init(action_desc, common_data)
 	self._unit = common_data.unit
 	self._dynamic_bodies = {}
+
 	local nr_bodies = self._unit:num_bodies()
 
 	for i = 0, nr_bodies - 1 do
@@ -26,7 +27,7 @@ function CopActionWarp:init(action_desc, common_data)
 	end
 
 	if Network:is_server() then
-		local sync_pos, has_sync_pos = nil
+		local sync_pos, has_sync_pos
 
 		if action_desc.position then
 			has_sync_pos = true
@@ -36,10 +37,11 @@ function CopActionWarp:init(action_desc, common_data)
 			sync_pos = Vector3()
 		end
 
-		local sync_yaw, has_rotation = nil
+		local sync_yaw, has_rotation
 
 		if action_desc.rotation then
 			has_rotation = true
+
 			local yaw = mrotation.yaw(action_desc.rotation)
 
 			if yaw < 0 then

@@ -76,6 +76,7 @@ end
 
 -- Lines 82-84
 function CoreEnvEditor:read_mode()
+	return
 end
 
 -- Lines 86-100
@@ -114,7 +115,7 @@ end
 
 -- Lines 116-136
 function CoreEnvEditor:check_news(new_only)
-	local news = nil
+	local news
 
 	if new_only then
 		news = managers.news:get_news("env_editor", self._main_frame)
@@ -123,7 +124,7 @@ function CoreEnvEditor:check_news(new_only)
 	end
 
 	if news then
-		local str = nil
+		local str
 
 		for _, n in ipairs(news) do
 			if not str then
@@ -260,6 +261,7 @@ function CoreEnvEditor:add_post_processors_param(pro, effect, mod, param, gui)
 	end
 
 	self._posteffect.post_processors[pro].effects[effect].modifiers[mod].params[param] = gui
+
 	local processor = managers.viewport:first_active_viewport():vp():get_post_processor_effect("World", Idstring(pro))
 
 	if processor then
@@ -299,6 +301,7 @@ function CoreEnvEditor:add_underlay_param(mat, param, gui)
 	end
 
 	self._underlayeffect.materials[mat].params[param] = gui
+
 	local material = Underlay:material(Idstring(mat))
 
 	if material and material:variable_exists(Idstring(param)) then
@@ -394,6 +397,7 @@ function CoreEnvEditor:flipp(...)
 
 	if #v > 1 then
 		local a = v[#v]
+
 		v[#v] = v[1]
 		v[1] = a
 
@@ -415,11 +419,10 @@ end
 -- Lines 391-407
 function CoreEnvEditor:create_tab(tab)
 	if not self._tabs[tab] then
-		self._tabs[tab] = {
-			child = {},
-			panel = EWS:Panel(self._main_notebook, "", ""),
-			panel_box = EWS:BoxSizer("VERTICAL")
-		}
+		self._tabs[tab] = {}
+		self._tabs[tab].child = {}
+		self._tabs[tab].panel = EWS:Panel(self._main_notebook, "", "")
+		self._tabs[tab].panel_box = EWS:BoxSizer("VERTICAL")
 
 		self._tabs[tab].panel:freeze()
 
@@ -730,6 +733,7 @@ function CoreEnvEditor:database_load_posteffect(post_effect_node)
 
 						if not parameter then
 							local data_path = "post_effect/" .. post_processor:name() .. "/" .. effect:name() .. "/" .. modifier:name() .. "/" .. k
+
 							remove_param = not managers.viewport:has_data_path_key(Idstring(data_path):key())
 
 							if not remove_param then
@@ -785,6 +789,7 @@ function CoreEnvEditor:database_load_underlay(underlay_effect_node)
 
 					if not parameter then
 						local data_path = "underlay_effect/" .. material:name() .. "/" .. k
+
 						remove_param = not managers.viewport:has_data_path_key(Idstring(data_path):key())
 
 						if not remove_param then
@@ -845,6 +850,7 @@ function CoreEnvEditor:database_load_sky(sky_node)
 
 				if not self._sky.params[k] then
 					local data_path = "others/" .. k
+
 					remove_param = not managers.viewport:has_data_path_key(Idstring(data_path):key())
 
 					if not remove_param then
