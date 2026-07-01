@@ -6,11 +6,11 @@ local small_font = tweak_data.menu.pd2_small_font
 local small_font_size = tweak_data.menu.pd2_small_font_size
 
 MenuGuiItem = MenuGuiItem or class()
-MenuGuiItem._input_components_set = {}
 
--- Lines 12-14
+-- Lines 11-14
 function MenuGuiItem:init()
 	self._selected = false
+	self._input_components_set = {}
 end
 
 -- Lines 16-17

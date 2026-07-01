@@ -33,23 +33,27 @@ function UnitBase:load(data)
 	managers.worlddefinition:use_me(self._unit)
 end
 
--- Lines 37-40
+-- Lines 37-43
 function UnitBase:pre_destroy(unit)
 	self._destroying = true
 
-	self._destroy_listener_holder:call(unit)
+	if self._destroy_listener_holder then
+		self._destroy_listener_holder:call(unit)
+	end
 end
 
--- Lines 44-49
+-- Lines 47-55
 function UnitBase:destroy(unit)
 	if self._destroying then
 		return
 	end
 
-	self._destroy_listener_holder:call(unit)
+	if self._destroy_listener_holder then
+		self._destroy_listener_holder:call(unit)
+	end
 end
 
--- Lines 53-55
+-- Lines 59-61
 function UnitBase:set_slot(unit, slot)
 	unit:set_slot(slot)
 end

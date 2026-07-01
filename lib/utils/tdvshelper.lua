@@ -186,11 +186,13 @@ function TDVS:end_ticket_session(account_id)
 	Global.TDVS.peer_tickets[account_id] = nil
 end
 
--- Lines 188-211
+-- Lines 188-212
 function TDVS:is_user_product_owned(account_id, dlc_data)
 	if not TDVS:available() then
 		return true
 	end
+
+	Global.TDVS.peer_tickets = Global.TDVS.peer_tickets or {}
 
 	local peer_data = Global.TDVS.peer_tickets[account_id]
 
@@ -215,7 +217,7 @@ end
 
 local TICKET_CHUNK_SIZE = 1000
 
--- Lines 215-222
+-- Lines 216-223
 function TDVS:should_chunk_auth_ticket(ticket)
 	if type(ticket) ~= "string" then
 		print("[Ticket DLC Validation System] Invalid auth ticket")
@@ -226,7 +228,7 @@ function TDVS:should_chunk_auth_ticket(ticket)
 	return string.len(ticket) >= TICKET_CHUNK_SIZE
 end
 
--- Lines 224-261
+-- Lines 225-262
 function TDVS:send_auth_ticket_in_chunks(ticket, peer, request, ...)
 	local rpc_function
 
