@@ -55,7 +55,7 @@ end
 
 -- Lines 58-64
 function CivilianHeisterSound:_play(sound_name, source_name)
-	local source = nil
+	local source
 
 	if source_name then
 		source = Idstring(source_name)

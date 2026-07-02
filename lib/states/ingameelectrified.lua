@@ -9,6 +9,7 @@ end
 
 -- Lines 9-10
 function IngameElectrifiedState:update(t, dt)
+	return
 end
 
 -- Lines 12-35

@@ -36,10 +36,12 @@ end
 -- Lines 34-48
 function ElementPlayEffect:play_effect()
 	if self._values.effect ~= "none" then
-		local params = {
-			effect = Idstring(self._values.effect)
-		}
+		local params = {}
+
+		params.effect = Idstring(self._values.effect)
+
 		local pos, rot = self:get_orientation()
+
 		params.position = self._values.screen_space and Vector3() or pos
 		params.rotation = self._values.screen_space and Rotation() or rot
 		params.base_time = self._values.base_time or 0

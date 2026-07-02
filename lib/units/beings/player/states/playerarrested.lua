@@ -15,6 +15,7 @@ function PlayerArrested:enter(state_data, enter_data)
 	self._revive_SO_data = {
 		unit = self._unit
 	}
+
 	local projectile_entry = managers.blackmarket:equipped_projectile()
 
 	if tweak_data.blackmarket.projectiles[projectile_entry].is_a_grenade then
@@ -133,7 +134,7 @@ function PlayerArrested:_update_check_actions(t, dt)
 		PlayerStandard.say_line(self, "s21x_sin")
 	end
 
-	if self._equip_weapon_expire_t and self._equip_weapon_expire_t <= t then
+	if self._equip_weapon_expire_t and t >= self._equip_weapon_expire_t then
 		self._equip_weapon_expire_t = nil
 	end
 
@@ -150,7 +151,7 @@ end
 
 -- Lines 167-189
 function PlayerArrested:_check_action_interact(t, input)
-	local new_action = nil
+	local new_action
 	local interaction_wanted = input.btn_interact_press
 
 	if interaction_wanted then
@@ -176,7 +177,7 @@ end
 
 -- Lines 193-198
 function PlayerArrested:_start_action_distance_interact(t)
-	if not self._intimidate_t or tweak_data.player.movement_state.interaction_delay < t - self._intimidate_t then
+	if not self._intimidate_t or t - self._intimidate_t > tweak_data.player.movement_state.interaction_delay then
 		self._intimidate_t = t
 
 		self:call_teammate("f13", t, true, true)
@@ -186,18 +187,18 @@ end
 -- Lines 202-230
 function PlayerArrested:call_teammate(line, t, no_gesture, skip_alert, skip_mark_cop)
 	local voice_type, plural, prime_target = self:_get_unit_intimidation_action(true, false, true, true, false)
-	local interact_type, queue_name = nil
+	local interact_type, queue_name
 
 	if voice_type == "come" then
 		interact_type = "cmd_come"
+
 		local character_code = managers.criminals:character_static_data_by_unit(prime_target.unit).ssuffix
+
 		queue_name = line .. character_code .. "_sin"
 	elseif voice_type == "mark_cop" and not skip_mark_cop then
 		local shout_sound = tweak_data.character[prime_target.unit:base()._tweak_table].priority_shout
 
-		if managers.groupai:state():whisper_mode() then
-			shout_sound = tweak_data.character[prime_target.unit:base()._tweak_table].silent_priority_shout or shout_sound
-		end
+		shout_sound = managers.groupai:state():whisper_mode() and tweak_data.character[prime_target.unit:base()._tweak_table].silent_priority_shout or shout_sound
 
 		if shout_sound then
 			interact_type = "cmd_point"
@@ -218,6 +219,7 @@ end
 
 -- Lines 234-235
 function PlayerArrested:_update_movement(t, dt)
+	return
 end
 
 -- Lines 239-248

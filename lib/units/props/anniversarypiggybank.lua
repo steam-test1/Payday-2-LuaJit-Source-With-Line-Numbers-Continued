@@ -21,6 +21,7 @@ end
 
 -- Lines 21-22
 function AnniversaryPiggyBank:sync_explode_pig(pig_level)
+	return
 end
 
 -- Lines 24-31

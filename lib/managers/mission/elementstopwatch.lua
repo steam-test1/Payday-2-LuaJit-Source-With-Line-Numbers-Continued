@@ -84,6 +84,7 @@ end
 
 -- Lines 86-88
 function ElementStopwatch:client_on_executed(...)
+	return
 end
 
 -- Lines 90-95
@@ -200,6 +201,7 @@ end
 
 -- Lines 180-182
 function ElementStopwatchOperator:client_on_executed(...)
+	return
 end
 
 -- Lines 184-234
@@ -300,6 +302,7 @@ end
 
 -- Lines 275-277
 function ElementStopwatchTrigger:client_on_executed(...)
+	return
 end
 
 -- Lines 279-289
@@ -315,6 +318,7 @@ end
 
 -- Lines 291-292
 function ElementStopwatchTrigger:operation_add()
+	return
 end
 
 -- Lines 294-305
@@ -339,10 +343,12 @@ end
 
 -- Lines 315-317
 function ElementStopwatchFilter:on_script_activated()
+	return
 end
 
 -- Lines 319-321
 function ElementStopwatchFilter:client_on_executed(...)
+	return
 end
 
 -- Lines 323-327
@@ -405,11 +411,11 @@ function ElementStopwatchFilter:_check_time(element, value)
 	if not self._values.check_type or self._values.check_type == "equal" then
 		return element:get_time() == value
 	elseif self._values.check_type == "less_or_equal" then
-		return element:get_time() <= value
+		return value >= element:get_time()
 	elseif self._values.check_type == "greater_or_equal" then
 		return value <= element:get_time()
 	elseif self._values.check_type == "less_than" then
-		return element:get_time() < value
+		return value > element:get_time()
 	elseif self._values.check_type == "greater_than" then
 		return value < element:get_time()
 	end

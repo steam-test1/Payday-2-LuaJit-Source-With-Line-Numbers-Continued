@@ -9,6 +9,7 @@ end
 
 -- Lines 9-11
 function ElementSpawnGageAssignment:on_script_activated()
+	return
 end
 
 -- Lines 13-23

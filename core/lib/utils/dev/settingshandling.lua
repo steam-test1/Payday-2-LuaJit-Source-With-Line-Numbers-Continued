@@ -227,7 +227,7 @@ end
 -- Lines 199-227
 function EWSControlSettingSync:get_ews_control_value(data, control_info)
 	local controls_type = control_info.controls_type
-	local value = nil
+	local value
 
 	if controls_type then
 		local type = controls_type[data]
@@ -243,6 +243,7 @@ function EWSControlSettingSync:get_ews_control_value(data, control_info)
 
 			if index ~= -1 then
 				local data_map = control_info.listctrl_data
+
 				value = data_map[index][1]
 			end
 		else
@@ -305,6 +306,7 @@ function EWSControlSettingSync:show_texture_dialog(custom_data, event_object)
 
 	if dialog:show_modal() then
 		local path = dialog:get_path()
+
 		path = path:substring(managers.database:base_path().size)
 		path = path:substring(0, path.size - 4)
 
@@ -330,9 +332,9 @@ function EWSControlSettingSync:create_linker(id, link_ids)
 	self._ews_frame:connect(id, "EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "update_link"), check)
 
 	local info_map = {}
-	local types_map = {
-		[check] = "check"
-	}
+	local types_map = {}
+
+	types_map[check] = "check"
 	info_map.controls_type = types_map
 	info_map.main_control = check
 	info_map.links = link_ids
@@ -345,11 +347,13 @@ end
 function EWSControlSettingSync:create_slider(id, min, max, num_decimals, labeltext)
 	min = min or 0
 	max = max or 0
+
 	local scale = math.pow(10, math.abs(num_decimals))
+
 	min = min * scale
 	max = max * scale
 
-	if min > max or min == max then
+	if max < min or min == max then
 		Application:throw_exception("EWSControlSettingSync::create_slider(" .. id .. "," .. min .. "," .. max .. "," .. num_decimals .. ") Arguments are confusing")
 	end
 
@@ -371,14 +375,15 @@ function EWSControlSettingSync:create_slider(id, min, max, num_decimals, labelte
 	self._ews_frame:connect(id, "EVT_SCROLL_CHANGED", callback(self, self, "update_setting"), slider)
 
 	local info_map = {}
-	local types_map = {
-		[text] = "text",
-		[slider] = "slider"
-	}
+	local types_map = {}
+
+	types_map[text] = "text"
+	types_map[slider] = "slider"
 	info_map.controls_type = types_map
-	local scales_map = {
-		[slider] = scale
-	}
+
+	local scales_map = {}
+
+	scales_map[slider] = scale
 	info_map.controls_scale = scales_map
 	info_map.controls = {
 		slider,
@@ -448,7 +453,7 @@ end
 function EWSControlSettingSync:create_rgb_box(base_id, labeltext)
 	local sizer = EWS:BoxSizer("HORIZONTAL")
 	local newid = base_id .. "-rgb"
-	local label = nil
+	local label
 
 	if labeltext == nil then
 		label = base_id
@@ -464,9 +469,9 @@ function EWSControlSettingSync:create_rgb_box(base_id, labeltext)
 	slider:connect("", "EVT_COMMAND_BUTTON_CLICKED", callback(self, self, "update_setting_box"), slider)
 
 	local info_map = {}
-	local types_map = {
-		[slider] = "box"
-	}
+	local types_map = {}
+
+	types_map[slider] = "box"
 	info_map.controls_type = types_map
 	info_map.main_control = slider
 	self._controls_map[newid] = info_map
@@ -490,9 +495,9 @@ function EWSControlSettingSync:create_string(id, label_text)
 	self._ews_frame:connect(id, "EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_setting"), text)
 
 	local info_map = {}
-	local types_map = {
-		[text] = "text"
-	}
+	local types_map = {}
+
+	types_map[text] = "text"
 	info_map.controls_type = types_map
 	info_map.main_control = text
 	self._controls_map[id] = info_map
@@ -511,9 +516,9 @@ function EWSControlSettingSync:create_texture_path(id)
 	self._ews_frame:connect(id, "EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_setting"), text)
 
 	local info_map = {}
-	local types_map = {
-		[text] = "text"
-	}
+	local types_map = {}
+
+	types_map[text] = "text"
 	info_map.controls_type = types_map
 	info_map.main_control = text
 	self._controls_map[id] = info_map
@@ -546,10 +551,10 @@ function EWSControlSettingSync:create_list_config(id, rename_event_func, add_eve
 	end
 
 	local info_map = {}
-	local types_map = {
-		[list] = "list",
-		[text] = "text"
-	}
+	local types_map = {}
+
+	types_map[list] = "list"
+	types_map[text] = "text"
 	info_map.controls_type = types_map
 	info_map.controls = {
 		list,
@@ -581,9 +586,9 @@ function EWSControlSettingSync:create_combo_config(id, label_text, rename_event_
 	self._ews_frame:connect(id, "EVT_COMMAND_COMBOBOX_SELECTED", callback(self, self, "update_setting"), combo)
 
 	local info_map = {}
-	local types_map = {
-		[combo] = "combo"
-	}
+	local types_map = {}
+
+	types_map[combo] = "combo"
 	info_map.controls_type = types_map
 	info_map.main_control = combo
 	self._controls_map[id] = info_map
@@ -594,6 +599,7 @@ end
 -- Lines 507-540
 function EWSControlSettingSync:create_name_popup(id, label_text, init_text)
 	init_text = init_text or "none"
+
 	local pop_up = EWS:Dialog(nil, label_text, "", Vector3(525, 400, 0), Vector3(230, 150, 0), "CAPTION,CLOSE_BOX")
 
 	pop_up:set_background_colour("LIGHT GREY")
@@ -619,9 +625,9 @@ function EWSControlSettingSync:create_name_popup(id, label_text, init_text)
 	pop_up_main_sizer:add(button_sizer, 0, 0, "EXPAND")
 
 	local info_map = {}
-	local types_map = {
-		[popup_name] = "popup_name"
-	}
+	local types_map = {}
+
+	types_map[popup_name] = "popup_name"
 	info_map.controls_type = types_map
 	info_map.main_control = popup_name
 	self._controls_map[id] = info_map
@@ -670,11 +676,13 @@ function EWSControlSettingSync:create_properties_list(id, add_vector, read_only)
 	list:insert_column(1, "Value", "")
 	sizer:add(list, 1, 0, "EXPAND")
 
-	local text = nil
+	local text
 
 	if not read_only then
 		local value_sizer = EWS:BoxSizer("HORIZONTAL")
+
 		text = EWS:TextCtrl(self._ews_frame, "", id, "")
+
 		local remove_id = self:get_unique_id()
 		local remove_btn = EWS:Button(self._ews_frame, "Remove", remove_id, "BU_EXACTFIT,NO_BORDER")
 
@@ -702,12 +710,13 @@ function EWSControlSettingSync:create_properties_list(id, add_vector, read_only)
 	self._ews_frame:connect(id, "EVT_COMMAND_LIST_ITEM_SELECTED", callback(self, self, "update_setting"), list)
 	self._ews_frame:connect(id, "EVT_COMMAND_TEXT_ENTER", callback(self, self, "update_setting"), text)
 
-	local info_map = {
-		listctrl_data = {}
-	}
-	local types_map = {
-		[list] = "listctrl"
-	}
+	local info_map = {}
+
+	info_map.listctrl_data = {}
+
+	local types_map = {}
+
+	types_map[list] = "listctrl"
 
 	if not read_only then
 		types_map[text] = "text"
@@ -732,6 +741,7 @@ function EWSControlSettingSync:load_properties_list(id, properties_map)
 	list_data:delete_all_items()
 
 	local data_map = control_info.listctrl_data
+
 	data_map = {}
 
 	if properties_map then
@@ -776,6 +786,7 @@ function EWSControlSettingSync:add_property_to_list(custom_data, event_object)
 	local list_data = control_info.main_control
 	local index = list_data:append_item(name)
 	local data_map = control_info.listctrl_data
+
 	data_map[index] = {
 		name,
 		""
@@ -799,12 +810,11 @@ end
 
 -- Lines 674-724
 function EWSControlSettingSync:create_about_dialog(about_text)
-	local text = about_text or "This about was created by\nH\\xe5kan\nThe all and mighty."
+	local text = about_text or "This about was created by\nH\xE5kan\nThe all and mighty."
 	local num_lines = 0
 	local longest_line = 0
-	local at = 0
-	local at_end = 0
-	local _ = nil
+	local at, at_end = 0, 0
+	local _
 
 	while true do
 		num_lines = num_lines + 1
@@ -855,12 +865,11 @@ AboutDialog = AboutDialog or class()
 
 -- Lines 733-782
 function AboutDialog:init(parent, text)
-	local text = text or "This about was created by\nH\\xe5kan\nThe all and mighty."
+	local text = text or "This about was created by\nH\xE5kan\nThe all and mighty."
 	local num_lines = 0
 	local longest_line = 0
-	local at = 0
-	local at_end = 0
-	local _ = nil
+	local at, at_end = 0, 0
+	local _
 
 	while true do
 		num_lines = num_lines + 1
@@ -886,6 +895,7 @@ function AboutDialog:init(parent, text)
 	local text_box_size = num_lines * 15
 	local frame_size_height = text_box_size + 50
 	local frame_size_width = longest_line * 6
+
 	self._frame = EWS:Dialog(parent, "About", "hoho", Vector3(-1, -1, 0), Vector3(frame_size_width, frame_size_height), "")
 	self._static_text = EWS:StaticText(self._frame, text, "", "ALIGN_CENTRE")
 

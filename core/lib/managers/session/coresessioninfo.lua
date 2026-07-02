@@ -4,6 +4,7 @@ Info = Info or class()
 
 -- Lines 5-6
 function Info:init()
+	return
 end
 
 -- Lines 8-10

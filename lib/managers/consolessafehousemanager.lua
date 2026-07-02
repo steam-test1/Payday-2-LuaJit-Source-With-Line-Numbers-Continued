@@ -27,6 +27,7 @@ end
 
 -- Lines 34-38
 function ConsolesSafehouseManager:init_finalize()
+	return
 end
 
 -- Lines 40-57
@@ -34,11 +35,10 @@ function ConsolesSafehouseManager:_setup()
 	print("[ConsolesSafehouseManager:_setup]")
 
 	if not Global.consoles_safehouse_manager_manager then
-		Global.consoles_safehouse_manager_manager = {
-			total = Application:digest_value(0, true),
-			total_collected = Application:digest_value(0, true),
-			prev_total = Application:digest_value(0, true)
-		}
+		Global.consoles_safehouse_manager_manager = {}
+		Global.consoles_safehouse_manager_manager.total = Application:digest_value(0, true)
+		Global.consoles_safehouse_manager_manager.total_collected = Application:digest_value(0, true)
+		Global.consoles_safehouse_manager_manager.prev_total = Application:digest_value(0, true)
 	end
 
 	self._global = Global.consoles_safehouse_manager_manager
@@ -55,6 +55,7 @@ function ConsolesSafehouseManager:save(data)
 		total = self._global.total,
 		total_collected = self._global.total_collected
 	}
+
 	data.ConsolesSafehouseManager = state
 end
 
@@ -102,6 +103,7 @@ end
 
 -- Lines 110-115
 function ConsolesSafehouseManager:update_previous_coins()
+	return
 end
 
 -- Lines 117-133
@@ -110,6 +112,7 @@ function ConsolesSafehouseManager:add_coins(amount)
 
 	local new_total = self:total_coins_earned() + amount
 	local new_current = self:coins() + amount
+
 	Global.consoles_safehouse_manager_manager.total = Application:digest_value(new_current, true)
 	Global.consoles_safehouse_manager_manager.total_collected = Application:digest_value(new_total, true)
 
@@ -151,4 +154,5 @@ end
 
 -- Lines 168-170
 function ConsolesSafehouseManager:add_coins_ingore_locked(amount)
+	return
 end

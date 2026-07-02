@@ -9,6 +9,7 @@ function UnoDeviceBase:init(unit)
 	local gui = World:gui()
 	local ws = gui:create_object_workspace(0, UnoDeviceBase.TEXT_HEIGHT, text_object)
 	local panel = ws:panel()
+
 	self._gui = gui
 	self._ws = ws
 	self._panel = panel
@@ -26,12 +27,13 @@ function UnoDeviceBase:build_hint_text()
 
 	local font = tweak_data.menu.uno_vessel_font
 	local font_size = tweak_data.menu.uno_vessel_font_size
+
 	self._hint_text = self._panel:text({
-		text = "",
-		direction = "right_left",
-		wrap = true,
 		align = "center",
+		direction = "right_left",
+		text = "",
 		vertical = "center",
+		wrap = true,
 		font = font,
 		font_size = font_size,
 		color = Color(0, 1, 1, 1)
@@ -49,7 +51,7 @@ end
 function UnoDeviceBase:show_text(text)
 	self._hint_text:set_text(text)
 	self._hint_text:stop()
-	self._hint_text:animate(function (o)
+	self._hint_text:animate(function(o)
 		text_fade(o, Color(0, 1, 1, 1), Color(1, 1, 1, 1), 0.3)
 		wait(10)
 		text_fade(o, Color(1, 1, 1, 1), Color(0, 1, 1, 1), 0.3)
@@ -58,7 +60,8 @@ end
 
 -- Lines 63-80
 function UnoDeviceBase:cycle_hints()
-	local uno_challenge = nil
+	local uno_challenge
+
 	uno_challenge = managers.custom_safehouse:uno_achievement_challenge()
 
 	if uno_challenge and uno_challenge:challenge() then
@@ -68,7 +71,7 @@ function UnoDeviceBase:cycle_hints()
 
 		self._next_hint = self._next_hint + 1
 
-		if UnoAchievementChallenge.CHALLENGE_COUNT < self._next_hint then
+		if self._next_hint > UnoAchievementChallenge.CHALLENGE_COUNT then
 			self._next_hint = 1
 		end
 	end
@@ -83,7 +86,8 @@ end
 
 -- Lines 94-105
 function UnoDeviceBase:generate_challenge()
-	local uno_challenge = nil
+	local uno_challenge
+
 	uno_challenge = managers.custom_safehouse:uno_achievement_challenge()
 
 	if uno_challenge then

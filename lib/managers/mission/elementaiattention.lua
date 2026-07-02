@@ -39,6 +39,7 @@ end
 
 -- Lines 43-45
 function ElementAIAttention:operation_remove()
+	return
 end
 
 -- Lines 49-73
@@ -55,15 +56,11 @@ function ElementAIAttention:_select_units_from_spawners()
 		end
 	end
 
-	local wanted_nr_units = nil
+	local wanted_nr_units
 
-	if self._values.trigger_times <= 0 then
-		wanted_nr_units = 1
-	else
-		wanted_nr_units = self._values.trigger_times
-	end
-
+	wanted_nr_units = self._values.trigger_times <= 0 and 1 or self._values.trigger_times
 	wanted_nr_units = math.min(wanted_nr_units, #candidates)
+
 	local chosen_units = {}
 
 	for i = 1, wanted_nr_units do
@@ -110,7 +107,7 @@ function ElementAIAttention:_create_override_attention_settings(unit)
 	local setting_desc = tweak_data.attention.settings[preset]
 
 	if setting_desc then
-		local clbk_receiver_class = nil
+		local clbk_receiver_class
 
 		if unit:base().is_local_player or unit:base().is_husk_player then
 			clbk_receiver_class = unit:movement()
@@ -190,7 +187,7 @@ end
 
 -- Lines 178-186
 function ElementAIAttention:_fetch_unit_by_unit_id(unit_id)
-	local unit = nil
+	local unit
 
 	if Application:editor() then
 		unit = managers.editor:unit_with_id(tonumber(unit_id))
@@ -203,4 +200,5 @@ end
 
 -- Lines 190-191
 function ElementAIAttention._load_unit(unit)
+	return
 end

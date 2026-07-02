@@ -34,8 +34,8 @@ function CoreCounterResetUnitElement:draw_links(t, dt, selected_unit, all_units)
 
 		if draw then
 			self:_draw_link({
-				g = 0,
 				b = 0,
+				g = 0,
 				r = 0.75,
 				from_unit = self._unit,
 				to_unit = unit
@@ -46,13 +46,14 @@ end
 
 -- Lines 31-32
 function CoreCounterResetUnitElement:update_editing()
+	return
 end
 
 -- Lines 34-44
 function CoreCounterResetUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit and string.find(ray.unit:name():s(), "logic_counter/logic_counter", 1, true) then
@@ -77,6 +78,7 @@ function CoreCounterResetUnitElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local names = {
 		"logic_counter/logic_counter"
 	}
@@ -84,13 +86,13 @@ function CoreCounterResetUnitElement:_build_panel(panel, panel_sizer)
 	self:_build_add_remove_unit_from_list(panel, panel_sizer, self._hed.elements, names)
 
 	local counter_target_params = {
-		name = "Counter target:",
 		ctrlr_proportions = 2,
-		name_proportions = 1,
-		tooltip = "Specifies what the selected counted should reset to",
-		sorted = false,
-		min = 0,
 		floats = 0,
+		min = 0,
+		name = "Counter target:",
+		name_proportions = 1,
+		sorted = false,
+		tooltip = "Specifies what the selected counted should reset to",
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.counter_target

@@ -27,4 +27,5 @@ end
 
 -- Lines 24-25
 function ElementEnemyDummyTrigger:load()
+	return
 end

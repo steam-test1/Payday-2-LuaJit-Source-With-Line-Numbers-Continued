@@ -1,5 +1,6 @@
 NewHeistsGui = NewHeistsGui or class(MenuGuiComponent)
 NewHeistsGui.make_fine_text = BlackMarketGui.make_fine_text
+
 local PANEL_PADDING = 10
 local IMAGE_H = 123
 local IMAGE_W = 416
@@ -15,6 +16,7 @@ local BAR_Y = 0
 -- Lines 24-135
 function NewHeistsGui:init(ws, fullscreen_ws)
 	local tweak = tweak_data.gui.new_heists
+
 	self._page_count = math.min(#tweak, tweak.limit)
 	self._current_page = 1
 	self._block_change = false
@@ -30,13 +32,16 @@ function NewHeistsGui:init(ws, fullscreen_ws)
 	self._content_panel:set_right(self._panel:width())
 
 	local header_h = tweak_data.menu.pd2_small_font_size + PANEL_PADDING
+
 	self._contents = {}
 	self._internal_content_panel = self._content_panel:panel()
 	self._internal_image_panel = self._internal_content_panel:panel({
 		y = header_h,
 		h = IMAGE_H
 	})
+
 	local max_h = 0
+
 	self._font_size = tweak_data.menu.pd2_small_font_size
 	self._text = self._internal_content_panel:text({
 		text = "ASDF",
@@ -91,9 +96,11 @@ function NewHeistsGui:init(ws, fullscreen_ws)
 		h = 16,
 		y = self._internal_content_panel:bottom() + PANEL_PADDING
 	})
+
 	local button_width_padding = 35
 	local middle_button = self._page_count / 2 + 0.5
 	local page_center_x = self._page_panel:w() / 2
+
 	self._page_buttons = {}
 
 	for i = 1, self._page_count do
@@ -111,6 +118,7 @@ function NewHeistsGui:init(ws, fullscreen_ws)
 	if managers.menu_component._player_profile_gui then
 		local wx = self._content_panel:world_x()
 		local wy = managers.menu_component._player_profile_gui._panel:world_y()
+
 		wx, wy = managers.gui_data:convert_pos(ws, fullscreen_ws, wx, wy)
 
 		self._content_panel:set_world_y(wy - header_h)
@@ -120,9 +128,9 @@ function NewHeistsGui:init(ws, fullscreen_ws)
 	end
 
 	self._bar = self._page_panel:bitmap({
+		halign = "grow",
 		texture = "guis/textures/pd2/shared_lines",
 		valign = "grow",
-		halign = "grow",
 		wrap_mode = "wrap",
 		x = BAR_X,
 		y = BAR_Y,
@@ -135,8 +143,8 @@ function NewHeistsGui:init(ws, fullscreen_ws)
 	self._bar:set_left(self._page_buttons[1]:left() + BAR_X)
 
 	self._select_rect = self._full_panel:bitmap({
-		texture = "guis/textures/pd2/ad_blue2",
-		layer = -2
+		layer = -2,
+		texture = "guis/textures/pd2/ad_blue2"
 	})
 
 	self._select_rect:set_visible(false)
@@ -172,6 +180,7 @@ function NewHeistsGui:set_bar_width(w, random)
 
 	self._bar_x = not random and self._bar_x or math.random(1, 255)
 	self._bar_y = not random and self._bar_y or math.random(0, math.round(self._bar:texture_height() / 2 - 1)) * 2
+
 	local x = self._bar_x
 	local y = self._bar_y
 	local h = 6
@@ -187,7 +196,7 @@ function NewHeistsGui:set_bar_width(w, random)
 	self._bar:set_texture_coordinates(mvector_tl, mvector_tr, mvector_bl, mvector_br)
 end
 
-local animating = nil
+local animating
 
 -- Lines 175-209
 function NewHeistsGui:update(t, dt)
@@ -211,7 +220,7 @@ function NewHeistsGui:update(t, dt)
 	if self._block_change then
 		self._next_time = t + TIME_PER_PAGE
 	else
-		if self._next_time <= t then
+		if t >= self._next_time then
 			self:_next_page()
 
 			self._next_time = t + TIME_PER_PAGE
@@ -247,6 +256,7 @@ function NewHeistsGui:_move_pages(pages)
 	-- Lines 233-271
 	local function swipe_func(o, other_object, swipe_distance, time, end_pos)
 		time = math.max(0.0001, time or 1)
+
 		local fade_text_t = time / 2
 		local text_changed = false
 		local t = 0
@@ -265,6 +275,7 @@ function NewHeistsGui:_move_pages(pages)
 
 		while alive(o) and alive(other_object) and final_pos <= o:x() do
 			local dt = coroutine.yield()
+
 			t = t + dt
 
 			o:move(-dt * speed, 0)

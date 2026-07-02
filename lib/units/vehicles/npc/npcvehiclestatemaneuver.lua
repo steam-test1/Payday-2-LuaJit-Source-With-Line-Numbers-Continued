@@ -26,6 +26,7 @@ end
 
 -- Lines 33-34
 function NpcVehicleStateManeuver:update(npc_driving_ext, t, dt)
+	return
 end
 
 -- Lines 37-39
@@ -35,6 +36,7 @@ end
 
 -- Lines 43-45
 function NpcVehicleStateManeuver:change_state(npc_driving_ext)
+	return
 end
 
 -- Lines 48-50

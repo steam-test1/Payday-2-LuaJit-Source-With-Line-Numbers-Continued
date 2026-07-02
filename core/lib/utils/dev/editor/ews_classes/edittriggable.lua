@@ -9,17 +9,20 @@ function EditUnitTriggable:init(editor)
 		name = "Sequences",
 		class = self
 	})
+
 	self._panel = panel
 	self._ctrls = {}
 	self._element_guis = {}
+
 	local sequence_sizer = EWS:BoxSizer("HORIZONTAL")
+
 	self._triggers_params = {
+		ctrlr_proportions = 2,
 		name = "Triggers:",
 		name_proportions = 1,
-		tooltip = "Select a sequence that should trigger other unit sequences",
-		sorted = true,
 		sizer_proportions = 1,
-		ctrlr_proportions = 2,
+		sorted = true,
+		tooltip = "Select a sequence that should trigger other unit sequences",
 		panel = panel,
 		sizer = sequence_sizer,
 		options = {}
@@ -218,6 +221,7 @@ end
 -- Lines 185-188
 function EditUnitTriggable:copy_element(ctrls)
 	local trigger_data = self._ctrls.unit:damage():get_trigger_data(ctrls.trigger_name, ctrls.id)
+
 	self._copied_trigger_data = trigger_data
 end
 

@@ -3,10 +3,9 @@ CoreMusicManager = CoreMusicManager or class()
 -- Lines 3-56
 function CoreMusicManager:init()
 	if not Global.music_manager then
-		Global.music_manager = {
-			source = SoundDevice:create_source("music"),
-			volume = 0
-		}
+		Global.music_manager = {}
+		Global.music_manager.source = SoundDevice:create_source("music")
+		Global.music_manager.volume = 0
 
 		self:init_globals()
 	end
@@ -14,6 +13,7 @@ function CoreMusicManager:init()
 	self._path_list = {}
 	self._path_map = {}
 	self._event_map = {}
+
 	local temp_list = {}
 
 	if Application:editor() then
@@ -67,6 +67,7 @@ end
 
 -- Lines 70-71
 function CoreMusicManager:init_globals()
+	return
 end
 
 -- Lines 73-75

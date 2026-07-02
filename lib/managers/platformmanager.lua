@@ -3,6 +3,7 @@ core:import("CoreEvent")
 
 local empty_vector = Vector3()
 local tmp_vector = Vector3()
+
 PlatformManager = PlatformManager or class()
 PlatformManager.PLATFORM_CLASS_MAP = {}
 
@@ -35,6 +36,7 @@ end
 
 -- Lines 33-33
 function GenericPlatformManager:destroy_context()
+	return
 end
 
 -- Lines 35-38
@@ -86,6 +88,7 @@ end
 
 -- Lines 76-77
 function GenericPlatformManager:set_rich_presence(Key, value)
+	return
 end
 
 -- Lines 79-81
@@ -115,10 +118,12 @@ end
 
 -- Lines 99-100
 function GenericPlatformManager:set_progress(progress)
+	return
 end
 
 -- Lines 102-103
 function GenericPlatformManager:set_feedback_color(color)
+	return
 end
 
 Xbox360PlatformManager = Xbox360PlatformManager or class(GenericPlatformManager)
@@ -144,7 +149,8 @@ function Xbox360PlatformManager:set_rich_presence_state(name, callback)
 	if callback then
 		XboxLive:set_context("presence", name, callback)
 	else
-		XboxLive:set_context("presence", name, function ()
+		XboxLive:set_context("presence", name, function()
+			return
 		end)
 	end
 end
@@ -177,7 +183,8 @@ function XB1PlatformManager:set_rich_presence_state(name, callback)
 	if callback then
 		XboxLive:set_context("presence", name, callback)
 	else
-		XboxLive:set_context("presence", name, function ()
+		XboxLive:set_context("presence", name, function()
+			return
 		end)
 	end
 end
@@ -229,7 +236,7 @@ end
 function PS3PlatformManager:update(t, dt)
 	PS3PlatformManager.super.update(self, t, dt)
 
-	if self._current_psn_presence ~= self:presence() and self._psn_set_presence_time <= t then
+	if self._current_psn_presence ~= self:presence() and t >= self._psn_set_presence_time then
 		self._psn_set_presence_time = t + 10
 		self._current_psn_presence = self:presence()
 
@@ -270,7 +277,7 @@ end
 function PS4PlatformManager:update(t, dt)
 	PS4PlatformManager.super.update(self, t, dt)
 
-	if self._current_psn_presence ~= self:presence() and self._psn_set_presence_time <= t then
+	if self._current_psn_presence ~= self:presence() and t >= self._psn_set_presence_time then
 		self._psn_set_presence_time = t + 10
 		self._current_psn_presence = self:presence()
 
@@ -340,6 +347,7 @@ end
 
 WinPlatformManager = WinPlatformManager or class(GenericPlatformManager)
 PlatformManager.PLATFORM_CLASS_MAP[_G.Idstring("WIN32"):key()] = WinPlatformManager
+
 local is_steam = SystemInfo:distribution() == _G.Idstring("STEAM")
 local is_epic = SystemInfo:distribution() == _G.Idstring("EPIC")
 local is_mm_eos = SystemInfo:matchmaking() == _G.Idstring("MM_EPIC")
@@ -369,6 +377,7 @@ function WinPlatformManager:set_rich_presence_state(name)
 			end
 		elseif managers.network.matchmake.lobby_handler then
 			local rich_presence_allowed = true
+
 			rich_presence_allowed = rich_presence_allowed and Global.game_settings.permission ~= "private"
 
 			if not rich_presence_allowed then
@@ -387,14 +396,14 @@ function WinPlatformManager:set_rich_presence_state(name)
 			local in_lobby = _G.game_state_machine:verify_game_state(_G.GameStateFilters.lobby)
 			local is_multi_day = #(managers.job:current_job_chain_data() or {}) > 1
 			local job_tweak = managers.job:current_job_data()
-			local display_token = nil
+			local display_token
 			local heist_token = job_tweak and job_tweak.name_id
-			local difficulty = nil
+			local difficulty
 			local heist_day = is_multi_day and tostring(managers.job:current_stage())
 			local peer_count = tostring(#managers.network:session():all_peers())
 			local max_peers = tostring(_G.tweak_data.max_players)
 			local lobby_id = managers.network.matchmake.lobby_handler:id()
-			local crime_spree_rank = nil
+			local crime_spree_rank
 
 			if in_lobby and job_tweak then
 				display_token = "#in_lobby_heist"
@@ -408,6 +417,7 @@ function WinPlatformManager:set_rich_presence_state(name)
 
 			if managers.job:has_active_job() then
 				local difficulty_stars = managers.job:current_difficulty_stars()
+
 				difficulty = tostring(difficulty_stars)
 			end
 
@@ -415,10 +425,7 @@ function WinPlatformManager:set_rich_presence_state(name)
 				local level_id = Global.game_settings.level_id
 				local name_id = level_id and _G.tweak_data.levels[level_id] and _G.tweak_data.levels[level_id].name_id
 
-				if name_id then
-					heist_token = name_id or heist_token
-				end
-
+				heist_token = name_id and name_id or heist_token
 				display_token = display_token .. "_cs"
 				crime_spree_rank = managers.experience:cash_string(managers.crime_spree:spree_level(), "")
 				difficulty = nil
@@ -465,9 +472,7 @@ function WinPlatformManager:_build_legacy_presence_string()
 		local level_id = Global.game_settings.level_id
 		local name_id = level_id and _G.tweak_data.levels[level_id] and _G.tweak_data.levels[level_id].name_id
 
-		if name_id then
-			job_name = managers.localization:text(name_id) or job_name
-		end
+		job_name = name_id and managers.localization:text(name_id) or job_name
 	end
 
 	if in_lobby then
@@ -503,6 +508,7 @@ function WinPlatformManager:_build_legacy_presence_string()
 	elseif managers.job:has_active_job() then
 		local difficulty_stars = managers.job:current_difficulty_stars()
 		local difficulty = _G.tweak_data.difficulties[managers.job:current_difficulty_stars() + 2] or 1
+
 		presence = presence .. "\n" .. managers.localization:text("steam_rp_current_difficulty", {
 			difficulty = managers.localization:to_upper_text(_G.tweak_data.difficulty_name_ids[difficulty])
 		})
@@ -572,9 +578,7 @@ function WinPlatformManager:update_discord_heist()
 			local level_id = Global.game_settings.level_id
 			local name_id = level_id and _G.tweak_data.levels[level_id] and _G.tweak_data.levels[level_id].name_id
 
-			if name_id then
-				job_name = managers.localization:text(name_id) or job_name
-			end
+			job_name = name_id and managers.localization:text(name_id) or job_name
 		end
 
 		local large_image = job_id
@@ -631,9 +635,7 @@ function WinPlatformManager:set_rich_presence_discord(name)
 		local level_id = Global.game_settings.level_id
 		local name_id = level_id and _G.tweak_data.levels[level_id] and _G.tweak_data.levels[level_id].name_id
 
-		if name_id then
-			job_name = managers.localization:text(name_id) or job_name
-		end
+		job_name = name_id and managers.localization:text(name_id) or job_name
 	end
 
 	local large_image = job_id

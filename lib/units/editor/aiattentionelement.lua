@@ -1,20 +1,20 @@
 AIAttentionElement = AIAttentionElement or class(MissionElement)
 AIAttentionElement.LINK_VALUES = {
 	{
-		value = "parent_u_id",
-		output = true,
 		layer = "Statics",
-		type = "parent"
+		output = true,
+		type = "parent",
+		value = "parent_u_id"
 	},
 	{
 		table_value = "instigator_ids",
 		type = "instigator"
 	},
 	{
-		value = "att_obj_u_id",
-		output = true,
 		layer = "Statics",
-		type = "operator"
+		output = true,
+		type = "operator",
+		value = "att_obj_u_id"
 	}
 }
 
@@ -103,8 +103,8 @@ function AIAttentionElement:draw_links(t, dt, selected_unit, all_units)
 
 		if draw then
 			self:_draw_link({
-				g = 0,
 				b = 0.75,
+				g = 0,
 				r = 0,
 				from_unit = unit,
 				to_unit = self._unit
@@ -118,8 +118,8 @@ function AIAttentionElement:draw_links(t, dt, selected_unit, all_units)
 
 	if self._parent_unit then
 		self:_draw_link({
-			g = 0.75,
 			b = 0,
+			g = 0.75,
 			r = 0,
 			from_unit = self._unit,
 			to_unit = self._parent_unit
@@ -128,8 +128,8 @@ function AIAttentionElement:draw_links(t, dt, selected_unit, all_units)
 
 	if self._att_obj_unit then
 		self:_draw_link({
-			g = 0,
 			b = 0.75,
+			g = 0,
 			r = 0,
 			from_unit = self._unit,
 			to_unit = self._att_obj_unit
@@ -147,8 +147,8 @@ function AIAttentionElement:update_selected(t, dt, selected_unit, all_units)
 
 	if self._parent_unit then
 		self:_draw_link({
-			g = 0.75,
 			b = 0,
+			g = 0.75,
 			r = 0,
 			from_unit = self._unit,
 			to_unit = self._parent_unit
@@ -157,8 +157,8 @@ function AIAttentionElement:update_selected(t, dt, selected_unit, all_units)
 
 	if self._att_obj_unit then
 		self:_draw_link({
-			g = 0,
 			b = 0,
+			g = 0,
 			r = 0.75,
 			from_unit = self._unit,
 			to_unit = self._att_obj_unit
@@ -169,8 +169,8 @@ function AIAttentionElement:update_selected(t, dt, selected_unit, all_units)
 		local unit = all_units[id]
 
 		self:_draw_link({
-			g = 0,
 			b = 0.75,
+			g = 0,
 			r = 0,
 			from_unit = unit,
 			to_unit = self._unit
@@ -247,15 +247,15 @@ end
 -- Lines 218-235
 function AIAttentionElement:_find_instigator_raycast()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if not ray or not ray.unit then
 		return
 	end
 
-	local id = nil
+	local id
 
 	if string.find(ray.unit:name():s(), "ai_enemy_group", 1, true) or string.find(ray.unit:name():s(), "ai_spawn_enemy", 1, true) or string.find(ray.unit:name():s(), "ai_civilian_group", 1, true) or string.find(ray.unit:name():s(), "ai_spawn_civilian", 1, true) then
 		id = ray.unit:unit_data().unit_id
@@ -354,6 +354,7 @@ function AIAttentionElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local names = {
 		"ai_spawn_enemy",
 		"ai_spawn_civilian",
@@ -378,6 +379,7 @@ end
 
 -- Lines 334-337
 function AIAttentionElement:add_to_mission_package()
+	return
 end
 
 -- Lines 341-360
@@ -389,6 +391,7 @@ function AIAttentionElement:_chk_set_link_values()
 		local parent_rot = self._parent_obj:rotation()
 		local parent_inv_rot = parent_rot:inverse()
 		local world_vec = att_obj_pos - parent_pos
+
 		self._hed.local_pos = world_vec:rotate_with(parent_inv_rot)
 	else
 		self._hed.local_pos = nil

@@ -129,7 +129,7 @@ end
 
 -- Lines 116-124
 function CameraManager:stop_layer(layer_name)
-	local mixer = nil
+	local mixer
 
 	if layer_name then
 		mixer = self._name_to_layer[layer_name]
@@ -198,7 +198,7 @@ function CameraManager:create_camera(name)
 	local nodes = camera._nodes
 	local name_to_nodes = camera._name_to_nodes
 	local blend_table = camera._blend_table
-	local parent_node = nil
+	local parent_node
 	local num_cameras = 0
 
 	for _, camera_setup in ipairs(camera_list) do
@@ -291,13 +291,12 @@ CameraTemplateManager.camera_db_path = "cameras/cameras"
 -- Lines 254-268
 function CameraTemplateManager:init()
 	self._camera_space = {}
-	self._parse_func_table = {
-		interpreter = CameraTemplateManager.parse_interpreter,
-		layer = CameraTemplateManager.parse_layer,
-		camera = CameraTemplateManager.parse_camera,
-		camera_node = CameraTemplateManager.parse_camera_node,
-		depends_on = CameraTemplateManager.parse_depends_on
-	}
+	self._parse_func_table = {}
+	self._parse_func_table.interpreter = CameraTemplateManager.parse_interpreter
+	self._parse_func_table.layer = CameraTemplateManager.parse_layer
+	self._parse_func_table.camera = CameraTemplateManager.parse_camera
+	self._parse_func_table.camera_node = CameraTemplateManager.parse_camera_node
+	self._parse_func_table.depends_on = CameraTemplateManager.parse_depends_on
 	self._camera_managers = {}
 
 	self:load_cameras()
@@ -343,13 +342,17 @@ function CameraTemplateManager:load_camera_file(file_name)
 
 		if xml_node:name() == "camera_space" then
 			local space_name = xml_node:parameter("name")
+
 			self._camera_space[space_name] = self._camera_space[space_name] or {}
+
 			local space = self._camera_space[space_name]
+
 			space._name = space_name
 			space._interpreter_class = CoreCameraDataInterpreter.CameraDataInterpreter
 			space._node_setups = {}
 			space._setups = {}
 			space._layers = {}
+
 			local xml_node_children = xml_node:children()
 
 			for xml_child_node in xml_node_children do
@@ -385,6 +388,7 @@ end
 -- Lines 337-340
 function CameraTemplateManager:parse_interpreter(xml_node, space)
 	local interpreter_class = xml_node:parameter("class")
+
 	space._interpreter_class = rawget(_G, interpreter_class)
 end
 
@@ -411,9 +415,9 @@ function CameraTemplateManager:parse_camera(xml_node, space)
 
 	-- Lines 363-380
 	local function parse_node(xml_node)
-		local node = {
-			_node_name = xml_node:parameter("node_name")
-		}
+		local node = {}
+
+		node._node_name = xml_node:parameter("node_name")
 
 		assert(node._node_name)
 
@@ -453,11 +457,12 @@ function CameraTemplateManager:parse_camera(xml_node, space)
 		end
 	end
 
-	local parse_func_table = {
-		node = parse_node,
-		default = parse_default_blend,
-		from = parse_from_blend
-	}
+	local parse_func_table = {}
+
+	parse_func_table.node = parse_node
+	parse_func_table.default = parse_default_blend
+	parse_func_table.from = parse_from_blend
+
 	local xml_node_children = xml_node:children()
 
 	for xml_child_node in xml_node_children do
@@ -486,10 +491,11 @@ function CameraTemplateManager:parse_camera_node(xml_node, space)
 		local camera_node_setups = space._node_setups
 		local class_name = xml_node:parameter("class")
 		local class_hier = split_string(class_name)
-		local class = nil
+		local class
 
 		if #class_hier > 1 then
 			local module = core:import(class_hier[1])
+
 			class = module[class_hier[2]]
 		else
 			class = rawget(_G, class_name)
@@ -503,12 +509,14 @@ function CameraTemplateManager:parse_camera_node(xml_node, space)
 
 		class.compile_settings(xml_node, settings)
 
-		local setup = {
-			_class = class,
-			_class_name = class_name,
-			_settings = settings
-		}
+		local setup = {}
+
+		setup._class = class
+		setup._class_name = class_name
+		setup._settings = settings
+
 		local name = xml_node:parameter("name")
+
 		camera_node_setups[name] = setup
 	end
 end

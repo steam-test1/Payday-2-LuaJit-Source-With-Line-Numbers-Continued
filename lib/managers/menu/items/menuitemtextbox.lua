@@ -23,20 +23,21 @@ end
 
 -- Lines 22-37
 function MenuItemTextBox:setup_gui(node, row_item)
-	local right_align = node:_right_align()
+	local right_align = node._right_align(node)
+
 	row_item.gui_panel = node.item_panel:panel({
 		alpha = 0.9,
 		w = node.item_panel:w()
 	})
-	row_item.gui_text = node:_text_item_part(row_item, row_item.gui_panel, right_align, row_item.align)
-	row_item.title_text = node:_text_item_part(row_item, row_item.gui_panel, right_align, row_item.align)
+	row_item.gui_text = node._text_item_part(node, row_item, row_item.gui_panel, right_align, row_item.align)
+	row_item.title_text = node._text_item_part(node, row_item, row_item.gui_panel, right_align, row_item.align)
 	row_item.input_bg = row_item.gui_panel:rect({
+		align = "scale",
 		alpha = 0,
-		vertical = "scale",
 		blend_mdoe = "add",
 		halign = "scale",
-		align = "scale",
 		valign = "scale",
+		vertical = "scale",
 		color = Color(0.5, 0.5, 0.5),
 		layer = node.layers.items - 1
 	})
@@ -45,13 +46,13 @@ function MenuItemTextBox:setup_gui(node, row_item)
 	row_item.gui_text:set_text("")
 
 	row_item.caret = row_item.gui_panel:rect({
-		rotation = 360,
-		name = "caret",
-		h = 0,
-		w = 0,
 		blend_mode = "add",
-		y = 0,
+		h = 0,
+		name = "caret",
+		rotation = 360,
+		w = 0,
 		x = 0,
+		y = 0,
 		color = Color(0.1, 1, 1, 1),
 		layer = node.layers.items + 2
 	})
@@ -64,8 +65,8 @@ end
 -- Lines 39-60
 function MenuItemTextBox:_layout_gui(node, row_item)
 	local safe_rect = managers.gui_data:scaled_size()
-	local right_align = node:_right_align()
-	local left_align = node:_left_align()
+	local right_align = node._right_align(node)
+	local left_align = node._left_align(node)
 
 	row_item.gui_text:set_text(self._input_text or "")
 
@@ -78,11 +79,11 @@ function MenuItemTextBox:_layout_gui(node, row_item)
 	local _, _, w, h = row_item.title_text:text_rect()
 
 	row_item.gui_panel:set_height(h * self._panel_row_count)
-	row_item.gui_panel:set_width(safe_rect.width - node:_mid_align())
-	row_item.gui_panel:set_x(node:_mid_align())
+	row_item.gui_panel:set_width(safe_rect.width - node._mid_align(node))
+	row_item.gui_panel:set_x(node._mid_align(node))
 
 	self._align_right = row_item.gui_panel:w()
-	self._align_left = node:_right_align() - row_item.gui_panel:x()
+	self._align_left = node._right_align(node) - row_item.gui_panel:x()
 
 	self:_layout(row_item)
 end
@@ -217,7 +218,9 @@ function MenuItemTextBox:_animate_input_bg(input_bg)
 
 	while true do
 		local dt = coroutine.yield()
+
 		t = t + dt
+
 		local a = 0.75 + (1 + math.sin(t * 200)) / 8
 
 		input_bg:set_alpha(a)
@@ -269,6 +272,7 @@ function MenuItemTextBox:_loose_focus(row_item)
 	self._focus = false
 	self._one_scroll_up_delay = nil
 	self._one_scroll_dn_delay = nil
+
 	local text = row_item.gui_text
 
 	text:set_text(self._input_text or "")
@@ -333,6 +337,7 @@ function MenuItemTextBox:_update_caret(row_item)
 			text:set_selection(s - 1, e)
 
 			local _, _, dw, _ = text:selection_rect()
+
 			x = x + dw
 		end
 
@@ -368,6 +373,7 @@ function MenuItemTextBox:_get_current_line(text)
 	end
 
 	line_breaks[1] = -1
+
 	local s, e = text:selection()
 
 	for i, lb in ipairs(line_breaks) do
@@ -394,6 +400,7 @@ function MenuItemTextBox:enter_text(row_item, o, s)
 	local text = row_item.gui_text
 	local m = self._input_limit
 	local n = utf8.len(text:text())
+
 	s = utf8.sub(s, 1, m - n)
 
 	if type(self._typing_callback) ~= "number" then
@@ -447,6 +454,7 @@ function MenuItemTextBox:key_press(row_item, o, k)
 	end
 
 	local text = row_item.gui_text
+
 	self._key_pressed = k
 
 	text:stop()
@@ -523,7 +531,7 @@ function MenuItemTextBox:handle_key(row_item, o, k)
 	elseif k == Idstring("insert") or self:_ctrl() and k == Idstring("v") then
 		local clipboard = Application:get_clipboard() or ""
 
-		if self._input_limit < n + utf8.len(clipboard) then
+		if n + utf8.len(clipboard) > self._input_limit then
 			clipboard = utf8.sub(clipboard, 1, self._input_limit - n)
 		end
 
@@ -599,7 +607,7 @@ function MenuItemTextBox:handle_key(row_item, o, k)
 	elseif k == Idstring("down") then
 		local line_breaks = text:line_breaks()
 
-		if #line_breaks < 2 or #line_breaks >= 2 and line_breaks[#line_breaks] < e then
+		if #line_breaks < 2 or #line_breaks >= 2 and e > line_breaks[#line_breaks] then
 			text:set_selection(n, n)
 		else
 			table.insert(line_breaks, n)
@@ -689,6 +697,7 @@ end
 -- Lines 588-612
 function MenuItemTextBox:scroll_to_line(row_item, line, direction)
 	local scroll_pos_abs = math.abs(self._scroll_pos)
+
 	direction = direction or scroll_pos_abs > line * row_item.gui_text:line_height() and "up" or "down"
 
 	print(direction)
@@ -696,7 +705,7 @@ function MenuItemTextBox:scroll_to_line(row_item, line, direction)
 	if direction == "up" then
 		local scroll_pos = line * row_item.gui_text:line_height()
 
-		if scroll_pos_abs > scroll_pos then
+		if scroll_pos < scroll_pos_abs then
 			self:set_scroll_pos(row_item, -scroll_pos)
 		end
 	elseif direction == "down" then

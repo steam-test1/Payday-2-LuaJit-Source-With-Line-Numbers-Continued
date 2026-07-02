@@ -41,11 +41,11 @@ function HUDInteractionVR:init(hud, child_name)
 	})
 
 	local interact_text = self._hud_panel:text({
-		vertical = "center",
 		align = "center",
-		text = "HELLO",
-		visible = false,
 		layer = 1,
+		text = "HELLO",
+		vertical = "center",
+		visible = false,
 		name = self._child_name_text,
 		color = Color.white,
 		font = tweak_data.menu.pd2_large_font,
@@ -54,12 +54,12 @@ function HUDInteractionVR:init(hud, child_name)
 		w = interact_text_bg:w()
 	})
 	local invalid_text = self._hud_panel:text({
-		vertical = "center",
-		text = "HELLO",
 		align = "center",
 		blend_mode = "normal",
-		visible = false,
 		layer = 3,
+		text = "HELLO",
+		vertical = "center",
+		visible = false,
 		name = self._child_ivalid_name_text,
 		color = Color(1, 0.3, 0.3),
 		font = tweak_data.menu.pd2_large_font,
@@ -67,6 +67,7 @@ function HUDInteractionVR:init(hud, child_name)
 		h = self._circle_radius * 2,
 		w = interact_text_bg:w()
 	})
+
 	self._interaction_panel = managers.hud:interaction_panel()
 
 	VRManagerPD2.overlay_helper(self._hud_panel)
@@ -138,11 +139,11 @@ function HUDInteractionVR:show_interaction_bar(current, total)
 	end
 
 	self._interact_circle = CircleBitmapGuiObject:new(self._interaction_panel, {
-		image = "guis/textures/pd2/progress_reload",
 		bg = "guis/textures/pd2/progress_reload_black",
-		use_bg = true,
 		blend_mode = "normal",
+		image = "guis/textures/pd2/progress_reload",
 		layer = 2,
+		use_bg = true,
 		radius = self._circle_radius,
 		sides = self._sides,
 		current = self._sides,
@@ -153,8 +154,8 @@ function HUDInteractionVR:show_interaction_bar(current, total)
 	self._interact_circle:set_position(self._interaction_panel:w() - self._circle_radius * 2, 0)
 
 	self._interact_circle_overlay = CircleBitmapGuiObject:new(self._interaction_panel, {
-		image = "guis/textures/pd2/progress_reload",
 		blend_mode = "add",
+		image = "guis/textures/pd2/progress_reload",
 		layer = 2,
 		radius = self._circle_radius,
 		sides = self._sides,

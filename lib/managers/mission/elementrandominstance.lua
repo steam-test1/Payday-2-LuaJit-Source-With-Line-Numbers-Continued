@@ -11,6 +11,7 @@ end
 
 -- Lines 12-14
 function ElementRandomInstance:client_on_executed(...)
+	return
 end
 
 -- Lines 16-71
@@ -44,7 +45,7 @@ function ElementRandomInstance:on_executed(instigator)
 	end
 
 	for i, instance_data in ipairs(self._instances) do
-		local elements = nil
+		local elements
 
 		if self._type == "input" then
 			elements = managers.world_instance:get_registered_input_elements(instance_data.instance, instance_data.event)

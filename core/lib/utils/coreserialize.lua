@@ -2,13 +2,12 @@ core:module("CoreSerialize")
 
 -- Lines 12-30
 function string_to_classtable(s)
-	local module_name, name = nil
+	local module_name, name
 
 	if string.find(s, "[.]") then
 		module_name, name = unpack(string.split(s, "[.]"))
 	else
-		name = s
-		module_name = "_G"
+		module_name, name = "_G", s
 	end
 
 	if module_name == "_G" then

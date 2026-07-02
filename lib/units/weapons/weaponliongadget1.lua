@@ -20,6 +20,7 @@ end
 
 -- Lines 33-35
 function WeaponLionGadget1:update(unit, t, dt)
+	return
 end
 
 -- Lines 39-42
@@ -135,11 +136,11 @@ function WeaponLionGadget1:_is_deployable()
 		return false
 	end
 
-	if bipod_rays.left and bipod_rays.left.distance < bipod_min_length then
+	if bipod_rays.left and bipod_min_length > bipod_rays.left.distance then
 		return false
 	end
 
-	if bipod_rays.right and bipod_rays.right.distance < bipod_min_length then
+	if bipod_rays.right and bipod_min_length > bipod_rays.right.distance then
 		return false
 	end
 
@@ -157,7 +158,9 @@ function WeaponLionGadget1:get_offsets()
 	end
 
 	self._bipod_offsets = self._bipod_offsets or {}
+
 	local dir = Vector3()
+
 	self._bipod_offsets.distance = mvector3.direction(dir, self._bipod_obj:position(), self:_get_bipod_alignment_obj():position())
 
 	mvector3.rotate_with(dir, self:_get_bipod_alignment_obj():rotation():inverse())

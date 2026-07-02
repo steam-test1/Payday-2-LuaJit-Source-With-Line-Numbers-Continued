@@ -5,6 +5,7 @@ CoroutineManager.Size = 16
 function CoroutineManager:init()
 	self._coroutines = {}
 	self._buffer = {}
+
 	local size = CoroutineManager.Size
 
 	for i = 1, size do
@@ -44,6 +45,7 @@ function CoroutineManager:add_coroutine(name, func, ...)
 		local arg = {
 			...
 		}
+
 		self._buffer[name] = {
 			name = name,
 			func = func,
@@ -77,6 +79,7 @@ end
 function CoroutineManager:_add()
 	for key, value in pairs(self._buffer) do
 		local co = coroutine.create(value.func.Function)
+
 		self._coroutines[value.func.Priority][value.name] = {
 			co = co,
 			arg = value.arg,
@@ -117,7 +120,9 @@ function CoroutineManager:remove_coroutine(name)
 	for i = 1, size do
 		if self._coroutines[i][name] then
 			local co_data = self._coroutines[i][name]
+
 			self._coroutines[i][name] = nil
+
 			local rem_func = co_data.force_rem_func
 
 			if rem_func then

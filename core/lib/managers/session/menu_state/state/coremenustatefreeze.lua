@@ -4,4 +4,5 @@ Freeze = Freeze or class()
 
 -- Lines 5-6
 function Freeze:transition()
+	return
 end

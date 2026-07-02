@@ -67,6 +67,7 @@ end
 -- Lines 80-97
 function traceback(max_level)
 	max_level = max_level or 2
+
 	local level = 2
 
 	while true do
@@ -108,7 +109,7 @@ function sort_iterator(t, raw)
 		sorted[#sorted + 1] = k
 	end
 
-	table.sort(sorted, function (a, b)
+	table.sort(sorted, function(a, b)
 		if type(a) == "number" then
 			if type(b) == "number" then
 				return a < b
@@ -124,8 +125,9 @@ function sort_iterator(t, raw)
 
 	local index = 0
 
-	return function ()
+	return function()
 		index = index + 1
+
 		local k = sorted[index]
 
 		if raw then
@@ -154,6 +156,7 @@ function line_representation(x, seen, raw)
 		end
 
 		seen[x] = true
+
 		local r = "{"
 
 		for k, v in sort_iterator(x, raw) do
@@ -197,7 +200,9 @@ end
 function add_prints(class_name, ignore_list)
 	local obj = _G[class_name]
 	local to_change = {}
+
 	ignore_list = ignore_list or {}
+
 	local ignore = {
 		new = true
 	}
@@ -208,7 +213,7 @@ function add_prints(class_name, ignore_list)
 
 	for k, v in pairs(obj) do
 		if type(v) == "function" and not ignore[k] then
-			to_change[k] = function (...)
+			to_change[k] = function(...)
 				print("[" .. class_name .. "]" .. "." .. k, ...)
 
 				return v(...)
@@ -264,14 +269,14 @@ end
 
 -- Lines 268-272
 function make_tag_print(tag)
-	return function (...)
+	return function(...)
 		tag_print(tag, ...)
 	end
 end
 
 -- Lines 275-279
 function make_tag_error(tag)
-	return function (...)
+	return function(...)
 		tag_error(tag, ...)
 	end
 end
@@ -320,6 +325,7 @@ function help(o)
 					if info.source ~= "=[C]" then
 						local h = get_prototype(info)
 						local name = k
+
 						k = nil
 
 						if h:match("= function") then
@@ -432,7 +438,9 @@ function memory_report(limit)
 		end
 
 		seen[index] = true
+
 		local t = name[index] or name[getmetatable(item)] or parent .. "/" .. key
+
 		count[t] = (count[t] or 0) + 1
 
 		if type(item) == "table" then
@@ -503,9 +511,10 @@ function profile(s)
 		return
 	end
 
-	local t = {
-		s = s
-	}
+	local t = {}
+
+	t.s = s
+
 	local start, stop = s:find(":")
 
 	if start then

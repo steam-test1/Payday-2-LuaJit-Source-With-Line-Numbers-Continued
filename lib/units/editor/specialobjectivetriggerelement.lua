@@ -44,8 +44,8 @@ function SpecialObjectiveTriggerUnitElement:draw_links(t, dt, selected_unit, all
 
 		if draw then
 			self:_draw_link({
-				g = 0.75,
 				b = 0,
+				g = 0.75,
 				r = 0,
 				from_unit = unit,
 				to_unit = self._unit
@@ -56,13 +56,14 @@ end
 
 -- Lines 43-44
 function SpecialObjectiveTriggerUnitElement:update_editing()
+	return
 end
 
 -- Lines 46-56
 function SpecialObjectiveTriggerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit and self:_correct_unit(ray.unit:name():s()) then
@@ -103,6 +104,7 @@ function SpecialObjectiveTriggerUnitElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local names = {
 		"point_special_objective",
 		"ai_so_group"

@@ -5,6 +5,7 @@ Storage = Storage or class(CoreLocalUserStorage.Storage)
 
 -- Lines 6-7
 function Storage:save()
+	return
 end
 
 -- Lines 9-11

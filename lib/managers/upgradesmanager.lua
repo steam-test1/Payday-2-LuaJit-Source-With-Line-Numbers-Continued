@@ -17,18 +17,17 @@ end
 -- Lines 25-36
 function UpgradesManager:_setup()
 	if not Global.upgrades_manager then
-		Global.upgrades_manager = {
-			aquired = {},
-			automanage = false,
-			progress = {
-				0,
-				0,
-				0,
-				0
-			},
-			target_tree = self:_autochange_tree(),
-			disabled_visual_upgrades = {}
+		Global.upgrades_manager = {}
+		Global.upgrades_manager.aquired = {}
+		Global.upgrades_manager.automanage = false
+		Global.upgrades_manager.progress = {
+			0,
+			0,
+			0,
+			0
 		}
+		Global.upgrades_manager.target_tree = self:_autochange_tree()
+		Global.upgrades_manager.disabled_visual_upgrades = {}
 	end
 
 	self._global = Global.upgrades_manager
@@ -36,6 +35,7 @@ end
 
 -- Lines 39-65
 function UpgradesManager:setup_current_weapon()
+	return
 end
 
 -- Lines 67-69
@@ -69,6 +69,7 @@ end
 function UpgradesManager:_set_target_tree(tree)
 	local i = self._global.progress[tree] + 1
 	local upgrade = tweak_data.upgrades.definitions[tweak_data.upgrades.progress[tree][i]]
+
 	self._global.target_tree = tree
 end
 
@@ -85,9 +86,10 @@ end
 -- Lines 126-130
 function UpgradesManager:tree_allowed(tree, level)
 	level = level or managers.experience:current_level()
+
 	local cap = tweak_data.upgrades.tree_caps[self._global.progress[tree] + 1]
 
-	return not cap or level >= cap, cap
+	return not cap or not (level < cap), cap
 end
 
 -- Lines 132-134
@@ -97,6 +99,7 @@ end
 
 -- Lines 136-138
 function UpgradesManager:next_upgrade(tree)
+	return
 end
 
 -- Lines 140-145
@@ -133,7 +136,7 @@ function UpgradesManager:verify_level_tree(level, loading)
 	end
 
 	local identifier = UpgradesManager.AQUIRE_STRINGS[4] .. tostring(level)
-	local upgrade = nil
+	local upgrade
 
 	for _, id in ipairs(tree_data.upgrades) do
 		upgrade = tweak_data.upgrades.definitions[id]
@@ -155,7 +158,7 @@ end
 
 -- Lines 215-233
 function UpgradesManager:_next_tree()
-	local tree = nil
+	local tree
 
 	if self._global.automanage then
 		tree = self:_autochange_tree()
@@ -206,7 +209,7 @@ function UpgradesManager:aquired(id, identifier)
 	if identifier then
 		local identify_key = Idstring(identifier):key()
 
-		return self._global.aquired[id] and not not self._global.aquired[id][identify_key]
+		return not not self._global.aquired[id] and not not self._global.aquired[id][identify_key]
 	else
 		local count = 0
 
@@ -253,6 +256,7 @@ function UpgradesManager:aquire_default(id, identifier)
 
 	self._global.aquired[id] = self._global.aquired[id] or {}
 	self._global.aquired[id][identify_key] = identifier
+
 	local upgrade = tweak_data.upgrades.definitions[id]
 
 	self:_aquire_upgrade(upgrade, id, true)
@@ -356,6 +360,7 @@ function UpgradesManager:unaquire(id, identifier)
 	end
 
 	self._global.aquired[id][identify_key] = nil
+
 	local count = 0
 
 	for key, aquired in pairs(self._global.aquired[id]) do
@@ -364,6 +369,7 @@ function UpgradesManager:unaquire(id, identifier)
 
 	if count == 0 then
 		self._global.aquired[id] = nil
+
 		local upgrade = tweak_data.upgrades.definitions[id]
 
 		self:_unaquire_upgrade(upgrade, id)
@@ -695,7 +701,7 @@ function UpgradesManager:is_locked(step)
 
 	for i, d in ipairs(tweak_data.upgrades.itree_caps) do
 		if level < d.level then
-			return d.step <= step
+			return step >= d.step
 		end
 	end
 
@@ -873,7 +879,7 @@ end
 function UpgradesManager:list_level_rewards(dlcs)
 	local t = {}
 	local tree_data = tweak_data.upgrades.level_tree
-	local def = nil
+	local def
 
 	for level, data in pairs(tree_data) do
 		if data.upgrades then
@@ -1057,6 +1063,7 @@ end
 -- Lines 1001-1009
 function UpgradesManager:load(data)
 	local state = data.UpgradesManager
+
 	self._global.automanage = state.automanage or self._global.automanage
 	self._global.progress = state.progress or self._global.progress
 	self._global.target_tree = state.target_tree or self._global.target_tree
@@ -1067,6 +1074,7 @@ end
 
 -- Lines 1012-1051
 function UpgradesManager:_verify_loaded_data()
+	return
 end
 
 -- Lines 1053-1056

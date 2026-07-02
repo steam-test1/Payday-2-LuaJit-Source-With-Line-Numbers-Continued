@@ -22,6 +22,7 @@ end
 -- Lines 26-29
 function OffshoreGui:add_workspace(gui_object)
 	local gui_width, gui_height = managers.gui_data:get_base_res()
+
 	self._ws = self._new_gui:create_object_workspace(gui_width, gui_height, gui_object, Vector3(0, 0, 0))
 end
 
@@ -39,28 +40,32 @@ function OffshoreGui:setup()
 	})
 
 	self._back_drop_gui = MenuBackdropGUI:new(self._ws)
+
 	local panel = self._back_drop_gui:get_new_background_layer()
 	local font_size = 120
 	local default_offset = 48
 	local text = managers.localization:to_upper_text("menu_offshore_account")
+
 	self._title_text = panel:text({
-		vertical = "bottom",
 		align = "center",
-		visible = true,
 		layer = 0,
+		vertical = "bottom",
+		visible = true,
 		text = text,
 		y = -self._ws:panel():h() / 2 - default_offset,
 		font = tweak_data.menu.pd2_medium_font,
 		font_size = font_size,
 		color = OffshoreGui.TITLE_COLOR
 	})
+
 	local font_size = 220
 	local money_text = managers.experience:cash_string(managers.money:offshore())
+
 	self._money_text = panel:text({
-		vertical = "top",
 		align = "center",
-		visible = true,
 		layer = 0,
+		vertical = "top",
+		visible = true,
 		text = money_text,
 		y = self._ws:panel():h() / 2 - default_offset,
 		font = tweak_data.menu.pd2_massive_font,
@@ -73,10 +78,12 @@ end
 
 -- Lines 55-56
 function OffshoreGui:_start()
+	return
 end
 
 -- Lines 58-59
 function OffshoreGui:start()
+	return
 end
 
 -- Lines 61-63

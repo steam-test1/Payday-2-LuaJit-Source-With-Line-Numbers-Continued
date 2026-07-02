@@ -31,6 +31,7 @@ end
 
 -- Lines 34-35
 function BaseDialog:fade_in()
+	return
 end
 
 -- Lines 37-39
@@ -45,6 +46,7 @@ end
 
 -- Lines 45-46
 function BaseDialog:force_close()
+	return
 end
 
 -- Lines 48-50

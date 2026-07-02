@@ -46,6 +46,7 @@ local zero_rotation = Rotation(0, 0, 0)
 local zero_vector3 = Vector3(0, 0, 0)
 local temp_rotation = Rotation(0, 0, 0)
 local temp_vector3 = Vector3(0, 0, 0)
+
 Feeder = Feeder or CoreClass.class()
 Feeder.APPLY_GROUP_ID = 0
 Feeder.DATA_PATH_KEY = nil
@@ -114,7 +115,7 @@ end
 -- Lines 117-131
 function Feeder:update(handler, scale)
 	if self._modifier_func then
-		local is_done, is_not_changed = nil
+		local is_done, is_not_changed
 
 		if not self._is_modifier_override then
 			is_done, is_not_changed = self:update_current(handler, scale)
@@ -137,6 +138,7 @@ end
 
 -- Lines 138-139
 function Feeder:apply(handler, viewport, scene)
+	return
 end
 
 Vector3Feeder = Vector3Feeder or CoreClass.class(Feeder)
@@ -559,6 +561,7 @@ end
 
 -- Lines 572-577
 local function _apply_fov_ratio(current)
+	return
 end
 
 PostShadowSlice0Feeder = PostShadowSlice0Feeder or CoreClass.class(Vector3Feeder)

@@ -10,6 +10,7 @@ end
 
 -- Lines 10-11
 function LocalUserBound:destroy()
+	return
 end
 
 -- Lines 13-17

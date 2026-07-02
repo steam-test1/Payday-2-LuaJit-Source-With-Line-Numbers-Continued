@@ -4,6 +4,7 @@ State = State or class()
 
 -- Lines 5-6
 function State:init()
+	return
 end
 
 -- Lines 8-10

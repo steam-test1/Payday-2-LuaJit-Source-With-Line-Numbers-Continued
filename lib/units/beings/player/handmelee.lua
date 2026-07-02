@@ -41,7 +41,9 @@ function HandMelee:set_weapon_unit(unit)
 	end
 
 	self._entry = "weapon"
+
 	local weapon_base = self._weapon_unit:base()
+
 	self._bayonet_entry = managers.blackmarket:equipped_bayonet(weapon_base.name_id)
 	self._bayonet_unit = self._bayonet_entry and weapon_base._parts[self._bayonet_entry].unit
 	self._weapon_id = weapon_base.name_id
@@ -80,6 +82,7 @@ function HandMelee:_get_hitpoint()
 			end
 
 			local hit_point = self._bayonet_unit:position() + Vector3(0, self._bayonet_unit:oobb():size().y, 0):rotate_with(self._bayonet_unit:rotation())
+
 			hit_point = hit_point - Vector3(0, self._bayonet_unit:oobb():distance_to_point(hit_point), 0):rotate_with(self._bayonet_unit:rotation())
 
 			return hit_point
@@ -88,6 +91,7 @@ function HandMelee:_get_hitpoint()
 		else
 			local length = self._weapon_unit:oobb():size().y
 			local hit_point = self._weapon_unit:position() + Vector3(0, length, 0):rotate_with(self._weapon_unit:rotation())
+
 			hit_point = hit_point - Vector3(0, self._weapon_unit:oobb():distance_to_point(hit_point), 0):rotate_with(self._weapon_unit:rotation())
 
 			return hit_point, length
@@ -100,6 +104,7 @@ function HandMelee:_get_hitpoint()
 		end
 
 		local hit_point = self._melee_unit:position() + Vector3(0, self._melee_unit:oobb():size().y, 0):rotate_with(self._melee_unit:rotation())
+
 		hit_point = hit_point - Vector3(0, self._melee_unit:oobb():distance_to_point(hit_point), 0):rotate_with(self._melee_unit:rotation())
 
 		return hit_point
@@ -109,6 +114,7 @@ function HandMelee:_get_hitpoint()
 		end
 
 		local hit_point = self._custom_unit:position() + Vector3(0, self._custom_unit:oobb():size().y, 0):rotate_with(self._custom_unit:rotation())
+
 		hit_point = hit_point - Vector3(0, self._custom_unit:oobb():distance_to_point(hit_point), 0):rotate_with(self._custom_unit:rotation())
 
 		return hit_point
@@ -139,7 +145,7 @@ function HandMelee:update(unit, t, dt)
 
 	if self:has_weapon() or self:has_custom_weapon() then
 		local limit = 5
-		local point = nil
+		local point
 
 		if has_bayonet then
 			limit = 2.5
@@ -149,13 +155,14 @@ function HandMelee:update(unit, t, dt)
 		end
 
 		if length then
-			limit = limit * length / 3
+			limit = limit * (length / 3)
 		end
 
 		mvector3.subtract(point, managers.player:player_unit():position())
 
 		self._avg_momentum = self._avg_momentum or Vector3()
 		self._last_pos = self._last_pos or point
+
 		local delta = mvec_delta
 
 		mvector3.set(delta, point)
@@ -195,7 +202,7 @@ function HandMelee:update(unit, t, dt)
 		local ray = self._hand_unit:raycast("ray", start_pos, hit_point, "slot_mask", managers.slot:get_mask("bullet_impact_targets"), "ray_type", "body melee")
 
 		if ray then
-			if not self._next_hit_t or self._next_hit_t < t then
+			if not self._next_hit_t or t > self._next_hit_t then
 				if self._next_full_hit_t and t < self._next_full_hit_t then
 					local range = tweak_data.blackmarket.melee_weapons[self._entry].expire_t
 					local current = range - (self._next_full_hit_t - t)

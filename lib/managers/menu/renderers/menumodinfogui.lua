@@ -48,15 +48,15 @@ function MenuModInfoGui:setup()
 	title:set_right(self.safe_rect_panel:right())
 	self:create_gui_box(panel)
 	panel:rect({
-		name = "bg",
 		alpha = 0.4,
+		name = "bg",
 		color = Color.black
 	})
 	panel:bitmap({
-		texture = "guis/textures/test_blur_df",
+		layer = -1,
 		name = "blur",
 		render_template = "VertexColorTexturedBlur3D",
-		layer = -1,
+		texture = "guis/textures/test_blur_df",
 		w = panel:w(),
 		h = panel:h()
 	})
@@ -102,15 +102,15 @@ function MenuModInfoGui:set_mod_info(item)
 	local mod_name = params.name
 	local mod_data = mods and mods[mod_name]
 	local conflicted_panel = self.mod_info_panel:panel({
-		y = 10,
-		name = "conflicted"
+		name = "conflicted",
+		y = 10
 	})
 	local modded_panel = self.mod_info_panel:panel({
 		name = "modded"
 	})
 	local title = self.safe_rect_panel:text({
-		name = "info_title",
 		layer = 1,
+		name = "info_title",
 		text = managers.localization:to_upper_text("menu_mods_info_title", {
 			mod = mod_name
 		}),
@@ -122,9 +122,9 @@ function MenuModInfoGui:set_mod_info(item)
 
 	if mod_data then
 		local text = conflicted_panel:text({
-			y = 0,
-			x = 10,
 			layer = 1,
+			x = 10,
+			y = 0,
 			text = managers.localization:to_upper_text("menu_mods_conflict_title"),
 			font = self.medium_font,
 			font_size = self.medium_font_size,
@@ -140,9 +140,9 @@ function MenuModInfoGui:set_mod_info(item)
 		conflict_text_title:hide()
 
 		local text = modded_panel:text({
-			y = 0,
-			x = 10,
 			layer = 1,
+			x = 10,
+			y = 0,
 			text = managers.localization:to_upper_text("menu_mods_modded_title"),
 			font = self.medium_font,
 			font_size = self.medium_font_size,
@@ -172,9 +172,9 @@ function MenuModInfoGui:set_mod_info(item)
 				conflict_text_title:show()
 			else
 				text = modded_panel:text({
+					layer = 1,
 					wrap = true,
 					x = 20,
-					layer = 1,
 					text = path,
 					font = self.small_font,
 					font_size = self.small_font_size,
@@ -202,9 +202,9 @@ function MenuModInfoGui:set_mod_info(item)
 
 		for _, mod in ipairs(sorted_conflicts) do
 			text = conflicted_panel:text({
+				layer = 1,
 				wrap = true,
 				x = 20,
-				layer = 1,
 				text = utf8.to_upper(mod) .. ":",
 				font = self.small_font,
 				font_size = self.small_font_size,
@@ -219,9 +219,9 @@ function MenuModInfoGui:set_mod_info(item)
 
 			for _, path in ipairs(conflicted_mods[mod]) do
 				text = conflicted_panel:text({
+					layer = 1,
 					wrap = true,
 					x = 25,
-					layer = 1,
 					text = path,
 					font = self.small_font,
 					font_size = self.small_font_size,
@@ -245,7 +245,7 @@ function MenuModInfoGui:set_mod_info(item)
 		self.mod_info_panel:set_y(0)
 		self.mod_info_panel:set_h(modded_panel:bottom() + 10)
 
-		if self._mod_main_panel:h() < self.mod_info_panel:h() then
+		if self.mod_info_panel:h() > self._mod_main_panel:h() then
 			self._scroll_up_box = BoxGuiObject:new(self._mod_main_panel, {
 				sides = {
 					0,
@@ -267,8 +267,8 @@ function MenuModInfoGui:set_mod_info(item)
 			self._scroll_down_box:show()
 
 			self._scroll_bar_panel = self.safe_rect_panel:panel({
-				w = 20,
 				name = "scroll_bar_panel",
+				w = 20,
 				h = self._mod_main_panel:h()
 			})
 
@@ -277,9 +277,9 @@ function MenuModInfoGui:set_mod_info(item)
 
 			local texture, rect = tweak_data.hud_icons:get_icon_data("scrollbar_arrow")
 			local scroll_up_indicator_arrow = self._scroll_bar_panel:bitmap({
-				name = "scroll_up_indicator_arrow",
-				layer = 2,
 				blend_mode = "add",
+				layer = 2,
+				name = "scroll_up_indicator_arrow",
 				texture = texture,
 				texture_rect = rect,
 				color = Color.white
@@ -289,9 +289,9 @@ function MenuModInfoGui:set_mod_info(item)
 
 			local texture, rect = tweak_data.hud_icons:get_icon_data("scrollbar_arrow")
 			local scroll_down_indicator_arrow = self._scroll_bar_panel:bitmap({
-				name = "scroll_down_indicator_arrow",
-				layer = 2,
 				blend_mode = "add",
+				layer = 2,
+				name = "scroll_down_indicator_arrow",
 				rotation = 180,
 				texture = texture,
 				texture_rect = rect,
@@ -312,17 +312,19 @@ function MenuModInfoGui:set_mod_info(item)
 			}):set_center_x(self._scroll_bar_panel:w() / 2)
 
 			bar_h = scroll_down_indicator_arrow:bottom() - scroll_up_indicator_arrow:top()
+
 			local scroll_bar = self._scroll_bar_panel:panel({
-				name = "scroll_bar",
 				layer = 2,
+				name = "scroll_bar",
 				h = bar_h
 			})
 			local scroll_bar_box_panel = scroll_bar:panel({
-				w = 4,
+				halign = "scale",
 				name = "scroll_bar_box_panel",
 				valign = "scale",
-				halign = "scale"
+				w = 4
 			})
+
 			self._scroll_bar_box_class = BoxGuiObject:new(scroll_bar_box_panel, {
 				sides = {
 					2,
@@ -450,10 +452,10 @@ function MenuModInfoGui:set_scroll_indicators(y)
 		scroll_bar:set_h(bar_h * scroll_diff)
 		scroll_bar:set_y(-self._scroll_y * scroll_diff)
 		self._scroll_up_box:set_visible(self._scroll_y < 0)
-		self._scroll_down_box:set_visible(self._mod_main_panel:h() < self.mod_info_panel:bottom())
+		self._scroll_down_box:set_visible(self.mod_info_panel:bottom() > self._mod_main_panel:h())
 		scroll_up_indicator_arrow:set_visible(self._scroll_y < 0)
-		scroll_down_indicator_arrow:set_visible(self._mod_main_panel:h() < self.mod_info_panel:bottom())
-		self._scroll_bar_panel:set_visible(self._mod_main_panel:h() < self.mod_info_panel:h())
+		scroll_down_indicator_arrow:set_visible(self.mod_info_panel:bottom() > self._mod_main_panel:h())
+		self._scroll_bar_panel:set_visible(self.mod_info_panel:h() > self._mod_main_panel:h())
 	end
 end
 
@@ -477,6 +479,7 @@ end
 -- Lines 309-317
 function MenuModInfoGui:mouse_pressed(button, x, y)
 	local used = MenuModInfoGui.super.mouse_pressed(self, button, x, y)
+
 	used = used or self:check_pressed_scroll_bar(button, x, y)
 
 	return used

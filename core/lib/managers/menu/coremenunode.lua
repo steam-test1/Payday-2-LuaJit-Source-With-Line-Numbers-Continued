@@ -17,30 +17,36 @@ function MenuNode:init(data_node)
 
 	if parameters.modifier then
 		local modifier_names = string.split(parameters.modifier, " ")
+
 		parameters.modifier = {}
 
 		for i = 1, #modifier_names do
 			local modifier_instance = loadstring("return " .. modifier_names[i] .. ":new()")()
+
 			parameters.modifier[i] = callback(modifier_instance, modifier_instance, "modify_node")
 		end
 	end
 
 	if parameters.refresh then
 		local refresh_names = string.split(parameters.refresh, " ")
+
 		parameters.refresh = {}
 
 		for i = 1, #refresh_names do
 			local refresh_instance = loadstring("return " .. refresh_names[i] .. ":new()")()
+
 			parameters.refresh[i] = callback(refresh_instance, refresh_instance, "refresh_node")
 		end
 	end
 
 	if parameters.update then
 		local update_names = string.split(parameters.update, " ")
+
 		parameters.update = {}
 
 		for i = 1, #update_names do
 			local update_instance = loadstring("return " .. update_names[i] .. ":new()")()
+
 			parameters.update[i] = callback(update_instance, update_instance, "update_node")
 		end
 	end
@@ -103,6 +109,7 @@ end
 
 -- Lines 105-107
 function MenuNode:update(t, dt)
+	return
 end
 
 -- Lines 109-111
@@ -197,7 +204,8 @@ end
 -- Lines 179-192
 function MenuNode:item(item_name)
 	item_name = item_name or self._default_item_name
-	local item = nil
+
+	local item
 
 	for _, i in ipairs(self:items()) do
 		if not item_name and i:visible() or i:parameters().name == item_name then
@@ -263,7 +271,7 @@ function MenuNode:trigger_back()
 		return true
 	end
 
-	local block_back = nil
+	local block_back
 
 	for _, callback in pairs(self:parameters().back_callback) do
 		block_back = block_back or callback(self)
@@ -282,7 +290,7 @@ end
 -- Lines 257-261
 function MenuNode:item_dirty(item)
 	if self.dirty_callback then
-		self:dirty_callback(item)
+		self.dirty_callback(self, item)
 	end
 end
 

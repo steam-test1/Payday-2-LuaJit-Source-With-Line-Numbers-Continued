@@ -6,6 +6,7 @@ function ShieldLogicAttack.enter(data, new_logic_name, enter_params)
 	local my_data = {
 		unit = data.unit
 	}
+
 	data.internal_data = my_data
 	my_data.detection = data.char_tweak.detection.combat
 	my_data.tmp_vec1 = Vector3()
@@ -62,7 +63,9 @@ end
 -- Lines 70-198
 function ShieldLogicAttack.queued_update(data)
 	local t = TimerManager:game():time()
+
 	data.t = t
+
 	local unit = data.unit
 	local my_data = data.internal_data
 
@@ -104,79 +107,83 @@ function ShieldLogicAttack.queued_update(data)
 			action_taken = CopLogicAttack._chk_request_action_crouch(data)
 		end
 
-		if not action_taken then
-			if my_data.pathing_to_optimal_pos then
-				-- Nothing
-			elseif my_data.optimal_path then
-				ShieldLogicAttack._chk_request_action_walk_to_optimal_pos(data, my_data)
-			elseif my_data.optimal_pos and focus_enemy.nav_tracker then
-				local to_pos = my_data.optimal_pos
-				my_data.optimal_pos = nil
-				local ray_params = {
-					trace = true,
-					tracker_from = unit:movement():nav_tracker(),
-					pos_to = to_pos
-				}
-				local ray_res = managers.navigation:raycast(ray_params)
-				to_pos = ray_params.trace[1]
+		if action_taken or my_data.pathing_to_optimal_pos then
+			-- Nothing
+		elseif my_data.optimal_path then
+			ShieldLogicAttack._chk_request_action_walk_to_optimal_pos(data, my_data)
+		elseif my_data.optimal_pos and focus_enemy.nav_tracker then
+			local to_pos = my_data.optimal_pos
 
-				if ray_res then
-					local vec = data.m_pos - to_pos
+			my_data.optimal_pos = nil
 
-					mvector3.normalize(vec)
+			local ray_params = {
+				trace = true,
+				tracker_from = unit:movement():nav_tracker(),
+				pos_to = to_pos
+			}
+			local ray_res = managers.navigation:raycast(ray_params)
 
-					local fwd = unit:movement():m_fwd()
-					local fwd_dot = fwd:dot(vec)
+			to_pos = ray_params.trace[1]
 
-					if fwd_dot > 0 then
-						local enemy_tracker = focus_enemy.nav_tracker
+			if ray_res then
+				local vec = data.m_pos - to_pos
 
-						if enemy_tracker:lost() then
-							ray_params.tracker_from = nil
-							ray_params.pos_from = enemy_tracker:field_position()
-						else
-							ray_params.tracker_from = enemy_tracker
-						end
+				mvector3.normalize(vec)
 
-						ray_res = managers.navigation:raycast(ray_params)
-						to_pos = ray_params.trace[1]
-					end
-				end
+				local fwd = unit:movement():m_fwd()
+				local fwd_dot = fwd:dot(vec)
 
-				local fwd_bump = nil
-				to_pos, fwd_bump = ShieldLogicAttack.chk_wall_distance(data, my_data, to_pos)
-				local do_move = mvector3.distance_sq(to_pos, data.m_pos) > 10000
+				if fwd_dot > 0 then
+					local enemy_tracker = focus_enemy.nav_tracker
 
-				if not do_move then
-					local to_pos_current, fwd_bump_current = ShieldLogicAttack.chk_wall_distance(data, my_data, data.m_pos)
-
-					if fwd_bump_current then
-						do_move = true
-					end
-				end
-
-				if do_move then
-					my_data.pathing_to_optimal_pos = true
-					my_data.optimal_path_search_id = tostring(unit:key()) .. "optimal"
-					local reservation = managers.navigation:reserve_pos(nil, nil, to_pos, callback(ShieldLogicAttack, ShieldLogicAttack, "_reserve_pos_step_clbk", {
-						unit_pos = data.m_pos
-					}), 70, data.pos_rsrv_id)
-
-					if reservation then
-						to_pos = reservation.position
+					if enemy_tracker:lost() then
+						ray_params.tracker_from = nil
+						ray_params.pos_from = enemy_tracker:field_position()
 					else
-						reservation = {
-							radius = 60,
-							position = mvector3.copy(to_pos),
-							filter = data.pos_rsrv_id
-						}
-
-						managers.navigation:add_pos_reservation(reservation)
+						ray_params.tracker_from = enemy_tracker
 					end
 
-					data.brain:set_pos_rsrv("path", reservation)
-					data.brain:search_for_path(my_data.optimal_path_search_id, to_pos)
+					ray_res = managers.navigation:raycast(ray_params)
+					to_pos = ray_params.trace[1]
 				end
+			end
+
+			local fwd_bump
+
+			to_pos, fwd_bump = ShieldLogicAttack.chk_wall_distance(data, my_data, to_pos)
+
+			local do_move = mvector3.distance_sq(to_pos, data.m_pos) > 10000
+
+			if not do_move then
+				local to_pos_current, fwd_bump_current = ShieldLogicAttack.chk_wall_distance(data, my_data, data.m_pos)
+
+				if fwd_bump_current then
+					do_move = true
+				end
+			end
+
+			if do_move then
+				my_data.pathing_to_optimal_pos = true
+				my_data.optimal_path_search_id = tostring(unit:key()) .. "optimal"
+
+				local reservation = managers.navigation:reserve_pos(nil, nil, to_pos, callback(ShieldLogicAttack, ShieldLogicAttack, "_reserve_pos_step_clbk", {
+					unit_pos = data.m_pos
+				}), 70, data.pos_rsrv_id)
+
+				if reservation then
+					to_pos = reservation.position
+				else
+					reservation = {
+						radius = 60,
+						position = mvector3.copy(to_pos),
+						filter = data.pos_rsrv_id
+					}
+
+					managers.navigation:add_pos_reservation(reservation)
+				end
+
+				data.brain:set_pos_rsrv("path", reservation)
+				data.brain:search_for_path(my_data.optimal_path_search_id, to_pos)
 			end
 		end
 	end
@@ -201,7 +208,7 @@ function ShieldLogicAttack:_reserve_pos_step_clbk(data, test_pos)
 
 	local step_length = mvector3.length(data.step_vector)
 
-	if data.distance < step_length or data.num_steps > 4 then
+	if step_length > data.distance or data.num_steps > 4 then
 		return false
 	end
 
@@ -220,7 +227,9 @@ end
 function ShieldLogicAttack._process_pathing_results(data, my_data)
 	if data.pathing_results then
 		local pathing_results = data.pathing_results
+
 		data.pathing_results = nil
+
 		local path = pathing_results[my_data.optimal_path_search_id]
 
 		if path then
@@ -242,12 +251,13 @@ function ShieldLogicAttack._chk_request_action_walk_to_optimal_pos(data, my_data
 		ShieldLogicAttack._correct_path_start_pos(data, my_data.optimal_path)
 
 		local new_action_data = {
-			type = "walk",
 			body_part = 2,
+			type = "walk",
 			variant = "walk",
 			nav_path = my_data.optimal_path,
 			end_rot = end_rot
 		}
+
 		my_data.optimal_path = nil
 		my_data.walking_to_optimal_pos = data.unit:brain():action_request(new_action_data)
 
@@ -298,20 +308,21 @@ function ShieldLogicAttack._upd_enemy_detection(data)
 	managers.groupai:state():on_unit_detection_updated(data.unit)
 
 	data.t = TimerManager:game():time()
+
 	local my_data = data.internal_data
 	local min_reaction = AIAttentionObject.REACT_AIM
 	local delay = CopLogicBase._upd_attention_obj_detection(data, min_reaction, nil)
-	local focus_enemy, focus_enemy_angle, focus_enemy_reaction = nil
+	local focus_enemy, focus_enemy_angle, focus_enemy_reaction
 	local detected_enemies = data.detected_attention_objects
 	local enemies = {}
 	local enemies_cpy = {}
 	local passive_enemies = {}
-	local threat_epicenter, threats = nil
+	local threat_epicenter, threats
 	local nr_threats = 0
 	local verified_chk_t = data.t - 8
 
 	for key, enemy_data in pairs(detected_enemies) do
-		if AIAttentionObject.REACT_COMBAT <= enemy_data.reaction and enemy_data.identified and enemy_data.verified_t and verified_chk_t < enemy_data.verified_t then
+		if enemy_data.reaction >= AIAttentionObject.REACT_COMBAT and enemy_data.identified and enemy_data.verified_t and verified_chk_t < enemy_data.verified_t then
 			enemies[key] = enemy_data
 			enemies_cpy[key] = enemy_data
 		end
@@ -335,7 +346,7 @@ function ShieldLogicAttack._upd_enemy_detection(data)
 		mvector3.normalize(from_threat)
 
 		local furthest_pt_dist = 0
-		local furthest_line = nil
+		local furthest_line
 
 		if not my_data.threat_epicenter or mvector3.distance(threat_epicenter, my_data.threat_epicenter) > 100 then
 			my_data.threat_epicenter = mvector3.copy(threat_epicenter)
@@ -409,7 +420,7 @@ function ShieldLogicAttack._upd_enemy_detection(data)
 			end
 		end
 
-		local optimal_direction = nil
+		local optimal_direction
 
 		if furthest_line then
 			local BA = mvector3.copy(furthest_line[2])
@@ -420,7 +431,7 @@ function ShieldLogicAttack._upd_enemy_detection(data)
 
 			mvector3.subtract(PA, data.m_pos)
 
-			local out = nil
+			local out
 
 			if nr_threats == 2 then
 				mvector3.normalize(BA)
@@ -473,6 +484,7 @@ function ShieldLogicAttack._upd_enemy_detection(data)
 				mvector3.subtract(enemy_dir, enemy.m_pos)
 
 				local len = mvector3.dot(enemy_dir, optimal_direction)
+
 				optimal_length = math.max(len, optimal_length)
 			end
 
@@ -522,7 +534,7 @@ function ShieldLogicAttack._upd_enemy_detection(data)
 				end
 			end
 
-			if AIAttentionObject.REACT_COMBAT <= new_reaction and new_attention.nav_tracker then
+			if new_reaction >= AIAttentionObject.REACT_COMBAT and new_attention.nav_tracker then
 				my_data.optimal_pos = CopLogicAttack._find_flank_pos(data, my_data, new_attention.nav_tracker)
 			end
 		elseif old_att_obj and not data.unit:movement():chk_action_forbidden("walk") then
@@ -610,7 +622,7 @@ function ShieldLogicAttack.chk_wall_distance(data, my_data, pos, second_pass)
 
 	mvector3.multiply(correction_vec, 1.05)
 
-	local correction_vec_proj = nil
+	local correction_vec_proj
 
 	if col_side == "x_pos" then
 		correction_vec_proj = math.X * -mvector3.dot(correction_vec, math.X)
@@ -623,6 +635,7 @@ function ShieldLogicAttack.chk_wall_distance(data, my_data, pos, second_pass)
 	end
 
 	local walk_to_pos = pos + correction_vec_proj
+
 	ray_params.pos_to = walk_to_pos
 
 	if managers.navigation:raycast(ray_params) then

@@ -28,6 +28,7 @@ end
 
 -- Lines 27-28
 function AIGraphUnitElement:update_editing()
+	return
 end
 
 -- Lines 30-37
@@ -47,8 +48,8 @@ function AIGraphUnitElement:update_selected(t, dt)
 		for _, id in ipairs(self._hed.graph_ids) do
 			if unit:unit_data().unit_id == id then
 				self:_draw_link({
-					g = 0.75,
 					b = 0,
+					g = 0.75,
 					r = 0,
 					from_unit = self._unit,
 					to_unit = unit
@@ -72,8 +73,8 @@ end
 -- Lines 59-64
 function AIGraphUnitElement:_add_element()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 19
+		mask = 19,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit and string.find(ray.unit:name():s(), "nav_surface", 1, true) then
@@ -133,11 +134,11 @@ function AIGraphUnitElement:_build_panel(panel, panel_sizer)
 
 	local operation_options = table.list_add(NavigationManager.nav_states, NavigationManager.nav_meta_operations)
 	local operations_params = {
+		ctrlr_proportions = 2,
 		name = "Operation:",
 		name_proportions = 1,
-		tooltip = "Select an operation to perform on the selected graphs",
 		sorted = true,
-		ctrlr_proportions = 2,
+		tooltip = "Select an operation to perform on the selected graphs",
 		panel = panel,
 		sizer = panel_sizer,
 		options = operation_options,
@@ -156,11 +157,11 @@ function AIGraphUnitElement:_build_panel(panel, panel_sizer)
 
 	self._filter_group_element:set_enabled(self._hed.operation == "forbid_custom")
 
-	local help = {
-		text = "The operation defines what to do with the selected graphs. \"Forbid Custom\" marks the selected graphs as disabled for that specific type of units.",
-		panel = panel,
-		sizer = panel_sizer
-	}
+	local help = {}
+
+	help.text = "The operation defines what to do with the selected graphs. \"Forbid Custom\" marks the selected graphs as disabled for that specific type of units."
+	help.panel = panel
+	help.sizer = panel_sizer
 
 	self:add_help_text(help)
 end

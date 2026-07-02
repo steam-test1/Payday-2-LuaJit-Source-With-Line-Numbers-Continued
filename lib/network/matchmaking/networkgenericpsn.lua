@@ -6,6 +6,7 @@ function NetworkGenericPSN:init()
 
 	-- Lines 6-6
 	local function f()
+		return
 	end
 
 	PSN:set_matchmaking_callback("room_invitation", f)
@@ -39,10 +40,9 @@ end
 
 -- Lines 23-32
 function NetworkGenericPSN:start_game()
-	Global.rendezvous = {
-		rendevous = managers.network.shared_rdv:rendezvousonline(),
-		is_online = managers.network.shared_rdv:is_online()
-	}
+	Global.rendezvous = {}
+	Global.rendezvous.rendevous = managers.network.shared_rdv:rendezvousonline()
+	Global.rendezvous.is_online = managers.network.shared_rdv:is_online()
 
 	managers.network.voice_chat:_save_globals(true)
 	managers.network.group:_save_global()
@@ -51,10 +51,9 @@ end
 
 -- Lines 34-43
 function NetworkGenericPSN:end_game()
-	Global.rendezvous = {
-		rendevous = managers.network.shared_rdv:rendezvousonline(),
-		is_online = managers.network.shared_rdv:is_online()
-	}
+	Global.rendezvous = {}
+	Global.rendezvous.rendevous = managers.network.shared_rdv:rendezvousonline()
+	Global.rendezvous.is_online = managers.network.shared_rdv:is_online()
 
 	managers.network.generic:set_entermenu(true)
 	managers.network.voice_chat:_save_globals(managers.network.group:room_id() or false)

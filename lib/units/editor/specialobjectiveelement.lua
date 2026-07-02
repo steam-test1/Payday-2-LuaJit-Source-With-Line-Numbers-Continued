@@ -1,8 +1,8 @@
 SpecialObjectiveUnitElement = SpecialObjectiveUnitElement or class(MissionElement)
 SpecialObjectiveUnitElement.INSTANCE_VAR_NAMES = {
 	{
-		value = "so_action",
-		type = "special_objective_action"
+		type = "special_objective_action",
+		value = "so_action"
 	}
 }
 SpecialObjectiveUnitElement._AI_SO_types = {
@@ -121,7 +121,7 @@ function SpecialObjectiveUnitElement:test_element()
 		return
 	end
 
-	local spawn_unit_name = nil
+	local spawn_unit_name
 
 	if self._hed.test_unit == "default" then
 		local SO_access_strings = managers.navigation:convert_access_filter_to_table(self._hed.SO_access)
@@ -162,6 +162,7 @@ function SpecialObjectiveUnitElement:test_element()
 	end
 
 	spawn_unit_name = spawn_unit_name or Idstring("units/payday2/characters/ene_swat_1/ene_swat_1")
+
 	local enemy = safe_spawn_unit(spawn_unit_name, self._unit:position(), self._unit:rotation())
 
 	if not enemy then
@@ -174,9 +175,10 @@ function SpecialObjectiveUnitElement:test_element()
 
 	local t = {
 		id = self._unit:unit_data().unit_id,
-		editor_name = self._unit:unit_data().name_id,
-		values = self:new_save_values()
+		editor_name = self._unit:unit_data().name_id
 	}
+
+	t.values = self:new_save_values()
 	t.values.use_instigator = true
 	t.values.is_navigation_link = false
 	t.values.followup_elements = nil
@@ -242,8 +244,8 @@ function SpecialObjectiveUnitElement:update_selected(t, dt, selected_unit, all_u
 
 			if draw then
 				self:_draw_link({
-					g = 0,
 					b = 0.75,
+					g = 0,
 					r = 0,
 					from_unit = unit,
 					to_unit = self._unit
@@ -264,7 +266,7 @@ function SpecialObjectiveUnitElement:_highlight_if_outside_the_nav_field(t)
 		if nav_tracker:lost() then
 			local t1 = t % 0.5
 			local t2 = t % 1
-			local alpha = nil
+			local alpha
 
 			if t2 > 0.5 then
 				alpha = t1
@@ -273,6 +275,7 @@ function SpecialObjectiveUnitElement:_highlight_if_outside_the_nav_field(t)
 			end
 
 			alpha = math.lerp(0.1, 0.5, alpha)
+
 			local nav_color = Color(alpha, 1, 0, 0)
 
 			Draw:brush(nav_color):cylinder(my_pos, my_pos + math.UP * 80, 20, 4)
@@ -332,8 +335,8 @@ function SpecialObjectiveUnitElement:_draw_follow_up(selected_unit, all_units)
 
 			if draw then
 				self:_draw_link({
-					g = 0.75,
 					b = 0,
+					g = 0.75,
 					r = 0,
 					from_unit = self._unit,
 					to_unit = unit
@@ -353,8 +356,8 @@ end
 -- Lines 304-312
 function SpecialObjectiveUnitElement:_so_raycast()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit and (string.find(ray.unit:name():s(), "point_special_objective", 1, true) or string.find(ray.unit:name():s(), "ai_so_group", 1, true)) then
@@ -371,15 +374,15 @@ end
 -- Lines 314-331
 function SpecialObjectiveUnitElement:_spawn_raycast()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if not ray or not ray.unit then
 		return
 	end
 
-	local id = nil
+	local id
 
 	if string.find(ray.unit:name():s(), "ai_enemy_group", 1, true) or string.find(ray.unit:name():s(), "ai_spawn_enemy", 1, true) or string.find(ray.unit:name():s(), "ai_civilian_group", 1, true) or string.find(ray.unit:name():s(), "ai_spawn_civilian", 1, true) then
 		id = ray.unit:unit_data().unit_id
@@ -552,12 +555,13 @@ function SpecialObjectiveUnitElement:_build_panel(panel, panel_sizer)
 	panel_sizer = panel_sizer or self._panel_sizer
 	self._filters = {}
 	self._nav_link_filter = managers.navigation:convert_access_filter_to_table(self._hed.SO_access)
+
 	local opt_sizer = EWS:StaticBoxSizer(panel, "VERTICAL", "Filter")
 	local filter_preset_params = {
-		sorted = true,
+		ctrlr_proportions = 2,
 		name = "Preset:",
 		name_proportions = 1,
-		ctrlr_proportions = 2,
+		sorted = true,
 		tooltip = "Select a preset.",
 		panel = panel,
 		sizer = opt_sizer,
@@ -627,6 +631,7 @@ function SpecialObjectiveUnitElement:_build_panel(panel, panel_sizer)
 	local options = table.list_add({
 		"none"
 	}, clone(CopActionAct._act_redirects.SO))
+
 	options = table.list_add(options, self._AI_SO_types)
 
 	table.sort(options)
@@ -635,6 +640,7 @@ function SpecialObjectiveUnitElement:_build_panel(panel, panel_sizer)
 	local ctrlr, params = self:_build_value_combobox(panel, panel_sizer, "patrol_path", table.list_add({
 		"none"
 	}, managers.ai_data:patrol_path_names()), "Select a patrol path to use from the spawn point. Different objectives and behaviors will interpet the path different.")
+
 	self._patrol_path_params = params
 
 	self:_build_value_combobox(panel, panel_sizer, "path_style", table.list_add({
@@ -671,14 +677,14 @@ function SpecialObjectiveUnitElement:_build_panel(panel, panel_sizer)
 		min = -1
 	}, "Used to specify how often the SO should search for an actor. A negative value means it will check only once.")
 	self:_build_value_number(panel, panel_sizer, "base_chance", {
-		min = 0,
 		floats = 2,
-		max = 1
+		max = 1,
+		min = 0
 	}, "Used to specify chance to happen (1==absolutely!)")
 	self:_build_value_number(panel, panel_sizer, "chance_inc", {
-		min = 0,
 		floats = 2,
-		max = 1
+		max = 1,
+		min = 0
 	}, "Used to specify an incremental chance to happen", "Chance incremental:")
 	self:_build_value_number(panel, panel_sizer, "action_duration_min", {
 		floats = 2,
@@ -697,4 +703,5 @@ end
 
 -- Lines 560-563
 function SpecialObjectiveUnitElement:add_to_mission_package()
+	return
 end

@@ -4,6 +4,7 @@ CoreSetupCutsceneKeyBase = CoreSetupCutsceneKeyBase or class(CoreCutsceneKeyBase
 
 -- Lines 5-7
 function CoreSetupCutsceneKeyBase:populate_from_editor(cutscene_editor)
+	return
 end
 
 -- Lines 9-12
@@ -13,10 +14,12 @@ end
 
 -- Lines 14-16
 function CoreSetupCutsceneKeyBase:set_frame(frame)
+	return
 end
 
 -- Lines 18-20
 function CoreSetupCutsceneKeyBase:on_gui_representation_changed(sender, sequencer_clip)
+	return
 end
 
 -- Lines 22-24
@@ -26,4 +29,5 @@ end
 
 -- Lines 26-28
 function CoreSetupCutsceneKeyBase:play(player, undo, fast_forward)
+	return
 end

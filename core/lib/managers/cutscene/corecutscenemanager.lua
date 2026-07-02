@@ -195,7 +195,7 @@ function CoreCutsceneManager:cutscene_actors_in_world()
 		return {}
 	end
 
-	local dead_units = table.collect(self._cutscene_actors, function (unit)
+	local dead_units = table.collect(self._cutscene_actors, function(unit)
 		return not alive(unit) or nil
 	end)
 
@@ -240,7 +240,7 @@ function CoreCutsceneManager:start_delayed_cutscene()
 		self._manager_locked = true
 		Global.debug_cutscene = nil
 
-		self:connect("EVT_PLAYBACK_FINISHED", function ()
+		self:connect("EVT_PLAYBACK_FINISHED", function()
 			managers.cutscene._manager_locked = nil
 		end)
 	end
@@ -248,7 +248,7 @@ end
 
 -- Lines 215-263
 function CoreCutsceneManager:update()
-	return
+	do return end
 
 	local time = self._timer:time()
 	local delta_time = self._timer:delta_time()
@@ -369,6 +369,7 @@ end
 -- Lines 329-341
 function CoreCutsceneManager:prime(name, time)
 	time = time or 0
+
 	local cutscene = self:get_cutscene(name)
 
 	if self._player == nil then
@@ -446,7 +447,7 @@ function CoreCutsceneManager:_cleanup(called_from_prime)
 		self._is_overriding_user_music = nil
 	end
 
-	local playing_cutscene_name = nil
+	local playing_cutscene_name
 
 	if self._player then
 		if called_from_prime then
@@ -558,10 +559,12 @@ end
 
 -- Lines 503-505
 function CoreCutsceneManager:_on_playback_started(cutscene_name)
+	return
 end
 
 -- Lines 507-509
 function CoreCutsceneManager:_on_playback_finished(cutscene_name)
+	return
 end
 
 -- Lines 516-526
@@ -571,6 +574,7 @@ function CoreCutsceneManager:_debug_persistent_keys_per_cutscene()
 	for _, name in ipairs(self:get_cutscene_names()) do
 		local cutscene = self:get_cutscene(name)
 		local persistent_keys = cutscene:_debug_persistent_keys()
+
 		persistent_keys_per_cutscene[name] = table.map_keys(persistent_keys)
 	end
 
@@ -580,6 +584,7 @@ end
 -- Lines 528-542
 function CoreCutsceneManager:_debug_persistent_keys_report()
 	local output_string = "Persistent Cutscene Keys Report\n"
+
 	output_string = output_string .. "-------------------------------\n"
 
 	for cutscene_name, persistent_keys in pairs(self:_debug_persistent_keys_per_cutscene()) do

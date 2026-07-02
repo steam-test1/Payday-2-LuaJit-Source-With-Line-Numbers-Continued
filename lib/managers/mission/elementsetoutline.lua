@@ -9,6 +9,7 @@ end
 
 -- Lines 9-11
 function ElementSetOutline:client_on_executed(...)
+	return
 end
 
 -- Lines 13-45

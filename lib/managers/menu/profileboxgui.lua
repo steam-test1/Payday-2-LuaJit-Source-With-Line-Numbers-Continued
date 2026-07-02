@@ -5,7 +5,9 @@ function ProfileBoxGui:init(ws, title, text, content_data, config)
 	config = config or {}
 	config.h = config.h or 260
 	config.w = config.w or 280
+
 	local x, y = ws:size()
+
 	config.x = config.x or 0
 	config.y = config.y or y - config.h - CoreMenuRenderer.Renderer.border_height
 	config.no_close_legend = true
@@ -34,14 +36,14 @@ function ProfileBoxGui:update(t, dt)
 	local name_panel = self._scroll_panel:child("profile_panel"):child("name_panel")
 	local name = name_panel:child("name")
 
-	if name_panel:w() < name:w() then
+	if name:w() > name_panel:w() then
 		if self._name_right then
 			if name:x() < 0 then
 				name:set_x(name:x() + dt * 10)
 			else
 				self._name_right = false
 			end
-		elseif name_panel:w() < name:right() then
+		elseif name:right() > name_panel:w() then
 			name:set_x(name:x() - dt * 10)
 		else
 			self._name_right = true
@@ -54,10 +56,10 @@ function ProfileBoxGui:_create_text_box(ws, title, text, content_data, config)
 	ProfileBoxGui.super._create_text_box(self, ws, title, text, content_data, config)
 
 	local profile_panel = self._scroll_panel:panel({
-		name = "profile_panel",
 		h = 600,
-		x = 0,
 		layer = 1,
+		name = "profile_panel",
+		x = 0,
 		w = self._scroll_panel:w()
 	})
 	local texture, rect = tweak_data.hud_icons:get_icon_data(table.random({
@@ -65,23 +67,23 @@ function ProfileBoxGui:_create_text_box(ws, title, text, content_data, config)
 		"mask_alien"
 	}) .. math.random(4))
 	local avatar = profile_panel:bitmap({
-		name = "avatar",
 		layer = 0,
+		name = "avatar",
 		visible = true,
-		y = 10,
 		x = 0,
+		y = 10,
 		texture = texture,
 		texture_rect = rect
 	})
 
 	profile_panel:gradient({
-		y = 10,
-		name = "avatar_indicator",
 		blend_mode = "add",
-		visible = false,
-		orientation = "vertical",
-		x = 0,
 		layer = 1,
+		name = "avatar_indicator",
+		orientation = "vertical",
+		visible = false,
+		x = 0,
+		y = 10,
 		gradient_points = {
 			0,
 			Color(0, 1, 0.6588235294117647, 0),
@@ -103,14 +105,14 @@ function ProfileBoxGui:_create_text_box(ws, title, text, content_data, config)
 	name_panel:set_y(avatar:y())
 
 	local name = name_panel:text({
-		y = 0,
-		name = "name",
-		vertical = "top",
-		hvertical = "top",
 		align = "left",
 		halign = "left",
-		x = 0,
+		hvertical = "top",
 		layer = 0,
+		name = "name",
+		vertical = "top",
+		x = 0,
+		y = 0,
 		text = self:_profile_name(),
 		font = tweak_data.menu.pd2_medium_font,
 		font_size = tweak_data.menu.pd2_medium_font_size,
@@ -123,14 +125,14 @@ function ProfileBoxGui:_create_text_box(ws, title, text, content_data, config)
 	name:set_w(tw + 4)
 
 	local level = profile_panel:text({
-		name = "level",
-		vertical = "center",
-		hvertical = "center",
 		align = "right",
 		blend_mode = "normal",
 		halign = "right",
-		x = 16,
+		hvertical = "center",
 		layer = 0,
+		name = "level",
+		vertical = "center",
+		x = 16,
 		text = self:_profile_level(),
 		font = tweak_data.menu.small_font_noshadow,
 		font_size = tweak_data.menu.small_font_size,
@@ -145,8 +147,8 @@ function ProfileBoxGui:_create_text_box(ws, title, text, content_data, config)
 
 	local texture, rect = tweak_data.hud_icons:get_icon_data("icon_equipped")
 	local arrow = profile_panel:bitmap({
-		name = "arrow",
 		layer = 0,
+		name = "arrow",
 		visible = false,
 		texture = texture,
 		texture_rect = rect,
@@ -213,12 +215,12 @@ function ProfileBoxGui:_add_stats(params)
 		w = self._scroll_panel:child("profile_panel"):w()
 	})
 	local topic = panel:text({
-		name = "topic",
-		halign = "left",
-		vertical = "center",
 		align = "left",
-		y = 0,
+		halign = "left",
 		layer = 2,
+		name = "topic",
+		vertical = "center",
+		y = 0,
 		font = tweak_data.menu.small_font,
 		font_size = self._stats_font_size,
 		color = Color.white,
@@ -233,13 +235,13 @@ function ProfileBoxGui:_add_stats(params)
 
 	if params.type == "text" then
 		local text = panel:text({
-			name = "text",
-			halign = "right",
 			align = "right",
-			vertical = "center",
-			valign = "center",
-			y = 0,
+			halign = "right",
 			layer = 2,
+			name = "text",
+			valign = "center",
+			vertical = "center",
+			y = 0,
 			font = tweak_data.menu.small_font,
 			font_size = self._stats_font_size,
 			color = Color.white,
@@ -257,22 +259,22 @@ function ProfileBoxGui:_add_stats(params)
 		panel:set_h(math.ceil(h))
 
 		local bg = panel:rect({
-			name = "bg",
-			y = 0,
-			x = 0,
 			layer = 0,
+			name = "bg",
+			x = 0,
+			y = 0,
 			w = panel:w(),
 			h = h,
 			color = Color.black:with_alpha(0.5)
 		})
 		local bar = panel:gradient({
-			halign = "center",
-			name = "bar",
-			vertical = "center",
 			align = "center",
-			orientation = "vertical",
-			x = 2,
+			halign = "center",
 			layer = 1,
+			name = "bar",
+			orientation = "vertical",
+			vertical = "center",
+			x = 2,
 			gradient_points = {
 				0,
 				Color(1, 1, 0.6588235294117647, 0),
@@ -284,13 +286,13 @@ function ProfileBoxGui:_add_stats(params)
 			h = bg:h() - 4
 		})
 		local text = panel:text({
-			name = "bar_text",
-			halign = "right",
 			align = "right",
-			vertical = "center",
-			valign = "center",
-			y = 0,
+			halign = "right",
 			layer = 2,
+			name = "bar_text",
+			valign = "center",
+			vertical = "center",
+			y = 0,
 			font = tweak_data.menu.small_font,
 			font_size = self._stats_font_size,
 			color = Color.white,
@@ -351,7 +353,7 @@ function ProfileBoxGui:mouse_moved(x, y)
 		return
 	end
 
-	local pointer = nil
+	local pointer
 	local inside_info = self._panel:child("info_area"):inside(x, y)
 	local profile_panel = self._scroll_panel:child("profile_panel")
 	local name_panel = profile_panel:child("name_panel")
@@ -361,17 +363,13 @@ function ProfileBoxGui:mouse_moved(x, y)
 	profile_panel:child("level"):set_color(inside and Color.white or Color(0.8, 1, 0.8))
 	profile_panel:child("arrow"):set_visible(inside)
 
-	if inside then
-		pointer = "link"
-	end
+	pointer = inside and "link" or pointer
 
 	local inside = inside_info and profile_panel:child("avatar"):inside(x, y)
 
 	profile_panel:child("avatar_indicator"):set_visible(inside)
 
-	if inside then
-		pointer = "link"
-	end
+	pointer = inside and "link" or pointer
 
 	if profile_panel:child("achievements") then
 		local inside = inside_info and profile_panel:child("achievements"):inside(x, y)
@@ -379,12 +377,11 @@ function ProfileBoxGui:mouse_moved(x, y)
 		profile_panel:child("achievements"):child("topic"):set_color(inside and Color(0.8, 1, 0.8) or Color.white)
 		profile_panel:child("achievements"):child("bar_text"):set_color(inside and Color(0.8, 1, 0.8) or Color.white)
 
-		if inside then
-			pointer = "link"
-		end
+		pointer = inside and "link" or pointer
 	end
 
 	local inside = inside_info and profile_panel:inside(x, y)
+
 	pointer = pointer or inside and "arrow"
 
 	return false, pointer
@@ -460,6 +457,7 @@ end
 
 -- Lines 294-296
 function LobbyProfileBoxGui:_add_statistics()
+	return
 end
 
 ViewCharacterProfileBoxGui = ViewCharacterProfileBoxGui or class(ProfileBoxGui)
@@ -498,4 +496,5 @@ end
 
 -- Lines 326-328
 function ViewCharacterProfileBoxGui:_add_statistics()
+	return
 end

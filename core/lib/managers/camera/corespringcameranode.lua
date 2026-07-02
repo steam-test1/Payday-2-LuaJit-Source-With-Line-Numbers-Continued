@@ -12,6 +12,7 @@ local mvector3_set = mvector3.set
 local mvector3_set_static = mvector3.set_static
 local mvector3_copy = mvector3.copy
 local mvector3_rotate_with = mvector3.rotate_with
+
 SpringCameraNode = SpringCameraNode or CoreClass.class(CoreTransformCameraNode.TransformCameraNode)
 
 -- Lines 19-32
@@ -91,6 +92,7 @@ function SpringCameraNode:euler_integration(dt, force)
 	local displacement = self._displacement
 	local velocity = self._velocity
 	local a1 = self:acceleration(displacement, velocity, force)
+
 	self._displacement = velocity + a1 * dt
 	self._velocity = self._displacement + velocity * dt + 0.5 * a1 * dt * dt
 end
@@ -136,6 +138,7 @@ function SpringCameraNode:rk4_integration(dt, force)
 	local a4 = self:acceleration(x4, v4, force)
 	local xf = x1 + dt / 6 * (v1 + 2 * v2 + 2 * v3 + v4)
 	local vf = v1 + dt / 6 * (a1 + 2 * a2 + 2 * a3 + a4)
+
 	self._displacement = xf
 	self._velocity = vf
 end
@@ -172,7 +175,7 @@ function SpringCameraNode:debug_render(t, dt)
 	local start_brush = Draw:brush(Color(0.3, 1, 0, 0))
 	local end_brush = Draw:brush(Color(0.3, 0, 1, 0))
 	local line_pen = Draw:pen(Color(0.3, 0, 0, 1))
-	local parent_position = nil
+	local parent_position
 
 	start_brush:sphere(self:parent_camera():position(), 1)
 	end_brush:sphere(self:position(), 1)
@@ -187,14 +190,17 @@ SpringCameraForce = SpringCameraForce or CoreClass.class()
 
 -- Lines 215-216
 function SpringCameraForce:init()
+	return
 end
 
 -- Lines 218-219
 function SpringCameraForce:force(t, dt, force, parent_position, parent_rotation)
+	return
 end
 
 -- Lines 221-222
 function SpringCameraForce:reset()
+	return
 end
 
 SpringCameraPosition = SpringCameraPosition or CoreClass.class(SpringCameraForce)

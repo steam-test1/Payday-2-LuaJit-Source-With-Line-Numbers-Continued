@@ -62,7 +62,7 @@ function SimpleGUIEffectSpewer:_particles_update(t, dt)
 			particle_data.particle:set_center(cx, cy)
 		end
 
-		if particle_data.plive_time <= particle_data.pt then
+		if particle_data.pt >= particle_data.plive_time then
 			table.insert(dead_particles, key)
 		else
 			local ex, ey = particle_data.particle:center()
@@ -100,12 +100,10 @@ function SimpleGUIEffectSpewer:_spew_update(t, dt)
 	self.__particle_spawn_t = self.__particle_spawn_t - dt
 
 	while self.__particle_spawn_t <= 0 do
-		if self._max_num_particles == 0 or table.size(self.__living_particles) < self._max_num_particles then
+		if self._max_num_particles == 0 or self._max_num_particles > table.size(self.__living_particles) then
 			local rot = math.rand(self._min_spew_angle, self._max_spew_angle)
 
-			if rot == 0 then
-				rot = 360
-			end
+			rot = rot == 0 and 360 or rot
 
 			local new_particle = self._particle_panel:bitmap({
 				texture = self._particle_textures[math.random(#self._particle_textures)],
@@ -130,9 +128,7 @@ function SimpleGUIEffectSpewer:_spew_update(t, dt)
 
 			new_particle:set_world_center(wx, wy)
 
-			local red = 1
-			local green = 1
-			local blue = 1
+			local red, green, blue = 1, 1, 1
 
 			if self._particle_colors then
 				local red_data = self._particle_colors.red or {
@@ -147,6 +143,7 @@ function SimpleGUIEffectSpewer:_spew_update(t, dt)
 					1,
 					1
 				}
+
 				red = type(red_data) == "number" and red_data or math.rand(red_data[1], red_data[2])
 				green = type(green_data) == "number" and green_data or math.rand(green_data[1], green_data[2])
 				blue = type(blue_data) == "number" and blue_data or math.rand(blue_data[1], blue_data[2])
@@ -207,10 +204,12 @@ end
 function SimpleGUIEffectSpewer:animation_update(o)
 	local t = 0
 	local dt = coroutine.yield()
+
 	self.__spew_time = math.rand(self._min_spew_time, self._max_spew_time)
 	self.__particle_spawn_interval = math.rand(self._min_spawn_interval, self._max_spawn_interval)
 	self.__particle_spawn_t = self._spew_at_start and 0 or self.__particle_spawn_interval
 	self.__living_particles = {}
+
 	local done = false
 
 	while not done do
@@ -219,7 +218,7 @@ function SimpleGUIEffectSpewer:animation_update(o)
 		if t <= self.__spew_time then
 			self:_spew_update(t, dt)
 
-			done = false
+			done = false and done
 		end
 
 		if table.size(self.__living_particles) > 0 then
@@ -251,8 +250,8 @@ end
 -- Lines 206-284
 function SimpleGUIEffectSpewer:init(params)
 	params = params or {
-		spawn_interval = 0.1,
 		plive_time = 1,
+		spawn_interval = 0.1,
 		spew_time = 1
 	}
 	self._ws = params.ws or managers.menu_component:fullscreen_ws()
@@ -319,20 +318,20 @@ end
 function SimpleGUIEffectSpewer.lootdrop_drill_drop_flip_card(panel)
 	local color = tweak_data.economy.rarities.legendary.color
 	local particle_colors = {
-		green = 0,
 		blue = 0,
+		green = 0,
 		red = 1
 	}
 
 	SimpleGUIEffectSpewer:new({
-		spawn_interval = 0.1,
-		plive_time = 6,
 		max_num_particles = 1,
-		spew_at_start = true,
-		particle_speed = 0,
-		spew_time = 0,
 		particle_alpha = 1,
 		particle_rotation_speed = 180,
+		particle_speed = 0,
+		plive_time = 6,
+		spawn_interval = 0.1,
+		spew_at_start = true,
+		spew_time = 0,
 		particle_colors = particle_colors,
 		particle_w = panel:h() * 6,
 		particle_h = panel:h() * 6,
@@ -343,14 +342,14 @@ function SimpleGUIEffectSpewer.lootdrop_drill_drop_flip_card(panel)
 		parent_panel = panel
 	})
 	SimpleGUIEffectSpewer:new({
-		spawn_interval = 0.1,
-		plive_time = 6,
 		max_num_particles = 1,
-		spew_at_start = true,
-		particle_speed = 0,
-		spew_time = 0,
 		particle_alpha = 1,
 		particle_rotation_speed = -180,
+		particle_speed = 0,
+		plive_time = 6,
+		spawn_interval = 0.1,
+		spew_at_start = true,
+		spew_time = 0,
 		particle_colors = particle_colors,
 		particle_w = panel:h() * 6,
 		particle_h = panel:h() * 6,
@@ -389,19 +388,19 @@ function SimpleGUIEffectSpewer.lootdrop_drill_drop_show_item(panel)
 
 	for i = 1, 4 do
 		SimpleGUIEffectSpewer:new({
+			gravity = 50,
+			max_num_particles = 25,
+			max_particle_speed = 30,
+			max_plive_time = 1.9,
 			min_particle_speed = 10,
 			min_plive_time = 0.65,
-			max_num_particles = 25,
-			particle_w = 8,
-			spew_time = 0.44,
-			max_particle_speed = 30,
-			particle_sway_distance = 4.4,
-			max_plive_time = 1.9,
-			gravity = 50,
 			particle_h = 8,
 			particle_rotation_speed = 180,
-			spawn_interval = 0.09,
+			particle_sway_distance = 4.4,
 			particle_sway_speed = 180,
+			particle_w = 8,
+			spawn_interval = 0.09,
+			spew_time = 0.44,
 			particle_colors = particle_colors,
 			particle_textures = {
 				"guis/textures/pd2/particles/bulb"
@@ -410,22 +409,22 @@ function SimpleGUIEffectSpewer.lootdrop_drill_drop_show_item(panel)
 			layer = panel:world_layer() + 10
 		})
 		SimpleGUIEffectSpewer:new({
-			min_plive_time = 0.65,
-			max_num_particles = 35,
-			particle_alpha = 0.6,
-			spew_time = 0.44,
-			particle_speed_sway_speed = 90,
 			gravity = 75,
-			min_particle_speed = 15,
+			max_num_particles = 35,
 			max_particle_speed = 45,
-			particle_sway_distance = 4.4,
 			max_plive_time = 1.9,
-			particle_w = 12,
+			min_particle_speed = 15,
+			min_plive_time = 0.65,
+			particle_alpha = 0.6,
 			particle_h = 12,
 			particle_rotation_speed = 90,
 			particle_speed_sway_distance = 5,
-			spawn_interval = 0.09,
+			particle_speed_sway_speed = 90,
+			particle_sway_distance = 4.4,
 			particle_sway_speed = 180,
+			particle_w = 12,
+			spawn_interval = 0.09,
+			spew_time = 0.44,
 			particle_colors = particle_colors,
 			particle_textures = {
 				"guis/textures/pd2/particles/bulb"
@@ -434,15 +433,15 @@ function SimpleGUIEffectSpewer.lootdrop_drill_drop_show_item(panel)
 			layer = panel:world_layer() + 10
 		})
 		SimpleGUIEffectSpewer:new({
-			particle_w = 4,
 			max_num_particles = 60,
-			particle_h = 4,
-			min_plive_time = 0.1,
-			spawn_interval = 0.09,
-			min_particle_speed = 415,
-			spew_time = 0.2,
 			max_particle_speed = 605,
 			max_plive_time = 0.45,
+			min_particle_speed = 415,
+			min_plive_time = 0.1,
+			particle_h = 4,
+			particle_w = 4,
+			spawn_interval = 0.09,
+			spew_time = 0.2,
 			particle_colors = particle_colors,
 			particle_textures = {
 				"guis/textures/pd2/particles/spark"
@@ -451,15 +450,15 @@ function SimpleGUIEffectSpewer.lootdrop_drill_drop_show_item(panel)
 			layer = panel:world_layer() + 10
 		})
 		SimpleGUIEffectSpewer:new({
-			particle_w = 8,
 			max_num_particles = 35,
-			particle_h = 8,
-			min_plive_time = 0.2,
-			spawn_interval = 0.08,
-			min_particle_speed = 395,
-			spew_time = 0.4,
 			max_particle_speed = 505,
 			max_plive_time = 0.35,
+			min_particle_speed = 395,
+			min_plive_time = 0.2,
+			particle_h = 8,
+			particle_w = 8,
+			spawn_interval = 0.08,
+			spew_time = 0.4,
 			particle_colors = particle_colors,
 			particle_textures = {
 				"guis/textures/pd2/particles/spark"
@@ -468,13 +467,13 @@ function SimpleGUIEffectSpewer.lootdrop_drill_drop_show_item(panel)
 			layer = panel:world_layer() + 10
 		})
 		SimpleGUIEffectSpewer:new({
-			spawn_interval = 0.1,
-			plive_time = 1.9,
 			max_num_particles = 2,
-			spew_at_start = true,
-			particle_speed = 0,
-			spew_time = 0,
 			particle_alpha = 0.2,
+			particle_speed = 0,
+			plive_time = 1.9,
+			spawn_interval = 0.1,
+			spew_at_start = true,
+			spew_time = 0,
 			particle_colors = particle_colors,
 			particle_w = panel:h() * 2.5,
 			particle_h = panel:h() * 2.5,
@@ -485,13 +484,13 @@ function SimpleGUIEffectSpewer.lootdrop_drill_drop_show_item(panel)
 			layer = panel:world_layer() + 10
 		})
 		SimpleGUIEffectSpewer:new({
-			spawn_interval = 0.1,
-			plive_time = 1.5,
 			max_num_particles = 1,
-			spew_at_start = true,
-			particle_speed = 0,
-			spew_time = 0,
 			particle_alpha = 0.4,
+			particle_speed = 0,
+			plive_time = 1.5,
+			spawn_interval = 0.1,
+			spew_at_start = true,
+			spew_time = 0,
 			particle_colors = particle_colors,
 			particle_w = panel:h() * 1.55,
 			particle_h = panel:h() * 1.55,
@@ -502,13 +501,13 @@ function SimpleGUIEffectSpewer.lootdrop_drill_drop_show_item(panel)
 			layer = panel:world_layer() + 10
 		})
 		SimpleGUIEffectSpewer:new({
-			spawn_interval = 0.1,
-			plive_time = 2,
 			max_num_particles = 2,
-			spew_at_start = true,
-			particle_speed = 0,
-			spew_time = 0,
 			particle_alpha = 0.1,
+			particle_speed = 0,
+			plive_time = 2,
+			spawn_interval = 0.1,
+			spew_at_start = true,
+			spew_time = 0,
 			particle_colors = particle_colors,
 			particle_w = panel:h() * 4,
 			particle_h = panel:h() * 4,
@@ -525,20 +524,20 @@ end
 function SimpleGUIEffectSpewer.lootdrop_safe_drop_flip_card(panel)
 	local color = tweak_data.economy.rarities.legendary.color
 	local particle_colors = {
-		green = 1,
 		blue = 1,
+		green = 1,
 		red = 1
 	}
 
 	SimpleGUIEffectSpewer:new({
-		spawn_interval = 0.1,
-		plive_time = 6,
 		max_num_particles = 1,
-		spew_at_start = true,
-		particle_speed = 0,
-		spew_time = 0,
 		particle_alpha = 0.6,
 		particle_rotation_speed = 180,
+		particle_speed = 0,
+		plive_time = 6,
+		spawn_interval = 0.1,
+		spew_at_start = true,
+		spew_time = 0,
 		particle_colors = particle_colors,
 		particle_w = panel:h() * 4,
 		particle_h = panel:h() * 4,
@@ -549,14 +548,14 @@ function SimpleGUIEffectSpewer.lootdrop_safe_drop_flip_card(panel)
 		parent_panel = panel
 	})
 	SimpleGUIEffectSpewer:new({
-		spawn_interval = 0.1,
-		plive_time = 6,
 		max_num_particles = 1,
-		spew_at_start = true,
-		particle_speed = 0,
-		spew_time = 0,
 		particle_alpha = 0.6,
 		particle_rotation_speed = -180,
+		particle_speed = 0,
+		plive_time = 6,
+		spawn_interval = 0.1,
+		spew_at_start = true,
+		spew_time = 0,
 		particle_colors = particle_colors,
 		particle_w = panel:h() * 4,
 		particle_h = panel:h() * 4,
@@ -593,19 +592,19 @@ function SimpleGUIEffectSpewer.lootdrop_safe_drop_show_item(panel)
 
 	for i = 1, 4 do
 		SimpleGUIEffectSpewer:new({
+			gravity = 50,
+			max_num_particles = 25,
+			max_particle_speed = 30,
+			max_plive_time = 1.9,
 			min_particle_speed = 10,
 			min_plive_time = 0.65,
-			max_num_particles = 25,
-			particle_w = 8,
-			spew_time = 0.44,
-			max_particle_speed = 30,
-			particle_sway_distance = 4.4,
-			max_plive_time = 1.9,
-			gravity = 50,
 			particle_h = 8,
 			particle_rotation_speed = 180,
-			spawn_interval = 0.09,
+			particle_sway_distance = 4.4,
 			particle_sway_speed = 180,
+			particle_w = 8,
+			spawn_interval = 0.09,
+			spew_time = 0.44,
 			particle_colors = particle_colors,
 			particle_textures = {
 				"guis/textures/pd2/particles/bulb"
@@ -614,22 +613,22 @@ function SimpleGUIEffectSpewer.lootdrop_safe_drop_show_item(panel)
 			layer = panel:world_layer() + 10
 		})
 		SimpleGUIEffectSpewer:new({
-			min_plive_time = 0.65,
-			max_num_particles = 35,
-			particle_alpha = 0.6,
-			spew_time = 0.44,
-			particle_speed_sway_speed = 90,
 			gravity = 75,
-			min_particle_speed = 15,
+			max_num_particles = 35,
 			max_particle_speed = 45,
-			particle_sway_distance = 4.4,
 			max_plive_time = 1.9,
-			particle_w = 12,
+			min_particle_speed = 15,
+			min_plive_time = 0.65,
+			particle_alpha = 0.6,
 			particle_h = 12,
 			particle_rotation_speed = 90,
 			particle_speed_sway_distance = 5,
-			spawn_interval = 0.09,
+			particle_speed_sway_speed = 90,
+			particle_sway_distance = 4.4,
 			particle_sway_speed = 180,
+			particle_w = 12,
+			spawn_interval = 0.09,
+			spew_time = 0.44,
 			particle_colors = particle_colors,
 			particle_textures = {
 				"guis/textures/pd2/particles/bulb"
@@ -638,15 +637,15 @@ function SimpleGUIEffectSpewer.lootdrop_safe_drop_show_item(panel)
 			layer = panel:world_layer() + 10
 		})
 		SimpleGUIEffectSpewer:new({
-			particle_w = 4,
 			max_num_particles = 60,
-			particle_h = 4,
-			min_plive_time = 0.1,
-			spawn_interval = 0.09,
-			min_particle_speed = 415,
-			spew_time = 0.2,
 			max_particle_speed = 605,
 			max_plive_time = 0.45,
+			min_particle_speed = 415,
+			min_plive_time = 0.1,
+			particle_h = 4,
+			particle_w = 4,
+			spawn_interval = 0.09,
+			spew_time = 0.2,
 			particle_colors = particle_colors,
 			particle_textures = {
 				"guis/textures/pd2/particles/spark"
@@ -655,15 +654,15 @@ function SimpleGUIEffectSpewer.lootdrop_safe_drop_show_item(panel)
 			layer = panel:world_layer() + 10
 		})
 		SimpleGUIEffectSpewer:new({
-			particle_w = 8,
 			max_num_particles = 35,
-			particle_h = 8,
-			min_plive_time = 0.2,
-			spawn_interval = 0.08,
-			min_particle_speed = 395,
-			spew_time = 0.4,
 			max_particle_speed = 505,
 			max_plive_time = 0.35,
+			min_particle_speed = 395,
+			min_plive_time = 0.2,
+			particle_h = 8,
+			particle_w = 8,
+			spawn_interval = 0.08,
+			spew_time = 0.4,
 			particle_colors = particle_colors,
 			particle_textures = {
 				"guis/textures/pd2/particles/spark"
@@ -672,13 +671,13 @@ function SimpleGUIEffectSpewer.lootdrop_safe_drop_show_item(panel)
 			layer = panel:world_layer() + 10
 		})
 		SimpleGUIEffectSpewer:new({
-			spawn_interval = 0.1,
-			plive_time = 1.9,
 			max_num_particles = 2,
-			spew_at_start = true,
-			particle_speed = 0,
-			spew_time = 0,
 			particle_alpha = 0.2,
+			particle_speed = 0,
+			plive_time = 1.9,
+			spawn_interval = 0.1,
+			spew_at_start = true,
+			spew_time = 0,
 			particle_colors = particle_colors,
 			particle_w = panel:h() * 2.5,
 			particle_h = panel:h() * 2.5,
@@ -689,13 +688,13 @@ function SimpleGUIEffectSpewer.lootdrop_safe_drop_show_item(panel)
 			layer = panel:world_layer() + 10
 		})
 		SimpleGUIEffectSpewer:new({
-			spawn_interval = 0.1,
-			plive_time = 1.5,
 			max_num_particles = 1,
-			spew_at_start = true,
-			particle_speed = 0,
-			spew_time = 0,
 			particle_alpha = 0.4,
+			particle_speed = 0,
+			plive_time = 1.5,
+			spawn_interval = 0.1,
+			spew_at_start = true,
+			spew_time = 0,
 			particle_colors = particle_colors,
 			particle_w = panel:h() * 1.55,
 			particle_h = panel:h() * 1.55,
@@ -706,13 +705,13 @@ function SimpleGUIEffectSpewer.lootdrop_safe_drop_show_item(panel)
 			layer = panel:world_layer() + 10
 		})
 		SimpleGUIEffectSpewer:new({
-			spawn_interval = 0.1,
-			plive_time = 2,
 			max_num_particles = 2,
-			spew_at_start = true,
-			particle_speed = 0,
-			spew_time = 0,
 			particle_alpha = 0.1,
+			particle_speed = 0,
+			plive_time = 2,
+			spawn_interval = 0.1,
+			spew_at_start = true,
+			spew_time = 0,
 			particle_colors = particle_colors,
 			particle_w = panel:h() * 4,
 			particle_h = panel:h() * 4,
@@ -732,15 +731,15 @@ function SimpleGUIEffectSpewer.get_sample_boom()
 	local ws = managers.menu_component:fullscreen_ws()
 
 	return {
-		spawn_interval = 0.04,
 		max_num_particles = 35,
+		max_particle_speed = 225,
+		max_plive_time = 1,
 		min_particle_speed = 175,
 		min_plive_time = 0.6,
-		spew_time = 0.5,
-		max_particle_speed = 225,
 		particle_sway_distance = 0.5,
-		max_plive_time = 1,
 		particle_sway_speed = 360,
+		spawn_interval = 0.04,
+		spew_time = 0.5,
 		particle_colors = {
 			red = {
 				0.8,
@@ -759,15 +758,15 @@ function SimpleGUIEffectSpewer.get_sample_boom()
 			"guis/textures/pd2/particles/bulb"
 		}
 	}, {
-		particle_w = 16,
 		max_num_particles = 20,
-		particle_h = 16,
-		min_plive_time = 0.4,
-		spawn_interval = 0.05,
-		min_particle_speed = 375,
-		spew_time = 0.6,
 		max_particle_speed = 425,
 		max_plive_time = 0.6,
+		min_particle_speed = 375,
+		min_plive_time = 0.4,
+		particle_h = 16,
+		particle_w = 16,
+		spawn_interval = 0.05,
+		spew_time = 0.6,
 		particle_colors = {
 			red = {
 				0.8,
@@ -786,17 +785,17 @@ function SimpleGUIEffectSpewer.get_sample_boom()
 			"guis/textures/pd2/particles/spark"
 		}
 	}, {
-		spawn_interval = 0.1,
-		plive_time = 1.6,
-		max_num_particles = 1,
-		spew_at_start = true,
-		particle_speed = 0,
-		spew_time = 0,
-		particle_alpha = 0.8,
 		layer = 1,
+		max_num_particles = 1,
+		particle_alpha = 0.8,
+		particle_speed = 0,
+		plive_time = 1.6,
+		spawn_interval = 0.1,
+		spew_at_start = true,
+		spew_time = 0,
 		particle_colors = {
-			green = 0.8,
 			blue = 0.1,
+			green = 0.8,
 			red = 0.8
 		},
 		particle_w = ws:panel():h() / 2,
@@ -805,17 +804,17 @@ function SimpleGUIEffectSpewer.get_sample_boom()
 			"guis/textures/pd2/particles/fill"
 		}
 	}, {
-		spawn_interval = 0.1,
-		plive_time = 1.5,
-		max_num_particles = 1,
-		spew_at_start = true,
-		particle_speed = 0,
-		spew_time = 0,
-		particle_alpha = 0.8,
 		layer = 1,
+		max_num_particles = 1,
+		particle_alpha = 0.8,
+		particle_speed = 0,
+		plive_time = 1.5,
+		spawn_interval = 0.1,
+		spew_at_start = true,
+		spew_time = 0,
 		particle_colors = {
-			green = 0.5,
 			blue = 0.1,
+			green = 0.5,
 			red = 0.8
 		},
 		particle_w = ws:panel():h(),
@@ -824,17 +823,17 @@ function SimpleGUIEffectSpewer.get_sample_boom()
 			"guis/textures/pd2/particles/fill"
 		}
 	}, {
-		spawn_interval = 0.1,
-		plive_time = 0.8,
-		max_num_particles = 1,
-		spew_at_start = true,
-		particle_speed = 0,
-		spew_time = 0,
-		particle_alpha = 0.8,
 		layer = 1,
+		max_num_particles = 1,
+		particle_alpha = 0.8,
+		particle_speed = 0,
+		plive_time = 0.8,
+		spawn_interval = 0.1,
+		spew_at_start = true,
+		spew_time = 0,
 		particle_colors = {
-			green = 0.5,
 			blue = 0.1,
+			green = 0.5,
 			red = 0.8
 		},
 		particle_w = ws:panel():h(),
@@ -876,19 +875,19 @@ function SimpleGUIEffectSpewer.get_skill_spewers(x, y, panel, color)
 	}
 
 	return {
-		spew_time = 0.4,
-		min_plive_time = 0.4,
-		max_num_particles = 35,
-		particle_sway_speed = 180,
-		ws_converter = "safe_to_full_16_9",
-		min_particle_speed = 100,
 		gravity = 50,
+		max_num_particles = 35,
 		max_particle_speed = 155,
-		particle_sway_distance = 0.4,
 		max_plive_time = 0.6,
-		particle_w = 8,
+		min_particle_speed = 100,
+		min_plive_time = 0.4,
 		particle_h = 8,
+		particle_sway_distance = 0.4,
+		particle_sway_speed = 180,
+		particle_w = 8,
 		spawn_interval = 0.06,
+		spew_time = 0.4,
+		ws_converter = "safe_to_full_16_9",
 		particle_colors = colors,
 		particle_alpha = skill_color.alpha,
 		particle_textures = {
@@ -899,16 +898,16 @@ function SimpleGUIEffectSpewer.get_skill_spewers(x, y, panel, color)
 		parent_panel = panel,
 		layer = (panel and panel:layer() or 0) + 2
 	}, {
-		spew_time = 0.2,
-		min_plive_time = 0.2,
 		max_num_particles = 35,
-		ws_converter = "safe_to_full_16_9",
-		min_particle_speed = 255,
 		max_particle_speed = 305,
 		max_plive_time = 0.3,
-		particle_w = 4,
+		min_particle_speed = 255,
+		min_plive_time = 0.2,
 		particle_h = 4,
+		particle_w = 4,
 		spawn_interval = 0.05,
+		spew_time = 0.2,
+		ws_converter = "safe_to_full_16_9",
 		particle_colors = colors,
 		particle_alpha = skill_color.alpha,
 		particle_textures = {
@@ -919,11 +918,11 @@ function SimpleGUIEffectSpewer.get_skill_spewers(x, y, panel, color)
 		parent_panel = panel,
 		layer = (panel and panel:layer() or 0) + 2
 	}, {
-		spawn_interval = 0.1,
-		plive_time = 1.6,
 		max_num_particles = 1,
-		spew_at_start = true,
 		particle_speed = 0,
+		plive_time = 1.6,
+		spawn_interval = 0.1,
+		spew_at_start = true,
 		spew_time = 0,
 		ws_converter = "safe_to_full_16_9",
 		particle_colors = colors,
@@ -938,11 +937,11 @@ function SimpleGUIEffectSpewer.get_skill_spewers(x, y, panel, color)
 		parent_panel = panel,
 		layer = (panel and panel:layer() or 0) + 3
 	}, {
-		spawn_interval = 0.1,
-		plive_time = 1.5,
 		max_num_particles = 1,
-		spew_at_start = true,
 		particle_speed = 0,
+		plive_time = 1.5,
+		spawn_interval = 0.1,
+		spew_at_start = true,
 		spew_time = 0,
 		ws_converter = "safe_to_full_16_9",
 		particle_colors = colors,
@@ -957,11 +956,11 @@ function SimpleGUIEffectSpewer.get_skill_spewers(x, y, panel, color)
 		parent_panel = panel,
 		layer = (panel and panel:layer() or 0) + 3
 	}, {
-		spawn_interval = 0.1,
-		plive_time = 0.8,
 		max_num_particles = 1,
-		spew_at_start = true,
 		particle_speed = 0,
+		plive_time = 0.8,
+		spawn_interval = 0.1,
+		spew_at_start = true,
 		spew_time = 0,
 		ws_converter = "safe_to_full_16_9",
 		particle_colors = colors,
@@ -998,24 +997,24 @@ function SimpleGUIEffectSpewer.item_sell(x, y, layer)
 	}
 	local spewers = {
 		{
-			max_particle_w = 32,
-			min_particle_w = -32,
-			min_particle_speed = 125,
-			spew_time = 0.35,
-			min_particle_flip_speed = 125,
-			max_num_particles = 35,
-			particle_flip_dimension = 32,
-			max_particle_speed = 195,
-			max_spew_angle = 0,
-			ws_converter = "safe_to_full_16_9",
-			max_plive_time = 0.9,
 			gravity = 325,
-			particle_h = 32,
-			particle_blend_mode = "normal",
-			min_plive_time = 0.7,
+			max_num_particles = 35,
 			max_particle_flip_speed = 225,
-			spawn_interval = 0.015,
+			max_particle_speed = 195,
+			max_particle_w = 32,
+			max_plive_time = 0.9,
+			max_spew_angle = 0,
+			min_particle_flip_speed = 125,
+			min_particle_speed = 125,
+			min_particle_w = -32,
+			min_plive_time = 0.7,
 			min_spew_angle = -180,
+			particle_blend_mode = "normal",
+			particle_flip_dimension = 32,
+			particle_h = 32,
+			spawn_interval = 0.015,
+			spew_time = 0.35,
+			ws_converter = "safe_to_full_16_9",
 			x = x,
 			y = y,
 			particle_colors = colors,
@@ -1077,19 +1076,19 @@ function SimpleGUIEffectSpewer.get_daily_reward_spewers(x, y, panel, color)
 	}
 
 	return {
-		spew_time = 0.6,
-		min_plive_time = 0.8,
-		max_num_particles = 60,
-		min_spew_angle = -120,
-		ws_converter = "safe_to_full_16_9",
-		min_particle_speed = 250,
 		gravity = 500,
+		max_num_particles = 60,
 		max_particle_speed = 300,
-		max_spew_angle = -60,
 		max_plive_time = 1.4,
-		particle_w = 12,
+		max_spew_angle = -60,
+		min_particle_speed = 250,
+		min_plive_time = 0.8,
+		min_spew_angle = -120,
 		particle_h = 12,
+		particle_w = 12,
 		spawn_interval = 0.02,
+		spew_time = 0.6,
+		ws_converter = "safe_to_full_16_9",
 		particle_colors = colors,
 		particle_alpha = skill_color.alpha,
 		particle_textures = {
@@ -1100,16 +1099,16 @@ function SimpleGUIEffectSpewer.get_daily_reward_spewers(x, y, panel, color)
 		parent_panel = panel,
 		layer = (panel and panel:layer() or 0) + 2
 	}, {
-		spew_time = 0.4,
-		min_plive_time = 0.2,
 		max_num_particles = 35,
-		ws_converter = "safe_to_full_16_9",
-		min_particle_speed = 255,
 		max_particle_speed = 305,
 		max_plive_time = 0.3,
-		particle_w = 4,
+		min_particle_speed = 255,
+		min_plive_time = 0.2,
 		particle_h = 4,
+		particle_w = 4,
 		spawn_interval = 0.05,
+		spew_time = 0.4,
+		ws_converter = "safe_to_full_16_9",
 		particle_colors = colors,
 		particle_alpha = skill_color.alpha,
 		particle_textures = {
@@ -1120,11 +1119,11 @@ function SimpleGUIEffectSpewer.get_daily_reward_spewers(x, y, panel, color)
 		parent_panel = panel,
 		layer = (panel and panel:layer() or 0) + 2
 	}, {
-		spawn_interval = 0.1,
-		plive_time = 1.6,
 		max_num_particles = 1,
-		spew_at_start = true,
 		particle_speed = 0,
+		plive_time = 1.6,
+		spawn_interval = 0.1,
+		spew_at_start = true,
 		spew_time = 0,
 		ws_converter = "safe_to_full_16_9",
 		particle_colors = colors,
@@ -1139,11 +1138,11 @@ function SimpleGUIEffectSpewer.get_daily_reward_spewers(x, y, panel, color)
 		parent_panel = panel,
 		layer = (panel and panel:layer() or 0) + 3
 	}, {
-		spawn_interval = 0.1,
-		plive_time = 1.5,
 		max_num_particles = 1,
-		spew_at_start = true,
 		particle_speed = 0,
+		plive_time = 1.5,
+		spawn_interval = 0.1,
+		spew_at_start = true,
 		spew_time = 0,
 		ws_converter = "safe_to_full_16_9",
 		particle_colors = colors,
@@ -1158,11 +1157,11 @@ function SimpleGUIEffectSpewer.get_daily_reward_spewers(x, y, panel, color)
 		parent_panel = panel,
 		layer = (panel and panel:layer() or 0) + 3
 	}, {
-		spawn_interval = 0.1,
-		plive_time = 0.8,
 		max_num_particles = 1,
-		spew_at_start = true,
 		particle_speed = 0,
+		plive_time = 0.8,
+		spawn_interval = 0.1,
+		spew_at_start = true,
 		spew_time = 0,
 		ws_converter = "safe_to_full_16_9",
 		particle_colors = colors,

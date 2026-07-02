@@ -7,9 +7,9 @@ end
 
 -- Lines 9-32
 function SpawnManager:spawn_enemy_group_in_vis_group(event, i_vis_group)
-	local spawn_request = {
-		groups = {}
-	}
+	local spawn_request = {}
+
+	spawn_request.groups = {}
 
 	for unit_name, unit_data in pairs(event.groups) do
 		spawn_request.groups[unit_name] = {
@@ -43,9 +43,9 @@ end
 
 -- Lines 36-90
 function SpawnManager:spawn_enemy_group(event)
-	local spawn_request = {
-		groups = {}
-	}
+	local spawn_request = {}
+
+	spawn_request.groups = {}
 
 	for unit_name, unit_data in pairs(event.groups) do
 		spawn_request.groups[unit_name] = {
@@ -54,6 +54,7 @@ function SpawnManager:spawn_enemy_group(event)
 	end
 
 	spawn_request.ai = event.ai
+
 	local criminals = World:find_units_quick("all", managers.slot:get_mask("players"))
 
 	if #criminals > 0 then
@@ -115,16 +116,17 @@ end
 
 -- Lines 94-95
 function SpawnManager:update(unit, t, dt)
+	return
 end
 
 -- Lines 99-148
 function SpawnManager:_spawn_units()
 	if self._spawn_requests then
 		local units_spawned = {}
-		local trash_requests = nil
+		local trash_requests
 
 		for request_id, spawn_request in pairs(self._spawn_requests) do
-			local trash_groups = nil
+			local trash_groups
 
 			for unit_name, unit_data in pairs(spawn_request.groups) do
 				if unit_data.amount == 1 then

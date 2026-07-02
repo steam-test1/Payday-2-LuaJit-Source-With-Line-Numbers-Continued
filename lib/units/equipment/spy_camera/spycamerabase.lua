@@ -1,6 +1,7 @@
 SpyCameraBase = SpyCameraBase or class(UnitBase)
 SpyCameraBase.UPDATE_RATE = 1.5
 SpyCameraBase.WHISPER_UPDATE_RATE = 4
+
 local IDS_MATERIAL = Idstring("material")
 local IDS_UV0_SPEED = Idstring("uv0_speed")
 
@@ -93,7 +94,9 @@ end
 -- Lines 96-133
 function SpyCameraBase:set_owner(owner)
 	self._owner = owner
+
 	local is_whisper_mode = managers.groupai and managers.groupai:state():whisper_mode()
+
 	self._update_rate = is_whisper_mode and self.WHISPER_UPDATE_RATE or self.UPDATE_RATE
 
 	if owner then
@@ -147,6 +150,7 @@ end
 -- Lines 146-157
 function SpyCameraBase:_update_materials()
 	self._material_clbk_id = nil
+
 	local uv0_speed = Vector3(1 / (self._update_rate or 1), 0, 0)
 
 	for _, material in ipairs(self._unit:get_objects_by_type(IDS_MATERIAL)) do
@@ -186,9 +190,10 @@ function SpyCameraBase:link_attachment()
 
 	if ray then
 		local body = ray.body
+
 		self._attached_data = {
-			max_index = 3,
 			index = 1,
+			max_index = 3,
 			body = body,
 			position = body:position(),
 			rotation = body:rotation()
@@ -215,6 +220,7 @@ function SpyCameraBase:update(unit, t, dt)
 	end
 
 	self._next_update_t = t + self._update_rate
+
 	local position = self._unit:position()
 	local rotation = self._unit:rotation()
 	local forward = rotation:y()
@@ -389,13 +395,14 @@ end
 
 -- Lines 394-406
 function SpyCameraBase:save(data)
-	local state = {
-		is_dynamic = self._is_dynamic
-	}
+	local state = {}
+
+	state.is_dynamic = self._is_dynamic
 	data.SpyCameraBase = state
 
 	if self._interaction_unit then
 		local peer = managers.network:session():dropin_peer()
+
 		self._dropin_clbk_id = "SpyCameraBase" .. tostring(self._unit:key())
 
 		managers.enemy:add_delayed_clbk(self._dropin_clbk_id, callback(self, self, "_clbk_drop_in_sync", peer:id()), TimerManager:game():time() + 0.1)
@@ -470,8 +477,8 @@ function SpyAccessCameraBase:init(unit)
 	self._camera_object = self._unit:get_object(Idstring("a_camera"))
 	self._obstruction_slotmask = managers.slot:get_mask("interaction_obstruction")
 	self._values = {
-		text_id = "hud_cam_access_spy_camera",
 		destroyed = false,
+		text_id = "hud_cam_access_spy_camera",
 		theme = "spy_camera",
 		position = self:camera_position(),
 		rotation = self:camera_rotation(),
@@ -580,9 +587,13 @@ function SpyAccessCameraBase:set_owner_id(owner_id)
 	end
 
 	self._owner_id = owner_id
+
 	local theme_id = "spy_camera_peer_" .. owner_id
+
 	self._values.theme = tweak_data.camera_themes[theme_id] and theme_id or "spy_camera"
+
 	local character_name = owner_peer:character()
+
 	self._values.text_macros.NAME = managers.localization:text("menu_" .. character_name)
 end
 
@@ -614,6 +625,7 @@ function SpyAccessCameraBase:save(data)
 		owner_id = self._owner_id,
 		destroyed = self._values.destroyed
 	}
+
 	data.SpyAccessCameraBase = state
 end
 

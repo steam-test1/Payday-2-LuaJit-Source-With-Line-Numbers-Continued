@@ -1,4 +1,5 @@
 PlayerTurretMovement = PlayerTurretMovement or class()
+
 local mvec3_dir = mvector3.direction
 local tmp_rot1 = Rotation()
 local tmp_vec1 = Vector3()
@@ -21,6 +22,7 @@ end
 
 -- Lines 27-28
 function PlayerTurretMovement:post_init()
+	return
 end
 
 -- Lines 30-39

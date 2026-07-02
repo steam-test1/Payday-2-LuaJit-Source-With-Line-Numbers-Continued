@@ -43,6 +43,7 @@ function StoryMissionsTweakData:_level_progress(progress_id, ...)
 	end
 
 	local had_levels = data.levels
+
 	data.levels = data.levels or ach.job and {
 		ach.job
 	} or ach.jobs
@@ -71,12 +72,12 @@ end
 function StoryMissionsTweakData:_default_pre_coins()
 	return {
 		{
-			type_items = "cash",
-			item_entry = "cash20"
+			item_entry = "cash20",
+			type_items = "cash"
 		},
 		{
-			type_items = "xp",
-			item_entry = "xp30"
+			item_entry = "xp30",
+			type_items = "xp"
 		}
 	}
 end
@@ -85,12 +86,12 @@ end
 function StoryMissionsTweakData:_default_pre_coins_halved()
 	return {
 		{
-			type_items = "cash",
-			item_entry = "cash10"
+			item_entry = "cash10",
+			type_items = "cash"
 		},
 		{
-			type_items = "xp",
-			item_entry = "xp15"
+			item_entry = "xp15",
+			type_items = "xp"
 		}
 	}
 end
@@ -147,7 +148,7 @@ function StoryMissionsTweakData._sm_2_check()
 
 	maybe_award("story_inv_deployable", slots and #slots > 0)
 	maybe_award("story_inv_perkdeck", managers.skilltree:current_specialization_tier() > 0)
-	maybe_award("story_inv_skillpoints", tweak_data.story.sm_2_skillpoints <= managers.skilltree:total_points_spent())
+	maybe_award("story_inv_skillpoints", managers.skilltree:total_points_spent() >= tweak_data.story.sm_2_skillpoints)
 end
 
 -- Lines 130-132
@@ -165,20 +166,20 @@ function StoryMissionsTweakData:_init_missions(tweak_data)
 	self.sm_2_skillpoints = 8
 	self.missions = {
 		self:_mission("sm_act_1", {
-			rewarded = true,
 			completed = true,
 			is_header = true,
+			rewarded = true,
 			objectives = {}
 		}),
 		self:_mission("sm_1", {
-			reward_id = "menu_sm_pre_coin_reward",
 			custom_check = "_sm_1_check",
+			reward_id = "menu_sm_pre_coin_reward",
 			voice_line = "Play_pln_stq_01",
 			objectives = {
 				{
 					self:_level_progress("story_basics_loud", 1, {
-						name_id = "menu_sm_basics_loud",
-						basic = true
+						basic = true,
+						name_id = "menu_sm_basics_loud"
 					})
 				},
 				{
@@ -191,8 +192,8 @@ function StoryMissionsTweakData:_init_missions(tweak_data)
 			rewards_halved = self:_default_pre_coins_halved()
 		}),
 		self:_mission("sm_2", {
-			reward_id = "menu_sm_pre_coin_reward",
 			custom_check = "_sm_2_check",
+			reward_id = "menu_sm_pre_coin_reward",
 			voice_line = "Play_pln_stq_02",
 			objectives = {
 				{
@@ -266,14 +267,14 @@ function StoryMissionsTweakData:_init_missions(tweak_data)
 			rewards_halved = self:_default_pre_coins_halved()
 		}),
 		self:_mission("sm_moving_up", {
+			custom_check = "_sm_moving_up_check",
 			reward_id = "menu_sm_moving_up_reward",
 			voice_line = "Play_pln_stq_30",
-			custom_check = "_sm_moving_up_check",
 			objectives = {
 				{
 					self:_level_progress("story_basics_stealth", 1, {
-						name_id = "menu_sm_basics_stealth",
-						basic = true
+						basic = true,
+						name_id = "menu_sm_basics_stealth"
 					})
 				},
 				{
@@ -359,10 +360,10 @@ function StoryMissionsTweakData:_init_missions(tweak_data)
 			rewards = self:_default_reward()
 		}),
 		self:_mission("sm_13", {
-			reward_id = "menu_sm_default_reward",
-			voice_line = "Play_pln_stq_13",
 			custom_check = "_sm_13_check",
 			hide_progress = true,
+			reward_id = "menu_sm_default_reward",
+			voice_line = "Play_pln_stq_13",
 			objectives = {
 				{
 					self:_progress("story_half_lvl", 1, {
@@ -409,9 +410,9 @@ function StoryMissionsTweakData:_init_missions(tweak_data)
 			rewards = self:_default_reward()
 		}),
 		self:_mission("sm_act_2", {
-			rewarded = true,
 			completed = true,
 			is_header = true,
+			rewarded = true,
 			objectives = {}
 		}),
 		self:_mission("sm_17", {
@@ -552,14 +553,14 @@ function StoryMissionsTweakData:_init_missions(tweak_data)
 			rewards = self:_default_reward()
 		}),
 		self:_mission("sm_27", {
+			hide_progress = true,
 			reward_id = "menu_sm_default_reward",
 			voice_line = "Play_pln_stq_28",
-			hide_progress = true,
 			objectives = {
 				{
 					self:_progress("story_crime_spree", 1, {
-						name_id = "menu_sm_crime_spree",
-						crimespree = true
+						crimespree = true,
+						name_id = "menu_sm_crime_spree"
 					})
 				}
 			},
@@ -636,9 +637,9 @@ function StoryMissionsTweakData:_init_missions(tweak_data)
 			rewards = self:_default_reward()
 		}),
 		self:_mission("sm_act_3", {
-			rewarded = true,
 			completed = true,
 			is_header = true,
+			rewarded = true,
 			objectives = {}
 		}),
 		self:_mission("sm_33", {
@@ -894,9 +895,9 @@ function StoryMissionsTweakData:_init_missions(tweak_data)
 			rewards = self:_default_reward()
 		}),
 		self:_mission("sm_end", {
-			rewarded = true,
 			completed = true,
 			last_mission = true,
+			rewarded = true,
 			objectives = {}
 		})
 	}

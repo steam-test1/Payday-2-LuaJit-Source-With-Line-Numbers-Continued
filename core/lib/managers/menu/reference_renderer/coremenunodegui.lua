@@ -12,7 +12,9 @@ function NodeGui:init(node, layer, parameters)
 	self.topic_font_size = 48
 	self.spacing = 0
 	self.height_padding = 0
+
 	local safe_rect_pixels = managers.viewport:get_safe_rect_pixels()
+
 	self.ws = managers.gui_data:create_saferect_workspace()
 	self._item_panel_parent = self.ws:panel():panel({
 		name = "item_panel_parent"
@@ -27,12 +29,11 @@ function NodeGui:init(node, layer, parameters)
 
 	self.ws:show()
 
-	self.layers = {
-		first = layer,
-		background = layer,
-		marker = layer + 1,
-		items = layer + 2
-	}
+	self.layers = {}
+	self.layers.first = layer
+	self.layers.background = layer
+	self.layers.marker = layer + 1
+	self.layers.items = layer + 2
 	self.layers.last = self.layers.items
 	self.localize_strings = true
 	self.row_item_color = self.row_item_color or Color(1, 0.5529411764705883, 0.6901960784313725, 0.8274509803921568)
@@ -66,6 +67,7 @@ end
 
 -- Lines 71-72
 function NodeGui:_setup_panels(node)
+	return
 end
 
 -- Lines 74-161
@@ -78,6 +80,7 @@ function NodeGui:_setup_item_rows(node)
 			for k, b in ipairs(items) do
 				if i ~= k and a:parameters().controller_order_override ~= nil and b:parameters().controller_order_override ~= nil and a:parameters().controller_order_override < b:parameters().controller_order_override and k < i then
 					local t = a
+
 					items[i] = b
 					items[k] = t
 				end
@@ -88,6 +91,7 @@ function NodeGui:_setup_item_rows(node)
 	for _, item in pairs(items) do
 		if item:visible() then
 			item:parameters().gui_node = self
+
 			local item_name = item:parameters().name
 			local item_text = "menu item missing 'text_id'"
 
@@ -95,7 +99,7 @@ function NodeGui:_setup_item_rows(node)
 				item_text = nil
 			end
 
-			local help_text = nil
+			local help_text
 			local params = item:parameters()
 
 			if params.text_id then
@@ -161,9 +165,10 @@ end
 function NodeGui:_insert_row_item(item, node, i)
 	if item:visible() then
 		item:parameters().gui_node = self
+
 		local item_name = item:parameters().name
 		local item_text = "menu item missing 'text_id'"
-		local help_text = nil
+		local help_text
 		local params = item:parameters()
 
 		if params.text_id then
@@ -331,6 +336,7 @@ end
 
 -- Lines 343-366
 function NodeGui:_create_menu_item(row_item)
+	return
 end
 
 -- Lines 372-493
@@ -343,7 +349,7 @@ function NodeGui:_reposition_items(highlighted_row_item)
 			return
 		end
 
-		local prev_item, first_item = nil
+		local prev_item, first_item
 		local top_dividers_padding = 0
 		local bottom_dividers_padding = 0
 		local num_dividers_top = 0
@@ -360,7 +366,7 @@ function NodeGui:_reposition_items(highlighted_row_item)
 		end
 
 		local first = first_item.gui_panel == highlighted_row_item.gui_panel
-		local last_item = nil
+		local last_item
 		local num_dividers_bottom = 0
 
 		for i = #self.row_items, 1, -1 do
@@ -375,7 +381,7 @@ function NodeGui:_reposition_items(highlighted_row_item)
 		end
 
 		local last = last_item.gui_panel == highlighted_row_item.gui_panel
-		local prev_item, next_item = nil
+		local prev_item, next_item
 
 		for i, row_item in ipairs(self.row_items) do
 			if row_item.gui_panel == highlighted_row_item.gui_panel then
@@ -417,6 +423,7 @@ function NodeGui:_reposition_items(highlighted_row_item)
 
 		if prev_item then
 			local prev_top = prev_item.gui_panel:world_y()
+
 			offset_prev = offset_prev + math.abs(prev_top - highlighted_top)
 		end
 
@@ -425,6 +432,7 @@ function NodeGui:_reposition_items(highlighted_row_item)
 		if next_item then
 			local next_height = next_item.item:get_h(next_item, self) or next_item.gui_panel:h()
 			local next_top = next_item.gui_panel:world_y()
+
 			offset_next = offset_next + math.abs(next_top + next_height - highlighted_bottom)
 		end
 
@@ -451,19 +459,18 @@ end
 
 -- Lines 495-501
 function NodeGui:scroll_setup()
-	self._scroll_data = {
-		max_scroll_duration = 0.5,
-		scroll_speed = (self.font_size + self.spacing * 2) / 0.1,
-		dy_total = 0,
-		dy_left = 0
-	}
+	self._scroll_data = {}
+	self._scroll_data.max_scroll_duration = 0.5
+	self._scroll_data.scroll_speed = (self.font_size + self.spacing * 2) / 0.1
+	self._scroll_data.dy_total = 0
+	self._scroll_data.dy_left = 0
 end
 
 -- Lines 503-515
 function NodeGui:scroll_start(dy)
 	local speed = self._scroll_data.scroll_speed
 
-	if speed > 0 and self._scroll_data.max_scroll_duration < math.abs(dy / speed) then
+	if speed > 0 and math.abs(dy / speed) > self._scroll_data.max_scroll_duration then
 		speed = math.abs(dy) / self._scroll_data.max_scroll_duration
 	end
 
@@ -480,7 +487,7 @@ function NodeGui:scroll_update(dt)
 
 	if dy_left ~= 0 then
 		local speed = self._scroll_data.speed
-		local dy = nil
+		local dy
 
 		if speed <= 0 then
 			dy = dy_left
@@ -509,8 +516,8 @@ function NodeGui:wheel_scroll_start(dy)
 	if dy > 0 then
 		local dist = self.item_panel:world_y() - self._item_panel_parent:world_y()
 
-		if math.round(self.item_panel:world_y()) - self._item_panel_parent:world_y() >= 0 then
-			return self._item_panel_parent:h() < self.item_panel:h()
+		if not (math.round(self.item_panel:world_y()) - self._item_panel_parent:world_y() < 0) then
+			return self.item_panel:h() > self._item_panel_parent:h()
 		end
 
 		speed = math.min(speed, math.abs(dist))
@@ -518,7 +525,7 @@ function NodeGui:wheel_scroll_start(dy)
 		local dist = self.item_panel:world_bottom() - self._item_panel_parent:world_bottom()
 
 		if math.round(self.item_panel:world_bottom()) - self._item_panel_parent:world_bottom() < 4 then
-			return self._item_panel_parent:h() < self.item_panel:h()
+			return self.item_panel:h() > self._item_panel_parent:h()
 		end
 
 		speed = math.min(speed, math.abs(dist))
@@ -618,6 +625,7 @@ end
 
 -- Lines 645-646
 function NodeGui:_set_topic_position()
+	return
 end
 
 -- Lines 648-658
@@ -627,6 +635,7 @@ function NodeGui:_item_panel_height()
 	for _, row_item in pairs(self.row_items) do
 		if not row_item.item:parameters().back and not row_item.item:parameters().pd2_corner then
 			local x, y, w, h = row_item.gui_panel:shape()
+
 			height = height + h + self.spacing
 		end
 	end
@@ -667,6 +676,7 @@ function NodeGui:_set_item_positions()
 
 				if row_item.gui_panel.set_text then
 					local x, y, w, h = row_item.gui_panel:text_rect()
+
 					left = x
 					right = x + w
 				end
@@ -691,6 +701,7 @@ function NodeGui:_set_item_positions()
 			end
 
 			local x, y, w, h = row_item.gui_panel:shape()
+
 			current_item_height = h + self.spacing
 			current_y = current_y + current_item_height
 		end
@@ -781,11 +792,12 @@ end
 
 -- Lines 827-828
 function NodeGui:_setup_item_size(row_item)
+	return
 end
 
 -- Lines 830-838
 function NodeGui:mouse_pressed(button, x, y)
-	if self.item_panel:inside(x, y) and self._item_panel_parent:inside(x, y) and self:_mid_align() < x then
+	if self.item_panel:inside(x, y) and self._item_panel_parent:inside(x, y) and x > self:_mid_align() then
 		if button == Idstring("mouse wheel down") then
 			return self:wheel_scroll_start(-1)
 		elseif button == Idstring("mouse wheel up") then

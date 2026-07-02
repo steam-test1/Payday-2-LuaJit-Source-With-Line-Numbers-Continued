@@ -23,6 +23,7 @@ end
 -- Lines 20-49
 function ElementSpawnEnemyDummy:_finalize_values()
 	local values = self._values
+
 	values.spawn_action = self:value("spawn_action")
 
 	-- Lines 24-26
@@ -40,6 +41,7 @@ function ElementSpawnEnemyDummy:_finalize_values()
 	-- Lines 34-37
 	local function _index_or_nil(table_in, name_in)
 		local found_index = table.index_of(table_in, values[name_in])
+
 		values[name_in] = found_index ~= -1 and found_index or nil
 	end
 
@@ -74,17 +76,20 @@ function ElementSpawnEnemyDummy:produce(params)
 		return
 	end
 
-	local unit = nil
+	local unit
 
 	if params and params.name then
 		unit = safe_spawn_unit(params.name, self:get_orientation())
+
 		local spawn_ai = self:_create_spawn_AI_parametric(params.stance, params.objective, self._values)
 
 		unit:brain():set_spawn_ai(spawn_ai)
 	else
 		local enemy_name = self:value("enemy") or self._enemy_name
+
 		unit = safe_spawn_unit(enemy_name, self:get_orientation())
-		local objective = nil
+
+		local objective
 		local action = self._create_action_data(CopActionAct._act_redirects.enemy_spawn[self._values.spawn_action])
 		local stance = managers.groupai:state():enemy_weapons_hot() and "cbt" or "ntl"
 
@@ -181,6 +186,7 @@ function ElementSpawnEnemyDummy:_create_spawn_AI_parametric(stance, objective, s
 
 	if entry_action.type == "act" then
 		local followup_objective = objective
+
 		objective = {
 			type = "act",
 			action = entry_action,
@@ -202,20 +208,20 @@ end
 function ElementSpawnEnemyDummy._create_action_data(anim_name)
 	if not anim_name or anim_name == "none" then
 		return {
-			sync = true,
 			body_part = 1,
+			sync = true,
 			type = "idle"
 		}
 	else
 		return {
 			align_sync = true,
-			type = "act",
 			body_part = 1,
+			type = "act",
 			variant = anim_name,
 			blocks = {
+				action = -1,
 				heavy_hurt = -1,
 				hurt = -1,
-				action = -1,
 				walk = -1
 			}
 		}

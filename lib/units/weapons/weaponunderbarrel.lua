@@ -18,6 +18,7 @@ end
 
 -- Lines 19-21
 function WeaponUnderbarrel:destroy(unit)
+	return
 end
 
 -- Lines 23-32

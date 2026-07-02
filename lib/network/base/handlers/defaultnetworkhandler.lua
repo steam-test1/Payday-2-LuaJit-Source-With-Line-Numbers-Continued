@@ -2,6 +2,7 @@ DefaultNetworkHandler = DefaultNetworkHandler or class()
 
 -- Lines 3-4
 function DefaultNetworkHandler:init()
+	return
 end
 
 -- Lines 6-14

@@ -64,6 +64,7 @@ end
 -- Lines 59-82
 function has_projection_light(unit, type)
 	type = type or "projection"
+
 	local object_file = CoreEngineAccess._editor_unit_data(unit:name():id()):model()
 	local node = DB:has("object", object_file) and DB:load_node("object", object_file)
 
@@ -85,6 +86,7 @@ end
 -- Lines 85-106
 function is_projection_light(unit, light, type)
 	type = type or "projection"
+
 	local object_file = CoreEngineAccess._editor_unit_data(unit:name():id()):model()
 	local node = DB:has("object", object_file) and DB:load_node("object", object_file)
 
@@ -228,6 +230,7 @@ end
 function toolbar_toggle(data, event)
 	local c = data.class
 	local toolbar = _G.type_name(data.toolbar) == "string" and c[data.toolbar] or data.toolbar
+
 	c[data.value] = toolbar:tool_state(event:get_id())
 
 	if c[data.menu] then
@@ -254,6 +257,7 @@ function dump_mesh(units, name, get_objects_string)
 	name = name or "dump_mesh"
 	get_objects_string = get_objects_string or "g_*"
 	units = units or World:find_units_quick("all", managers.slot:get_mask("dump_mesh"))
+
 	local objects = {}
 	local lods = {
 		"e",
@@ -307,6 +311,7 @@ function dump_all(units, name, get_objects_string)
 	name = name or "all_dumped"
 	get_objects_string = get_objects_string or "g_*"
 	units = units or World:find_units_quick("all", managers.slot:get_mask("dump_all"))
+
 	local objects = {}
 
 	cat_print("editor", "Starting dump mesh")

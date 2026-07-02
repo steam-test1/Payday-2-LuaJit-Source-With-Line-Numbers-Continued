@@ -15,10 +15,12 @@ end
 
 -- Lines 16-17
 function User.default_data(data)
+	return
 end
 
 -- Lines 19-20
 function User:save(data)
+	return
 end
 
 -- Lines 22-24

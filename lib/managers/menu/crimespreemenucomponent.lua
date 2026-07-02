@@ -1,4 +1,5 @@
 CrimeSpreeMenuComponent = CrimeSpreeMenuComponent or class(MenuGuiComponentGeneric)
+
 local padding = 10
 local button_size = {
 	256,
@@ -82,14 +83,13 @@ function CrimeSpreeMenuComponent:mouse_moved(o, x, y)
 		return
 	end
 
-	local used, pointer = nil
+	local used, pointer
 
 	for idx, btn in ipairs(self._buttons) do
 		btn:set_selected(btn:inside(x, y))
 
 		if btn:is_selected() then
-			pointer = "link"
-			used = true
+			used, pointer = true, "link"
 		end
 	end
 
@@ -142,9 +142,9 @@ function CrimeSpreeMenuComponent:_open_crime_spree_contract()
 	local node = Global.game_settings.single_player and "crimenet_crime_spree_contract_singleplayer" or "crimenet_crime_spree_contract_host"
 	local data = {
 		{
-			job_id = "crime_spree",
-			customize_contract = false,
 			competitive = false,
+			customize_contract = false,
+			job_id = "crime_spree",
 			professional = false,
 			difficulty = tweak_data.crime_spree.base_difficulty,
 			difficulty_id = tweak_data.crime_spree.base_difficulty_index,
@@ -171,27 +171,27 @@ function CrimeSpreeStartButton:init(parent)
 		h = parent:h()
 	})
 	self._text = self._panel:text({
-		halign = "center",
-		vertical = "center",
-		layer = 1,
 		align = "center",
+		halign = "center",
+		layer = 1,
 		text = "",
-		y = 0,
-		x = 0,
 		valign = "center",
+		vertical = "center",
+		x = 0,
+		y = 0,
 		color = Color.white,
 		font = tweak_data.menu.pd2_medium_font,
 		font_size = tweak_data.menu.pd2_medium_font_size
 	})
 	self._level_text = self._panel:text({
-		halign = "center",
-		vertical = "center",
-		layer = 1,
 		align = "center",
+		halign = "center",
+		layer = 1,
 		text = "",
-		y = 0,
-		x = 0,
 		valign = "center",
+		vertical = "center",
+		x = 0,
+		y = 0,
 		color = tweak_data.screen_colors.crime_spree_risk,
 		font = tweak_data.menu.pd2_large_font,
 		font_size = tweak_data.menu.pd2_medium_large_size
@@ -207,11 +207,11 @@ function CrimeSpreeStartButton:init(parent)
 		color = tweak_data.screen_colors.button_stage_3
 	})
 	self._blur = self._panel:bitmap({
-		texture = "guis/textures/test_blur_df",
-		layer = -1,
-		halign = "scale",
 		alpha = 1,
+		halign = "scale",
+		layer = -1,
 		render_template = "VertexColorTexturedBlur3D",
+		texture = "guis/textures/test_blur_df",
 		valign = "scale",
 		w = self._panel:w(),
 		h = self._panel:h()
@@ -268,4 +268,5 @@ end
 
 -- Lines 266-267
 function CrimeSpreeStartButton:update(t, dt)
+	return
 end

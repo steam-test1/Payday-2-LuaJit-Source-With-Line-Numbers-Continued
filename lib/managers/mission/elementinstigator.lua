@@ -12,6 +12,7 @@ end
 
 -- Lines 12-14
 function ElementInstigator:client_on_executed(...)
+	return
 end
 
 -- Lines 16-24
@@ -154,6 +155,7 @@ function ElementInstigator:instigator_operation_use_all(keep_on_use)
 	end
 
 	local instigators = clone(self._instigators)
+
 	self._instigators = {}
 
 	return instigators
@@ -187,6 +189,7 @@ end
 
 -- Lines 167-169
 function ElementInstigatorOperator:client_on_executed(...)
+	return
 end
 
 -- Lines 171-211
@@ -257,6 +260,7 @@ end
 
 -- Lines 236-238
 function ElementInstigatorTrigger:client_on_executed(...)
+	return
 end
 
 -- Lines 240-246

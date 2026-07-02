@@ -36,7 +36,7 @@ function CoreCutsceneFrameVisitor:update(time, delta_time)
 	end
 
 	local was_aborted = not self.__progress_dialog:update_bar(self.__frame - self.__start_frame, self:_progress_message(self.__frame))
-	local is_done = was_aborted or self.__end_frame <= self.__frame
+	local is_done = was_aborted or self.__frame >= self.__end_frame
 
 	if is_done then
 		self:_done(was_aborted)
@@ -70,6 +70,7 @@ end
 
 -- Lines 60-64
 function CoreCutsceneFrameVisitor:_done(aborted)
+	return
 end
 
 -- Lines 66-75

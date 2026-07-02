@@ -16,6 +16,7 @@ end
 -- Lines 13-26
 function CoreCutsceneSequencerPanel:update(time, delta_time)
 	local current_mouse_event = EWS:MouseEvent("EVT_MOTION")
+
 	self._previous_mouse_event = self._previous_mouse_event or current_mouse_event
 
 	if current_mouse_event:get_position() ~= self._previous_mouse_event:get_position() then
@@ -93,7 +94,7 @@ end
 
 -- Lines 79-81
 function CoreCutsceneSequencerPanel:track_at_screen_position(screen_position)
-	return table.find_value(self:tracks(), function (track)
+	return table.find_value(self:tracks(), function(track)
 		return track:point_is_inside(screen_position)
 	end)
 end
@@ -133,7 +134,7 @@ function CoreCutsceneSequencerPanel:set_active_film_track(active_track)
 	end
 
 	self:_send_event("EVT_EVALUATE_FRAME_AT_PLAYHEAD", {
-		position = function ()
+		position = function()
 			return position
 		end
 	})
@@ -141,7 +142,7 @@ end
 
 -- Lines 113-115
 function CoreCutsceneSequencerPanel:film_clips()
-	return table.inject(self:film_tracks(), {}, function (accumulated, track)
+	return table.inject(self:film_tracks(), {}, function(accumulated, track)
 		return table.list_union(accumulated, track:clips())
 	end)
 end
@@ -153,7 +154,7 @@ end
 
 -- Lines 121-123
 function CoreCutsceneSequencerPanel:selected_film_clips()
-	return table.inject(self:film_tracks(), {}, function (accumulated, track)
+	return table.inject(self:film_tracks(), {}, function(accumulated, track)
 		return table.list_union(accumulated, track:selected_clips())
 	end)
 end
@@ -179,6 +180,7 @@ end
 
 -- Lines 140-142
 function CoreCutsceneSequencerPanel:add_audio_clip(offset, sound)
+	return
 end
 
 -- Lines 144-150
@@ -216,7 +218,7 @@ function CoreCutsceneSequencerPanel:remove_items(clip_list)
 
 	self:thaw()
 	self:_send_event("EVT_EVALUATE_FRAME_AT_PLAYHEAD", {
-		position = function ()
+		position = function()
 			return position
 		end
 	})
@@ -249,7 +251,7 @@ function CoreCutsceneSequencerPanel:remove_all_items()
 	end
 
 	self:_send_event("EVT_EVALUATE_FRAME_AT_PLAYHEAD", {
-		position = function ()
+		position = function()
 			return position
 		end
 	})
@@ -294,6 +296,7 @@ end
 -- Lines 226-236
 function CoreCutsceneSequencerPanel:set_playhead_position(position)
 	local current_position = self:playhead_position()
+
 	position = math.max(position, 0)
 
 	if position ~= current_position then
@@ -310,7 +313,7 @@ end
 -- Lines 238-240
 function CoreCutsceneSequencerPanel:_evaluate_frame_at_playhead()
 	self:_send_event("EVT_EVALUATE_FRAME_AT_PLAYHEAD", {
-		position = function ()
+		position = function()
 			return self:playhead_position()
 		end
 	})
@@ -338,6 +341,7 @@ end
 -- Lines 255-312
 function CoreCutsceneSequencerPanel:_create_panel(parent_frame)
 	self._panel = EWS:Panel(parent_frame)
+
 	local panel_sizer = EWS:BoxSizer("VERTICAL")
 
 	self._panel:set_sizer(panel_sizer)

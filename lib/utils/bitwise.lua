@@ -2,6 +2,7 @@ Bitwise = Bitwise or class()
 
 -- Lines 6-8
 function Bitwise:init()
+	return
 end
 
 -- Lines 10-12

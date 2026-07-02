@@ -8,6 +8,7 @@ function UnoPuzzleDoorBase:init(unit)
 	self._outer = UnoPuzzleDoorRing:new(unit:get_object(Idstring("a_outer_ring")), 26)
 	self._middle = UnoPuzzleDoorRing:new(unit:get_object(Idstring("a_middle_ring")), 26)
 	self._inner = UnoPuzzleDoorRing:new(unit:get_object(Idstring("a_inner_ring")), 26)
+
 	local riddle_ids = {}
 
 	for i = 1, #tweak_data.safehouse.uno_door_riddles do
@@ -40,6 +41,7 @@ function UnoPuzzleDoorBase:update(unit, t, dt)
 	self._unit:set_moving()
 
 	local rotating = false
+
 	rotating = self._outer:update(t, dt) or rotating
 	rotating = self._middle:update(t, dt) or rotating
 	rotating = self._inner:update(t, dt) or rotating
@@ -70,6 +72,7 @@ function UnoPuzzleDoorBase:set_riddle(current_riddle)
 	end
 
 	local riddle_id = self._riddle_ids[current_riddle]
+
 	self._current_riddle = current_riddle
 	self._solution = tweak_data.safehouse.uno_door_riddles[riddle_id]
 
@@ -172,7 +175,7 @@ function UnoPuzzleDoorRing:update(t, dt)
 
 	self._object:set_local_rotation(rotation * Rotation(Vector3(0, 1, 0), angle))
 
-	return self.EPSILON < math.abs(angle)
+	return math.abs(angle) > self.EPSILON
 end
 
 -- Lines 175-177
@@ -183,6 +186,7 @@ end
 -- Lines 179-182
 function UnoPuzzleDoorRing:_target_stop(stop)
 	local angle = 360 / self._stops * stop
+
 	self._target = Rotation(Vector3(0, 1, 0), angle)
 end
 

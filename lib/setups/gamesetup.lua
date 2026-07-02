@@ -68,30 +68,36 @@ else
 
 	-- Lines 100-100
 	function PlayerHand:init(unit)
+		return
 	end
 
 	-- Lines 100-100
 	function PlayerHand:destroy()
+		return
 	end
 
 	PlayerWarp = PlayerWarp or class()
 
 	-- Lines 101-101
 	function PlayerWarp:init(unit)
+		return
 	end
 
 	-- Lines 101-101
 	function PlayerWarp:destroy()
+		return
 	end
 
 	HandMelee = HandMelee or class()
 
 	-- Lines 102-102
 	function HandMelee:init(unit)
+		return
 	end
 
 	-- Lines 102-102
 	function HandMelee:destroy()
+		return
 	end
 end
 
@@ -303,7 +309,7 @@ function GameSetup:load_packages()
 		end
 	end
 
-	local job_tweak_contact_data, job_tweak_package_data = nil
+	local job_tweak_contact_data, job_tweak_package_data
 
 	if Global.job_manager and Global.job_manager.current_job and Global.job_manager.current_job.job_id then
 		job_tweak_contact_data = tweak_data.narrative:job_data(Global.job_manager.current_job.job_id)
@@ -332,7 +338,7 @@ function GameSetup:load_packages()
 		load_difficulty_package(diff_package)
 	end
 
-	local level_package = nil
+	local level_package
 	local event_packages = {}
 
 	if not Global.level_data or not Global.level_data.level_id then
@@ -341,6 +347,7 @@ function GameSetup:load_packages()
 		end
 	else
 		local lvl_tweak_data = Global.level_data and Global.level_data.level_id and tweak_data.levels[Global.level_data.level_id]
+
 		level_package = lvl_tweak_data and lvl_tweak_data.package
 
 		if lvl_tweak_data and lvl_tweak_data.is_christmas_heist then
@@ -372,7 +379,7 @@ function GameSetup:load_packages()
 		end
 	end
 
-	local contact = nil
+	local contact
 
 	if Global.job_manager and Global.job_manager.interupt_stage then
 		contact = "interupt"

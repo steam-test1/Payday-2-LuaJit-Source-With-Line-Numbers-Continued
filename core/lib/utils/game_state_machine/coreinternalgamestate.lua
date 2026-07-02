@@ -10,6 +10,7 @@ end
 
 -- Lines 16-17
 function GameState:destroy()
+	return
 end
 
 -- Lines 19-21
@@ -24,10 +25,12 @@ end
 
 -- Lines 32-33
 function GameState:at_enter(previous_state)
+	return
 end
 
 -- Lines 35-36
 function GameState:at_exit(next_state)
+	return
 end
 
 -- Lines 38-41

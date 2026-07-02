@@ -1,4 +1,5 @@
 StatisticsAdaptor = StatisticsAdaptor or {}
+
 local max_possible_val = 2147483000
 
 -- Lines 4-41
@@ -11,7 +12,7 @@ function StatisticsAdaptor:run(stats)
 			local val = math.max(0, handler:get_stat(key))
 
 			if stat.method == "lowest" then
-				if stat.value < val then
+				if val > stat.value then
 					adapted[key] = stat.value
 				end
 			elseif stat.method == "highest" then
@@ -34,6 +35,7 @@ function StatisticsAdaptor:run(stats)
 		elseif stat.type == "float" then
 			if stat.value > 0 then
 				local val = handler:get_stat_float(key)
+
 				adapted[key] = val + stat.value
 			end
 		elseif stat.type == "avgrate" then

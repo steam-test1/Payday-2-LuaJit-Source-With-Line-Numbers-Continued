@@ -5,6 +5,7 @@ require("lib/managers/menu/BoxGuiObject")
 MenuItemGrid = MenuItemGrid or class(MenuItemMultiChoice)
 MenuItemGrid.TYPE = "grid"
 MenuItemGrid.INPUT_ON_HIJACK = true
+
 local ids_texture = Idstring("texture")
 
 -- Lines 11-59
@@ -41,6 +42,7 @@ function MenuItemGrid:init(data_node, parameters)
 				end
 
 				option.enabled = true
+
 				local enabled_callback = c.enabled_callback
 
 				if enabled_callback then
@@ -78,7 +80,7 @@ end
 function MenuItemGrid:set_callback_handler(callback_handler)
 	MenuItemGrid.super.set_callback_handler(self, callback_handler)
 
-	local icon, texture_rect = nil
+	local icon, texture_rect
 
 	for _, option in ipairs(self._all_options) do
 		if option.enabled_callback_names then
@@ -121,6 +123,7 @@ end
 -- Lines 111-143
 function MenuItemGrid:_show_options(callback_handler)
 	local selected_value = self:selected_option() and self:selected_option():value()
+
 	self._options = {}
 
 	for _, option in ipairs(self._all_options) do
@@ -249,7 +252,7 @@ end
 function MenuItemGrid:move_x(x, row_item)
 	self._selection_index = (self._selection_index + x - 1) % #self._options + 1
 
-	return true
+	do return true end
 
 	local current_row = math.ceil(self._selection_index / self._columns)
 	local new_selection_index = self._selection_index + x
@@ -272,6 +275,7 @@ function MenuItemGrid:move_y(y, row_item)
 
 	if new_selection_index > 0 and new_selection_index <= #self._options then
 		self._selection_index = new_selection_index
+
 		local selection_option = self._options[self._selection_index]
 
 		row_item.scroll_panel:scroll_to_show(selection_option.gui_panel:top(), selection_option.gui_panel:bottom())
@@ -279,6 +283,7 @@ function MenuItemGrid:move_y(y, row_item)
 		return true
 	elseif new_selection_index > #self._options and current_row ~= max_row then
 		self._selection_index = #self._options
+
 		local selection_option = self._options[self._selection_index]
 
 		row_item.scroll_panel:scroll_to_show(selection_option.gui_panel:top(), selection_option.gui_panel:bottom())
@@ -395,20 +400,21 @@ function MenuItemGrid:setup_gui(node_gui, row_item)
 	local slot_width = (gui_width - 10) / self._columns
 	local slot_height = slot_width * (self:parameters().height_aspect or 1)
 	local gui_height = slot_height * self._rows
+
 	row_item.gui_panel = node_gui.item_panel:panel({
 		w = gui_width,
 		h = gui_height
 	})
 	row_item.grid_panel = ExtendedPanel:new(row_item.gui_panel)
 	row_item.scroll_panel = ScrollableList:new(row_item.grid_panel, {
+		bar_minimum_size = 0,
 		input = true,
 		input_focus = true,
+		scroll_w = 4,
+		scrollbar_padding = 2,
 		scrollbar_y_padding = 0,
 		x_padding = 0.0001,
-		bar_minimum_size = 0,
 		y_padding = 0,
-		scrollbar_padding = 2,
-		scroll_w = 4,
 		layer = node_gui.layers.items,
 		update = self._scroll_update,
 		w = gui_width,
@@ -416,6 +422,7 @@ function MenuItemGrid:setup_gui(node_gui, row_item)
 	}, {
 		padding = 0
 	})
+
 	local scroll_item = row_item.scroll_panel:scroll_item()
 	local scroll_canvas = row_item.scroll_panel:canvas()
 	local scroll_placer = scroll_canvas:placer()
@@ -428,6 +435,7 @@ function MenuItemGrid:setup_gui(node_gui, row_item)
 			0
 		}
 	})
+
 	scroll_item.scroll_indicators = {
 		up_no_scroll = BoxGuiObject:new(box._panel, {
 			sides = {
@@ -485,7 +493,7 @@ function MenuItemGrid:setup_gui(node_gui, row_item)
 	self:_create_gui_box(row_item, "selection", row_item.selection_panel, 2)
 	row_item.gui_boxes.selection:set_visible(self.highlighted)
 
-	local color, texture_path, parameters, column, row = nil
+	local color, texture_path, parameters, column, row
 	local current_row = 0
 
 	for index, option in ipairs(self._options) do
@@ -521,8 +529,8 @@ function MenuItemGrid:setup_gui(node_gui, row_item)
 			option.gui_disabled_icon = option.gui_panel:bitmap({
 				blend_mode = "normal",
 				layer = 1,
-				y = 32,
 				w = 32,
+				y = 32,
 				texture = option.disabled_icon,
 				texture_rect = option.disabled_texture_rect,
 				color = parameters.disabled_icon_color or tweak_data.screen_colors.important_1
@@ -546,8 +554,8 @@ function MenuItemGrid:setup_gui(node_gui, row_item)
 	self:update_selection_position(row_item)
 
 	if row_item.gui_info_panel then
-		node_gui:_align_item_gui_info_panel(row_item.gui_info_panel)
-		node_gui:_align_info_panel(row_item)
+		node_gui._align_item_gui_info_panel(node_gui, row_item.gui_info_panel)
+		node_gui._align_info_panel(node_gui, row_item)
 	end
 
 	return true
@@ -555,7 +563,7 @@ end
 
 -- Lines 477-504
 function MenuItemGrid:_scroll_update(dt)
-	local element, step = nil
+	local element, step
 
 	for element_name, data in pairs(self._alphas) do
 		step = dt == -1 and 1 or dt * data.speed

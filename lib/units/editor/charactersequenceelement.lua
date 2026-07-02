@@ -27,6 +27,7 @@ function CharacterSequenceElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local names = {
 		"ai_spawn_enemy",
 		"ai_spawn_civilian"
@@ -58,8 +59,8 @@ function CharacterSequenceElement:draw_links(t, dt, selected_unit, all_units)
 
 		if draw then
 			self:_draw_link({
-				g = 0.75,
 				b = 0,
+				g = 0.75,
 				r = 0,
 				from_unit = self._unit,
 				to_unit = unit
@@ -71,8 +72,8 @@ end
 -- Lines 48-61
 function CharacterSequenceElement:on_lmb()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit and (string.find(ray.unit:name():s(), "ai_spawn_enemy", 1, true) or string.find(ray.unit:name():s(), "ai_spawn_civilian", 1, true)) then
@@ -93,4 +94,5 @@ end
 
 -- Lines 68-69
 function CharacterSequenceElement:update_editing()
+	return
 end

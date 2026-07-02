@@ -36,6 +36,7 @@ end
 -- Lines 33-43
 function SettingsReader:_read_children(nodes)
 	self._layer_descriptions = {}
+
 	local layer_description_priority = 1
 
 	for node in nodes do

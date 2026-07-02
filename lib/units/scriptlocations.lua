@@ -2,6 +2,7 @@ ScriptLocations = ScriptLocations or class()
 
 -- Lines 3-5
 function ScriptLocations:init(unit)
+	return
 end
 
 -- Lines 7-14

@@ -42,6 +42,7 @@ end
 function SyncManager:send_all_synced_units_to(peer)
 	if type(peer) == "number" then
 		local find_peer = peer
+
 		peer = nil
 
 		for _, m_peer in pairs(managers.network:session():peers()) do
@@ -61,10 +62,10 @@ function SyncManager:send_all_synced_units_to(peer)
 end
 
 SyncManager.sync_functions = {
-	weapon = "handle_synced_weapon_blueprint",
-	vault_cash = "handle_synced_vault_cash",
+	mask = "handle_synced_mask_blueprint",
 	offshore_gui = "handle_synced_offshore_gui",
-	mask = "handle_synced_mask_blueprint"
+	vault_cash = "handle_synced_vault_cash",
+	weapon = "handle_synced_weapon_blueprint"
 }
 
 -- Lines 62-70
@@ -83,6 +84,7 @@ end
 -- Lines 75-80
 function SyncManager:add_synced_weapon_blueprint(unit_id, factory_id, blueprint)
 	local blueprint_string = managers.weapon_factory:blueprint_to_string(factory_id, blueprint)
+
 	blueprint_string = factory_id .. " " .. blueprint_string
 
 	self:add_synced_outfit_unit(unit_id, "weapon", blueprint_string)

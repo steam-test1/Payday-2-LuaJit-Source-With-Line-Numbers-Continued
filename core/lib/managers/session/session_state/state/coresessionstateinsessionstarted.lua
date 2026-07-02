@@ -15,6 +15,7 @@ end
 
 -- Lines 13-14
 function InSessionStarted:destroy()
+	return
 end
 
 -- Lines 16-25

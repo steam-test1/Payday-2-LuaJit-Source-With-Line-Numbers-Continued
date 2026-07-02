@@ -11,17 +11,17 @@ function HUDPlayerCustody:init(hud)
 	end
 
 	local custody_panel = self._hud_panel:panel({
-		valign = "grow",
+		halign = "grow",
 		name = "custody_panel",
-		halign = "grow"
+		valign = "grow"
 	})
 	local timer_msg = custody_panel:text({
-		text = "something IN",
-		vertical = "center",
+		align = "center",
 		h = 40,
 		name = "timer_msg",
+		text = "something IN",
+		vertical = "center",
 		w = 400,
-		align = "center",
 		font = tweak_data.hud_custody.custody_font,
 		font_size = tweak_data.hud_downed.timer_message_size
 	})
@@ -35,13 +35,13 @@ function HUDPlayerCustody:init(hud)
 	timer_msg:set_y(28)
 
 	local timer = custody_panel:text({
-		text = "00:00",
-		vertical = "bottom",
-		h = 32,
-		name = "timer",
-		w = 400,
 		align = "center",
 		font_size = 42,
+		h = 32,
+		name = "timer",
+		text = "00:00",
+		vertical = "bottom",
+		w = 400,
 		font = tweak_data.hud_custody.custody_font_large
 	})
 	local _, _, w, h = timer:text_rect()
@@ -53,25 +53,26 @@ function HUDPlayerCustody:init(hud)
 	self._timer = timer
 	self._last_time = -1
 	self._last_trade_delay_time = -1
+
 	local civilians_killed = custody_panel:text({
-		vertical = "top",
-		name = "civilians_killed",
-		h = 32,
-		w = 400,
 		align = "right",
+		h = 32,
+		name = "civilians_killed",
 		text = "Civilians killed",
 		valign = "bottom",
+		vertical = "top",
+		w = 400,
 		font = tweak_data.hud_custody.custody_font,
 		font_size = tweak_data.hud_custody.small_font_size
 	})
 	local trade_delay = custody_panel:text({
-		vertical = "top",
-		name = "trade_delay",
-		h = 32,
-		w = 400,
 		align = "right",
+		h = 32,
+		name = "trade_delay",
 		text = "Trade delay",
 		valign = "bottom",
+		vertical = "top",
+		w = 400,
 		font = tweak_data.hud_custody.custody_font,
 		font_size = tweak_data.hud_custody.small_font_size
 	})
@@ -132,6 +133,7 @@ function HUDPlayerCustody:set_respawn_time(time)
 	end
 
 	self._last_time = time
+
 	local time_text = self:_get_time_text(time)
 
 	self._timer:set_text(utf8.to_upper(tostring(time_text)))
@@ -154,6 +156,7 @@ function HUDPlayerCustody:set_trade_delay(time)
 	end
 
 	self._last_trade_delay_time = time
+
 	local time_text = self:_get_time_text(time)
 	local trade_delay = self._hud_panel:child("custody_panel"):child("trade_delay")
 
@@ -191,8 +194,11 @@ end
 -- Lines 140-149
 function HUDPlayerCustody:_get_time_text(time)
 	time = math.max(math.floor(time), 0)
+
 	local minutes = math.floor(time / 60)
+
 	time = time - minutes * 60
+
 	local seconds = math.round(time)
 	local text = ""
 
@@ -205,8 +211,10 @@ function HUDPlayerCustody:_animate_text_pulse(text)
 
 	while true do
 		local dt = coroutine.yield()
+
 		t = t + dt
-		local alpha = 0.5 + math.abs(math.sin(t * 360 * 0.5)) / 2
+
+		local alpha = 0.5 + math.abs((math.sin(t * 360 * 0.5))) / 2
 
 		text:set_alpha(alpha)
 	end

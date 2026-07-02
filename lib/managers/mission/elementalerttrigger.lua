@@ -18,6 +18,7 @@ end
 
 -- Lines 18-20
 function ElementAlertTrigger:client_on_executed(...)
+	return
 end
 
 -- Lines 22-24

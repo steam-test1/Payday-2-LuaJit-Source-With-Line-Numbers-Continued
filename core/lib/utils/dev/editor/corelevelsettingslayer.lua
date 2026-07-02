@@ -62,6 +62,7 @@ end
 
 -- Lines 58-60
 function LevelSettingsLayer:update(t, dt)
+	return
 end
 
 -- Lines 62-78
@@ -87,13 +88,13 @@ end
 function LevelSettingsLayer:_add_simulation_level_id(sizer)
 	local id = "simulation_level_id"
 	local params = {
+		ctrlr_proportions = 2,
 		default = "none",
 		name = "Simulation level id:",
-		value = "none",
-		ctrlr_proportions = 2,
 		name_proportions = 1,
-		tooltip = "Select a level id to use when simulating the level.",
 		sorted = true,
+		tooltip = "Select a level id to use when simulating the level.",
+		value = "none",
 		panel = self._ews_panel,
 		sizer = sizer,
 		options = rawget(_G, "tweak_data").levels:get_level_index()
@@ -146,12 +147,12 @@ function LevelSettingsLayer:_add_chunk_name(panel, sizer)
 		"init"
 	}
 	local combobox_params = {
-		name = "Chunk Name",
-		sizer_proportions = 1,
-		name_proportions = 1,
-		tooltip = "Select an option from the combobox",
-		sorted = false,
 		ctrlr_proportions = 2,
+		name = "Chunk Name",
+		name_proportions = 1,
+		sizer_proportions = 1,
+		sorted = false,
+		tooltip = "Select an option from the combobox",
 		panel = panel,
 		sizer = horizontal_sizer,
 		options = options,

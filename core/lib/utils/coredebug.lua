@@ -16,12 +16,12 @@ end
 -- Lines 37-48
 function only_in_debug(f, klass)
 	klass = klass or getmetatable(Application)
+
 	local old = "old_" .. f
 
 	if not klass[old] then
 		klass[old] = klass[f]
-
-		klass[f] = function (...)
+		klass[f] = function(...)
 			if Global.render_debug.draw_enabled then
 				klass[old](...)
 			end
@@ -73,6 +73,7 @@ function out(...)
 		local sel = {
 			select(2, ...)
 		}
+
 		sel[1] = args[1] .. " " .. tostring(sel[1])
 
 		return unpack(sel)
@@ -100,6 +101,7 @@ function out(...)
 		return
 	elseif #args > 1 and type(args[1]) == "string" then
 		local a = args[1]
+
 		args[1] = "[" .. a .. "]"
 
 		do_print(a, correct_spaces(unpack(args)))
@@ -174,14 +176,14 @@ end
 
 -- Lines 175-179
 function make_cat_tag_print(cat)
-	return function (...)
+	return function(...)
 		cat_tag_print(cat, ...)
 	end
 end
 
 -- Lines 182-186
 function make_cat_tag_error(cat)
-	return function (...)
+	return function(...)
 		cat_tag_error(cat, ...)
 	end
 end
@@ -229,6 +231,7 @@ function catprint_load()
 		for _, sub_data in ipairs(data) do
 			local name = tostring(sub_data.name)
 			local allow_print = sub_data.print == true
+
 			Global.category_print[name] = allow_print
 		end
 	end
@@ -246,7 +249,7 @@ function compile_and_reload()
 	-- Lines 236-242
 	local function root_path()
 		local path = Application:base_path() .. (CoreApp.arg_value("-assetslocation") or "../../")
-		local f = nil
+		local f
 
 		-- Lines 240-240
 		function f(s)
@@ -260,8 +263,8 @@ function compile_and_reload()
 
 	assert(SystemInfo:platform() == Idstring("WIN32"), "You can only compile on win32 platforms!")
 	Application:data_compile({
-		target_db_name = "all",
 		preprocessor_definitions = "preprocessor_definitions",
+		target_db_name = "all",
 		verbose = false,
 		platform = string.lower(SystemInfo:platform():s()),
 		source_root = root_path() .. "//assets",
@@ -285,7 +288,7 @@ end
 
 -- Lines 282-303
 function watch(cond_func, exact)
-	debug.sethook(function ()
+	debug.sethook(function()
 		if cond_func() then
 			if exact then
 				cat_print("debug", string.format("[CoreVarTrace] %s", rawget(_G, "__watch_previnfo") or "? : -1"))
@@ -333,7 +336,7 @@ function trace_ref(class_name, init_name, destroy_name)
 
 	if not rawget(class_mt, "_" .. init_name) then
 		rawset(class_mt, "_" .. init_name, assert(rawget(class_mt, init_name)))
-		rawset(class_mt, init_name, function (...)
+		rawset(class_mt, init_name, function(...)
 			ref()
 
 			local r = rawget(class_mt, "_" .. init_name)(...)
@@ -349,7 +352,7 @@ function trace_ref(class_name, init_name, destroy_name)
 
 	if not rawget(class_mt, "_" .. destroy_name) then
 		rawset(class_mt, "_" .. destroy_name, assert(rawget(class_mt, destroy_name)))
-		rawset(class_mt, destroy_name, function (...)
+		rawset(class_mt, destroy_name, function(...)
 			ref()
 
 			local p = {
@@ -365,6 +368,7 @@ function trace_ref(class_name, init_name, destroy_name)
 
 			local r = rawget(class_mt, "_" .. destroy_name)(...)
 			local t = rawget(_G, "_trace_ref_table")
+
 			t[o] = nil
 
 			return r
@@ -373,7 +377,7 @@ function trace_ref(class_name, init_name, destroy_name)
 
 	if not rawget(_G, "_destroy") then
 		rawset(_G, "_destroy", rawget(_G, "destroy"))
-		rawset(_G, "destroy", function (...)
+		rawset(_G, "destroy", function(...)
 			ref()
 
 			local d = rawget(_G, "_destroy")
@@ -405,7 +409,7 @@ function trace_ref_add_destroy_all(class_name, func_name)
 	rawset(class_mt, "_" .. func_name, assert(rawget(class_mt, func_name)))
 
 	if not rawget(class_mt, "_" .. func_name) then
-		rawset(class_mt, func_name, function (...)
+		rawset(class_mt, func_name, function(...)
 			local r = rawget(class_mt, "_" .. func_name)(...)
 
 			cat_print("debug", "[CoreTraceRef] WARNING! Called destroy all function:", func_name)
@@ -417,10 +421,12 @@ end
 
 -- Lines 415-425
 function debug_pause(...)
+	return
 end
 
 -- Lines 427-438
 function debug_pause_unit(unit, ...)
+	return
 end
 
 -- Lines 440-449

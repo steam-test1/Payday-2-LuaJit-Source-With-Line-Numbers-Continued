@@ -7,6 +7,7 @@ end
 
 -- Lines 10-12
 function NpcVehicleStatePlayerProximity:on_enter(npc_driving_ext)
+	return
 end
 
 -- Lines 15-19
@@ -16,6 +17,7 @@ end
 
 -- Lines 22-23
 function NpcVehicleStatePlayerProximity:update(t, dt)
+	return
 end
 
 -- Lines 25-27

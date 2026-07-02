@@ -9,6 +9,7 @@ end
 
 -- Lines 10-12
 function ElementSmokeGrenade:client_on_executed(...)
+	return
 end
 
 -- Lines 14-29

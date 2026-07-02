@@ -20,9 +20,9 @@ end
 
 -- Lines 23-27
 function MutatorsListGui:_start_page_data()
-	local data = {
-		topic_id = "menu_mutators"
-	}
+	local data = {}
+
+	data.topic_id = "menu_mutators"
 
 	return data
 end

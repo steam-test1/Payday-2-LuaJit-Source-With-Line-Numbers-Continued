@@ -7,7 +7,9 @@ function FadeoutGuiObject:init(params)
 	table.insert(Global.FadeoutObjects, self)
 
 	params = params or {}
+
 	local sustain = params.sustain
+
 	self._fade_out_duration = params.fade_out or 0
 
 	if not sustain then
@@ -17,6 +19,7 @@ function FadeoutGuiObject:init(params)
 	local fade_color = params.color or Color.black
 	local show_loding_icon = params.show_loading_icon or true
 	local loading_texture = params.loading_texture or "guis/textures/icon_loading"
+
 	self._ws = managers.gui_data:create_fullscreen_workspace()
 	self._panel = self._ws:panel()
 
@@ -33,7 +36,7 @@ function FadeoutGuiObject:init(params)
 
 		-- Lines 32-38
 		local function spin_forever_animation(o)
-			local dt = nil
+			local dt
 
 			while true do
 				dt = coroutine.yield()
@@ -53,7 +56,7 @@ function FadeoutGuiObject:init(params)
 			wait(1)
 		end
 
-		over(self._fade_out_duration, function (p)
+		over(self._fade_out_duration, function(p)
 			panel:set_alpha(1 - p)
 
 			if alive(loading_icon) then

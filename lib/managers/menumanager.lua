@@ -55,11 +55,11 @@ function MenuManager:init(is_start_menu)
 
 	if is_start_menu then
 		local menu_main = {
+			content_file = "gamedata/menus/start_menu",
+			id = "start_menu",
 			input = "MenuInput",
 			name = "menu_main",
 			renderer = "MenuRenderer",
-			id = "start_menu",
-			content_file = "gamedata/menus/start_menu",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
@@ -68,70 +68,71 @@ function MenuManager:init(is_start_menu)
 		if _G.IS_VR then
 			local menu_data = self._registered_menus.menu_main.data
 			local lobby_parameters = menu_data:get_node("lobby"):parameters()
+
 			lobby_parameters.scene_state = "lobby_vr"
 		end
 	else
 		local menu_pause = {
+			content_file = "gamedata/menus/pause_menu",
+			id = "pause_menu",
 			input = "MenuInput",
 			name = "menu_pause",
 			renderer = "MenuPauseRenderer",
-			id = "pause_menu",
-			content_file = "gamedata/menus/pause_menu",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(menu_pause)
 
 		local kit_menu = {
+			content_file = "gamedata/menus/kit_menu",
+			id = "kit_menu",
 			input = "MenuInput",
 			name = "kit_menu",
 			renderer = "MenuKitRenderer",
-			id = "kit_menu",
-			content_file = "gamedata/menus/kit_menu",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(kit_menu)
 
 		local mission_end_menu = {
+			content_file = "gamedata/menus/mission_end_menu",
+			id = "mission_end_menu",
 			input = "MenuInput",
 			name = "mission_end_menu",
 			renderer = "MenuHiddenRenderer",
-			id = "mission_end_menu",
-			content_file = "gamedata/menus/mission_end_menu",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(mission_end_menu)
 
 		local loot_menu = {
+			content_file = "gamedata/menus/loot_menu",
+			id = "loot_menu",
 			input = "MenuInput",
 			name = "loot_menu",
 			renderer = "MenuHiddenRenderer",
-			id = "loot_menu",
-			content_file = "gamedata/menus/loot_menu",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(loot_menu)
 
 		local custom_safehouse_menu = {
+			content_file = "gamedata/menus/custom_safehouse_menu",
+			id = "custom_safehouse_menu",
 			input = "MenuInput",
 			name = "custom_safehouse_menu",
 			renderer = "MenuHiddenRenderer",
-			id = "custom_safehouse_menu",
-			content_file = "gamedata/menus/custom_safehouse_menu",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(custom_safehouse_menu)
 
 		local heister_interact_menu = {
+			content_file = "gamedata/menus/heister_interact_menu",
+			id = "heister_interact_menu",
 			input = "MenuInput",
 			name = "heister_interact_menu",
 			renderer = "MenuHiddenRenderer",
-			id = "heister_interact_menu",
-			content_file = "gamedata/menus/heister_interact_menu",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
@@ -212,7 +213,7 @@ end
 -- Lines 267-285
 function MenuManager:init_finalize()
 	if not Global._menu_started_once then
-		managers.dlc:check_pdth(function (pdth, tester)
+		managers.dlc:check_pdth(function(pdth, tester)
 			if pdth then
 				managers.statistics:publish_custom_stat_to_steam("pdth")
 				Telemetry:set_steam_stats_pdth_true()
@@ -531,8 +532,10 @@ end
 function MenuManager:create_controller()
 	if not self._controller then
 		self._controller = managers.controller:create_controller("MenuManager", nil, false)
+
 		local setup = self._controller:get_setup()
 		local look_connection = setup:get_connection("look")
+
 		self._look_multiplier = look_connection:get_multiplier()
 
 		if not managers.savefile:is_active() then
@@ -654,7 +657,7 @@ end
 -- Lines 686-728
 function MenuManager:set_mouse_sensitivity(zoomed)
 	local zoom_sense = zoomed
-	local sense_x, sense_y = nil
+	local sense_x, sense_y
 
 	if zoom_sense then
 		sense_x = managers.user:get_setting("camera_zoom_sensitivity_x")
@@ -670,6 +673,7 @@ function MenuManager:set_mouse_sensitivity(zoomed)
 		if alive(state._equipped_unit) then
 			local fov = managers.user:get_setting("fov_multiplier")
 			local scale = (state._equipped_unit:base():zoom() or 65) * (fov + 1) / 2 / (65 * fov)
+
 			sense_x = sense_x * scale
 			sense_y = sense_y * scale
 		end
@@ -938,11 +942,11 @@ function MenuManager:add_back_button(new_node)
 	new_node:delete_item("back")
 
 	local params = {
-		visible_callback = "is_pc_controller",
-		name = "back",
-		text_id = "menu_back",
 		back = true,
-		previous_node = true
+		name = "back",
+		previous_node = true,
+		text_id = "menu_back",
+		visible_callback = "is_pc_controller"
 	}
 	local new_item = new_node:create_item(nil, params)
 
@@ -958,8 +962,8 @@ end
 function MenuManager:_recompile(dir)
 	local source_files = self:_source_files(dir)
 	local t = {
-		target_db_name = "all",
 		send_idstrings = false,
+		target_db_name = "all",
 		verbose = false,
 		platform = string.lower(SystemInfo:platform():s()),
 		source_root = managers.database:root_path() .. "/assets",
@@ -996,14 +1000,15 @@ end
 
 -- Lines 1043-1054
 function MenuManager:progress_resetted()
-	local dialog_data = {
-		title = "Dr Evil",
-		text = "HAHA, your progress is gone!"
-	}
-	local no_button = {
-		text = "Doh!",
-		callback_func = callback(self, self, "_dialog_progress_resetted_ok")
-	}
+	local dialog_data = {}
+
+	dialog_data.title = "Dr Evil"
+	dialog_data.text = "HAHA, your progress is gone!"
+
+	local no_button = {}
+
+	no_button.text = "Doh!"
+	no_button.callback_func = callback(self, self, "_dialog_progress_resetted_ok")
 	dialog_data.button_list = {
 		no_button
 	}
@@ -1013,6 +1018,7 @@ end
 
 -- Lines 1056-1057
 function MenuManager:_dialog_progress_resetted_ok()
+	return
 end
 
 -- Lines 1059-1061
@@ -1062,7 +1068,7 @@ function MenuManager:open_sign_in_menu(cb)
 
 		if PSN:is_fetching_status() then
 			self:show_fetching_status_dialog({
-				cancel_func = function ()
+				cancel_func = function()
 					PSN:fetch_cancel()
 				end
 			})
@@ -1091,7 +1097,7 @@ function MenuManager:open_sign_in_menu(cb)
 		if managers.network.account:signin_state() == "signed in" then
 			if managers.user:check_privilege(nil, "multiplayer_sessions", callback(self, self, "_check_privilege_callback")) then
 				self:show_fetching_status_dialog({
-					cancel_func = function ()
+					cancel_func = function()
 						self._queued_privilege_check_cb = nil
 					end
 				})
@@ -1367,7 +1373,7 @@ function MenuManager:show_disconnect_message(requires_signin)
 	self._showing_disconnect_message = true
 
 	self:show_mp_disconnected_internet_dialog({
-		ok_func = function ()
+		ok_func = function()
 			self._showing_disconnect_message = nil
 		end
 	})
@@ -1385,7 +1391,7 @@ end
 
 -- Lines 1428-1461
 function MenuManager:exit_online_menues()
-	local must_show_controller_disconnect = nil
+	local must_show_controller_disconnect
 
 	if Global.controller_manager.connect_controller_dialog_visible then
 		must_show_controller_disconnect = true
@@ -1468,10 +1474,11 @@ end
 
 -- Lines 1533-1583
 function MenuManager:show_global_success(node)
-	local node_gui = nil
+	local node_gui
 
 	if not node then
 		local stack = managers.menu:active_menu().renderer._node_gui_stack
+
 		node_gui = stack[#stack]
 
 		if not node_gui.set_mini_info then
@@ -1500,7 +1507,8 @@ function MenuManager:show_global_success(node)
 	end
 
 	rate = rate * 100
-	local rate_str = nil
+
+	local rate_str
 
 	if rate >= 10 then
 		rate_str = string.format("%.0f", rate)
@@ -1510,6 +1518,7 @@ function MenuManager:show_global_success(node)
 
 	local diff_str = string.upper(managers.localization:text("menu_difficulty_" .. Global.game_settings.difficulty))
 	local heist_str = string.upper(managers.localization:text(tweak_data.levels[Global.game_settings.level_id].name_id))
+
 	rate_str = managers.localization:text("menu_global_success", {
 		COUNT = rate_str,
 		HEIST = heist_str,
@@ -1705,6 +1714,7 @@ end
 
 -- Lines 1772-1783
 function MenuCallbackHandler:_on_host_setting_updated()
+	return
 end
 
 -- Lines 1785-1794
@@ -1722,7 +1732,7 @@ end
 -- Lines 1797-1806
 function MenuCallbackHandler:get_latest_dlc_locked()
 	local dlcs = managers.dlc:get_promoted_dlc_list()
-	local has_dlc = nil
+	local has_dlc
 
 	for _, dlc in ipairs(dlcs) do
 		has_dlc = managers.dlc:is_dlc_unlocked(dlc)
@@ -1777,7 +1787,7 @@ end
 
 -- Lines 1855-1857
 function MenuCallbackHandler:reputation_check(data)
-	return data:value() <= managers.experience:current_level()
+	return managers.experience:current_level() >= data:value()
 end
 
 -- Lines 1859-1861
@@ -1998,7 +2008,7 @@ end
 function MenuCallbackHandler:is_not_max_rank()
 	local max_rank = tweak_data.infamy.ranks
 
-	return managers.experience:current_rank() < max_rank
+	return max_rank > managers.experience:current_rank()
 end
 
 -- Lines 2073-2075
@@ -2235,19 +2245,21 @@ end
 
 -- Lines 2289-2305
 function MenuCallbackHandler:quit_game()
-	local dialog_data = {
-		title = managers.localization:text("dialog_warning_title"),
-		text = managers.localization:text("dialog_are_you_sure_you_want_to_quit")
-	}
-	local yes_button = {
-		text = managers.localization:text("dialog_yes"),
-		callback_func = callback(self, self, "_dialog_quit_yes")
-	}
-	local no_button = {
-		text = managers.localization:text("dialog_no"),
-		callback_func = callback(self, self, "_dialog_quit_no"),
-		cancel_button = true
-	}
+	local dialog_data = {}
+
+	dialog_data.title = managers.localization:text("dialog_warning_title")
+	dialog_data.text = managers.localization:text("dialog_are_you_sure_you_want_to_quit")
+
+	local yes_button = {}
+
+	yes_button.text = managers.localization:text("dialog_yes")
+	yes_button.callback_func = callback(self, self, "_dialog_quit_yes")
+
+	local no_button = {}
+
+	no_button.text = managers.localization:text("dialog_no")
+	no_button.callback_func = callback(self, self, "_dialog_quit_no")
+	no_button.cancel_button = true
 	dialog_data.button_list = {
 		yes_button,
 		no_button
@@ -2265,6 +2277,7 @@ end
 
 -- Lines 2330-2331
 function MenuCallbackHandler:_dialog_quit_no()
+	return
 end
 
 -- Lines 2333-2336
@@ -2319,6 +2332,7 @@ end
 -- Lines 2385-2390
 function MenuCallbackHandler:change_nr_players(item)
 	local nr_players = item:value()
+
 	Global.nr_players = nr_players
 
 	managers.player:set_nr_players(nr_players)
@@ -2416,7 +2430,7 @@ function MenuCallbackHandler:choice_choose_window_mode(item)
 		managers.viewport:set_aspect_ratio(highest_resolution.x / highest_resolution.y)
 	end
 
-	managers.menu:show_accept_gfx_settings_dialog(function ()
+	managers.menu:show_accept_gfx_settings_dialog(function()
 		managers.viewport:set_fullscreen(previous_fullscreen)
 		managers.viewport:set_borderless(previous_borderless)
 
@@ -2729,6 +2743,7 @@ function MenuCallbackHandler:choice_premium_contact(item)
 	end
 
 	managers.menu:active_menu().logic:selected_node():parameters().listed_contact = string.gsub(item:value(), "#", "")
+
 	local logic = managers.menu:active_menu().logic
 
 	if logic then
@@ -2751,6 +2766,7 @@ function MenuCallbackHandler:choice_controller_type(item)
 	end
 
 	managers.menu:active_menu().logic:selected_node():parameters().controller_category = item:value()
+
 	local logic = managers.menu:active_menu().logic
 
 	if logic then
@@ -2848,6 +2864,7 @@ end
 -- Lines 2911-2916
 function MenuCallbackHandler:choice_job_appropriate_filter(item)
 	local diff_appropriate = item:value()
+
 	Global.game_settings.search_appropriate_jobs = diff_appropriate == "on" and true or false
 
 	managers.user:set_setting("crimenet_filter_level_appopriate", diff_appropriate == "on" and true or false)
@@ -2856,6 +2873,7 @@ end
 -- Lines 2919-2923
 function MenuCallbackHandler:choice_allow_safehouses_filter(item)
 	local allow_safehouses = item:value() == "on" and true or false
+
 	Global.game_settings.allow_search_safehouses = allow_safehouses
 
 	managers.user:set_setting("crimenet_filter_safehouses", allow_safehouses)
@@ -2864,6 +2882,7 @@ end
 -- Lines 2950-2954
 function MenuCallbackHandler:choice_mutated_lobbies_filter(item)
 	local allow_mutators = item:value() == "on" and true or false
+
 	Global.game_settings.search_mutated_lobbies = allow_mutators
 
 	managers.user:set_setting("crimenet_filter_mutators", allow_mutators)
@@ -2872,6 +2891,7 @@ end
 -- Lines 2959-2963
 function MenuCallbackHandler:choice_modded_lobbies_filter(item)
 	local allow_modded = item:value() == "on" and true or false
+
 	Global.game_settings.search_modded_lobbies = allow_modded
 
 	managers.user:set_setting("crimenet_filter_modded", allow_modded)
@@ -2880,6 +2900,7 @@ end
 -- Lines 2966-2970
 function MenuCallbackHandler:chocie_one_down_filter(item)
 	local allow_one_down = item:value() == "on" and true or false
+
 	Global.game_settings.search_one_down_lobbies = allow_one_down
 
 	managers.user:set_setting("crimenet_filter_one_down", allow_one_down)
@@ -2888,6 +2909,7 @@ end
 -- Lines 2973-2977
 function MenuCallbackHandler:choice_weekly_skirmish_filter(item)
 	local only_weekly = item:value() == "on" and true or false
+
 	Global.game_settings.search_only_weekly_skirmish = only_weekly
 
 	managers.user:set_setting("crimenet_filter_weekly_skirmish", only_weekly)
@@ -2932,6 +2954,7 @@ function MenuCallbackHandler:open_contract_node(item)
 	local job_tweak = tweak_data.narrative:job_data(item:parameters().id)
 	local is_professional = job_tweak and job_tweak.professional or false
 	local is_competitive = job_tweak and job_tweak.competitive or false
+
 	self._temp_job_data = job_tweak
 
 	managers.menu:open_node(Global.game_settings.single_player and "crimenet_contract_singleplayer" or "crimenet_contract_host", {
@@ -2986,7 +3009,7 @@ function MenuCallbackHandler:is_contract_difficulty_allowed(item)
 	local level_lock = tweak_data.difficulty_level_locks[item:value()] or 0
 	local is_not_level_locked = prank >= 1 or level_lock <= plvl
 
-	return is_not_level_locked and math.clamp(job_jc + difficulty_jc, 0, 100) <= managers.job:get_max_jc_for_player()
+	return is_not_level_locked and managers.job:get_max_jc_for_player() >= math.clamp(job_jc + difficulty_jc, 0, 100)
 end
 
 -- Lines 3054-3066
@@ -2997,11 +3020,11 @@ function MenuCallbackHandler:buy_crimenet_contract(item, node)
 		return
 	end
 
-	local params = {
-		contract_fee = managers.experience:cash_string(managers.money:get_cost_of_premium_contract(job_data.job_id, job_data.difficulty_id or 3)),
-		offshore = managers.experience:cash_string(managers.money:offshore()),
-		yes_func = callback(self, self, "_buy_crimenet_contract", item, node)
-	}
+	local params = {}
+
+	params.contract_fee = managers.experience:cash_string(managers.money:get_cost_of_premium_contract(job_data.job_id, job_data.difficulty_id or 3))
+	params.offshore = managers.experience:cash_string(managers.money:offshore())
+	params.yes_func = callback(self, self, "_buy_crimenet_contract", item, node)
 
 	managers.menu:show_confirm_buy_premium_contract(params)
 end
@@ -3144,6 +3167,7 @@ function MenuCallbackHandler:change_contract_difficulty(item)
 	end
 
 	local can_afford = managers.money:can_afford_buy_premium_contract(job_data.job_id, job_data.difficulty_id or 3)
+
 	buy_contract_item:parameters().text_id = can_afford and "menu_cn_premium_buy_accept" or "menu_cn_premium_cannot_buy"
 
 	buy_contract_item:set_enabled(can_afford)
@@ -3170,6 +3194,7 @@ end
 -- Lines 3216-3241
 function MenuCallbackHandler:choice_lobby_difficulty(item)
 	local difficulty = item:value()
+
 	Global.game_settings.difficulty = difficulty
 
 	if managers.menu:active_menu().renderer.update_difficulty then
@@ -3235,6 +3260,7 @@ end
 -- Lines 3284-3289
 function MenuCallbackHandler:choice_friends_only(item)
 	local choice_friends_only = item:value() == "on"
+
 	Global.game_settings.search_friends_only = choice_friends_only
 
 	managers.user:set_setting("crimenet_filter_friends_only", choice_friends_only)
@@ -3244,6 +3270,7 @@ end
 function MenuCallbackHandler:choice_lobby_permission(item)
 	local permission = item:value()
 	local level_id = item:value()
+
 	Global.game_settings.permission = permission
 
 	self:update_matchmake_attributes()
@@ -3253,6 +3280,7 @@ end
 -- Lines 3300-3320
 function MenuCallbackHandler:choice_lobby_reputation_permission(item)
 	local reputation_permission = item:value()
+
 	Global.game_settings.reputation_permission = reputation_permission
 
 	self:update_matchmake_attributes()
@@ -3268,6 +3296,7 @@ end
 -- Lines 3332-3348
 function MenuCallbackHandler:choice_drop_in(item)
 	local choice_drop_in = item:value()
+
 	Global.game_settings.drop_in_allowed = choice_drop_in ~= 0
 	Global.game_settings.drop_in_option = choice_drop_in
 
@@ -3288,12 +3317,14 @@ end
 -- Lines 3356-3359
 function MenuCallbackHandler:choice_crimenet_lobby_permission(item)
 	local permission = item:value()
+
 	Global.game_settings.permission = permission
 end
 
 -- Lines 3361-3364
 function MenuCallbackHandler:choice_crimenet_lobby_reputation_permission(item)
 	local reputation_permission = item:value()
+
 	Global.game_settings.reputation_permission = reputation_permission
 end
 
@@ -3322,6 +3353,7 @@ end
 -- Lines 3389-3402
 function MenuCallbackHandler:choice_crimenet_drop_in(item)
 	local choice_drop_in = item:value()
+
 	Global.game_settings.drop_in_allowed = choice_drop_in ~= 0
 	Global.game_settings.drop_in_option = choice_drop_in
 
@@ -3381,9 +3413,13 @@ function MenuCallbackHandler:get_matchmake_attributes()
 
 	if self:is_win32() then
 		local kick_option = Global.game_settings.kick_option
+
 		attributes.numbers[8] = kick_option
+
 		local job_class = managers.job:calculate_job_class(managers.job:current_real_job_id(), difficulty_id)
+
 		attributes.numbers[9] = job_class
+
 		local job_plan = Global.game_settings.job_plan
 
 		if tweak_data.quickplay.stealth_levels[managers.job:current_real_job_id()] then
@@ -3568,10 +3604,10 @@ function MenuCallbackHandler:become_infamous(params)
 	local infamous_cost = managers.money:get_infamous_cost(rank)
 	local yes_clbk = params and params.yes_clbk or false
 	local no_clbk = params and params.no_clbk
-	local params = {
-		cost = managers.experience:cash_string(infamous_cost),
-		free = infamous_cost == 0
-	}
+	local params = {}
+
+	params.cost = managers.experience:cash_string(infamous_cost)
+	params.free = infamous_cost == 0
 
 	if infamous_cost <= managers.money:offshore() and managers.experience:current_level() >= 100 then
 		-- Lines 3714-3722
@@ -3606,11 +3642,11 @@ function MenuCallbackHandler:become_infamous_with_prestige(params)
 	local infamous_cost = managers.money:get_infamous_cost(rank)
 	local yes_clbk = params and params.yes_clbk or false
 	local no_clbk = params and params.no_clbk
-	local params = {
-		cost = managers.experience:cash_string(infamous_cost),
-		free = infamous_cost == 0,
-		prestige = true
-	}
+	local params = {}
+
+	params.cost = managers.experience:cash_string(infamous_cost)
+	params.free = infamous_cost == 0
+	params.prestige = true
 
 	if infamous_cost <= managers.money:offshore() and managers.experience:current_level() >= 100 then
 		-- Lines 3751-3759
@@ -3659,7 +3695,7 @@ function MenuCallbackHandler:choice_choose_video_adapter(item)
 	if alive(fullscreen_ws) then
 		local panel = fullscreen_ws:panel()
 
-		panel:animate(function (o)
+		panel:animate(function(o)
 			wait(0.025)
 
 			local resolutions = clone(RenderSettings.modes)
@@ -3693,28 +3729,26 @@ function MenuCallbackHandler:apply_and_save_render_settings()
 			color = Color.black
 		})
 		black_overlay:text({
-			vertical = "center",
-			halign = "center",
-			font_size = 50,
 			align = "center",
+			font_size = 50,
+			halign = "center",
 			valign = "center",
+			vertical = "center",
 			text = managers.localization:to_upper_text("menu_apply_render_settings"),
 			font = tweak_data.menu.pd2_large_font
 		})
-		black_overlay:animate(function (o)
+		black_overlay:animate(function(o)
 			coroutine.yield()
 			coroutine.yield()
 			func()
-			over(0.05, function (p)
+			over(0.05, function(p)
 				black_overlay:set_alpha(1 - p)
 			end)
 			fullscreen_ws:panel():remove(black_overlay)
 		end)
-
-		return
+	else
+		func()
 	end
-
-	func()
 end
 
 -- Lines 3835-3839
@@ -3863,7 +3897,7 @@ end
 
 -- Lines 3969-3985
 function MenuCallbackHandler:set_fov_standard(item)
-	return
+	do return end
 
 	local fov = item:value()
 
@@ -3886,7 +3920,7 @@ end
 
 -- Lines 3987-4003
 function MenuCallbackHandler:set_fov_zoom(item)
-	return
+	do return end
 
 	local fov = item:value()
 
@@ -3894,7 +3928,7 @@ function MenuCallbackHandler:set_fov_zoom(item)
 
 	local item_fov_standard = managers.menu:active_menu().logic:selected_node():item("fov_standard")
 
-	if item_fov_standard:value() < fov then
+	if fov > item_fov_standard:value() then
 		item_fov_standard:set_value(fov)
 		item_fov_standard:trigger()
 	end
@@ -3930,20 +3964,22 @@ function MenuCallbackHandler:leave_lobby()
 		return
 	end
 
-	local dialog_data = {
-		title = managers.localization:text("dialog_warning_title"),
-		text = managers.localization:text("dialog_are_you_sure_you_want_leave"),
-		id = "leave_lobby"
-	}
-	local yes_button = {
-		text = managers.localization:text("dialog_yes"),
-		callback_func = callback(self, self, "_dialog_leave_lobby_yes")
-	}
-	local no_button = {
-		text = managers.localization:text("dialog_no"),
-		callback_func = callback(self, self, "_dialog_leave_lobby_no"),
-		cancel_button = true
-	}
+	local dialog_data = {}
+
+	dialog_data.title = managers.localization:text("dialog_warning_title")
+	dialog_data.text = managers.localization:text("dialog_are_you_sure_you_want_leave")
+	dialog_data.id = "leave_lobby"
+
+	local yes_button = {}
+
+	yes_button.text = managers.localization:text("dialog_yes")
+	yes_button.callback_func = callback(self, self, "_dialog_leave_lobby_yes")
+
+	local no_button = {}
+
+	no_button.text = managers.localization:text("dialog_no")
+	no_button.callback_func = callback(self, self, "_dialog_leave_lobby_no")
+	no_button.cancel_button = true
 	dialog_data.button_list = {
 		yes_button,
 		no_button
@@ -3967,6 +4003,7 @@ end
 
 -- Lines 4059-4060
 function MenuCallbackHandler:_dialog_leave_lobby_no()
+	return
 end
 
 -- Lines 4062-4083
@@ -3997,6 +4034,7 @@ function MenuCallbackHandler:host_multiplayer(item)
 
 	local level_id = item:parameters().level_id
 	local level_name = level_id and tweak_data.levels[level_id].world_name
+
 	level_id = level_id or tweak_data.levels:get_level_name_from_world_name(item:parameters().level)
 	level_name = level_name or item:parameters().level or "bank"
 	Global.game_settings.level_id = level_id
@@ -4110,6 +4148,7 @@ end
 
 -- Lines 4217-4220
 function MenuCallbackHandler:find_friends()
+	return
 end
 
 -- Lines 4222-4224
@@ -4225,24 +4264,28 @@ function MenuCallbackHandler:restart_level(item)
 		return
 	end
 
-	local dialog_data = {
-		title = managers.localization:text("dialog_mp_restart_level_title"),
-		text = managers.localization:text(managers.vote:option_vote_restart() and "dialog_mp_restart_level_message" or "dialog_mp_restart_level_host_message")
-	}
-	local yes_button = {
-		text = managers.localization:text("dialog_yes"),
-		callback_func = function ()
-			if managers.vote:option_vote_restart() then
-				managers.vote:restart()
-			else
-				managers.vote:restart_auto()
-			end
+	local dialog_data = {}
+
+	dialog_data.title = managers.localization:text("dialog_mp_restart_level_title")
+	dialog_data.text = managers.localization:text(managers.vote:option_vote_restart() and "dialog_mp_restart_level_message" or "dialog_mp_restart_level_host_message")
+
+	local yes_button = {}
+
+	yes_button.text = managers.localization:text("dialog_yes")
+
+	-- Lines 4343-4349
+	function yes_button.callback_func()
+		if managers.vote:option_vote_restart() then
+			managers.vote:restart()
+		else
+			managers.vote:restart_auto()
 		end
-	}
-	local no_button = {
-		text = managers.localization:text("dialog_no"),
-		cancel_button = true
-	}
+	end
+
+	local no_button = {}
+
+	no_button.text = managers.localization:text("dialog_no")
+	no_button.cancel_button = true
 	dialog_data.button_list = {
 		yes_button,
 		no_button
@@ -4318,6 +4361,7 @@ function MenuCallbackHandler:start_the_game()
 	end
 
 	self._game_started = true
+
 	local level_id = Global.game_settings.level_id
 	local level_name = level_id and tweak_data.levels[level_id].world_name
 
@@ -4340,7 +4384,7 @@ end
 -- Lines 4443-4456
 function MenuCallbackHandler:restart_game(item)
 	managers.menu:show_restart_game_dialog({
-		yes_func = function ()
+		yes_func = function()
 			if managers.job:stage_success() then
 				print("No restart after stage success")
 
@@ -4558,19 +4602,21 @@ end
 
 -- Lines 4613-4629
 function MenuCallbackHandler:end_game()
-	local dialog_data = {
-		title = managers.localization:text("dialog_warning_title"),
-		text = managers.localization:text("dialog_are_you_sure_you_want_to_leave_game")
-	}
-	local yes_button = {
-		text = managers.localization:text("dialog_yes"),
-		callback_func = callback(self, self, "_dialog_end_game_yes")
-	}
-	local no_button = {
-		text = managers.localization:text("dialog_no"),
-		callback_func = callback(self, self, "_dialog_end_game_no"),
-		cancel_button = true
-	}
+	local dialog_data = {}
+
+	dialog_data.title = managers.localization:text("dialog_warning_title")
+	dialog_data.text = managers.localization:text("dialog_are_you_sure_you_want_to_leave_game")
+
+	local yes_button = {}
+
+	yes_button.text = managers.localization:text("dialog_yes")
+	yes_button.callback_func = callback(self, self, "_dialog_end_game_yes")
+
+	local no_button = {}
+
+	no_button.text = managers.localization:text("dialog_no")
+	no_button.callback_func = callback(self, self, "_dialog_end_game_no")
+	no_button.cancel_button = true
 	dialog_data.button_list = {
 		yes_button,
 		no_button
@@ -4667,6 +4713,7 @@ end
 
 -- Lines 4740-4741
 function MenuCallbackHandler:_dialog_end_game_no()
+	return
 end
 
 -- Lines 4743-4746
@@ -4683,14 +4730,12 @@ function MenuCallbackHandler:show_steam_controller_binding_panel()
 
 	local controller = managers.controller:get_default_controller()
 
-	if controller then
-		if controller:show_binding_panel() then
-			-- Nothing
-		elseif MenuCallbackHandler:is_overlay_enabled() then
-			managers.menu:show_requires_big_picture()
-		else
-			managers.menu:show_enable_steam_overlay()
-		end
+	if not controller or controller:show_binding_panel() then
+		-- Nothing
+	elseif MenuCallbackHandler:is_overlay_enabled() then
+		managers.menu:show_requires_big_picture()
+	else
+		managers.menu:show_enable_steam_overlay()
 	end
 end
 
@@ -4698,7 +4743,7 @@ end
 function MenuCallbackHandler:set_default_options()
 	local params = {
 		text = managers.localization:text("dialog_default_options_message"),
-		callback = function ()
+		callback = function()
 			managers.user:reset_setting_map()
 			managers.music:jukebox_set_defaults()
 			self:_reset_mainmusic()
@@ -4723,7 +4768,7 @@ end
 function MenuCallbackHandler:set_default_control_options()
 	local params = {
 		text = managers.localization:text("dialog_default_controls_options_message"),
-		callback = function ()
+		callback = function()
 			managers.user:reset_controls_setting_map()
 			self:refresh_node()
 		end
@@ -4736,7 +4781,7 @@ end
 function MenuCallbackHandler:set_default_video_options()
 	local params = {
 		text = managers.localization:text("dialog_default_video_options_message"),
-		callback = function ()
+		callback = function()
 			managers.user:reset_video_setting_map()
 			managers.viewport:reset_viewport_settings()
 			Application:reset_render_settings({
@@ -4757,7 +4802,7 @@ end
 function MenuCallbackHandler:set_default_sound_options()
 	local params = {
 		text = managers.localization:text("dialog_default_sound_options_message"),
-		callback = function ()
+		callback = function()
 			managers.user:reset_sound_setting_map()
 			managers.music:jukebox_set_defaults()
 			self:refresh_node()
@@ -4772,7 +4817,7 @@ end
 function MenuCallbackHandler:set_default_network_options()
 	local params = {
 		text = managers.localization:text("dialog_default_network_options_message"),
-		callback = function ()
+		callback = function()
 			managers.user:reset_network_setting_map()
 			self:refresh_node()
 		end
@@ -4785,7 +4830,7 @@ end
 function MenuCallbackHandler:set_default_user_interface_options()
 	local params = {
 		text = managers.localization:text("dialog_default_user_interface_options_message"),
-		callback = function ()
+		callback = function()
 			managers.user:reset_user_interface_setting_map()
 			self:refresh_node()
 		end
@@ -4811,6 +4856,7 @@ function MenuManager:on_resume_heister_interaction()
 	self:close_menu("heister_interact_menu")
 
 	self._heister_interaction = false
+
 	local player_unit = managers.player:player_unit()
 
 	if alive(player_unit) and player_unit:movement():current_state().update_check_actions_paused then
@@ -4825,6 +4871,7 @@ end
 
 -- Lines 4866-4867
 function MenuCallbackHandler:change_upgrade(menu_item)
+	return
 end
 
 -- Lines 4869-4877
@@ -4875,19 +4922,21 @@ end
 
 -- Lines 4906-4922
 function MenuCallbackHandler:clear_progress()
-	local dialog_data = {
-		title = managers.localization:text("dialog_warning_title"),
-		text = managers.localization:text("dialog_are_you_sure_you_want_to_clear_progress")
-	}
-	local yes_button = {
-		text = managers.localization:text("dialog_yes"),
-		callback_func = callback(self, self, "_dialog_clear_progress_yes")
-	}
-	local no_button = {
-		text = managers.localization:text("dialog_no"),
-		callback_func = callback(self, self, "_dialog_clear_progress_no"),
-		cancel_button = true
-	}
+	local dialog_data = {}
+
+	dialog_data.title = managers.localization:text("dialog_warning_title")
+	dialog_data.text = managers.localization:text("dialog_are_you_sure_you_want_to_clear_progress")
+
+	local yes_button = {}
+
+	yes_button.text = managers.localization:text("dialog_yes")
+	yes_button.callback_func = callback(self, self, "_dialog_clear_progress_yes")
+
+	local no_button = {}
+
+	no_button.text = managers.localization:text("dialog_no")
+	no_button.callback_func = callback(self, self, "_dialog_clear_progress_no")
+	no_button.cancel_button = true
 	dialog_data.button_list = {
 		yes_button,
 		no_button
@@ -4910,13 +4959,14 @@ end
 
 -- Lines 4941-4942
 function MenuCallbackHandler:_dialog_clear_progress_no()
+	return
 end
 
 -- Lines 4944-4960
 function MenuCallbackHandler:set_default_controller(item)
 	local params = {
 		text = managers.localization:text("dialog_use_default_keys_message"),
-		callback = function ()
+		callback = function()
 			managers.controller:load_settings("settings/controller_settings")
 			managers.controller:clear_user_mod(item:parameters().category, MenuCustomizeControllerCreator.CONTROLS_INFO)
 
@@ -4997,9 +5047,9 @@ function MenuUpgrades:modify_node(node, up, ...)
 			new_node:add_item(new_node:create_item({
 				type = "MenuItemUpgrade"
 			}, {
-				upgrade_lock = true,
-				name = "upgrade_lock",
 				localize = "false",
+				name = "upgrade_lock",
+				upgrade_lock = true,
 				text_id = managers.localization:text("menu_upgrades_locked", {
 					LEVEL = managers.upgrades:get_level_from_step(i)
 				})
@@ -5044,7 +5094,8 @@ function InviteFriendsPSN:modify_node(node, up)
 	end
 
 	managers.network.friends:register_callback("get_friends_done", f2)
-	managers.network.friends:register_callback("status_change", function ()
+	managers.network.friends:register_callback("status_change", function()
+		return
 	end)
 	managers.network.friends:get_friends(new_node)
 
@@ -5084,7 +5135,7 @@ end
 
 -- Lines 5147-5155
 function InviteFriendsPSN:update_node(node)
-	if self._update_friends_t and Application:time() < self._update_friends_t then
+	if self._update_friends_t and self._update_friends_t > Application:time() then
 		return
 	end
 
@@ -5107,6 +5158,7 @@ end
 
 -- Lines 5271-5272
 function InviteFriendsSTEAM:update_node(node)
+	return
 end
 
 InviteFriendsEPIC = InviteFriendsEPIC or class()
@@ -5123,6 +5175,7 @@ end
 
 -- Lines 5286-5287
 function InviteFriendsEPIC:update_node(node)
+	return
 end
 
 PauseMenu = PauseMenu or class()
@@ -5163,11 +5216,13 @@ function KickPlayer:modify_node(node, up)
 			local name = peer:name()
 			local color_range_offset = utf8.len(name) + 2
 			local experience, color_ranges = managers.experience:gui_string(level, rank, color_range_offset)
+
 			experience = " (" .. experience .. ")"
+
 			local params = {
+				callback = "kick_player",
 				localize = false,
 				localize_help = false,
-				callback = "kick_player",
 				to_upper = false,
 				name = name,
 				text_id = name .. experience,
@@ -5207,7 +5262,9 @@ function MutePlayer:modify_node(node, up)
 			local name = peer:name()
 			local color_range_offset = utf8.len(name) + 2
 			local experience, color_ranges = managers.experience:gui_string(level, rank, color_range_offset)
+
 			experience = " (" .. experience .. ")"
+
 			local params = {
 				callback = "mute_player",
 				localize = "false",
@@ -5220,32 +5277,32 @@ function MutePlayer:modify_node(node, up)
 			}
 			local data = {
 				{
-					w = 24,
-					y = 0,
+					_meta = "option",
 					h = 24,
+					icon = "guis/textures/menu_tickbox",
+					s_h = 24,
+					s_icon = "guis/textures/menu_tickbox",
+					s_w = 24,
+					s_x = 24,
 					s_y = 24,
 					value = "on",
-					s_w = 24,
-					s_h = 24,
-					s_x = 24,
-					_meta = "option",
-					icon = "guis/textures/menu_tickbox",
+					w = 24,
 					x = 24,
-					s_icon = "guis/textures/menu_tickbox"
+					y = 0
 				},
 				{
-					w = 24,
-					y = 0,
+					_meta = "option",
 					h = 24,
+					icon = "guis/textures/menu_tickbox",
+					s_h = 24,
+					s_icon = "guis/textures/menu_tickbox",
+					s_w = 24,
+					s_x = 0,
 					s_y = 24,
 					value = "off",
-					s_w = 24,
-					s_h = 24,
-					s_x = 0,
-					_meta = "option",
-					icon = "guis/textures/menu_tickbox",
+					w = 24,
 					x = 0,
-					s_icon = "guis/textures/menu_tickbox"
+					y = 0
 				},
 				type = "CoreMenuItemToggle.ItemToggle"
 			}
@@ -5270,9 +5327,9 @@ function MutePlayerX360:modify_node(node, up)
 	if managers.network:session() then
 		for _, peer in pairs(managers.network:session():peers()) do
 			local params = {
+				callback = "mute_xbox_player",
 				localize = "false",
 				to_upper = false,
-				callback = "mute_xbox_player",
 				name = peer:name(),
 				text_id = peer:name(),
 				rpc = peer:rpc(),
@@ -5281,32 +5338,32 @@ function MutePlayerX360:modify_node(node, up)
 			}
 			local data = {
 				{
-					w = 24,
-					y = 0,
+					_meta = "option",
 					h = 24,
+					icon = "guis/textures/menu_tickbox",
+					s_h = 24,
+					s_icon = "guis/textures/menu_tickbox",
+					s_w = 24,
+					s_x = 24,
 					s_y = 24,
 					value = "on",
-					s_w = 24,
-					s_h = 24,
-					s_x = 24,
-					_meta = "option",
-					icon = "guis/textures/menu_tickbox",
+					w = 24,
 					x = 24,
-					s_icon = "guis/textures/menu_tickbox"
+					y = 0
 				},
 				{
-					w = 24,
-					y = 0,
+					_meta = "option",
 					h = 24,
+					icon = "guis/textures/menu_tickbox",
+					s_h = 24,
+					s_icon = "guis/textures/menu_tickbox",
+					s_w = 24,
+					s_x = 0,
 					s_y = 24,
 					value = "off",
-					s_w = 24,
-					s_h = 24,
-					s_x = 0,
-					_meta = "option",
-					icon = "guis/textures/menu_tickbox",
+					w = 24,
 					x = 0,
-					s_icon = "guis/textures/menu_tickbox"
+					y = 0
 				},
 				type = "CoreMenuItemToggle.ItemToggle"
 			}
@@ -5331,9 +5388,9 @@ function MutePlayerXB1:modify_node(node, up)
 	if managers.network:session() then
 		for _, peer in pairs(managers.network:session():peers()) do
 			local params = {
+				callback = "mute_xb1_player",
 				localize = "false",
 				to_upper = false,
-				callback = "mute_xb1_player",
 				name = peer:name(),
 				text_id = peer:name(),
 				rpc = peer:rpc(),
@@ -5342,32 +5399,32 @@ function MutePlayerXB1:modify_node(node, up)
 			}
 			local data = {
 				{
-					w = 24,
-					y = 0,
+					_meta = "option",
 					h = 24,
+					icon = "guis/textures/menu_tickbox",
+					s_h = 24,
+					s_icon = "guis/textures/menu_tickbox",
+					s_w = 24,
+					s_x = 24,
 					s_y = 24,
 					value = "on",
-					s_w = 24,
-					s_h = 24,
-					s_x = 24,
-					_meta = "option",
-					icon = "guis/textures/menu_tickbox",
+					w = 24,
 					x = 24,
-					s_icon = "guis/textures/menu_tickbox"
+					y = 0
 				},
 				{
-					w = 24,
-					y = 0,
+					_meta = "option",
 					h = 24,
+					icon = "guis/textures/menu_tickbox",
+					s_h = 24,
+					s_icon = "guis/textures/menu_tickbox",
+					s_w = 24,
+					s_x = 0,
 					s_y = 24,
 					value = "off",
-					s_w = 24,
-					s_h = 24,
-					s_x = 0,
-					_meta = "option",
-					icon = "guis/textures/menu_tickbox",
+					w = 24,
 					x = 0,
-					s_icon = "guis/textures/menu_tickbox"
+					y = 0
 				},
 				type = "CoreMenuItemToggle.ItemToggle"
 			}
@@ -5402,32 +5459,32 @@ function MutePlayerPS4:modify_node(node, up)
 			}
 			local data = {
 				{
-					w = 24,
-					y = 0,
+					_meta = "option",
 					h = 24,
+					icon = "guis/textures/menu_tickbox",
+					s_h = 24,
+					s_icon = "guis/textures/menu_tickbox",
+					s_w = 24,
+					s_x = 24,
 					s_y = 24,
 					value = "on",
-					s_w = 24,
-					s_h = 24,
-					s_x = 24,
-					_meta = "option",
-					icon = "guis/textures/menu_tickbox",
+					w = 24,
 					x = 24,
-					s_icon = "guis/textures/menu_tickbox"
+					y = 0
 				},
 				{
-					w = 24,
-					y = 0,
+					_meta = "option",
 					h = 24,
+					icon = "guis/textures/menu_tickbox",
+					s_h = 24,
+					s_icon = "guis/textures/menu_tickbox",
+					s_w = 24,
+					s_x = 0,
 					s_y = 24,
 					value = "off",
-					s_w = 24,
-					s_h = 24,
-					s_x = 0,
-					_meta = "option",
-					icon = "guis/textures/menu_tickbox",
+					w = 24,
 					x = 0,
-					s_icon = "guis/textures/menu_tickbox"
+					y = 0
 				},
 				type = "CoreMenuItemToggle.ItemToggle"
 			}
@@ -5452,9 +5509,9 @@ function ViewGamerCard:modify_node(node, up)
 	if managers.network:session() then
 		for _, peer in pairs(managers.network:session():peers()) do
 			local params = {
+				callback = "view_gamer_card",
 				localize = "false",
 				to_upper = false,
-				callback = "view_gamer_card",
 				name = peer:name(),
 				text_id = peer:name(),
 				xuid = peer:xuid()
@@ -5495,47 +5552,47 @@ function MenuPSNHostBrowser:add_filter(node)
 	end
 
 	local params = {
-		visible_callback = "is_ps3",
-		name = "difficulty_filter",
 		callback = "choice_difficulty_filter_ps3",
-		text_id = "menu_diff_filter",
+		filter = true,
 		help_id = "menu_diff_filter_help",
-		filter = true
+		name = "difficulty_filter",
+		text_id = "menu_diff_filter",
+		visible_callback = "is_ps3"
 	}
 	local data_node = {
 		{
-			value = 0,
+			_meta = "option",
 			text_id = "menu_all",
-			_meta = "option"
+			value = 0
 		},
 		{
-			value = 1,
+			_meta = "option",
 			text_id = "menu_difficulty_easy",
-			_meta = "option"
+			value = 1
 		},
 		{
-			value = 2,
+			_meta = "option",
 			text_id = "menu_difficulty_normal",
-			_meta = "option"
+			value = 2
 		},
 		{
-			value = 3,
+			_meta = "option",
 			text_id = "menu_difficulty_hard",
-			_meta = "option"
+			value = 3
 		},
 		{
-			value = 4,
+			_meta = "option",
 			text_id = "menu_difficulty_overkill",
-			_meta = "option"
+			value = 4
 		},
 		type = "MenuItemMultiChoice"
 	}
 
 	if managers.experience:current_level() >= 145 then
 		table.insert(data_node, {
-			value = 5,
+			_meta = "option",
 			text_id = "menu_difficulty_overkill_145",
-			_meta = "option"
+			value = 5
 		})
 	end
 
@@ -5576,6 +5633,7 @@ function MenuPSNHostBrowser:refresh_node(node, info_list, friends_only)
 
 			if managers.network.matchmake:is_server_ok(friends_only, room, attributes_numbers) then
 				dead_list[name_str] = nil
+
 				local host_name = name_str
 				local level_id = attributes_numbers and tweak_data.levels:get_level_name_from_index(attributes_numbers[1] % 1000)
 				local name_id = level_id and tweak_data.levels[level_id] and tweak_data.levels[level_id].name_id or "N/A"
@@ -5589,8 +5647,8 @@ function MenuPSNHostBrowser:refresh_node(node, info_list, friends_only)
 
 				if not item then
 					local params = {
-						localize = "false",
 						callback = "connect_to_lobby",
+						localize = "false",
 						name = name_str,
 						text_id = name_str,
 						room_id = room.room_id,
@@ -5673,33 +5731,33 @@ function MenuSTEAMHostBrowser:add_filter(node)
 	end
 
 	local params = {
-		visible_callback = "is_pc_controller",
-		name = "server_filter",
 		callback = "choice_distance_filter",
-		text_id = "menu_dist_filter",
+		filter = true,
 		help_id = "menu_dist_filter_help",
-		filter = true
+		name = "server_filter",
+		text_id = "menu_dist_filter",
+		visible_callback = "is_pc_controller"
 	}
 	local data_node = {
 		{
-			value = 0,
+			_meta = "option",
 			text_id = "menu_dist_filter_close",
-			_meta = "option"
+			value = 0
 		},
 		{
-			value = 1,
+			_meta = "option",
 			text_id = "menu_dist_filter_default",
-			_meta = "option"
+			value = 1
 		},
 		{
-			value = 2,
+			_meta = "option",
 			text_id = "menu_dist_filter_far",
-			_meta = "option"
+			value = 2
 		},
 		{
-			value = 3,
+			_meta = "option",
 			text_id = "menu_dist_filter_worldwide",
-			_meta = "option"
+			value = 3
 		},
 		type = "MenuItemMultiChoice"
 	}
@@ -5709,47 +5767,47 @@ function MenuSTEAMHostBrowser:add_filter(node)
 	node:add_item(new_item)
 
 	local params = {
-		visible_callback = "is_pc_controller",
-		name = "difficulty_filter",
 		callback = "choice_difficulty_filter",
-		text_id = "menu_diff_filter",
+		filter = true,
 		help_id = "menu_diff_filter_help",
-		filter = true
+		name = "difficulty_filter",
+		text_id = "menu_diff_filter",
+		visible_callback = "is_pc_controller"
 	}
 	local data_node = {
 		{
-			value = 0,
+			_meta = "option",
 			text_id = "menu_all",
-			_meta = "option"
+			value = 0
 		},
 		{
-			value = 1,
+			_meta = "option",
 			text_id = "menu_difficulty_easy",
-			_meta = "option"
+			value = 1
 		},
 		{
-			value = 2,
+			_meta = "option",
 			text_id = "menu_difficulty_normal",
-			_meta = "option"
+			value = 2
 		},
 		{
-			value = 3,
+			_meta = "option",
 			text_id = "menu_difficulty_hard",
-			_meta = "option"
+			value = 3
 		},
 		{
-			value = 4,
+			_meta = "option",
 			text_id = "menu_difficulty_overkill",
-			_meta = "option"
+			value = 4
 		},
 		type = "MenuItemMultiChoice"
 	}
 
 	if managers.experience:current_level() >= 145 then
 		table.insert(data_node, {
-			value = 5,
+			_meta = "option",
 			text_id = "menu_difficulty_overkill_145",
-			_meta = "option"
+			value = 5
 		})
 	end
 
@@ -5790,6 +5848,7 @@ function MenuSTEAMHostBrowser:refresh_node(node, info, friends_only)
 
 		if managers.network.matchmake:is_server_ok(friends_only, room, attributes_numbers, nil, attributes_mutators) then
 			dead_list[room.room_id] = nil
+
 			local host_name = name_str
 			local level_id = tweak_data.levels:get_level_name_from_index(attributes_numbers[1] % 1000)
 			local name_id = level_id and tweak_data.levels[level_id] and tweak_data.levels[level_id].name_id
@@ -5805,8 +5864,8 @@ function MenuSTEAMHostBrowser:refresh_node(node, info, friends_only)
 				print("ADD", name_str)
 
 				local params = {
-					localize = "false",
 					callback = "connect_to_lobby",
+					localize = "false",
 					name = room.room_id,
 					text_id = name_str,
 					room_id = room.room_id,
@@ -5895,8 +5954,8 @@ function MenuLANHostBrowser:refresh_node(node)
 
 		if not item then
 			local params = {
-				localize = "false",
 				callback = "connect_to_host_rpc",
+				localize = "false",
 				name = name_str,
 				text_id = name_str,
 				columns = {
@@ -5969,8 +6028,8 @@ function MenuMPHostBrowser:refresh_node(node)
 
 		if not item then
 			local params = {
-				localize = "false",
 				callback = "connect_to_host_rpc",
+				localize = "false",
 				name = name_str,
 				text_id = name_str,
 				columns = {
@@ -6036,10 +6095,10 @@ function MenuResolutionCreator:modify_node(node)
 			if not new_node:item(res_string) then
 				local params = {
 					callback = "change_resolution",
-					localize = "false",
 					icon = "guis/textures/scrollarrow",
 					icon_rotation = 90,
 					icon_visible_callback = "is_current_resolution",
+					localize = "false",
 					name = res_string,
 					text_id = res_string,
 					resolution = res
@@ -6099,6 +6158,7 @@ function MenuSoundCreator:modify_node(node)
 	end
 
 	option_value = "on"
+
 	local st_item = node:item("toggle_push_to_talk")
 
 	if st_item then
@@ -6154,11 +6214,12 @@ function MenuManager.refresh_level_select(node, verify_dlc_owned)
 	end
 
 	Global.game_settings.difficulty = min_difficulty < tweak_data:difficulty_to_index(Global.game_settings.difficulty) and Global.game_settings.difficulty or tweak_data:index_to_difficulty(min_difficulty)
+
 	local item_difficulty = node:item("lobby_difficulty")
 
 	if item_difficulty then
 		for i, option in ipairs(item_difficulty:options()) do
-			option:parameters().exclude = tonumber(option:parameters().difficulty) < min_difficulty
+			option:parameters().exclude = min_difficulty > tonumber(option:parameters().difficulty)
 		end
 
 		item_difficulty:set_value(Global.game_settings.difficulty)
@@ -6172,8 +6233,8 @@ function MenuManager.refresh_level_select(node, verify_dlc_owned)
 
 		local params = {
 			callback = "choice_lobby_mission",
-			name = "lobby_mission",
 			localize = "false",
+			name = "lobby_mission",
 			text_id = "menu_choose_mission"
 		}
 		local data_node = {
@@ -6183,18 +6244,18 @@ function MenuManager.refresh_level_select(node, verify_dlc_owned)
 		if mission_data then
 			for _, data in ipairs(mission_data) do
 				table.insert(data_node, {
-					localize = false,
 					_meta = "option",
+					localize = false,
 					text_id = data.mission,
 					value = data.mission
 				})
 			end
 		else
 			table.insert(data_node, {
-				value = "none",
-				text_id = "none",
+				_meta = "option",
 				localize = false,
-				_meta = "option"
+				text_id = "none",
+				value = "none"
 			})
 		end
 
@@ -6282,7 +6343,7 @@ function LobbyOptionInitiator:modify_node(node)
 		item_lobby_job_plan:set_value(Global.game_settings.job_plan or -1)
 
 		if tweak_data.quickplay.stealth_levels[managers.job:current_real_job_id()] then
-			local stealth_option = nil
+			local stealth_option
 
 			for _, option in ipairs(item_lobby_job_plan:options()) do
 				if option:value() == 2 then
@@ -6360,174 +6421,173 @@ MenuCustomizeControllerCreator.AXIS_ORDERED = {
 		"turn_right"
 	}
 }
-MenuCustomizeControllerCreator.CONTROLS_INFO = {
-	move = {
-		hidden = true,
-		category = "normal"
-	},
-	up = {
-		category = "normal",
-		text_id = "menu_button_move_forward"
-	},
-	down = {
-		category = "normal",
-		text_id = "menu_button_move_back"
-	},
-	left = {
-		category = "normal",
-		text_id = "menu_button_move_left"
-	},
-	right = {
-		category = "normal",
-		text_id = "menu_button_move_right"
-	},
-	primary_attack = {
-		category = "normal",
-		text_id = "menu_button_fire_weapon"
-	},
-	secondary_attack = {
-		category = "normal",
-		text_id = "menu_button_aim_down_sight"
-	},
-	primary_choice1 = {
-		category = "normal",
-		text_id = "menu_button_weapon_slot1"
-	},
-	primary_choice2 = {
-		category = "normal",
-		text_id = "menu_button_weapon_slot2"
-	},
-	switch_weapon = {
-		category = "normal",
-		text_id = "menu_button_switch_weapon"
-	},
-	reload = {
-		category = "normal",
-		text_id = "menu_button_reload"
-	},
-	weapon_gadget = {
-		category = "normal",
-		text_id = "menu_button_weapon_gadget"
-	},
-	run = {
-		category = "normal",
-		text_id = "menu_button_sprint"
-	},
-	jump = {
-		category = "normal",
-		text_id = "menu_button_jump"
-	},
-	duck = {
-		category = "normal",
-		text_id = "menu_button_crouch"
-	},
-	melee = {
-		category = "normal",
-		text_id = "menu_button_melee"
-	},
-	interact = {
-		category = "normal",
-		text_id = "menu_button_shout"
-	},
-	interact_secondary = {
-		category = "normal",
-		text_id = "menu_button_shout_secondary"
-	},
-	use_item = {
-		category = "normal",
-		text_id = "menu_button_deploy"
-	},
-	toggle_chat = {
-		category = "normal",
-		text_id = "menu_button_chat_message"
-	},
-	push_to_talk = {
-		category = "normal",
-		text_id = "menu_button_push_to_talk"
-	},
-	continue = {
-		category = "normal",
-		text_id = "menu_button_continue"
-	},
-	throw_grenade = {
-		category = "normal",
-		text_id = "menu_button_throwable"
-	},
-	weapon_firemode = {
-		category = "normal",
-		text_id = "menu_button_weapon_firemode"
-	},
-	cash_inspect = {
-		category = "normal",
-		text_id = "menu_button_cash_inspect"
-	},
-	deploy_bipod = {
-		category = "normal",
-		text_id = "menu_button_deploy_bipod"
-	},
-	change_equipment = {
-		category = "normal",
-		text_id = "menu_button_change_equipment"
-	},
-	toggle_hud = {
-		category = "normal",
-		text_id = "menu_button_toggle_hud"
-	},
-	drive = {
-		hidden = true,
-		category = "vehicle"
-	},
-	accelerate = {
-		category = "vehicle",
-		text_id = "menu_button_accelerate"
-	},
-	brake = {
-		category = "vehicle",
-		text_id = "menu_button_brake"
-	},
-	turn_left = {
-		category = "vehicle",
-		text_id = "menu_button_turn_left"
-	},
-	turn_right = {
-		category = "vehicle",
-		text_id = "menu_button_turn_right"
-	},
-	hand_brake = {
-		category = "vehicle",
-		text_id = "menu_button_handbrake"
-	},
-	vehicle_change_camera = {
-		category = "vehicle",
-		text_id = "menu_button_vehicle_change_camera"
-	},
-	vehicle_rear_camera = {
-		category = "vehicle",
-		text_id = "menu_button_vehicle_rear_camera"
-	},
-	vehicle_shooting_stance = {
-		category = "vehicle",
-		text_id = "menu_button_vehicle_shooting_stance",
-		block = {
-			"normal"
-		}
-	},
-	vehicle_exit = {
-		category = "vehicle",
-		text_id = "menu_button_vehicle_exit"
-	},
-	drop_in_accept = {
-		category = "normal",
-		text_id = "menu_button_drop_in_accept"
-	},
-	drop_in_return = {
-		category = "normal",
-		text_id = "menu_button_drop_in_return"
-	},
-	drop_in_kick = {
-		category = "normal",
-		text_id = "menu_button_drop_in_kick"
+MenuCustomizeControllerCreator.CONTROLS_INFO = {}
+MenuCustomizeControllerCreator.CONTROLS_INFO.move = {
+	category = "normal",
+	hidden = true
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.up = {
+	category = "normal",
+	text_id = "menu_button_move_forward"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.down = {
+	category = "normal",
+	text_id = "menu_button_move_back"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.left = {
+	category = "normal",
+	text_id = "menu_button_move_left"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.right = {
+	category = "normal",
+	text_id = "menu_button_move_right"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.primary_attack = {
+	category = "normal",
+	text_id = "menu_button_fire_weapon"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.secondary_attack = {
+	category = "normal",
+	text_id = "menu_button_aim_down_sight"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.primary_choice1 = {
+	category = "normal",
+	text_id = "menu_button_weapon_slot1"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.primary_choice2 = {
+	category = "normal",
+	text_id = "menu_button_weapon_slot2"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.switch_weapon = {
+	category = "normal",
+	text_id = "menu_button_switch_weapon"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.reload = {
+	category = "normal",
+	text_id = "menu_button_reload"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.weapon_gadget = {
+	category = "normal",
+	text_id = "menu_button_weapon_gadget"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.run = {
+	category = "normal",
+	text_id = "menu_button_sprint"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.jump = {
+	category = "normal",
+	text_id = "menu_button_jump"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.duck = {
+	category = "normal",
+	text_id = "menu_button_crouch"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.melee = {
+	category = "normal",
+	text_id = "menu_button_melee"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.interact = {
+	category = "normal",
+	text_id = "menu_button_shout"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.interact_secondary = {
+	category = "normal",
+	text_id = "menu_button_shout_secondary"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.use_item = {
+	category = "normal",
+	text_id = "menu_button_deploy"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.toggle_chat = {
+	category = "normal",
+	text_id = "menu_button_chat_message"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.push_to_talk = {
+	category = "normal",
+	text_id = "menu_button_push_to_talk"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.continue = {
+	category = "normal",
+	text_id = "menu_button_continue"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.throw_grenade = {
+	category = "normal",
+	text_id = "menu_button_throwable"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.weapon_firemode = {
+	category = "normal",
+	text_id = "menu_button_weapon_firemode"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.cash_inspect = {
+	category = "normal",
+	text_id = "menu_button_cash_inspect"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.deploy_bipod = {
+	category = "normal",
+	text_id = "menu_button_deploy_bipod"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.change_equipment = {
+	category = "normal",
+	text_id = "menu_button_change_equipment"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.toggle_hud = {
+	category = "normal",
+	text_id = "menu_button_toggle_hud"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.drive = {
+	category = "vehicle",
+	hidden = true
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.accelerate = {
+	category = "vehicle",
+	text_id = "menu_button_accelerate"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.brake = {
+	category = "vehicle",
+	text_id = "menu_button_brake"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.turn_left = {
+	category = "vehicle",
+	text_id = "menu_button_turn_left"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.turn_right = {
+	category = "vehicle",
+	text_id = "menu_button_turn_right"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.hand_brake = {
+	category = "vehicle",
+	text_id = "menu_button_handbrake"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.vehicle_change_camera = {
+	category = "vehicle",
+	text_id = "menu_button_vehicle_change_camera"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.vehicle_rear_camera = {
+	category = "vehicle",
+	text_id = "menu_button_vehicle_rear_camera"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.vehicle_shooting_stance = {
+	category = "vehicle",
+	text_id = "menu_button_vehicle_shooting_stance",
+	block = {
+		"normal"
 	}
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.vehicle_exit = {
+	category = "vehicle",
+	text_id = "menu_button_vehicle_exit"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.drop_in_accept = {
+	category = "normal",
+	text_id = "menu_button_drop_in_accept"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.drop_in_return = {
+	category = "normal",
+	text_id = "menu_button_drop_in_return"
+}
+MenuCustomizeControllerCreator.CONTROLS_INFO.drop_in_kick = {
+	category = "normal",
+	text_id = "menu_button_drop_in_kick"
 }
 
 -- Lines 6410-6418
@@ -6574,14 +6634,14 @@ function MenuCustomizeControllerCreator:setup_node(node)
 	}
 
 	table.insert(data_node, {
-		value = "normal",
+		_meta = "option",
 		text_id = "menu_controller_normal",
-		_meta = "option"
+		value = "normal"
 	})
 	table.insert(data_node, {
-		value = "vehicle",
+		_meta = "option",
 		text_id = "menu_controller_vehicle",
-		_meta = "option"
+		value = "vehicle"
 	})
 
 	local new_item = node:create_item(data_node, params)
@@ -6672,7 +6732,7 @@ function MenuCrimeNetContractInitiator:modify_node(original_node, data)
 
 		if tweak_data.quickplay.stealth_levels[data.job_id] then
 			local job_plan_item = node:item("lobby_job_plan")
-			local stealth_option = nil
+			local stealth_option
 
 			for _, option in ipairs(job_plan_item:options()) do
 				if option:value() == 2 then
@@ -6697,6 +6757,7 @@ function MenuCrimeNetContractInitiator:modify_node(original_node, data)
 
 			if buy_contract_item then
 				local can_afford = managers.money:can_afford_buy_premium_contract(job_data.job_id, job_data.difficulty_id or 3)
+
 				buy_contract_item:parameters().text_id = can_afford and "menu_cn_premium_buy_accept" or "menu_cn_premium_cannot_buy"
 				buy_contract_item:parameters().disabled_color = Color(1, 0.6, 0.2, 0.2)
 
@@ -6725,6 +6786,7 @@ MenuSkirmishContractInitiator = MenuSkirmishContractInitiator or class()
 -- Lines 6596-6637
 function MenuSkirmishContractInitiator:modify_node(original_node, data)
 	local node = deep_clone(original_node)
+
 	data = data or {}
 
 	if Global.game_settings.single_player then
@@ -6757,8 +6819,8 @@ function MenuCallbackHandler:accept_skirmish_contract(item)
 
 	local job_id = (node:parameters().menu_component_data or {}).job_id
 	local job_data = {
-		difficulty = "overkill_145",
 		customize_contract = true,
+		difficulty = "overkill_145",
 		job_id = job_id or managers.skirmish:random_skirmish_job_id(),
 		difficulty_id = tweak_data:difficulty_to_index("overkill_145")
 	}
@@ -6838,6 +6900,7 @@ function MenuCrimeNetContactInfoInitiator:modify_node(original_node, data)
 	for _, codex_d in ipairs(self.TWEAK_DATA) do
 		local codex = {}
 		local codex_string = managers.localization:to_upper_text(codex_d.name_id)
+
 		codex.id = codex_d.id
 		codex.name_localized = codex_string .. (self.COUNT_ITEMS and " (" .. tostring(#codex_d) .. ")" or "")
 
@@ -6849,22 +6912,22 @@ function MenuCrimeNetContactInfoInitiator:modify_node(original_node, data)
 			end
 
 			if add_info then
-				local data = {
-					id = info_data.id,
-					name_localized = managers.localization:to_upper_text(info_data.name_id),
-					files = {},
-					sub_text = self.USE_SUBTEXT and codex_string or nil
-				}
+				local data = {}
+
+				data.id = info_data.id
+				data.name_localized = managers.localization:to_upper_text(info_data.name_id)
+				data.files = {}
+				data.sub_text = self.USE_SUBTEXT and codex_string or nil
 
 				for page, file_data in ipairs(info_data) do
-					local file = {
-						desc_localized = file_data.desc_id and managers.localization:text(file_data.desc_id) or "",
-						post_event = file_data.post_event,
-						videos = file_data.videos and deep_clone(file_data.videos) or {},
-						lock = file_data.lock,
-						icon = file_data.icon,
-						icon_rect = file_data.icon_rect
-					}
+					local file = {}
+
+					file.desc_localized = file_data.desc_id and managers.localization:text(file_data.desc_id) or ""
+					file.post_event = file_data.post_event
+					file.videos = file_data.videos and deep_clone(file_data.videos) or {}
+					file.lock = file_data.lock
+					file.icon = file_data.icon
+					file.icon_rect = file_data.icon_rect
 
 					if file_data.video then
 						table.insert(file.videos, file_data.video)
@@ -6901,14 +6964,14 @@ function MenuCrimeNetContactInfoInitiator:modify_node(original_node, data)
 	end
 
 	local params = {
-		visible_callback = "is_pc_controller",
+		align = "left",
+		gui_node_custom = "true",
+		last_item = "true",
 		name = "back",
 		pd2_corner = "true",
+		previous_node = "true",
 		text_id = "menu_back",
-		gui_node_custom = "true",
-		align = "left",
-		last_item = "true",
-		previous_node = "true"
+		visible_callback = "is_pc_controller"
 	}
 	local data_node = {}
 	local new_item = node:create_item(data_node, params)
@@ -6949,10 +7012,10 @@ function MenuCrimeNetContactInfoInitiator:create_item(node, contact)
 	local sub_text = contact.sub_text
 	local files = contact.files
 	local video_id = contact.video
-	local color_ranges = nil
+	local color_ranges
 	local params = {
-		localize = "false",
 		callback = "set_contact_info",
+		localize = "false",
 		name = contact.id,
 		text_id = text_id,
 		color_ranges = color_ranges,
@@ -6982,14 +7045,15 @@ function MenuCrimeNetContactShortInitiator:modify_node(original_node, data)
 
 	for _, job_data in ipairs(tweak_data.narrative.tutorials) do
 		local heist_tweak = tweak_data.narrative.jobs[job_data.job]
-		local info_data = {
-			id = job_data.job,
-			text = managers.localization:to_upper_text(heist_tweak.name_id),
-			enabled = true
-		}
+		local info_data = {}
+
+		info_data.id = job_data.job
+		info_data.text = managers.localization:to_upper_text(heist_tweak.name_id)
+		info_data.enabled = true
 
 		if job_data.complete_job then
 			local completed = managers.statistics:sessions_jobs()
+
 			info_data.enabled = completed and completed[job_data.complete_job .. "_normal_completed"]
 		end
 
@@ -6997,14 +7061,14 @@ function MenuCrimeNetContactShortInitiator:modify_node(original_node, data)
 	end
 
 	local params = {
-		visible_callback = "is_pc_controller",
+		align = "left",
+		gui_node_custom = "true",
+		last_item = "true",
 		name = "back",
 		pd2_corner = "true",
+		previous_node = "true",
 		text_id = "menu_back",
-		gui_node_custom = "true",
-		align = "left",
-		last_item = "true",
-		previous_node = "true"
+		visible_callback = "is_pc_controller"
 	}
 	local data_node = {}
 	local new_item = node:create_item(data_node, params)
@@ -7104,46 +7168,46 @@ function MenuCrimeNetContactChillInitiator:modify_node(original_node, data)
 
 	local params = {
 		callback = "_on_chill_change_difficulty",
-		name = "difficulty",
-		text_id = "menu_lobby_difficulty_title",
+		filter = true,
 		help_id = "menu_diff_help",
-		filter = true
+		name = "difficulty",
+		text_id = "menu_lobby_difficulty_title"
 	}
 	local data_node = {
 		{
-			value = "normal",
+			_meta = "option",
 			text_id = "menu_difficulty_normal",
-			_meta = "option"
+			value = "normal"
 		},
 		{
-			value = "hard",
+			_meta = "option",
 			text_id = "menu_difficulty_hard",
-			_meta = "option"
+			value = "hard"
 		},
 		{
-			value = "overkill",
+			_meta = "option",
 			text_id = "menu_difficulty_very_hard",
-			_meta = "option"
+			value = "overkill"
 		},
 		{
-			value = "overkill_145",
+			_meta = "option",
 			text_id = "menu_difficulty_overkill",
-			_meta = "option"
+			value = "overkill_145"
 		},
 		{
-			value = "easy_wish",
+			_meta = "option",
 			text_id = "menu_difficulty_easy_wish",
-			_meta = "option"
+			value = "easy_wish"
 		},
 		{
-			value = "overkill_290",
+			_meta = "option",
 			text_id = "menu_difficulty_apocalypse",
-			_meta = "option"
+			value = "overkill_290"
 		},
 		{
-			value = "sm_wish",
+			_meta = "option",
 			text_id = "menu_difficulty_sm_wish",
-			_meta = "option"
+			value = "sm_wish"
 		},
 		type = "MenuItemMultiChoice"
 	}
@@ -7159,32 +7223,32 @@ function MenuCrimeNetContactChillInitiator:modify_node(original_node, data)
 	}
 	data_node = {
 		{
-			w = "24",
-			y = "0",
+			_meta = "option",
 			h = "24",
+			icon = "guis/textures/menu_tickbox",
+			s_h = "24",
+			s_icon = "guis/textures/menu_tickbox",
+			s_w = "24",
+			s_x = "24",
 			s_y = "24",
 			value = "on",
-			s_w = "24",
-			s_h = "24",
-			s_x = "24",
-			_meta = "option",
-			icon = "guis/textures/menu_tickbox",
+			w = "24",
 			x = "24",
-			s_icon = "guis/textures/menu_tickbox"
+			y = "0"
 		},
 		{
-			w = "24",
-			y = "0",
+			_meta = "option",
 			h = "24",
+			icon = "guis/textures/menu_tickbox",
+			s_h = "24",
+			s_icon = "guis/textures/menu_tickbox",
+			s_w = "24",
+			s_x = "0",
 			s_y = "24",
 			value = "off",
-			s_w = "24",
-			s_h = "24",
-			s_x = "0",
-			_meta = "option",
-			icon = "guis/textures/menu_tickbox",
+			w = "24",
 			x = "0",
-			s_icon = "guis/textures/menu_tickbox"
+			y = "0"
 		},
 		type = "CoreMenuItemToggle.ItemToggle"
 	}
@@ -7195,9 +7259,9 @@ function MenuCrimeNetContactChillInitiator:modify_node(original_node, data)
 	node:add_item(new_item)
 
 	params = {
+		align = "left",
 		callback = "play_chill_combat",
 		name = "CustomSafeHouseDefendBtn",
-		align = "left",
 		text_id = "menu_cn_chill_combat_defend"
 	}
 	data_node = {}
@@ -7207,9 +7271,9 @@ function MenuCrimeNetContactChillInitiator:modify_node(original_node, data)
 	node:add_item(new_item)
 
 	params = {
+		align = "left",
 		callback = "ignore_chill_combat",
 		name = "CustomSafeHouseIgnoreBtn",
-		align = "left",
 		text_id = "menu_cn_chill_combat_ignore_defend"
 	}
 	data_node = {}
@@ -7219,12 +7283,12 @@ function MenuCrimeNetContactChillInitiator:modify_node(original_node, data)
 	node:add_item(new_item)
 
 	params = {
-		visible_callback = "is_pc_controller",
-		name = "back",
-		last_item = "true",
-		text_id = "menu_back",
 		align = "left",
-		previous_node = "true"
+		last_item = "true",
+		name = "back",
+		previous_node = "true",
+		text_id = "menu_back",
+		visible_callback = "is_pc_controller"
 	}
 	data_node = {}
 	new_item = node:create_item(data_node, params)
@@ -7243,10 +7307,12 @@ end
 
 -- Lines 7228-7229
 function MenuCrimeNetContactChillInitiator:create_divider(node, id, text_id, size, color)
+	return
 end
 
 -- Lines 7231-7232
 function MenuCrimeNetContactChillInitiator:create_item(node, data)
+	return
 end
 
 MenuJukeboxInitiator = MenuJukeboxInitiator or class()
@@ -7336,36 +7402,36 @@ function MenuJukeboxHeistPlaylist:modify_node(node, data)
 
 	local data = {
 		{
-			w = 24,
-			y = 0,
+			_meta = "option",
 			h = 24,
+			icon = "guis/textures/menu_tickbox",
+			s_h = 24,
+			s_icon = "guis/textures/menu_tickbox",
+			s_w = 24,
+			s_x = 24,
 			s_y = 24,
 			value = "on",
-			s_w = 24,
-			s_h = 24,
-			s_x = 24,
-			_meta = "option",
-			icon = "guis/textures/menu_tickbox",
+			w = 24,
 			x = 24,
-			s_icon = "guis/textures/menu_tickbox"
+			y = 0
 		},
 		{
-			w = 24,
-			y = 0,
+			_meta = "option",
 			h = 24,
+			icon = "guis/textures/menu_tickbox",
+			s_h = 24,
+			s_icon = "guis/textures/menu_tickbox",
+			s_w = 24,
+			s_x = 0,
 			s_y = 24,
 			value = "off",
-			s_w = 24,
-			s_h = 24,
-			s_x = 0,
-			_meta = "option",
-			icon = "guis/textures/menu_tickbox",
+			w = 24,
 			x = 0,
-			s_icon = "guis/textures/menu_tickbox"
+			y = 0
 		},
 		type = "MenuItemToggleWithIcon"
 	}
-	local item = nil
+	local item
 	local track_list, track_locked = managers.music:jukebox_music_tracks()
 
 	for _, track_name in pairs(track_list) do
@@ -7378,6 +7444,7 @@ function MenuJukeboxHeistPlaylist:modify_node(node, data)
 			disabled_color = tweak_data.screen_colors.important_1,
 			icon = tweak_data.hud_icons:get_icon_data("jukebox_playing_icon")
 		}
+
 		item = node:create_item(data, params)
 
 		if locked then
@@ -7408,14 +7475,14 @@ function MenuJukeboxHeistTracks:modify_node(node, data)
 	}
 
 	table.insert(option_data, {
-		value = "all",
+		_meta = "option",
 		text_id = "menu_jukebox_playlist_all",
-		_meta = "option"
+		value = "all"
 	})
 	table.insert(option_data, {
-		value = "playlist",
+		_meta = "option",
 		text_id = "menu_jukebox_random_heist_playlist",
-		_meta = "option"
+		value = "playlist"
 	})
 
 	for _, track_name in pairs(track_list) do
@@ -7465,21 +7532,21 @@ function MenuJukeboxHeistTracks:modify_node(node, data)
 		end
 	end
 
-	table.sort(track_list, function (x, y)
+	table.sort(track_list, function(x, y)
 		return x.sort_id == y.sort_id and x.text_id < y.text_id or x.sort_id < y.sort_id
 	end)
 	table.insert(track_list, {
-		name_id = "escape",
 		job_id = "escape",
+		name_id = "escape",
 		text_id = managers.localization:text("menu_jukebox_heist_escape")
 	})
 
 	for _, track_data in pairs(track_list) do
 		local heist_name = track_data.name_id .. (track_data.day and track_data.day or "")
 		local params = {
-			localize = "false",
 			align = "left",
 			callback = "jukebox_option_heist_tracks",
+			localize = "false",
 			text_offset = 100,
 			name = heist_name,
 			text_id = track_data.text_id,
@@ -7535,36 +7602,36 @@ function MenuJukeboxMenuPlaylist:modify_node(node, data)
 
 	local data = {
 		{
-			w = 24,
-			y = 0,
+			_meta = "option",
 			h = 24,
+			icon = "guis/textures/menu_tickbox",
+			s_h = 24,
+			s_icon = "guis/textures/menu_tickbox",
+			s_w = 24,
+			s_x = 24,
 			s_y = 24,
 			value = "on",
-			s_w = 24,
-			s_h = 24,
-			s_x = 24,
-			_meta = "option",
-			icon = "guis/textures/menu_tickbox",
+			w = 24,
 			x = 24,
-			s_icon = "guis/textures/menu_tickbox"
+			y = 0
 		},
 		{
-			w = 24,
-			y = 0,
+			_meta = "option",
 			h = 24,
+			icon = "guis/textures/menu_tickbox",
+			s_h = 24,
+			s_icon = "guis/textures/menu_tickbox",
+			s_w = 24,
+			s_x = 0,
 			s_y = 24,
 			value = "off",
-			s_w = 24,
-			s_h = 24,
-			s_x = 0,
-			_meta = "option",
-			icon = "guis/textures/menu_tickbox",
+			w = 24,
 			x = 0,
-			s_icon = "guis/textures/menu_tickbox"
+			y = 0
 		},
 		type = "MenuItemToggleWithIcon"
 	}
-	local item = nil
+	local item
 	local track_list, track_locked = managers.music:jukebox_menu_tracks()
 
 	for _, track_name in pairs(track_list) do
@@ -7577,6 +7644,7 @@ function MenuJukeboxMenuPlaylist:modify_node(node, data)
 			disabled_color = tweak_data.screen_colors.important_1,
 			icon = tweak_data.hud_icons:get_icon_data("jukebox_playing_icon")
 		}
+
 		item = node:create_item(data, params)
 
 		if locked then
@@ -7607,14 +7675,14 @@ function MenuJukeboxMenuTracks:modify_node(node, data)
 	}
 
 	table.insert(option_data, {
-		value = "all",
+		_meta = "option",
 		text_id = "menu_jukebox_playlist_all",
-		_meta = "option"
+		value = "all"
 	})
 	table.insert(option_data, {
-		value = "playlist",
+		_meta = "option",
 		text_id = "menu_jukebox_random_menu_playlist",
-		_meta = "option"
+		value = "playlist"
 	})
 
 	for _, track_name in pairs(track_list) do
@@ -7638,9 +7706,9 @@ function MenuJukeboxMenuTracks:modify_node(node, data)
 
 	for _, track_name in pairs(menu_options) do
 		local params = {
+			align = "left",
 			callback = "jukebox_option_menu_tracks",
 			text_offset = 100,
-			align = "left",
 			name = track_name,
 			text_id = "menu_jukebox_screen_" .. track_name,
 			icon = tweak_data.hud_icons:get_icon_data("jukebox_playing_icon")
@@ -7743,36 +7811,36 @@ function MenuJukeboxGhostPlaylist:modify_node(node, data)
 
 	local data = {
 		{
-			w = 24,
-			y = 0,
+			_meta = "option",
 			h = 24,
+			icon = "guis/textures/menu_tickbox",
+			s_h = 24,
+			s_icon = "guis/textures/menu_tickbox",
+			s_w = 24,
+			s_x = 24,
 			s_y = 24,
 			value = "on",
-			s_w = 24,
-			s_h = 24,
-			s_x = 24,
-			_meta = "option",
-			icon = "guis/textures/menu_tickbox",
+			w = 24,
 			x = 24,
-			s_icon = "guis/textures/menu_tickbox"
+			y = 0
 		},
 		{
-			w = 24,
-			y = 0,
+			_meta = "option",
 			h = 24,
+			icon = "guis/textures/menu_tickbox",
+			s_h = 24,
+			s_icon = "guis/textures/menu_tickbox",
+			s_w = 24,
+			s_x = 0,
 			s_y = 24,
 			value = "off",
-			s_w = 24,
-			s_h = 24,
-			s_x = 0,
-			_meta = "option",
-			icon = "guis/textures/menu_tickbox",
+			w = 24,
 			x = 0,
-			s_icon = "guis/textures/menu_tickbox"
+			y = 0
 		},
 		type = "MenuItemToggleWithIcon"
 	}
-	local item = nil
+	local item
 	local track_list, track_locked = managers.music:jukebox_ghost_tracks()
 
 	for _, track_name in pairs(track_list) do
@@ -7785,6 +7853,7 @@ function MenuJukeboxGhostPlaylist:modify_node(node, data)
 			disabled_color = tweak_data.screen_colors.important_1,
 			icon = tweak_data.hud_icons:get_icon_data("jukebox_playing_icon")
 		}
+
 		item = node:create_item(data, params)
 
 		if locked then
@@ -7815,14 +7884,14 @@ function MenuJukeboxGhostTracks:modify_node(node, data)
 	}
 
 	table.insert(option_data, {
-		value = "all",
+		_meta = "option",
 		text_id = "menu_jukebox_playlist_all",
-		_meta = "option"
+		value = "all"
 	})
 	table.insert(option_data, {
-		value = "playlist",
+		_meta = "option",
 		text_id = "menu_jukebox_random_ghost_playlist",
-		_meta = "option"
+		value = "playlist"
 	})
 
 	for _, track_name in pairs(track_list) do
@@ -7872,16 +7941,16 @@ function MenuJukeboxGhostTracks:modify_node(node, data)
 		end
 	end
 
-	table.sort(track_list, function (x, y)
+	table.sort(track_list, function(x, y)
 		return x.sort_id == y.sort_id and x.text_id < y.text_id or x.sort_id < y.sort_id
 	end)
 
 	for _, track_data in pairs(track_list) do
 		local heist_name = track_data.name_id .. (track_data.day and track_data.day or "")
 		local params = {
-			localize = "false",
 			align = "left",
 			callback = "jukebox_option_ghost_tracks",
+			localize = "false",
 			text_offset = 100,
 			name = heist_name,
 			text_id = track_data.text_id,
@@ -7988,6 +8057,7 @@ end
 -- Lines 7820-7832
 function MenuCallbackHandler:jukebox_ghost_track_selection(item)
 	local track = item:value()
+
 	Global.music_manager.loadout_selection_ghost = track
 
 	if track ~= "all" and track ~= "playlist" then
@@ -8114,12 +8184,11 @@ function MenuPrePlanningInitiator:create_info_items(node, params, selected_item)
 	params.name = "preplanning_help"
 	params.callback = "open_preplanning_help"
 	params.text_id = managers.localization:text("menu_item_preplanning_help")
-	params.tooltip = {
-		texture = tweak_data.preplanning.gui.custom_icons_path,
-		texture_rect = tweak_data.preplanning:get_custom_texture_rect(45),
-		name = params.text_id,
-		desc = managers.localization:text("menu_item_preplanning_help_desc")
-	}
+	params.tooltip = {}
+	params.tooltip.texture = tweak_data.preplanning.gui.custom_icons_path
+	params.tooltip.texture_rect = tweak_data.preplanning:get_custom_texture_rect(45)
+	params.tooltip.name = params.text_id
+	params.tooltip.desc = managers.localization:text("menu_item_preplanning_help_desc")
 
 	self:create_item(node, params)
 
@@ -8127,12 +8196,11 @@ function MenuPrePlanningInitiator:create_info_items(node, params, selected_item)
 		params.name = "preplanning_rebuy"
 		params.callback = "open_preplanning_rebuy"
 		params.text_id = managers.localization:text("menu_item_preplanning_rebuy")
-		params.tooltip = {
-			texture = tweak_data.preplanning.gui.custom_icons_path,
-			texture_rect = tweak_data.preplanning:get_custom_texture_rect(45),
-			name = params.text_id,
-			desc = managers.localization:text("menu_item_preplanning_rebuy_desc")
-		}
+		params.tooltip = {}
+		params.tooltip.texture = tweak_data.preplanning.gui.custom_icons_path
+		params.tooltip.texture_rect = tweak_data.preplanning:get_custom_texture_rect(45)
+		params.tooltip.name = params.text_id
+		params.tooltip.desc = managers.localization:text("menu_item_preplanning_rebuy_desc")
 
 		self:create_item(node, params)
 	end
@@ -8149,6 +8217,7 @@ function MenuPrePlanningInitiator:modifiy_node_view_only(node, item_name, select
 	end
 
 	node:parameters().current_viewing = true
+
 	local params = {
 		localize = "false",
 		tooltip = {
@@ -8156,7 +8225,7 @@ function MenuPrePlanningInitiator:modifiy_node_view_only(node, item_name, select
 		}
 	}
 	local finished_preplan = managers.preplanning:get_finished_preplan()
-	local type_data, location_data, data = nil
+	local type_data, location_data, data
 
 	for i = 1, #tweak_data.preplanning.location_groups do
 		data = finished_preplan[i]
@@ -8194,6 +8263,7 @@ end
 function MenuPrePlanningInitiator:set_locks_to_param(params, key, index)
 	local data = tweak_data:get_raw_value("preplanning", key, index) or {}
 	local enabled = params.enabled ~= false
+
 	params.tooltip = params.tooltip or {}
 	params.tooltip.errors = params.tooltip.errors or {}
 
@@ -8239,7 +8309,7 @@ function MenuPrePlanningInitiator:modifiy_node_preplanning(node, item_name, sele
 			texture = tweak_data.preplanning.gui.type_icons_path
 		}
 	}
-	local type_data, first_type, category_data = nil
+	local type_data, first_type, category_data
 
 	for i, data in ipairs(subgroups) do
 		if #data.subgroup > 0 then
@@ -8278,6 +8348,7 @@ end
 -- Lines 8113-8177
 function MenuPrePlanningInitiator:modifiy_node_preplanning_category(node, item_name, selected_item)
 	node:parameters().current_category = item_name or node:parameters().current_category
+
 	local current_category = node:parameters().current_category
 
 	if not current_category then
@@ -8294,14 +8365,14 @@ function MenuPrePlanningInitiator:modifiy_node_preplanning_category(node, item_n
 
 	local category_data = tweak_data:get_raw_value("preplanning", "categories", current_category) or {}
 	local params = {
+		callback = "open_preplanning_type_item",
 		enabled = true,
 		localize = "false",
-		callback = "open_preplanning_type_item",
 		tooltip = {
 			texture = tweak_data.preplanning.gui.type_icons_path
 		}
 	}
-	local type_data, can_place, error_num, enabled = nil
+	local type_data, can_place, error_num, enabled
 	local peer_id = managers.network:session():local_peer():id()
 
 	for i, type in ipairs(types) do
@@ -8345,6 +8416,7 @@ end
 -- Lines 8181-8318
 function MenuPrePlanningInitiator:modifiy_node_preplanning_type(node, item_name, selected_item)
 	node:parameters().current_type = item_name or node:parameters().current_type
+
 	local current_type = node:parameters().current_type
 
 	if not current_type then
@@ -8352,8 +8424,8 @@ function MenuPrePlanningInitiator:modifiy_node_preplanning_type(node, item_name,
 	end
 
 	local params = {
-		localize = "false",
-		callback = "reserve_preplanning_mission_element_by_item"
+		callback = "reserve_preplanning_mission_element_by_item",
+		localize = "false"
 	}
 	local mission_elements = managers.preplanning:get_mission_elements_by_type(current_type)
 	local locations = managers.preplanning:sort_mission_elements_into_locations(mission_elements)
@@ -8362,7 +8434,7 @@ function MenuPrePlanningInitiator:modifiy_node_preplanning_type(node, item_name,
 
 	local peer_id = managers.network:session():local_peer():id()
 	local can_place, error_num = managers.preplanning:can_reserve_mission_element(current_type, peer_id)
-	local reserved, reserved_type, type_data, enabled, dlc_lock, upgrade_lock, last_location_index = nil
+	local reserved, reserved_type, type_data, enabled, dlc_lock, upgrade_lock, last_location_index
 
 	for index = 1, #tweak_data.preplanning.location_groups do
 		if locations[index] then
@@ -8383,15 +8455,14 @@ function MenuPrePlanningInitiator:modifiy_node_preplanning_type(node, item_name,
 				params.text_id = managers.preplanning:get_element_name(data.element)
 				params.index = data.index
 				type_data = tweak_data:get_raw_value("preplanning", "types", current_type) or {}
-				params.tooltip = {
-					name = managers.localization:text("menu_pp_reserve_type", {
-						type = managers.preplanning:get_type_name(current_type)
-					}),
-					desc = managers.preplanning:get_type_desc(current_type),
-					texture = tweak_data.preplanning.gui.type_icons_path,
-					texture_rect = tweak_data.preplanning:get_type_texture_rect(type_data.icon),
-					errors = {}
-				}
+				params.tooltip = {}
+				params.tooltip.name = managers.localization:text("menu_pp_reserve_type", {
+					type = managers.preplanning:get_type_name(current_type)
+				})
+				params.tooltip.desc = managers.preplanning:get_type_desc(current_type)
+				params.tooltip.texture = tweak_data.preplanning.gui.type_icons_path
+				params.tooltip.texture_rect = tweak_data.preplanning:get_type_texture_rect(type_data.icon)
+				params.tooltip.errors = {}
 				dlc_lock = data.element:value("dlc_lock")
 				upgrade_lock = data.element:value("upgrade_lock")
 				enabled = true
@@ -8487,6 +8558,7 @@ end
 -- Lines 8322-8403
 function MenuPrePlanningInitiator:modifiy_node_preplanning_plan(node, item_name, selected_item)
 	node:parameters().current_plan = item_name or node:parameters().current_plan
+
 	local current_plan = node:parameters().current_plan
 
 	if not current_plan then
@@ -8505,18 +8577,20 @@ function MenuPrePlanningInitiator:modifiy_node_preplanning_plan(node, item_name,
 
 	local category_data = tweak_data.preplanning.categories[current_plan]
 	local params = {
+		callback = "vote_preplanning_mission_element_by_item",
 		enabled = false,
 		localize = "false",
-		callback = "vote_preplanning_mission_element_by_item",
 		tooltip = {
 			texture = tweak_data.preplanning.gui.type_icons_path
 		}
 	}
-	local type_data = nil
+	local type_data
 
 	for _, type in pairs(types) do
 		type_data = tweak_data:get_raw_value("preplanning", "types", type) or {}
+
 		local enabled = true
+
 		params.post_event = type_data.post_event
 		params.tooltip.errors = {}
 
@@ -8548,6 +8622,7 @@ function MenuPrePlanningInitiator:modifiy_node_preplanning_plan(node, item_name,
 		end
 
 		params.enabled = enabled
+
 		local mission_elements = managers.preplanning:get_mission_elements_by_type(type)
 
 		for index, element in ipairs(mission_elements) do
@@ -8577,6 +8652,7 @@ end
 -- Lines 8407-8458
 function MenuPrePlanningInitiator:modifiy_node_preplanning_custom(node, item_name, selected_item)
 	node:parameters().current_custom = item_name or node:parameters().current_custom
+
 	local current_custom = node:parameters().current_custom
 
 	if not current_custom then
@@ -8589,12 +8665,12 @@ function MenuPrePlanningInitiator:modifiy_node_preplanning_custom(node, item_nam
 
 	local params = {
 		callback = "pressed_preplanning_custom_point",
-		name = "test",
 		localize = "false",
+		name = "test",
 		text_id = "TEST"
 	}
 	local current_custom_points = managers.preplanning:get_current_custom_points()
-	local last_custom_point_index = nil
+	local last_custom_point_index
 
 	for index = 1, #tweak_data.preplanning.location_groups do
 		if current_custom_points[index] then
@@ -8824,6 +8900,7 @@ end
 
 -- Lines 8623-8625
 function MenuCallbackHandler:select_preplanning_mission_element_by_item(item)
+	return
 end
 
 -- Lines 8628-8631
@@ -9040,6 +9117,7 @@ end
 -- Lines 8816-8828
 function MenuCallbackHandler:jukebox_track_selection(item)
 	local track = item:value()
+
 	Global.music_manager.loadout_selection = track
 
 	if track ~= "all" and track ~= "playlist" then
@@ -9235,7 +9313,7 @@ function MenuCrimeNetGageAssignmentInitiator:modify_node(original_node, data)
 		})
 	end
 
-	table.sort(node_data, function (x, y)
+	table.sort(node_data, function(x, y)
 		return x.aquire < y.aquire
 	end)
 
@@ -9244,14 +9322,14 @@ function MenuCrimeNetGageAssignmentInitiator:modify_node(original_node, data)
 	end
 
 	local params = {
-		visible_callback = "is_pc_controller",
+		align = "left",
+		gui_node_custom = "true",
+		last_item = "true",
 		name = "back",
 		pd2_corner = "true",
+		previous_node = "true",
 		text_id = "menu_back",
-		gui_node_custom = "true",
-		align = "left",
-		last_item = "true",
-		previous_node = "true"
+		visible_callback = "is_pc_controller"
 	}
 	local data_node = {}
 	local new_item = node:create_item(data_node, params)
@@ -9332,6 +9410,7 @@ function MenuCrimeNetSpecialInitiator:setup_node(node)
 
 			if contact then
 				local allow_contact = true
+
 				allow_contact = not table.contains(contacts, contact) and (not contact_tweak or not contact_tweak.hidden)
 
 				if allow_contact then
@@ -9339,7 +9418,9 @@ function MenuCrimeNetSpecialInitiator:setup_node(node)
 				end
 
 				jobs[contact] = jobs[contact] or {}
+
 				local dlc = job_tweak.dlc
+
 				dlc = not dlc or managers.dlc:is_dlc_unlocked(dlc)
 
 				if not tweak_data.narrative:is_wrapped_to_job(job_id) then
@@ -9351,12 +9432,12 @@ function MenuCrimeNetSpecialInitiator:setup_node(node)
 			end
 		end
 
-		table.sort(contacts, function (x, y)
+		table.sort(contacts, function(x, y)
 			return x < y
 		end)
 
 		for _, contracts in pairs(jobs) do
-			table.sort(contracts, function (x, y)
+			table.sort(contracts, function(x, y)
 				if x.enabled ~= y.enabled then
 					return x.enabled
 				end
@@ -9382,8 +9463,8 @@ function MenuCrimeNetSpecialInitiator:setup_node(node)
 
 		local params = {
 			callback = "choice_premium_contact",
-			name = "contact_filter",
 			filter = true,
+			name = "contact_filter",
 			text_id = "menu_contact_filter"
 		}
 		local data_node = {
@@ -9399,9 +9480,9 @@ function MenuCrimeNetSpecialInitiator:setup_node(node)
 
 		if num_contact > 1 then
 			table.insert(data_node, {
-				text_id = "",
-				no_text = true,
 				_meta = "option",
+				no_text = true,
+				text_id = "",
 				value = contacts[#contacts] .. "#"
 			})
 		end
@@ -9418,9 +9499,9 @@ function MenuCrimeNetSpecialInitiator:setup_node(node)
 
 		if num_contact > 1 then
 			table.insert(data_node, {
-				text_id = "",
-				no_text = true,
 				_meta = "option",
+				no_text = true,
+				text_id = "",
 				value = contacts[1] .. "#"
 			})
 		end
@@ -9446,12 +9527,12 @@ function MenuCrimeNetSpecialInitiator:setup_node(node)
 	end
 
 	local params = {
-		visible_callback = "is_pc_controller",
-		name = "back",
-		last_item = "true",
-		text_id = "menu_back",
 		align = "right",
-		previous_node = "true"
+		last_item = "true",
+		name = "back",
+		previous_node = "true",
+		text_id = "menu_back",
+		visible_callback = "is_pc_controller"
 	}
 	local data_node = {}
 	local new_item = node:create_item(data_node, params)
@@ -9535,8 +9616,8 @@ function MenuCrimeNetSpecialInitiator:create_job(node, contract)
 	end
 
 	local params = {
-		localize = "false",
 		customize_contract = "true",
+		localize = "false",
 		name = "job_" .. id,
 		text_id = text_id,
 		color_ranges = color_ranges,
@@ -9565,6 +9646,7 @@ function MenuReticleSwitchInitiator:setup_node(node, data)
 	node:clean_items()
 
 	data = data or node:parameters().menu_component_data
+
 	local part_id = data.name
 	local slot = data.slot
 	local category = data.category
@@ -9573,14 +9655,14 @@ function MenuReticleSwitchInitiator:setup_node(node, data)
 	if not node:item("divider_end") then
 		local params = {
 			callback = "update_weapon_texture_switch",
-			name = "reticle_type",
 			filter = true,
+			name = "reticle_type",
 			text_id = "menu_reticle_type"
 		}
 		local data_node = {
 			type = "MenuItemMultiChoice"
 		}
-		local pass_dlc = nil
+		local pass_dlc
 
 		for index, reticle_data in ipairs(tweak_data.gui.weapon_texture_switches.types.sight) do
 			pass_dlc = not reticle_data.dlc or managers.dlc:is_dlc_unlocked(reticle_data.dlc)
@@ -9600,8 +9682,8 @@ function MenuReticleSwitchInitiator:setup_node(node, data)
 
 		local params = {
 			callback = "update_weapon_texture_switch",
-			name = "reticle_color",
 			filter = true,
+			name = "reticle_color",
 			text_id = "menu_reticle_color"
 		}
 		local data_node = {
@@ -9628,10 +9710,10 @@ function MenuReticleSwitchInitiator:setup_node(node, data)
 
 	local enabled = MenuCallbackHandler:is_reticle_applicable(node)
 	local params = {
+		align = "right",
 		callback = "set_weapon_texture_switch",
 		name = "confirm",
 		text_id = "dialog_apply",
-		align = "right",
 		enabled = enabled,
 		disabled_color = tweak_data.screen_colors.important_1
 	}
@@ -9641,11 +9723,11 @@ function MenuReticleSwitchInitiator:setup_node(node, data)
 	node:add_item(new_item)
 
 	local params = {
+		align = "right",
 		last_item = "true",
 		name = "back",
-		text_id = "dialog_cancel",
-		align = "right",
-		previous_node = "true"
+		previous_node = "true",
+		text_id = "dialog_cancel"
 	}
 	local data_node = {}
 	local new_item = node:create_item(data_node, params)
@@ -9676,6 +9758,7 @@ end
 
 -- Lines 9460-9461
 function MenuReticleSwitchInitiator:create_multichoice()
+	return
 end
 
 -- Lines 9463-9484
@@ -9777,13 +9860,13 @@ end
 
 -- Lines 9574-9585
 function MenuCrimeNetCasinoInitiator:refresh_node(node)
-	local options = {
-		preferred = node:item("preferred_item"):value(),
-		infamous = node:item("increase_infamous"):value(),
-		card1 = node:item("secure_card_1"):value(),
-		card2 = node:item("secure_card_2"):value(),
-		card3 = node:item("secure_card_3"):value()
-	}
+	local options = {}
+
+	options.preferred = node:item("preferred_item"):value()
+	options.infamous = node:item("increase_infamous"):value()
+	options.card1 = node:item("secure_card_1"):value()
+	options.card2 = node:item("secure_card_2"):value()
+	options.card3 = node:item("secure_card_3"):value()
 
 	node:clean_items()
 	self:_create_items(node, options)
@@ -9801,35 +9884,35 @@ function MenuCrimeNetCasinoInitiator:_create_items(node, options)
 	local visible_callback = "casino_betting_visible"
 	local preferred_data = {
 		{
-			value = "none",
+			_meta = "option",
 			text_id = "menu_casino_option_prefer_none",
-			_meta = "option"
+			value = "none"
 		},
 		{
-			value = "weapon_mods",
+			_meta = "option",
 			text_id = "menu_casino_stat_weapon_mods",
-			_meta = "option"
+			value = "weapon_mods"
 		},
 		{
-			value = "masks",
+			_meta = "option",
 			text_id = "menu_casino_stat_masks",
-			_meta = "option"
+			value = "masks"
 		},
 		{
-			value = "materials",
+			_meta = "option",
 			text_id = "menu_casino_stat_materials",
-			_meta = "option"
+			value = "materials"
 		},
 		{
-			value = "textures",
+			_meta = "option",
 			text_id = "menu_casino_stat_textures",
-			_meta = "option"
+			value = "textures"
 		},
 		type = "MenuItemMultiChoice"
 	}
 	local preferred_params = {
-		name = "preferred_item",
 		callback = "crimenet_casino_update",
+		name = "preferred_item",
 		text_id = "",
 		visible_callback = visible_callback
 	}
@@ -9846,47 +9929,47 @@ function MenuCrimeNetCasinoInitiator:_create_items(node, options)
 
 	local infamous_data = {
 		{
-			w = 24,
-			y = 0,
+			_meta = "option",
 			h = 24,
+			icon = "guis/textures/menu_tickbox",
+			s_h = 24,
+			s_icon = "guis/textures/menu_tickbox",
+			s_w = 24,
+			s_x = 24,
 			s_y = 24,
 			value = "on",
-			s_w = 24,
-			s_h = 24,
-			s_x = 24,
-			_meta = "option",
-			icon = "guis/textures/menu_tickbox",
+			w = 24,
 			x = 24,
-			s_icon = "guis/textures/menu_tickbox"
+			y = 0
 		},
 		{
-			w = 24,
-			y = 0,
+			_meta = "option",
 			h = 24,
+			icon = "guis/textures/menu_tickbox",
+			s_h = 24,
+			s_icon = "guis/textures/menu_tickbox",
+			s_w = 24,
+			s_x = 0,
 			s_y = 24,
 			value = "off",
-			s_w = 24,
-			s_h = 24,
-			s_x = 0,
-			_meta = "option",
-			icon = "guis/textures/menu_tickbox",
+			w = 24,
 			x = 0,
-			s_icon = "guis/textures/menu_tickbox"
+			y = 0
 		},
 		type = "CoreMenuItemToggle.ItemToggle"
 	}
 	local infamous_params = {
-		name = "increase_infamous",
 		callback = "crimenet_casino_update",
-		text_id = "menu_casino_option_infamous_title",
 		icon_by_text = true,
+		name = "increase_infamous",
+		text_id = "menu_casino_option_infamous_title",
 		disabled_color = Color(0.25, 1, 1, 1),
 		visible_callback = visible_callback
 	}
 	local infamous_items = {
-		textures = true,
 		masks = true,
 		materials = true,
+		textures = true,
 		weapon_mods = false
 	}
 	local preferred_value = preferred_item:value()
@@ -9905,40 +9988,40 @@ function MenuCrimeNetCasinoInitiator:_create_items(node, options)
 
 	local card1_data = {
 		{
-			w = 24,
-			y = 0,
+			_meta = "option",
 			h = 24,
+			icon = "guis/textures/menu_tickbox",
+			s_h = 24,
+			s_icon = "guis/textures/menu_tickbox",
+			s_w = 24,
+			s_x = 24,
 			s_y = 24,
 			value = "on",
-			s_w = 24,
-			s_h = 24,
-			s_x = 24,
-			_meta = "option",
-			icon = "guis/textures/menu_tickbox",
+			w = 24,
 			x = 24,
-			s_icon = "guis/textures/menu_tickbox"
+			y = 0
 		},
 		{
-			w = 24,
-			y = 0,
+			_meta = "option",
 			h = 24,
+			icon = "guis/textures/menu_tickbox",
+			s_h = 24,
+			s_icon = "guis/textures/menu_tickbox",
+			s_w = 24,
+			s_x = 0,
 			s_y = 24,
 			value = "off",
-			s_w = 24,
-			s_h = 24,
-			s_x = 0,
-			_meta = "option",
-			icon = "guis/textures/menu_tickbox",
+			w = 24,
 			x = 0,
-			s_icon = "guis/textures/menu_tickbox"
+			y = 0
 		},
 		type = "CoreMenuItemToggle.ItemToggle"
 	}
 	local card1_params = {
-		name = "secure_card_1",
 		callback = "crimenet_casino_safe_card1",
-		text_id = "menu_casino_option_safecard1",
 		icon_by_text = true,
+		name = "secure_card_1",
+		text_id = "menu_casino_option_safecard1",
 		disabled_color = Color(0.25, 1, 1, 1),
 		visible_callback = visible_callback
 	}
@@ -9965,40 +10048,40 @@ function MenuCrimeNetCasinoInitiator:_create_items(node, options)
 
 	local card2_data = {
 		{
-			w = 24,
-			y = 0,
+			_meta = "option",
 			h = 24,
+			icon = "guis/textures/menu_tickbox",
+			s_h = 24,
+			s_icon = "guis/textures/menu_tickbox",
+			s_w = 24,
+			s_x = 24,
 			s_y = 24,
 			value = "on",
-			s_w = 24,
-			s_h = 24,
-			s_x = 24,
-			_meta = "option",
-			icon = "guis/textures/menu_tickbox",
+			w = 24,
 			x = 24,
-			s_icon = "guis/textures/menu_tickbox"
+			y = 0
 		},
 		{
-			w = 24,
-			y = 0,
+			_meta = "option",
 			h = 24,
+			icon = "guis/textures/menu_tickbox",
+			s_h = 24,
+			s_icon = "guis/textures/menu_tickbox",
+			s_w = 24,
+			s_x = 0,
 			s_y = 24,
 			value = "off",
-			s_w = 24,
-			s_h = 24,
-			s_x = 0,
-			_meta = "option",
-			icon = "guis/textures/menu_tickbox",
+			w = 24,
 			x = 0,
-			s_icon = "guis/textures/menu_tickbox"
+			y = 0
 		},
 		type = "CoreMenuItemToggle.ItemToggle"
 	}
 	local card2_params = {
-		name = "secure_card_2",
 		callback = "crimenet_casino_safe_card2",
-		text_id = "menu_casino_option_safecard2",
 		icon_by_text = true,
+		name = "secure_card_2",
+		text_id = "menu_casino_option_safecard2",
 		disabled_color = Color(0.25, 1, 1, 1),
 		visible_callback = visible_callback
 	}
@@ -10025,40 +10108,40 @@ function MenuCrimeNetCasinoInitiator:_create_items(node, options)
 
 	local card3_data = {
 		{
-			w = 24,
-			y = 0,
+			_meta = "option",
 			h = 24,
+			icon = "guis/textures/menu_tickbox",
+			s_h = 24,
+			s_icon = "guis/textures/menu_tickbox",
+			s_w = 24,
+			s_x = 24,
 			s_y = 24,
 			value = "on",
-			s_w = 24,
-			s_h = 24,
-			s_x = 24,
-			_meta = "option",
-			icon = "guis/textures/menu_tickbox",
+			w = 24,
 			x = 24,
-			s_icon = "guis/textures/menu_tickbox"
+			y = 0
 		},
 		{
-			w = 24,
-			y = 0,
+			_meta = "option",
 			h = 24,
+			icon = "guis/textures/menu_tickbox",
+			s_h = 24,
+			s_icon = "guis/textures/menu_tickbox",
+			s_w = 24,
+			s_x = 0,
 			s_y = 24,
 			value = "off",
-			s_w = 24,
-			s_h = 24,
-			s_x = 0,
-			_meta = "option",
-			icon = "guis/textures/menu_tickbox",
+			w = 24,
 			x = 0,
-			s_icon = "guis/textures/menu_tickbox"
+			y = 0
 		},
 		type = "CoreMenuItemToggle.ItemToggle"
 	}
 	local card3_params = {
-		name = "secure_card_3",
 		callback = "crimenet_casino_safe_card3",
-		text_id = "menu_casino_option_safecard3",
 		icon_by_text = true,
+		name = "secure_card_3",
+		text_id = "menu_casino_option_safecard3",
 		disabled_color = Color(0.25, 1, 1, 1),
 		visible_callback = visible_callback
 	}
@@ -10273,17 +10356,17 @@ function MenuCrimeNetFiltersInitiator:add_filters(node)
 	end
 
 	local item_params = {
-		visible_callback = "is_multiplayer is_win32",
-		name = "job_id_filter",
 		callback = "choice_job_id_filter",
+		filter = true,
+		name = "job_id_filter",
 		text_id = "menu_job_id_filter",
-		filter = true
+		visible_callback = "is_multiplayer is_win32"
 	}
 	local data_node = {
 		{
-			value = -1,
+			_meta = "option",
 			text_id = "menu_any",
-			_meta = "option"
+			value = -1
 		},
 		type = "MenuItemMultiChoice"
 	}
@@ -10298,8 +10381,8 @@ function MenuCrimeNetFiltersInitiator:add_filters(node)
 		if allow then
 			local text_id, color_data = tweak_data.narrative:create_job_name(job_id)
 			local params = {
-				localize = false,
 				_meta = "option",
+				localize = false,
 				text_id = text_id,
 				value = index
 			}
@@ -10320,32 +10403,32 @@ function MenuCrimeNetFiltersInitiator:add_filters(node)
 	node:add_item(new_item)
 
 	local kick_params = {
-		visible_callback = "is_multiplayer is_win32",
-		name = "kick_option_filter",
 		callback = "choice_kick_option",
+		filter = true,
+		name = "kick_option_filter",
 		text_id = "menu_kicking_allowed_filter",
-		filter = true
+		visible_callback = "is_multiplayer is_win32"
 	}
 	local data_node = {
 		{
-			value = -1,
+			_meta = "option",
 			text_id = "menu_any",
-			_meta = "option"
+			value = -1
 		},
 		type = "MenuItemMultiChoice"
 	}
 	local kick_filters = {
 		{
-			value = 1,
-			text_id = "menu_kick_server"
+			text_id = "menu_kick_server",
+			value = 1
 		},
 		{
-			value = 2,
-			text_id = "menu_kick_vote"
+			text_id = "menu_kick_vote",
+			value = 2
 		},
 		{
-			value = 0,
-			text_id = "menu_kick_disabled"
+			text_id = "menu_kick_disabled",
+			value = 0
 		}
 	}
 
@@ -10363,9 +10446,9 @@ function MenuCrimeNetFiltersInitiator:add_filters(node)
 	node:add_item(new_item)
 
 	local divider_params = {
-		size = 8,
 		name = "divider_end",
-		no_text = true
+		no_text = true,
+		size = 8
 	}
 	local data_node = {
 		type = "MenuItemDivider"
@@ -10375,9 +10458,9 @@ function MenuCrimeNetFiltersInitiator:add_filters(node)
 	node:add_item(new_item)
 
 	local reset_params = {
+		align = "right",
 		callback = "_reset_filters",
 		name = "reset_filters",
-		align = "right",
 		text_id = "dialog_reset_filters"
 	}
 	local data_node = {}
@@ -10409,15 +10492,16 @@ function MenuMutatorOptionsInitiator:setup_node(node, mutator)
 	node:clean_items()
 
 	mutator = mutator or node:parameters()._mutator
+
 	local default_item = mutator:setup_options_gui(node)
 
 	self:create_divider(node, "end", nil, 16)
 
 	local params = {
+		align = "right",
 		callback = "reset_mutator",
 		name = "reset",
 		text_id = "menu_mutators_reset",
-		align = "right",
 		disabled_color = tweak_data.screen_colors.important_1,
 		mutator = mutator
 	}
@@ -10427,11 +10511,11 @@ function MenuMutatorOptionsInitiator:setup_node(node, mutator)
 	node:add_item(new_item)
 
 	local params = {
+		align = "right",
 		callback = "save_mutator_options",
-		name = "back",
 		last_item = "true",
-		text_id = "dialog_accept",
-		align = "right"
+		name = "back",
+		text_id = "dialog_accept"
 	}
 	local data_node = {}
 	local new_item = node:create_item(data_node, params)
@@ -10493,11 +10577,11 @@ function MenuLobbyCountdownInitiator:setup_node(node, mutator)
 	node:clean_items()
 
 	local params = {
+		align = "right",
 		last_item = "true",
 		name = "back",
-		text_id = "dialog_cancel",
-		align = "right",
-		previous_node = "true"
+		previous_node = "true",
+		text_id = "dialog_cancel"
 	}
 	local data_node = {}
 	local new_item = node:create_item(data_node, params)
@@ -10538,16 +10622,16 @@ function MenuCrimeNetSmartmatchmakeInitiator:add_filters(node)
 	end
 
 	local params = {
-		visible_callback = "is_multiplayer",
-		name = "job_id_filter",
 		filter = true,
-		text_id = "menu_smm_job_id"
+		name = "job_id_filter",
+		text_id = "menu_smm_job_id",
+		visible_callback = "is_multiplayer"
 	}
 	local data_node = {
 		{
-			value = -1,
+			_meta = "option",
 			text_id = "menu_any",
-			_meta = "option"
+			value = -1
 		},
 		type = "MenuItemMultiChoice"
 	}
@@ -10560,8 +10644,8 @@ function MenuCrimeNetSmartmatchmakeInitiator:add_filters(node)
 		if not job_tweak.wrapped_to_job and not is_hidden then
 			local text_id, color_data = tweak_data.narrative:create_job_name(job_id)
 			local params = {
-				localize = false,
 				_meta = "option",
+				localize = false,
 				text_id = text_id,
 				value = index
 			}
@@ -10581,9 +10665,9 @@ function MenuCrimeNetSmartmatchmakeInitiator:add_filters(node)
 	node:add_item(new_item)
 
 	local params = {
-		size = 8,
 		name = "divider_end",
-		no_text = true
+		no_text = true,
+		size = 8
 	}
 	local data_node = {
 		type = "MenuItemDivider"
@@ -10597,7 +10681,7 @@ end
 function MenuCallbackHandler:start_smart_matchmaking(item)
 	print("crimenet_filter_crimespree = ", managers.user:get_setting("crimenet_filter_crimespree"))
 
-	local smart_mode, smart_job_id, smart_difficulty = nil
+	local smart_mode, smart_job_id, smart_difficulty
 
 	if item:name() == "quick_join" then
 		local jobs = managers.crimenet:get_jobs_by_player_stars()
@@ -10617,6 +10701,7 @@ function MenuCallbackHandler:start_smart_matchmaking(item)
 		managers.menu:active_menu().logic:navigate_back(true)
 
 		local job_data = item:parameters().gui_node.node:parameters().menu_component_data
+
 		smart_mode = 0
 		smart_job_id = job_data.job_id
 		smart_difficulty = job_data.difficulty_id
@@ -10670,7 +10755,9 @@ MenuOptionInitiator.diff_name_lookup = {
 -- Lines 10512-10520
 function MenuOptionInitiator:modify_node(node)
 	local node_name = node:parameters().name
+
 	node_name = self.diff_name_lookup[node_name] or node_name
+
 	local modify_func = self["modify_" .. node_name]
 
 	if modify_func and type(modify_func) == "function" then
@@ -10735,6 +10822,7 @@ function MenuOptionInitiator:modify_accessibility_options(node)
 	end
 
 	option_value = "off"
+
 	local accessibility_dot_size_item = node:item("accessibility_dot_size")
 
 	if accessibility_dot_size_item then
@@ -10746,6 +10834,7 @@ function MenuOptionInitiator:modify_accessibility_options(node)
 	end
 
 	option_value = "off"
+
 	local toggle_dot_hide_ads = node:item("toggle_dot_hide_ads")
 
 	if toggle_dot_hide_ads then
@@ -10787,6 +10876,7 @@ function MenuOptionInitiator:modify_accessibility_options(node)
 	end
 
 	option_value = "off"
+
 	local accessibility_sounds_tinnitus = node:item("accessibility_sounds_tinnitus_toggle")
 
 	if accessibility_sounds_tinnitus then
@@ -10889,6 +10979,7 @@ function MenuOptionInitiator:modify_adv_video(node)
 	end
 
 	option_value = "off"
+
 	local chromatic_setting_item = node:item("toggle_chromatic")
 
 	if chromatic_setting_item then
@@ -10957,8 +11048,8 @@ function MenuOptionInitiator:modify_video(node)
 
 		for i = 0, RenderSettings.adapter_count - 1 do
 			local option = CoreMenuItemOption.ItemOption:new({
-				localize = false,
 				_meta = "option",
+				localize = false,
 				text_id = "" .. i + 1,
 				value = i
 			})
@@ -11031,6 +11122,7 @@ function MenuOptionInitiator:modify_controls(node)
 	end
 
 	option_value = "off"
+
 	local inv_cam_horizontally_item = node:item("toggle_invert_camera_horisontally")
 
 	if inv_cam_horizontally_item then
@@ -11042,6 +11134,7 @@ function MenuOptionInitiator:modify_controls(node)
 	end
 
 	option_value = "off"
+
 	local inv_cam_vertically_item = node:item("toggle_invert_camera_vertically")
 
 	if inv_cam_vertically_item then
@@ -11053,6 +11146,7 @@ function MenuOptionInitiator:modify_controls(node)
 	end
 
 	option_value = "off"
+
 	local southpaw_item = node:item("toggle_southpaw")
 
 	if southpaw_item then
@@ -11064,6 +11158,7 @@ function MenuOptionInitiator:modify_controls(node)
 	end
 
 	option_value = "off"
+
 	local hold_to_steelsight_item = node:item("toggle_hold_to_steelsight")
 
 	if hold_to_steelsight_item then
@@ -11075,6 +11170,7 @@ function MenuOptionInitiator:modify_controls(node)
 	end
 
 	option_value = "off"
+
 	local hold_to_run_item = node:item("toggle_hold_to_run")
 
 	if hold_to_run_item then
@@ -11086,6 +11182,7 @@ function MenuOptionInitiator:modify_controls(node)
 	end
 
 	option_value = "off"
+
 	local hold_to_duck_item = node:item("toggle_hold_to_duck")
 
 	if hold_to_duck_item then
@@ -11097,6 +11194,7 @@ function MenuOptionInitiator:modify_controls(node)
 	end
 
 	option_value = "off"
+
 	local aim_assist_item = node:item("toggle_aim_assist")
 
 	if aim_assist_item then
@@ -11108,6 +11206,7 @@ function MenuOptionInitiator:modify_controls(node)
 	end
 
 	option_value = "off"
+
 	local sticky_aim_item = node:item("toggle_sticky_aim")
 
 	if sticky_aim_item then
@@ -11118,7 +11217,7 @@ function MenuOptionInitiator:modify_controls(node)
 		sticky_aim_item:set_value(option_value)
 	end
 
-	local tap_choice_setting = nil
+	local tap_choice_setting
 	local tap_to_interact = node:item("tap_to_interact_choice")
 
 	if tap_to_interact then
@@ -11140,6 +11239,7 @@ function MenuOptionInitiator:modify_controls(node)
 	end
 
 	option_value = "off"
+
 	local tap_to_interact_show_text = node:item("tap_to_interact_show_text_toggle")
 
 	if tap_to_interact_show_text then
@@ -11253,6 +11353,7 @@ function MenuOptionInitiator:modify_user_interface_options(node)
 	end
 
 	option_value = "off"
+
 	local ammo_contour = node:item("toggle_ammo_contour")
 
 	if ammo_contour then
@@ -11271,6 +11372,7 @@ function MenuOptionInitiator:modify_user_interface_options(node)
 	end
 
 	option_value = "off"
+
 	local st_item = node:item("toggle_subtitle")
 
 	if st_item then
@@ -11282,6 +11384,7 @@ function MenuOptionInitiator:modify_user_interface_options(node)
 	end
 
 	option_value = "off"
+
 	local hit_indicator_item = node:item("toggle_hit_indicator")
 
 	if hit_indicator_item then
@@ -11293,6 +11396,7 @@ function MenuOptionInitiator:modify_user_interface_options(node)
 	end
 
 	option_value = "off"
+
 	local objective_reminder_item = node:item("toggle_objective_reminder")
 
 	if objective_reminder_item then
@@ -11304,6 +11408,7 @@ function MenuOptionInitiator:modify_user_interface_options(node)
 	end
 
 	option_value = "off"
+
 	local infamy_roman_rank_item = node:item("toggle_infamy_roman_rank")
 
 	if infamy_roman_rank_item then
@@ -11315,6 +11420,7 @@ function MenuOptionInitiator:modify_user_interface_options(node)
 	end
 
 	option_value = "off"
+
 	local infamy_roman_card_item = node:item("toggle_infamy_roman_card")
 
 	if infamy_roman_card_item then
@@ -11332,6 +11438,7 @@ function MenuOptionInitiator:modify_user_interface_options(node)
 	end
 
 	option_value = "off"
+
 	local color_blind_hit_direction_item = node:item("toggle_color_blind_hit_direction")
 
 	if color_blind_hit_direction_item then
@@ -11343,6 +11450,7 @@ function MenuOptionInitiator:modify_user_interface_options(node)
 	end
 
 	option_value = "off"
+
 	local toggle_alt_hud_ammo_item = node:item("toggle_alt_hud_ammo")
 
 	if toggle_alt_hud_ammo_item then
@@ -11407,12 +11515,15 @@ SkillSwitchInitiator = SkillSwitchInitiator or class()
 function SkillSwitchInitiator:modify_node(node, data)
 	node:clean_items()
 
-	local hightlight_color, row_item_color, callback = nil
+	local hightlight_color, row_item_color, callback
 
 	self:create_divider(node, "title", "menu_st_skill_switch_title_name", 2, tweak_data.screen_colors.text)
 
 	for skill_switch, data in ipairs(Global.skilltree_manager.skill_switches) do
-		hightlight_color, row_item_color, callback = nil
+		hightlight_color = nil
+		row_item_color = nil
+		callback = nil
+
 		local unlocked = data.unlocked
 		local can_unlock = managers.skilltree:can_unlock_skill_switch(skill_switch)
 		local is_suspended = managers.skilltree:is_skill_switch_suspended(managers.skilltree._global.skill_switches[skill_switch])
@@ -11462,6 +11573,7 @@ end
 -- Lines 11417-11425
 function SkillSwitchInitiator:refresh_node(node, data)
 	local selected_item = node:selected_item() and node:selected_item():name()
+
 	node = self:modify_node(node, data)
 
 	if selected_item then
@@ -11502,11 +11614,11 @@ function SkillSwitchInitiator:add_back_button(node)
 	node:delete_item("back")
 
 	local params = {
-		visible_callback = "is_pc_controller",
-		name = "back",
-		text_id = "menu_back",
 		align = "right",
-		previous_node = true
+		name = "back",
+		previous_node = true,
+		text_id = "menu_back",
+		visible_callback = "is_pc_controller"
 	}
 	local new_item = node:create_item(nil, params)
 
@@ -11517,9 +11629,10 @@ end
 function MenuCallbackHandler:unlock_skill_switch(item)
 	local spending_cost = managers.money:get_unlock_skill_switch_spending_cost(item:parameters().name)
 	local offshore_cost = managers.money:get_unlock_skill_switch_offshore_cost(item:parameters().name)
-	local dialog_data = {
-		title = managers.localization:text("dialog_unlock_skill_switch_title")
-	}
+	local dialog_data = {}
+
+	dialog_data.title = managers.localization:text("dialog_unlock_skill_switch_title")
+
 	local cost_text = ""
 
 	if spending_cost ~= 0 and offshore_cost ~= 0 then
@@ -11542,20 +11655,27 @@ function MenuCallbackHandler:unlock_skill_switch(item)
 	dialog_data.text = managers.localization:text("dialog_unlock_skill_switch", {
 		cost_text = cost_text
 	})
-	local yes_button = {
-		text = managers.localization:text("dialog_yes"),
-		callback_func = function ()
-			managers.skilltree:on_skill_switch_unlocked(item:parameters().name)
-			self:refresh_node()
-		end
-	}
-	local no_button = {
-		text = managers.localization:text("dialog_no"),
-		callback_func = function ()
-			self:refresh_node()
-		end,
-		cancel_button = true
-	}
+
+	local yes_button = {}
+
+	yes_button.text = managers.localization:text("dialog_yes")
+
+	-- Lines 11486-11486
+	function yes_button.callback_func()
+		managers.skilltree:on_skill_switch_unlocked(item:parameters().name)
+		self:refresh_node()
+	end
+
+	local no_button = {}
+
+	no_button.text = managers.localization:text("dialog_no")
+
+	-- Lines 11490-11490
+	function no_button.callback_func()
+		self:refresh_node()
+	end
+
+	no_button.cancel_button = true
 	dialog_data.button_list = {
 		yes_button,
 		no_button
@@ -11572,23 +11692,28 @@ end
 
 -- Lines 11502-11517
 function MenuCallbackHandler:unsuspend_skill_switch_dialog(item)
-	local dialog_data = {
-		title = managers.localization:text("dialog_unsuspend_title"),
-		text = managers.localization:text("dialog_unsuspend", {
-			Name = managers.skilltree:get_skill_switch_name(item:parameters().name, true)
-		})
-	}
-	local yes_button = {
-		text = managers.localization:text("dialog_yes"),
-		callback_func = callback(self, self, "unsuspend_skill_switch_dialog_yes", item:parameters().name)
-	}
-	local no_button = {
-		text = managers.localization:text("dialog_no"),
-		callback_func = function ()
-			self:refresh_node()
-		end,
-		cancel_button = true
-	}
+	local dialog_data = {}
+
+	dialog_data.title = managers.localization:text("dialog_unsuspend_title")
+	dialog_data.text = managers.localization:text("dialog_unsuspend", {
+		Name = managers.skilltree:get_skill_switch_name(item:parameters().name, true)
+	})
+
+	local yes_button = {}
+
+	yes_button.text = managers.localization:text("dialog_yes")
+	yes_button.callback_func = callback(self, self, "unsuspend_skill_switch_dialog_yes", item:parameters().name)
+
+	local no_button = {}
+
+	no_button.text = managers.localization:text("dialog_no")
+
+	-- Lines 11512-11512
+	function no_button.callback_func()
+		self:refresh_node()
+	end
+
+	no_button.cancel_button = true
 	dialog_data.button_list = {
 		yes_button,
 		no_button
@@ -11609,7 +11734,7 @@ MultiProfileSwitchInitiator = MultiProfileSwitchInitiator or class()
 function MultiProfileSwitchInitiator:modify_node(node, data)
 	node:clean_items()
 
-	local hightlight_color, row_item_color, callback = nil
+	local hightlight_color, row_item_color, callback
 
 	self:create_divider(node, "title", "menu_multi_profile_switch_title_name", nil, tweak_data.screen_colors.text)
 
@@ -11628,8 +11753,8 @@ function MultiProfileSwitchInitiator:modify_node(node, data)
 		end
 
 		self:create_item(node, {
-			enabled = true,
 			callback = "set_active_multi_profile",
+			enabled = true,
 			localize = false,
 			name = i,
 			text_id = profile_name,
@@ -11648,6 +11773,7 @@ end
 -- Lines 11564-11572
 function MultiProfileSwitchInitiator:refresh_node(node, data)
 	local selected_item = node:selected_item() and node:selected_item():name()
+
 	node = self:modify_node(node, data)
 
 	if selected_item then
@@ -11688,14 +11814,14 @@ function MultiProfileSwitchInitiator:add_back_button(node)
 	node:delete_item("back")
 
 	local params = {
-		visible_callback = "is_pc_controller",
+		align = "left",
+		gui_node_custom = true,
+		last_item = true,
 		name = "back",
 		pd2_corner = true,
+		previous_node = true,
 		text_id = "menu_back",
-		gui_node_custom = true,
-		align = "left",
-		last_item = true,
-		previous_node = true
+		visible_callback = "is_pc_controller"
 	}
 	local new_item = node:create_item(nil, params)
 
@@ -11776,13 +11902,14 @@ function ModMenuCreator:create_mod_menu(node)
 	table.sort(sorted_mods)
 
 	local list_of_mods = {}
-	local mod_item = nil
+	local mod_item
 
 	for _, mod_name in ipairs(sorted_mods) do
 		local conflicts = table.size(mods[mod_name].conflicted) > 0
+
 		mod_item = self:create_item(node, {
-			localize = false,
 			enabled = true,
+			localize = false,
 			name = mod_name,
 			text_id = mod_name,
 			hightlight_color = conflicts and tweak_data.screen_colors.important_1,
@@ -11828,32 +11955,32 @@ end
 function ModMenuCreator:create_toggle(node, params)
 	local data_node = {
 		{
-			w = 24,
-			y = 0,
+			_meta = "option",
 			h = 24,
+			icon = "guis/textures/menu_tickbox",
+			s_h = 24,
+			s_icon = "guis/textures/menu_tickbox",
+			s_w = 24,
+			s_x = 24,
 			s_y = 24,
 			value = "on",
-			s_w = 24,
-			s_h = 24,
-			s_x = 24,
-			_meta = "option",
-			icon = "guis/textures/menu_tickbox",
+			w = 24,
 			x = 24,
-			s_icon = "guis/textures/menu_tickbox"
+			y = 0
 		},
 		{
-			w = 24,
-			y = 0,
+			_meta = "option",
 			h = 24,
+			icon = "guis/textures/menu_tickbox",
+			s_h = 24,
+			s_icon = "guis/textures/menu_tickbox",
+			s_w = 24,
+			s_x = 0,
 			s_y = 24,
 			value = "off",
-			s_w = 24,
-			s_h = 24,
-			s_x = 0,
-			_meta = "option",
-			icon = "guis/textures/menu_tickbox",
+			w = 24,
 			x = 0,
-			s_icon = "guis/textures/menu_tickbox"
+			y = 0
 		},
 		type = "MenuItemToggleWithIcon"
 	}
@@ -11870,11 +11997,11 @@ function ModMenuCreator:add_back_button(node)
 	node:delete_item("back")
 
 	local params = {
-		visible_callback = "is_pc_controller",
-		name = "back",
-		text_id = "menu_back",
 		back = true,
-		previous_node = true
+		name = "back",
+		previous_node = true,
+		text_id = "menu_back",
+		visible_callback = "is_pc_controller"
 	}
 	local new_item = node:create_item(nil, params)
 
@@ -11883,6 +12010,7 @@ end
 
 -- Lines 11750-11752
 function MenuCallbackHandler:save_mod_changes(node)
+	return
 end
 
 -- Lines 11754-11760
@@ -11952,14 +12080,14 @@ function MenuCrimeNetChallengeInitiator:setup_node(node)
 	})
 	self:create_divider(node, 2)
 
-	local first_item = nil
+	local first_item
 
 	if not managers.challenge:is_retrieving() and managers.challenge:is_validated() then
 		local challenges = {}
 		local categories = {}
-		local category = nil
+		local category
 		local current_timestamp = managers.challenge:get_timestamp()
-		local timestamp, interval, expire_timestamp, expire_time = nil
+		local timestamp, interval, expire_timestamp, expire_time
 
 		for assignment, data in pairs(managers.challenge:get_all_active_challenges()) do
 			timestamp = data.timestamp
@@ -11980,44 +12108,26 @@ function MenuCrimeNetChallengeInitiator:setup_node(node)
 
 		categories = table.list_union(categories)
 
-		table.sort(categories, function (x, y)
+		table.sort(categories, function(x, y)
 			return challenges[x][1].interval < challenges[y][1].interval
 		end)
 
-		local node_data = nil
+		local node_data
 		local selected_item = node:selected_item() and node:selected_item():name()
 
 		for _, category in ipairs(categories) do
 			self:create_divider(node, category, managers.localization:text("menu_challenge_div_cat_" .. category), nil, tweak_data.screen_colors.text)
 
 			node_data = {}
-			local hightlight_color, row_item_color, marker_color, icon, icon_rotation, icon_visible_callback = nil
+
+			local hightlight_color, row_item_color, marker_color, icon, icon_rotation, icon_visible_callback
 
 			for assignment, challenge in ipairs(challenges[category]) do
 				hightlight_color = challenge.rewarded and tweak_data.screen_colors.text:with_alpha(0.5) or challenge.completed and tweak_data.screen_colors.challenge_completed_color
 				row_item_color = challenge.rewarded and tweak_data.screen_colors.text:with_alpha(0.5) or challenge.completed and tweak_data.screen_colors.challenge_completed_color
 				marker_color = challenge.rewarded and tweak_data.screen_colors.text:with_alpha(0.5) or challenge.completed and tweak_data.screen_colors.challenge_completed_color:with_alpha(0.15)
-
-				if selected_item ~= challenge.id then
-					if challenge.rewarded then
-						icon = "guis/textures/menu_singletick"
-					elseif challenge.completed then
-						icon = "guis/textures/pd2/icon_reward"
-					end
-				else
-					icon = nil
-				end
-
-				if selected_item ~= challenge.id then
-					if challenge.rewarded then
-						icon_rotation = 360
-					elseif challenge.completed then
-						icon_rotation = 360
-					end
-				else
-					icon_rotation = nil
-				end
-
+				icon = selected_item ~= challenge.id and (challenge.rewarded and "guis/textures/menu_singletick" or challenge.completed and "guis/textures/pd2/icon_reward") or nil
+				icon_rotation = selected_item ~= challenge.id and (challenge.rewarded and 360 or challenge.completed and 360) or nil
 				icon_visible_callback = "is_current_challenge"
 
 				table.insert(node_data, {
@@ -12034,7 +12144,7 @@ function MenuCrimeNetChallengeInitiator:setup_node(node)
 				})
 			end
 
-			table.sort(node_data, function (x, y)
+			table.sort(node_data, function(x, y)
 				if x.completed ~= y.completed then
 					return x.completed
 				end
@@ -12057,14 +12167,14 @@ function MenuCrimeNetChallengeInitiator:setup_node(node)
 	end
 
 	local params = {
-		visible_callback = "is_pc_controller",
+		align = "left",
+		gui_node_custom = "true",
+		last_item = "true",
 		name = "back",
 		pd2_corner = "true",
+		previous_node = "true",
 		text_id = "menu_back",
-		gui_node_custom = "true",
-		align = "left",
-		last_item = "true",
-		previous_node = "true"
+		visible_callback = "is_pc_controller"
 	}
 	local data_node = {}
 	local new_item = node:create_item(data_node, params)
@@ -12133,7 +12243,7 @@ function MenuChooseWeaponRewardInitiator:modify_node(original_node, data)
 
 	local all_dlc_data = Global.dlc_manager.all_dlc_data
 	local weapon_tweak = tweak_data.weapon
-	local x_id, y_id, x_level, y_level, x_unlocked, y_unlocked, x_skill, y_skill, x_gv, y_gv, x_sn, y_sn = nil
+	local x_id, y_id, x_level, y_level, x_unlocked, y_unlocked, x_skill, y_skill, x_gv, y_gv, x_sn, y_sn
 	local primaries = managers.blackmarket:get_weapon_category("primaries")
 	local secondaries = managers.blackmarket:get_weapon_category("secondaries")
 	local items = {}
@@ -12167,7 +12277,7 @@ function MenuChooseWeaponRewardInitiator:modify_node(original_node, data)
 		return weapon_tweak[weapon.weapon_id] and not weapon_tweak[weapon.weapon_id].parent_weapon_id
 	end
 
-	local loot_table, data = nil
+	local loot_table, data
 
 	for i, category_data in ipairs({
 		primaries,
@@ -12266,6 +12376,7 @@ function MenuChooseWeaponRewardInitiator:setup_node(node)
 	local listed_category = node:parameters().listed_category or "assault_rifle"
 	local listed_weapon = node:parameters().listed_weapon or "amcar"
 	local listed_global_value = node:parameters().listed_global_value or "all"
+
 	node:parameters().listed_global_value = listed_global_value
 	node:parameters().listed_weapon = listed_weapon
 	node:parameters().listed_category = listed_category
@@ -12279,27 +12390,27 @@ function MenuChooseWeaponRewardInitiator:setup_node(node)
 		local items = node:parameters().weapon_items
 		local params = {
 			callback = "choice_challenge_choose_weapon_category",
+			filter = true,
 			name = "choose_weapon_category",
 			text_id = "menu_challenge_choose_weapon_category",
-			text_offset = 75,
-			filter = true
+			text_offset = 75
 		}
 		local data_node = {
 			type = "MenuItemMultiChoice"
 		}
 
 		table.insert(data_node, {
-			text_id = "",
-			no_text = true,
-			localize = false,
 			_meta = "option",
+			localize = false,
+			no_text = true,
+			text_id = "",
 			value = category_list[#category_list] .. "#"
 		})
 
 		for index, category in ipairs(category_list) do
 			table.insert(data_node, {
-				localize = false,
 				_meta = "option",
+				localize = false,
 				text_id = managers.localization:to_upper_text("menu_" .. category),
 				value = category
 			})
@@ -12308,10 +12419,10 @@ function MenuChooseWeaponRewardInitiator:setup_node(node)
 		end
 
 		table.insert(data_node, {
-			text_id = "",
-			no_text = true,
-			localize = false,
 			_meta = "option",
+			localize = false,
+			no_text = true,
+			text_id = "",
 			value = category_list[1] .. "#"
 		})
 
@@ -12320,30 +12431,30 @@ function MenuChooseWeaponRewardInitiator:setup_node(node)
 		new_item:set_value(listed_category)
 		node:add_item(new_item)
 
-		local current_weapon_data = nil
+		local current_weapon_data
 		local params = {
 			callback = "choice_challenge_choose_weapon",
+			filter = true,
 			name = "choose_weapon",
 			text_id = "menu_challenge_choose_weapon",
-			text_offset = 75,
-			filter = true
+			text_offset = 75
 		}
 		local data_node = {
 			type = "MenuItemMultiChoice"
 		}
 
 		table.insert(data_node, {
-			text_id = "",
-			no_text = true,
-			localize = false,
 			_meta = "option",
+			localize = false,
+			no_text = true,
+			text_id = "",
 			value = items[listed_category][#items[listed_category]].weapon_id .. "#"
 		})
 
 		for index, weapon_data in ipairs(items[listed_category]) do
 			table.insert(data_node, {
-				localize = false,
 				_meta = "option",
+				localize = false,
 				text_id = managers.weapon_factory:get_weapon_name_by_weapon_id(weapon_data.weapon_id),
 				value = weapon_data.weapon_id
 			})
@@ -12354,10 +12465,10 @@ function MenuChooseWeaponRewardInitiator:setup_node(node)
 		end
 
 		table.insert(data_node, {
-			text_id = "",
-			no_text = true,
-			localize = false,
 			_meta = "option",
+			localize = false,
+			no_text = true,
+			text_id = "",
 			value = items[listed_category][1].weapon_id .. "#"
 		})
 
@@ -12374,7 +12485,8 @@ function MenuChooseWeaponRewardInitiator:setup_node(node)
 		end
 
 		global_values = table.list_union(global_values)
-		local x_sn, y_sn = nil
+
+		local x_sn, y_sn
 
 		-- Lines 12193-12208
 		local function sort_func(x, y)
@@ -12398,10 +12510,10 @@ function MenuChooseWeaponRewardInitiator:setup_node(node)
 
 		local params = {
 			callback = "choice_challenge_choose_global_value",
+			filter = true,
 			name = "choose_global_value",
 			text_id = "menu_challenge_choose_global_value",
-			text_offset = 75,
-			filter = true
+			text_offset = 75
 		}
 		local data_node = {
 			type = "MenuItemMultiChoice"
@@ -12409,10 +12521,10 @@ function MenuChooseWeaponRewardInitiator:setup_node(node)
 
 		if #global_values > 1 then
 			table.insert(data_node, {
-				text_id = "",
-				no_text = true,
-				localize = false,
 				_meta = "option",
+				localize = false,
+				no_text = true,
+				text_id = "",
 				value = global_values[#global_values] .. "#"
 			})
 		end
@@ -12420,33 +12532,34 @@ function MenuChooseWeaponRewardInitiator:setup_node(node)
 		local gv_all_text_id = #global_values == 1 and tweak_data:get_raw_value("lootdrop", "global_values", global_values[1], "name_id") or "menu_challenge_global_value_all"
 
 		table.insert(data_node, {
-			value = "all",
-			localize = false,
 			_meta = "option",
+			localize = false,
+			value = "all",
 			text_id = managers.localization:text(gv_all_text_id)
 		})
 
 		if #global_values > 1 then
 			for index, global_value in ipairs(global_values) do
 				table.insert(data_node, {
-					localize = false,
 					_meta = "option",
+					localize = false,
 					text_id = managers.localization:text(tweak_data:get_raw_value("lootdrop", "global_values", global_value, "name_id")),
 					value = global_value
 				})
 			end
 
 			table.insert(data_node, {
-				text_id = "",
-				no_text = true,
-				localize = false,
 				_meta = "option",
+				localize = false,
+				no_text = true,
+				text_id = "",
 				value = "all#"
 			})
 		end
 
 		node:parameters().listed_global_value = table.contains(global_values, listed_global_value) and listed_global_value or "all"
 		listed_global_value = node:parameters().listed_global_value
+
 		local new_item = node:create_item(data_node, params)
 
 		new_item:set_value(listed_global_value)
@@ -12454,12 +12567,12 @@ function MenuChooseWeaponRewardInitiator:setup_node(node)
 		self:create_divider(node, "divider_end", nil, 32)
 
 		local params = {
-			callback = "choice_challenge_get_weapon_mod_reward",
-			name = "get_weapon_mod_reward",
-			halign = "right",
-			text_id = "menu_challenge_get_weapon_mod_reward",
 			align = "right",
-			filter = true
+			callback = "choice_challenge_get_weapon_mod_reward",
+			filter = true,
+			halign = "right",
+			name = "get_weapon_mod_reward",
+			text_id = "menu_challenge_get_weapon_mod_reward"
 		}
 		local data_node = {}
 		local new_item = node:create_item(data_node, params)
@@ -12504,6 +12617,7 @@ function MenuCallbackHandler:choice_challenge_choose_weapon_category(item)
 	end
 
 	local node = managers.menu:active_menu().logic:selected_node()
+
 	node:parameters().listed_category = string.gsub(item:value(), "#", "")
 
 	if string.find(item:value(), "#") then
@@ -12596,6 +12710,7 @@ function MenuCallbackHandler:choice_challenge_get_weapon_mod_reward(item)
 		local weapon_id = managers.menu:active_menu().logic:selected_node():parameters().listed_weapon
 		local global_value = managers.menu:active_menu().logic:selected_node():parameters().listed_global_value
 		local entry = MenuCallbackHandler:roll_challenge_give_weapon_mod(weapon_id, global_value)
+
 		managers.menu:active_menu().logic:selected_node():parameters().listed_weapon = nil
 
 		if entry then
@@ -12640,6 +12755,7 @@ function MenuCustomizeGadgetInitiator:setup_node(node, data)
 	node:clean_items()
 
 	data = data or node:parameters().menu_component_data
+
 	local part_id = data.name
 	local slot = data.slot
 	local category = data.category
@@ -12650,6 +12766,7 @@ function MenuCustomizeGadgetInitiator:setup_node(node, data)
 	if mod_td.adds then
 		for _, part_id in ipairs(mod_td.adds) do
 			local sub_type = tweak_data.weapon.factory.parts[part_id].sub_type
+
 			show_laser = sub_type == "laser" or show_laser
 			show_flashlight = sub_type == "flashlight" or show_flashlight
 		end
@@ -12658,66 +12775,66 @@ function MenuCustomizeGadgetInitiator:setup_node(node, data)
 	if not node:item("divider_end") then
 		if show_laser then
 			self:create_slider(node, {
-				max = 360,
-				name = "laser_hue",
-				min = 0,
 				callback = "set_gadget_laser_hue",
+				max = 360,
+				min = 0,
+				name = "laser_hue",
+				show_value = true,
 				step = 5,
-				text_id = "bm_menu_laser_hue",
-				show_value = true
+				text_id = "bm_menu_laser_hue"
 			})
 			self:create_slider(node, {
+				callback = "set_gadget_laser_sat",
+				default_value = 1,
+				max = 1,
 				min = 0,
 				name = "laser_sat",
-				max = 1,
-				callback = "set_gadget_laser_sat",
+				show_value = true,
 				step = 0.02,
-				text_id = "bm_menu_laser_sat",
-				default_value = 1,
-				show_value = true
+				text_id = "bm_menu_laser_sat"
 			})
 			self:create_slider(node, {
+				callback = "set_gadget_laser_val",
+				default_value = 1,
+				max = 1,
 				min = 0.1,
 				name = "laser_val",
-				max = 1,
-				callback = "set_gadget_laser_val",
+				show_value = true,
 				step = 0.02,
-				text_id = "bm_menu_laser_val",
-				default_value = 1,
-				show_value = true
+				text_id = "bm_menu_laser_val"
 			})
 			self:create_divider(node, "laser_divider", nil, 64)
 		end
 
 		if show_flashlight then
 			self:create_slider(node, {
-				max = 360,
-				name = "flashlight_hue",
-				min = 0,
 				callback = "set_gadget_flashlight_hue",
+				max = 360,
+				min = 0,
+				name = "flashlight_hue",
+				show_value = true,
 				step = 5,
-				text_id = "bm_menu_flashlight_hue",
-				show_value = true
+				text_id = "bm_menu_flashlight_hue"
 			})
 			self:create_slider(node, {
+				callback = "set_gadget_flashlight_sat",
+				default_value = 1,
+				max = 1,
 				min = 0,
 				name = "flashlight_sat",
-				max = 1,
-				callback = "set_gadget_flashlight_sat",
+				show_value = true,
 				step = 0.02,
-				text_id = "bm_menu_flashlight_sat",
-				default_value = 1,
-				show_value = true
+				text_id = "bm_menu_flashlight_sat"
 			})
 			self:create_slider(node, {
+				callback = "set_gadget_flashlight_val",
+				default_value = 1,
+				max = 1,
 				min = 0,
 				name = "flashlight_val",
-				max = 1,
-				callback = "set_gadget_flashlight_val",
+				show_value = true,
 				step = 0.02,
-				text_id = "bm_menu_flashlight_val",
-				default_value = 1,
-				show_value = true
+				text_id = "bm_menu_flashlight_val"
 			})
 			self:create_divider(node, "flashlight_divider", nil, 64)
 		end
@@ -12725,10 +12842,10 @@ function MenuCustomizeGadgetInitiator:setup_node(node, data)
 
 	local enabled = false
 	local params = {
+		align = "right",
 		callback = "set_gadget_customize_params",
 		name = "confirm",
 		text_id = "dialog_apply",
-		align = "right",
 		enabled = enabled,
 		disabled_color = tweak_data.screen_colors.important_1
 	}
@@ -12738,11 +12855,11 @@ function MenuCustomizeGadgetInitiator:setup_node(node, data)
 	node:add_item(new_item)
 
 	local params = {
+		align = "right",
 		last_item = "true",
 		name = "back",
-		text_id = "dialog_cancel",
-		align = "right",
-		previous_node = "true"
+		previous_node = "true",
+		text_id = "dialog_cancel"
 	}
 	local data_node = {}
 	local new_item = node:create_item(data_node, params)
@@ -12759,6 +12876,7 @@ function MenuCustomizeGadgetInitiator:setup_node(node, data)
 
 	node:parameters().menu_component_data = data
 	node:parameters().set_blackmarket_enabled = false
+
 	local l_hue = node:item("laser_hue")
 	local l_sat = node:item("laser_sat")
 	local l_val = node:item("laser_val")

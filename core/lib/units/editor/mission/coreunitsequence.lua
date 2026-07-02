@@ -1,10 +1,10 @@
 CoreUnitSequenceUnitElement = CoreUnitSequenceUnitElement or class(MissionElement)
 CoreUnitSequenceUnitElement.LINK_VALUES = {
 	{
+		layer = "Statics",
 		output = true,
 		table_key = "notify_unit_id",
-		table_value = "trigger_list",
-		layer = "Statics"
+		table_value = "trigger_list"
 	}
 }
 UnitSequenceUnitElement = UnitSequenceUnitElement or class(CoreUnitSequenceUnitElement)
@@ -109,6 +109,7 @@ end
 -- Lines 102-134
 function CoreUnitSequenceUnitElement:_set_trigger_list()
 	self._hed.trigger_list = {}
+
 	local triggers = managers.sequence:get_trigger_list(self._unit:name())
 
 	if #triggers > 0 then
@@ -147,11 +148,11 @@ function CoreUnitSequenceUnitElement:_build_panel(panel, panel_sizer)
 
 	self:_build_value_checkbox(panel, panel_sizer, "only_for_local_player")
 
-	local help = {
-		text = "Use the \"Edit Triggable\" interface, which you enable in the down left toolbar, to select and edit which units and sequences you want to run.",
-		panel = panel,
-		sizer = panel_sizer
-	}
+	local help = {}
+
+	help.text = "Use the \"Edit Triggable\" interface, which you enable in the down left toolbar, to select and edit which units and sequences you want to run."
+	help.panel = panel
+	help.sizer = panel_sizer
 
 	self:add_help_text(help)
 end
@@ -159,13 +160,13 @@ end
 -- Lines 152-164
 function CoreUnitSequenceUnitElement:add_to_mission_package()
 	managers.editor:add_to_world_package({
-		name = "core/units/run_sequence_dummy/run_sequence_dummy",
 		category = "units",
+		name = "core/units/run_sequence_dummy/run_sequence_dummy",
 		continent = self._unit:unit_data().continent
 	})
 	managers.editor:add_to_world_package({
-		name = "core/units/run_sequence_dummy/run_sequence_dummy.sequence_manager",
 		category = "script_data",
+		name = "core/units/run_sequence_dummy/run_sequence_dummy.sequence_manager",
 		continent = self._unit:unit_data().continent
 	})
 end

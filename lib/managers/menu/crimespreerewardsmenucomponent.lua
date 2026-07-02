@@ -1,8 +1,9 @@
 CrimeSpreeRewardsMenuComponent = CrimeSpreeRewardsMenuComponent or class(MenuGuiComponentGeneric)
 CrimeSpreeRewardsMenuComponent.menu_nodes = {
-	start_menu = "crime_spree_lobby",
-	mission_end_menu = "main"
+	mission_end_menu = "main",
+	start_menu = "crime_spree_lobby"
 }
+
 local padding = 10
 local card_size = 180
 
@@ -78,8 +79,8 @@ function CrimeSpreeRewardsMenuComponent:_setup()
 	})
 
 	local blur = self._fullscreen_panel:bitmap({
-		texture = "guis/textures/test_blur_df",
 		render_template = "VertexColorTexturedBlur3D",
+		texture = "guis/textures/test_blur_df",
 		w = self._fullscreen_ws:panel():w(),
 		h = self._fullscreen_ws:panel():h()
 	})
@@ -88,7 +89,7 @@ function CrimeSpreeRewardsMenuComponent:_setup()
 	local function func(o)
 		local start_blur = 0
 
-		over(0.6, function (p)
+		over(0.6, function(p)
 			o:set_alpha(math.lerp(start_blur, 1, p))
 		end)
 	end
@@ -105,14 +106,15 @@ function CrimeSpreeRewardsMenuComponent:_setup()
 	})
 
 	self._text_header = self._ws:panel():text({
-		vertical = "top",
 		align = "left",
 		layer = 51,
+		vertical = "top",
 		text = managers.localization:to_upper_text("menu_cs_rewards"),
 		font_size = tweak_data.menu.pd2_large_font_size,
 		font = tweak_data.menu.pd2_large_font,
 		color = tweak_data.screen_colors.text
 	})
+
 	local x, y, w, h = self._text_header:text_rect()
 
 	self._text_header:set_size(self._panel:w(), h)
@@ -128,6 +130,7 @@ function CrimeSpreeRewardsMenuComponent:_setup()
 	})
 
 	local progress_bar_h = 24
+
 	self._progress_panel = self._panel:panel({
 		layer = 10,
 		w = self._panel:w() * 0.8,
@@ -137,8 +140,8 @@ function CrimeSpreeRewardsMenuComponent:_setup()
 	self._progress_panel:set_center_x(self._panel:w() * 0.5)
 	self._progress_panel:set_center_y(self._panel:h() * 0.5)
 	self._progress_panel:text({
-		vertical = "top",
 		align = "left",
+		vertical = "top",
 		text = managers.localization:to_upper_text("menu_cs_generating_rewards"),
 		font_size = tweak_data.menu.pd2_medium_font_size,
 		font = tweak_data.menu.pd2_medium_font,
@@ -146,13 +149,14 @@ function CrimeSpreeRewardsMenuComponent:_setup()
 	})
 
 	self._progress_text = self._progress_panel:text({
+		align = "right",
 		text = "",
 		vertical = "top",
-		align = "right",
 		font_size = tweak_data.menu.pd2_medium_font_size,
 		font = tweak_data.menu.pd2_medium_font,
 		color = tweak_data.screen_colors.text
 	})
+
 	local progress_bar_panel = self._progress_panel:panel({
 		h = progress_bar_h
 	})
@@ -181,6 +185,7 @@ function CrimeSpreeRewardsMenuComponent:_setup_gui()
 	self._progress_panel:animate(callback(self, self, "fade_out"), 0.5, 0)
 
 	local panel_w = math.floor(self._panel:w() / 3)
+
 	self._rewards_panel = self._panel:panel({})
 
 	self:_create_experience_reward(1, panel_w)
@@ -215,7 +220,8 @@ function CrimeSpreeRewardsMenuComponent:mouse_moved(o, x, y)
 		return
 	end
 
-	local used, pointer = nil
+	local used, pointer
+
 	self._selected_item = nil
 
 	for idx, btn in ipairs(self._buttons) do
@@ -223,8 +229,7 @@ function CrimeSpreeRewardsMenuComponent:mouse_moved(o, x, y)
 
 		if btn:is_selected() then
 			self._selected_item = btn
-			pointer = "link"
-			used = true
+			used, pointer = true, "link"
 		end
 	end
 
@@ -253,10 +258,10 @@ function CrimeSpreeRewardsMenuComponent:create_card(panel, icon, size)
 	local rotation = math.rand(-10, 10)
 	local texture, rect, coords = tweak_data.hud_icons:get_icon_data(icon or tweak_data.lootdrop.type_to_card_fallback)
 	local upcard = panel:bitmap({
-		name = "upcard",
 		halign = "scale",
-		valign = "scale",
 		layer = 20,
+		name = "upcard",
+		valign = "scale",
 		texture = texture,
 		w = math.round(0.7111111111111111 * size),
 		h = size
@@ -287,15 +292,16 @@ function CrimeSpreeRewardsMenuComponent:_create_experience_reward(idx, panel_w)
 		x = panel_w * (idx - 1),
 		w = panel_w
 	})
+
 	local card = self:create_card(self._exp_panel, tweak_data.crime_spree:get_reward_icon("experience"), card_size)
 	local level_circle = self._exp_panel:bitmap({
-		texture = "guis/textures/pd2/endscreen/exp_ring",
-		name = "level_circle",
-		render_template = "VertexColorTexturedRadial",
 		alpha = 0,
 		blend_mode = "add",
-		rotation = 360,
 		layer = 1,
+		name = "level_circle",
+		render_template = "VertexColorTexturedRadial",
+		rotation = 360,
+		texture = "guis/textures/pd2/endscreen/exp_ring",
 		w = card:w(),
 		h = card:w(),
 		color = Color.white
@@ -306,13 +312,13 @@ function CrimeSpreeRewardsMenuComponent:_create_experience_reward(idx, panel_w)
 	level_circle:set_color(Color(0, 1, 1))
 
 	local prestige_circle = self._exp_panel:bitmap({
-		texture = "guis/textures/pd2/exp_ring_purple",
-		name = "prestige_circle",
-		rotation = 360,
-		render_template = "VertexColorTexturedRadial",
 		alpha = 0,
 		blend_mode = "add",
 		layer = 2,
+		name = "prestige_circle",
+		render_template = "VertexColorTexturedRadial",
+		rotation = 360,
+		texture = "guis/textures/pd2/exp_ring_purple",
 		x = level_circle:x() - 5,
 		y = level_circle:y() - 5,
 		w = card:w() + 10,
@@ -320,11 +326,11 @@ function CrimeSpreeRewardsMenuComponent:_create_experience_reward(idx, panel_w)
 		color = Color(0, 1, 1)
 	})
 	local level_text = self._exp_panel:text({
-		name = "level_text",
-		vertical = "center",
 		align = "center",
 		alpha = 0,
 		layer = 1,
+		name = "level_text",
+		vertical = "center",
 		text = tostring(self._exp_data.current_level),
 		w = card:w(),
 		h = card:w(),
@@ -337,11 +343,11 @@ function CrimeSpreeRewardsMenuComponent:_create_experience_reward(idx, panel_w)
 	level_text:set_top(level_circle:top())
 
 	local experience_title = self._exp_panel:text({
-		vertical = "center",
-		name = "experience_title",
-		alpha = 0,
 		align = "center",
+		alpha = 0,
 		layer = 1,
+		name = "experience_title",
+		vertical = "center",
 		text = managers.localization:to_upper_text("menu_experience"),
 		font_size = tweak_data.menu.pd2_medium_font_size,
 		font = tweak_data.menu.pd2_medium_font,
@@ -354,11 +360,11 @@ function CrimeSpreeRewardsMenuComponent:_create_experience_reward(idx, panel_w)
 
 	local text = self._exp_data.reached_cap and managers.localization:to_upper_text("menu_reached_level_cap") or managers.experience:experience_string(self._exp_data.total - self:get_reward("experience"))
 	local experience_text = self._exp_panel:text({
-		vertical = "center",
-		name = "experience_text",
-		alpha = 0,
 		align = "center",
+		alpha = 0,
 		layer = 1,
+		name = "experience_text",
+		vertical = "center",
 		text = text,
 		font_size = tweak_data.menu.pd2_medium_font_size,
 		font = tweak_data.menu.pd2_medium_font,
@@ -370,11 +376,11 @@ function CrimeSpreeRewardsMenuComponent:_create_experience_reward(idx, panel_w)
 	experience_text:set_top(experience_title:bottom())
 
 	local experience_gained = self._exp_panel:text({
-		vertical = "center",
-		name = "experience_gained",
-		alpha = 0,
 		align = "center",
+		alpha = 0,
 		layer = 1,
+		name = "experience_gained",
+		vertical = "center",
 		text = "+" .. managers.experience:experience_string(self:get_reward("experience")),
 		font_size = tweak_data.menu.pd2_medium_font_size,
 		font = tweak_data.menu.pd2_medium_font,
@@ -392,14 +398,15 @@ function CrimeSpreeRewardsMenuComponent:_create_cash_reward(idx, panel_w)
 		x = panel_w * (idx - 1),
 		w = panel_w
 	})
+
 	local card = self:create_card(self._cash_panel, tweak_data.crime_spree:get_reward_icon("cash"), card_size)
 	local got_cash = self:get_reward("cash") * tweak_data:get_value("money_manager", "offshore_rate")
 	local cash_title = self._cash_panel:text({
-		vertical = "center",
-		name = "cash_title",
-		alpha = 0,
 		align = "center",
+		alpha = 0,
 		layer = 1,
+		name = "cash_title",
+		vertical = "center",
 		text = managers.localization:to_upper_text("menu_cash_spending"),
 		font_size = tweak_data.menu.pd2_medium_font_size,
 		font = tweak_data.menu.pd2_medium_font,
@@ -411,11 +418,11 @@ function CrimeSpreeRewardsMenuComponent:_create_cash_reward(idx, panel_w)
 	cash_title:set_top(card:bottom() + padding)
 
 	local cash_text = self._cash_panel:text({
-		vertical = "center",
-		name = "cash_text",
-		alpha = 0,
 		align = "center",
+		alpha = 0,
 		layer = 1,
+		name = "cash_text",
+		vertical = "center",
 		text = managers.experience:cash_string(managers.money:total() - got_cash),
 		font_size = tweak_data.menu.pd2_medium_font_size,
 		font = tweak_data.menu.pd2_medium_font,
@@ -427,11 +434,11 @@ function CrimeSpreeRewardsMenuComponent:_create_cash_reward(idx, panel_w)
 	cash_text:set_top(cash_title:bottom())
 
 	local cash_gained = self._cash_panel:text({
-		vertical = "center",
-		name = "cash_gained",
-		alpha = 0,
 		align = "center",
+		alpha = 0,
 		layer = 1,
+		name = "cash_gained",
+		vertical = "center",
 		text = "+" .. managers.experience:cash_string(got_cash),
 		font_size = tweak_data.menu.pd2_medium_font_size,
 		font = tweak_data.menu.pd2_medium_font,
@@ -444,11 +451,11 @@ function CrimeSpreeRewardsMenuComponent:_create_cash_reward(idx, panel_w)
 
 	local got_offshore = self:get_reward("cash") * (1 - tweak_data:get_value("money_manager", "offshore_rate"))
 	local offshore_title = self._cash_panel:text({
-		vertical = "center",
-		name = "offshore_title",
-		alpha = 0,
 		align = "center",
+		alpha = 0,
 		layer = 1,
+		name = "offshore_title",
+		vertical = "center",
 		text = managers.localization:to_upper_text("menu_offshore_account"),
 		font_size = tweak_data.menu.pd2_medium_font_size,
 		font = tweak_data.menu.pd2_medium_font,
@@ -460,11 +467,11 @@ function CrimeSpreeRewardsMenuComponent:_create_cash_reward(idx, panel_w)
 	offshore_title:set_top(cash_gained:bottom() + padding)
 
 	local offshore_text = self._cash_panel:text({
-		vertical = "center",
-		name = "offshore_text",
-		alpha = 0,
 		align = "center",
+		alpha = 0,
 		layer = 1,
+		name = "offshore_text",
+		vertical = "center",
 		text = managers.experience:cash_string(managers.money:offshore() - got_offshore),
 		font_size = tweak_data.menu.pd2_medium_font_size,
 		font = tweak_data.menu.pd2_medium_font,
@@ -476,11 +483,11 @@ function CrimeSpreeRewardsMenuComponent:_create_cash_reward(idx, panel_w)
 	offshore_text:set_top(offshore_title:bottom())
 
 	local offshore_gained = self._cash_panel:text({
-		vertical = "center",
-		name = "offshore_gained",
-		alpha = 0,
 		align = "center",
+		alpha = 0,
 		layer = 1,
+		name = "offshore_gained",
+		vertical = "center",
 		text = "+" .. managers.experience:cash_string(got_offshore),
 		font_size = tweak_data.menu.pd2_medium_font_size,
 		font = tweak_data.menu.pd2_medium_font,
@@ -498,13 +505,14 @@ function CrimeSpreeRewardsMenuComponent:_create_coins_reward(idx, panel_w)
 		x = panel_w * (idx - 1),
 		w = panel_w
 	})
+
 	local card = self:create_card(self._coins_panel, tweak_data.crime_spree:get_reward_icon("continental_coins"), card_size)
 	local coins_title = self._coins_panel:text({
-		vertical = "center",
-		name = "coins_title",
-		alpha = 0,
 		align = "center",
+		alpha = 0,
 		layer = 1,
+		name = "coins_title",
+		vertical = "center",
 		text = managers.localization:to_upper_text("menu_cs_coins"),
 		font_size = tweak_data.menu.pd2_medium_font_size,
 		font = tweak_data.menu.pd2_medium_font,
@@ -516,13 +524,15 @@ function CrimeSpreeRewardsMenuComponent:_create_coins_reward(idx, panel_w)
 	coins_title:set_top(card:bottom() + padding)
 
 	local coins = 0
+
 	coins = managers.custom_safehouse:coins()
+
 	local coins_text = self._coins_panel:text({
-		vertical = "center",
-		name = "coins_text",
-		alpha = 0,
 		align = "center",
+		alpha = 0,
 		layer = 1,
+		name = "coins_text",
+		vertical = "center",
 		text = managers.experience:cash_string(math.floor(coins - self:get_reward("continental_coins")), ""),
 		font_size = tweak_data.menu.pd2_medium_font_size,
 		font = tweak_data.menu.pd2_medium_font,
@@ -534,11 +544,11 @@ function CrimeSpreeRewardsMenuComponent:_create_coins_reward(idx, panel_w)
 	coins_text:set_top(coins_title:bottom())
 
 	local coins_gained = self._coins_panel:text({
-		vertical = "center",
-		name = "coins_gained",
-		alpha = 0,
 		align = "center",
+		alpha = 0,
 		layer = 1,
+		name = "coins_gained",
+		vertical = "center",
 		text = "+" .. managers.experience:cash_string(math.floor(self:get_reward("continental_coins")), ""),
 		font_size = tweak_data.menu.pd2_medium_font_size,
 		font = tweak_data.menu.pd2_medium_font,
@@ -567,20 +577,20 @@ function CrimeSpreeRewardsMenuComponent:_add_item_textures(lootdrop_data, panel)
 	if category == "colors" then
 		local colors = tweak_data.blackmarket.colors[item_id].colors
 		local bg = panel:bitmap({
-			texture = "guis/textures/pd2/blackmarket/icons/colors/color_bg",
 			layer = 1,
+			texture = "guis/textures/pd2/blackmarket/icons/colors/color_bg",
 			w = panel:h(),
 			h = panel:h()
 		})
 		local c1 = panel:bitmap({
-			texture = "guis/textures/pd2/blackmarket/icons/colors/color_01",
 			layer = 0,
+			texture = "guis/textures/pd2/blackmarket/icons/colors/color_01",
 			w = panel:h(),
 			h = panel:h()
 		})
 		local c2 = panel:bitmap({
-			texture = "guis/textures/pd2/blackmarket/icons/colors/color_02",
 			layer = 0,
+			texture = "guis/textures/pd2/blackmarket/icons/colors/color_02",
 			w = panel:h(),
 			h = panel:h()
 		})
@@ -592,7 +602,7 @@ function CrimeSpreeRewardsMenuComponent:_add_item_textures(lootdrop_data, panel)
 			panel = panel,
 			is_pattern = category == "textures" and true or false
 		})
-		local texture_path = nil
+		local texture_path
 
 		if category == "textures" then
 			texture_path = tweak_data.blackmarket.textures[item_id].texture
@@ -612,6 +622,7 @@ function CrimeSpreeRewardsMenuComponent:_add_item_textures(lootdrop_data, panel)
 				end
 
 				local path = category .. "/"
+
 				texture_path = guis_catalog .. path .. item_id
 			else
 				texture_path = "guis/dlcs/cash/safes/default/safes/default_01"
@@ -628,6 +639,7 @@ function CrimeSpreeRewardsMenuComponent:_add_item_textures(lootdrop_data, panel)
 				end
 
 				local path = category .. "/"
+
 				texture_path = guis_catalog .. path .. item_id
 			else
 				texture_path = "guis/dlcs/cash/safes/default/drills/default_01"
@@ -833,6 +845,7 @@ end
 -- Lines 767-773
 function CrimeSpreeRewardsMenuComponent:next_state(wait_t)
 	self._current_state = (self._current_state or 0) + 1
+
 	local t = CrimeSpreeRewardsMenuComponent.states[self._current_state] and CrimeSpreeRewardsMenuComponent.states[self._current_state][2] or 0
 
 	if t > 0 or wait_t then
@@ -867,7 +880,7 @@ function CrimeSpreeRewardsMenuComponent:flip_card(card)
 	card:set_halign("scale")
 	card:show()
 	managers.menu_component:post_event("loot_flip_card")
-	over(0.25, function (p)
+	over(0.25, function(p)
 		card:set_rotation(start_rotation + math.sin(p * 45 + 45) * diff)
 
 		if card:rotation() == 0 then
@@ -897,7 +910,7 @@ function CrimeSpreeRewardsMenuComponent:flip_item_card(card, item_type, delay)
 	end
 
 	managers.menu_component:post_event("loot_flip_card")
-	over(0.25, function (p)
+	over(0.25, function(p)
 		card:set_rotation(start_rotation + math.sin(p * 45) * diff)
 
 		if card:rotation() == 0 then
@@ -912,7 +925,7 @@ function CrimeSpreeRewardsMenuComponent:flip_item_card(card, item_type, delay)
 
 	card:set_image(texture)
 	card:set_texture_rect(unpack(rect))
-	over(0.25, function (p)
+	over(0.25, function(p)
 		card:set_rotation(start_rotation + math.sin(p * 45 + 45) * diff)
 
 		if card:rotation() == 0 then
@@ -930,7 +943,7 @@ function CrimeSpreeRewardsMenuComponent:fade_in(element, duration, delay)
 		wait(delay)
 	end
 
-	over(duration, function (p)
+	over(duration, function(p)
 		element:set_alpha(math.lerp(0, 1, p))
 	end)
 end
@@ -941,7 +954,7 @@ function CrimeSpreeRewardsMenuComponent:fade_out(element, duration, delay)
 		wait(delay)
 	end
 
-	over(duration, function (p)
+	over(duration, function(p)
 		element:set_alpha(math.lerp(1, 0, p))
 	end)
 end
@@ -955,7 +968,7 @@ function CrimeSpreeRewardsMenuComponent:count_text(element, cash_string, start_v
 	local v = start_val
 
 	managers.menu_component:post_event("count_1")
-	over(duration, function (p)
+	over(duration, function(p)
 		v = math.lerp(start_val, end_val, p)
 
 		element:set_text(managers.experience:cash_string(v, cash_string))
@@ -969,7 +982,7 @@ function CrimeSpreeRewardsMenuComponent:fill_circle(element, start, target, dura
 		wait(delay)
 	end
 
-	over(duration, function (p)
+	over(duration, function(p)
 		local v = math.lerp(start, target, p)
 
 		element:set_color(Color(v, 1, 1))
@@ -1029,6 +1042,7 @@ function CrimeSpreeRewardsMenuComponent:_update_experience()
 	experience_gained:animate(callback(self, self, "fade_in"), fade_in_t, t)
 
 	t = t + 1
+
 	local fill_percent = managers.experience:next_level_data().current_points / managers.experience:next_level_data().points
 	local start_exp = self._exp_data.total
 	local current_exp = self._exp_data.total + self:get_reward("experience")
@@ -1116,6 +1130,7 @@ function CrimeSpreeRewardsMenuComponent:_update_cash(t, dt)
 	cash_gained:animate(callback(self, self, "fade_in"), fade_in_t, t)
 
 	t = t + 1
+
 	local got_cash = self:get_reward("cash") * tweak_data:get_value("money_manager", "offshore_rate")
 	local start_cash = managers.money:total() - got_cash
 	local current_cash = managers.money:total()
@@ -1140,6 +1155,7 @@ function CrimeSpreeRewardsMenuComponent:_update_cash(t, dt)
 	offshore_gained:animate(callback(self, self, "fade_in"), fade_in_t, t)
 
 	t = t + 1
+
 	local got_offshore = self:get_reward("cash") * (1 - tweak_data:get_value("money_manager", "offshore_rate"))
 	local start_offshore = managers.money:offshore() - got_offshore
 	local current_offshore = managers.money:offshore()
@@ -1188,8 +1204,10 @@ function CrimeSpreeRewardsMenuComponent:_update_coins(t, dt)
 	coins_gained:animate(callback(self, self, "fade_in"), fade_in_t, t)
 
 	t = t + 1
+
 	local start_coins = 0
 	local current_coins = 0
+
 	start_coins = math.floor(managers.custom_safehouse:coins() - self:get_reward("continental_coins"))
 	current_coins = math.floor(managers.custom_safehouse:coins())
 
@@ -1227,16 +1245,17 @@ function CrimeSpreeRewardsMenuComponent:_update_cosmetic_drops()
 		w = self._panel:w() - padding * 2,
 		h = self._panel:h() - padding * 2
 	})
+
 	local cosmetic_rewards = managers.crime_spree:cosmetic_rewards()
 
-	table.sort(cosmetic_rewards, function (a, b)
+	table.sort(cosmetic_rewards, function(a, b)
 		return a.type < b.type
 	end)
 
 	local t = 0
 	local card_types = {
-		continental_coins = "upcard_coins",
 		armor = "upcard_cosmetic",
+		continental_coins = "upcard_coins",
 		weapon_skins = "upcard_cosmetic"
 	}
 
@@ -1266,7 +1285,7 @@ function CrimeSpreeRewardsMenuComponent:_update_cosmetic_drops()
 		card:set_center_y(card_panel:h() * 0.5)
 		card:set_alpha(0)
 
-		local texture, bg_texure, item_name, rarity_name = nil
+		local texture, bg_texure, item_name, rarity_name
 		local rarity_color = tweak_data.screen_colors.text
 
 		if reward.type == "armor" then
@@ -1281,7 +1300,9 @@ function CrimeSpreeRewardsMenuComponent:_update_cosmetic_drops()
 			item_name = managers.localization:to_upper_text(td.name_id)
 			texture = guis_catalog .. "armor_skins/" .. reward.id
 			bg_texure = managers.blackmarket:get_cosmetic_rarity_bg(td.rarity or "common")
+
 			local rtd = tweak_data.economy.rarities[td.rarity]
+
 			rarity_name = managers.localization:to_upper_text(rtd.name_id)
 			rarity_color = rtd.color or tweak_data.screen_colors.text
 		elseif reward.type == "weapon_skins" then
@@ -1315,8 +1336,8 @@ function CrimeSpreeRewardsMenuComponent:_update_cosmetic_drops()
 		if texture then
 			local cosmetic_icon = icon_panel:bitmap({
 				blend_mode = "normal",
-				stream = true,
 				layer = 2,
+				stream = true,
 				texture = texture
 			})
 
@@ -1327,8 +1348,8 @@ function CrimeSpreeRewardsMenuComponent:_update_cosmetic_drops()
 		if bg_texure then
 			local rarity_icon = icon_panel:bitmap({
 				blend_mode = "normal",
-				stream = true,
 				layer = 1,
+				stream = true,
 				texture = bg_texure
 			})
 
@@ -1339,9 +1360,9 @@ function CrimeSpreeRewardsMenuComponent:_update_cosmetic_drops()
 		local font = tweak_data.menu.pd2_large_font
 		local font_size = tweak_data.menu.pd2_large_font_size * 0.75
 		local name = name_panel:text({
-			vertical = "center",
 			align = "center",
 			layer = 1,
+			vertical = "center",
 			text = item_name or "missing name",
 			h = font_size,
 			font_size = font_size,
@@ -1351,9 +1372,9 @@ function CrimeSpreeRewardsMenuComponent:_update_cosmetic_drops()
 
 		if rarity_name then
 			local rarity = name_panel:text({
-				vertical = "center",
 				align = "center",
 				layer = 1,
+				vertical = "center",
 				text = rarity_name,
 				h = font_size,
 				font_size = font_size,
@@ -1418,14 +1439,15 @@ function CrimeSpreeRewardsMenuComponent:_update_loot_drops()
 		w = self._panel:w() - padding * 2,
 		h = self._panel:h() - padding * 2
 	})
+
 	local loot_params = {
 		loot = managers.experience:cash_string(#loot_drops, "")
 	}
 	local drops_remaining = self._loot_panel:text({
-		vertical = "bottom",
-		name = "drops_remaining",
 		align = "left",
 		layer = 1,
+		name = "drops_remaining",
+		vertical = "bottom",
 		text = managers.localization:to_upper_text("menu_cs_loot_drops_remaining", loot_params),
 		font_size = tweak_data.menu.pd2_medium_font_size,
 		font = tweak_data.menu.pd2_medium_font,
@@ -1439,6 +1461,7 @@ function CrimeSpreeRewardsMenuComponent:_update_loot_drops()
 	self._loot_scroll = ScrollablePanel:new(self._loot_panel, "loot_scroll", {
 		padding = 0
 	})
+
 	local num_items = #loot_drops
 	local items_per_line = 6
 	local max_lines = 3
@@ -1452,16 +1475,16 @@ function CrimeSpreeRewardsMenuComponent:_update_loot_drops()
 	for i = 1, math.min(num_items, max_items * max_pages) do
 		local lootdrop_data = loot_drops[i]
 		local card_types = {
-			weapon_mods = "upcard_weapon",
-			xp = "upcard_xp",
+			cash = "upcard_cash",
+			colors = "upcard_color",
+			drills = "upcard_drill",
+			masks = "upcard_mask",
 			materials = "upcard_material",
 			safes = "upcard_safe",
-			cash = "upcard_cash",
-			masks = "upcard_mask",
-			colors = "upcard_color",
 			textures = "upcard_pattern",
-			drills = "upcard_drill",
-			weapon_bonus = "upcard_weapon_bonus"
+			weapon_bonus = "upcard_weapon_bonus",
+			weapon_mods = "upcard_weapon",
+			xp = "upcard_xp"
 		}
 		local panel = self._loot_scroll:canvas():panel({
 			x = item_size * (c % items_per_line),
@@ -1488,6 +1511,7 @@ function CrimeSpreeRewardsMenuComponent:_update_loot_drops()
 		self:_add_item_textures(lootdrop_data, item_panel)
 
 		local t = 0
+
 		t = t + 1 + intial_delay
 
 		card:animate(callback(self, self, "fade_in"), 0.25, t)
@@ -1497,6 +1521,7 @@ function CrimeSpreeRewardsMenuComponent:_update_loot_drops()
 		card:animate(callback(self, self, "flip_item_card"), card_types[lootdrop_data.type_items], t)
 
 		loot_params.loot = managers.experience:cash_string(num_items - i, "")
+
 		local new_text = managers.localization:to_upper_text("menu_cs_loot_drops_remaining", loot_params)
 
 		drops_remaining:animate(callback(self, self, "set_text"), new_text, t)
@@ -1522,9 +1547,9 @@ function CrimeSpreeRewardsMenuComponent:_update_loot_drops()
 
 	if num_items > max_items * max_pages then
 		local more_text = self._loot_scroll:canvas():text({
-			vertical = "center",
 			align = "center",
 			alpha = 0,
+			vertical = "center",
 			text = managers.localization:text("menu_cs_loot_drops_not_shown", {
 				remaining = tostring(num_items - max_items * max_pages)
 			}),
@@ -1565,6 +1590,7 @@ function CrimeSpreeRewardsMenuComponent:_update_rewards_list()
 		force_scroll_indicators = true,
 		padding = 0
 	})
+
 	local count = 0
 	local fade_in_t = 0.25
 	local fade_in_delay = fade_in_t / 4
@@ -1573,10 +1599,10 @@ function CrimeSpreeRewardsMenuComponent:_update_rewards_list()
 	-- Lines 1475-1495
 	local function add_reward_text(text, color)
 		local reward_text = self._list_scroll:canvas():text({
-			alpha = 0,
-			vertical = "bottom",
 			align = "left",
+			alpha = 0,
 			layer = 1,
+			vertical = "bottom",
 			text = text,
 			x = padding,
 			y = padding + (size + 2) * count,
@@ -1641,7 +1667,7 @@ function CrimeSpreeRewardsMenuComponent:_update_rewards_list()
 	local loot_drops = managers.crime_spree:loot_drops()
 
 	for _, lootdrop_data in ipairs(loot_drops) do
-		local td, text, color = nil
+		local td, text, color
 		local item_id = lootdrop_data.item_entry
 		local category = lootdrop_data.type_items
 
@@ -1665,12 +1691,14 @@ function CrimeSpreeRewardsMenuComponent:_update_rewards_list()
 			td = tweak_data.economy[category] and tweak_data.economy[category][item_id]
 		else
 			local tweak_data_category = category == "mods" and "weapon_mods" or category
+
 			td = tweak_data.blackmarket[tweak_data_category][item_id]
 		end
 
 		if text == nil then
 			if td.name_id then
 				local gv = lootdrop_data.global_value
+
 				text = managers.localization:text("bm_menu_" .. tostring(category)) .. ": " .. managers.localization:text(td.name_id)
 				color = tweak_data.lootdrop.global_values[gv] and tweak_data.lootdrop.global_values[gv].color or tweak_data.screen_colors.text
 			else

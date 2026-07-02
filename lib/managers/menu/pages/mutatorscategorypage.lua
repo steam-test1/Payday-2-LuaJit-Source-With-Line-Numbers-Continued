@@ -7,6 +7,7 @@ local large_font_size = tweak_data.menu.pd2_large_font_size
 local medium_font_size = tweak_data.menu.pd2_medium_font_size
 local small_font_size = tweak_data.menu.pd2_small_font_size
 local PANEL_PADDING = 10
+
 MutatorsCategoryPage = MutatorsCategoryPage or class(MenuGuiTabPage)
 MutatorsCategoryPage.category = "all"
 
@@ -29,6 +30,7 @@ end
 function MutatorsCategoryPage:_setup_mutators_list()
 	self._items = {}
 	self._buttons = {}
+
 	local mutators_list = {}
 	local scroll = ScrollablePanel:new(self:panel(), "MutatorsPanel", {
 		padding = 0
@@ -53,7 +55,7 @@ function MutatorsCategoryPage:_setup_mutators_list()
 		end
 	end
 
-	table.sort(mutators_list, function (a, b)
+	table.sort(mutators_list, function(a, b)
 		return a:name() < b:name()
 	end)
 
@@ -107,14 +109,15 @@ end
 function MutatorsCategoryPage:_setup_help_panel()
 	self._help_text_panel = self:info_panel():panel({})
 	self._buttons_panel = self:info_panel():panel({})
+
 	local text_title = self:info_panel():text({
-		name = "title_text",
-		blend_mode = "add",
 		align = "left",
-		vertical = "top",
-		valign = "scale",
+		blend_mode = "add",
 		halign = "scale",
 		layer = 1,
+		name = "title_text",
+		valign = "scale",
+		vertical = "top",
 		font_size = medium_font_size,
 		font = medium_font,
 		color = tweak_data.screen_colors.title,
@@ -127,15 +130,15 @@ function MutatorsCategoryPage:_setup_help_panel()
 	text_title:set_top(PANEL_PADDING)
 
 	local text_desc = self:info_panel():text({
-		blend_mode = "add",
-		name = "help_text",
-		word_wrap = true,
-		wrap = true,
 		align = "left",
-		vertical = "top",
-		valign = "scale",
+		blend_mode = "add",
 		halign = "scale",
 		layer = 1,
+		name = "help_text",
+		valign = "scale",
+		vertical = "top",
+		word_wrap = true,
+		wrap = true,
 		font_size = small_font_size,
 		font = small_font,
 		color = tweak_data.screen_colors.text,
@@ -151,16 +154,16 @@ function MutatorsCategoryPage:_setup_help_panel()
 	text_desc:set_h(h)
 
 	local text_longdesc = self:info_panel():text({
-		blend_mode = "add",
-		name = "mutator_longdesc_text",
-		word_wrap = true,
-		wrap = true,
 		align = "left",
-		vertical = "top",
-		text = "",
-		valign = "scale",
+		blend_mode = "add",
 		halign = "scale",
 		layer = 1,
+		name = "mutator_longdesc_text",
+		text = "",
+		valign = "scale",
+		vertical = "top",
+		word_wrap = true,
+		wrap = true,
 		font_size = small_font_size,
 		font = small_font,
 		color = tweak_data.screen_colors.text,
@@ -175,16 +178,17 @@ function MutatorsCategoryPage:_setup_help_panel()
 	text_longdesc:set_h(h)
 
 	self._mutator_longdesc = text_longdesc
+
 	local text_incompatibilities = self:info_panel():text({
-		blend_mode = "add",
-		name = "incompatibilities_text",
-		word_wrap = true,
-		wrap = true,
 		align = "left",
-		vertical = "top",
-		valign = "scale",
+		blend_mode = "add",
 		halign = "scale",
 		layer = 1,
+		name = "incompatibilities_text",
+		valign = "scale",
+		vertical = "top",
+		word_wrap = true,
+		wrap = true,
 		font_size = small_font_size,
 		font = small_font,
 		color = tweak_data.screen_colors.important_1,
@@ -201,16 +205,17 @@ function MutatorsCategoryPage:_setup_help_panel()
 	text_incompatibilities:set_visible(false)
 
 	self._incompatibilities_text = text_incompatibilities
+
 	local text_achievements = self:info_panel():text({
-		blend_mode = "add",
-		name = "achievement_text",
-		wrap = true,
 		align = "left",
-		word_wrap = true,
-		vertical = "top",
+		blend_mode = "add",
 		halign = "scale",
-		valign = "scale",
 		layer = 1,
+		name = "achievement_text",
+		valign = "scale",
+		vertical = "top",
+		word_wrap = true,
+		wrap = true,
 		font_size = small_font_size,
 		font = small_font,
 		color = tweak_data.screen_colors.important_1,
@@ -228,16 +233,17 @@ function MutatorsCategoryPage:_setup_help_panel()
 	text_achievements:set_visible(managers.mutators:are_mutators_enabled())
 
 	self._achievements_text = text_achievements
+
 	local text_reduction = self:info_panel():text({
-		blend_mode = "add",
-		name = "reduction_text",
-		wrap = true,
 		align = "left",
-		word_wrap = true,
-		vertical = "top",
+		blend_mode = "add",
 		halign = "scale",
-		valign = "scale",
 		layer = 1,
+		name = "reduction_text",
+		valign = "scale",
+		vertical = "top",
+		word_wrap = true,
+		wrap = true,
 		font_size = small_font_size,
 		font = small_font,
 		color = tweak_data.screen_colors.important_1,
@@ -258,6 +264,7 @@ function MutatorsCategoryPage:_setup_help_panel()
 	self._buttons = {}
 	self._controllers_pc_mapping = {}
 	self._controllers_mapping = {}
+
 	local buttons = {
 		{
 			btn = "BTN_Y",
@@ -269,9 +276,9 @@ function MutatorsCategoryPage:_setup_help_panel()
 
 	if not managers.menu:is_pc_controller() then
 		table.insert(buttons, {
+			btn = "BTN_A",
 			name_id = "menu_mutators_toggle",
-			prio = 10,
-			btn = "BTN_A"
+			prio = 10
 		})
 		table.insert(buttons, {
 			btn = "BTN_X",
@@ -281,7 +288,7 @@ function MutatorsCategoryPage:_setup_help_panel()
 		})
 	end
 
-	table.sort(buttons, function (a, b)
+	table.sort(buttons, function(a, b)
 		return (a.prio or 0) > (b.prio or 0)
 	end)
 
@@ -289,6 +296,7 @@ function MutatorsCategoryPage:_setup_help_panel()
 
 	for btn, btn_data in pairs(buttons) do
 		local new_button = MenuGuiButtonItem:new(self:buttons_panel(), btn_data, btn_x, btn)
+
 		self._buttons[btn] = new_button
 
 		if btn_data.pc_btn then
@@ -321,7 +329,7 @@ end
 function MutatorsCategoryPage:refresh()
 	MutatorsCategoryPage.super.refresh(self)
 
-	local compatible, incompatible_mutator = nil
+	local compatible, incompatible_mutator
 
 	if self._selected_item then
 		local longdesc = self._selected_item:mutator():longdesc()
@@ -432,7 +440,7 @@ function MutatorsCategoryPage:mouse_moved(button, x, y)
 	end
 
 	local allow_selection = true
-	local used, pointer = nil
+	local used, pointer
 
 	for i, panel in pairs(self._scrollable_panels) do
 		if panel then
@@ -461,8 +469,7 @@ function MutatorsCategoryPage:mouse_moved(button, x, y)
 		if button:inside(x, y) then
 			button:set_selected(true)
 
-			pointer = "link"
-			used = true
+			used, pointer = true, "link"
 		else
 			button:set_selected(false)
 		end
@@ -593,7 +600,7 @@ function MutatorsCategoryPage:_scroll(target)
 	local scroll_panel = self._mutators_scroll:scroll_panel()
 	local y = self._mutators_scroll:canvas():y() + target:bottom()
 
-	if scroll_panel:h() < y then
+	if y > scroll_panel:h() then
 		self._mutators_scroll:perform_scroll(y - scroll_panel:h(), -1)
 	else
 		y = self._mutators_scroll:canvas():y() + target:top()
@@ -612,6 +619,7 @@ function MutatorItem:init(parent_panel, mutator, index)
 
 	local h = 64
 	local spacing = 4
+
 	self._mutator = mutator
 	self._selected_options = false
 	self._panel = parent_panel:panel({
@@ -636,6 +644,7 @@ function MutatorItem:init(parent_panel, mutator, index)
 	})
 
 	local tex, rect = mutator:icon()
+
 	self._icon = self._icon_panel:bitmap({
 		blend_mode = "add",
 		name = "icon",
@@ -646,11 +655,11 @@ function MutatorItem:init(parent_panel, mutator, index)
 		h = self._icon_panel:h()
 	})
 	self._title_text = self._panel:text({
-		blend_mode = "add",
-		name = "title",
 		align = "left",
-		y = 8,
+		blend_mode = "add",
 		layer = 1,
+		name = "title",
+		y = 8,
 		text = mutator:name(),
 		x = self._icon_panel:w() + 10,
 		h = medium_font_size,
@@ -660,11 +669,11 @@ function MutatorItem:init(parent_panel, mutator, index)
 		alpha = self:text_alpha()
 	})
 	self._desc_text = self._panel:text({
-		blend_mode = "add",
-		name = "title",
 		align = "left",
-		y = 10,
+		blend_mode = "add",
 		layer = 1,
+		name = "title",
+		y = 10,
 		text = mutator:desc(),
 		x = self._icon_panel:w() + 10,
 		h = small_font_size,
@@ -678,8 +687,8 @@ function MutatorItem:init(parent_panel, mutator, index)
 
 	self._select_rect = self._panel:rect({
 		blend_mode = "add",
-		name = "select_rect",
 		halign = "scale",
+		name = "select_rect",
 		valign = "scale",
 		color = tweak_data.screen_colors.button_stage_3,
 		alpha = self:selection_alpha()
@@ -688,10 +697,10 @@ function MutatorItem:init(parent_panel, mutator, index)
 	self._select_rect:set_visible(false)
 
 	self._enabled_rect = self._panel:rect({
-		blend_mode = "add",
-		name = "enabled_rect",
-		halign = "scale",
 		alpha = 0.35,
+		blend_mode = "add",
+		halign = "scale",
+		name = "enabled_rect",
 		valign = "scale",
 		color = tweak_data.screen_colors.button_stage_3
 	})
@@ -700,6 +709,7 @@ function MutatorItem:init(parent_panel, mutator, index)
 
 	if mutator.has_options then
 		local option_size = self._panel:h() - spacing * 2
+
 		self._option_panel = self._panel:panel({
 			halign = "right",
 			w = option_size,
@@ -718,10 +728,11 @@ function MutatorItem:init(parent_panel, mutator, index)
 		})
 
 		local icon_size = MutatorsManager._icon_size
+
 		self._options_icon = self._option_panel:bitmap({
+			alpha = 0.5,
 			blend_mode = "add",
 			name = "options_icon",
-			alpha = 0.5,
 			texture = MutatorsManager._atlas_file,
 			texture_rect = {
 				icon_size * (MutatorsManager._options_icon_coord[1] - 1),
@@ -734,8 +745,8 @@ function MutatorItem:init(parent_panel, mutator, index)
 		})
 		self._options_select_rect = self._option_panel:rect({
 			blend_mode = "add",
-			name = "select_rect",
 			halign = "scale",
+			name = "select_rect",
 			valign = "scale",
 			color = tweak_data.screen_colors.button_stage_3,
 			alpha = self:selection_alpha()
@@ -744,10 +755,10 @@ function MutatorItem:init(parent_panel, mutator, index)
 		self._options_select_rect:set_visible(false)
 
 		self._options_fill = self._option_panel:rect({
-			blend_mode = "add",
-			name = "option_fill_rect",
-			halign = "scale",
 			alpha = 0.4,
+			blend_mode = "add",
+			halign = "scale",
+			name = "option_fill_rect",
 			valign = "scale",
 			color = tweak_data.screen_colors.button_stage_3,
 			h = self._option_panel:h() * self:mutator():options_fill()

@@ -14,6 +14,7 @@ end
 
 -- Lines 13-14
 function LoadingFrontEnd:destroy()
+	return
 end
 
 -- Lines 16-21

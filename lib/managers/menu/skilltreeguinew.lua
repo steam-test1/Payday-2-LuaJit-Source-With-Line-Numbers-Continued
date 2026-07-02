@@ -33,6 +33,7 @@ local PADDING = 10
 local PAGE_TREE_OVERLAP = 2
 local SKILLS_WIDTH_PERCENT = 0.7
 local PAGE_TAB_H = medium_font_size + 10
+
 NewSkillTreeGui = NewSkillTreeGui or class()
 
 -- Lines 69-96
@@ -46,7 +47,9 @@ function NewSkillTreeGui:init(ws, fullscreen_ws, node)
 	self._fullscreen_ws = fullscreen_ws
 	self._node = node
 	self._init_layer = self._ws:panel():layer()
+
 	local menu_components_data = node:parameters().menu_component_data or {}
+
 	self._active_page = nil
 	self._active_tree_item = nil
 	self._active_tier_item = nil
@@ -79,9 +82,9 @@ function NewSkillTreeGui:_setup()
 	WalletGuiObject.set_wallet(self._panel)
 
 	local skilltree_text = self._panel:text({
-		vertical = "top",
-		name = "TitleText",
 		align = "left",
+		name = "TitleText",
+		vertical = "top",
 		text = managers.localization:to_upper_text("menu_st_skilltree"),
 		font = large_font,
 		font_size = large_font_size,
@@ -92,13 +95,13 @@ function NewSkillTreeGui:_setup()
 	skilltree_text:set_size(w, h)
 
 	local title_bg_text = self._fullscreen_panel:text({
+		align = "left",
+		alpha = 0.4,
+		blend_mode = "add",
+		h = 90,
+		layer = 1,
 		name = "TitleTextBg",
 		vertical = "top",
-		h = 90,
-		alpha = 0.4,
-		align = "left",
-		blend_mode = "add",
-		layer = 1,
 		text = skilltree_text:text(),
 		font = massive_font,
 		font_size = massive_font_size,
@@ -113,8 +116,8 @@ function NewSkillTreeGui:_setup()
 
 	if managers.menu:is_pc_controller() then
 		local back_button = self._panel:text({
-			name = "BackButton",
 			blend_mode = "add",
+			name = "BackButton",
 			text = managers.localization:to_upper_text("menu_back"),
 			font = large_font,
 			font_size = large_font_size,
@@ -126,13 +129,13 @@ function NewSkillTreeGui:_setup()
 		back_button:set_bottom(self._panel:h())
 
 		local back_bg_text = self._fullscreen_panel:text({
+			align = "right",
+			alpha = 0.4,
+			blend_mode = "add",
+			h = 90,
+			layer = 1,
 			name = "TitleTextBg",
 			vertical = "top",
-			h = 90,
-			alpha = 0.4,
-			align = "right",
-			blend_mode = "add",
-			layer = 1,
 			text = back_button:text(),
 			font = massive_font,
 			font_size = massive_font_size,
@@ -147,8 +150,8 @@ function NewSkillTreeGui:_setup()
 	end
 
 	local skills_panel = self._panel:panel({
-		name = "SkillsRootPanel",
 		layer = 1,
+		name = "SkillsRootPanel",
 		w = self._panel:w() * SKILLS_WIDTH_PERCENT,
 		h = self._panel:h() - (TOP_ADJUSTMENT + BOT_ADJUSTMENT)
 	})
@@ -189,8 +192,8 @@ function NewSkillTreeGui:_setup()
 	tree_panel:set_left(0)
 
 	local info_panel = self._panel:panel({
-		name = "InfoRootPanel",
 		layer = 1,
+		name = "InfoRootPanel",
 		w = self._panel:w() * (1 - SKILLS_WIDTH_PERCENT) - BIG_PADDING,
 		h = tree_panel:h()
 	})
@@ -202,9 +205,9 @@ function NewSkillTreeGui:_setup()
 		name = "SkillSetPanel"
 	})
 	local skillset_text = skillset_panel:text({
-		name = "SkillSetText",
 		blend_mode = "add",
 		layer = 1,
+		name = "SkillSetText",
 		text = utf8.to_upper(self._skilltree:get_skill_switch_name(self._skilltree:get_selected_skill_switch(), true)),
 		font = medium_font,
 		font_size = medium_font_size,
@@ -215,23 +218,24 @@ function NewSkillTreeGui:_setup()
 	skillset_panel:set_h(skillset_text:bottom())
 
 	self._skillset_panel = skillset_panel
+
 	local skillpoints_panel = info_panel:panel({
 		name = "SkillPointsPanel",
 		y = skillset_panel:bottom() + PADDING
 	})
 	local skillpoints_title_text = skillpoints_panel:text({
-		name = "SkillPointsTitleText",
 		blend_mode = "add",
 		layer = 1,
+		name = "SkillPointsTitleText",
 		text = managers.localization:to_upper_text("menu_skillpoints"),
 		font = medium_font,
 		font_size = medium_font_size,
 		color = tweak_data.screen_colors.text
 	})
 	local skillpoints_points_text = skillpoints_panel:text({
-		name = "SkillPointsPointsText",
 		blend_mode = "add",
 		layer = 1,
+		name = "SkillPointsPointsText",
 		text = tostring(self._skilltree:points()),
 		font = medium_font,
 		font_size = medium_font_size,
@@ -245,6 +249,7 @@ function NewSkillTreeGui:_setup()
 
 	self._skill_points_title_text = skillpoints_title_text
 	self._skill_points_text = skillpoints_points_text
+
 	local color = self._skilltree:points() > 0 and tweak_data.screen_colors.text or tweak_data.screen_colors.important_1
 
 	self._skill_points_title_text:set_color(color)
@@ -256,11 +261,11 @@ function NewSkillTreeGui:_setup()
 		h = info_panel:h() - (skillpoints_panel:bottom() + PADDING)
 	})
 	local description_text = description_panel:text({
-		text = "",
-		name = "DescriptionText",
-		wrap = true,
 		blend_mode = "add",
+		name = "DescriptionText",
+		text = "",
 		word_wrap = true,
+		wrap = true,
 		font = small_font,
 		font_size = small_font_size
 	})
@@ -274,10 +279,11 @@ function NewSkillTreeGui:_setup()
 	self._active_tree_item = nil
 	self._active_tier_item = nil
 	self._selected_item = nil
+
 	local pages = managers.skilltree:get_pages()
-	local page_data = nil
+	local page_data
 	local tab_x = 0
-	local page_tree_title_panel, page_tree_panel = nil
+	local page_tree_title_panel, page_tree_panel
 
 	for index, page in ipairs(tweak_data.skilltree.skill_pages_order) do
 		page_data = pages[page]
@@ -285,11 +291,13 @@ function NewSkillTreeGui:_setup()
 		if page_data and tweak_data.skilltree.skilltree[page] then
 			page_tree_title_panel = tree_title_panel:panel()
 			page_tree_panel = tree_panel:panel()
+
 			local tree = NewSkillTreePage:new(page, page_data, page_tree_title_panel, page_tree_panel, self._fullscreen_panel, self)
 
 			table.insert(self._tree_items, tree)
 
 			local tab_item = NewSkillTreeTabItem:new(tab_panel, page, tab_x, index, self, tree)
+
 			tab_x = tab_item:next_page_position()
 
 			table.insert(self._tab_items, tab_item)
@@ -298,6 +306,7 @@ function NewSkillTreeGui:_setup()
 
 	self._selected_page = self._tree_items[1]
 	self._legend_buttons = {}
+
 	local legends_panel = self._panel:panel({
 		name = "LegendsPanel",
 		w = self._panel:w() * 0.75,
@@ -306,10 +315,10 @@ function NewSkillTreeGui:_setup()
 
 	legends_panel:set_righttop(self._panel:w(), 0)
 	legends_panel:text({
-		text = "",
-		name = "LegendText",
 		align = "right",
 		blend_mode = "add",
+		name = "LegendText",
+		text = "",
 		vertical = "top",
 		font = small_font,
 		font_size = small_font_size,
@@ -324,10 +333,10 @@ function NewSkillTreeGui:_setup()
 
 	legend_panel_reset_skills:set_righttop(self._panel:w() - 2, tweak_data.menu.pd2_medium_font_size)
 	legend_panel_reset_skills:text({
-		text = "RESET SKILLS",
-		name = "LegendTextResetSkills",
 		align = "right",
 		blend_mode = "add",
+		name = "LegendTextResetSkills",
+		text = "RESET SKILLS",
 		vertical = "top",
 		font = small_font,
 		font_size = small_font_size,
@@ -355,16 +364,16 @@ function NewSkillTreeGui:_setup()
 		color = Color(0.4, 0, 0, 0)
 	})
 	local blur = self._fullscreen_panel:bitmap({
-		texture = "guis/textures/test_blur_df",
-		render_template = "VertexColorTexturedBlur3D",
 		layer = -1,
+		render_template = "VertexColorTexturedBlur3D",
+		texture = "guis/textures/test_blur_df",
 		w = self._fullscreen_ws:panel():w(),
 		h = self._fullscreen_ws:panel():h()
 	})
 
 	-- Lines 282-284
 	local function func(o)
-		over(0.6, function (p)
+		over(0.6, function(p)
 			o:set_alpha(p)
 		end)
 	end
@@ -425,7 +434,7 @@ function NewSkillTreeGui:refresh_reset_skills_legends(trees_idx)
 
 		table.insert(self._legend_buttons, {
 			text = text,
-			callback = function ()
+			callback = function()
 				self:respec_all()
 			end
 		})
@@ -448,7 +457,7 @@ function NewSkillTreeGui:refresh_reset_skills_legends(trees_idx)
 		text:set_right(right)
 		table.insert(self._legend_buttons, {
 			text = text,
-			callback = function ()
+			callback = function()
 				self:respec_page(self._tree_items[self._active_page])
 			end
 		})
@@ -524,7 +533,7 @@ function NewSkillTreeGui:set_active_page(new_page, play_sound)
 		active_tab:set_active(false)
 	end
 
-	local item = nil
+	local item
 
 	if new_tree then
 		item = new_tree:set_active(true)
@@ -689,6 +698,7 @@ function NewSkillTreeGui:_update_description(item)
 	if (_G.IS_VR or managers.user:get_setting("show_vr_descs")) and tweak_data.vr.skill_descs_addons[skill_id] then
 		local addon_data = tweak_data.vr.skill_descs_addons[skill_id]
 		local vr_addon = managers.localization:text(addon_data.text_id, addon_data.macros)
+
 		full_string = full_string .. "\n\n" .. managers.localization:text("menu_vr_skill_addon") .. "\n" .. vr_addon
 	end
 
@@ -723,7 +733,7 @@ function NewSkillTreeGui:_update_legends(item)
 	table.insert(legends, {
 		string_id = "menu_st_switch_skillset",
 		is_button = managers.menu:is_pc_controller(),
-		callback = function ()
+		callback = function()
 			managers.menu:open_node("skill_switch", {})
 		end
 	})
@@ -731,9 +741,9 @@ function NewSkillTreeGui:_update_legends(item)
 	if managers.menu:is_pc_controller() then
 		if can_refund then
 			table.insert(legends, {
-				texture = "guis/textures/pd2/mouse_buttons",
 				h = 23,
 				string_id = "menu_mouse_refund",
+				texture = "guis/textures/pd2/mouse_buttons",
 				w = 17,
 				texture_rect = {
 					18,
@@ -746,9 +756,9 @@ function NewSkillTreeGui:_update_legends(item)
 
 		if can_invest then
 			table.insert(legends, {
-				texture = "guis/textures/pd2/mouse_buttons",
 				h = 23,
 				string_id = "menu_mouse_invest",
+				texture = "guis/textures/pd2/mouse_buttons",
 				w = 17,
 				texture_rect = {
 					1,
@@ -774,11 +784,12 @@ function NewSkillTreeGui:_update_legends(item)
 
 	legend_panel:clear()
 
-	local text, icon = nil
+	local text, icon
 	local right = legend_panel:w()
 
 	for _, legend in ipairs(legends) do
-		text, icon = nil
+		text = nil
+		icon = nil
 
 		if legend.string_id then
 			text = legend_panel:text({
@@ -1185,49 +1196,52 @@ end
 
 -- Lines 988-989
 function NewSkillTreeGui:_dialog_confirm_no(item)
+	return
 end
 
 -- Lines 991-995
 function NewSkillTreeGui:on_tier_unlocked(tree, tier)
-	return
+	do return end
 
 	self._pages[tree]:unlock_tier(tier)
 end
 
 -- Lines 997-998
 function NewSkillTreeGui:on_skill_unlocked(tree, skill_id)
+	return
 end
 
 -- Lines 1000-1001
 function NewSkillTreeGui:on_points_spent()
+	return
 end
 
 -- Lines 1003-1009
 function NewSkillTreeGui:respec_page(page)
-	local params = {
-		tree = page:name(),
-		yes_func = callback(self, self, "_dialog_respec_trees_yes", page:trees_idx()),
-		no_func = callback(self, self, "_dialog_respec_no")
-	}
+	local params = {}
+
+	params.tree = page:name()
+	params.yes_func = callback(self, self, "_dialog_respec_trees_yes", page:trees_idx())
+	params.no_func = callback(self, self, "_dialog_respec_no")
 
 	managers.menu:show_confirm_respec_skilltree(params)
 end
 
 -- Lines 1011-1016
 function NewSkillTreeGui:respec_all()
-	local params = {
-		yes_func = callback(self, self, "_dialog_respec_all_yes"),
-		no_func = callback(self, self, "_dialog_respec_no")
-	}
+	local params = {}
+
+	params.yes_func = callback(self, self, "_dialog_respec_all_yes")
+	params.no_func = callback(self, self, "_dialog_respec_no")
 
 	managers.menu:show_confirm_respec_skilltree_all(params)
 end
 
 -- Lines 1018-1021
 function NewSkillTreeGui:respec_tree(tree)
-	local params = {
-		tree = tree
-	}
+	local params = {}
+
+	params.tree = tree
 end
 
 -- Lines 1023-1031
@@ -1262,6 +1276,7 @@ end
 
 -- Lines 1046-1047
 function NewSkillTreeGui:_dialog_respec_no()
+	return
 end
 
 -- Lines 1049-1057
@@ -1367,15 +1382,15 @@ function NewSkillTreeGui:disable()
 	})
 
 	self._disabled_panel:rect({
-		name = "bg",
 		alpha = 0.4,
+		name = "bg",
 		color = Color.black
 	})
 	self._disabled_panel:bitmap({
-		texture = "guis/textures/test_blur_df",
+		layer = -1,
 		name = "blur",
 		render_template = "VertexColorTexturedBlur3D",
-		layer = -1,
+		texture = "guis/textures/test_blur_df",
 		w = self._disabled_panel:w(),
 		h = self._disabled_panel:h()
 	})
@@ -1401,12 +1416,11 @@ end
 function NewSkillTreeGui:mouse_clicked(o, button, x, y)
 	self._mouse_click_index = ((self._mouse_click_index or 0) + 1) % 2
 	self._mouse_click = self._mouse_click or {}
-	self._mouse_click[self._mouse_click_index] = {
-		button = button,
-		x = x,
-		y = y,
-		selected_tree = self._active_skill_tree
-	}
+	self._mouse_click[self._mouse_click_index] = {}
+	self._mouse_click[self._mouse_click_index].button = button
+	self._mouse_click[self._mouse_click_index].x = x
+	self._mouse_click[self._mouse_click_index].y = y
+	self._mouse_click[self._mouse_click_index].selected_tree = self._active_skill_tree
 end
 
 -- Lines 1161-1178
@@ -1432,13 +1446,13 @@ end
 
 -- Lines 1180-1207
 function NewSkillTreeGui:press_first_btn(button)
-	local first_btn_callback = nil
+	local first_btn_callback
 	local first_btn_prio = 999
 	local first_btn_visible = false
 
 	if button == Idstring("0") then
 		for _, btn in pairs(self._btns) do
-			if btn:visible() and btn._data.prio < first_btn_prio then
+			if btn:visible() and first_btn_prio > btn._data.prio then
 				first_btn_prio = btn._data.prio
 				first_btn_callback = btn._data.callback
 				first_btn_visible = btn:visible()
@@ -1501,7 +1515,7 @@ function NewSkillTreeGui:show_btns(...)
 
 	self._button_count = #btns
 
-	table.sort(btns, function (x, y)
+	table.sort(btns, function(x, y)
 		return x:data().prio < y:data().prio
 	end)
 
@@ -1621,10 +1635,12 @@ end
 
 -- Lines 1330-1331
 function NewSkillTreeItem:refresh()
+	return
 end
 
 -- Lines 1333-1335
 function NewSkillTreeItem:inside()
+	return
 end
 
 -- Lines 1337-1339
@@ -1663,6 +1679,7 @@ end
 
 -- Lines 1364-1365
 function NewSkillTreeItem:flash()
+	return
 end
 
 NewSkillTreeTabItem = NewSkillTreeTabItem or class(NewSkillTreeItem)
@@ -1677,15 +1694,16 @@ function NewSkillTreeTabItem:init(page_tab_panel, page, tab_x, index, gui, page_
 	self._selected = false
 	self._gui = gui
 	self._page_item = page_item
+
 	local page_panel = page_tab_panel:panel({
 		name = "Page" .. string.capitalize(tostring(page)),
 		x = tab_x
 	})
 	local page_text = page_panel:text({
-		name = "PageText",
-		vertical = "center",
 		align = "center",
 		layer = 1,
+		name = "PageText",
+		vertical = "center",
 		text = managers.localization:to_upper_text(tweak_data.skilltree.skilltree[page].name_id),
 		font = medium_font,
 		font_size = medium_font_size,
@@ -1697,12 +1715,13 @@ function NewSkillTreeTabItem:init(page_tab_panel, page, tab_x, index, gui, page_
 	page_text:set_size(page_panel:size())
 
 	local page_tab_bg = page_panel:bitmap({
-		texture = "guis/textures/pd2/shared_tab_box",
 		name = "PageTabBG",
+		texture = "guis/textures/pd2/shared_tab_box",
 		w = page_panel:w(),
 		h = page_panel:h(),
 		color = tweak_data.screen_colors.text
 	})
+
 	self._page_panel = page_panel
 
 	self:refresh()
@@ -1768,6 +1787,7 @@ function NewSkillTreePage:init(page, page_data, tree_title_panel, tree_panel, fu
 	NewSkillTreePage.super.init(self)
 
 	local skilltrees_tweak = tweak_data.skilltree.trees
+
 	self._gui = gui
 	self._active = false
 	self._selected = 0
@@ -1785,8 +1805,10 @@ function NewSkillTreePage:init(page, page_data, tree_title_panel, tree_panel, fu
 
 	local tree_space = tree_title_panel:w() / 2 * 0.015
 	local tree_width = tree_title_panel:w() / 3 - tree_space
+
 	tree_space = (tree_title_panel:w() - tree_width * 3) / 2
-	local panel, tree_data = nil
+
+	local panel, tree_data
 
 	for index, tree in ipairs(page_data) do
 		tree_data = skilltrees_tweak[tree]
@@ -1800,9 +1822,9 @@ function NewSkillTreePage:init(page, page_data, tree_title_panel, tree_panel, fu
 		})
 
 		panel:text({
-			name = "TitleText",
-			blend_mode = "add",
 			align = "center",
+			blend_mode = "add",
+			name = "TitleText",
 			vertical = "center",
 			text = managers.localization:to_upper_text(tree_data.name_id),
 			font = large_font,
@@ -1848,6 +1870,7 @@ end
 
 -- Lines 1512-1513
 function NewSkillTreePage:on_points_spent()
+	return
 end
 
 -- Lines 1515-1517
@@ -1858,7 +1881,7 @@ end
 -- Lines 1520-1536
 function NewSkillTreePage:inside(x, y)
 	if self._tree_panel:inside(x, y) then
-		local item, tree_inside = nil
+		local item, tree_inside
 
 		for tree, tree_item in ipairs(self._trees) do
 			item, tree_inside = tree_item:inside(x, y)
@@ -1958,7 +1981,7 @@ function NewSkillTreeTreeItem:init(tree, tree_data, tree_panel, fullscreen_panel
 
 	local num_tiers = #tree_data.tiers
 	local tier_height = tree_panel:h() / num_tiers
-	local tier_panel, tier_item = nil
+	local tier_panel, tier_item
 
 	for tier, tier_data in ipairs(tree_data.tiers) do
 		tier_panel = tree_panel:panel({
@@ -1977,9 +2000,10 @@ function NewSkillTreeTreeItem:init(tree, tree_data, tree_panel, fullscreen_panel
 
 	local tier, points_spent, points_max = self:_tree_points()
 	local tier_height = self._tree_panel:h() / num_tiers
+
 	self._progress_start = self._tree_panel:h()
 	self._progress_tier_height = tier_height
-	self._progress_pos_current = math.max(0, self._progress_start - self._progress_tier_height * tier - self._progress_tier_height * points_spent / points_max)
+	self._progress_pos_current = math.max(0, self._progress_start - self._progress_tier_height * tier - self._progress_tier_height * (points_spent / points_max))
 	self._progress_pos_wanted = self._progress_pos_current
 	self._progress = tree_panel:bitmap({
 		texture = "guis/textures/pd2/skilltree_2/subtree_fill"
@@ -2017,7 +2041,7 @@ end
 -- Lines 1655-1667
 function NewSkillTreeTreeItem:inside(x, y)
 	if self._tree_panel:inside(x, y) then
-		local item = nil
+		local item
 
 		for tier, tier_item in pairs(self._tiers) do
 			item = tier_item:inside(x, y)
@@ -2055,7 +2079,8 @@ end
 -- Lines 1686-1689
 function NewSkillTreeTreeItem:refresh()
 	local tier, points_spent, points_max = self:_tree_points()
-	self._progress_pos_wanted = math.max(0, self._progress_start - self._progress_tier_height * tier - self._progress_tier_height * points_spent / points_max)
+
+	self._progress_pos_wanted = math.max(0, self._progress_start - self._progress_tier_height * tier - self._progress_tier_height * (points_spent / points_max))
 end
 
 -- Lines 1691-1698
@@ -2065,7 +2090,8 @@ function NewSkillTreeTreeItem:reload_connections()
 	end
 
 	local tier, points_spent, points_max = self:_tree_points()
-	self._progress_pos_wanted = math.max(0, self._progress_start - self._progress_tier_height * tier - self._progress_tier_height * points_spent / points_max)
+
+	self._progress_pos_wanted = math.max(0, self._progress_start - self._progress_tier_height * tier - self._progress_tier_height * (points_spent / points_max))
 end
 
 -- Lines 1700-1707
@@ -2082,7 +2108,7 @@ end
 -- Lines 1709-1725
 function NewSkillTreeTreeItem:_tree_points()
 	local points_spent = managers.skilltree:points_spent(self._tree)
-	local points_max = nil
+	local points_max
 	local points_prev = 0
 
 	for tier = 1, #self._tiers do
@@ -2100,7 +2126,7 @@ end
 
 -- Lines 1727-1740
 function NewSkillTreeTreeItem:link(left_tree, right_tree)
-	local first_item, last_item = nil
+	local first_item, last_item
 
 	for tier, tier_item in ipairs(self._tiers) do
 		first_item = tier_item:first_item()
@@ -2136,6 +2162,7 @@ function NewSkillTreeTierItem:init(tier, tier_data, tier_panel, tree_panel, tree
 	NewSkillTreeTierItem.super.init(self)
 
 	local skilltrees_tweak = tweak_data.skilltree.skills
+
 	self._gui = gui
 	self._tree = tree
 	self._tree_item = tree_item
@@ -2143,10 +2170,11 @@ function NewSkillTreeTierItem:init(tier, tier_data, tier_panel, tree_panel, tree
 	self._tier_panel = tier_panel
 	self._skills = {}
 	self._skills_ordered = {}
+
 	local num_skills = #tier_data
 	local skill_width = tier_panel:w() / num_skills
 	local skill_x = 0
-	local skill_data, skill_panel, skill_item = nil
+	local skill_data, skill_panel, skill_item
 
 	for index, skill_id in ipairs(tier_data) do
 		skill_data = skilltrees_tweak[skill_id]
@@ -2167,30 +2195,31 @@ function NewSkillTreeTierItem:init(tier, tier_data, tier_panel, tree_panel, tree
 
 	local line_length = tier_panel:w()
 	local line_small = line_length * 0.03
+
 	self._text_space = line_length * 0.02
 
 	if tier < #tweak_data.skilltree.trees[tree].tiers then
 		local line_left = tier_panel:bitmap({
+			halign = "grow",
+			layer = 1,
 			texture = "guis/textures/pd2/shared_lines",
 			valign = "grow",
-			layer = 1,
-			halign = "grow",
 			wrap_mode = "wrap"
 		})
 		local line_right = tier_panel:bitmap({
+			halign = "grow",
+			layer = 1,
 			texture = "guis/textures/pd2/shared_lines",
 			valign = "grow",
-			layer = 1,
-			halign = "grow",
 			wrap_mode = "wrap"
 		})
 		local line_middle = tier_panel:bitmap({
-			texture = "guis/textures/pd2/skilltree_2/lines_blue",
 			blend_mode = "add",
-			wrap_mode = "wrap",
 			halign = "grow",
 			layer = 1,
-			valign = "grow"
+			texture = "guis/textures/pd2/skilltree_2/lines_blue",
+			valign = "grow",
+			wrap_mode = "wrap"
 		})
 		local lx = math.random(1, 255)
 		local ly = math.random(0, line_left:texture_height() / 2 - 1) * 2
@@ -2206,29 +2235,30 @@ function NewSkillTreeTierItem:init(tier, tier_data, tier_panel, tree_panel, tree
 	end
 
 	self._tier_points_0 = tier_panel:text({
-		vertical = "top",
-		name = "TierPointsZeros",
-		alpha = 0.6,
 		align = "left",
+		alpha = 0.6,
 		blend_mode = "add",
-		visible = false,
 		layer = 1,
+		name = "TierPointsZeros",
+		vertical = "top",
+		visible = false,
 		font = small_font,
 		font_size = small_font_size,
 		color = tweak_data.screen_colors.button_stage_3
 	})
 	self._tier_points = tier_panel:text({
-		vertical = "top",
-		name = "TierPoints",
-		alpha = 0.9,
 		align = "left",
+		alpha = 0.9,
 		blend_mode = "add",
-		visible = false,
 		layer = 1,
+		name = "TierPoints",
+		vertical = "top",
+		visible = false,
 		font = small_font,
 		font_size = small_font_size,
 		color = tweak_data.screen_colors.button_stage_3
 	})
+
 	local tier_points = managers.skilltree:tier_cost(tree, tier)
 
 	self._tier_points_0:set_text(tier_points < 1 and "000" or tier_points < 10 and "00" or tier_points < 100 and "0" or "")
@@ -2243,37 +2273,37 @@ function NewSkillTreeTierItem:init(tier, tier_data, tier_panel, tree_panel, tree
 
 	if tier == 1 then
 		self._tier_points_total = tier_panel:text({
-			vertical = "bottom",
-			name = "TierPointsTotal",
-			alpha = 0.6,
 			align = "left",
+			alpha = 0.6,
 			blend_mode = "add",
-			visible = false,
 			layer = 1,
+			name = "TierPointsTotal",
+			vertical = "bottom",
+			visible = false,
 			font = small_font,
 			font_size = small_font_size,
 			color = tweak_data.screen_colors.button_stage_3
 		})
 		self._tier_points_total_zero = tier_panel:text({
-			vertical = "bottom",
-			name = "TierPointsTotalZero",
-			alpha = 0.6,
 			align = "left",
+			alpha = 0.6,
 			blend_mode = "add",
-			visible = false,
 			layer = 1,
+			name = "TierPointsTotalZero",
+			vertical = "bottom",
+			visible = false,
 			font = small_font,
 			font_size = small_font_size,
 			color = tweak_data.screen_colors.button_stage_3
 		})
 		self._tier_points_total_curr = tier_panel:text({
-			vertical = "bottom",
-			name = "TierPointsTotalCurr",
-			alpha = 0.6,
 			align = "left",
+			alpha = 0.6,
 			blend_mode = "add",
-			visible = false,
 			layer = 1,
+			name = "TierPointsTotalCurr",
+			vertical = "bottom",
+			visible = false,
 			font = small_font,
 			font_size = small_font_size,
 			color = tweak_data.screen_colors.button_stage_3
@@ -2287,49 +2317,49 @@ function NewSkillTreeTierItem:init(tier, tier_data, tier_panel, tree_panel, tree
 	end
 
 	self._tier_points_needed = tier_panel:text({
-		vertical = "top",
-		name = "TierPointsNeeded",
-		alpha = 0.9,
 		align = "left",
+		alpha = 0.9,
 		blend_mode = "add",
-		visible = false,
 		layer = 1,
+		name = "TierPointsNeeded",
+		vertical = "top",
+		visible = false,
 		font = small_font,
 		font_size = small_font_size,
 		color = tweak_data.screen_colors.button_stage_3
 	})
 	self._tier_points_needed_tier = tier_panel:text({
-		vertical = "top",
-		name = "TierPointsNeededTier",
-		alpha = 1,
 		align = "left",
+		alpha = 1,
 		blend_mode = "add",
-		visible = false,
 		layer = 1,
+		name = "TierPointsNeededTier",
+		vertical = "top",
+		visible = false,
 		font = small_font,
 		font_size = small_font_size,
 		color = tweak_data.screen_colors.button_stage_2
 	})
 	self._tier_points_needed_curr = tier_panel:text({
-		vertical = "top",
-		name = "TierPointsNeededCurr",
-		alpha = 0.9,
 		align = "left",
+		alpha = 0.9,
 		blend_mode = "add",
-		visible = false,
 		layer = 1,
+		name = "TierPointsNeededCurr",
+		vertical = "top",
+		visible = false,
 		font = small_font,
 		font_size = small_font_size,
 		color = tweak_data.screen_colors.button_stage_3
 	})
 	self._tier_points_needed_zero = tier_panel:text({
-		vertical = "top",
-		name = "TierPointsNeededZero",
-		alpha = 0.6,
 		align = "left",
+		alpha = 0.6,
 		blend_mode = "add",
-		visible = false,
 		layer = 1,
+		name = "TierPointsNeededZero",
+		vertical = "top",
+		visible = false,
 		font = small_font,
 		font_size = small_font_size,
 		color = tweak_data.screen_colors.button_stage_3
@@ -2580,10 +2610,10 @@ function NewSkillTreeSkillItem:init(skill_id, skill_data, skill_panel, tree_pane
 	}, callback(self, self, "_on_refresh_event"))
 
 	local skill_text = skill_panel:text({
-		name = "SkillName",
 		blend_mode = "add",
-		rotation = 360,
 		layer = 2,
+		name = "SkillName",
+		rotation = 360,
 		text = managers.localization:to_upper_text(skill_data.name_id),
 		font = small_font,
 		font_size = small_font_size,
@@ -2606,11 +2636,12 @@ function NewSkillTreeSkillItem:init(skill_id, skill_data, skill_panel, tree_pane
 
 	local texture_rect_x = skill_data.icon_xy and skill_data.icon_xy[1] or 0
 	local texture_rect_y = skill_data.icon_xy and skill_data.icon_xy[2] or 0
+
 	self._icon = skill_icon_panel:bitmap({
-		texture = "guis/textures/pd2/skilltree_2/icons_atlas_2",
-		name = "Icon",
 		blend_mode = "normal",
 		layer = 1,
+		name = "Icon",
+		texture = "guis/textures/pd2/skilltree_2/icons_atlas_2",
 		texture_rect = {
 			texture_rect_x * 80,
 			texture_rect_y * 80,
@@ -2619,20 +2650,21 @@ function NewSkillTreeSkillItem:init(skill_id, skill_data, skill_panel, tree_pane
 		},
 		color = tweak_data.screen_colors.button_stage_3
 	})
+
 	local locked = skill_icon_panel:bitmap({
-		texture = "guis/textures/pd2/skilltree/padlock",
-		name = "Locked",
 		blend_mode = "normal",
 		layer = 2,
+		name = "Locked",
+		texture = "guis/textures/pd2/skilltree/padlock",
 		color = tweak_data.screen_colors.text
 	})
 
 	locked:set_center(skill_icon_panel:w() / 2, skill_icon_panel:h() / 2)
 
 	local maxed_indicator = skill_icon_panel:bitmap({
-		texture = "guis/textures/pd2/skilltree_2/ace_symbol",
-		name = "MaxedIndicator",
 		blend_mode = "add",
+		name = "MaxedIndicator",
+		texture = "guis/textures/pd2/skilltree_2/ace_symbol",
 		color = tweak_data.screen_colors.button_stage_2
 	})
 
@@ -2757,6 +2789,7 @@ end
 
 -- Lines 2204-2206
 function NewSkillTreeSkillItem:connect(item)
+	return
 end
 
 -- Lines 2208-2210
@@ -2776,6 +2809,7 @@ function NewSkillTreeSkillItem:update(t, dt)
 	for _, connection in pairs(self._connection) do
 		if connection.rotate then
 			connection.rotate = (connection.rotate + dt * 10) % connection.length
+
 			local fw = connection.rotate
 			local length = connection.length
 
@@ -2788,6 +2822,7 @@ function NewSkillTreeSkillItem:update(t, dt)
 
 	if self._current_size ~= wanted_size then
 		local cx, cy = self._icon:center()
+
 		self._current_size = math.lerp(self._current_size, wanted_size, dt * 6)
 		self._current_size = math.step(self._current_size, wanted_size, dt * 25)
 
@@ -2816,7 +2851,7 @@ function NewSkillTreeSkillItem:flash()
 		local st_color = skill_text:color()
 		local s = 0
 
-		over(0.5, function (t)
+		over(0.5, function(t)
 			s = math.min(1, math.sin(t * 180) * 2)
 
 			skill_text:set_color(math.lerp(st_color, tweak_data.screen_colors.important_1, s))
@@ -2880,7 +2915,9 @@ end
 function NewSkillTreeGui:_start_rename_skill_switch()
 	if not self._renaming_skill_switch then
 		self._enabled = false
+
 		local selected_skill_switch = self._skilltree:get_selected_skill_switch()
+
 		self._renaming_skill_switch = self._skilltree:has_skill_switch_name(selected_skill_switch) and self._skilltree:get_skill_switch_name(selected_skill_switch, false) or ""
 
 		self._ws:connect_keyboard(Input:keyboard())
@@ -2894,13 +2931,13 @@ function NewSkillTreeGui:_start_rename_skill_switch()
 		self._skillset_panel:key_release(callback(self, self, "key_release"))
 
 		self._rename_caret = self._skillset_panel:rect({
-			name = "caret",
 			h = 0,
-			y = 0,
-			w = 0,
-			rotation = 360,
-			x = 0,
 			layer = 2,
+			name = "caret",
+			rotation = 360,
+			w = 0,
+			x = 0,
+			y = 0,
 			color = Color(0.05, 1, 1, 1)
 		})
 
@@ -3078,6 +3115,7 @@ end
 function NewSkillTreeGui:key_press(o, k)
 	local text = self._renaming_skill_switch
 	local n = utf8.len(text)
+
 	self._key_pressed = k
 
 	self._skillset_panel:stop()

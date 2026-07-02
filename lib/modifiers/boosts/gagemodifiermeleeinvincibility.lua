@@ -11,7 +11,7 @@ end
 
 -- Lines 12-19
 function GageModifierMeleeInvincibility:modify_value(id, value)
-	if self._special_kill_t and id == "PlayerDamage:CheckCanTakeDamage" and TimerManager:game():time() <= self._special_kill_t + self:value() then
+	if self._special_kill_t and id == "PlayerDamage:CheckCanTakeDamage" and self._special_kill_t + self:value() >= TimerManager:game():time() then
 		return false
 	end
 

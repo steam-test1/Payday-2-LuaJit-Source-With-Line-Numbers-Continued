@@ -1,9 +1,9 @@
 AIForceAttentionElement = AIForceAttentionElement or class(MissionElement)
 AIForceAttentionElement.LINK_VALUES = {
 	{
-		value = "att_unit_id",
 		output = true,
-		type = "operator"
+		type = "operator",
+		value = "att_unit_id"
 	},
 	{
 		table_value = "included_units",
@@ -14,6 +14,7 @@ AIForceAttentionElement.LINK_VALUES = {
 		type = "excluded_unit"
 	}
 }
+
 local att_unit_label_base = "Selected Unit: "
 local included_units_label_base = "Included Units: "
 local excluded_units_label_base = "Excluded Units: "
@@ -65,6 +66,7 @@ function AIForceAttentionElement:select_att_unit(label)
 
 	local dialog = SingleSelectUnitByNameModal:new("Select Unit", f)
 	local unit = dialog:_selected_item_unit()
+
 	self._hed.att_unit_id = unit and unit:unit_data().unit_id or self._hed.att_unit_id
 
 	if unit then
@@ -108,6 +110,7 @@ function AIForceAttentionElement:add_included_units(label)
 
 	local dialog = SelectUnitByNameModal:new("Add Units", f)
 	local units = dialog:selected_units()
+
 	self._hed.included_units = {}
 
 	for _, unit in pairs(units) do
@@ -155,6 +158,7 @@ function AIForceAttentionElement:add_excluded_units(label)
 
 	local dialog = SelectUnitByNameModal:new("Add Units", f)
 	local units = dialog:selected_units()
+
 	self._hed.excluded_units = {}
 
 	for _, unit in pairs(units) do
@@ -187,6 +191,7 @@ function AIForceAttentionElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local affected_panel_sizer = EWS:StaticBoxSizer(panel, "VERTICAL", "Affected Units")
 
 	panel_sizer:add(affected_panel_sizer, 0, 1, "EXPAND,LEFT")

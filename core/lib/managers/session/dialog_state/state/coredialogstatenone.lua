@@ -14,4 +14,5 @@ end
 
 -- Lines 13-14
 function None:transition()
+	return
 end

@@ -1,12 +1,4 @@
-local sqrt = math.sqrt
-local abs = math.abs
-local min = math.min
-local max = math.max
-local sin = math.sin
-local cos = math.cos
-local radians = math.rad
-local degrees = math.deg
-local atan2 = math.atan2
+local sqrt, abs, min, max, sin, cos, radians, degrees, atan2 = math.sqrt, math.abs, math.min, math.max, math.sin, math.cos, math.rad, math.deg, math.atan2
 
 -- Lines 8-13
 local function hypot(a, b)
@@ -14,10 +6,8 @@ local function hypot(a, b)
 		return 0
 	end
 
-	b = abs(b)
-	a = abs(a)
-	b = min(a, b)
-	a = max(a, b)
+	a, b = abs(a), abs(b)
+	a, b = max(a, b), min(a, b)
 
 	return a * sqrt(1 + (b / a)^2)
 end
@@ -46,10 +36,9 @@ local function rotate_point(x, y, cx, cy, angle)
 	end
 
 	angle = radians(angle)
-	y = y - cy
-	x = x - cx
-	local c = cos(angle)
-	local s = sin(angle)
+	x, y = x - cx, y - cy
+
+	local c, s = cos(angle), sin(angle)
 
 	return cx + x * c - y * s, cy + y * c + x * s
 end

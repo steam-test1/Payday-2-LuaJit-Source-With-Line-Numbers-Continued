@@ -1,4 +1,5 @@
 local InitState = InitState or class()
+
 StateMachine = StateMachine or class()
 
 -- Lines 5-8
@@ -9,6 +10,7 @@ end
 
 -- Lines 10-11
 function InitState:destroy()
+	return
 end
 
 -- Lines 13-15
@@ -23,10 +25,12 @@ end
 
 -- Lines 21-22
 function InitState:at_enter(previous_state)
+	return
 end
 
 -- Lines 24-25
 function InitState:at_exit(next_state)
+	return
 end
 
 -- Lines 27-30
@@ -91,7 +95,7 @@ end
 
 -- Lines 74-84
 function StateMachineTransitionQueue:last_queued_state(state_machine)
-	local state = nil
+	local state
 
 	if self._queued_transitions then
 		for _, transition in ipairs(self._queued_transitions) do
@@ -106,7 +110,7 @@ end
 
 -- Lines 86-96
 function StateMachineTransitionQueue:last_queued_state_name(state_machine)
-	local state_name = nil
+	local state_name
 
 	if self._queued_transitions then
 		for _, transition in ipairs(self._queued_transitions) do
@@ -123,7 +127,9 @@ end
 function StateMachine:init(start_state, shared_queue)
 	self._states = {}
 	self._transitions = {}
+
 	local init = InitState:new(self)
+
 	self._states[init:name()] = init
 	self._transitions[init] = self._transitions[init] or {}
 	self._transitions[init][start_state] = {
@@ -176,7 +182,9 @@ function StateMachine:change_state(state, params)
 
 	cat_print("state_machine", "[StateMachine] Requested state change " .. transition_debug_string)
 
-	if self:can_change_state(state) then
+	if not self:can_change_state(state) then
+		-- Nothing
+	else
 		self._transition_queue:queue_transition(state, params, self)
 	end
 end

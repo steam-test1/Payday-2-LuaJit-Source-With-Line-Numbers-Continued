@@ -81,16 +81,15 @@ function NetworkMatchMaking:_save_globals()
 		Global.empty = {}
 	end
 
-	Global.empty.match = {
-		lobby_handler = self.lobby_handler,
-		lobby_attributes = self._lobby_attributes,
-		try_re_enter_lobby = self._try_re_enter_lobby,
-		server_rpc = self._server_rpc,
-		lobby_filters = self._lobby_filters,
-		distance_filter = self._distance_filter,
-		difficulty_filter = self._difficulty_filter,
-		lobby_return_count = self._lobby_return_count
-	}
+	Global.empty.match = {}
+	Global.empty.match.lobby_handler = self.lobby_handler
+	Global.empty.match.lobby_attributes = self._lobby_attributes
+	Global.empty.match.try_re_enter_lobby = self._try_re_enter_lobby
+	Global.empty.match.server_rpc = self._server_rpc
+	Global.empty.match.lobby_filters = self._lobby_filters
+	Global.empty.match.distance_filter = self._distance_filter
+	Global.empty.match.difficulty_filter = self._difficulty_filter
+	Global.empty.match.lobby_return_count = self._lobby_return_count
 end
 
 -- Lines 93-135
@@ -100,10 +99,17 @@ function NetworkMatchMaking:load_user_filters()
 	Global.game_settings.search_mutated_lobbies = managers.user:get_setting("crimenet_filter_mutators")
 	Global.game_settings.gamemode_filter = managers.user:get_setting("crimenet_gamemode_filter")
 	Global.game_settings.crime_spree_max_lobby_diff = managers.user:get_setting("crime_spree_lobby_diff")
+
 	local new_servers = managers.user:get_setting("crimenet_filter_new_servers_only")
 	local in_lobby = managers.user:get_setting("crimenet_filter_in_lobby")
 	local max_servers = managers.user:get_setting("crimenet_filter_max_servers")
-	local distance = (SystemInfo:matchmaking() ~= Idstring("MM_EPIC") or managers.user:get_setting("crimenet_filter_distance_epic")) and managers.user:get_setting("crimenet_filter_distance")
+
+	if SystemInfo:matchmaking() == Idstring("MM_EPIC") then
+		local distance = managers.user:get_setting("crimenet_filter_distance_epic")
+	else
+		local distance = managers.user:get_setting("crimenet_filter_distance")
+	end
+
 	local difficulty = managers.user:get_setting("crimenet_filter_difficulty")
 	local job_id = managers.user:get_setting("crimenet_filter_contract")
 	local kick = managers.user:get_setting("crimenet_filter_kick")
@@ -201,6 +207,7 @@ function NetworkMatchMaking:get_friends_lobbies()
 
 	-- Lines 201-201
 	local function empty()
+		return
 	end
 
 	-- Lines 202-241
@@ -289,6 +296,7 @@ end
 
 -- Lines 278-280
 function NetworkAccountSTEAM:invite_friends_to_lobby()
+	return
 end
 
 -- Lines 282-284
@@ -352,6 +360,7 @@ end
 
 -- Lines 331-332
 function NetworkMatchMaking:lobby_search_reset()
+	return
 end
 
 -- Lines 334-428
@@ -410,8 +419,10 @@ function NetworkMatchMaking:search_lobby(friends_only)
 			self:_call_callback("search_lobby", info)
 		end
 
-		self.browser = LobbyBrowser(refresh_lobby, function ()
+		self.browser = LobbyBrowser(refresh_lobby, function()
+			return
 		end)
+
 		local interest_keys = {
 			"owner_id",
 			"owner_name",
@@ -561,6 +572,7 @@ end
 
 -- Lines 527-529
 function NetworkMatchMaking._on_data_update(...)
+	return
 end
 
 -- Lines 531-534
@@ -591,6 +603,7 @@ function NetworkMatchMaking:join_server(room_id, skip_showing_dialog)
 			print("Success!")
 
 			self.lobby_handler = handler
+
 			local _, host_id, owner = self.lobby_handler:get_server_details()
 
 			print("[NetworkMatchMaking:join_server] server details", _, host_id)
@@ -608,7 +621,7 @@ function NetworkMatchMaking:join_server(room_id, skip_showing_dialog)
 			self.lobby_handler:setup_callbacks(NetworkMatchMaking._on_memberstatus_change, NetworkMatchMaking._on_data_update, NetworkMatchMaking._on_chat_message)
 			managers.network:start_client()
 			managers.menu:show_waiting_for_server_response({
-				cancel_func = function ()
+				cancel_func = function()
 					managers.network:session():on_join_request_cancelled()
 				end
 			})
@@ -623,6 +636,7 @@ function NetworkMatchMaking:join_server(room_id, skip_showing_dialog)
 					managers.menu:on_enter_lobby()
 				elseif res == "JOINED_GAME" then
 					local level_id = tweak_data.levels:get_level_name_from_index(level_index)
+
 					Global.game_settings.level_id = level_id
 
 					managers.network:session():local_peer():set_in_lobby(false)
@@ -713,6 +727,7 @@ end
 
 -- Lines 698-699
 function NetworkMatchMaking:send_join_invite(friend)
+	return
 end
 
 -- Lines 702-704
@@ -723,12 +738,13 @@ end
 -- Lines 706-744
 function NetworkMatchMaking:create_lobby(settings)
 	self._num_players = nil
-	local dialog_data = {
-		title = managers.localization:text("dialog_creating_lobby_title"),
-		text = managers.localization:text("dialog_wait"),
-		id = "create_lobby",
-		no_buttons = true
-	}
+
+	local dialog_data = {}
+
+	dialog_data.title = managers.localization:text("dialog_creating_lobby_title")
+	dialog_data.text = managers.localization:text("dialog_wait")
+	dialog_data.id = "create_lobby"
+	dialog_data.no_buttons = true
 
 	managers.system_menu:show(dialog_data)
 
@@ -754,11 +770,12 @@ function NetworkMatchMaking:create_lobby(settings)
 			local title = managers.localization:text("dialog_error_title")
 			local dialog_data = {
 				title = title,
-				text = managers.localization:text("dialog_err_failed_creating_lobby"),
-				button_list = {
-					{
-						text = managers.localization:text("dialog_ok")
-					}
+				text = managers.localization:text("dialog_err_failed_creating_lobby")
+			}
+
+			dialog_data.button_list = {
+				{
+					text = managers.localization:text("dialog_ok")
 				}
 			}
 
@@ -786,6 +803,7 @@ end
 function NetworkMatchMaking:set_server_state(state)
 	if self._lobby_attributes then
 		local state_id = tweak_data:server_state_to_index(state)
+
 		self._lobby_attributes.state = state_id
 
 		if self.lobby_handler then

@@ -67,8 +67,10 @@ end
 
 -- Lines 58-60
 function InteractionEditorUIEvents:on_undo()
+	return
 end
 
 -- Lines 62-64
 function InteractionEditorUIEvents:on_redo()
+	return
 end

@@ -90,6 +90,7 @@ end
 
 -- Lines 85-87
 function CoreWorldCameraManager:set_dof(dof)
+	return
 end
 
 -- Lines 90-92
@@ -104,18 +105,17 @@ end
 
 -- Lines 100-113
 function CoreWorldCameraManager:_set_dof_effect()
-	self._dof = {
-		update_callback = "update_world_camera",
-		near_min = self:default_near_dof(),
-		near_max = self:default_near_dof(),
-		far_min = self:default_far_dof(),
-		far_max = self:default_far_dof(),
-		clamp = 1,
-		prio = 1,
-		name = "world_camera",
-		fade_in = 0,
-		fade_out = 0
-	}
+	self._dof = {}
+	self._dof.update_callback = "update_world_camera"
+	self._dof.near_min = self:default_near_dof()
+	self._dof.near_max = self:default_near_dof()
+	self._dof.far_min = self:default_far_dof()
+	self._dof.far_max = self:default_far_dof()
+	self._dof.clamp = 1
+	self._dof.prio = 1
+	self._dof.name = "world_camera"
+	self._dof.fade_in = 0
+	self._dof.fade_out = 0
 end
 
 -- Lines 115-132
@@ -230,11 +230,13 @@ function CoreWorldCameraManager:_old_load(path)
 	for child in node:children() do
 		if child:name() == "world_camera" then
 			local world_camera_name = child:parameter("name")
+
 			self._world_cameras[world_camera_name] = (rawget(_G, "WorldCamera") or rawget(_G, "CoreWorldCamera")):new(world_camera_name)
 
 			self._world_cameras[world_camera_name]:old_load(child)
 		else
 			local name, value = parse_value_node(child)
+
 			self[name] = value
 		end
 	end
@@ -349,6 +351,7 @@ function CoreWorldCameraManager:new_play_world_camera(world_camera_sequence)
 		end
 
 		self._current_world_camera = world_camera
+
 		local ok, msg = self._current_world_camera:play(world_camera_sequence)
 
 		if not ok then
@@ -466,11 +469,11 @@ end
 
 -- Lines 417-423
 function CoreWorldCameraManager:_camera_sequence_table(name)
-	local t = {
-		name = name,
-		start = 0,
-		stop = 1
-	}
+	local t = {}
+
+	t.name = name
+	t.start = 0
+	t.stop = 1
 
 	return t
 end
@@ -492,6 +495,7 @@ function CoreWorldCameraManager:_sequence_done()
 
 	local done_sequence = self._current_sequence
 	local done_sequence_name = self._current_sequence_name
+
 	self._current_sequence = nil
 	self._current_sequence_name = nil
 
@@ -537,8 +541,8 @@ function CoreWorldCameraManager:play_world_camera_sequence(name, sequence)
 
 	if not self._sound_environment_check_object then
 		self._sound_environment_check_object = managers.sound_environment:add_check_object({
-			primary = true,
 			active = false,
+			primary = true,
 			object = self._camera
 		})
 	end
@@ -661,6 +665,7 @@ function CoreWorldCamera:init(world_camera_name)
 	self._out_acc = self._out_accelerations.linear
 	self._old_viewport = nil
 	self._keys = {}
+
 	local time = 0
 	local fov = managers.worldcamera:default_fov()
 	local near_dof = managers.worldcamera:default_near_dof()
@@ -749,6 +754,7 @@ function CoreWorldCamera:old_load(node)
 			end
 		elseif child:name() == "value" then
 			local name, value = parse_value_node(child)
+
 			self[name] = value
 		end
 	end
@@ -840,7 +846,7 @@ end
 -- Lines 784-803
 function CoreWorldCamera:set_control_point_length(len_p1, len_p2, segment_index)
 	local positions = self._positions
-	local temp_vector = nil
+	local temp_vector
 
 	if len_p1 and segment_index > 1 then
 		temp_vector = self._spline_metadata.ctrl_points[segment_index].p1 - positions[segment_index]
@@ -868,10 +874,11 @@ end
 -- Lines 806-828
 function CoreWorldCamera:rotate_control_points(p2_p1_vec, segment_index)
 	local positions = self._positions
-	local temp_vector = nil
+	local temp_vector
 
 	if segment_index > 1 then
 		local p1_len = mvector3.distance(self._spline_metadata.ctrl_points[segment_index].p1, positions[segment_index])
+
 		temp_vector = -p2_p1_vec
 
 		mvector3.set_length(temp_vector, p1_len)
@@ -970,6 +977,7 @@ end
 function CoreWorldCamera:update(t, dt)
 	if self._timer < self._stop_timer then
 		self._timer = self._timer + dt / self._duration
+
 		local pos, t_pos = self:play_to_time(self._timer)
 
 		self:update_camera(pos, t_pos)
@@ -997,6 +1005,7 @@ function CoreWorldCamera:positions_at_time(s_t)
 			local metadata = self._spline_metadata
 			local subsegment_positions, subsegment_distances = self:extract_editor_random_access_data(self._positions, metadata.ctrl_points, metadata.nr_subseg_per_seg)
 			local tar_subsegment_positions, tar_subsegment_distances = self:extract_editor_random_access_data(self._target_positions, metadata.tar_ctrl_points, metadata.nr_subseg_per_seg)
+
 			self._editor_random_access_data = {
 				subsegment_positions = subsegment_positions,
 				subsegment_distances = subsegment_distances,
@@ -1029,7 +1038,7 @@ end
 
 -- Lines 937-996
 function CoreWorldCamera:positions_at_time_sine(spline_t)
-	local result_pos, result_look_pos = nil
+	local result_pos, result_look_pos
 	local positions = self._positions
 	local tar_positions = self._target_positions
 
@@ -1052,7 +1061,9 @@ function CoreWorldCamera:positions_at_time_sine(spline_t)
 						local prev_subseg_pos = subseg_positions[subseg_i - 1] or positions[seg_i]
 						local subseg_len = mvector3.distance(subseg_pos, prev_subseg_pos)
 						local percent_in_subseg = math.clamp(wanted_dis_in_subseg / subseg_len, 0, 1)
+
 						result_pos = math.lerp(prev_subseg_pos, subseg_pos, percent_in_subseg)
+
 						local percent_in_seg = wanted_dis_in_segment / (seg_dis - (segment_lengths[seg_i - 1] or 0))
 						local tar_segment_lengths = metadata.tar_segment_lengths
 						local tar_seg_len = tar_segment_lengths[seg_i] - (tar_segment_lengths[seg_i - 1] or 0)
@@ -1067,6 +1078,7 @@ function CoreWorldCamera:positions_at_time_sine(spline_t)
 								local prev_tar_subseg_pos = tar_subseg_positions[tar_subseg_i - 1] or tar_positions[seg_i]
 								local tar_subseg_len = mvector3.distance(tar_subseg_pos, prev_tar_subseg_pos)
 								local percent_in_tar_subseg = math.clamp(wanted_dis_in_tar_subseg / tar_subseg_len, 0, 1)
+
 								result_look_pos = result_pos + math.lerp(prev_tar_subseg_pos, tar_subseg_pos, percent_in_tar_subseg)
 
 								break
@@ -1092,16 +1104,16 @@ end
 
 -- Lines 998-1056
 function CoreWorldCamera:play_to_time_sine(s_t)
-	local result_pos, result_look_pos = nil
+	local result_pos, result_look_pos
 
 	if #self._positions > 2 then
 		local segments = self._positions
 		local metadata = self._spline_metadata
 		local runtime_data = self._spline_runtime_data.pos
 		local wanted_dis = math.clamp(s_t * metadata.spline_length, 0, metadata.spline_length)
-		local adv_seg = nil
+		local adv_seg
 
-		while runtime_data.seg_i == 0 or runtime_data.seg_dis < wanted_dis do
+		while runtime_data.seg_i == 0 or wanted_dis > runtime_data.seg_dis do
 			runtime_data.seg_i = runtime_data.seg_i + 1
 			runtime_data.seg_dis = metadata.segment_lengths[runtime_data.seg_i]
 			adv_seg = true
@@ -1122,9 +1134,11 @@ function CoreWorldCamera:play_to_time_sine(s_t)
 		local seg_p1 = metadata.ctrl_points[runtime_data.seg_i + 1].p1
 		local seg_p2 = metadata.ctrl_points[runtime_data.seg_i].p2
 
-		while (not runtime_data.subseg_pos or runtime_data.subseg_dis < wanted_dis_in_seg) and runtime_data.subseg_i < metadata.nr_subseg_per_seg do
+		while (not runtime_data.subseg_pos or wanted_dis_in_seg > runtime_data.subseg_dis) and runtime_data.subseg_i < metadata.nr_subseg_per_seg do
 			runtime_data.subseg_i = runtime_data.subseg_i + 1
+
 			local new_subseg_pos = self:position_at_time_on_segment(runtime_data.subseg_i / metadata.nr_subseg_per_seg, seg_pos, next_seg_pos, seg_p1, seg_p2)
+
 			runtime_data.subseg_len = mvector3.distance(runtime_data.subseg_pos or runtime_data.subseg_prev_pos, new_subseg_pos)
 			runtime_data.subseg_dis = runtime_data.subseg_dis + runtime_data.subseg_len
 			runtime_data.subseg_prev_pos = runtime_data.subseg_pos or runtime_data.subseg_prev_pos
@@ -1132,8 +1146,11 @@ function CoreWorldCamera:play_to_time_sine(s_t)
 		end
 
 		local percentage_in_subseg = 1 - (runtime_data.subseg_dis - wanted_dis_in_seg) / runtime_data.subseg_len
+
 		result_pos = math.lerp(runtime_data.subseg_prev_pos, runtime_data.subseg_pos, percentage_in_subseg)
+
 		local percentage_in_seg = wanted_dis_in_seg / runtime_data.seg_len
+
 		result_look_pos = result_pos + 500 * self:cam_look_vec_on_segment(percentage_in_seg, runtime_data.seg_i)
 	elseif #self._positions > 1 then
 		result_pos = math.lerp(self._positions[1], self._positions[2], s_t)
@@ -1167,9 +1184,11 @@ function CoreWorldCamera:cam_look_vec_on_segment(perc_in_seg, seg_i)
 	local seg_p1 = metadata.tar_ctrl_points[seg_i + 1].p1
 	local seg_p2 = metadata.tar_ctrl_points[seg_i].p2
 
-	while (not runtime_data.subseg_pos or runtime_data.subseg_dis < wanted_dis_in_seg) and runtime_data.subseg_i < metadata.nr_subseg_per_seg do
+	while (not runtime_data.subseg_pos or wanted_dis_in_seg > runtime_data.subseg_dis) and runtime_data.subseg_i < metadata.nr_subseg_per_seg do
 		runtime_data.subseg_i = runtime_data.subseg_i + 1
+
 		local new_subseg_pos = self:position_at_time_on_segment(runtime_data.subseg_i / metadata.nr_subseg_per_seg, seg_pos, next_seg_pos, seg_p1, seg_p2)
+
 		runtime_data.subseg_len = mvector3.distance(runtime_data.subseg_pos or runtime_data.subseg_prev_pos, new_subseg_pos)
 		runtime_data.subseg_dis = runtime_data.subseg_dis + runtime_data.subseg_len
 		runtime_data.subseg_prev_pos = runtime_data.subseg_pos or runtime_data.subseg_prev_pos
@@ -1194,6 +1213,7 @@ end
 -- Lines 1138-1160
 function CoreWorldCamera:extract_spline_control_points(position_table, curviness, start_index, end_index)
 	local control_points = {}
+
 	start_index = start_index or 1
 	end_index = math.min(end_index or #position_table, #position_table)
 
@@ -1202,6 +1222,7 @@ function CoreWorldCamera:extract_spline_control_points(position_table, curviness
 
 		while i <= end_index do
 			local segment_control_points = self:extract_control_points_at_index(position_table, control_points, i, curviness)
+
 			control_points[i] = segment_control_points
 			i = i + 1
 		end
@@ -1209,6 +1230,7 @@ function CoreWorldCamera:extract_spline_control_points(position_table, curviness
 
 	if start_index == 1 then
 		local segment_control_points = self:extract_control_points_at_index(position_table, control_points, 1, curviness)
+
 		control_points[1] = segment_control_points
 	end
 
@@ -1219,23 +1241,29 @@ end
 function CoreWorldCamera:extract_control_points_at_index(position_table, control_points, index, curviness)
 	local pos = position_table[index]
 	local segment_control_points = {}
-	local tan_seg = nil
+	local tan_seg
 
 	if index == #position_table then
 		local last_seg = pos - position_table[#position_table - 1]
 		local last_vec = (control_points[#position_table - 1].p2 or position_table[1]) - position_table[#position_table - 1]
 		local last_angle = last_vec:angle(last_seg)
 		local last_rot = last_seg:cross(last_vec)
+
 		last_rot = Rotation(last_rot, 180 - 2 * last_angle)
+
 		local w_vec = pos + last_vec:rotate_with(last_rot)
+
 		segment_control_points.p1 = w_vec
 	elseif index == 1 then
 		local first_vec = control_points[2].p1 - position_table[2]
 		local first_seg = position_table[2] - position_table[1]
 		local first_angle = first_vec:angle(first_seg)
 		local first_rot = first_seg:cross(first_vec)
+
 		first_rot = Rotation(first_rot, 180 - 2 * first_angle)
+
 		local w_vec = position_table[1] + first_vec:rotate_with(first_rot)
+
 		segment_control_points.p2 = w_vec
 	else
 		tan_seg = position_table[index + 1] - position_table[index - 1]
@@ -1259,6 +1287,7 @@ function CoreWorldCamera:extract_spline_metadata()
 	local segment_lengths, spline_length = self:extract_segment_dis_markers(self._positions, control_points, nr_subseg_per_seg)
 	local tar_control_points = self:extract_spline_control_points(self._target_positions, 0.5)
 	local tar_segment_lengths, tar_spline_length = self:extract_segment_dis_markers(self._target_positions, tar_control_points, nr_subseg_per_seg)
+
 	self._spline_metadata = {
 		ctrl_points = control_points,
 		segment_lengths = segment_lengths,
@@ -1291,6 +1320,7 @@ function CoreWorldCamera:extract_segment_dis_markers(segment_table, control_poin
 			local spline_t = math.min(1, subsegment_index / nr_subsegments)
 			local subseg_pos = self:position_at_time_on_segment(spline_t, pos, next_seg_pos, seg_p1, seg_p2)
 			local subseg_len = mvector3.distance(prev_subseg_pos, subseg_pos)
+
 			seg_len = seg_len + subseg_len
 			prev_subseg_pos = subseg_pos
 			subsegment_index = subsegment_index + 1
@@ -1327,6 +1357,7 @@ function CoreWorldCamera:extract_editor_random_access_data(segment_table, contro
 			local spline_t = math.min(1, subsegment_index / nr_subsegments)
 			local subseg_pos = self:position_at_time_on_segment(spline_t, pos, next_seg_pos, seg_p1, seg_p2)
 			local subseg_len = mvector3.distance(prev_subseg_pos, subseg_pos)
+
 			seg_len = seg_len + subseg_len
 
 			table.insert(seg_subsegment_lengths, seg_len)
@@ -1377,7 +1408,7 @@ function CoreWorldCamera:debug_draw_editor()
 				end
 			else
 				local step = 0.02
-				local previous_pos = nil
+				local previous_pos
 
 				for i = step, 1, step do
 					local acc = math.bezier({
@@ -1393,6 +1424,7 @@ function CoreWorldCamera:debug_draw_editor()
 					end
 
 					previous_pos = cam_pos
+
 					local look_dir = cam_look_pos - cam_pos
 
 					mvector3.set_length(look_dir, 100)
@@ -1449,22 +1481,22 @@ function CoreWorldCamera:play(sequence_data)
 		self._bezier = self:bezier_function()
 	end
 
-	local runtime_data_pos = {
-		seg_dis = 0,
-		seg_len = 0,
-		seg_i = 0,
-		subseg_i = 0,
-		subseg_prev_pos = self._positions[1]
-	}
-	local runtime_data_look_dir = {
-		seg_i = 0,
-		subseg_i = 0,
-		subseg_prev_pos = self._target_positions[1]
-	}
-	self._spline_runtime_data = {
-		pos = runtime_data_pos,
-		dir = runtime_data_look_dir
-	}
+	local runtime_data_pos = {}
+
+	runtime_data_pos.seg_dis = 0
+	runtime_data_pos.seg_len = 0
+	runtime_data_pos.seg_i = 0
+	runtime_data_pos.subseg_i = 0
+	runtime_data_pos.subseg_prev_pos = self._positions[1]
+
+	local runtime_data_look_dir = {}
+
+	runtime_data_look_dir.seg_i = 0
+	runtime_data_look_dir.subseg_i = 0
+	runtime_data_look_dir.subseg_prev_pos = self._target_positions[1]
+	self._spline_runtime_data = {}
+	self._spline_runtime_data.pos = runtime_data_pos
+	self._spline_runtime_data.dir = runtime_data_look_dir
 
 	self:update_camera(self._positions[1], self._target_positions[1])
 	self:set_current_fov(self:value_at_time(self._timer, "fov"))
@@ -1508,9 +1540,12 @@ function CoreWorldCamera:add_point(pos, rot)
 			self:extract_spline_metadata()
 		elseif #self._positions > 3 then
 			local new_control_points = self:extract_spline_control_points(self._positions, 0.5, #self._positions - 1, #self._positions)
+
 			self._spline_metadata.ctrl_points[#self._positions - 1] = new_control_points[#self._positions - 1]
 			self._spline_metadata.ctrl_points[#self._positions] = new_control_points[#self._positions]
+
 			local segment_lengths, spline_length = self:extract_segment_dis_markers(self._positions, self._spline_metadata.ctrl_points, self._spline_metadata.nr_subseg_per_seg)
+
 			self._spline_metadata.segment_lengths = segment_lengths
 			self._spline_metadata.spline_length = spline_length
 			new_control_points = self:extract_spline_control_points(self._target_positions, 0.5, #self._target_positions - 1, #self._target_positions)
@@ -1557,7 +1592,9 @@ function CoreWorldCamera:delete_point(point)
 			self._spline_metadata.ctrl_points[#self._positions].p2 = nil
 			self._spline_metadata.tar_ctrl_points[1].p1 = nil
 			self._spline_metadata.tar_ctrl_points[#self._target_positions].p2 = nil
+
 			local segment_lengths, spline_length = self:extract_segment_dis_markers(self._positions, self._spline_metadata.ctrl_points, self._spline_metadata.nr_subseg_per_seg)
+
 			self._spline_metadata.segment_lengths = segment_lengths
 			self._spline_metadata.spline_length = spline_length
 			segment_lengths, spline_length = self:extract_segment_dis_markers(self._target_positions, self._spline_metadata.tar_ctrl_points, self._spline_metadata.nr_subseg_per_seg)
@@ -1583,8 +1620,11 @@ end
 function CoreWorldCamera:reset_control_points(segment_index)
 	if self._curve_type == "sine" and #self._positions > 2 then
 		local control_points = self:extract_control_points_at_index(self._positions, self._spline_metadata.ctrl_points, segment_index, 0.5)
+
 		self._spline_metadata.ctrl_points[segment_index] = control_points
+
 		local segment_lengths, spline_length = self:extract_segment_dis_markers(self._positions, self._spline_metadata.ctrl_points, self._spline_metadata.nr_subseg_per_seg)
+
 		self._spline_metadata.spline_length = spline_length
 		self._spline_metadata.segment_lengths = segment_lengths
 
@@ -1600,6 +1640,7 @@ function CoreWorldCamera:move_point(point, pos, rot)
 				self:set_sine_segment_position(pos, point, self._positions, self._spline_metadata.ctrl_points[point])
 
 				local segment_lengths, spline_length = self:extract_segment_dis_markers(self._positions, self._spline_metadata.ctrl_points, self._spline_metadata.nr_subseg_per_seg)
+
 				self._spline_metadata.spline_length = spline_length
 				self._spline_metadata.segment_lengths = segment_lengths
 			else
@@ -1618,6 +1659,7 @@ function CoreWorldCamera:move_point(point, pos, rot)
 				end
 
 				local segment_lengths, spline_length = self:extract_segment_dis_markers(self._target_positions, self._spline_metadata.tar_ctrl_points, self._spline_metadata.nr_subseg_per_seg)
+
 				self._spline_metadata.tar_spline_length = spline_length
 				self._spline_metadata.tar_segment_lengths = segment_lengths
 			else
@@ -1633,6 +1675,7 @@ function CoreWorldCamera:move_point(point, pos, rot)
 
 		if rot then
 			local t_pos = rot:y() * self._target_offset + self._positions[point]
+
 			self._target_positions[point] = t_pos
 		end
 	end
@@ -1650,6 +1693,7 @@ end
 
 -- Lines 1609-1611
 function CoreWorldCamera:insert_point(index, position, rotation)
+	return
 end
 
 -- Lines 1613-1615
@@ -1667,7 +1711,7 @@ function CoreWorldCamera:next_key(time)
 	local index = 1
 
 	for i, key in ipairs(self._keys) do
-		if key.time <= time then
+		if time >= key.time then
 			index = i + 1
 		end
 	end
@@ -1685,10 +1729,10 @@ function CoreWorldCamera:prev_key(time, step)
 
 	for i, key in ipairs(self._keys) do
 		if step then
-			if key.time < time then
+			if time > key.time then
 				index = i
 			end
-		elseif key.time <= time then
+		elseif time >= key.time then
 			index = i
 		end
 	end
@@ -1699,11 +1743,13 @@ end
 -- Lines 1653-1670
 function CoreWorldCamera:add_key(time)
 	local index = 1
-	local fov, near_dof, far_dof, roll = nil
+	local fov, near_dof, far_dof, roll
+
 	fov = math.round(self:value_at_time(time, "fov"))
 	near_dof = math.round(self:value_at_time(time, "near_dof"))
 	far_dof = math.round(self:value_at_time(time, "far_dof"))
 	roll = math.round(self:value_at_time(time, "roll"))
+
 	local key = {
 		time = time,
 		fov = fov,
@@ -1713,7 +1759,7 @@ function CoreWorldCamera:add_key(time)
 	}
 
 	for i, key in ipairs(self._keys) do
-		if key.time < time then
+		if time > key.time then
 			index = i + 1
 		else
 			break
@@ -1742,6 +1788,7 @@ function CoreWorldCamera:move_key(index, time)
 		self:delete_key(index)
 
 		local index, key = self:add_key(time)
+
 		key.fov = old_key.fov
 		key.near_dof = old_key.near_dof
 		key.far_dof = old_key.far_dof

@@ -22,6 +22,7 @@ end
 
 -- Lines 20-21
 function MenuNodeTable:_setup_columns()
+	return
 end
 
 -- Lines 23-25

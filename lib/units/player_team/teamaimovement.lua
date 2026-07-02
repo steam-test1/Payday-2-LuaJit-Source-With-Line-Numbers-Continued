@@ -1,4 +1,5 @@
 TeamAIMovement = TeamAIMovement or class(CopMovement)
+
 local mvec3_set = mvector3.set
 local mvec3_sub = mvector3.subtract
 local mvec3_norm = mvector3.normalize
@@ -48,6 +49,7 @@ end
 
 -- Lines 47-48
 function TeamAIMovement:check_visual_equipment()
+	return
 end
 
 -- Lines 52-73
@@ -63,11 +65,17 @@ function TeamAIMovement:add_weapons()
 			self._unit:inventory():add_unit_by_factory_name(loadout.primary, false, false, nil, "")
 		else
 			local weapon = self._ext_base:default_weapon_name("primary")
-			local _ = weapon and self._unit:inventory():add_unit_by_factory_name(weapon, false, false, nil, "")
+
+			if weapon then
+				local _ = self._unit:inventory():add_unit_by_factory_name(weapon, false, false, nil, "")
+			end
 		end
 
 		local sec_weap_name = self._ext_base:default_weapon_name("secondary")
-		local _ = sec_weap_name and self._unit:inventory():add_unit_by_name(sec_weap_name)
+
+		if sec_weap_name then
+			local _ = self._unit:inventory():add_unit_by_name(sec_weap_name)
+		end
 	else
 		TeamAIMovement.super.add_weapons(self)
 	end
@@ -133,6 +141,7 @@ function TeamAIMovement:on_SPOOCed(enemy_unit)
 	end
 
 	local state = "incapacitated"
+
 	state = managers.modifiers:modify_value("TeamAIMovement:OnSpooked", state)
 
 	if state == "arrested" then
@@ -275,8 +284,8 @@ function TeamAIMovement:_switch_to_not_cool_clbk_func()
 			if self._unit:brain()._logic_data and self._unit:brain():is_available_for_assignment() then
 				self._unit:brain():set_objective()
 				self._unit:movement():action_request({
-					sync = true,
 					body_part = 1,
+					sync = true,
 					type = "idle"
 				})
 			end

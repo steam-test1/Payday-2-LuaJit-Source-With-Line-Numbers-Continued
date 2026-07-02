@@ -10,6 +10,7 @@ end
 -- Lines 11-16
 function CharacterAttentionObject:setup_attention_positions(m_att_pos, m_pos, m_detect_pos)
 	local mov_ext = self._unit:movement()
+
 	self._m_att_pos = m_att_pos or mov_ext:m_head_pos()
 	self._m_pos = m_pos or mov_ext:m_pos()
 	self._m_detect_pos = m_detect_pos or mov_ext.m_detect_pos and mov_ext:m_detect_pos() or self._m_att_pos
@@ -18,7 +19,7 @@ end
 -- Lines 20-58
 function CharacterAttentionObject:chk_settings_diff(settings_set)
 	local attention_data = self._attention_data
-	local changes = nil
+	local changes
 
 	if settings_set then
 		for _, id in ipairs(settings_set) do
@@ -38,7 +39,7 @@ function CharacterAttentionObject:chk_settings_diff(settings_set)
 
 	if attention_data then
 		for old_id, setting in pairs(attention_data) do
-			local found = nil
+			local found
 
 			if settings_set then
 				for _, new_id in ipairs(settings_set) do
@@ -65,7 +66,7 @@ end
 -- Lines 62-133
 function CharacterAttentionObject:set_settings_set(settings_set)
 	local attention_data = self._attention_data
-	local changed, register, unregister = nil
+	local changed, register, unregister
 
 	if attention_data then
 		if not settings_set or not next(settings_set) then

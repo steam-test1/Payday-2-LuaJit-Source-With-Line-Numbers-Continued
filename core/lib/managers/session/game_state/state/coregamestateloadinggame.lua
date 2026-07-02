@@ -33,6 +33,7 @@ end
 
 -- Lines 34-36
 function LoadingGame:destroy()
+	return
 end
 
 -- Lines 38-43

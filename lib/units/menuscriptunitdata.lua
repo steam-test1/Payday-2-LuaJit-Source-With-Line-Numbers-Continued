@@ -18,6 +18,7 @@ end
 
 -- Lines 15-16
 function UnitBase:destroy(unit)
+	return
 end
 
 -- Lines 19-21

@@ -7,13 +7,12 @@ function NetworkFriendsPSN:init()
 	self._friends = {}
 	self._callback = {}
 	self._updated_list_friends = PSN:update_list_friends()
-	self._last_info = {
-		friends = 0,
-		friends_map = {},
-		friends_status_map = {}
-	}
+	self._last_info = {}
+	self._last_info.friends = 0
+	self._last_info.friends_map = {}
+	self._last_info.friends_status_map = {}
 
-	PSN:set_matchmaking_callback("friends_updated", function ()
+	PSN:set_matchmaking_callback("friends_updated", function()
 		managers.network.friends:psn_update_friends()
 	end)
 	PSN:update_async_friends(true, 20)
@@ -21,7 +20,8 @@ end
 
 -- Lines 75-78
 function NetworkFriendsPSN:destroy()
-	PSN:set_matchmaking_callback("friends_updated", function ()
+	PSN:set_matchmaking_callback("friends_updated", function()
+		return
 	end)
 	PSN:update_async_friends(false, 20)
 end
@@ -53,7 +53,7 @@ end
 
 -- Lines 101-114
 function NetworkFriendsPSN:get_friends_list()
-	return self._friends
+	do return self._friends end
 
 	local npids = {}
 	local friends = PSN:get_list_friends()
@@ -114,6 +114,7 @@ function NetworkFriendsPSN:get_friends()
 	end
 
 	self._friends = {}
+
 	local name = managers.network.account:player_id()
 	local friends = PSN:get_list_friends()
 
@@ -128,6 +129,7 @@ function NetworkFriendsPSN:get_friends()
 			if tostring(v.friend) ~= name then
 				local online_status = "not_signed_in"
 				local info_mod = 1
+
 				self._last_info.friends_status_map[tostring(v.friend)] = v.status * info_mod
 
 				if managers.network.matchmake:user_in_lobby(v.friend) then
@@ -162,10 +164,12 @@ end
 
 -- Lines 219-220
 function NetworkFriendsPSN:send_friend_request(nickname)
+	return
 end
 
 -- Lines 222-223
 function NetworkFriendsPSN:remove_friend(id)
+	return
 end
 
 -- Lines 225-227
@@ -175,10 +179,12 @@ end
 
 -- Lines 229-230
 function NetworkFriendsPSN:accept_friend_request(player_id)
+	return
 end
 
 -- Lines 232-233
 function NetworkFriendsPSN:ignore_friend_request(player_id)
+	return
 end
 
 -- Lines 235-237
@@ -188,6 +194,7 @@ end
 
 -- Lines 239-240
 function NetworkFriendsPSN:debug_update(t, dt)
+	return
 end
 
 -- Lines 244-246

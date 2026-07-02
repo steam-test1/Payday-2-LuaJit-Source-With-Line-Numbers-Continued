@@ -11,6 +11,7 @@ end
 
 -- Lines 11-12
 function FindSession:destroy()
+	return
 end
 
 -- Lines 14-20

@@ -1556,32 +1556,32 @@ function TweakDataVR:init(tweak_data)
 	}
 	self.locked = {
 		melee_weapons = {
-			weapon = true,
-			road = true
+			road = true,
+			weapon = true
 		},
 		weapons = {
+			arblast = true,
 			contraband = true,
-			hunter = true,
 			frankish = true,
-			arblast = true
+			hunter = true
 		}
 	}
 	self.weapon_kick = {
-		kick_speed = 200,
 		kick_mul = 1.5,
+		kick_speed = 200,
 		max_kick = 20,
-		return_speed = 10,
 		precision_multiplier = 0.2,
+		return_speed = 10,
 		exclude_list = {
 			flamethrower_mk2 = true,
 			m134 = true,
-			saw_secondary = true,
-			saw = true
+			saw = true,
+			saw_secondary = true
 		}
 	}
 	self.custom_wall_check = {
-		saw_secondary = "a_fl",
-		saw = "a_fl"
+		saw = "a_fl",
+		saw_secondary = "a_fl"
 	}
 	self.weapon_hidden = {
 		china = {
@@ -2156,9 +2156,9 @@ function TweakDataVR:init(tweak_data)
 			}
 		},
 		limits = {
-			pistol_max = 20,
+			max = 50,
 			min = 5,
-			max = 50
+			pistol_max = 20
 		}
 	}
 	self.reload_buff = 0.2
@@ -2171,8 +2171,8 @@ function TweakDataVR:init(tweak_data)
 		glock_17 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_g17_clip_slide_out"
+					sound = "wp_g17_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -2183,8 +2183,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_g17_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -7, -20)
 				},
@@ -2197,8 +2197,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -4, -10)
 				},
 				{
-					time = 0.6,
 					sound = "wp_g17_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -2206,8 +2206,8 @@ function TweakDataVR:init(tweak_data)
 		glock_18c = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_g17_clip_slide_out"
+					sound = "wp_g17_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -2218,8 +2218,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_g17_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -7, -20)
 				},
@@ -2232,8 +2232,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -4, -10)
 				},
 				{
-					time = 0.6,
 					sound = "wp_g17_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -2241,8 +2241,8 @@ function TweakDataVR:init(tweak_data)
 		deagle = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_g17_clip_slide_out"
+					sound = "wp_g17_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -2253,8 +2253,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_g17_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -3, -20)
 				},
@@ -2267,8 +2267,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -1.6, -10)
 				},
 				{
-					time = 0.6,
 					sound = "wp_g17_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -2276,8 +2276,8 @@ function TweakDataVR:init(tweak_data)
 		colt_1911 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_usp_clip_out"
+					sound = "wp_usp_clip_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -2288,8 +2288,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_usp_clip_out",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -5, -20)
 				},
@@ -2302,8 +2302,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -4, -12)
 				},
 				{
-					time = 0.6,
 					sound = "wp_usp_mantel_back",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -2311,8 +2311,8 @@ function TweakDataVR:init(tweak_data)
 		b92fs = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_g17_clip_slide_out"
+					sound = "wp_g17_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -2323,8 +2323,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_g17_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -5, -20)
 				},
@@ -2337,25 +2337,25 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -3, -10)
 				},
 				{
-					time = 0.6,
 					sound = "wp_g17_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
 		},
 		new_raging_bull = {
-			reload_part_type = "upper_reciever",
 			custom_mag_unit = "units/pd2_dlc_vr/units/wpn_pis_speedloader_6x/wpn_pis_speedloader_6x",
+			reload_part_type = "upper_reciever",
 			start = {
 				{
-					time = 0,
 					sound = "wp_rbull_drum_open",
+					time = 0,
 					anims = {
 						{
 							anim_group = "reload",
-							to = 0.7,
 							from = 0.2,
-							part = "upper_reciever"
+							part = "upper_reciever",
+							to = 0.7
 						}
 					}
 				},
@@ -2370,20 +2370,20 @@ function TweakDataVR:init(tweak_data)
 						}
 					},
 					effect = {
-						part = "upper_reciever",
 						name = "effects/payday2/particles/weapons/shells/shell_revolver_dump",
-						object = "align_house_align"
+						object = "align_house_align",
+						part = "upper_reciever"
 					}
 				},
 				{
-					time = 0.9,
-					sound = "wp_rbull_shells_out"
+					sound = "wp_rbull_shells_out",
+					time = 0.9
 				}
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_rbull_shells_in",
+					time = 0,
 					visible = {
 						visible = true,
 						parts = {
@@ -2394,14 +2394,14 @@ function TweakDataVR:init(tweak_data)
 					}
 				},
 				{
-					time = 0.5,
 					sound = "wp_rbull_drum_close",
+					time = 0.5,
 					pos = Vector3(),
 					anims = {
 						{
 							anim_group = "reload",
-							part = "upper_reciever",
-							from = 3.2
+							from = 3.2,
+							part = "upper_reciever"
 						}
 					}
 				}
@@ -2410,8 +2410,8 @@ function TweakDataVR:init(tweak_data)
 		usp = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_usp_clip_out"
+					sound = "wp_usp_clip_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -2422,8 +2422,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_usp_clip_out",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -5, -20)
 				},
@@ -2436,8 +2436,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -3, -10)
 				},
 				{
-					time = 0.6,
 					sound = "wp_usp_mantel_back",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -2445,8 +2445,8 @@ function TweakDataVR:init(tweak_data)
 		g22c = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_g17_clip_slide_out"
+					sound = "wp_g17_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -2457,8 +2457,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_g17_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -7, -20)
 				},
@@ -2471,8 +2471,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -4, -10)
 				},
 				{
-					time = 0.6,
 					sound = "wp_g17_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -2480,8 +2480,8 @@ function TweakDataVR:init(tweak_data)
 		ppk = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_g17_clip_slide_out"
+					sound = "wp_g17_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -2492,8 +2492,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_g17_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -5, -20)
 				},
@@ -2506,8 +2506,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -2.5, -10)
 				},
 				{
-					time = 0.6,
 					sound = "wp_g17_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -2515,8 +2515,8 @@ function TweakDataVR:init(tweak_data)
 		p226 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_usp_clip_out"
+					sound = "wp_usp_clip_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -2527,8 +2527,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_usp_clip_out",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -5, -20)
 				},
@@ -2541,8 +2541,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -2.5, -10)
 				},
 				{
-					time = 0.6,
 					sound = "wp_usp_mantel_back",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -2550,8 +2550,8 @@ function TweakDataVR:init(tweak_data)
 		g26 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_g17_clip_slide_out"
+					sound = "wp_g17_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -2562,8 +2562,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_g17_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -5, -20)
 				},
@@ -2576,8 +2576,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -2, -7)
 				},
 				{
-					time = 0.6,
 					sound = "wp_g17_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -2586,8 +2586,8 @@ function TweakDataVR:init(tweak_data)
 			custom_mag_unit = "units/pd2_dlc_vr/units/wpn_pis_c96_mag/wpn_pis_c96_mag",
 			start = {
 				{
-					time = 0,
-					sound = "wp_c96_mantel_back"
+					sound = "wp_c96_mantel_back",
+					time = 0
 				},
 				{
 					time = 0.05
@@ -2595,32 +2595,32 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_c96_mantel_back",
+					time = 0,
 					anims = {
 						{
 							anim_group = "reload",
-							to = 2.7,
 							from = 2.6,
-							part = "magazine"
+							part = "magazine",
+							to = 2.7
 						}
 					}
 				},
 				{
-					time = 0,
-					sound = "wp_c96_second_slide"
+					sound = "wp_c96_second_slide",
+					time = 0
 				},
 				{
-					time = 0.5,
-					sound = "wp_c96_release"
+					sound = "wp_c96_release",
+					time = 0.5
 				},
 				{
 					time = 0.99,
 					anims = {
 						{
 							anim_group = "reload",
-							to = 0,
-							part = "magazine"
+							part = "magazine",
+							to = 0
 						}
 					}
 				}
@@ -2629,8 +2629,8 @@ function TweakDataVR:init(tweak_data)
 		hs2000 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_usp_clip_out"
+					sound = "wp_usp_clip_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -2641,8 +2641,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_usp_clip_out",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -5, -20)
 				},
@@ -2655,8 +2655,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -2, -7)
 				},
 				{
-					time = 0.6,
 					sound = "wp_usp_mantel_back",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -2665,8 +2665,8 @@ function TweakDataVR:init(tweak_data)
 			custom_mag_unit = "units/pd2_dlc_vr/units/wpn_vr_m_44/wpn_vr_m_44",
 			start = {
 				{
-					time = 0,
 					sound = "wp_pmkr45_cylinder_click_02",
+					time = 0,
 					anims = {
 						{
 							anim_group = "reload",
@@ -2675,18 +2675,18 @@ function TweakDataVR:init(tweak_data)
 					}
 				},
 				{
-					time = 0.5,
-					sound = "wp_pmkr45_shell_land"
+					sound = "wp_pmkr45_shell_land",
+					time = 0.5
 				}
 			},
 			finish = {
 				{
-					time = 0,
-					sound = "wp_pmkr45_load_bullet"
+					sound = "wp_pmkr45_load_bullet",
+					time = 0
 				},
 				{
-					time = 0.5,
 					sound = "wp_foley_generic_lever_release",
+					time = 0.5,
 					pos = Vector3()
 				}
 			}
@@ -2695,20 +2695,20 @@ function TweakDataVR:init(tweak_data)
 			custom_mag_unit = "units/pd2_dlc_vr/units/wpn_pis_speedloader_6x/wpn_pis_speedloader_6x",
 			start = {
 				{
-					time = 0,
 					sound = "wp_mateba_open_barrel",
+					time = 0,
 					anims = {
 						{
 							anim_group = "reload",
-							to = 0.7,
 							from = 0.3,
-							part = "magazine"
+							part = "magazine",
+							to = 0.7
 						}
 					}
 				},
 				{
-					time = 0.15,
-					sound = "wp_mateba_empty_barrel"
+					sound = "wp_mateba_empty_barrel",
+					time = 0.15
 				},
 				{
 					time = 0.15,
@@ -2721,16 +2721,16 @@ function TweakDataVR:init(tweak_data)
 						}
 					},
 					effect = {
-						part = "magazine",
 						name = "effects/payday2/particles/weapons/shells/shell_revolver_dump",
-						object = "align_bullets"
+						object = "align_bullets",
+						part = "magazine"
 					}
 				}
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_mateba_put_in_bullets",
+					time = 0,
 					visible = {
 						visible = true,
 						parts = {
@@ -2742,22 +2742,22 @@ function TweakDataVR:init(tweak_data)
 					anims = {
 						{
 							anim_group = "reload",
-							part = "magazine",
-							from = 3.2
+							from = 3.2,
+							part = "magazine"
 						}
 					}
 				},
 				{
-					time = 0.99,
-					sound = "wp_mateba_close_barrel"
+					sound = "wp_mateba_close_barrel",
+					time = 0.99
 				}
 			}
 		},
 		sparrow = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_pmkr45_open_latch"
+					sound = "wp_pmkr45_open_latch",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -2768,8 +2768,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_pmkr45_load_bullet",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -5, -20)
 				},
@@ -2782,8 +2782,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -2, -7)
 				},
 				{
-					time = 0.6,
 					sound = "wp_pmkr45_close_latch",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -2791,8 +2791,8 @@ function TweakDataVR:init(tweak_data)
 		pl14 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_sparrow_mag_out"
+					sound = "wp_sparrow_mag_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -2803,8 +2803,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_sparrow_mag_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -5, -20)
 				},
@@ -2817,8 +2817,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -3, -10)
 				},
 				{
-					time = 0.6,
 					sound = "wp_sparrow_cock",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -2826,8 +2826,8 @@ function TweakDataVR:init(tweak_data)
 		m1911 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_m1911_mag_out"
+					sound = "wp_m1911_mag_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -2838,8 +2838,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_m1911_mag_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -5, -20)
 				},
@@ -2852,8 +2852,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -3, -10)
 				},
 				{
-					time = 0.6,
 					sound = "wp_m1911_cock",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -2861,8 +2861,8 @@ function TweakDataVR:init(tweak_data)
 		packrat = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_packrat_mag_throw"
+					sound = "wp_packrat_mag_throw",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -2873,8 +2873,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_packrat_mag_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -6, -20)
 				},
@@ -2887,8 +2887,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -2.5, -7)
 				},
 				{
-					time = 0.6,
 					sound = "wp_packrat_slide_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -2896,8 +2896,8 @@ function TweakDataVR:init(tweak_data)
 		lemming = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_lemming_mag_out"
+					sound = "wp_lemming_mag_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -2908,8 +2908,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_lemming_mag_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -5, -20)
 				},
@@ -2922,8 +2922,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -3, -10)
 				},
 				{
-					time = 0.6,
 					sound = "wp_lemming_mantle_forward",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -2931,8 +2931,8 @@ function TweakDataVR:init(tweak_data)
 		type54 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_lemming_mag_out"
+					sound = "wp_lemming_mag_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -2943,8 +2943,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_lemming_mag_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -5, -20)
 				},
@@ -2957,8 +2957,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -3, -10)
 				},
 				{
-					time = 0.6,
 					sound = "wp_lemming_mantle_forward",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -2966,8 +2966,8 @@ function TweakDataVR:init(tweak_data)
 		x_type54 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_lemming_mag_out"
+					sound = "wp_lemming_mag_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -2978,8 +2978,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_lemming_mag_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -5, -20)
 				},
@@ -2992,8 +2992,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -3, -10)
 				},
 				{
-					time = 0.6,
 					sound = "wp_lemming_mantle_forward",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -3002,8 +3002,8 @@ function TweakDataVR:init(tweak_data)
 			custom_mag_unit = "units/pd2_dlc_vr/units/wpn_pis_speedloader_6x/wpn_pis_speedloader_6x",
 			start = {
 				{
-					time = 0,
 					sound = "wp_chinchilla_cylinder_out",
+					time = 0,
 					anims = {
 						{
 							anim_group = "reload",
@@ -3012,27 +3012,27 @@ function TweakDataVR:init(tweak_data)
 					}
 				},
 				{
-					time = 0.02,
-					sound = "wp_chinchilla_eject_shells"
+					sound = "wp_chinchilla_eject_shells",
+					time = 0.02
 				},
 				{
 					time = 0.25,
 					visible = false,
 					effect = {
-						object = "a_m",
-						name = "effects/payday2/particles/weapons/shells/shell_revolver_dump"
+						name = "effects/payday2/particles/weapons/shells/shell_revolver_dump",
+						object = "a_m"
 					}
 				}
 			},
 			finish = {
 				{
-					visible = true,
+					sound = "wp_chinchilla_insert",
 					time = 0,
-					sound = "wp_chinchilla_insert"
+					visible = true
 				},
 				{
-					time = 0,
 					sound = "wp_chinchilla_insert",
+					time = 0,
 					visible = {
 						visible = false,
 						parts = {
@@ -3043,8 +3043,8 @@ function TweakDataVR:init(tweak_data)
 					}
 				},
 				{
-					time = 0.5,
 					sound = "wp_chinchilla_cylinder_in",
+					time = 0.5,
 					anims = {
 						{
 							anim_group = "reload",
@@ -3058,8 +3058,8 @@ function TweakDataVR:init(tweak_data)
 			custom_mag_unit = "units/pd2_dlc_vr/units/wpn_pis_speedloader_6x/wpn_pis_speedloader_6x",
 			start = {
 				{
-					time = 0,
 					sound = "wp_model3_cylinder_out",
+					time = 0,
 					anims = {
 						{
 							anim_group = "reload",
@@ -3068,27 +3068,27 @@ function TweakDataVR:init(tweak_data)
 					}
 				},
 				{
-					time = 0.02,
-					sound = "wp_model3_eject_shells"
+					sound = "wp_model3_eject_shells",
+					time = 0.02
 				},
 				{
 					time = 0.25,
 					visible = false,
 					effect = {
-						object = "a_m",
-						name = "effects/payday2/particles/weapons/shells/shell_revolver_dump"
+						name = "effects/payday2/particles/weapons/shells/shell_revolver_dump",
+						object = "a_m"
 					}
 				}
 			},
 			finish = {
 				{
-					visible = true,
+					sound = "wp_model3_insert",
 					time = 0,
-					sound = "wp_model3_insert"
+					visible = true
 				},
 				{
-					time = 0,
 					sound = "wp_model3_insert",
+					time = 0,
 					visible = {
 						visible = false,
 						parts = {
@@ -3099,8 +3099,8 @@ function TweakDataVR:init(tweak_data)
 					}
 				},
 				{
-					time = 0.5,
 					sound = "wp_model3_cylinder_in",
+					time = 0.5,
 					anims = {
 						{
 							anim_group = "reload",
@@ -3113,8 +3113,8 @@ function TweakDataVR:init(tweak_data)
 		breech = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_breech_clip_slide_out"
+					sound = "wp_breech_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -3125,8 +3125,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_breech_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -13, -20)
 				},
@@ -3139,8 +3139,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -6, -10)
 				},
 				{
-					time = 0.6,
 					sound = "wp_breech_lock_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -3148,8 +3148,8 @@ function TweakDataVR:init(tweak_data)
 		shrew = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_g17_clip_slide_out"
+					sound = "wp_g17_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -3160,8 +3160,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_g17_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -7, -20)
 				},
@@ -3174,8 +3174,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -4, -10)
 				},
 				{
-					time = 0.6,
 					sound = "wp_g17_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -3183,8 +3183,8 @@ function TweakDataVR:init(tweak_data)
 		legacy = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_packrat_mag_throw"
+					sound = "wp_packrat_mag_throw",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -3195,8 +3195,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_packrat_mag_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -6, -20)
 				},
@@ -3209,8 +3209,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -2.5, -7)
 				},
 				{
-					time = 0.6,
 					sound = "wp_packrat_slide_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -3218,8 +3218,8 @@ function TweakDataVR:init(tweak_data)
 		beer = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_g17_clip_slide_out"
+					sound = "wp_g17_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -3230,8 +3230,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_g17_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -7, -20)
 				},
@@ -3244,8 +3244,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -4, -10)
 				},
 				{
-					time = 0.6,
 					sound = "wp_g17_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -3253,8 +3253,8 @@ function TweakDataVR:init(tweak_data)
 		czech = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_g17_clip_slide_out"
+					sound = "wp_g17_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -3265,8 +3265,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_g17_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -7, -20)
 				},
@@ -3279,8 +3279,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -4, -10)
 				},
 				{
-					time = 0.6,
 					sound = "wp_g17_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -3288,8 +3288,8 @@ function TweakDataVR:init(tweak_data)
 		stech = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_g17_clip_slide_out"
+					sound = "wp_g17_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -3300,8 +3300,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_g17_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -7, -20)
 				},
@@ -3314,8 +3314,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -4, -10)
 				},
 				{
-					time = 0.6,
 					sound = "wp_g17_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -3323,8 +3323,8 @@ function TweakDataVR:init(tweak_data)
 		holt = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_holt_mag_throw"
+					sound = "wp_holt_mag_throw",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -3335,8 +3335,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_holt_mag_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -6, -20)
 				},
@@ -3349,8 +3349,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -2.5, -7)
 				},
 				{
-					time = 0.6,
 					sound = "wp_holt_slide_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -3358,8 +3358,8 @@ function TweakDataVR:init(tweak_data)
 		mp9 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_mac10_clip_slide_out"
+					sound = "wp_mac10_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -3370,8 +3370,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_mac10_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -10)
 				},
@@ -3384,8 +3384,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_mac10_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -3393,8 +3393,8 @@ function TweakDataVR:init(tweak_data)
 		olympic = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_m4_clip_grab_out"
+					sound = "wp_m4_clip_grab_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -3406,8 +3406,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_m4_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -3420,8 +3420,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_m4_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -3429,8 +3429,8 @@ function TweakDataVR:init(tweak_data)
 		akmsu = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_ak47_clip_slide_out"
+					sound = "wp_ak47_clip_slide_out",
+					time = 0
 				},
 				{
 					time = 0.02,
@@ -3447,8 +3447,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_ak47_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20),
 					rot = Rotation()
@@ -3459,8 +3459,8 @@ function TweakDataVR:init(tweak_data)
 					rot = Rotation(0, 30, 0)
 				},
 				{
-					time = 0.5,
 					sound = "wp_ak47_lever_release",
+					time = 0.5,
 					pos = Vector3(),
 					rot = Rotation()
 				}
@@ -3469,8 +3469,8 @@ function TweakDataVR:init(tweak_data)
 		p90 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_p90_clip_slide_out"
+					sound = "wp_p90_clip_slide_out",
+					time = 0
 				},
 				{
 					time = 0.01,
@@ -3497,8 +3497,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_p90_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -15, 4),
 					rot = Rotation(0, 0, 0)
@@ -3514,8 +3514,8 @@ function TweakDataVR:init(tweak_data)
 					rot = Rotation(0, -5, 0)
 				},
 				{
-					time = 0.5,
 					sound = "wp_p90_lever_release",
+					time = 0.5,
 					pos = Vector3(),
 					rot = Rotation()
 				}
@@ -3524,8 +3524,8 @@ function TweakDataVR:init(tweak_data)
 		hailstorm = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_p90_clip_slide_out"
+					sound = "wp_p90_clip_slide_out",
+					time = 0
 				},
 				{
 					time = 0.01,
@@ -3552,8 +3552,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_p90_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -15, 4),
 					rot = Rotation(0, 0, 0)
@@ -3569,8 +3569,8 @@ function TweakDataVR:init(tweak_data)
 					rot = Rotation(0, -5, 0)
 				},
 				{
-					time = 0.5,
 					sound = "wp_p90_lever_release",
+					time = 0.5,
 					pos = Vector3(),
 					rot = Rotation()
 				}
@@ -3579,8 +3579,8 @@ function TweakDataVR:init(tweak_data)
 		new_mp5 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_mp5_clip_grab"
+					sound = "wp_mp5_clip_grab",
+					time = 0
 				},
 				{
 					time = 0.02,
@@ -3602,8 +3602,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_mp5_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 2, -10),
 					rot = Rotation()
@@ -3619,8 +3619,8 @@ function TweakDataVR:init(tweak_data)
 					rot = Rotation(0, 30, 0)
 				},
 				{
-					time = 0.5,
 					sound = "wp_mp5_lever_release",
+					time = 0.5,
 					pos = Vector3(),
 					rot = Rotation()
 				}
@@ -3629,8 +3629,8 @@ function TweakDataVR:init(tweak_data)
 		mac10 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_mac10_clip_slide_out"
+					sound = "wp_mac10_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -3641,8 +3641,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_mac10_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -3655,8 +3655,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_mac10_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -3664,8 +3664,8 @@ function TweakDataVR:init(tweak_data)
 		m45 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_m45_clip_grab_out"
+					sound = "wp_m45_clip_grab_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -3676,8 +3676,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_m45_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -10)
 				},
@@ -3690,8 +3690,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_m45_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -3699,8 +3699,8 @@ function TweakDataVR:init(tweak_data)
 		mp7 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_mp7_clip_slide_out"
+					sound = "wp_mp7_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -3711,8 +3711,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_mp7_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -10)
 				},
@@ -3725,8 +3725,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -7)
 				},
 				{
-					time = 0.6,
 					sound = "wp_mp7_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -3734,8 +3734,8 @@ function TweakDataVR:init(tweak_data)
 		scorpion = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_scorpion_clip_slide_out"
+					sound = "wp_scorpion_clip_slide_out",
+					time = 0
 				},
 				{
 					time = 0.02,
@@ -3752,8 +3752,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_scorpion_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20),
 					rot = Rotation()
@@ -3764,8 +3764,8 @@ function TweakDataVR:init(tweak_data)
 					rot = Rotation(0, 30, 0)
 				},
 				{
-					time = 0.5,
 					sound = "wp_scorpion_lever_release",
+					time = 0.5,
 					pos = Vector3(),
 					rot = Rotation()
 				}
@@ -3774,8 +3774,8 @@ function TweakDataVR:init(tweak_data)
 		tec9 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_tec9_clip_slide_out"
+					sound = "wp_tec9_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -3786,8 +3786,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_tec9_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -10)
 				},
@@ -3800,8 +3800,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_tec9_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -3809,8 +3809,8 @@ function TweakDataVR:init(tweak_data)
 		uzi = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_uzi_clip_slide_out"
+					sound = "wp_uzi_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -3821,8 +3821,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_uzi_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -10)
 				},
@@ -3835,8 +3835,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_uzi_clip_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -3844,8 +3844,8 @@ function TweakDataVR:init(tweak_data)
 		sterling = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_sterling_clip_remove"
+					sound = "wp_sterling_clip_remove",
+					time = 0
 				},
 				{
 					time = 0.019,
@@ -3867,8 +3867,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_sterling_clip_insert",
+					time = 0,
 					visible = true,
 					pos = Vector3(-10, 0, 0),
 					rot = Rotation()
@@ -3884,8 +3884,8 @@ function TweakDataVR:init(tweak_data)
 					rot = Rotation(-30, 0, 0)
 				},
 				{
-					time = 0.6,
 					sound = "wp_sterling_lever_pull",
+					time = 0.6,
 					pos = Vector3(),
 					rot = Rotation()
 				}
@@ -3894,8 +3894,8 @@ function TweakDataVR:init(tweak_data)
 		m1928 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_m1928_mag_empty_out"
+					sound = "wp_m1928_mag_empty_out",
+					time = 0
 				},
 				{
 					time = 0.01,
@@ -3910,8 +3910,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_m1928_mag_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(-8, 0, -10)
 				},
@@ -3924,8 +3924,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(-4, 0, -0.1)
 				},
 				{
-					time = 0.6,
 					sound = "wp_m1928_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -3933,8 +3933,8 @@ function TweakDataVR:init(tweak_data)
 		cobray = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_cobray_mag_slipping"
+					sound = "wp_cobray_mag_slipping",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -3945,8 +3945,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_cobray_mag_slap",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -10)
 				},
@@ -3959,8 +3959,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_cobray_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -3968,8 +3968,8 @@ function TweakDataVR:init(tweak_data)
 		polymer = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_polymer_mag_out"
+					sound = "wp_polymer_mag_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -3980,8 +3980,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_polymer_mag_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -7, -15)
 				},
@@ -3994,8 +3994,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -3.5, -10)
 				},
 				{
-					time = 0.6,
 					sound = "wp_polymer_button_press",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -4003,8 +4003,8 @@ function TweakDataVR:init(tweak_data)
 		baka = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_baka_mag_slide_out"
+					sound = "wp_baka_mag_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -4015,8 +4015,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_baka_mag_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -10)
 				},
@@ -4029,8 +4029,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_baka_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -4038,8 +4038,8 @@ function TweakDataVR:init(tweak_data)
 		pm9 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_pm9_mag_slide_out"
+					sound = "wp_pm9_mag_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -4050,8 +4050,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_pm9_mag_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -10)
 				},
@@ -4064,8 +4064,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_pm9_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -4073,8 +4073,8 @@ function TweakDataVR:init(tweak_data)
 		sr2 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_sr2_pull_out_mag"
+					sound = "wp_sr2_pull_out_mag",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -4085,8 +4085,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_sr2_put_in_mag",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -10)
 				},
@@ -4099,8 +4099,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.5,
 					sound = "wp_sr2_release_lever",
+					time = 0.5,
 					pos = Vector3()
 				}
 			}
@@ -4108,8 +4108,8 @@ function TweakDataVR:init(tweak_data)
 		hajk = {
 			start = {
 				{
-					time = 0,
-					sound = "hajk_push_mag_release"
+					sound = "hajk_push_mag_release",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -4121,8 +4121,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "hajk_push_in_mag",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -4135,8 +4135,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "hajk_release_lever",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -4144,8 +4144,8 @@ function TweakDataVR:init(tweak_data)
 		schakal = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_schakal_mag_out"
+					sound = "wp_schakal_mag_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -4156,8 +4156,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_schakal_mag_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 2.5, -10)
 				},
@@ -4170,8 +4170,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0.9, -3.5)
 				},
 				{
-					time = 0.6,
 					sound = "wp_schakal_bolt_slap",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -4179,8 +4179,8 @@ function TweakDataVR:init(tweak_data)
 		coal = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_coal_mag_out_back"
+					sound = "wp_coal_mag_out_back",
+					time = 0
 				},
 				{
 					time = 0.001,
@@ -4202,8 +4202,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_coal_mag_in_back",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -12),
 					rot = Rotation(0, 40, 0)
@@ -4219,8 +4219,8 @@ function TweakDataVR:init(tweak_data)
 					rot = Rotation(0, 5, 0)
 				},
 				{
-					time = 0.6,
 					sound = "wp_coal_release_lever",
+					time = 0.6,
 					pos = Vector3(),
 					rot = Rotation()
 				}
@@ -4229,8 +4229,8 @@ function TweakDataVR:init(tweak_data)
 		fmg9 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_fmg9_mag_out_back"
+					sound = "wp_fmg9_mag_out_back",
+					time = 0
 				},
 				{
 					time = 0.001,
@@ -4252,8 +4252,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_fmg9_mag_in_back",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -12),
 					rot = Rotation(0, 40, 0)
@@ -4269,8 +4269,8 @@ function TweakDataVR:init(tweak_data)
 					rot = Rotation(0, 5, 0)
 				},
 				{
-					time = 0.6,
 					sound = "wp_fmg9_release_lever",
+					time = 0.6,
 					pos = Vector3(),
 					rot = Rotation()
 				}
@@ -4279,8 +4279,8 @@ function TweakDataVR:init(tweak_data)
 		erma = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_erma_mag_out"
+					sound = "wp_erma_mag_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -4291,8 +4291,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_erma_mag_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -10)
 				},
@@ -4305,8 +4305,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -3.5)
 				},
 				{
-					time = 0.6,
 					sound = "wp_erma_slide_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -4314,8 +4314,8 @@ function TweakDataVR:init(tweak_data)
 		shepheard = {
 			start = {
 				{
-					time = 0,
-					sound = "shepheard_clip_out"
+					sound = "shepheard_clip_out",
+					time = 0
 				},
 				{
 					time = 0.02,
@@ -4337,8 +4337,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "shepheard_clip_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 2, -10),
 					rot = Rotation()
@@ -4354,52 +4354,52 @@ function TweakDataVR:init(tweak_data)
 					rot = Rotation(0, 30, 0)
 				},
 				{
-					time = 0.5,
 					sound = "shepheard_bolt_forward",
+					time = 0.5,
 					pos = Vector3(),
 					rot = Rotation()
 				}
 			}
 		},
 		serbu = {
-			reload_part_type = "lower_reciever",
 			custom_mag_unit = "units/pd2_dlc_vr/units/wpn_vr_m_slug/wpn_vr_m_slug_6",
+			reload_part_type = "lower_reciever",
 			start = {
 				{
-					time = 0,
-					sound = "wp_reinbeck_reload_cock"
+					sound = "wp_reinbeck_reload_cock",
+					time = 0
 				}
 			},
 			finish = {
 				{
-					time = 0,
-					sound = "wp_reinbeck_shell_insert"
+					sound = "wp_reinbeck_shell_insert",
+					time = 0
 				},
 				{
-					time = 0.5,
-					sound = "wp_reinbeck_reload_cock"
+					sound = "wp_reinbeck_reload_cock",
+					time = 0.5
 				}
 			}
 		},
 		judge = {
-			reload_part_type = "lower_reciever",
 			custom_mag_unit = "units/pd2_dlc_vr/units/wpn_vr_m_slug/wpn_vr_m_slug_6",
+			reload_part_type = "lower_reciever",
 			start = {
 				{
-					time = 0,
 					sound = "wp_rbull_drum_open",
+					time = 0,
 					anims = {
 						{
 							anim_group = "reload",
-							to = 1,
 							from = 0.5,
-							part = "lower_reciever"
+							part = "lower_reciever",
+							to = 1
 						}
 					}
 				},
 				{
-					time = 0.02,
-					sound = "wp_rbull_shells_out"
+					sound = "wp_rbull_shells_out",
+					time = 0.02
 				},
 				{
 					time = 0.09,
@@ -4416,21 +4416,21 @@ function TweakDataVR:init(tweak_data)
 						}
 					},
 					effect = {
-						part = "lower_reciever",
 						name = "effects/payday2/particles/weapons/shells/shell_judge_dump",
-						object = "align_house_align"
+						object = "align_house_align",
+						part = "lower_reciever"
 					}
 				}
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_rbull_shells_in",
+					time = 0,
 					anims = {
 						{
 							anim_group = "reload",
-							part = "lower_reciever",
-							from = 1.9
+							from = 1.9,
+							part = "lower_reciever"
 						}
 					},
 					visible = {
@@ -4447,30 +4447,30 @@ function TweakDataVR:init(tweak_data)
 					}
 				},
 				{
-					time = 0.5,
-					sound = "wp_rbull_drum_close"
+					sound = "wp_rbull_drum_close",
+					time = 0.5
 				}
 			}
 		},
 		rsh12 = {
-			reload_part_type = "lower_reciever",
 			custom_mag_unit = "units/pd2_dlc_vr/units/wpn_vr_m_slug/wpn_vr_m_slug_6",
+			reload_part_type = "lower_reciever",
 			start = {
 				{
-					time = 0,
 					sound = "wp_rbull_drum_open",
+					time = 0,
 					anims = {
 						{
 							anim_group = "reload",
-							to = 1,
 							from = 0.5,
-							part = "lower_reciever"
+							part = "lower_reciever",
+							to = 1
 						}
 					}
 				},
 				{
-					time = 0.02,
-					sound = "wp_rbull_shells_out"
+					sound = "wp_rbull_shells_out",
+					time = 0.02
 				},
 				{
 					time = 0.09,
@@ -4487,21 +4487,21 @@ function TweakDataVR:init(tweak_data)
 						}
 					},
 					effect = {
-						part = "lower_reciever",
 						name = "effects/payday2/particles/weapons/shells/shell_judge_dump",
-						object = "align_house_align"
+						object = "align_house_align",
+						part = "lower_reciever"
 					}
 				}
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_rbull_shells_in",
+					time = 0,
 					anims = {
 						{
 							anim_group = "reload",
-							part = "lower_reciever",
-							from = 1.9
+							from = 1.9,
+							part = "lower_reciever"
 						}
 					},
 					visible = {
@@ -4518,18 +4518,18 @@ function TweakDataVR:init(tweak_data)
 					}
 				},
 				{
-					time = 0.5,
-					sound = "wp_rbull_drum_close"
+					sound = "wp_rbull_drum_close",
+					time = 0.5
 				}
 			}
 		},
 		striker = {
-			reload_part_type = "lower_reciever",
 			custom_mag_unit = "units/pd2_dlc_vr/units/wpn_vr_m_slug/wpn_vr_m_slug_6",
+			reload_part_type = "lower_reciever",
 			start = {
 				{
-					time = 0,
-					sound = "wp_reinbeck_reload_cock"
+					sound = "wp_reinbeck_reload_cock",
+					time = 0
 				},
 				{
 					time = 0.03
@@ -4537,22 +4537,22 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
-					sound = "wp_reinbeck_shell_insert"
+					sound = "wp_reinbeck_shell_insert",
+					time = 0
 				},
 				{
-					time = 0.5,
-					sound = "wp_reinbeck_reload_cock"
+					sound = "wp_reinbeck_reload_cock",
+					time = 0.5
 				}
 			}
 		},
 		m37 = {
-			reload_part_type = "lower_reciever",
 			custom_mag_unit = "units/pd2_dlc_vr/units/wpn_vr_m_slug/wpn_vr_m_slug_6",
+			reload_part_type = "lower_reciever",
 			start = {
 				{
-					time = 0,
-					sound = "wp_m37_reload_enter"
+					sound = "wp_m37_reload_enter",
+					time = 0
 				},
 				{
 					time = 0.03
@@ -4564,29 +4564,29 @@ function TweakDataVR:init(tweak_data)
 					anims = {
 						{
 							anim_group = "reload_exit",
-							to = 0.7,
 							from = 0.2,
-							part = "foregrip"
+							part = "foregrip",
+							to = 0.7
 						}
 					}
 				},
 				{
-					time = 0,
-					sound = "wp_m37_insert_shell"
+					sound = "wp_m37_insert_shell",
+					time = 0
 				},
 				{
-					time = 0.6,
-					sound = "wp_m37_reload_exit_push_handle"
+					sound = "wp_m37_reload_exit_push_handle",
+					time = 0.6
 				}
 			}
 		},
 		ultima = {
-			reload_part_type = "lower_reciever",
 			custom_mag_unit = "units/pd2_dlc_vr/units/wpn_vr_m_slug/wpn_vr_m_slug_6",
+			reload_part_type = "lower_reciever",
 			start = {
 				{
-					time = 0,
-					sound = "wp_m37_reload_enter"
+					sound = "wp_m37_reload_enter",
+					time = 0
 				},
 				{
 					time = 0.03
@@ -4598,29 +4598,29 @@ function TweakDataVR:init(tweak_data)
 					anims = {
 						{
 							anim_group = "reload_exit",
-							to = 0.7,
 							from = 0.2,
-							part = "foregrip"
+							part = "foregrip",
+							to = 0.7
 						}
 					}
 				},
 				{
-					time = 0,
-					sound = "wp_ultima_insert_shell"
+					sound = "wp_ultima_insert_shell",
+					time = 0
 				},
 				{
-					time = 0.6,
-					sound = "wp_ultima_reload_exit_push_handle"
+					sound = "wp_ultima_reload_exit_push_handle",
+					time = 0.6
 				}
 			}
 		},
 		m1897 = {
-			reload_part_type = "lower_reciever",
 			custom_mag_unit = "units/pd2_dlc_vr/units/wpn_vr_m_slug/wpn_vr_m_slug_6",
+			reload_part_type = "lower_reciever",
 			start = {
 				{
-					time = 0,
-					sound = "wp_m1897_reload_enter"
+					sound = "wp_m1897_reload_enter",
+					time = 0
 				},
 				{
 					time = 0.03
@@ -4632,29 +4632,29 @@ function TweakDataVR:init(tweak_data)
 					anims = {
 						{
 							anim_group = "reload_exit",
-							to = 0.7,
 							from = 0.2,
-							part = "foregrip"
+							part = "foregrip",
+							to = 0.7
 						}
 					}
 				},
 				{
-					time = 0,
-					sound = "wp_m1897_insert_shell"
+					sound = "wp_m1897_insert_shell",
+					time = 0
 				},
 				{
-					time = 0.6,
-					sound = "wp_m1897_reload_exit_push_handle"
+					sound = "wp_m1897_reload_exit_push_handle",
+					time = 0.6
 				}
 			}
 		},
 		m590 = {
-			reload_part_type = "lower_reciever",
 			custom_mag_unit = "units/pd2_dlc_vr/units/wpn_vr_m_slug/wpn_vr_m_slug_6",
+			reload_part_type = "lower_reciever",
 			start = {
 				{
-					time = 0,
-					sound = "wp_m590_reload_enter"
+					sound = "wp_m590_reload_enter",
+					time = 0
 				}
 			},
 			finish = {
@@ -4663,27 +4663,27 @@ function TweakDataVR:init(tweak_data)
 					anims = {
 						{
 							anim_group = "reload_exit",
-							to = 0.7,
 							from = 0.2,
-							part = "foregrip"
+							part = "foregrip",
+							to = 0.7
 						}
 					}
 				},
 				{
-					time = 0,
-					sound = "wp_m590_insert_shell"
+					sound = "wp_m590_insert_shell",
+					time = 0
 				},
 				{
-					time = 0.5,
-					sound = "wp_m590_reload_exit_push_handle"
+					sound = "wp_m590_reload_exit_push_handle",
+					time = 0.5
 				}
 			}
 		},
 		rota = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_rota_slide_out"
+					sound = "wp_rota_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -4695,8 +4695,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_rota_slide_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20),
 					rot = Rotation(0, 30, 0)
@@ -4712,8 +4712,8 @@ function TweakDataVR:init(tweak_data)
 					rot = Rotation(0, 10, 60)
 				},
 				{
-					time = 0.99,
 					sound = "wp_rota_rotate_mag",
+					time = 0.99,
 					pos = Vector3(),
 					rot = Rotation()
 				}
@@ -4722,8 +4722,8 @@ function TweakDataVR:init(tweak_data)
 		basset = {
 			start = {
 				{
-					time = 0,
-					sound = "basset_mag_out"
+					sound = "basset_mag_out",
+					time = 0
 				},
 				{
 					time = 0.02,
@@ -4740,8 +4740,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "basset_mag_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20),
 					rot = Rotation()
@@ -4752,8 +4752,8 @@ function TweakDataVR:init(tweak_data)
 					rot = Rotation(0, 30, 0)
 				},
 				{
-					time = 0.5,
 					sound = "basset_lever_release",
+					time = 0.5,
 					pos = Vector3(),
 					rot = Rotation()
 				}
@@ -4773,8 +4773,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_rpg_grenade_slide_01",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 80, 0),
 					rot = Rotation()
@@ -4790,20 +4790,20 @@ function TweakDataVR:init(tweak_data)
 					rot = Rotation(0, 0, 40)
 				},
 				{
-					time = 0.99,
 					sound = "wp_rpg_safety_click_01",
+					time = 0.99,
 					pos = Vector3(0, 0, 0.1),
 					rot = Rotation()
 				}
 			}
 		},
 		hunter = {
-			reload_part_type = "ammo",
 			custom_mag_unit = "units/pd2_dlc_turtles/weapons/wpn_fps_bow_hunter_pts/wpn_fps_bow_hunter_m_standard",
+			reload_part_type = "ammo",
 			start = {
 				{
-					time = 0,
 					sound = "wp_dragon_lever_pull",
+					time = 0,
 					anims = {
 						{
 							anim_group = "reload",
@@ -4823,8 +4823,8 @@ function TweakDataVR:init(tweak_data)
 					visible = true
 				},
 				{
-					time = 0.5,
-					sound = "wp_dragon_lever_release"
+					sound = "wp_dragon_lever_release",
+					time = 0.5
 				}
 			}
 		},
@@ -4843,36 +4843,36 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_china_push_in_shell",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -10, -20),
 					rot = Rotation(0, 0, -10)
 				},
 				{
-					time = 0.3,
 					sound = "wp_china_push_in_shell",
+					time = 0.3,
 					visible = true,
 					pos = Vector3(0, -10, -8),
 					rot = Rotation(0, 30, 0)
 				},
 				{
-					time = 0.8,
 					sound = "wp_china_push_in_shell",
+					time = 0.8,
 					visible = true,
 					pos = Vector3(0, -8, -5),
 					rot = Rotation(0, 20, 0)
 				},
 				{
-					time = 0.9,
 					sound = "wp_china_push_in_shell",
+					time = 0.9,
 					visible = true,
 					pos = Vector3(0, -7, -2),
 					rot = Rotation(0, 20, 0)
 				},
 				{
-					time = 0.99,
 					sound = "wp_china_push_handle",
+					time = 0.99,
 					pos = Vector3(),
 					rot = Rotation()
 				}
@@ -4881,8 +4881,8 @@ function TweakDataVR:init(tweak_data)
 		arbiter = {
 			start = {
 				{
-					time = 0,
-					sound = "arbiter_mag_out"
+					sound = "arbiter_mag_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -4894,8 +4894,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "arbiter_mag_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -4908,8 +4908,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "arbiter_release_lever",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -4917,8 +4917,8 @@ function TweakDataVR:init(tweak_data)
 		ms3gl = {
 			start = {
 				{
-					time = 0,
-					sound = "ms3gl_mag_out"
+					sound = "ms3gl_mag_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -4930,8 +4930,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "ms3gl_mag_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -4944,8 +4944,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "ms3gl_release_lever",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -4957,22 +4957,22 @@ function TweakDataVR:init(tweak_data)
 					anims = {
 						{
 							anim_group = "reload",
-							to = 2,
-							from = 1
+							from = 1,
+							to = 2
 						}
 					}
 				},
 				{
-					time = 0.01,
-					sound = "wp_ray_grab"
+					sound = "wp_ray_grab",
+					time = 0.01
 				},
 				{
-					time = 0.1,
-					sound = "wp_ray_pull_out"
+					sound = "wp_ray_pull_out",
+					time = 0.1
 				},
 				{
-					time = 0.15,
-					sound = "wp_ray_lift"
+					sound = "wp_ray_lift",
+					time = 0.15
 				},
 				{
 					drop_mag = true,
@@ -4980,14 +4980,14 @@ function TweakDataVR:init(tweak_data)
 					visible = {
 						visible = false,
 						parts = {
-							magazine = true,
-							foregrip = true
+							foregrip = true,
+							magazine = true
 						}
 					}
 				},
 				{
-					time = 0.22,
-					sound = "wp_ray_lift"
+					sound = "wp_ray_lift",
+					time = 0.22
 				}
 			},
 			finish = {
@@ -4997,8 +4997,8 @@ function TweakDataVR:init(tweak_data)
 					visible = {
 						visible = true,
 						parts = {
-							magazine = true,
-							foregrip = true
+							foregrip = true,
+							magazine = true
 						}
 					},
 					anims = {
@@ -5009,32 +5009,32 @@ function TweakDataVR:init(tweak_data)
 					}
 				},
 				{
-					time = 0.01,
-					sound = "wp_ray_push_down_01"
+					sound = "wp_ray_push_down_01",
+					time = 0.01
 				},
 				{
-					time = 0.05,
-					sound = "wp_ray_shoulder"
+					sound = "wp_ray_shoulder",
+					time = 0.05
 				},
 				{
-					time = 0.1,
-					sound = "wp_ray_hit"
+					sound = "wp_ray_hit",
+					time = 0.1
 				},
 				{
-					time = 0.45,
-					sound = "wp_ray_push_down_02"
+					sound = "wp_ray_push_down_02",
+					time = 0.45
 				},
 				{
-					time = 0.5,
-					sound = "wp_ray_pull_up"
+					sound = "wp_ray_pull_up",
+					time = 0.5
 				}
 			}
 		},
 		ecp = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_ecp_remove_clip"
+					sound = "wp_ecp_remove_clip",
+					time = 0
 				},
 				{
 					time = 0.01,
@@ -5061,8 +5061,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_ecp_attach_clip",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -15, 4),
 					rot = Rotation(0, 0, 0)
@@ -5078,8 +5078,8 @@ function TweakDataVR:init(tweak_data)
 					rot = Rotation(0, -5, 0)
 				},
 				{
-					time = 0.5,
 					sound = "ecp_lever_release",
+					time = 0.5,
 					pos = Vector3(),
 					rot = Rotation()
 				}
@@ -5092,8 +5092,8 @@ function TweakDataVR:init(tweak_data)
 					anims = {
 						{
 							anim_group = "reload",
-							to = 1,
-							from = 0.4
+							from = 0.4,
+							to = 1
 						}
 					}
 				},
@@ -5107,15 +5107,15 @@ function TweakDataVR:init(tweak_data)
 						}
 					},
 					effect = {
-						object = "a_m",
-						name = "effects/payday2/particles/weapons/shells/shell_40mm"
+						name = "effects/payday2/particles/weapons/shells/shell_40mm",
+						object = "a_m"
 					}
 				}
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_gl40_shell_in",
+					time = 0,
 					visible = {
 						visible = true,
 						parts = {
@@ -5124,8 +5124,8 @@ function TweakDataVR:init(tweak_data)
 					}
 				},
 				{
-					time = 0.99,
 					sound = "wp_gl40_barrel_close",
+					time = 0.99,
 					pos = Vector3(),
 					anims = {
 						{
@@ -5139,8 +5139,8 @@ function TweakDataVR:init(tweak_data)
 		welrod = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_welrod_mag_flick"
+					sound = "wp_welrod_mag_flick",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -5151,8 +5151,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_welrod_mag_contact",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -5, -20)
 				},
@@ -5165,8 +5165,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -2, -7)
 				},
 				{
-					time = 0.6,
 					sound = "wp_welrod_bolt_lock",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -5174,8 +5174,8 @@ function TweakDataVR:init(tweak_data)
 		pmm = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_pmm_reload_mag_out"
+					sound = "wp_pmm_reload_mag_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -5186,8 +5186,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_pmm_reload_mag_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -5, -20)
 				},
@@ -5200,8 +5200,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -2.5, -10)
 				},
 				{
-					time = 0.6,
 					sound = "wp_pmm_reload_bolt_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -5209,8 +5209,8 @@ function TweakDataVR:init(tweak_data)
 		x_pmm = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_pmm_reload_mag_out"
+					sound = "wp_pmm_reload_mag_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -5221,8 +5221,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_pmm_reload_mag_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -5, -20)
 				},
@@ -5235,8 +5235,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -2.5, -10)
 				},
 				{
-					time = 0.6,
 					sound = "wp_pmm_reload_bolt_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -5244,8 +5244,8 @@ function TweakDataVR:init(tweak_data)
 		speen = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_pivot_reload_mag_out"
+					sound = "wp_pivot_reload_mag_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -5257,8 +5257,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_pivot_reload_mag_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -7, -20)
 				},
@@ -5271,30 +5271,30 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -1.5, -4.5)
 				},
 				{
-					time = 0.6,
 					sound = "wp_pivot_reload_bolt_close",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
 		},
 		dart = {
-			reload_part_type = "ammo",
 			custom_mag_unit = "units/pd2_dlc_esp/weapons/wpn_fps_spe_dart_pts/ammos/wpn_fps_spe_dart_ammo_poison",
+			reload_part_type = "ammo",
 			start = {
 				{
-					{
-						time = 0.2,
-						sound = "wp_dart_reload_chamber_open"
-					},
-					visible = false,
-					time = 0,
-					sound = "wp_dart_reload_valve_close",
 					anims = {
 						{
 							anim_group = "reload",
 							part = "lower_body"
 						}
-					}
+					},
+					{
+						sound = "wp_dart_reload_chamber_open",
+						time = 0.2
+					},
+					sound = "wp_dart_reload_valve_close",
+					time = 0,
+					visible = false
 				}
 			},
 			finish = {
@@ -5304,12 +5304,12 @@ function TweakDataVR:init(tweak_data)
 					visible = true
 				},
 				{
-					time = 0.25,
-					sound = "wp_dart_reload_chamber_close"
+					sound = "wp_dart_reload_chamber_close",
+					time = 0.25
 				},
 				{
-					time = 0.5,
-					sound = "wp_dart_reload_valve_open"
+					sound = "wp_dart_reload_valve_open",
+					time = 0.5
 				}
 			}
 		},
@@ -5317,13 +5317,13 @@ function TweakDataVR:init(tweak_data)
 			reload_part_type = "ammo",
 			start = {
 				{
-					time = 0,
 					sound = "wp_model3_cylinder_out",
+					time = 0,
 					anims = {
 						{
 							anim_group = "reload",
-							part = "lower_body",
 							from = 0,
+							part = "lower_body",
 							to = 1.3333333333333333,
 							visible = {
 								visible = false,
@@ -5340,17 +5340,17 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
-					sound = "wp_model3_insert"
+					sound = "wp_model3_insert",
+					time = 0
 				},
 				{
-					time = 0.5,
 					sound = "wp_model3_cylinder_in",
+					time = 0.5,
 					anims = {
 						{
 							anim_group = "reload",
-							part = "lower_body",
 							from = 2,
+							part = "lower_body",
 							visible = {
 								visible = true,
 								parts = {
@@ -5368,8 +5368,8 @@ function TweakDataVR:init(tweak_data)
 		new_m4 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_m4_clip_grab_out"
+					sound = "wp_m4_clip_grab_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -5381,8 +5381,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_m4_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -5395,8 +5395,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_m4_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -5404,8 +5404,8 @@ function TweakDataVR:init(tweak_data)
 		amcar = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_m4_clip_grab_out"
+					sound = "wp_m4_clip_grab_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -5417,8 +5417,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_m4_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -5431,8 +5431,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_m4_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -5440,8 +5440,8 @@ function TweakDataVR:init(tweak_data)
 		m16 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_m16_clip_grab_throw"
+					sound = "wp_m16_clip_grab_throw",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -5453,8 +5453,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_m16_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -5467,8 +5467,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_m16_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -5476,8 +5476,8 @@ function TweakDataVR:init(tweak_data)
 		ak74 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_ak47_clip_slide_out"
+					sound = "wp_ak47_clip_slide_out",
+					time = 0
 				},
 				{
 					time = 0.02,
@@ -5494,8 +5494,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_ak47_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20),
 					rot = Rotation()
@@ -5506,8 +5506,8 @@ function TweakDataVR:init(tweak_data)
 					rot = Rotation(0, 30, 0)
 				},
 				{
-					time = 0.5,
 					sound = "wp_ak47_lever_release",
+					time = 0.5,
 					pos = Vector3(),
 					rot = Rotation()
 				}
@@ -5516,8 +5516,8 @@ function TweakDataVR:init(tweak_data)
 		akm = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_ak47_clip_slide_out"
+					sound = "wp_ak47_clip_slide_out",
+					time = 0
 				},
 				{
 					time = 0.02,
@@ -5534,8 +5534,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_ak47_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20),
 					rot = Rotation()
@@ -5546,8 +5546,8 @@ function TweakDataVR:init(tweak_data)
 					rot = Rotation(0, 30, 0)
 				},
 				{
-					time = 0.5,
 					sound = "wp_ak47_lever_release",
+					time = 0.5,
 					pos = Vector3(),
 					rot = Rotation()
 				}
@@ -5556,8 +5556,8 @@ function TweakDataVR:init(tweak_data)
 		akm_gold = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_ak47_clip_slide_out"
+					sound = "wp_ak47_clip_slide_out",
+					time = 0
 				},
 				{
 					time = 0.02,
@@ -5574,8 +5574,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_ak47_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20),
 					rot = Rotation()
@@ -5586,8 +5586,8 @@ function TweakDataVR:init(tweak_data)
 					rot = Rotation(0, 30, 0)
 				},
 				{
-					time = 0.5,
 					sound = "wp_ak47_lever_release",
+					time = 0.5,
 					pos = Vector3(),
 					rot = Rotation()
 				}
@@ -5596,8 +5596,8 @@ function TweakDataVR:init(tweak_data)
 		ak5 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_m4_clip_grab_out"
+					sound = "wp_m4_clip_grab_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -5609,8 +5609,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_m4_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -5623,8 +5623,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_m4_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -5632,8 +5632,8 @@ function TweakDataVR:init(tweak_data)
 		vityaz = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_vityaz_clip_grab_out"
+					sound = "wp_vityaz_clip_grab_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -5645,8 +5645,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_vityaz_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -5659,8 +5659,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_vityaz_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -5668,8 +5668,8 @@ function TweakDataVR:init(tweak_data)
 		aug = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_aug_clip_grab_out"
+					sound = "wp_aug_clip_grab_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -5681,8 +5681,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_aug_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -5695,8 +5695,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_aug_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -5704,8 +5704,8 @@ function TweakDataVR:init(tweak_data)
 		tkb = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_tkb_clip_grab_out"
+					sound = "wp_tkb_clip_grab_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -5717,8 +5717,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_tkb_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -5731,8 +5731,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_tkb_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -5740,8 +5740,8 @@ function TweakDataVR:init(tweak_data)
 		g36 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_g36_clip_slide_out"
+					sound = "wp_g36_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -5753,8 +5753,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_g36_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -5767,8 +5767,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_g36_clip_in_hit",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -5776,8 +5776,8 @@ function TweakDataVR:init(tweak_data)
 		new_m14 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_m14_clip_slide_out"
+					sound = "wp_m14_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -5789,8 +5789,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_m14_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -5803,8 +5803,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_m14_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -5812,8 +5812,8 @@ function TweakDataVR:init(tweak_data)
 		s552 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_sig553_clip_grab"
+					sound = "wp_sig553_clip_grab",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -5825,8 +5825,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_sig553_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -5839,8 +5839,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_sig553_lever_punch",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -5848,8 +5848,8 @@ function TweakDataVR:init(tweak_data)
 		scar = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_scar_clip_slide_out"
+					sound = "wp_scar_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -5861,8 +5861,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_scar_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -5875,8 +5875,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_scar_push_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -5884,8 +5884,8 @@ function TweakDataVR:init(tweak_data)
 		fal = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_fn_fal_clip_out"
+					sound = "wp_fn_fal_clip_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -5897,8 +5897,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_fn_fal_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -5911,8 +5911,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_fn_fal_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -5920,8 +5920,8 @@ function TweakDataVR:init(tweak_data)
 		g3 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_g3_clip_slide_out"
+					sound = "wp_g3_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -5933,8 +5933,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_g3_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -5947,8 +5947,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_g3_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -5956,8 +5956,8 @@ function TweakDataVR:init(tweak_data)
 		galil = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_galil_clip_slide_out"
+					sound = "wp_galil_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -5969,8 +5969,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_galil_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -5983,8 +5983,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_galil_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -5992,8 +5992,8 @@ function TweakDataVR:init(tweak_data)
 		hcar = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_hcar_clip_slide_out"
+					sound = "wp_hcar_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -6005,8 +6005,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_hcar_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -6019,8 +6019,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_hcar_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -6028,8 +6028,8 @@ function TweakDataVR:init(tweak_data)
 		famas = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_famas_clip_out"
+					sound = "wp_famas_clip_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -6041,8 +6041,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_famas_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -6055,8 +6055,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_famas_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -6064,8 +6064,8 @@ function TweakDataVR:init(tweak_data)
 		l85a2 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_l85_mag_slide_out"
+					sound = "wp_l85_mag_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -6077,8 +6077,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_l85_mag_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -6091,8 +6091,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_l85_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -6100,8 +6100,8 @@ function TweakDataVR:init(tweak_data)
 		vhs = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_vhs_mag_slide_out"
+					sound = "wp_vhs_mag_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -6113,8 +6113,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_vhs_mag_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -6127,8 +6127,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_vhs_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -6136,8 +6136,8 @@ function TweakDataVR:init(tweak_data)
 		groza = {
 			start = {
 				{
-					time = 0,
-					sound = "groza_mag_out"
+					sound = "groza_mag_out",
+					time = 0
 				},
 				{
 					time = 0.02,
@@ -6154,8 +6154,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "groza_mag_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20),
 					rot = Rotation()
@@ -6166,8 +6166,8 @@ function TweakDataVR:init(tweak_data)
 					rot = Rotation(0, 30, 0)
 				},
 				{
-					time = 0.5,
 					sound = "groza_lever_release",
+					time = 0.5,
 					pos = Vector3(),
 					rot = Rotation()
 				}
@@ -6176,8 +6176,8 @@ function TweakDataVR:init(tweak_data)
 		asval = {
 			start = {
 				{
-					time = 0,
-					sound = "asval_mag_click_out"
+					sound = "asval_mag_click_out",
+					time = 0
 				},
 				{
 					time = 0.02,
@@ -6194,8 +6194,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "asval_mag_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20),
 					rot = Rotation()
@@ -6206,8 +6206,8 @@ function TweakDataVR:init(tweak_data)
 					rot = Rotation(0, 30, 0)
 				},
 				{
-					time = 0.5,
 					sound = "asval_release_lever",
+					time = 0.5,
 					pos = Vector3(),
 					rot = Rotation()
 				}
@@ -6216,8 +6216,8 @@ function TweakDataVR:init(tweak_data)
 		sub2000 = {
 			start = {
 				{
-					time = 0,
-					sound = "sub2k_mag_out"
+					sound = "sub2k_mag_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -6229,8 +6229,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "sub2k_mag_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -7, -20)
 				},
@@ -6243,8 +6243,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -1.5, -4.5)
 				},
 				{
-					time = 0.6,
 					sound = "sub2k_release_lever",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -6252,8 +6252,8 @@ function TweakDataVR:init(tweak_data)
 		tecci = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_tecci_mag_out"
+					sound = "wp_tecci_mag_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -6265,8 +6265,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_tecci_mag_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -6279,8 +6279,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_tecci_bolt_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -6288,8 +6288,8 @@ function TweakDataVR:init(tweak_data)
 		contraband = {
 			start = {
 				{
-					time = 0,
-					sound = "contraband_mag_out"
+					sound = "contraband_mag_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -6301,8 +6301,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "contraband_mag_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -6315,8 +6315,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "contraband_bolt_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -6324,8 +6324,8 @@ function TweakDataVR:init(tweak_data)
 		contraband_m203 = {
 			start = {
 				{
-					time = 0,
-					sound = "contraband_grenade_pull_handle"
+					sound = "contraband_grenade_pull_handle",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -6336,14 +6336,14 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "contraband_grenade_shell_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
 				{
-					time = 0.5,
 					sound = "contraband_grenade_push_handle",
+					time = 0.5,
 					pos = Vector3()
 				}
 			}
@@ -6351,8 +6351,8 @@ function TweakDataVR:init(tweak_data)
 		groza_underbarrel = {
 			start = {
 				{
-					time = 0,
-					sound = "groza_underbarrel_shell_in"
+					sound = "groza_underbarrel_shell_in",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -6363,8 +6363,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "groza_underbarrel_shell_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				}
@@ -6373,8 +6373,8 @@ function TweakDataVR:init(tweak_data)
 		flint = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_flint_mag_out"
+					sound = "wp_flint_mag_out",
+					time = 0
 				},
 				{
 					time = 0.02,
@@ -6391,8 +6391,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_flint_mag_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20),
 					rot = Rotation()
@@ -6403,8 +6403,8 @@ function TweakDataVR:init(tweak_data)
 					rot = Rotation(0, 30, 0)
 				},
 				{
-					time = 0.5,
 					sound = "wp_flint_cock_release",
+					time = 0.5,
 					pos = Vector3(),
 					rot = Rotation()
 				}
@@ -6413,9 +6413,9 @@ function TweakDataVR:init(tweak_data)
 		ching = {
 			start = {
 				{
-					visible = false,
+					sound = "ching_bolt_back",
 					time = 0,
-					sound = "ching_bolt_back"
+					visible = false
 				},
 				{
 					time = 0.05,
@@ -6425,8 +6425,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "ching_clip_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, 10),
 					rot = Rotation(0, 10, 0)
@@ -6441,8 +6441,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, 2)
 				},
 				{
-					time = 0.6,
 					sound = "ching_bolt_forward",
+					time = 0.6,
 					pos = Vector3(),
 					rot = Rotation()
 				}
@@ -6451,8 +6451,8 @@ function TweakDataVR:init(tweak_data)
 		corgi = {
 			start = {
 				{
-					time = 0,
-					sound = "corgi_clip_out"
+					sound = "corgi_clip_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -6464,8 +6464,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "corgi_clip_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -6478,8 +6478,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "corgi_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -6487,8 +6487,8 @@ function TweakDataVR:init(tweak_data)
 		shak12 = {
 			start = {
 				{
-					time = 0,
-					sound = "shak12_clip_out"
+					sound = "shak12_clip_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -6500,8 +6500,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "shak12_clip_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -6514,8 +6514,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "shak12_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -6523,8 +6523,8 @@ function TweakDataVR:init(tweak_data)
 		komodo = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_komodo_mag_out"
+					sound = "wp_komodo_mag_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -6536,8 +6536,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_komodo_mag_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -6550,8 +6550,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_komodo_release_lever",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -6559,8 +6559,8 @@ function TweakDataVR:init(tweak_data)
 		jowi = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_g17_clip_slide_out"
+					sound = "wp_g17_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -6571,8 +6571,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_g17_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -5, -20)
 				},
@@ -6585,8 +6585,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -2, -7)
 				},
 				{
-					time = 0.6,
 					sound = "wp_g17_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -6594,8 +6594,8 @@ function TweakDataVR:init(tweak_data)
 		x_1911 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_usp_clip_out"
+					sound = "wp_usp_clip_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -6606,8 +6606,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_usp_clip_out",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -5, -20)
 				},
@@ -6620,8 +6620,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -4, -12)
 				},
 				{
-					time = 0.6,
 					sound = "wp_usp_mantel_back",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -6629,8 +6629,8 @@ function TweakDataVR:init(tweak_data)
 		x_b92fs = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_g17_clip_slide_out"
+					sound = "wp_g17_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -6641,8 +6641,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_g17_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -5, -20)
 				},
@@ -6655,25 +6655,25 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -3, -10)
 				},
 				{
-					time = 0.6,
 					sound = "wp_g17_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
 		},
 		x_rage = {
-			reload_part_type = "upper_reciever",
 			custom_mag_unit = "units/pd2_dlc_vr/units/wpn_pis_speedloader_6x/wpn_pis_speedloader_6x",
+			reload_part_type = "upper_reciever",
 			start = {
 				{
-					time = 0,
 					sound = "wp_rbull_drum_open",
+					time = 0,
 					anims = {
 						{
 							anim_group = "reload",
-							to = 0.7,
 							from = 0.2,
-							part = "upper_reciever"
+							part = "upper_reciever",
+							to = 0.7
 						}
 					}
 				},
@@ -6688,20 +6688,20 @@ function TweakDataVR:init(tweak_data)
 						}
 					},
 					effect = {
-						part = "upper_reciever",
 						name = "effects/payday2/particles/weapons/shells/shell_revolver_dump",
-						object = "align_house_align"
+						object = "align_house_align",
+						part = "upper_reciever"
 					}
 				},
 				{
-					time = 0.9,
-					sound = "wp_rbull_shells_out"
+					sound = "wp_rbull_shells_out",
+					time = 0.9
 				}
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_rbull_shells_in",
+					time = 0,
 					visible = {
 						visible = true,
 						parts = {
@@ -6712,14 +6712,14 @@ function TweakDataVR:init(tweak_data)
 					}
 				},
 				{
-					time = 0.5,
 					sound = "wp_rbull_drum_close",
+					time = 0.5,
 					pos = Vector3(),
 					anims = {
 						{
 							anim_group = "reload",
-							part = "upper_reciever",
-							from = 3.2
+							from = 3.2,
+							part = "upper_reciever"
 						}
 					}
 				}
@@ -6728,8 +6728,8 @@ function TweakDataVR:init(tweak_data)
 		x_deagle = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_g17_clip_slide_out"
+					sound = "wp_g17_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -6740,8 +6740,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_g17_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -3, -20)
 				},
@@ -6754,8 +6754,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -1.6, -10)
 				},
 				{
-					time = 0.6,
 					sound = "wp_g17_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -6763,8 +6763,8 @@ function TweakDataVR:init(tweak_data)
 		x_g22c = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_g17_clip_slide_out"
+					sound = "wp_g17_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -6775,8 +6775,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_g17_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -7, -20)
 				},
@@ -6789,8 +6789,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -4, -10)
 				},
 				{
-					time = 0.6,
 					sound = "wp_g17_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -6798,8 +6798,8 @@ function TweakDataVR:init(tweak_data)
 		x_g17 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_g17_clip_slide_out"
+					sound = "wp_g17_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -6810,8 +6810,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_g17_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -7, -20)
 				},
@@ -6824,8 +6824,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -4, -10)
 				},
 				{
-					time = 0.6,
 					sound = "wp_g17_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -6833,8 +6833,8 @@ function TweakDataVR:init(tweak_data)
 		x_usp = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_usp_clip_out"
+					sound = "wp_usp_clip_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -6845,8 +6845,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_usp_clip_out",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -5, -20)
 				},
@@ -6859,8 +6859,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -3, -10)
 				},
 				{
-					time = 0.6,
 					sound = "wp_usp_mantel_back",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -6868,8 +6868,8 @@ function TweakDataVR:init(tweak_data)
 		x_packrat = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_packrat_mag_throw"
+					sound = "wp_packrat_mag_throw",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -6880,8 +6880,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_packrat_mag_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -6, -20)
 				},
@@ -6894,8 +6894,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -2.5, -7)
 				},
 				{
-					time = 0.6,
 					sound = "wp_packrat_slide_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -6903,8 +6903,8 @@ function TweakDataVR:init(tweak_data)
 		x_shrew = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_g17_clip_slide_out"
+					sound = "wp_g17_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -6915,8 +6915,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_g17_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -7, -20)
 				},
@@ -6929,8 +6929,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -4, -10)
 				},
 				{
-					time = 0.6,
 					sound = "wp_g17_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -6938,8 +6938,8 @@ function TweakDataVR:init(tweak_data)
 		x_ppk = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_g17_clip_slide_out"
+					sound = "wp_g17_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -6950,8 +6950,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_g17_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -5, -20)
 				},
@@ -6964,8 +6964,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -2.5, -10)
 				},
 				{
-					time = 0.6,
 					sound = "wp_g17_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -6973,8 +6973,8 @@ function TweakDataVR:init(tweak_data)
 		x_p226 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_usp_clip_out"
+					sound = "wp_usp_clip_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -6985,8 +6985,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_usp_clip_out",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -5, -20)
 				},
@@ -6999,8 +6999,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -2.5, -10)
 				},
 				{
-					time = 0.6,
 					sound = "wp_usp_mantel_back",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -7009,8 +7009,8 @@ function TweakDataVR:init(tweak_data)
 			custom_mag_unit = "units/pd2_dlc_vr/units/wpn_pis_c96_mag/wpn_pis_c96_mag",
 			start = {
 				{
-					time = 0,
-					sound = "wp_c96_mantel_back"
+					sound = "wp_c96_mantel_back",
+					time = 0
 				},
 				{
 					time = 0.05
@@ -7018,32 +7018,32 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_c96_mantel_back",
+					time = 0,
 					anims = {
 						{
 							anim_group = "reload",
-							to = 2.7,
 							from = 2.6,
-							part = "magazine"
+							part = "magazine",
+							to = 2.7
 						}
 					}
 				},
 				{
-					time = 0,
-					sound = "wp_c96_second_slide"
+					sound = "wp_c96_second_slide",
+					time = 0
 				},
 				{
-					time = 0.5,
-					sound = "wp_c96_release"
+					sound = "wp_c96_release",
+					time = 0.5
 				},
 				{
 					time = 0.99,
 					anims = {
 						{
 							anim_group = "reload",
-							to = 0,
-							part = "magazine"
+							part = "magazine",
+							to = 0
 						}
 					}
 				}
@@ -7052,8 +7052,8 @@ function TweakDataVR:init(tweak_data)
 		x_g18c = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_g17_clip_slide_out"
+					sound = "wp_g17_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -7064,8 +7064,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_g17_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -7, -20)
 				},
@@ -7078,8 +7078,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -4, -10)
 				},
 				{
-					time = 0.6,
 					sound = "wp_g17_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -7087,8 +7087,8 @@ function TweakDataVR:init(tweak_data)
 		x_m1911 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_g17_clip_slide_out"
+					sound = "wp_g17_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -7099,8 +7099,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_g17_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -7, -20)
 				},
@@ -7113,8 +7113,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -4, -10)
 				},
 				{
-					time = 0.6,
 					sound = "wp_g17_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -7122,8 +7122,8 @@ function TweakDataVR:init(tweak_data)
 		x_hs2000 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_usp_clip_out"
+					sound = "wp_usp_clip_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -7134,8 +7134,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_usp_clip_out",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -5, -20)
 				},
@@ -7148,8 +7148,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -2, -7)
 				},
 				{
-					time = 0.6,
 					sound = "wp_usp_mantel_back",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -7158,20 +7158,20 @@ function TweakDataVR:init(tweak_data)
 			custom_mag_unit = "units/pd2_dlc_vr/units/wpn_pis_speedloader_6x/wpn_pis_speedloader_6x",
 			start = {
 				{
-					time = 0,
 					sound = "wp_mateba_open_barrel",
+					time = 0,
 					anims = {
 						{
 							anim_group = "reload",
-							to = 0.7,
 							from = 0.3,
-							part = "magazine"
+							part = "magazine",
+							to = 0.7
 						}
 					}
 				},
 				{
-					time = 0.15,
-					sound = "wp_mateba_empty_barrel"
+					sound = "wp_mateba_empty_barrel",
+					time = 0.15
 				},
 				{
 					time = 0.15,
@@ -7184,16 +7184,16 @@ function TweakDataVR:init(tweak_data)
 						}
 					},
 					effect = {
-						part = "magazine",
 						name = "effects/payday2/particles/weapons/shells/shell_revolver_dump",
-						object = "align_bullets"
+						object = "align_bullets",
+						part = "magazine"
 					}
 				}
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_mateba_put_in_bullets",
+					time = 0,
 					visible = {
 						visible = true,
 						parts = {
@@ -7205,22 +7205,22 @@ function TweakDataVR:init(tweak_data)
 					anims = {
 						{
 							anim_group = "reload",
-							part = "magazine",
-							from = 3.2
+							from = 3.2,
+							part = "magazine"
 						}
 					}
 				},
 				{
-					time = 0.99,
-					sound = "wp_mateba_close_barrel"
+					sound = "wp_mateba_close_barrel",
+					time = 0.99
 				}
 			}
 		},
 		x_sparrow = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_pmkr45_open_latch"
+					sound = "wp_pmkr45_open_latch",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -7231,8 +7231,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_pmkr45_load_bullet",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -5, -20)
 				},
@@ -7245,8 +7245,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -2, -7)
 				},
 				{
-					time = 0.6,
 					sound = "wp_pmkr45_close_latch",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -7254,8 +7254,8 @@ function TweakDataVR:init(tweak_data)
 		x_pl14 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_sparrow_mag_out"
+					sound = "wp_sparrow_mag_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -7266,8 +7266,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_sparrow_mag_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -5, -20)
 				},
@@ -7280,8 +7280,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -3, -10)
 				},
 				{
-					time = 0.6,
 					sound = "wp_sparrow_cock",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -7289,8 +7289,8 @@ function TweakDataVR:init(tweak_data)
 		x_breech = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_breech_clip_slide_out"
+					sound = "wp_breech_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -7301,8 +7301,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_breech_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -13, -20)
 				},
@@ -7315,8 +7315,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -6, -10)
 				},
 				{
-					time = 0.6,
 					sound = "wp_breech_lock_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -7325,8 +7325,8 @@ function TweakDataVR:init(tweak_data)
 			custom_mag_unit = "units/pd2_dlc_vr/units/wpn_pis_speedloader_6x/wpn_pis_speedloader_6x",
 			start = {
 				{
-					time = 0,
 					sound = "wp_chinchilla_cylinder_out",
+					time = 0,
 					anims = {
 						{
 							anim_group = "reload_right",
@@ -7339,23 +7339,23 @@ function TweakDataVR:init(tweak_data)
 					}
 				},
 				{
-					time = 0.02,
-					sound = "wp_chinchilla_eject_shells"
+					sound = "wp_chinchilla_eject_shells",
+					time = 0.02
 				},
 				{
 					time = 0.25,
 					visible = false,
 					effect = {
-						object = "a_m",
-						name = "effects/payday2/particles/weapons/shells/shell_revolver_dump"
+						name = "effects/payday2/particles/weapons/shells/shell_revolver_dump",
+						object = "a_m"
 					}
 				}
 			},
 			finish = {
 				{
-					visible = true,
+					sound = "wp_chinchilla_insert",
 					time = 0,
-					sound = "wp_chinchilla_insert"
+					visible = true
 				},
 				{
 					time = 0,
@@ -7369,8 +7369,8 @@ function TweakDataVR:init(tweak_data)
 					}
 				},
 				{
-					time = 0.5,
 					sound = "wp_chinchilla_cylinder_in",
+					time = 0.5,
 					anims = {
 						{
 							anim_group = "reload_right",
@@ -7388,8 +7388,8 @@ function TweakDataVR:init(tweak_data)
 			custom_mag_unit = "units/pd2_dlc_vr/units/wpn_pis_speedloader_6x/wpn_pis_speedloader_6x",
 			start = {
 				{
-					time = 0,
 					sound = "wp_model3_cylinder_out",
+					time = 0,
 					anims = {
 						{
 							anim_group = "reload_right",
@@ -7402,23 +7402,23 @@ function TweakDataVR:init(tweak_data)
 					}
 				},
 				{
-					time = 0.02,
-					sound = "wp_model3_eject_shells"
+					sound = "wp_model3_eject_shells",
+					time = 0.02
 				},
 				{
 					time = 0.25,
 					visible = false,
 					effect = {
-						object = "a_m",
-						name = "effects/payday2/particles/weapons/shells/shell_revolver_dump"
+						name = "effects/payday2/particles/weapons/shells/shell_revolver_dump",
+						object = "a_m"
 					}
 				}
 			},
 			finish = {
 				{
-					visible = true,
+					sound = "wp_model3_insert",
 					time = 0,
-					sound = "wp_model3_insert"
+					visible = true
 				},
 				{
 					time = 0,
@@ -7432,8 +7432,8 @@ function TweakDataVR:init(tweak_data)
 					}
 				},
 				{
-					time = 0.5,
 					sound = "wp_model3_cylinder_in",
+					time = 0.5,
 					anims = {
 						{
 							anim_group = "reload_right",
@@ -7450,8 +7450,8 @@ function TweakDataVR:init(tweak_data)
 		x_legacy = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_packrat_mag_throw"
+					sound = "wp_packrat_mag_throw",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -7462,8 +7462,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_packrat_mag_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -6, -20)
 				},
@@ -7476,8 +7476,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -2.5, -7)
 				},
 				{
-					time = 0.6,
 					sound = "wp_packrat_slide_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -7486,8 +7486,8 @@ function TweakDataVR:init(tweak_data)
 			custom_mag_unit = "units/pd2_dlc_vr/units/wpn_pis_speedloader_6x/wpn_pis_speedloader_6x",
 			start = {
 				{
-					time = 0,
 					sound = "wp_chinchilla_cylinder_out",
+					time = 0,
 					anims = {
 						{
 							anim_group = "reload_right",
@@ -7500,23 +7500,23 @@ function TweakDataVR:init(tweak_data)
 					}
 				},
 				{
-					time = 0.02,
-					sound = "wp_chinchilla_eject_shells"
+					sound = "wp_chinchilla_eject_shells",
+					time = 0.02
 				},
 				{
 					time = 0.25,
 					visible = false,
 					effect = {
-						object = "a_m",
-						name = "effects/payday2/particles/weapons/shells/shell_revolver_dump"
+						name = "effects/payday2/particles/weapons/shells/shell_revolver_dump",
+						object = "a_m"
 					}
 				}
 			},
 			finish = {
 				{
-					visible = true,
+					sound = "wp_chinchilla_insert",
 					time = 0,
-					sound = "wp_chinchilla_insert"
+					visible = true
 				},
 				{
 					time = 0,
@@ -7530,8 +7530,8 @@ function TweakDataVR:init(tweak_data)
 					}
 				},
 				{
-					time = 0.5,
 					sound = "wp_chinchilla_cylinder_in",
+					time = 0.5,
 					anims = {
 						{
 							anim_group = "reload_right",
@@ -7549,8 +7549,8 @@ function TweakDataVR:init(tweak_data)
 			custom_mag_unit = "units/pd2_dlc_vr/units/wpn_pis_speedloader_6x/wpn_pis_speedloader_6x",
 			start = {
 				{
-					time = 0,
 					sound = "wp_chinchilla_cylinder_out",
+					time = 0,
 					anims = {
 						{
 							anim_group = "reload_right",
@@ -7563,23 +7563,23 @@ function TweakDataVR:init(tweak_data)
 					}
 				},
 				{
-					time = 0.02,
-					sound = "wp_chinchilla_eject_shells"
+					sound = "wp_chinchilla_eject_shells",
+					time = 0.02
 				},
 				{
 					time = 0.25,
 					visible = false,
 					effect = {
-						object = "a_m",
-						name = "effects/payday2/particles/weapons/shells/shell_revolver_dump"
+						name = "effects/payday2/particles/weapons/shells/shell_revolver_dump",
+						object = "a_m"
 					}
 				}
 			},
 			finish = {
 				{
-					visible = true,
+					sound = "wp_chinchilla_insert",
 					time = 0,
-					sound = "wp_chinchilla_insert"
+					visible = true
 				},
 				{
 					time = 0,
@@ -7593,8 +7593,8 @@ function TweakDataVR:init(tweak_data)
 					}
 				},
 				{
-					time = 0.5,
 					sound = "wp_chinchilla_cylinder_in",
+					time = 0.5,
 					anims = {
 						{
 							anim_group = "reload_right",
@@ -7611,8 +7611,8 @@ function TweakDataVR:init(tweak_data)
 		x_beer = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_g17_clip_slide_out"
+					sound = "wp_g17_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -7623,8 +7623,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_g17_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -7, -20)
 				},
@@ -7637,8 +7637,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -4, -10)
 				},
 				{
-					time = 0.6,
 					sound = "wp_g17_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -7646,8 +7646,8 @@ function TweakDataVR:init(tweak_data)
 		x_czech = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_g17_clip_slide_out"
+					sound = "wp_g17_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -7658,8 +7658,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_g17_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -7, -20)
 				},
@@ -7672,8 +7672,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -4, -10)
 				},
 				{
-					time = 0.6,
 					sound = "wp_g17_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -7681,8 +7681,8 @@ function TweakDataVR:init(tweak_data)
 		x_stech = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_g17_clip_slide_out"
+					sound = "wp_g17_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -7693,8 +7693,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_g17_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -7, -20)
 				},
@@ -7707,8 +7707,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -4, -10)
 				},
 				{
-					time = 0.6,
 					sound = "wp_g17_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -7716,8 +7716,8 @@ function TweakDataVR:init(tweak_data)
 		x_holt = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_holt_mag_throw"
+					sound = "wp_holt_mag_throw",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -7728,8 +7728,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_holt_mag_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -6, -20)
 				},
@@ -7742,8 +7742,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -2.5, -7)
 				},
 				{
-					time = 0.6,
 					sound = "wp_holt_slide_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -7751,8 +7751,8 @@ function TweakDataVR:init(tweak_data)
 		x_sr2 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_sr2_pull_out_mag"
+					sound = "wp_sr2_pull_out_mag",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -7763,8 +7763,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_sr2_put_in_mag",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -10)
 				},
@@ -7777,8 +7777,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.5,
 					sound = "wp_sr2_release_lever",
+					time = 0.5,
 					pos = Vector3()
 				}
 			}
@@ -7786,8 +7786,8 @@ function TweakDataVR:init(tweak_data)
 		x_mp5 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_mp5_clip_grab"
+					sound = "wp_mp5_clip_grab",
+					time = 0
 				},
 				{
 					time = 0.02,
@@ -7809,8 +7809,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_mp5_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 2, -10),
 					rot = Rotation()
@@ -7826,8 +7826,8 @@ function TweakDataVR:init(tweak_data)
 					rot = Rotation(0, 30, 0)
 				},
 				{
-					time = 0.5,
 					sound = "wp_mp5_lever_release",
+					time = 0.5,
 					pos = Vector3(),
 					rot = Rotation()
 				}
@@ -7836,8 +7836,8 @@ function TweakDataVR:init(tweak_data)
 		x_akmsu = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_ak47_clip_slide_out"
+					sound = "wp_ak47_clip_slide_out",
+					time = 0
 				},
 				{
 					time = 0.02,
@@ -7854,8 +7854,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_ak47_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20),
 					rot = Rotation()
@@ -7866,8 +7866,8 @@ function TweakDataVR:init(tweak_data)
 					rot = Rotation(0, 30, 0)
 				},
 				{
-					time = 0.5,
 					sound = "wp_ak47_lever_release",
+					time = 0.5,
 					pos = Vector3(),
 					rot = Rotation()
 				}
@@ -7876,8 +7876,8 @@ function TweakDataVR:init(tweak_data)
 		x_vityaz = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_vityaz_clip_slide_out"
+					sound = "wp_vityaz_clip_slide_out",
+					time = 0
 				},
 				{
 					time = 0.02,
@@ -7894,8 +7894,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_vityaz_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20),
 					rot = Rotation()
@@ -7906,8 +7906,8 @@ function TweakDataVR:init(tweak_data)
 					rot = Rotation(0, 30, 0)
 				},
 				{
-					time = 0.5,
 					sound = "wp_vityaz_lever_release",
+					time = 0.5,
 					pos = Vector3(),
 					rot = Rotation()
 				}
@@ -7916,8 +7916,8 @@ function TweakDataVR:init(tweak_data)
 		x_pm9 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_pm9_mag_slide_out"
+					sound = "wp_pm9_mag_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -7928,8 +7928,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_pm9_mag_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -10)
 				},
@@ -7942,8 +7942,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_pm9_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -7951,8 +7951,8 @@ function TweakDataVR:init(tweak_data)
 		x_mp9 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_mac10_clip_slide_out"
+					sound = "wp_mac10_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -7963,8 +7963,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_mac10_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -10)
 				},
@@ -7977,8 +7977,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_mac10_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -7986,8 +7986,8 @@ function TweakDataVR:init(tweak_data)
 		x_olympic = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_m4_clip_grab_out"
+					sound = "wp_m4_clip_grab_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -7999,8 +7999,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_m4_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -8013,8 +8013,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_m4_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -8022,8 +8022,8 @@ function TweakDataVR:init(tweak_data)
 		x_p90 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_p90_clip_slide_out"
+					sound = "wp_p90_clip_slide_out",
+					time = 0
 				},
 				{
 					time = 0.01,
@@ -8050,8 +8050,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_p90_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -15, 4),
 					rot = Rotation(0, 0, 0)
@@ -8067,8 +8067,8 @@ function TweakDataVR:init(tweak_data)
 					rot = Rotation(0, -5, 0)
 				},
 				{
-					time = 0.5,
 					sound = "wp_p90_lever_release",
+					time = 0.5,
 					pos = Vector3(),
 					rot = Rotation()
 				}
@@ -8077,8 +8077,8 @@ function TweakDataVR:init(tweak_data)
 		x_mac10 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_mac10_clip_slide_out"
+					sound = "wp_mac10_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -8089,8 +8089,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_mac10_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -8103,8 +8103,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_mac10_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -8112,8 +8112,8 @@ function TweakDataVR:init(tweak_data)
 		x_m45 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_m45_clip_grab_out"
+					sound = "wp_m45_clip_grab_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -8124,8 +8124,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_m45_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -10)
 				},
@@ -8138,8 +8138,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_m45_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -8147,8 +8147,8 @@ function TweakDataVR:init(tweak_data)
 		x_mp7 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_mp7_clip_slide_out"
+					sound = "wp_mp7_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -8159,8 +8159,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_mp7_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -10)
 				},
@@ -8173,8 +8173,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -7)
 				},
 				{
-					time = 0.6,
 					sound = "wp_mp7_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -8182,8 +8182,8 @@ function TweakDataVR:init(tweak_data)
 		x_scorpion = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_scorpion_clip_slide_out"
+					sound = "wp_scorpion_clip_slide_out",
+					time = 0
 				},
 				{
 					time = 0.02,
@@ -8200,8 +8200,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_scorpion_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20),
 					rot = Rotation()
@@ -8212,8 +8212,8 @@ function TweakDataVR:init(tweak_data)
 					rot = Rotation(0, 30, 0)
 				},
 				{
-					time = 0.5,
 					sound = "wp_scorpion_lever_release",
+					time = 0.5,
 					pos = Vector3(),
 					rot = Rotation()
 				}
@@ -8222,8 +8222,8 @@ function TweakDataVR:init(tweak_data)
 		x_tec9 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_tec9_clip_slide_out"
+					sound = "wp_tec9_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -8234,8 +8234,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_tec9_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -10)
 				},
@@ -8248,8 +8248,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_tec9_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -8257,8 +8257,8 @@ function TweakDataVR:init(tweak_data)
 		x_uzi = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_uzi_clip_slide_out"
+					sound = "wp_uzi_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -8269,8 +8269,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_uzi_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -10)
 				},
@@ -8283,8 +8283,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_uzi_clip_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -8292,8 +8292,8 @@ function TweakDataVR:init(tweak_data)
 		x_sterling = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_sterling_clip_remove"
+					sound = "wp_sterling_clip_remove",
+					time = 0
 				},
 				{
 					time = 0.019,
@@ -8315,8 +8315,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_sterling_clip_insert",
+					time = 0,
 					visible = true,
 					pos = Vector3(-10, 0, 0),
 					rot = Rotation()
@@ -8332,8 +8332,8 @@ function TweakDataVR:init(tweak_data)
 					rot = Rotation(-30, 0, 0)
 				},
 				{
-					time = 0.6,
 					sound = "wp_sterling_lever_pull",
+					time = 0.6,
 					pos = Vector3(),
 					rot = Rotation()
 				}
@@ -8342,8 +8342,8 @@ function TweakDataVR:init(tweak_data)
 		x_m1928 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_m1928_mag_empty_out"
+					sound = "wp_m1928_mag_empty_out",
+					time = 0
 				},
 				{
 					time = 0.01,
@@ -8358,8 +8358,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_m1928_mag_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(-8, 0, -10)
 				},
@@ -8372,8 +8372,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(-4, 0, -0.1)
 				},
 				{
-					time = 0.6,
 					sound = "wp_m1928_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -8381,8 +8381,8 @@ function TweakDataVR:init(tweak_data)
 		x_cobray = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_cobray_mag_slipping"
+					sound = "wp_cobray_mag_slipping",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -8393,8 +8393,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_cobray_mag_slap",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -10)
 				},
@@ -8407,8 +8407,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_cobray_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -8416,8 +8416,8 @@ function TweakDataVR:init(tweak_data)
 		x_polymer = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_polymer_mag_out"
+					sound = "wp_polymer_mag_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -8428,8 +8428,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_polymer_mag_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -7, -15)
 				},
@@ -8442,8 +8442,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, -3.5, -10)
 				},
 				{
-					time = 0.6,
 					sound = "wp_polymer_button_press",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -8451,8 +8451,8 @@ function TweakDataVR:init(tweak_data)
 		x_baka = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_baka_mag_slide_out"
+					sound = "wp_baka_mag_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -8463,8 +8463,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_baka_mag_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -10)
 				},
@@ -8477,8 +8477,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_baka_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -8486,8 +8486,8 @@ function TweakDataVR:init(tweak_data)
 		x_hajk = {
 			start = {
 				{
-					time = 0,
-					sound = "hajk_push_mag_release"
+					sound = "hajk_push_mag_release",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -8499,8 +8499,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "hajk_push_in_mag",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -8513,8 +8513,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "hajk_release_lever",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -8522,8 +8522,8 @@ function TweakDataVR:init(tweak_data)
 		x_schakal = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_schakal_mag_out"
+					sound = "wp_schakal_mag_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -8534,8 +8534,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_schakal_mag_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 2.5, -10)
 				},
@@ -8548,8 +8548,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0.9, -3.5)
 				},
 				{
-					time = 0.6,
 					sound = "wp_schakal_bolt_slap",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -8557,8 +8557,8 @@ function TweakDataVR:init(tweak_data)
 		x_coal = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_coal_mag_out_back"
+					sound = "wp_coal_mag_out_back",
+					time = 0
 				},
 				{
 					time = 0.001,
@@ -8580,8 +8580,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_coal_mag_in_back",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -12),
 					rot = Rotation(0, 40, 0)
@@ -8597,8 +8597,8 @@ function TweakDataVR:init(tweak_data)
 					rot = Rotation(0, 5, 0)
 				},
 				{
-					time = 0.6,
 					sound = "wp_coal_release_lever",
+					time = 0.6,
 					pos = Vector3(),
 					rot = Rotation()
 				}
@@ -8607,8 +8607,8 @@ function TweakDataVR:init(tweak_data)
 		x_erma = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_erma_mag_out"
+					sound = "wp_erma_mag_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -8619,8 +8619,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_erma_mag_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -10)
 				},
@@ -8633,8 +8633,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -3.5)
 				},
 				{
-					time = 0.6,
 					sound = "wp_erma_slide_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -8642,8 +8642,8 @@ function TweakDataVR:init(tweak_data)
 		x_shepheard = {
 			start = {
 				{
-					time = 0,
-					sound = "shepheard_clip_out"
+					sound = "shepheard_clip_out",
+					time = 0
 				},
 				{
 					time = 0.02,
@@ -8665,8 +8665,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "shepheard_clip_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 2, -10),
 					rot = Rotation()
@@ -8682,8 +8682,8 @@ function TweakDataVR:init(tweak_data)
 					rot = Rotation(0, 30, 0)
 				},
 				{
-					time = 0.5,
 					sound = "shepheard_bolt_forward",
+					time = 0.5,
 					pos = Vector3(),
 					rot = Rotation()
 				}
@@ -8692,8 +8692,8 @@ function TweakDataVR:init(tweak_data)
 		x_basset = {
 			start = {
 				{
-					time = 0,
-					sound = "basset_mag_out"
+					sound = "basset_mag_out",
+					time = 0
 				},
 				{
 					time = 0.02,
@@ -8710,8 +8710,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "basset_mag_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20),
 					rot = Rotation()
@@ -8722,32 +8722,32 @@ function TweakDataVR:init(tweak_data)
 					rot = Rotation(0, 30, 0)
 				},
 				{
-					time = 0.5,
 					sound = "basset_lever_release",
+					time = 0.5,
 					pos = Vector3(),
 					rot = Rotation()
 				}
 			}
 		},
 		x_judge = {
-			reload_part_type = "lower_reciever",
 			custom_mag_unit = "units/pd2_dlc_vr/units/wpn_vr_m_slug/wpn_vr_m_slug_6",
+			reload_part_type = "lower_reciever",
 			start = {
 				{
-					time = 0,
 					sound = "wp_rbull_drum_open",
+					time = 0,
 					anims = {
 						{
 							anim_group = "reload",
-							to = 1,
 							from = 0.5,
-							part = "lower_reciever"
+							part = "lower_reciever",
+							to = 1
 						}
 					}
 				},
 				{
-					time = 0.02,
-					sound = "wp_rbull_shells_out"
+					sound = "wp_rbull_shells_out",
+					time = 0.02
 				},
 				{
 					time = 0.09,
@@ -8764,21 +8764,21 @@ function TweakDataVR:init(tweak_data)
 						}
 					},
 					effect = {
-						part = "lower_reciever",
 						name = "effects/payday2/particles/weapons/shells/shell_judge_dump",
-						object = "align_house_align"
+						object = "align_house_align",
+						part = "lower_reciever"
 					}
 				}
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_rbull_shells_in",
+					time = 0,
 					anims = {
 						{
 							anim_group = "reload",
-							part = "lower_reciever",
-							from = 1.9
+							from = 1.9,
+							part = "lower_reciever"
 						}
 					},
 					visible = {
@@ -8795,16 +8795,16 @@ function TweakDataVR:init(tweak_data)
 					}
 				},
 				{
-					time = 0.5,
-					sound = "wp_rbull_drum_close"
+					sound = "wp_rbull_drum_close",
+					time = 0.5
 				}
 			}
 		},
 		x_rota = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_rota_slide_out"
+					sound = "wp_rota_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -8816,8 +8816,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_rota_slide_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20),
 					rot = Rotation(0, 30, 0)
@@ -8833,8 +8833,8 @@ function TweakDataVR:init(tweak_data)
 					rot = Rotation(0, 10, 60)
 				},
 				{
-					time = 0.99,
 					sound = "wp_rota_rotate_mag",
+					time = 0.99,
 					pos = Vector3(),
 					rot = Rotation()
 				}
@@ -8843,8 +8843,8 @@ function TweakDataVR:init(tweak_data)
 		x_sko12 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_rota_slide_out"
+					sound = "wp_rota_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -8856,8 +8856,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_rota_slide_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20),
 					rot = Rotation(0, 30, 0)
@@ -8873,58 +8873,58 @@ function TweakDataVR:init(tweak_data)
 					rot = Rotation(0, 10, 60)
 				},
 				{
-					time = 0.99,
 					sound = "wp_rota_rotate_mag",
+					time = 0.99,
 					pos = Vector3(),
 					rot = Rotation()
 				}
 			}
 		},
 		r870 = {
-			reload_part_type = "lower_reciever",
 			custom_mag_unit = "units/pd2_dlc_vr/units/wpn_vr_m_slug/wpn_vr_m_slug_6",
+			reload_part_type = "lower_reciever",
 			start = {
 				{
-					time = 0,
-					sound = "wp_reinbeck_reload_cock"
+					sound = "wp_reinbeck_reload_cock",
+					time = 0
 				}
 			},
 			finish = {
 				{
-					time = 0,
-					sound = "wp_reinbeck_shell_insert"
+					sound = "wp_reinbeck_shell_insert",
+					time = 0
 				},
 				{
-					time = 0.5,
-					sound = "wp_reinbeck_reload_cock"
+					sound = "wp_reinbeck_reload_cock",
+					time = 0.5
 				}
 			}
 		},
 		supernova = {
-			reload_part_type = "lower_reciever",
 			custom_mag_unit = "units/pd2_dlc_vr/units/wpn_vr_m_slug/wpn_vr_m_slug_6",
+			reload_part_type = "lower_reciever",
 			start = {
 				{
-					time = 0,
-					sound = "wp_reinbeck_reload_cock"
+					sound = "wp_reinbeck_reload_cock",
+					time = 0
 				}
 			},
 			finish = {
 				{
-					time = 0,
-					sound = "wp_reinbeck_shell_insert"
+					sound = "wp_reinbeck_shell_insert",
+					time = 0
 				},
 				{
-					time = 0.5,
-					sound = "wp_reinbeck_reload_cock"
+					sound = "wp_reinbeck_reload_cock",
+					time = 0.5
 				}
 			}
 		},
 		saiga = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_ak47_clip_slide_out"
+					sound = "wp_ak47_clip_slide_out",
+					time = 0
 				},
 				{
 					time = 0.02,
@@ -8941,8 +8941,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_ak47_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20),
 					rot = Rotation()
@@ -8953,8 +8953,8 @@ function TweakDataVR:init(tweak_data)
 					rot = Rotation(0, 30, 0)
 				},
 				{
-					time = 0.5,
 					sound = "wp_ak47_lever_release",
+					time = 0.5,
 					pos = Vector3(),
 					rot = Rotation()
 				}
@@ -8963,8 +8963,8 @@ function TweakDataVR:init(tweak_data)
 		sko12 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_ak47_clip_slide_out"
+					sound = "wp_ak47_clip_slide_out",
+					time = 0
 				},
 				{
 					time = 0.02,
@@ -8981,8 +8981,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_ak47_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20),
 					rot = Rotation()
@@ -8993,32 +8993,32 @@ function TweakDataVR:init(tweak_data)
 					rot = Rotation(0, 30, 0)
 				},
 				{
-					time = 0.5,
 					sound = "wp_ak47_lever_release",
+					time = 0.5,
 					pos = Vector3(),
 					rot = Rotation()
 				}
 			}
 		},
 		huntsman = {
-			reload_part_type = "barrel",
 			custom_mag_unit = "units/pd2_dlc_vr/units/wpn_vr_m_slug/wpn_vr_m_slug_2",
+			reload_part_type = "barrel",
 			start = {
 				{
-					time = 0,
 					sound = "wp_huntsman_barrel_open",
+					time = 0,
 					anims = {
 						{
 							anim_group = "reload",
-							to = 1,
 							from = 0.5,
-							part = "barrel"
+							part = "barrel",
+							to = 1
 						}
 					}
 				},
 				{
-					time = 0.02,
-					sound = "wp_huntsman_shell_out"
+					sound = "wp_huntsman_shell_out",
+					time = 0.02
 				},
 				{
 					time = 0.03,
@@ -9032,9 +9032,9 @@ function TweakDataVR:init(tweak_data)
 						}
 					},
 					effect = {
-						part = "barrel",
 						name = "effects/payday2/particles/weapons/shells/shell_slug_2x",
-						object = "a_slugs"
+						object = "a_slugs",
+						part = "barrel"
 					}
 				}
 			},
@@ -9053,29 +9053,29 @@ function TweakDataVR:init(tweak_data)
 					}
 				},
 				{
-					time = 0.4,
 					sound = "wp_huntsman_barrel_close",
+					time = 0.4,
 					anims = {
 						{
 							anim_group = "reload",
-							part = "barrel",
-							from = 2.3
+							from = 2.3,
+							part = "barrel"
 						}
 					}
 				},
 				{
-					time = 0.5,
-					sound = "wp_huntsman_lock_click"
+					sound = "wp_huntsman_lock_click",
+					time = 0.5
 				}
 			}
 		},
 		benelli = {
-			reload_part_type = "lower_reciever",
 			custom_mag_unit = "units/pd2_dlc_vr/units/wpn_vr_m_slug/wpn_vr_m_slug_6",
+			reload_part_type = "lower_reciever",
 			start = {
 				{
-					time = 0,
-					sound = "wp_reinbeck_reload_cock"
+					sound = "wp_reinbeck_reload_cock",
+					time = 0
 				},
 				{
 					time = 0.03
@@ -9083,22 +9083,22 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
-					sound = "wp_reinbeck_shell_insert"
+					sound = "wp_reinbeck_shell_insert",
+					time = 0
 				},
 				{
-					time = 0.5,
-					sound = "wp_benelli_lever_release"
+					sound = "wp_benelli_lever_release",
+					time = 0.5
 				}
 			}
 		},
 		ksg = {
-			reload_part_type = "lower_reciever",
 			custom_mag_unit = "units/pd2_dlc_vr/units/wpn_vr_m_slug/wpn_vr_m_slug_6",
+			reload_part_type = "lower_reciever",
 			start = {
 				{
-					time = 0,
-					sound = "wp_reinbeck_reload_cock"
+					sound = "wp_reinbeck_reload_cock",
+					time = 0
 				},
 				{
 					time = 0.03
@@ -9106,22 +9106,22 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
-					sound = "wp_reinbeck_shell_insert"
+					sound = "wp_reinbeck_shell_insert",
+					time = 0
 				},
 				{
-					time = 0.5,
-					sound = "wp_benelli_lever_release"
+					sound = "wp_benelli_lever_release",
+					time = 0.5
 				}
 			}
 		},
 		spas12 = {
-			reload_part_type = "lower_reciever",
 			custom_mag_unit = "units/pd2_dlc_vr/units/wpn_vr_m_slug/wpn_vr_m_slug_6",
+			reload_part_type = "lower_reciever",
 			start = {
 				{
-					time = 0,
-					sound = "wp_reinbeck_reload_cock"
+					sound = "wp_reinbeck_reload_cock",
+					time = 0
 				},
 				{
 					time = 0.03
@@ -9129,28 +9129,28 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
-					sound = "wp_reinbeck_shell_insert"
+					sound = "wp_reinbeck_shell_insert",
+					time = 0
 				},
 				{
-					time = 0.5,
-					sound = "wp_benelli_lever_release"
+					sound = "wp_benelli_lever_release",
+					time = 0.5
 				}
 			}
 		},
 		b682 = {
-			reload_part_type = "barrel",
 			custom_mag_unit = "units/pd2_dlc_vr/units/wpn_vr_m_slug/wpn_vr_m_slug_2",
+			reload_part_type = "barrel",
 			start = {
 				{
-					time = 0,
 					sound = "wp_b682_barrel_open_01",
+					time = 0,
 					anims = {
 						{
 							anim_group = "reload",
-							to = 1,
 							from = 0.5,
-							part = "barrel"
+							part = "barrel",
+							to = 1
 						}
 					},
 					visible = {
@@ -9163,16 +9163,16 @@ function TweakDataVR:init(tweak_data)
 						}
 					},
 					effect = {
-						part = "barrel",
 						name = "effects/payday2/particles/weapons/shells/shell_slug_2x",
-						object = "a_slugs"
+						object = "a_slugs",
+						part = "barrel"
 					}
 				}
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_b682_load_shell_01",
+					time = 0,
 					pos = Vector3(),
 					visible = {
 						visible = true,
@@ -9185,14 +9185,14 @@ function TweakDataVR:init(tweak_data)
 					}
 				},
 				{
-					time = 0.5,
 					sound = "wp_b682_barrel_close_01",
+					time = 0.5,
 					pos = Vector3(),
 					anims = {
 						{
 							anim_group = "reload",
-							part = "barrel",
-							from = 2.5
+							from = 2.5,
+							part = "barrel"
 						}
 					}
 				},
@@ -9204,8 +9204,8 @@ function TweakDataVR:init(tweak_data)
 		aa12 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_aa12_clip_out"
+					sound = "wp_aa12_clip_out",
+					time = 0
 				},
 				{
 					time = 0.01,
@@ -9224,8 +9224,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_aa12_clip_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 2, -20)
 				},
@@ -9238,54 +9238,54 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0.1, -4.5)
 				},
 				{
-					time = 0.6,
 					sound = "wp_aa12_lever_pull",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
 		},
 		boot = {
-			reload_part_type = "lower_reciever",
 			custom_mag_unit = "units/pd2_dlc_vr/units/wpn_vr_m_slug/wpn_vr_m_slug_6",
+			reload_part_type = "lower_reciever",
 			start = {
 				{
-					time = 0,
 					sound = "boot_reload_enter",
+					time = 0,
 					anims = {
 						{
 							anim_group = "reload_exit",
-							to = 0,
 							from = 0,
-							part = "lower_reciever"
+							part = "lower_reciever",
+							to = 0
 						},
 						{
 							anim_group = "reload_enter",
-							to = 1,
 							from = 0.1,
-							part = "lower_reciever"
+							part = "lower_reciever",
+							to = 1
 						}
 					}
 				}
 			},
 			finish = {
 				{
-					time = 0,
-					sound = "boot_push_in_shell"
+					sound = "boot_push_in_shell",
+					time = 0
 				},
 				{
-					time = 0.5,
 					sound = "boot_reload_empty_push_handle",
+					time = 0.5,
 					anims = {
 						{
 							anim_group = "reload_enter",
-							to = 0.1,
 							from = 0.1,
-							part = "lower_reciever"
+							part = "lower_reciever",
+							to = 0.1
 						},
 						{
 							anim_group = "reload_exit",
-							part = "lower_reciever",
-							from = 0.2
+							from = 0.2,
+							part = "lower_reciever"
 						}
 					}
 				}
@@ -9295,19 +9295,19 @@ function TweakDataVR:init(tweak_data)
 			custom_mag_unit = "units/pd2_dlc_vr/units/wpn_vr_m_slug/wpn_vr_m_slug_2",
 			start = {
 				{
-					time = 0,
 					sound = "wp_huntsman_barrel_open",
+					time = 0,
 					anims = {
 						{
 							anim_group = "reload",
-							to = 0.5,
-							from = 0
+							from = 0,
+							to = 0.5
 						}
 					}
 				},
 				{
-					time = 0.02,
-					sound = "wp_huntsman_shell_out"
+					sound = "wp_huntsman_shell_out",
+					time = 0.02
 				},
 				{
 					time = 0.03,
@@ -9318,8 +9318,8 @@ function TweakDataVR:init(tweak_data)
 						}
 					},
 					effect = {
-						object = "a_right_slug",
-						name = "effects/payday2/particles/weapons/shells/shell_slug_2x"
+						name = "effects/payday2/particles/weapons/shells/shell_slug_2x",
+						object = "a_right_slug"
 					}
 				}
 			},
@@ -9335,8 +9335,8 @@ function TweakDataVR:init(tweak_data)
 					}
 				},
 				{
-					time = 0.4,
 					sound = "wp_huntsman_barrel_close",
+					time = 0.4,
 					anims = {
 						{
 							anim_group = "reload",
@@ -9345,16 +9345,16 @@ function TweakDataVR:init(tweak_data)
 					}
 				},
 				{
-					time = 0.5,
-					sound = "wp_huntsman_lock_click"
+					sound = "wp_huntsman_lock_click",
+					time = 0.5
 				}
 			}
 		},
 		hk21 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_hk21_box_out"
+					sound = "wp_hk21_box_out",
+					time = 0
 				},
 				{
 					time = 0.01,
@@ -9373,8 +9373,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_hk21_box_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -9387,8 +9387,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(-5, 0, -1)
 				},
 				{
-					time = 0.6,
 					sound = "wp_hk21_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -9396,8 +9396,8 @@ function TweakDataVR:init(tweak_data)
 		hk51b = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_hk51b_box_out"
+					sound = "wp_hk51b_box_out",
+					time = 0
 				},
 				{
 					time = 0.01,
@@ -9416,8 +9416,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_hk51b_box_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -9430,8 +9430,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(-5, 0, -1)
 				},
 				{
-					time = 0.6,
 					sound = "wp_hk51b_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -9439,8 +9439,8 @@ function TweakDataVR:init(tweak_data)
 		m249 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_m249_box_out"
+					sound = "wp_m249_box_out",
+					time = 0
 				},
 				{
 					time = 0.01,
@@ -9459,8 +9459,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_m249_box_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -9473,8 +9473,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(-2, 0, -2)
 				},
 				{
-					time = 0.6,
 					sound = "wp_m249_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -9482,8 +9482,8 @@ function TweakDataVR:init(tweak_data)
 		m60 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_m60_box_out"
+					sound = "wp_m60_box_out",
+					time = 0
 				},
 				{
 					time = 0.01,
@@ -9502,8 +9502,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_m60_box_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -9516,8 +9516,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(-2, 0, -2)
 				},
 				{
-					time = 0.6,
 					sound = "wp_m60_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -9525,8 +9525,8 @@ function TweakDataVR:init(tweak_data)
 		rpk = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_rpk_box_out"
+					sound = "wp_rpk_box_out",
+					time = 0
 				},
 				{
 					time = 0.02,
@@ -9543,8 +9543,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_rpk_box_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20),
 					rot = Rotation()
@@ -9555,24 +9555,24 @@ function TweakDataVR:init(tweak_data)
 					rot = Rotation(0, 30, 0)
 				},
 				{
-					time = 0.5,
 					sound = "wp_rpk_lever_release",
+					time = 0.5,
 					pos = Vector3(),
 					rot = Rotation()
 				}
 			}
 		},
 		mg42 = {
-			reload_part_type = "lower_reciever",
 			custom_mag_unit = "units/pd2_dlc_vr/units/wpn_vr_m_mg42/wpn_vr_m_mg42",
+			reload_part_type = "lower_reciever",
 			start = {
 				{
-					time = 0,
-					sound = "wp_mg42_cover_open"
+					sound = "wp_mg42_cover_open",
+					time = 0
 				},
 				{
-					time = 0.03,
 					sound = "wp_mg42_box_remove",
+					time = 0.03,
 					visible = {
 						visible = false,
 						parts = {
@@ -9596,8 +9596,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_mg42_box_slide_in",
+					time = 0,
 					visible = {
 						visible = true,
 						parts = {
@@ -9619,20 +9619,20 @@ function TweakDataVR:init(tweak_data)
 					}
 				},
 				{
-					time = 0.56,
-					sound = "wp_mg42_cover_close"
+					sound = "wp_mg42_cover_close",
+					time = 0.56
 				},
 				{
-					time = 0.6,
-					sound = "wp_mg42_lever_release"
+					sound = "wp_mg42_lever_release",
+					time = 0.6
 				}
 			}
 		},
 		par = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_svinet_mag_out"
+					sound = "wp_svinet_mag_out",
+					time = 0
 				},
 				{
 					time = 0.01,
@@ -9651,8 +9651,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_svinet_mag_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -9665,8 +9665,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(-2, 0, -2)
 				},
 				{
-					time = 0.6,
 					sound = "wp_svinet_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -9674,8 +9674,8 @@ function TweakDataVR:init(tweak_data)
 		m95 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_m95_clip_slide_out"
+					sound = "wp_m95_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -9687,8 +9687,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_m95_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -9701,8 +9701,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_m95_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -9710,8 +9710,8 @@ function TweakDataVR:init(tweak_data)
 		msr = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_msr_clip_slide_out"
+					sound = "wp_msr_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -9723,8 +9723,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_msr_clip_slide_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -9737,8 +9737,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_msr_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -9746,8 +9746,8 @@ function TweakDataVR:init(tweak_data)
 		r93 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_blazer_clip_slide_out"
+					sound = "wp_blazer_clip_slide_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -9759,8 +9759,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_blazer_clip_punch_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -9773,8 +9773,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_blazer_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -9782,8 +9782,8 @@ function TweakDataVR:init(tweak_data)
 		mosin = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_nagant_pull_bolt_back"
+					sound = "wp_nagant_pull_bolt_back",
+					time = 0
 				},
 				{
 					time = 0.03
@@ -9791,24 +9791,24 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
-					sound = "wp_nagant_second_slide"
+					sound = "wp_nagant_second_slide",
+					time = 0
 				},
 				{
-					time = 0.4,
-					sound = "wp_nagant_push_bolt"
+					sound = "wp_nagant_push_bolt",
+					time = 0.4
 				},
 				{
-					time = 0.5,
-					sound = "wp_nagant_push_bolt_side"
+					sound = "wp_nagant_push_bolt_side",
+					time = 0.5
 				}
 			}
 		},
 		winchester1874 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_m1873_lever_pull"
+					sound = "wp_m1873_lever_pull",
+					time = 0
 				},
 				{
 					time = 0.03
@@ -9816,20 +9816,20 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
-					sound = "wp_m1873_bullet_in"
+					sound = "wp_m1873_bullet_in",
+					time = 0
 				},
 				{
-					time = 0.5,
-					sound = "wp_m1873_lever_push"
+					sound = "wp_m1873_lever_push",
+					time = 0.5
 				}
 			}
 		},
 		sbl = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_m1873_lever_pull"
+					sound = "wp_m1873_lever_pull",
+					time = 0
 				},
 				{
 					time = 0.03
@@ -9837,20 +9837,20 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
-					sound = "wp_m1873_bullet_in"
+					sound = "wp_m1873_bullet_in",
+					time = 0
 				},
 				{
-					time = 0.5,
-					sound = "wp_m1873_lever_push"
+					sound = "wp_m1873_lever_push",
+					time = 0.5
 				}
 			}
 		},
 		wa2000 = {
 			start = {
 				{
-					time = 0,
-					sound = "lakner_mag_out"
+					sound = "lakner_mag_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -9862,8 +9862,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "lakner_mag_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -9876,8 +9876,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "lakner_lever_release",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -9885,8 +9885,8 @@ function TweakDataVR:init(tweak_data)
 		model70 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_m70_mag_out_01"
+					sound = "wp_m70_mag_out_01",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -9898,8 +9898,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_m70_mag_in_01",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -9912,8 +9912,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_m70_pull_lever_01",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -9921,8 +9921,8 @@ function TweakDataVR:init(tweak_data)
 		scout = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_scout_mag_out_01"
+					sound = "wp_scout_mag_out_01",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -9934,8 +9934,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_scout_mag_in_01",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -9948,8 +9948,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_scout_pull_lever_01",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -9957,8 +9957,8 @@ function TweakDataVR:init(tweak_data)
 		qbu88 = {
 			start = {
 				{
-					time = 0,
-					sound = "qbu88_mag_out"
+					sound = "qbu88_mag_out",
+					time = 0
 				},
 				{
 					time = 0.02,
@@ -9975,8 +9975,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "qbu88_mag_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20),
 					rot = Rotation()
@@ -9987,8 +9987,8 @@ function TweakDataVR:init(tweak_data)
 					rot = Rotation(0, 30, 0)
 				},
 				{
-					time = 0.5,
 					sound = "qbu88_lever_release",
+					time = 0.5,
 					pos = Vector3(),
 					rot = Rotation()
 				}
@@ -9997,8 +9997,8 @@ function TweakDataVR:init(tweak_data)
 		r700 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_r700_mag_out_01"
+					sound = "wp_r700_mag_out_01",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -10010,8 +10010,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_r700_mag_in_01",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -10024,8 +10024,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_r700_pull_lever_01",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -10033,8 +10033,8 @@ function TweakDataVR:init(tweak_data)
 		awp = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_awp_mag_out_01"
+					sound = "wp_awp_mag_out_01",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -10046,8 +10046,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_awp_mag_in_01",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -10060,8 +10060,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_awp_pull_lever_01",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -10069,8 +10069,8 @@ function TweakDataVR:init(tweak_data)
 		desertfox = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_desertfox_mag_out"
+					sound = "wp_desertfox_mag_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -10082,8 +10082,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_desertfox_mag_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -10096,8 +10096,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_desertfox_push_bolt",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -10105,8 +10105,8 @@ function TweakDataVR:init(tweak_data)
 		tti = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_tti_mag_out"
+					sound = "wp_tti_mag_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -10118,8 +10118,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_tti_mag_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -10132,8 +10132,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_tti_release_lever",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -10141,8 +10141,8 @@ function TweakDataVR:init(tweak_data)
 		victor = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_victor_mag_out"
+					sound = "wp_victor_mag_out",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -10154,8 +10154,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_victor_mag_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
@@ -10168,8 +10168,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, -4)
 				},
 				{
-					time = 0.6,
 					sound = "wp_victor_release_lever",
+					time = 0.6,
 					pos = Vector3()
 				}
 			}
@@ -10177,8 +10177,8 @@ function TweakDataVR:init(tweak_data)
 		siltstone = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_siltstone_mag_out"
+					sound = "wp_siltstone_mag_out",
+					time = 0
 				},
 				{
 					time = 0.02,
@@ -10195,8 +10195,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_siltstone_mag_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20),
 					rot = Rotation()
@@ -10207,8 +10207,8 @@ function TweakDataVR:init(tweak_data)
 					rot = Rotation(0, 30, 0)
 				},
 				{
-					time = 0.5,
 					sound = "wp_siltstone_lever_release",
+					time = 0.5,
 					pos = Vector3(),
 					rot = Rotation()
 				}
@@ -10217,20 +10217,20 @@ function TweakDataVR:init(tweak_data)
 		flamethrower_mk2 = {
 			start = {
 				{
-					time = 0,
 					sound = "wp_flamethrower_unlock_tank",
+					time = 0,
 					anims = {
 						{
 							anim_group = "reload",
-							to = 2,
 							from = 0.8,
-							part = "lower_reciever"
+							part = "lower_reciever",
+							to = 2
 						}
 					}
 				},
 				{
-					time = 0.01,
-					sound = "wp_flamethrower_pull_out_tank"
+					sound = "wp_flamethrower_pull_out_tank",
+					time = 0.01
 				},
 				{
 					drop_mag = true,
@@ -10242,22 +10242,22 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_flamethrower_push_in_tank",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, -20, 0),
 					rot = Rotation(0, 0, 180)
 				},
 				{
-					time = 0.5,
 					sound = "wp_flamethrower_insert_tank",
+					time = 0.5,
 					pos = Vector3(),
 					rot = Rotation(),
 					anims = {
 						{
 							anim_group = "reload",
-							part = "lower_reciever",
-							from = 8
+							from = 8,
+							part = "lower_reciever"
 						}
 					}
 				}
@@ -10266,13 +10266,13 @@ function TweakDataVR:init(tweak_data)
 		gre_m79 = {
 			start = {
 				{
-					time = 0,
 					sound = "wp_gl40_lock_open",
+					time = 0,
 					anims = {
 						{
 							anim_group = "reload",
-							to = 1,
-							from = 0.4
+							from = 0.4,
+							to = 1
 						}
 					},
 					visible = {
@@ -10283,22 +10283,22 @@ function TweakDataVR:init(tweak_data)
 					}
 				},
 				{
-					time = 0.01,
-					sound = "wp_gl40_barrel_open"
+					sound = "wp_gl40_barrel_open",
+					time = 0.01
 				},
 				{
-					time = 0.12,
 					sound = "wp_gl40_shell_out",
+					time = 0.12,
 					effect = {
-						object = "a_m",
-						name = "effects/payday2/particles/weapons/shells/shell_40mm"
+						name = "effects/payday2/particles/weapons/shells/shell_40mm",
+						object = "a_m"
 					}
 				}
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_gl40_shell_in",
+					time = 0,
 					visible = {
 						visible = true,
 						parts = {
@@ -10307,8 +10307,8 @@ function TweakDataVR:init(tweak_data)
 					}
 				},
 				{
-					time = 0.99,
 					sound = "wp_gl40_barrel_close",
+					time = 0.99,
 					pos = Vector3(),
 					anims = {
 						{
@@ -10322,13 +10322,13 @@ function TweakDataVR:init(tweak_data)
 		contender = {
 			start = {
 				{
-					time = 0,
 					sound = "wp_contender_lock_open",
+					time = 0,
 					anims = {
 						{
 							anim_group = "reload",
-							to = 1,
-							from = 0.4
+							from = 0.4,
+							to = 1
 						}
 					},
 					visible = {
@@ -10339,22 +10339,22 @@ function TweakDataVR:init(tweak_data)
 					}
 				},
 				{
-					time = 0.01,
-					sound = "wp_contender_barrel_open"
+					sound = "wp_contender_barrel_open",
+					time = 0.01
 				},
 				{
-					time = 0.12,
 					sound = "wp_contender_shell_out",
+					time = 0.12,
 					effect = {
-						object = "a_m",
-						name = "effects/payday2/particles/weapons/shells/shell_556"
+						name = "effects/payday2/particles/weapons/shells/shell_556",
+						object = "a_m"
 					}
 				}
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_contender_shell_in",
+					time = 0,
 					visible = {
 						visible = true,
 						parts = {
@@ -10363,8 +10363,8 @@ function TweakDataVR:init(tweak_data)
 					}
 				},
 				{
-					time = 0.99,
 					sound = "wp_contender_barrel_close",
+					time = 0.99,
 					pos = Vector3(),
 					anims = {
 						{
@@ -10378,8 +10378,8 @@ function TweakDataVR:init(tweak_data)
 		saw = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_saw_blade_grab_throw"
+					sound = "wp_saw_blade_grab_throw",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -10390,14 +10390,14 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_saw_blade_load",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
 				{
-					time = 0.5,
 					sound = "wp_saw_blade_spin",
+					time = 0.5,
 					pos = Vector3()
 				}
 			}
@@ -10405,8 +10405,8 @@ function TweakDataVR:init(tweak_data)
 		saw_secondary = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_saw_blade_grab_throw"
+					sound = "wp_saw_blade_grab_throw",
+					time = 0
 				},
 				{
 					drop_mag = true,
@@ -10417,14 +10417,14 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_saw_blade_load",
+					time = 0,
 					visible = true,
 					pos = Vector3(0, 0, -20)
 				},
 				{
-					time = 0.5,
 					sound = "wp_saw_blade_spin",
+					time = 0.5,
 					pos = Vector3()
 				}
 			}
@@ -10432,16 +10432,16 @@ function TweakDataVR:init(tweak_data)
 		m134 = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_minigun_belt_out"
+					sound = "wp_minigun_belt_out",
+					time = 0
 				},
 				{
 					time = 0.001,
 					pos = Vector3(4, 0, -1)
 				},
 				{
-					time = 0.03,
 					sound = "wp_minigun_box_out",
+					time = 0.03,
 					pos = Vector3(4, 0, -1)
 				},
 				{
@@ -10453,8 +10453,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_minigun_box_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(20, 0, -10)
 				},
@@ -10467,8 +10467,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(4, 0, -1)
 				},
 				{
-					time = 0.9,
 					sound = "wp_minigun_belt_in",
+					time = 0.9,
 					pos = Vector3()
 				}
 			}
@@ -10476,16 +10476,16 @@ function TweakDataVR:init(tweak_data)
 		kacchainsaw = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_minigun_belt_out"
+					sound = "wp_minigun_belt_out",
+					time = 0
 				},
 				{
 					time = 0.001,
 					pos = Vector3(4, 0, -1)
 				},
 				{
-					time = 0.03,
 					sound = "wp_minigun_box_out",
+					time = 0.03,
 					pos = Vector3(4, 0, -1)
 				},
 				{
@@ -10497,8 +10497,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_minigun_box_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(20, 0, -10)
 				},
@@ -10511,104 +10511,104 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(4, 0, -1)
 				},
 				{
-					time = 0.9,
 					sound = "wp_minigun_belt_in",
+					time = 0.9,
 					pos = Vector3()
 				}
 			}
 		},
 		bessy = {
+			custom_mag_unit = "units/pd2_dlc_pda10/weapons/wpn_fps_spec_bessy_pts/wpn_vr_spec_bessy_pouch",
 			manual_reload_reduction = 2,
 			reload_part_type = "barrel",
-			custom_mag_unit = "units/pd2_dlc_pda10/weapons/wpn_fps_spec_bessy_pts/wpn_vr_spec_bessy_pouch",
 			start = {
 				{
 					time = 0,
 					anims = {
 						{
 							anim_group = "reload",
-							part = "stock",
 							from = 0,
+							part = "stock",
 							state = "auto",
 							to = 11.1
 						},
 						{
 							anim_group = "reload",
+							from = 0,
 							part = "extra",
-							from = 0,
 							state = "auto",
 							to = 11.1
 						},
 						{
 							anim_group = "reload",
+							from = 0,
 							part = "reciever",
-							from = 0,
 							state = "auto",
 							to = 11.1
 						},
 						{
 							anim_group = "reload",
-							part = "stock",
 							from = 0,
+							part = "stock",
 							state = "manual",
 							to = 9.166666666666666
 						},
 						{
 							anim_group = "reload",
-							part = "extra",
 							from = 0,
+							part = "extra",
 							state = "manual",
 							to = 9.166666666666666
 						},
 						{
 							anim_group = "reload",
-							part = "reciever",
 							from = 0,
+							part = "reciever",
 							state = "manual",
 							to = 9.166666666666666
 						}
 					}
 				},
 				{
-					time = 0,
-					sound = "wp_musket_flint_pull"
+					sound = "wp_musket_flint_pull",
+					time = 0
 				},
 				{
-					time = 0.4,
-					sound = "wp_musket_hammer_pull"
+					sound = "wp_musket_hammer_pull",
+					time = 0.4
 				},
 				{
-					time = 2.4,
-					sound = "wp_musket_rod_in_barrel_first"
+					sound = "wp_musket_rod_in_barrel_first",
+					time = 2.4
 				},
 				{
-					time = 3.4,
-					sound = "wp_musket_rod_out_side_first"
+					sound = "wp_musket_rod_out_side_first",
+					time = 3.4
 				}
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_musket_rod_out_barrel_second",
+					time = 0,
 					anims = {
 						{
 							anim_group = "reload",
+							from = 10.966666666666667,
 							part = "stock",
-							from = 10.966666666666667,
 							state = "manual",
 							to = 11.1
 						},
 						{
 							anim_group = "reload",
+							from = 10.966666666666667,
 							part = "extra",
-							from = 10.966666666666667,
 							state = "manual",
 							to = 11.1
 						},
 						{
 							anim_group = "reload",
-							part = "reciever",
 							from = 10.6,
+							part = "reciever",
 							state = "manual",
 							to = 11.1
 						}
@@ -10620,24 +10620,24 @@ function TweakDataVR:init(tweak_data)
 			custom_mag_unit = "units/pd2_dlc_vr/units/wpn_vr_m_grenade/wpn_vr_m_grenade_6",
 			start = {
 				{
-					time = 0,
 					sound = "wp_mgl_open",
+					time = 0,
 					anims = {
 						{
 							anim_group = "reload_exit",
-							to = 0.1,
-							from = 0.1
+							from = 0.1,
+							to = 0.1
 						},
 						{
 							anim_group = "reload_enter",
-							to = 1.7,
-							from = 1.2
+							from = 1.2,
+							to = 1.7
 						}
 					}
 				},
 				{
-					time = 0.02,
-					sound = "wp_mgl_drag_out_empty_shell"
+					sound = "wp_mgl_drag_out_empty_shell",
+					time = 0.02
 				},
 				{
 					time = 0.03,
@@ -10658,27 +10658,27 @@ function TweakDataVR:init(tweak_data)
 						}
 					},
 					effect = {
-						object = "a_m",
-						name = "effects/payday2/particles/weapons/shells/shell_40mm_6x_dump"
+						name = "effects/payday2/particles/weapons/shells/shell_40mm_6x_dump",
+						object = "a_m"
 					}
 				}
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_mgl_rotate_mag",
+					time = 0,
 					pos = Vector3(),
 					anims = {
 						{
 							anim_group = "reload_exit",
-							to = 1,
-							from = 0.1
+							from = 0.1,
+							to = 1
 						}
 					}
 				},
 				{
-					time = 0.5,
 					sound = "wp_mgl_close_mag",
+					time = 0.5,
 					pos = Vector3(),
 					visible = {
 						visible = true,
@@ -10716,15 +10716,15 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, 0)
 				},
 				{
-					time = 0.5,
 					sound = "wp_bow_new_arrow",
+					time = 0.5,
 					pos = Vector3()
 				}
 			}
 		},
 		arblast = {
-			reload_part_type = "ammo",
 			custom_mag_unit = "units/pd2_dlc_steel/weapons/wpn_fps_bow_arblast_pts/wpn_fps_bow_arblast_m_standard",
+			reload_part_type = "ammo",
 			start = {
 				{
 					time = 0,
@@ -10752,15 +10752,15 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, 0)
 				},
 				{
-					time = 0.5,
 					sound = "wp_arblast_arrow_click_01",
+					time = 0.5,
 					pos = Vector3()
 				}
 			}
 		},
 		frankish = {
-			reload_part_type = "ammo",
 			custom_mag_unit = "units/pd2_dlc_steel/weapons/wpn_fps_bow_frankish_pts/wpn_fps_bow_frankish_m_standard",
+			reload_part_type = "ammo",
 			start = {
 				{
 					time = 0,
@@ -10788,8 +10788,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, 0)
 				},
 				{
-					time = 0.5,
 					sound = "wp_frankish_new_arrow",
+					time = 0.5,
 					pos = Vector3()
 				}
 			}
@@ -10812,8 +10812,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, 0)
 				},
 				{
-					time = 0.5,
 					sound = "wp_long_new_arrow",
+					time = 0.5,
 					pos = Vector3()
 				}
 			}
@@ -10837,8 +10837,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, 0)
 				},
 				{
-					time = 0.5,
 					sound = "wp_long_new_arrow",
+					time = 0.5,
 					pos = Vector3()
 				}
 			}
@@ -10846,16 +10846,16 @@ function TweakDataVR:init(tweak_data)
 		shuno = {
 			start = {
 				{
-					time = 0,
-					sound = "wp_minigun_belt_out"
+					sound = "wp_minigun_belt_out",
+					time = 0
 				},
 				{
 					time = 0.001,
 					pos = Vector3(4, 0, -1)
 				},
 				{
-					time = 0.03,
 					sound = "wp_minigun_box_out",
+					time = 0.03,
 					pos = Vector3(4, 0, -1)
 				},
 				{
@@ -10867,8 +10867,8 @@ function TweakDataVR:init(tweak_data)
 			},
 			finish = {
 				{
-					time = 0,
 					sound = "wp_minigun_box_in",
+					time = 0,
 					visible = true,
 					pos = Vector3(20, 0, -10)
 				},
@@ -10881,8 +10881,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(4, 0, -1)
 				},
 				{
-					time = 0.9,
 					sound = "wp_minigun_belt_in",
+					time = 0.9,
 					pos = Vector3()
 				}
 			}
@@ -10905,8 +10905,8 @@ function TweakDataVR:init(tweak_data)
 					pos = Vector3(0, 0, 0)
 				},
 				{
-					time = 0.5,
 					sound = "wp_bow_new_arrow",
+					time = 0.5,
 					pos = Vector3()
 				}
 			}
@@ -10916,9 +10916,9 @@ function TweakDataVR:init(tweak_data)
 	self.weapon_sound_overrides = {
 		x_sr2 = {
 			sounds = {
-				fire_single = "sr2_fire_single",
 				fire = "sr2_fire_single",
 				fire_auto = "sr2_fire",
+				fire_single = "sr2_fire_single",
 				stop_fire = "sr2_stop"
 			}
 		}
@@ -10932,9 +10932,9 @@ function TweakDataVR:init(tweak_data)
 				rotation = Rotation(0, 0, 0),
 				children = {
 					loading_spin = {
+						order = 3,
 						visible = true,
 						width = 50,
-						order = 3,
 						position = Vector3(0, 0, 0),
 						rotation = Rotation(0, 0, 0),
 						texture = Idstring("guis/dlcs/vr/textures/loading/icon_loading")
@@ -10942,42 +10942,42 @@ function TweakDataVR:init(tweak_data)
 				}
 			},
 			floor = {
-				width = 800,
-				visible = true,
 				order = 2,
+				visible = true,
+				width = 800,
 				position = Vector3(0, 0, 0),
 				rotation = Rotation(0, -90, 0),
 				texture = Idstring("guis/dlcs/vr/textures/loading/floor_df")
 			},
 			roof = {
-				width = 1000,
-				visible = true,
 				order = 2,
+				visible = true,
+				width = 1000,
 				position = Vector3(0, 0, 500),
 				rotation = Rotation(0, 90, 0),
 				texture = Idstring("guis/dlcs/vr/textures/loading/darkness_df")
 			},
 			darkness_below = {
-				width = 10000,
-				visible = true,
 				order = 2,
+				visible = true,
+				width = 10000,
 				position = Vector3(0, 0, -10),
 				rotation = Rotation(0, -90, 0),
 				color = Color(1, 1, 1, 1),
 				texture = Idstring("guis/dlcs/vr/textures/loading/darkness_df")
 			},
 			logo = {
-				width = 1400,
-				visible = true,
 				order = 2,
+				visible = true,
+				width = 1400,
 				position = Vector3(0, 1000, 300),
 				rotation = Rotation(0, 0, 0),
 				texture = Idstring("guis/dlcs/vr/textures/loading/logotype_df")
 			},
 			background_pattern = {
-				width = 4000,
-				visible = true,
 				order = 2,
+				visible = true,
+				width = 4000,
 				position = Vector3(0, 2000, 1000),
 				rotation = Rotation(0, 0, 0),
 				texture = Idstring("guis/dlcs/vr/textures/loading/front_bg_pattern_df")
@@ -10990,35 +10990,34 @@ function TweakDataVR:init(tweak_data)
 			rotation = Rotation(180, 135, 0)
 		}
 	}
-	self.ladder = {
-		distance = 500
-	}
+	self.ladder = {}
+	self.ladder.distance = 500
 	self.autowarp_length = {
-		short = 0.65,
-		long = 1
+		long = 1,
+		short = 0.65
 	}
 	self.heartbeat_time = 5
 	self.tablet = {
-		interaction_radius_sq = 350,
-		view_angle_th = 0.4,
-		swipe_length = 6,
-		interaction_angle_th = 0.2,
 		flick_time = 0.2,
+		interaction_angle_th = 0.2,
+		interaction_radius_sq = 350,
+		swipe_length = 6,
+		view_angle_th = 0.4,
 		interaction_volume_start = {
-			min_depth = -5,
-			max_depth = 5,
-			extra_width = 2,
 			angle_th = 0.05,
 			extra_height = 0,
-			height_scale = 1
+			extra_width = 2,
+			height_scale = 1,
+			max_depth = 5,
+			min_depth = -5
 		},
 		interaction_volume = {
-			min_depth = -5,
-			max_depth = 5,
-			extra_width = 2,
 			angle_th = 0.05,
 			extra_height = 0,
-			height_scale = 1
+			extra_width = 2,
+			height_scale = 1,
+			max_depth = 5,
+			min_depth = -5
 		}
 	}
 	self.driving = {
@@ -11107,8 +11106,8 @@ function TweakDataVR:init(tweak_data)
 			}
 		},
 		boat_rib_1 = {
-			max_angle = 30,
 			inverted = true,
+			max_angle = 30,
 			steering_pos = Vector3(-6, -100, 68),
 			middle_pos = Vector3(-6, -170, 68),
 			steering_dir = Vector3(0, 0, -1),
@@ -11132,8 +11131,8 @@ function TweakDataVR:init(tweak_data)
 				}
 			},
 			throttle = {
-				max_angle = 45,
 				inverted = true,
+				max_angle = 45,
 				type = "twist_grip"
 			}
 		},
@@ -11150,8 +11149,8 @@ function TweakDataVR:init(tweak_data)
 				}
 			},
 			throttle = {
-				max_angle = 45,
 				hand = "right",
+				max_angle = 45,
 				offset = 30,
 				type = "twist_grip"
 			}
@@ -11169,8 +11168,8 @@ function TweakDataVR:init(tweak_data)
 				}
 			},
 			throttle = {
-				max_angle = 45,
 				hand = "right",
+				max_angle = 45,
 				offset = 30,
 				type = "twist_grip"
 			}
@@ -11247,16 +11246,15 @@ function TweakDataVR:init(tweak_data)
 	self.driving.blackhawk_2 = deep_clone(self.driving.blackhawk_1)
 	self.driving.wanker = deep_clone(self.driving.blackhawk_1)
 	self.driving.forklift_3 = deep_clone(self.driving.forklift)
-	self.overlay_effects = {
-		fade_in_rotate_player = {
-			blend_mode = "normal",
-			sustain = 0,
-			play_paused = true,
-			fade_in = 0,
-			fade_out = 0.21,
-			color = Color(1, 0, 0, 0),
-			timer = TimerManager:main()
-		}
+	self.overlay_effects = {}
+	self.overlay_effects.fade_in_rotate_player = {
+		blend_mode = "normal",
+		fade_in = 0,
+		fade_out = 0.21,
+		play_paused = true,
+		sustain = 0,
+		color = Color(1, 0, 0, 0),
+		timer = TimerManager:main()
 	}
 	self.long_range_damage_reduction_distance = {
 		1800,
@@ -11271,14 +11269,14 @@ function TweakDataVR:init(tweak_data)
 	self:init_skills(tweak_data)
 
 	self.arm_simulator = {
-		rate = 15,
+		momentum = 15,
 		momentum_decay = 30,
-		momentum = 15
+		rate = 15
 	}
 	self.default_body_metrics = {
+		arm_length = 70,
 		head_to_shoulder = 15,
-		shoulder_width = 44,
-		arm_length = 70
+		shoulder_width = 44
 	}
 end
 
@@ -11437,6 +11435,7 @@ function TweakDataVR:init_specializations(tweak_data)
 			}
 		}
 	}
+
 	self.specialization_addons = {}
 
 	for index, addon in ipairs(addon_indices) do
@@ -11447,6 +11446,7 @@ function TweakDataVR:init_specializations(tweak_data)
 
 	for index, addon in ipairs(addon_indices) do
 		self.specialization_descs_addons[index] = {}
+
 		local addon_data = addons[addon] or {}
 
 		for deck_index, data in pairs(addon_data) do
@@ -11458,23 +11458,27 @@ function TweakDataVR:init_specializations(tweak_data)
 
 			if addon == "health" then
 				local min, max, total_amount, time = unpack(tweak_data.upgrades.values.player.warp_health[data_index])
+
 				macros.min = min * 10
 				macros.max = max * 10
 				macros.amount = total_amount * 10
 				macros.time = time
 			elseif addon == "armor" then
 				local min, max, max_restores, time = unpack(tweak_data.upgrades.values.player.warp_armor[data_index])
+
 				macros.min = min * 10
 				macros.max = max * 10
 				macros.restores = max_restores
 				macros.time = time
 			elseif addon == "dodge" then
 				local min, max, time = unpack(tweak_data.upgrades.values.player.warp_dodge[data_index])
+
 				macros.min = tostring(min * 100) .. "%"
 				macros.max = tostring(max * 100) .. "%"
 				macros.time = time
 			elseif addon == "armor_lite" then
 				local min, max, max_restores, time = unpack(tweak_data.upgrades.values.player.warp_armor_lite[data_index])
+
 				macros.min = min * 10
 				macros.max = max * 10
 				macros.restores = max_restores
@@ -11499,10 +11503,9 @@ end
 
 -- Lines 6611-6671
 function TweakDataVR:init_skills(tweak_data)
-	self.post_warp = {
-		min = 1,
-		max = 5
-	}
+	self.post_warp = {}
+	self.post_warp.min = 1
+	self.post_warp.max = 5
 	self.steelsight_stamina_regen = 0.02
 
 	if _G.IS_VR then
@@ -11514,6 +11517,7 @@ function TweakDataVR:init_skills(tweak_data)
 	end
 
 	local stamina_regen_macro = tostring(self.steelsight_stamina_regen * 100) .. "%"
+
 	self.skill_descs_addons = {
 		rifleman = {
 			text_id = "menu_vr_addon_rifleman",

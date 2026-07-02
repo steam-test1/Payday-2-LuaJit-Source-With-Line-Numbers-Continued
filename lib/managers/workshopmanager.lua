@@ -4,6 +4,7 @@ WorkshopManager = WorkshopManager or class()
 WorkshopManager.PATH = "workshop/"
 WorkshopManager.FULL_PATH = Application:base_path() .. WorkshopManager.PATH
 WorkshopManager.STAGING_NAME = "temporary_staging"
+
 local UGC = SystemInfo:distribution() == Idstring("STEAM") and Steam:ugc_handler()
 
 -- Lines 18-34
@@ -87,7 +88,9 @@ function WorkshopManager:create_staging_directory()
 
 	if not path or path == "" then
 		local basepath = WorkshopManager.FULL_PATH .. WorkshopManager.STAGING_NAME
+
 		path = basepath
+
 		local count = 1
 
 		while SystemFS:exists(path) do
@@ -117,8 +120,10 @@ end
 -- Lines 124-144
 function WorkshopManager:_new_item_path()
 	local date = Application:date()
+
 	date = date:gsub(":", "")
 	date = date:gsub(" ", "-")
+
 	local date_path = WorkshopManager.FULL_PATH .. date
 	local next_path = date_path
 	local counter = 2
@@ -134,6 +139,7 @@ end
 -- Lines 146-168
 function WorkshopManager:_init_items()
 	self._items = {}
+
 	local directories = SystemFS:list(WorkshopManager.FULL_PATH, true)
 
 	for _, dir in ipairs(directories) do

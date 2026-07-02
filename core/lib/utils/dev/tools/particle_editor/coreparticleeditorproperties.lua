@@ -312,7 +312,7 @@ function CoreEffectProperty:validate()
 			return ret
 		end
 	elseif self._type == "color" then
-		local c = nil
+		local c
 
 		if math.string_is_good_vector(self._value) then
 			c = math.string_to_vector(self._value)
@@ -355,7 +355,7 @@ function CoreEffectProperty:validate()
 		if not a then
 			ret.valid = false
 			ret.message = self._value .. " is not a valid float"
-		elseif self._min_range and self._max_range and (a < self._min_range or self._max_range < a) then
+		elseif self._min_range and self._max_range and (a < self._min_range or a > self._max_range) then
 			ret.valid = false
 			ret.message = self._value .. " is out of range (" .. self._min_range .. ", " .. self._max_range .. ")"
 		end
@@ -388,7 +388,7 @@ function CoreEffectProperty:validate()
 			return ret
 		end
 
-		if self._max_keys < #self._keys then
+		if #self._keys > self._max_keys then
 			ret.valid = false
 			ret.message = "Too many keys"
 
@@ -404,6 +404,7 @@ function CoreEffectProperty:validate()
 			end
 
 			local temp = CoreEffectProperty:new("", self._key_type, k.v, "")
+
 			ret = temp:validate()
 
 			if not ret.valid then
@@ -415,7 +416,7 @@ function CoreEffectProperty:validate()
 	end
 
 	if ret.valid and self._custom_validator then
-		return self:_custom_validator()
+		return self._custom_validator(self)
 	end
 
 	return ret
@@ -438,6 +439,7 @@ end
 
 -- Lines 365-366
 function CoreEffectProperty:on_change(widget_view)
+	return
 end
 
 -- Lines 368-376
@@ -460,7 +462,9 @@ function CoreEffectProperty:on_set_variant(widget_view_variant)
 	local variant_panel = widget_view_variant.variant_panel
 	local container = widget_view_variant.container
 	local container_sizer = widget_view_variant.container_sizer
+
 	self._value = combo:get_value()
+
 	local variant = self._variants[self._value]
 
 	variant_panel:destroy_children()
@@ -515,9 +519,10 @@ function create_color_selector(parent, view, prop)
 
 		if cdlg:show_modal() then
 			local c = cdlg:get_colour() * 255
+
 			vars.prop._value = c.x .. " " .. c.y .. " " .. c.z
 
-			vars:update_colour()
+			vars.update_colour(vars)
 			vars.view:update_view(false)
 		end
 	end
@@ -677,7 +682,7 @@ function create_key_curve_widget(parent, view, prop)
 				t = t:get_value(),
 				v = v:get_value()
 			})
-			vars:refresh_list()
+			vars.refresh_list(vars)
 		end
 	end
 
@@ -692,9 +697,9 @@ function create_key_curve_widget(parent, view, prop)
 			return
 		end
 
-		if prop._min_keys < #prop._keys then
+		if #prop._keys > prop._min_keys then
 			table.remove(prop._keys, listbox:selected_index() + 1)
-			vars:refresh_list()
+			vars.refresh_list(vars)
 		end
 	end
 
@@ -727,7 +732,7 @@ function create_key_curve_widget(parent, view, prop)
 		prop._keys[listbox:selected_index() + 1].t = t:get_value()
 		prop._keys[listbox:selected_index() + 1].v = v:get_value()
 
-		vars:refresh_list()
+		vars.refresh_list(vars)
 	end
 
 	local panel = EWS:Panel(parent, "", "")
@@ -796,7 +801,7 @@ end
 
 -- Lines 620-834
 function CoreEffectProperty:create_widget(parent, view)
-	local widget = nil
+	local widget
 
 	if self._type == "value_list" then
 		widget = EWS:ComboBox(parent, self._value, "", "CB_DROPDOWN,CB_READONLY")
@@ -833,6 +838,7 @@ function CoreEffectProperty:create_widget(parent, view)
 			if math.string_to_vector(self._min) ~= widget_view.widget:get_min() or math.string_to_vector(self._max) ~= widget_view.widget:get_max() then
 				local minv = widget_view.widget:get_min()
 				local maxv = widget_view.widget:get_max()
+
 				self._min = minv.x .. " " .. minv.y .. " " .. minv.z
 				self._max = maxv.x .. " " .. maxv.y .. " " .. maxv.z
 
@@ -846,6 +852,7 @@ function CoreEffectProperty:create_widget(parent, view)
 		})
 	elseif self._type == "variant" then
 		widget = EWS:Panel(parent, "", "")
+
 		local combo = EWS:ComboBox(widget, "", "", "CB_DROPDOWN,CB_READONLY")
 
 		set_widget_help(combo, self._help)
@@ -886,7 +893,7 @@ function CoreEffectProperty:create_widget(parent, view)
 		-- Lines 690-694
 		local function on_add_object(vars)
 			table.insert(vars.property._list_members, deep_clone(self._list_objects[vars.combo:get_value()]))
-			vars:fill_list()
+			vars.fill_list(vars)
 			vars.view:update_view(false)
 		end
 
@@ -897,8 +904,8 @@ function CoreEffectProperty:create_widget(parent, view)
 			end
 
 			table.remove(vars.property._list_members, vars.list_box:selected_index() + 1)
-			vars:fill_list()
-			vars:on_select_object()
+			vars.fill_list(vars)
+			vars.on_select_object(vars)
 			vars.view:update_view(false)
 		end
 
@@ -936,6 +943,7 @@ function CoreEffectProperty:create_widget(parent, view)
 		end
 
 		widget = EWS:Panel(parent, "", "")
+
 		local list_box = EWS:ListBox(widget, "", "LB_SINGLE,LB_HSCROLL")
 		local remove_button = EWS:Button(widget, "Remove", "", "BU_EXACTFIT")
 		local combo = EWS:ComboBox(widget, "", "", "CB_DROPDOWN,CB_READONLY")
@@ -1010,6 +1018,7 @@ function CoreEffectProperty:create_widget(parent, view)
 		local function on_keys_commit(widget_view)
 			local keys = widget_view.widget:get_keys()
 			local prop = widget_view.prop
+
 			prop._keys = {}
 
 			for _, k in ipairs(keys) do
@@ -1066,7 +1075,7 @@ function CoreEffectProperty:save(node)
 	end
 
 	if self._type == "compound" then
-		local n = nil
+		local n
 
 		if self._save_to_child then
 			n = node:make_child(self._compound_container:name())

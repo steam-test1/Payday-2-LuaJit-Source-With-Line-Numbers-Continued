@@ -27,9 +27,10 @@ function TeamAILogicTravel.enter(data, new_logic_name, enter_params)
 
 	local old_internal_data = data.internal_data
 	local my_data = {
-		unit = data.unit,
-		detection = data.char_tweak.detection.recon
+		unit = data.unit
 	}
+
+	my_data.detection = data.char_tweak.detection.recon
 
 	if old_internal_data then
 		my_data.turning = old_internal_data.turning
@@ -51,6 +52,7 @@ function TeamAILogicTravel.enter(data, new_logic_name, enter_params)
 	end
 
 	data.internal_data = my_data
+
 	local key_str = tostring(data.key)
 
 	if not data.unit:movement():cool() then
@@ -91,6 +93,7 @@ function TeamAILogicTravel.enter(data, new_logic_name, enter_params)
 
 	if w_td then
 		local cw_td = data.char_tweak.weapon[w_td.usage]
+
 		my_data.weapon_range = (cw_td or {}).range or 5000
 	end
 
@@ -180,8 +183,9 @@ end
 -- Lines 188-257
 function TeamAILogicTravel._upd_enemy_detection(data)
 	data.t = TimerManager:game():time()
+
 	local my_data = data.internal_data
-	local max_reaction = nil
+	local max_reaction
 
 	if data.cool then
 		max_reaction = AIAttentionObject.REACT_SURPRISED
@@ -194,7 +198,7 @@ function TeamAILogicTravel._upd_enemy_detection(data)
 
 	if new_attention then
 		local objective = data.objective
-		local allow_trans, obj_failed = nil
+		local allow_trans, obj_failed
 		local dont_exit = false
 
 		if data.unit:movement():chk_action_forbidden("walk") and not data.unit:anim_data().act_idle then

@@ -34,12 +34,12 @@ function MenuLobbyRenderer:show_node(node)
 end
 
 local mugshots = {
-	undecided = "mugshot_unassigned",
-	russian = 3,
+	american = 1,
 	german = 2,
 	random = "mugshot_random",
+	russian = 3,
 	spanish = 4,
-	american = 1
+	undecided = "mugshot_unassigned"
 }
 local mugshot_stencil = {
 	random = {
@@ -84,9 +84,9 @@ function MenuLobbyRenderer:open(...)
 	if _G.IS_VR then
 		self._menu_bg:rect({
 			halign = "scale",
+			layer = -1000,
 			valign = "scale",
 			visible = true,
-			layer = -1000,
 			color = Color.black
 		})
 	end
@@ -101,12 +101,12 @@ function MenuLobbyRenderer:open(...)
 	end
 
 	for i = 1, is_single_player and 1 or tweak_data.max_players do
-		local t = {
-			player = {},
-			free = true,
-			kit_slots = {},
-			params = {}
-		}
+		local t = {}
+
+		t.player = {}
+		t.free = true
+		t.kit_slots = {}
+		t.params = {}
 
 		for slot = 1, PlayerManager.WEAPON_SLOTS + 3 do
 			table.insert(t.kit_slots, slot)
@@ -161,6 +161,7 @@ function MenuLobbyRenderer:update_level_id(level_id)
 	end
 
 	level_id = level_id or Global.game_settings.level_id
+
 	local level_id_index = tweak_data.levels:get_index_from_level_id(level_id)
 
 	managers.network:session():send_to_peers("lobby_sync_update_level_id", level_id_index)
@@ -219,6 +220,7 @@ function MenuLobbyRenderer:set_slot_joining(peer, peer_id)
 	managers.hud:set_slot_joining(peer, peer_id)
 
 	local slot = self._player_slots[peer_id]
+
 	slot.peer_id = peer_id
 end
 
@@ -255,6 +257,7 @@ function MenuLobbyRenderer:set_slot_outfit(slot, criminal_name, outfit_string)
 	end
 
 	local outfit = managers.blackmarket:unpack_outfit_from_string(outfit_string)
+
 	self._player_slots[slot].outfit = outfit
 
 	managers.menu_component:set_slot_outfit_mission_briefing_gui(slot, criminal_name, outfit)
@@ -279,6 +282,7 @@ function MenuLobbyRenderer:_set_player_slot(nr, params)
 	end
 
 	local slot = self._player_slots[nr]
+
 	slot.free = false
 	slot.peer_id = params.peer_id
 	slot.params = params
@@ -511,10 +515,10 @@ function MenuLobbyRenderer:_layout_slot_progress_panel(slot, progress)
 	slot.p_sha:set_shape(slot.p_sha_bg:shape())
 	slot.p_sup:set_shape(slot.p_sup_bg:shape())
 	slot.p_tec:set_shape(slot.p_tec_bg:shape())
-	slot.p_ass:set_w(slot.params and slot.p_ass_bg:w() * progress[1] / 49 or slot.p_ass:w())
-	slot.p_sha:set_w(slot.params and slot.p_sha_bg:w() * progress[2] / 49 or slot.p_sha:w())
-	slot.p_sup:set_w(slot.params and slot.p_sup_bg:w() * progress[3] / 49 or slot.p_sup:w())
-	slot.p_tec:set_w(slot.params and slot.p_sup_bg:w() * (progress[4] or 0) / 49 or slot.p_tec:w())
+	slot.p_ass:set_w(slot.params and slot.p_ass_bg:w() * (progress[1] / 49) or slot.p_ass:w())
+	slot.p_sha:set_w(slot.params and slot.p_sha_bg:w() * (progress[2] / 49) or slot.p_sha:w())
+	slot.p_sup:set_w(slot.params and slot.p_sup_bg:w() * (progress[3] / 49) or slot.p_sup:w())
+	slot.p_tec:set_w(slot.params and slot.p_sup_bg:w() * ((progress[4] or 0) / 49) or slot.p_tec:w())
 end
 
 -- Lines 464-514
@@ -629,6 +633,7 @@ function MenuLobbyRenderer:set_stencil_align(align, percent)
 
 	self._menu_stencil_align = align
 	self._menu_stencil_align_percent = percent
+
 	local res = RenderSettings.resolution
 	local safe_rect_pixels = managers.gui_data:scaled_size()
 	local y = safe_rect_pixels.height - tweak_data.load_level.upper_saferect_border * 2 + 2

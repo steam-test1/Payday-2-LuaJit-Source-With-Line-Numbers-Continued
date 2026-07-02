@@ -20,7 +20,7 @@ end
 
 -- Lines 16-28
 function BanListManager:unban(identifier)
-	local user_index = nil
+	local user_index
 
 	for index, user in ipairs(self._global.banned) do
 		if user.identifier == identifier then

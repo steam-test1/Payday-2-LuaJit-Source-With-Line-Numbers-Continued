@@ -12,26 +12,32 @@ end
 
 -- Lines 11-12
 function NetworkAccount:update()
+	return
 end
 
 -- Lines 14-15
 function NetworkAccount:create_account(name, password, email)
+	return
 end
 
 -- Lines 17-18
 function NetworkAccount:reset_password(name, email)
+	return
 end
 
 -- Lines 20-21
 function NetworkAccount:login(name, password, cdkey)
+	return
 end
 
 -- Lines 23-24
 function NetworkAccount:logout()
+	return
 end
 
 -- Lines 26-27
 function NetworkAccount:register_callback(event, callback)
+	return
 end
 
 -- Lines 29-31
@@ -166,6 +172,7 @@ end
 
 -- Lines 134-135
 function NetworkAccount:overlay_activate()
+	return
 end
 
 -- Lines 137-139
@@ -194,26 +201,32 @@ end
 
 -- Lines 156-157
 function NetworkAccount:set_playing(state)
+	return
 end
 
 -- Lines 159-160
 function NetworkAccount:set_played_with(peer)
+	return
 end
 
 -- Lines 162-163
 function NetworkAccount:_load_globals()
+	return
 end
 
 -- Lines 165-166
 function NetworkAccount:_save_globals()
+	return
 end
 
 -- Lines 168-169
 function NetworkAccount:inventory_load()
+	return
 end
 
 -- Lines 171-172
 function NetworkAccount:inventory_is_loading()
+	return
 end
 
 -- Lines 174-176
@@ -223,22 +236,27 @@ end
 
 -- Lines 178-179
 function NetworkAccount:inventory_reward_dlc()
+	return
 end
 
 -- Lines 181-182
 function NetworkAccount:inventory_reward_unlock(box, key)
+	return
 end
 
 -- Lines 184-185
 function NetworkAccount:inventory_reward_open(item)
+	return
 end
 
 -- Lines 187-188
 function NetworkAccount:inventory_outfit_refresh()
+	return
 end
 
 -- Lines 190-191
 function NetworkAccount:inventory_outfit_verify(id, outfit_data, outfit_callback)
+	return
 end
 
 -- Lines 193-195
@@ -248,6 +266,7 @@ end
 
 -- Lines 197-198
 function NetworkAccount:inventory_repair_list(list)
+	return
 end
 
 -- Lines 200-202
@@ -257,6 +276,7 @@ end
 
 -- Lines 204-205
 function NetworkAccount:experience_loaded()
+	return
 end
 
 local sa_handler_funcs = {
@@ -297,7 +317,7 @@ local sa_handler_funcs = {
 local sa_handler_stub = class()
 
 for _, func_name in ipairs(sa_handler_funcs) do
-	sa_handler_stub[func_name] = function (self)
+	sa_handler_stub[func_name] = function(self)
 		print("[NetworkAccount] sa_handler NYI", func_name)
 	end
 end
@@ -309,6 +329,7 @@ end
 
 -- Lines 221-222
 function NetworkAccount:set_stat(key, value)
+	return
 end
 
 -- Lines 224-226
@@ -338,4 +359,5 @@ end
 
 -- Lines 244-245
 function NetworkAccount:publish_statistics(stats, force_store)
+	return
 end

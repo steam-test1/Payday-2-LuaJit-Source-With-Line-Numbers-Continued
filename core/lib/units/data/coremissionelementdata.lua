@@ -8,4 +8,5 @@ end
 
 -- Lines 9-11
 function CoreMissionElementData:init(unit)
+	return
 end

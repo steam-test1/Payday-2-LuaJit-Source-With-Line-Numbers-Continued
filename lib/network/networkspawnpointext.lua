@@ -17,4 +17,5 @@ end
 
 -- Lines 14-16
 function NetworkSpawnPointExt:destroy(unit)
+	return
 end

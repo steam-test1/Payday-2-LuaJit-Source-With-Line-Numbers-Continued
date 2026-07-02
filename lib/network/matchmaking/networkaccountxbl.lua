@@ -36,6 +36,7 @@ end
 
 -- Lines 59-60
 function NetworkAccountXBL:show_signin_ui()
+	return
 end
 
 -- Lines 62-66

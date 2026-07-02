@@ -20,6 +20,7 @@ function CoreMacroToolbar:reload_macros()
 	end
 
 	self._macros = {}
+
 	local node = File:parse_xml(self._macro_file)
 
 	if node then
@@ -31,9 +32,9 @@ function CoreMacroToolbar:reload_macros()
 			end
 
 			local name = macro:parameter("name")
-			self._macros[name] = {
-				_ews = EWS:BitmapButton(self._toolbar_panel, icon_path, "", "")
-			}
+
+			self._macros[name] = {}
+			self._macros[name]._ews = EWS:BitmapButton(self._toolbar_panel, icon_path, "", "")
 
 			self._macros[name]._ews:set_tool_tip(name)
 

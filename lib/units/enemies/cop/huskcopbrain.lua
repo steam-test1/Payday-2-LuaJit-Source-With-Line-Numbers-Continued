@@ -1,10 +1,10 @@
 HuskCopBrain = HuskCopBrain or class()
 HuskCopBrain._NET_EVENTS = {
-	surrender_cop_tied = 3,
 	surrender_civilian_tied = 5,
-	weapon_laser_off = 2,
 	surrender_civilian_untied = 6,
+	surrender_cop_tied = 3,
 	surrender_cop_untied = 4,
+	weapon_laser_off = 2,
 	weapon_laser_on = 1
 }
 HuskCopBrain._ENABLE_LASER_TIME = 3
@@ -34,17 +34,23 @@ end
 
 -- Lines 50-66
 function HuskCopBrain:_setup_fake_attention_handler()
-	local handler = {
-		get_attention_m_pos = function (handler)
-			return self._unit:movement():m_head_pos()
-		end,
-		get_detection_m_pos = function (handler)
-			return self._unit:movement():m_head_pos()
-		end,
-		get_ground_m_pos = function (handler)
-			return self._unit:movement():m_pos()
-		end
-	}
+	local handler = {}
+
+	-- Lines 53-55
+	function handler.get_attention_m_pos(handler)
+		return self._unit:movement():m_head_pos()
+	end
+
+	-- Lines 57-59
+	function handler.get_detection_m_pos(handler)
+		return self._unit:movement():m_head_pos()
+	end
+
+	-- Lines 61-63
+	function handler.get_ground_m_pos(handler)
+		return self._unit:movement():m_pos()
+	end
+
 	self._attention_handler = handler
 end
 
@@ -104,6 +110,7 @@ end
 -- Lines 126-151
 function HuskCopBrain:load(load_data)
 	local my_load_data = load_data.brain
+
 	self._dead = my_load_data.dead
 
 	self:set_interaction_voice(my_load_data.interaction_voice)
@@ -141,10 +148,12 @@ end
 
 -- Lines 167-168
 function HuskCopBrain:on_cool_state_changed(state)
+	return
 end
 
 -- Lines 172-173
 function HuskCopBrain:action_complete_clbk(action)
+	return
 end
 
 -- Lines 185-199
@@ -224,6 +233,7 @@ end
 
 -- Lines 260-260
 function HuskCopBrain:on_team_set(team_data)
+	return
 end
 
 -- Lines 264-272
@@ -289,6 +299,7 @@ end
 function HuskCopBrain:enable_weapon_laser()
 	self._add_laser_t = nil
 	self._weapon_laser_on = true
+
 	local weapon = self._unit:inventory():equipped_unit()
 	local weap_base_ext = weapon and weapon:base()
 
@@ -304,6 +315,7 @@ end
 function HuskCopBrain:disable_weapon_laser()
 	self._add_laser_t = nil
 	self._weapon_laser_on = nil
+
 	local weapon = self._unit:inventory():equipped_unit()
 	local weap_base_ext = weapon and weapon:base()
 

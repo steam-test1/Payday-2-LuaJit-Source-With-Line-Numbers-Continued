@@ -10,9 +10,8 @@ end
 
 -- Lines 11-14
 function AiDataManager:_setup()
-	self._data = {
-		patrol_paths = {}
-	}
+	self._data = {}
+	self._data.patrol_paths = {}
 end
 
 -- Lines 16-24

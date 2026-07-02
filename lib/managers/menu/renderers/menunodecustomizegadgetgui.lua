@@ -1,4 +1,5 @@
 MenuNodeCustomizeGadgetGui = MenuNodeCustomizeGadgetGui or class(MenuNodeGui)
+
 local padding = 10
 
 -- Lines 6-20
@@ -83,7 +84,7 @@ function MenuNodeCustomizeGadgetGui:_setup_item_panel(safe_rect, res)
 	self.box_panel:set_x(self.item_panel:x())
 	self.box_panel:set_w(self.item_panel:w())
 
-	if self._align_data.panel:h() < self.item_panel:h() then
+	if self.item_panel:h() > self._align_data.panel:h() then
 		self.box_panel:set_y(0)
 		self.box_panel:set_h(self.item_panel:parent():h())
 	else
@@ -104,6 +105,7 @@ function MenuNodeCustomizeGadgetGui:_setup_item_panel(safe_rect, res)
 	if mod_td.adds then
 		for _, part_id in ipairs(mod_td.adds) do
 			local sub_type = tweak_data.weapon.factory.parts[part_id].sub_type
+
 			show_laser = sub_type == "laser" or show_laser
 			show_flashlight = sub_type == "flashlight" or show_flashlight
 		end

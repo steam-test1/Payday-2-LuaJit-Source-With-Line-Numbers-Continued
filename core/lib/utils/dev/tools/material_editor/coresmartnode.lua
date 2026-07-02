@@ -25,7 +25,7 @@ function CoreSmartNode:children()
 	local count = table.getn(self._children)
 	local i = 0
 
-	return function ()
+	return function()
 		i = i + 1
 
 		if i <= count then
@@ -100,6 +100,7 @@ end
 -- Lines 81-85
 function CoreSmartNode:remove_child_at(index)
 	local i = index + 1
+
 	self._children[i] = self._children[#self._children]
 	self._children[#self._children] = nil
 end

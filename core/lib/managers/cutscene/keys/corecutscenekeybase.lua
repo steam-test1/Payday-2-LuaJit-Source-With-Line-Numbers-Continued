@@ -48,10 +48,12 @@ end
 
 -- Lines 41-43
 function CoreCutsceneKeyBase:prime(player)
+	return
 end
 
 -- Lines 45-47
 function CoreCutsceneKeyBase:unload(player)
+	return
 end
 
 -- Lines 49-51
@@ -295,6 +297,7 @@ end
 -- Lines 237-268
 function CoreCutsceneKeyBase:register_serialized_attribute(attribute_name, default, transform_func)
 	local class_table = self
+
 	class_table.__serialized_attributes = class_table.__serialized_attributes or {}
 	class_table.__serialized_attributes[attribute_name] = transform_func or tostring
 	class_table.__serialized_attribute_order = class_table.__serialized_attribute_order or {}
@@ -303,13 +306,12 @@ function CoreCutsceneKeyBase:register_serialized_attribute(attribute_name, defau
 		table.insert(class_table.__serialized_attribute_order, attribute_name)
 	end
 
-	class_table[attribute_name] = function (instance)
+	class_table[attribute_name] = function(instance)
 		local value = instance["__" .. attribute_name]
 
 		return value == nil and default or value
 	end
-
-	class_table["set_" .. attribute_name] = function (instance, value)
+	class_table["set_" .. attribute_name] = function(instance, value)
 		local previous_value = instance["__" .. attribute_name]
 
 		if instance.on_attribute_before_changed then
@@ -333,17 +335,20 @@ end
 -- Lines 270-275
 function CoreCutsceneKeyBase:attribute_affects(changed, ...)
 	local class_table = self
+
 	class_table.__control_dependencies = class_table.__control_dependencies or {}
+
 	local affected_attribute_names = table.list_union(class_table.__control_dependencies[changed] or {}, {
 		...
 	})
+
 	class_table.__control_dependencies[changed] = affected_attribute_names
 end
 
 -- Lines 277-312
 function CoreCutsceneKeyBase:populate_sizer_with_editable_attributes(grid_sizer, parent_frame)
 	for _, attribute_name in ipairs(self:attribute_names()) do
-		local control = nil
+		local control
 
 		-- Lines 281-290
 		local function on_control_edited()
@@ -351,6 +356,7 @@ function CoreCutsceneKeyBase:populate_sizer_with_editable_attributes(grid_sizer,
 
 			if value_is_valid then
 				local value = control:get_value()
+
 				value = value == nil and "" or tostring(value)
 
 				self:set_attribute_value_from_string(attribute_name, value)

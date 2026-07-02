@@ -6,6 +6,7 @@ function HUDManager:_animate_test_circle()
 
 	while t > 0 do
 		local dt = coroutine.yield()
+
 		t = t - dt
 	end
 
@@ -20,6 +21,7 @@ function HUDManager:_animate_ammo_test(panel)
 
 	while t > 0 do
 		local dt = coroutine.yield()
+
 		t = t - dt
 
 		if t < 2 then

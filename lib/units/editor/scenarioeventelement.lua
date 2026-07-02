@@ -21,14 +21,15 @@ function ScenarioEventUnitElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local amount_params = {
-		name_proportions = 1,
-		name = "Amount:",
 		ctrlr_proportions = 2,
-		tooltip = "Should be set to the amount of enemies that will be created from this event",
-		min = 1,
 		floats = 0,
 		max = 25,
+		min = 1,
+		name = "Amount:",
+		name_proportions = 1,
+		tooltip = "Should be set to the amount of enemies that will be created from this event",
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.amount
@@ -45,11 +46,11 @@ function ScenarioEventUnitElement:_build_panel(panel, panel_sizer)
 	})
 
 	local task_params = {
+		ctrlr_proportions = 2,
 		name = "Task:",
 		name_proportions = 1,
-		tooltip = "Select a task from the combobox",
 		sorted = true,
-		ctrlr_proportions = 2,
+		tooltip = "Select a task from the combobox",
 		panel = panel,
 		sizer = panel_sizer,
 		options = managers.groupai:state():task_names(),
@@ -63,13 +64,13 @@ function ScenarioEventUnitElement:_build_panel(panel, panel_sizer)
 	})
 
 	local base_chance_params = {
-		name_proportions = 1,
-		name = "Base chance:",
 		ctrlr_proportions = 2,
-		tooltip = "Used to specify chance to happen (1==absolutely!)",
-		min = 0,
 		floats = 2,
 		max = 1,
+		min = 0,
+		name = "Base chance:",
+		name_proportions = 1,
+		tooltip = "Used to specify chance to happen (1==absolutely!)",
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.base_chance
@@ -86,13 +87,13 @@ function ScenarioEventUnitElement:_build_panel(panel, panel_sizer)
 	})
 
 	local chance_inc_params = {
-		name_proportions = 1,
-		name = "Chance incremental:",
 		ctrlr_proportions = 2,
-		tooltip = "Used to specify an incremental chance to happen",
-		min = 0,
 		floats = 2,
 		max = 1,
+		min = 0,
+		name = "Chance incremental:",
+		name_proportions = 1,
+		tooltip = "Used to specify an incremental chance to happen",
 		panel = panel,
 		sizer = panel_sizer,
 		value = self._hed.chance_inc

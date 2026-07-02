@@ -46,7 +46,9 @@ function HttpRequest:check_requests()
 		local content_type = self._current_request.content_type or ""
 		local body = self._current_request.body or ""
 		local body_size = string.len(body)
-		local headers = self._current_request.headers and type(self._current_request.headers) == "table" and self._current_request.headers or self._current_request.headers
+		local headers = self._current_request.headers and type(self._current_request.headers) == "table" and self._current_request.headers or {
+			self._current_request.headers
+		}
 
 		if method == "get" then
 			self.handler:http_request(url, clbk, headers)
@@ -85,15 +87,15 @@ function HttpRequest:create_request(method, url, clbk, content_type, body, heade
 		end
 	end
 
-	local new_request = {
-		method = method,
-		url = url,
-		clbk = clbk,
-		content_type = content_type,
-		body = body,
-		headers = headers,
-		key = key
-	}
+	local new_request = {}
+
+	new_request.method = method
+	new_request.url = url
+	new_request.clbk = clbk
+	new_request.content_type = content_type
+	new_request.body = body
+	new_request.headers = headers
+	new_request.key = key
 
 	table.insert(self._requests, new_request)
 	self:check_requests()

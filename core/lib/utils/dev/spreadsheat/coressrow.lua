@@ -3,6 +3,7 @@ core:import("CoreClass")
 
 local EMPTY_ROW_XML = "   <Row> %s\n   </Row> "
 local CELL_XML = "    <Cell><Data ss:Type=\"String\">%s</Data></Cell> "
+
 Row = Row or CoreClass.class()
 
 -- Lines 17-19
@@ -34,6 +35,7 @@ function Row:to_xml(f)
 end
 
 local EMPTY_HEADER1_ROW_XML = "   <Row ss:StyleID=\"header1\"> %s\n   </Row> "
+
 Header1Row = Header1Row or CoreClass.class(Row)
 
 -- Lines 45-47
@@ -42,6 +44,7 @@ function Header1Row:to_xml(f)
 end
 
 local EMPTY_HEADER2_ROW_XML = "   <Row ss:StyleID=\"header2\"> %s\n   </Row> "
+
 Header2Row = Header2Row or CoreClass.class(Row)
 
 -- Lines 57-59

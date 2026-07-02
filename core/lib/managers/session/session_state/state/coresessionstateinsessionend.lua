@@ -14,6 +14,7 @@ end
 
 -- Lines 12-13
 function InSessionEnd:destroy()
+	return
 end
 
 -- Lines 15-17

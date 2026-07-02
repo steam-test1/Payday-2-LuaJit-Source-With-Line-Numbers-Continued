@@ -5,6 +5,7 @@ Reporter = Reporter or CoreClass.class()
 
 -- Lines 7-8
 function Reporter:init()
+	return
 end
 
 -- Lines 10-12

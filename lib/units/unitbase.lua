@@ -25,6 +25,7 @@ end
 
 -- Lines 27-29
 function UnitBase:save(data)
+	return
 end
 
 -- Lines 31-33

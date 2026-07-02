@@ -13,7 +13,7 @@ end
 
 -- Lines 22-31
 function arg_value(key)
-	local found = nil
+	local found
 
 	for _, arg in ipairs(Application:argv()) do
 		if found then
@@ -26,4 +26,5 @@ end
 
 -- Lines 33-62
 function min_exe_version(version, system_name)
+	return
 end

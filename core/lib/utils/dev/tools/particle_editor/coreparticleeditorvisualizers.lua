@@ -22,15 +22,7 @@ function CoreParticleEditorVisualizers:create_billboard()
 
 	visualizer:add_property(p)
 
-	help = [[
-Determines alignment type of billboard:
-camera_facing - billboard is always facing camera position, use this for ex. smoke particles
-normal_locked - billboard rotates around particle normal trying to face camera as much as possible, use this for ex. spark particles
-axialz_locked - billboard rotates around world Z trying to face camera as much as possible
-normal_facing - billboard faces particle normal
-screen_aligned - billboard faces camera near clip plane
-NOTE: for screen_aligned billboards you will want to set the atom to never cull,
-and play it in (0,0,0) (move the gizmo using the Move To Origo button)]]
+	help = "Determines alignment type of billboard:\ncamera_facing - billboard is always facing camera position, use this for ex. smoke particles\nnormal_locked - billboard rotates around particle normal trying to face camera as much as possible, use this for ex. spark particles\naxialz_locked - billboard rotates around world Z trying to face camera as much as possible\nnormal_facing - billboard faces particle normal\nscreen_aligned - billboard faces camera near clip plane\nNOTE: for screen_aligned billboards you will want to set the atom to never cull,\nand play it in (0,0,0) (move the gizmo using the Move To Origo button)"
 	p = CoreEffectProperty:new("billboard_type", "value_list", "camera_facing", help)
 
 	p:add_value("camera_facing")
@@ -42,18 +34,14 @@ and play it in (0,0,0) (move the gizmo using the Move To Origo button)]]
 	visualizer:add_property(p)
 
 	help = "If positions are read, this channel will be used"
+
 	local p = CoreEffectProperty:new("rotation_channel", "value_list", "world_rotation", help)
 
 	p:add_value("rotation")
 	p:add_value("world_rotation")
 	visualizer:add_property(p)
 
-	help = [[
-Determines how billboard is blended against the background:
-add - color becomes color of destination + billboard alpha * billboard color
-normal - color becomes color of destination * (1 - billboard alpha) + billboard alpha * billboard color
-premultiplied - color becomes color of destination + billboard color
-add_no_alpha - color becomes color of destination + billboard color]]
+	help = "Determines how billboard is blended against the background:\nadd - color becomes color of destination + billboard alpha * billboard color\nnormal - color becomes color of destination * (1 - billboard alpha) + billboard alpha * billboard color\npremultiplied - color becomes color of destination + billboard color\nadd_no_alpha - color becomes color of destination + billboard color"
 	p = CoreEffectProperty:new("blend_mode", "value_list", "normal", help)
 
 	p:add_value("normal")
@@ -88,12 +76,7 @@ add_no_alpha - color becomes color of destination + billboard color]]
 
 	visualizer:add_property(CoreEffectProperty:new("per_particle_age", "boolean", "false", help))
 
-	help = [[
-Size of particle
-constant - use constant value
-keys - use key curve over time
-channel - read from channel
-scaled_channel - read from channel, scale with key curve]]
+	help = "Size of particle\nconstant - use constant value\nkeys - use key curve over time\nchannel - read from channel\nscaled_channel - read from channel, scale with key curve"
 	p = CoreEffectProperty:new("size_input", "variant", "constant", help)
 
 	p:add_variant("constant", CoreEffectProperty:new("size", "vector2", "100 100", "Constant size of particle"))
@@ -103,8 +86,8 @@ scaled_channel - read from channel, scale with key curve]]
 
 	size_keys:set_key_type("vector2")
 	size_keys:add_key({
-		v = "100 100",
-		t = 0
+		t = 0,
+		v = "100 100"
 	})
 	size_keys:set_min_max_keys(1, 4)
 	size_keys:set_presets({
@@ -158,19 +141,14 @@ scaled_channel - read from channel, scale with key curve]]
 
 	size_scale_keys:set_key_type("vector2")
 	size_scale_keys:add_key({
-		v = "1 1",
-		t = 0
+		t = 0,
+		v = "1 1"
 	})
 	size_scale_keys:set_min_max_keys(1, 4)
 	p:add_variant("scaled_channel", size_scale_keys)
 	visualizer:add_property(p)
 
-	help = [[
-Color of particle
-constant - use constant value
-keys - use key curve over time
-channel - read from channel
-scaled_channel - read from channel, scale with key curve]]
+	help = "Color of particle\nconstant - use constant value\nkeys - use key curve over time\nchannel - read from channel\nscaled_channel - read from channel, scale with key curve"
 	p = CoreEffectProperty:new("color_input", "variant", "constant", help)
 
 	p:add_variant("constant", CoreEffectProperty:new("color", "color", "255 255 255", "Constant color of particle"))
@@ -180,8 +158,8 @@ scaled_channel - read from channel, scale with key curve]]
 
 	color_keys:set_key_type("color")
 	color_keys:add_key({
-		v = "255 255 255",
-		t = 0
+		t = 0,
+		v = "255 255 255"
 	})
 	color_keys:set_min_max_keys(1, 4)
 	p:add_variant("keys", color_keys)
@@ -190,19 +168,14 @@ scaled_channel - read from channel, scale with key curve]]
 
 	color_scale_keys:set_key_type("vector3")
 	color_scale_keys:add_key({
-		v = "1 1 1",
-		t = 0
+		t = 0,
+		v = "1 1 1"
 	})
 	color_scale_keys:set_min_max_keys(1, 4)
 	p:add_variant("scaled_channel", color_scale_keys)
 	visualizer:add_property(p)
 
-	help = [[
-Opacity of particle
-constant - use constant value
-keys - use key curve over time
-channel - read from channel
-scaled_channel - read from channel, scale with key curve]]
+	help = "Opacity of particle\nconstant - use constant value\nkeys - use key curve over time\nchannel - read from channel\nscaled_channel - read from channel, scale with key curve"
 	p = CoreEffectProperty:new("opacity_input", "variant", "constant", help)
 
 	p:add_variant("constant", CoreEffectProperty:new("opacity", "opacity", "255", "Constant opacity of particle"))
@@ -212,8 +185,8 @@ scaled_channel - read from channel, scale with key curve]]
 
 	opacity_keys:set_key_type("opacity")
 	opacity_keys:add_key({
-		v = "255",
-		t = 0
+		t = 0,
+		v = "255"
 	})
 	opacity_keys:set_min_max_keys(1, 4)
 	p:add_variant("keys", opacity_keys)
@@ -222,19 +195,14 @@ scaled_channel - read from channel, scale with key curve]]
 
 	opacity_scale_keys:set_key_type("float")
 	opacity_scale_keys:add_key({
-		v = "1",
-		t = 0
+		t = 0,
+		v = "1"
 	})
 	opacity_scale_keys:set_min_max_keys(1, 4)
 	p:add_variant("scaled_channel", opacity_scale_keys)
 	visualizer:add_property(p)
 
-	help = [[
-Rotation of particle
-constant - use constant value
-keys - use key curve over time
-channel - read from channel
-scaled_channel - read from channel, scale with key curve]]
+	help = "Rotation of particle\nconstant - use constant value\nkeys - use key curve over time\nchannel - read from channel\nscaled_channel - read from channel, scale with key curve"
 	p = CoreEffectProperty:new("rotation_input", "variant", "constant", help)
 
 	p:add_variant("constant", CoreEffectProperty:new("rotation", "angle", "0", "Constant rotation of particle"))
@@ -244,8 +212,8 @@ scaled_channel - read from channel, scale with key curve]]
 
 	rotation_keys:set_key_type("angle")
 	rotation_keys:add_key({
-		v = "0",
-		t = 0
+		t = 0,
+		v = "0"
 	})
 	rotation_keys:set_min_max_keys(1, 4)
 	rotation_keys:set_presets({
@@ -299,8 +267,8 @@ scaled_channel - read from channel, scale with key curve]]
 
 	rotation_scale_keys:set_key_type("float")
 	rotation_scale_keys:add_key({
-		v = "1",
-		t = 0
+		t = 0,
+		v = "1"
 	})
 	rotation_scale_keys:set_min_max_keys(1, 4)
 	p:add_variant("scaled_channel", rotation_scale_keys)
@@ -314,11 +282,7 @@ scaled_channel - read from channel, scale with key curve]]
 
 	visualizer:add_property(CoreEffectProperty:new("uv_size", "vector2", "1 1", help))
 
-	help = [[
-UV offset of particle
-constant - use constant value
-keys - uv animation, stepping between the uv offsets of each frame over time
-channel - read from channel]]
+	help = "UV offset of particle\nconstant - use constant value\nkeys - uv animation, stepping between the uv offsets of each frame over time\nchannel - read from channel"
 	p = CoreEffectProperty:new("uv_offset_input", "variant", "constant", help)
 
 	p:add_variant("constant", CoreEffectProperty:new("uv_offset", "vector2", "0 0", "const uv offset of particles"))
@@ -371,6 +335,7 @@ function CoreParticleEditorVisualizers:create_trail()
 
 	local intensities = LightIntensityDB:list()
 	local defintensity = ""
+
 	p = CoreEffectProperty:new("intensity", "value_list", defintensity, "Intensity of billboards - choose a template that corresponds closest to the intensity range you want.\nTo scale the intensity over time, use the color.")
 
 	p:add_value("")
@@ -381,12 +346,7 @@ function CoreParticleEditorVisualizers:create_trail()
 
 	visualizer:add_property(p)
 
-	help = [[
-Determines how billboard is blended against the background:
-add - color becomes color of destination + billboard alpha * billboard color
-normal - color becomes color of destination * (1 - billboard alpha) + billboard alpha * billboard color
-premultiplied - color becomes color of destination + billboard color
-add_no_alpha - color becomes color of destination + billboard color]]
+	help = "Determines how billboard is blended against the background:\nadd - color becomes color of destination + billboard alpha * billboard color\nnormal - color becomes color of destination * (1 - billboard alpha) + billboard alpha * billboard color\npremultiplied - color becomes color of destination + billboard color\nadd_no_alpha - color becomes color of destination + billboard color"
 	p = CoreEffectProperty:new("blend_mode", "value_list", "normal", help)
 
 	p:add_value("normal")
@@ -417,12 +377,7 @@ add_no_alpha - color becomes color of destination + billboard color]]
 
 	visualizer:add_property(CoreEffectProperty:new("per_particle_age", "boolean", "false", help))
 
-	help = [[
-Color of particle
-constant - use constant value
-keys - use key curve over time
-channel - read from channel
-scaled_channel - read from channel, scale with key curve]]
+	help = "Color of particle\nconstant - use constant value\nkeys - use key curve over time\nchannel - read from channel\nscaled_channel - read from channel, scale with key curve"
 	p = CoreEffectProperty:new("color_input", "variant", "constant", help)
 
 	p:add_variant("constant", CoreEffectProperty:new("color", "color", "255 255 255", "Constant color of particle"))
@@ -432,8 +387,8 @@ scaled_channel - read from channel, scale with key curve]]
 
 	color_keys:set_key_type("color")
 	color_keys:add_key({
-		v = "255 255 255",
-		t = 0
+		t = 0,
+		v = "255 255 255"
 	})
 	color_keys:set_min_max_keys(1, 4)
 	p:add_variant("keys", color_keys)
@@ -442,8 +397,8 @@ scaled_channel - read from channel, scale with key curve]]
 
 	color_scale_keys:set_key_type("vector3")
 	color_scale_keys:add_key({
-		v = "1 1 1",
-		t = 0
+		t = 0,
+		v = "1 1 1"
 	})
 	color_scale_keys:set_min_max_keys(1, 4)
 	p:add_variant("scaled_channel", color_scale_keys)
@@ -453,18 +408,13 @@ scaled_channel - read from channel, scale with key curve]]
 
 	color_multiplier_keys:set_key_type("vector3")
 	color_multiplier_keys:add_key({
-		v = "1 1 1",
-		t = 0
+		t = 0,
+		v = "1 1 1"
 	})
 	color_multiplier_keys:set_min_max_keys(1, 4)
 	visualizer:add_property(color_multiplier_keys)
 
-	help = [[
-Opacity of particle
-constant - use constant value
-keys - use key curve over time
-channel - read from channel
-scaled_channel - read from channel, scale with key curve]]
+	help = "Opacity of particle\nconstant - use constant value\nkeys - use key curve over time\nchannel - read from channel\nscaled_channel - read from channel, scale with key curve"
 	p = CoreEffectProperty:new("opacity_input", "variant", "constant", help)
 
 	p:add_variant("constant", CoreEffectProperty:new("opacity", "opacity", "255", "Constant opacity of particle"))
@@ -474,8 +424,8 @@ scaled_channel - read from channel, scale with key curve]]
 
 	opacity_keys:set_key_type("opacity")
 	opacity_keys:add_key({
-		v = "255",
-		t = 0
+		t = 0,
+		v = "255"
 	})
 	opacity_keys:set_min_max_keys(1, 4)
 	p:add_variant("keys", opacity_keys)
@@ -484,8 +434,8 @@ scaled_channel - read from channel, scale with key curve]]
 
 	opacity_scale_keys:set_key_type("float")
 	opacity_scale_keys:add_key({
-		v = "1",
-		t = 0
+		t = 0,
+		v = "1"
 	})
 	opacity_scale_keys:set_min_max_keys(1, 4)
 	p:add_variant("scaled_channel", opacity_scale_keys)
@@ -495,18 +445,13 @@ scaled_channel - read from channel, scale with key curve]]
 
 	opacity_multiplier_keys:set_key_type("float")
 	opacity_multiplier_keys:add_key({
-		v = "1",
-		t = 0
+		t = 0,
+		v = "1"
 	})
 	opacity_multiplier_keys:set_min_max_keys(1, 4)
 	visualizer:add_property(opacity_multiplier_keys)
 
-	help = [[
-Width of trail
-constant - use constant value
-keys - use key curve over length of trail
-channel - read from channel
-scaled_channel - read from channel, scale over length with key curve]]
+	help = "Width of trail\nconstant - use constant value\nkeys - use key curve over length of trail\nchannel - read from channel\nscaled_channel - read from channel, scale over length with key curve"
 	p = CoreEffectProperty:new("width_input", "variant", "constant", help)
 
 	p:add_variant("constant", CoreEffectProperty:new("width", "float", "50", "Constant width of trail"))
@@ -516,8 +461,8 @@ scaled_channel - read from channel, scale over length with key curve]]
 
 	width_keys:set_key_type("float")
 	width_keys:add_key({
-		v = "50",
-		t = 0
+		t = 0,
+		v = "50"
 	})
 	width_keys:set_min_max_keys(1, 4)
 	p:add_variant("keys", width_keys)
@@ -526,8 +471,8 @@ scaled_channel - read from channel, scale over length with key curve]]
 
 	width_scale_keys:set_key_type("float")
 	width_scale_keys:add_key({
-		v = "1",
-		t = 0
+		t = 0,
+		v = "1"
 	})
 	width_scale_keys:set_min_max_keys(1, 4)
 	p:add_variant("scaled_channel", width_scale_keys)
@@ -537,11 +482,7 @@ scaled_channel - read from channel, scale over length with key curve]]
 
 	visualizer:add_property(CoreEffectProperty:new("uv_size", "vector2", "1 1", help))
 
-	help = [[
-UV offset of particle
-constant - use constant value
-keys - uv animation, stepping between the uv offsets of each frame over time
-channel - read from channel]]
+	help = "UV offset of particle\nconstant - use constant value\nkeys - uv animation, stepping between the uv offsets of each frame over time\nchannel - read from channel"
 	p = CoreEffectProperty:new("uv_offset_input", "variant", "constant", help)
 
 	p:add_variant("constant", CoreEffectProperty:new("uv_offset", "vector2", "0 0", "const uv offset of particles"))
@@ -585,11 +526,8 @@ function CoreParticleEditorVisualizers:create_light()
 
 	visualizer:add_property(CoreEffectProperty:new("specular", "boolean", "false", help))
 
-	help = [[
-Color of light
-constant - use constant value
-keys - use key curve over time
-channel - read from channel]]
+	help = "Color of light\nconstant - use constant value\nkeys - use key curve over time\nchannel - read from channel"
+
 	local p = CoreEffectProperty:new("color_input", "variant", "constant", help)
 
 	p:add_variant("constant", CoreEffectProperty:new("color", "color", "255 255 255", "Constant color of light"))
@@ -599,18 +537,14 @@ channel - read from channel]]
 
 	color_keys:set_key_type("color")
 	color_keys:add_key({
-		v = "255 255 255",
-		t = 0
+		t = 0,
+		v = "255 255 255"
 	})
 	color_keys:set_min_max_keys(1, 4)
 	p:add_variant("keys", color_keys)
 	visualizer:add_property(p)
 
-	help = [[
-Multiplier of light
-constant - use constant value
-keys - use key curve over time
-channel - read from channel]]
+	help = "Multiplier of light\nconstant - use constant value\nkeys - use key curve over time\nchannel - read from channel"
 	p = CoreEffectProperty:new("multiplier_input", "variant", "constant", help)
 
 	p:add_variant("constant", CoreEffectProperty:new("multiplier", "float", "1", "Constant multiplier of light"))
@@ -620,18 +554,14 @@ channel - read from channel]]
 
 	multiplier_keys:set_key_type("float")
 	multiplier_keys:add_key({
-		v = "1.0",
-		t = 0
+		t = 0,
+		v = "1.0"
 	})
 	multiplier_keys:set_min_max_keys(1, 4)
 	p:add_variant("keys", multiplier_keys)
 	visualizer:add_property(p)
 
-	help = [[
-Far range of light
-constant - use constant value
-keys - use key curve over time
-channel - read from channel]]
+	help = "Far range of light\nconstant - use constant value\nkeys - use key curve over time\nchannel - read from channel"
 	p = CoreEffectProperty:new("far_range_input", "variant", "constant", help)
 
 	p:add_variant("constant", CoreEffectProperty:new("far_range", "float", "100", "Constant far range of light"))
@@ -641,8 +571,8 @@ channel - read from channel]]
 
 	far_range_keys:set_key_type("float")
 	far_range_keys:add_key({
-		v = "100",
-		t = 0
+		t = 0,
+		v = "100"
 	})
 	far_range_keys:set_min_max_keys(1, 4)
 	p:add_variant("keys", far_range_keys)

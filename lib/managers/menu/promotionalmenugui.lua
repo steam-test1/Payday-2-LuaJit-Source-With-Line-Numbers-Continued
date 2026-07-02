@@ -37,7 +37,7 @@ end
 
 -- Lines 39-42
 function PromotionalMenuGui:_idx(x, y)
-	local i = (y - 1) * self._menu_data.layout.x + x - 1
+	local i = (y - 1) * self._menu_data.layout.x + (x - 1)
 
 	return i
 end
@@ -46,6 +46,7 @@ end
 function PromotionalMenuGui:setup(menu_data, theme_data)
 	self._menu_data = menu_data
 	self._theme_data = theme_data
+
 	local padding = menu_data.padding or 10
 
 	if self._theme_data.backgrounds then
@@ -67,8 +68,8 @@ function PromotionalMenuGui:setup(menu_data, theme_data)
 				})
 			elseif data.type == "video" then
 				bg_panel:video({
-					name = "video",
 					loop = true,
+					name = "video",
 					video = data.video,
 					width = data.w or bg_panel:w(),
 					height = data.h or bg_panel:h(),
@@ -89,6 +90,7 @@ function PromotionalMenuGui:setup(menu_data, theme_data)
 	end
 
 	local panel_size = math.min(self._panel:w() * menu_data.size, self._panel:h() * menu_data.size)
+
 	self._items_panel = self._panel:panel({
 		layer = 100,
 		w = panel_size,
@@ -106,22 +108,24 @@ function PromotionalMenuGui:setup(menu_data, theme_data)
 		local _y = math.floor((h + padding) * (btn_data.position[2] - 1))
 		local _w = math.floor(btn_data.size[1] * w + (btn_data.size[1] - 1) * padding)
 		local _h = math.floor(btn_data.size[2] * h + (btn_data.size[2] - 1) * padding)
+
 		btn_data.x = _x
 		btn_data.y = _y
 		btn_data.w = _w
 		btn_data.h = _h
+
 		local type_class = btn_data.type and _G[btn_data.type] or PromotionalMenuButton
 		local btn = type_class:new(self, self._items_panel, btn_data, theme_data)
 
 		table.insert(self._buttons, btn)
 
-		local _x, _y = nil
+		local _x, _y
 
 		for x = 1, btn_data.size[1] do
-			_x = x + btn:position()[1] - 1
+			_x = x + (btn:position()[1] - 1)
 
 			for y = 1, btn_data.size[2] do
-				_y = y + btn:position()[2] - 1
+				_y = y + (btn:position()[2] - 1)
 				self._selection_map[self:_idx(_x, _y)] = btn
 			end
 		end
@@ -141,11 +145,11 @@ end
 -- Lines 166-204
 function PromotionalMenuGui:_add_back_button()
 	local back_button = self._panel:text({
-		vertical = "bottom",
-		name = "back",
-		blend_mode = "add",
 		align = "right",
+		blend_mode = "add",
 		layer = 40,
+		name = "back",
+		vertical = "bottom",
 		text = managers.localization:text("menu_back"),
 		font_size = tweak_data.menu.pd2_large_font_size,
 		font = tweak_data.menu.pd2_large_font,
@@ -158,14 +162,15 @@ function PromotionalMenuGui:_add_back_button()
 	back_button:set_visible(managers.menu:is_pc_controller())
 
 	self._back_button = back_button
+
 	local bg_back = self._fullscreen_panel:text({
-		name = "back_button",
-		vertical = "bottom",
-		h = 90,
 		align = "right",
 		alpha = 0.4,
 		blend_mode = "add",
+		h = 90,
 		layer = 1,
+		name = "back_button",
+		vertical = "bottom",
 		text = utf8.to_upper(managers.localization:text("menu_back")),
 		font_size = tweak_data.menu.pd2_massive_font_size,
 		font = tweak_data.menu.pd2_massive_font,
@@ -210,6 +215,7 @@ function PromotionalMenuGui:move_selection(mx, my, force)
 	repeat
 		self._selection[1] = math.clamp(self._selection[1] + mx, 1, self._menu_data.layout.x)
 		self._selection[2] = math.clamp(self._selection[2] + my, 1, self._menu_data.layout.y)
+
 		local new_btn = self:_get_selected_button()
 
 		if new_btn and not new_btn:can_be_selected() then
@@ -218,7 +224,7 @@ function PromotionalMenuGui:move_selection(mx, my, force)
 		end
 
 		itr = itr + 1
-	until last_btn ~= self:_get_selected_button() or self._menu_data.layout.x < itr
+	until last_btn ~= self:_get_selected_button() or itr > self._menu_data.layout.x
 
 	if last_btn ~= self:_get_selected_button() or force then
 		if last_btn then
@@ -236,7 +242,7 @@ end
 
 -- Lines 267-294
 function PromotionalMenuGui:mouse_moved(button, x, y)
-	local used, pointer = nil
+	local used, pointer
 
 	if alive(self._back_button) then
 		if self._back_button:inside(x, y) then
@@ -248,8 +254,7 @@ function PromotionalMenuGui:mouse_moved(button, x, y)
 				managers.menu:post_event("highlight")
 			end
 
-			pointer = "link"
-			used = true
+			used, pointer = true, "link"
 		else
 			self._back_button:set_color(tweak_data.screen_colors.button_stage_3)
 
@@ -261,8 +266,7 @@ function PromotionalMenuGui:mouse_moved(button, x, y)
 		if not used and btn:inside(x, y) then
 			self:_set_selection(btn, true)
 
-			pointer = "link"
-			used = true
+			used, pointer = true, "link"
 		end
 	end
 

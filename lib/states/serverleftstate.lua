@@ -34,6 +34,7 @@ end
 
 -- Lines 65-67
 function ServerLeftState:on_server_left()
+	return
 end
 
 -- Lines 69-71

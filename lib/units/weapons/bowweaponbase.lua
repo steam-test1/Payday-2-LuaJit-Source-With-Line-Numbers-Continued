@@ -37,7 +37,7 @@ end
 
 -- Lines 52-71
 function BowWeaponBase:trigger_released(...)
-	local fired = nil
+	local fired
 
 	if self._charging and not self._cancelled and self:start_shooting_allowed() then
 		fired = self:fire(...)
@@ -46,6 +46,7 @@ function BowWeaponBase:trigger_released(...)
 			self:play_tweak_data_sound(self:charge_fail() and "charge_release_fail" or "charge_release")
 
 			local next_fire = (tweak_data.weapon[self._name_id].fire_mode_data and tweak_data.weapon[self._name_id].fire_mode_data.fire_rate or 0) / self:fire_rate_multiplier()
+
 			self._next_fire_allowed = self._next_fire_allowed + next_fire
 		end
 	end
@@ -63,14 +64,15 @@ function BowWeaponBase:add_damage_result(unit, is_dead, attacker, damage_percent
 	end
 
 	managers.statistics:shot_fired({
-		skip_bullet_count = true,
 		hit = true,
+		skip_bullet_count = true,
 		weapon_unit = self._unit
 	})
 end
 
 -- Lines 85-86
 function BowWeaponBase:_spawn_muzzle_effect()
+	return
 end
 
 -- Lines 90-92
@@ -88,6 +90,7 @@ function BowWeaponBase:charge_multiplier()
 
 	if self._charge_start_t then
 		local delta_t = managers.player:player_timer():time() - self._charge_start_t
+
 		charge_multiplier = math.min(delta_t / self:charge_max_t(), 1)
 	end
 
@@ -236,8 +239,8 @@ function CrossbowWeaponBase:add_damage_result(unit, is_dead, attacker, damage_pe
 	end
 
 	managers.statistics:shot_fired({
-		skip_bullet_count = true,
 		hit = true,
+		skip_bullet_count = true,
 		weapon_unit = self._unit
 	})
 end
@@ -278,6 +281,7 @@ end
 -- Lines 310-315
 function DartWeaponBase:projectile_speed_multiplier()
 	local multiplier = DartWeaponBase.super.projectile_speed_multiplier(self)
+
 	multiplier = multiplier * self._launch_speed_mul
 
 	return multiplier

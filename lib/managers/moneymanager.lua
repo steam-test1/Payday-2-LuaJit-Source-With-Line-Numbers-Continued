@@ -11,12 +11,11 @@ end
 -- Lines 13-44
 function MoneyManager:_setup()
 	if not Global.money_manager then
-		Global.money_manager = {
-			total = Application:digest_value(0, true),
-			total_collected = Application:digest_value(0, true),
-			offshore = Application:digest_value(0, true),
-			total_spent = Application:digest_value(0, true)
-		}
+		Global.money_manager = {}
+		Global.money_manager.total = Application:digest_value(0, true)
+		Global.money_manager.total_collected = Application:digest_value(0, true)
+		Global.money_manager.offshore = Application:digest_value(0, true)
+		Global.money_manager.total_spent = Application:digest_value(0, true)
 	end
 
 	self._global = Global.money_manager
@@ -55,7 +54,9 @@ end
 -- Lines 50-59
 function MoneyManager:total_string_no_currency()
 	local total = math.round(self:total())
+
 	total = tostring(total)
+
 	local reverse = string.reverse(total)
 	local s = ""
 
@@ -69,7 +70,9 @@ end
 -- Lines 61-70
 function MoneyManager:total_string()
 	local total = math.round(self:total())
+
 	total = tostring(total)
+
 	local reverse = string.reverse(total)
 	local s = ""
 
@@ -83,7 +86,9 @@ end
 -- Lines 72-81
 function MoneyManager:total_collected_string_no_currency()
 	local total = math.round(self:total_collected())
+
 	total = tostring(total)
+
 	local reverse = string.reverse(total)
 	local s = ""
 
@@ -97,7 +102,9 @@ end
 -- Lines 83-92
 function MoneyManager:total_collected_string()
 	local total = math.round(self:total_collected())
+
 	total = tostring(total)
+
 	local reverse = string.reverse(total)
 	local s = ""
 
@@ -167,11 +174,10 @@ function MoneyManager:get_civilian_deduction()
 	local has_active_job = managers.job:has_active_job()
 	local job_and_difficulty_stars = has_active_job and managers.job:current_job_and_difficulty_stars() or 1
 
-	if managers.crime_spree:is_active() then
-		job_and_difficulty_stars = tweak_data.crime_spree.base_difficulty_index or job_and_difficulty_stars
-	end
+	job_and_difficulty_stars = managers.crime_spree:is_active() and tweak_data.crime_spree.base_difficulty_index or job_and_difficulty_stars
 
 	local multiplier = 1
+
 	multiplier = multiplier * managers.player:upgrade_value("player", "cleaner_cost_multiplier", 1)
 
 	return math.round(self:get_tweak_value("money_manager", "killing_civilian_deduction", job_and_difficulty_stars) * multiplier)
@@ -234,20 +240,21 @@ function MoneyManager:get_contract_money_by_stars(job_stars, risk_stars, job_day
 	local job_stars = job_stars
 	local difficulty_stars = risk_stars
 	local player_stars = managers.experience:level_to_stars()
-	local params = {
-		job_id = job_id,
-		level_id = level_id,
-		job_stars = job_stars,
-		difficulty_stars = difficulty_stars,
-		success = true,
-		num_winners = 1,
-		on_last_stage = true,
-		player_stars = player_stars,
-		bonus_bags_value = extra_params and extra_params.bonus_bags_value or 0,
-		mandatory_bags_value = extra_params and extra_params.mandatory_bags_value or 0,
-		small_value = extra_params and extra_params.small_value or 0,
-		vehicle_value = extra_params and extra_params.vehicle_value or 0
-	}
+	local params = {}
+
+	params.job_id = job_id
+	params.level_id = level_id
+	params.job_stars = job_stars
+	params.difficulty_stars = difficulty_stars
+	params.success = true
+	params.num_winners = 1
+	params.on_last_stage = true
+	params.player_stars = player_stars
+	params.bonus_bags_value = extra_params and extra_params.bonus_bags_value or 0
+	params.mandatory_bags_value = extra_params and extra_params.mandatory_bags_value or 0
+	params.small_value = extra_params and extra_params.small_value or 0
+	params.vehicle_value = extra_params and extra_params.vehicle_value or 0
+
 	local stage_value, job_value, bag_value, vehicle_value, small_value, crew_value, total_payout, risk_table, job_table = self:get_money_by_params(params)
 	local stage_risk_value = risk_table.stage_risk
 	local job_risk_value = risk_table.job_risk
@@ -295,9 +302,10 @@ function MoneyManager:get_money_by_job(job_id, difficulty)
 			if tweak_data.levels[level.level_id] and tweak_data.levels[level.level_id].payout and tweak_data.levels[level.level_id].payout[difficulty] then
 				local cash = tweak_data.levels[level.level_id].payout[difficulty] or 0
 				local base_cash = tweak_data.levels[level.level_id].payout[1] or 0
+
 				payout = payout + cash
 				base_payout = base_payout + base_cash
-				risk_payout = risk_payout + cash - base_cash
+				risk_payout = risk_payout + (cash - base_cash)
 			end
 		end
 
@@ -341,13 +349,14 @@ function MoneyManager:get_money_by_params(params)
 	local vehicle_risk = 0
 	local small_risk = 0
 	local static_value, base_static_value, risk_static_value = self:get_money_by_job(job_id, difficulty_stars + 1)
+
 	static_value = static_value * cash_skill_bonus
 	base_static_value = static_value - risk_static_value
 
 	if static_value then
 		small_value = real_small_value + managers.loot:get_real_total_postponed_small_loot_value()
 
-		if tweak_data:get_value("money_manager", "max_small_loot_value") < small_value then
+		if small_value > tweak_data:get_value("money_manager", "max_small_loot_value") then
 			print("[MoneyManager:get_money_by_params] - Small Loot drop was too much", small_value, tweak_data.carry.max_small_loot_value)
 
 			small_value = tweak_data:get_value("money_manager", "max_small_loot_value")
@@ -394,12 +403,15 @@ function MoneyManager:get_money_by_params(params)
 
 		if managers.skirmish:is_skirmish() then
 			local skirmish_payout = managers.skirmish:current_ransom_amount()
+
 			total_payout = math.max(0, math.round(total_payout + skirmish_payout))
 		end
 	else
 		stage_value = self:get_stage_payout_by_stars(total_stars) or 0
+
 		local mandatory_bag_value = 0
 		local bonus_bag_value = 0
+
 		small_value = real_small_value + managers.loot:get_real_total_postponed_small_loot_value()
 
 		if on_last_stage then
@@ -424,7 +436,9 @@ function MoneyManager:get_money_by_params(params)
 			end
 
 			local unlimited_payout = unlimited_stage_value + unlimited_job_value + unlimited_bonus_bag_value + unlimited_mandatory_bag_value + unlimited_small_value
+
 			total_payout = math.round(stage_value + job_value + bonus_bag_value + mandatory_bag_value + small_value)
+
 			local diff_in_money = unlimited_payout - total_payout
 			local diff_in_stars = job_stars - player_stars
 			local tweak_multiplier = self:get_tweak_value("money_manager", "level_limit", "pc_difference_multipliers", diff_in_stars) or 0
@@ -434,12 +448,15 @@ function MoneyManager:get_money_by_params(params)
 			local bonus_bag_ratio = bonus_bag_value / total_payout
 			local mandatory_bag_ratio = mandatory_bag_value / total_payout
 			local job_ratio = job_value / total_payout
+
 			stage_value = math.round(new_total_payout * stage_ratio)
 			small_value = math.round(new_total_payout * small_ratio)
 			bonus_bag_value = math.round(new_total_payout * bonus_bag_ratio * bag_skill_bonus)
 			mandatory_bag_value = math.round(new_total_payout * mandatory_bag_ratio * bag_skill_bonus)
 			job_value = math.round(new_total_payout * job_ratio)
+
 			local rounding_error = new_total_payout - (stage_value + small_value + bonus_bag_value + mandatory_bag_value + job_value)
+
 			job_value = job_value + rounding_error
 		end
 
@@ -464,11 +481,13 @@ function MoneyManager:get_money_by_params(params)
 		end
 
 		local bag_value = math.round((bonus_bag_value + mandatory_bag_value) / offshore_rate)
+
 		bag_risk = math.round(bag_risk / offshore_rate)
 	end
 
 	local mutators_multiplier = managers.mutators:get_cash_multiplier()
 	local original_total_payout = total_payout
+
 	total_payout = total_payout * mutators_multiplier
 	stage_value = stage_value * mutators_multiplier
 	job_value = job_value * mutators_multiplier
@@ -481,6 +500,7 @@ function MoneyManager:get_money_by_params(params)
 	bag_risk = bag_risk * mutators_multiplier
 	vehicle_risk = vehicle_risk * mutators_multiplier
 	small_risk = small_risk * mutators_multiplier
+
 	local mutators_reduction = original_total_payout - total_payout
 	local ret = {
 		stage_value,
@@ -566,6 +586,7 @@ function MoneyManager:get_secured_bonus_bag_value(carry_id, multiplier)
 		local stars = managers.job:has_active_job() and managers.job:current_difficulty_stars() or 0
 		local money_multiplier = self:get_contract_difficulty_multiplier(stars)
 		local total_stages = job_id and #tweak_data.narrative:job_chain(job_id) or 1
+
 		bag_value = carry_value
 		bag_risk = math.round(bag_value * money_multiplier)
 	else
@@ -591,6 +612,7 @@ function MoneyManager:get_bag_value(carry_id, multiplier)
 		value = value * (multiplier or 1)
 	else
 		local bag_value_id = tweak_data.carry[carry_id] and tweak_data.carry[carry_id].bag_value or "default"
+
 		value = self:get_tweak_value("money_manager", "bag_values", bag_value_id)
 	end
 
@@ -649,7 +671,7 @@ end
 
 -- Lines 731-733
 function MoneyManager:can_afford_weapon(weapon_id)
-	return self:get_weapon_price_modified(weapon_id) <= self:total()
+	return self:total() >= self:get_weapon_price_modified(weapon_id)
 end
 
 -- Lines 735-757
@@ -668,6 +690,7 @@ function MoneyManager:get_weapon_price(weapon_id)
 	local cost_multiplier = 1
 	local weapon_tweak_data = tweak_data.weapon[weapon_id]
 	local category = weapon_tweak_data and weapon_tweak_data.categories[1]
+
 	cost_multiplier = cost_multiplier * (category and tweak_data.upgrades.weapon_cost_multiplier[category] or 1)
 
 	return math.round(cost * cost_multiplier)
@@ -687,10 +710,13 @@ function MoneyManager:get_weapon_price_modified(weapon_id)
 
 	local cost = self:get_tweak_value("money_manager", "weapon_cost", pc)
 	local cost_multiplier = 1
+
 	cost_multiplier = cost_multiplier * managers.player:upgrade_value("player", "buy_cost_multiplier", 1)
 	cost_multiplier = cost_multiplier * managers.player:upgrade_value("player", "crime_net_deal", 1)
+
 	local weapon_tweak_data = tweak_data.weapon[weapon_id]
 	local category = weapon_tweak_data and weapon_tweak_data.categories[1]
+
 	cost_multiplier = cost_multiplier * (category and tweak_data.upgrades.weapon_cost_multiplier[category] or 1)
 
 	return math.round(cost * cost_multiplier)
@@ -759,10 +785,12 @@ function MoneyManager:get_weapon_part_sell_value(part_id, global_value)
 
 		if pc_value then
 			local star_value = math.ceil(pc_value / 10)
+
 			mod_price = self:get_tweak_value("money_manager", "modify_weapon_cost", star_value)
 		end
 
 		local stats_value = part.stats
+
 		stats_value = stats_value and stats_value.value or 1
 		mod_price = mod_price * tweak_data.weapon.stats.value[math.clamp(stats_value, 1, #tweak_data.weapon.stats.value)]
 	end
@@ -791,7 +819,7 @@ end
 
 -- Lines 887-889
 function MoneyManager:can_afford_mission_asset(asset_id)
-	return self:get_mission_asset_cost_by_id(asset_id) <= self:total()
+	return self:total() >= self:get_mission_asset_cost_by_id(asset_id)
 end
 
 -- Lines 891-898
@@ -814,7 +842,7 @@ end
 
 -- Lines 907-909
 function MoneyManager:can_afford_spend_skillpoint(tree, tier, points)
-	return self:get_skillpoint_cost(tree, tier, points) <= self:total()
+	return self:total() >= self:get_skillpoint_cost(tree, tier, points)
 end
 
 -- Lines 910-912
@@ -852,19 +880,23 @@ end
 
 -- Lines 947-980
 function MoneyManager:get_weapon_modify_price(weapon_id, part_id, global_value)
-	local star_value = nil
+	local star_value
 	local pc_value = tweak_data.blackmarket.weapon_mods and tweak_data.blackmarket.weapon_mods[part_id] and tweak_data.blackmarket.weapon_mods[part_id].value or 1
 	local mod_price = pc_value > 0 and self:get_tweak_value("money_manager", "modify_weapon_cost", pc_value) or 0
 	local gv_tweak_data = tweak_data.lootdrop.global_values[global_value or "normal"]
 	local global_value_multiplier = gv_tweak_data and gv_tweak_data.value_multiplier or 1
 	local cost_multiplier = 1
 	local crafting_multiplier = managers.player:upgrade_value("player", "passive_crafting_weapon_multiplier", 1)
+
 	crafting_multiplier = crafting_multiplier * managers.player:upgrade_value("player", "crafting_weapon_multiplier", 1)
 	crafting_multiplier = crafting_multiplier * managers.player:upgrade_value("player", "buy_cost_multiplier", 1)
 	crafting_multiplier = crafting_multiplier * managers.player:upgrade_value("player", "crime_net_deal", 1)
+
 	local weapon_tweak_data = tweak_data.weapon[weapon_id]
 	local category = weapon_tweak_data and weapon_tweak_data.categories[1]
+
 	cost_multiplier = cost_multiplier * (category and tweak_data.upgrades.weapon_cost_multiplier[category] or 1)
+
 	local total_price = mod_price * crafting_multiplier * global_value_multiplier * cost_multiplier
 
 	return math.round(total_price)
@@ -872,7 +904,7 @@ end
 
 -- Lines 982-984
 function MoneyManager:can_afford_weapon_modification(weapon_id, part_id, global_value)
-	return self:get_weapon_modify_price(weapon_id, part_id, global_value) <= self:total()
+	return self:total() >= self:get_weapon_modify_price(weapon_id, part_id, global_value)
 end
 
 -- Lines 986-990
@@ -891,12 +923,14 @@ function MoneyManager:_get_pc_entry(entry)
 	end
 
 	local pcs = entry.pcs
-	local pc_value = nil
+	local pc_value
 
 	if not pcs then
 		local pc = entry.pc
 
-		if pc then
+		if not pc then
+			-- Nothing
+		else
 			pc_value = pc
 		end
 	else
@@ -913,6 +947,7 @@ end
 -- Lines 1020-1026
 function MoneyManager:get_buy_mask_slot_price()
 	local multiplier = 1
+
 	multiplier = multiplier * managers.player:upgrade_value("player", "buy_cost_multiplier", 1)
 	multiplier = multiplier * managers.player:upgrade_value("player", "crime_net_deal", 1)
 
@@ -921,7 +956,7 @@ end
 
 -- Lines 1028-1030
 function MoneyManager:can_afford_buy_mask_slot()
-	return self:get_buy_mask_slot_price() <= self:total()
+	return self:total() >= self:get_buy_mask_slot_price()
 end
 
 -- Lines 1032-1035
@@ -934,6 +969,7 @@ end
 -- Lines 1039-1045
 function MoneyManager:get_buy_weapon_slot_price()
 	local multiplier = 1
+
 	multiplier = multiplier * managers.player:upgrade_value("player", "buy_cost_multiplier", 1)
 	multiplier = multiplier * managers.player:upgrade_value("player", "crime_net_deal", 1)
 
@@ -942,7 +978,7 @@ end
 
 -- Lines 1047-1049
 function MoneyManager:can_afford_buy_weapon_slot()
-	return self:get_buy_weapon_slot_price() <= self:total()
+	return self:total() >= self:get_buy_weapon_slot_price()
 end
 
 -- Lines 1051-1054
@@ -955,6 +991,7 @@ end
 -- Lines 1057-1064
 function MoneyManager:get_mask_crafting_multipliers()
 	local crafting_multiplier = managers.player:upgrade_value("player", "passive_crafting_mask_multiplier", 1)
+
 	crafting_multiplier = crafting_multiplier * managers.player:upgrade_value("player", "crafting_mask_multiplier", 1)
 	crafting_multiplier = crafting_multiplier * managers.player:upgrade_value("player", "buy_cost_multiplier", 1)
 	crafting_multiplier = crafting_multiplier * managers.player:upgrade_value("player", "crime_net_deal", 1)
@@ -992,6 +1029,7 @@ end
 -- Lines 1090-1134
 function MoneyManager:get_mask_part_price(category, id, global_value, mask_id)
 	local cached_part_id = self:get_cached_mask_part_id(category, id, global_value, mask_id)
+
 	self._cached_mask_part_prices = self._cached_mask_part_prices or {}
 
 	if self._cached_mask_part_prices[cached_part_id] then
@@ -1009,16 +1047,19 @@ function MoneyManager:get_mask_part_price(category, id, global_value, mask_id)
 		materials = "material",
 		textures = "pattern"
 	}
+
 	part_name_converter.color_a = part_name_converter.materials
 	part_name_converter.color_b = part_name_converter.materials
 	part_name_converter.color_c = part_name_converter.materials
 	part_name_converter.mask_colors = part_name_converter.materials
 	part_name_converter.colors = nil
+
 	local gv_tweak_data = tweak_data.lootdrop.global_values[global_value or "normal"]
 	local gv_multiplier = gv_tweak_data and gv_tweak_data.value_multiplier or 1
 	local value = tweak_data.blackmarket[category] and tweak_data.blackmarket[category][id] and tweak_data.blackmarket[category][id].value or 1
 	local part_value = value > 0 and self:get_tweak_value("money_manager", "masks", tostring(part_name_converter[category]) .. "_value", value) or 0
 	local price = math.round(part_value * gv_multiplier)
+
 	self._cached_mask_part_prices[cached_part_id] = price
 
 	return price
@@ -1027,16 +1068,19 @@ end
 -- Lines 1136-1187
 function MoneyManager:get_mask_crafting_price(mask_id, global_value, blueprint, default_blueprint)
 	local bonus_global_values = {
-		infamous = 0,
 		exceptional = 0,
-		superior = 0,
-		normal = 0
+		infamous = 0,
+		normal = 0,
+		superior = 0
 	}
+
 	default_blueprint = default_blueprint or managers.blackmarket:get_mask_default_blueprint(mask_id) or {}
 	blueprint = blueprint or default_blueprint
+
 	local pc_value = tweak_data.blackmarket.masks and tweak_data.blackmarket.masks[mask_id] and tweak_data.blackmarket.masks[mask_id].value or 1
 	local mask_gv = global_value or "normal"
 	local base_value = self:get_mask_base_value(mask_id, global_value)
+
 	bonus_global_values[mask_gv] = (bonus_global_values[mask_gv] or 0) + 1
 
 	-- Lines 1150-1163
@@ -1078,11 +1122,12 @@ end
 function MoneyManager:get_mask_base_value(mask_id, global_value)
 	local pc_value = tweak_data.blackmarket.masks[mask_id] and tweak_data.blackmarket.masks[mask_id].value or 1
 	local mask_gv = global_value or "normal"
-	local base_value = nil
+	local base_value
 
 	if pc_value > 0 then
 		local gv_tweak_data = tweak_data.lootdrop.global_values[mask_gv]
 		local global_value_multiplier = gv_tweak_data and gv_tweak_data.value_multiplier or 1
+
 		base_value = self:get_tweak_value("money_manager", "masks", "mask_value", pc_value) * global_value_multiplier
 	else
 		base_value = 0
@@ -1099,7 +1144,7 @@ function MoneyManager:get_mask_sell_value(mask_id, global_value, blueprint)
 		return sell_value
 	end
 
-	local bonus_multiplier = nil
+	local bonus_multiplier
 
 	for gv, amount in pairs(bonuses) do
 		bonus_multiplier = (self:get_tweak_value("money_manager", "global_value_bonus_multiplier", gv) or 0) * math.max(amount - 1, 0)
@@ -1122,7 +1167,7 @@ end
 
 -- Lines 1232-1234
 function MoneyManager:can_afford_mask_crafting(mask_id, global_value, blueprint)
-	return self:get_mask_crafting_price_modified(mask_id, global_value, blueprint) <= self:total()
+	return self:total() >= self:get_mask_crafting_price_modified(mask_id, global_value, blueprint)
 end
 
 -- Lines 1236-1239
@@ -1186,6 +1231,7 @@ function MoneyManager:get_preplanning_type_cost(type)
 	local cost = self:get_tweak_value("preplanning", "types", type, "cost") or 0
 	local has_active_job = managers.job:has_active_job()
 	local difficulty_stars = (has_active_job and managers.job:current_difficulty_stars() or 0) + 1
+
 	cost = cost * (self:get_tweak_value("money_manager", "preplaning_asset_cost_multiplier_by_risk", difficulty_stars) or 1)
 	cost = cost * managers.player:upgrade_value("player", "assets_cost_multiplier", 1) * managers.player:upgrade_value("player", "assets_cost_multiplier_b", 1) * managers.player:upgrade_value("player", "passive_assets_cost_multiplier", 1) * managers.player:upgrade_value("player", "buy_cost_multiplier", 1) * managers.player:upgrade_value("player", "crime_net_deal", 1)
 
@@ -1296,6 +1342,7 @@ function MoneyManager:get_mission_asset_cost_by_id(id)
 	local difficulty_stars = has_active_job and managers.job:current_difficulty_stars() or 0
 	local pc_multiplier = self:get_tweak_value("money_manager", "mission_asset_cost_multiplier_by_pc", job_stars) or 0
 	local risk_multiplier = difficulty_stars > 0 and self:get_tweak_value("money_manager", "mission_asset_cost_multiplier_by_risk", difficulty_stars) or 0
+
 	value = value + value * pc_multiplier + value * risk_multiplier
 
 	return math.round(value * managers.player:upgrade_value("player", "assets_cost_multiplier", 1) * managers.player:upgrade_value("player", "assets_cost_multiplier_b", 1) * managers.player:upgrade_value("player", "passive_assets_cost_multiplier", 1) * managers.player:upgrade_value("player", "buy_cost_multiplier", 1) * managers.player:upgrade_value("player", "crime_net_deal", 1))
@@ -1324,6 +1371,7 @@ function MoneyManager:get_cost_of_premium_contract(job_id, difficulty_id)
 	local value = total_payout * self:get_tweak_value("money_manager", "buy_premium_multiplier", diffs[difficulty_id]) + self:get_tweak_value("money_manager", "buy_premium_static_fee", diffs[difficulty_id])
 	local total_value = value
 	local multiplier = 1 * managers.player:upgrade_value("player", "buy_cost_multiplier", 1) * managers.player:upgrade_value("player", "crime_net_deal", 1) * managers.player:upgrade_value("player", "premium_contract_cost_multiplier", 1)
+
 	total_value = total_value + (job_data.contract_cost and job_data.contract_cost[difficulty_id - 1] / self:get_tweak_value("money_manager", "offshore_rate") or 0)
 	total_value = total_value * multiplier
 
@@ -1385,7 +1433,7 @@ end
 
 -- Lines 1511-1513
 function MoneyManager:can_afford_casino_fee(secured_cards, increase_infamous, preferred_card)
-	return self:get_cost_of_casino_fee(secured_cards, increase_infamous, preferred_card) <= self:offshore()
+	return self:offshore() >= self:get_cost_of_casino_fee(secured_cards, increase_infamous, preferred_card)
 end
 
 -- Lines 1515-1521
@@ -1495,7 +1543,9 @@ function MoneyManager:_add_to_total(amount, params, reason)
 	local offshore = math.round(no_offshore and 0 or amount * (1 - self:get_tweak_value("money_manager", "offshore_rate")))
 	local spending_cash = math.round(no_offshore and amount or amount * self:get_tweak_value("money_manager", "offshore_rate"))
 	local rounding_error = math.round(amount - (offshore + spending_cash))
+
 	spending_cash = spending_cash + rounding_error
+
 	local total_cash = self:total() + spending_cash
 	local total_collected_cash = self:total_collected() + math.round(amount)
 	local offshore_cash = self:offshore() + offshore
@@ -1599,11 +1649,11 @@ function MoneyManager:_on_total_changed(amount, spending_cash, offshore)
 		self._heist_spending = self._heist_spending + spending_cash
 	end
 
-	if tweak_data.achievement.going_places <= self:total() then
+	if self:total() >= tweak_data.achievement.going_places then
 		managers.achievment:award("going_places")
 	end
 
-	if tweak_data.achievement.spend_money_to_make_money <= self:total_spent() then
+	if self:total_spent() >= tweak_data.achievement.spend_money_to_make_money then
 		managers.achievment:award("spend_money_to_make_money")
 	end
 end
@@ -1749,12 +1799,14 @@ function MoneyManager:save(data)
 		offshore = self._global.offshore,
 		total_spent = self._global.total_spent
 	}
+
 	data.MoneyManager = state
 end
 
 -- Lines 1859-1870
 function MoneyManager:load(data)
 	local state = data.MoneyManager
+
 	self._global.total = state.total and Application:digest_value(math.max(0, Application:digest_value(state.total, false)), true) or self._global.total
 	self._global.total_collected = state.total_collected and Application:digest_value(math.max(0, Application:digest_value(state.total_collected, false)), true) or self._global.total_collected
 	self._global.offshore = state.offshore and Application:digest_value(math.max(0, Application:digest_value(state.offshore, false)), true) or self._global.offshore
@@ -1768,7 +1820,7 @@ end
 
 -- Lines 1873-1875
 function MoneyManager:session_moneythrower_spending()
-	return managers.statistics:session_killed_by_weapon("money") > 0 and tweak_data:get_value("money_manager", "moneythrower", "kill_to_offshore_multiplier") <= self:offshore()
+	return managers.statistics:session_killed_by_weapon("money") > 0 and self:offshore() >= tweak_data:get_value("money_manager", "moneythrower", "kill_to_offshore_multiplier")
 end
 
 -- Lines 1877-1885

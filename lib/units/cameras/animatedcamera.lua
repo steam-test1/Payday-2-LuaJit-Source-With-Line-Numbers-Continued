@@ -7,6 +7,7 @@ end
 
 -- Lines 13-14
 function AnimatedCamera:update(unit, t, dt)
+	return
 end
 
 -- Lines 16-18
@@ -45,4 +46,5 @@ end
 
 -- Lines 42-43
 function AnimatedCamera:destroy()
+	return
 end

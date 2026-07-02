@@ -29,8 +29,8 @@ function CharacterDamageTriggerUnitElement:draw_links(t, dt, selected_unit, all_
 
 		if draw then
 			self:_draw_link({
-				g = 0.85,
 				b = 0,
+				g = 0.85,
 				r = 0,
 				from_unit = unit,
 				to_unit = self._unit
@@ -41,13 +41,14 @@ end
 
 -- Lines 29-30
 function CharacterDamageTriggerUnitElement:update_editing()
+	return
 end
 
 -- Lines 32-42
 function CharacterDamageTriggerUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit and self:_correct_unit(ray.unit:name():s()) then
@@ -91,6 +92,7 @@ function CharacterDamageTriggerUnitElement:_build_panel(panel, panel_sizer)
 
 	panel = panel or self._panel
 	panel_sizer = panel_sizer or self._panel_sizer
+
 	local dmg_sizer = EWS:BoxSizer("HORIZONTAL")
 
 	dmg_sizer:add(EWS:StaticText(panel, "Damage Types Filter:", 0, ""), 1, 0, "ALIGN_CENTER_VERTICAL")

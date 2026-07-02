@@ -9,7 +9,7 @@ end
 -- Lines 8-45
 function DOTManager:update(t, dt)
 	local doted_units = self._doted_units
-	local dot_info = nil
+	local dot_info
 
 	for i = #doted_units, 1, -1 do
 		dot_info = doted_units[i]
@@ -18,9 +18,10 @@ function DOTManager:update(t, dt)
 			for var_name, var_info in pairs(dot_info.variants) do
 				var_info.dot_counter = var_info.dot_counter + dt
 
-				if var_info.dot_tick_period <= var_info.dot_counter then
+				if var_info.dot_counter >= var_info.dot_tick_period then
 					var_info.dot_ticks_remaining = var_info.dot_ticks_remaining - 1
 					var_info.dot_counter = var_info.dot_counter - var_info.dot_tick_period
+
 					local killed = self:_damage_dot(dot_info, var_info)
 
 					if killed then
@@ -54,6 +55,7 @@ end
 -- Lines 54-59
 function DOTManager:_remove_variant(dot_info, var_name)
 	local var_info = dot_info.variants[var_name]
+
 	dot_info.variants[var_name] = nil
 
 	self:_on_removed_variant(dot_info, var_info, false)
@@ -80,6 +82,7 @@ function DOTManager:_on_removed_dot(dot_info, destroyed)
 
 		if dot_info.destroy_listener_key then
 			local destroy_listener_class = dot_info.unit:base()
+
 			destroy_listener_class = destroy_listener_class and destroy_listener_class.add_destroy_listener and destroy_listener_class or dot_info.unit:unit_data() or nil
 			destroy_listener_class = destroy_listener_class and destroy_listener_class.add_destroy_listener and destroy_listener_class or nil
 
@@ -154,13 +157,15 @@ function DOTManager:add_doted_enemy(data)
 			return dot_info, var_info
 		end
 
-		local selection_index = nil
+		local selection_index
 		local weapon = data.weapon_unit
 		local attacker = data.attacker_unit
+
 		attacker = attacker and attacker:id() ~= -1 and attacker or nil
 
 		if weapon then
 			local base_ext = weapon:base()
+
 			selection_index = base_ext and base_ext.selection_index and base_ext:selection_index()
 			weapon = weapon:id() ~= -1 and weapon or nil
 		end
@@ -225,7 +230,9 @@ end
 -- Lines 234-272
 function DOTManager:_add_variant_data(dot_info, data, t)
 	t = t or data.time_override or TimerManager:game():time()
+
 	local var_info = {}
+
 	dot_info.variants[data.dot_data.variant] = var_info
 	var_info.variant = data.dot_data.variant
 	var_info.damage_class = data.dot_data.damage_class
@@ -348,6 +355,7 @@ function DOTManager:_add_doted_enemy(data)
 	end
 
 	local destroy_listener_class = target_unit:base()
+
 	destroy_listener_class = destroy_listener_class and destroy_listener_class.add_destroy_listener and destroy_listener_class or target_unit:unit_data() or nil
 	destroy_listener_class = destroy_listener_class and destroy_listener_class.add_destroy_listener and destroy_listener_class or nil
 
@@ -384,21 +392,24 @@ end
 -- Lines 412-456
 function DOTManager:check_achievemnts()
 	local dotted_enemies_by_variant = {}
-	local base_ext, tweak_name = nil
-	local is_civ_f = CopDamage.is_civilian
 
-	for i, dot_info in ipairs(self._doted_units) do
-		base_ext = dot_info.unit:base()
-		tweak_name = base_ext and base_ext.char_tweak_name and base_ext:char_tweak_name()
+	do
+		local base_ext, tweak_name
+		local is_civ_f = CopDamage.is_civilian
 
-		if tweak_name and not is_civ_f(tweak_name) then
-			for var_name, var_info in pairs(dot_info.variants) do
-				if var_info.check_achivements_clbk then
-					var_info.check_achivements_clbk(dot_info.unit, var_info)
-				elseif var_info.check_achievements then
-					dotted_enemies_by_variant[var_name] = dotted_enemies_by_variant[var_name] or {}
+		for i, dot_info in ipairs(self._doted_units) do
+			base_ext = dot_info.unit:base()
+			tweak_name = base_ext and base_ext.char_tweak_name and base_ext:char_tweak_name()
 
-					table.insert(dotted_enemies_by_variant[var_name], true)
+			if tweak_name and not is_civ_f(tweak_name) then
+				for var_name, var_info in pairs(dot_info.variants) do
+					if var_info.check_achivements_clbk then
+						var_info.check_achivements_clbk(dot_info.unit, var_info)
+					elseif var_info.check_achievements then
+						dotted_enemies_by_variant[var_name] = dotted_enemies_by_variant[var_name] or {}
+
+						table.insert(dotted_enemies_by_variant[var_name], true)
+					end
 				end
 			end
 		end
@@ -408,10 +419,10 @@ function DOTManager:check_achievemnts()
 		return
 	end
 
-	local variant_count_pass, all_pass = nil
+	local variant_count_pass, all_pass
 
 	for achievement, achievement_data in pairs(tweak_data.achievement.dot_achievements) do
-		variant_count_pass = not achievement_data.count or achievement_data.variant and dotted_enemies_by_variant[achievement_data.variant] and achievement_data.count <= #dotted_enemies_by_variant[achievement_data.variant]
+		variant_count_pass = not achievement_data.count or achievement_data.variant and dotted_enemies_by_variant[achievement_data.variant] and #dotted_enemies_by_variant[achievement_data.variant] >= achievement_data.count
 		all_pass = variant_count_pass
 
 		if all_pass then
@@ -441,8 +452,11 @@ function DOTManager:_damage_dot(dot_info, var_info)
 			unit = dot_info.unit
 		}
 		local weapon_unit = var_info.last_weapon_unit
+
 		weapon_unit = alive(weapon_unit) and weapon_unit or nil
+
 		local attacker = var_info.last_attacker_unit
+
 		attacker = alive(attacker) and attacker or nil
 
 		if attacker then

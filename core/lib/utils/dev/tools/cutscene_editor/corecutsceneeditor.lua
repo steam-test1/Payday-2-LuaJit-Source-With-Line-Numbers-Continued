@@ -20,11 +20,11 @@ CoreCutsceneEditor.DEFAULT_CAMERA_FAR_RANGE = 50000
 
 -- Lines 20-24
 function CoreCutsceneEditor:_all_keys_sorted_by_time()
-	local cutscene_keys = table.collect(self._sequencer:key_track():clips(), function (sequencer_key)
+	local cutscene_keys = table.collect(self._sequencer:key_track():clips(), function(sequencer_key)
 		return sequencer_key:metadata()
 	end)
 
-	table.sort(cutscene_keys, function (a, b)
+	table.sort(cutscene_keys, function(a, b)
 		return a:frame() < b:frame()
 	end)
 
@@ -34,52 +34,52 @@ end
 local commands = CoreCommandRegistry:new()
 
 commands:add({
+	help = "Closes the currently open cutscene project so you can start with a blank slate",
 	id = "NEW_PROJECT",
-	label = "&New Project",
 	key = "Ctrl+N",
-	help = "Closes the currently open cutscene project so you can start with a blank slate"
+	label = "&New Project"
 })
 commands:add({
+	help = "Opens an existing cutscene project from the database",
 	id = "OPEN_PROJECT",
-	label = "&Open Project...",
 	key = "Ctrl+O",
-	help = "Opens an existing cutscene project from the database"
+	label = "&Open Project..."
 })
 commands:add({
+	help = "Saves the current project to the database",
 	id = "SAVE_PROJECT",
-	label = "&Save Project",
 	key = "Ctrl+S",
-	help = "Saves the current project to the database"
+	label = "&Save Project"
 })
 commands:add({
+	help = "Saves the current project to the database under a new name",
 	id = "SAVE_PROJECT_AS",
-	label = "Save Project &As...",
-	help = "Saves the current project to the database under a new name"
+	label = "Save Project &As..."
 })
 commands:add({
+	help = "Displays the Project Settings dialog",
 	id = "SHOW_PROJECT_SETTINGS",
-	label = "&Project Settings...",
-	help = "Displays the Project Settings dialog"
+	label = "&Project Settings..."
 })
 commands:add({
+	help = "Exports an optimized version of the cutscene that can be used within the game",
 	id = "EXPORT_TO_GAME",
-	label = "&Export Cutscene to Game...",
-	help = "Exports an optimized version of the cutscene that can be used within the game"
+	label = "&Export Cutscene to Game..."
 })
 commands:add({
+	help = "Exports edited animations for all actors, cameras and locators as a Maya scene",
 	id = "EXPORT_TO_MAYA",
-	label = "Export Cutscene to &Maya...",
-	help = "Exports edited animations for all actors, cameras and locators as a Maya scene"
+	label = "Export Cutscene to &Maya..."
 })
 commands:add({
+	help = "Exports a low-quality render of each frame in the cutscene as an image file for use as a reference",
 	id = "EXPORT_PLAYBLAST",
-	label = "Export &Playblast...",
-	help = "Exports a low-quality render of each frame in the cutscene as an image file for use as a reference"
+	label = "Export &Playblast..."
 })
 commands:add({
+	help = "Displays the Batch Export dialog",
 	id = "SHOW_BATCH_OPTIMIZER",
-	label = "&Batch Export to Game...",
-	help = "Displays the Batch Export dialog"
+	label = "&Batch Export to Game..."
 })
 commands:add({
 	id = "EXIT",
@@ -87,179 +87,179 @@ commands:add({
 	help = "Closes the " .. CoreCutsceneEditor.EDITOR_TITLE .. " window"
 })
 commands:add({
+	help = "Place selected clips on the clipboard. When pasted, the clips will be moved",
 	id = "CUT",
-	label = "Cut",
 	key = "Ctrl+X",
-	help = "Place selected clips on the clipboard. When pasted, the clips will be moved"
+	label = "Cut"
 })
 commands:add({
+	help = "Place selected clips on the clipboard. When pasted, the clips will be duplicated",
 	id = "COPY",
-	label = "Copy",
 	key = "Ctrl+C",
-	help = "Place selected clips on the clipboard. When pasted, the clips will be duplicated"
+	label = "Copy"
 })
 commands:add({
+	help = "Paste clipboard contents into the current film track at the playhead position",
 	id = "PASTE",
-	label = "Paste",
 	key = "Ctrl+V",
-	help = "Paste clipboard contents into the current film track at the playhead position"
+	label = "Paste"
 })
 commands:add({
+	help = "Removes selected clips from the sequencer timeline",
 	id = "DELETE",
-	label = "Delete",
 	key = "Del",
-	help = "Removes selected clips from the sequencer timeline"
+	label = "Delete"
 })
 commands:add({
+	help = "Select all clips and all keys in the sequencer timeline",
 	id = "SELECT_ALL",
-	label = "Select &All",
 	key = "Ctrl+A",
-	help = "Select all clips and all keys in the sequencer timeline"
+	label = "Select &All"
 })
 commands:add({
+	help = "Select all clips on the current film track",
 	id = "SELECT_ALL_ON_CURRENT_TRACK",
-	label = "Select All on Current &Track",
 	key = "Ctrl+Shift+A",
-	help = "Select all clips on the current film track"
+	label = "Select All on Current &Track"
 })
 commands:add({
+	help = "Deselect all clips and all keys in the sequencer timeline",
 	id = "DESELECT",
-	label = "&Deselect",
 	key = "Ctrl+D",
-	help = "Deselect all clips and all keys in the sequencer timeline"
+	label = "&Deselect"
 })
 commands:add({
+	help = "Remove all Camera Zoom keys that have no effect from the script track",
 	id = "CLEANUP_ZOOM_KEYS",
-	label = "Cleanup &Zoom Keys",
-	help = "Remove all Camera Zoom keys that have no effect from the script track"
+	label = "Cleanup &Zoom Keys"
 })
 commands:add({
+	help = "Check to view the scene though the directed cutscene camera",
 	id = "CUTSCENE_CAMERA_TOGGLE",
-	label = "Use &Cutscene Camera",
-	help = "Check to view the scene though the directed cutscene camera"
+	label = "Use &Cutscene Camera"
 })
 commands:add({
+	help = "Check to use 16:9 letterbox format for the directed cutscene camera",
 	id = "WIDESCREEN_TOGGLE",
-	label = "&Widescreen Aspect Ratio",
 	key = "Ctrl+R",
-	help = "Check to use 16:9 letterbox format for the directed cutscene camera"
+	label = "&Widescreen Aspect Ratio"
 })
 commands:add({
+	help = "Visualize cast member positions using debug lines",
 	id = "CAST_FINDER_TOGGLE",
-	label = "Cast &Finder",
-	help = "Visualize cast member positions using debug lines"
+	label = "Cast &Finder"
 })
 commands:add({
+	help = "Visualize cameras using debug lines",
 	id = "CAMERAS_TOGGLE",
-	label = "&Cameras",
-	help = "Visualize cameras using debug lines"
+	label = "&Cameras"
 })
 commands:add({
+	help = "Visualize depth of field effects with focus planes",
 	id = "FOCUS_PLANE_TOGGLE",
-	label = "&Focus Planes",
 	key = "Ctrl+F",
-	help = "Visualize depth of field effects with focus planes"
+	label = "&Focus Planes"
 })
 commands:add({
+	help = "Visualize bone hierarchies using debug lines",
 	id = "HIERARCHIES_TOGGLE",
-	label = "&Hierarchies",
-	help = "Visualize bone hierarchies using debug lines"
+	label = "&Hierarchies"
 })
 commands:add({
+	help = "Check to advance the playhead by exactly one frame instead of the elapsed time since the last update during playback",
 	id = "PLAY_EVERY_FRAME_TOGGLE",
-	label = "Play &Every Frame",
-	help = "Check to advance the playhead by exactly one frame instead of the elapsed time since the last update during playback"
+	label = "Play &Every Frame"
 })
 commands:add({
+	help = "Inserts clips from the selected footage track at the current playhead position",
 	id = "INSERT_CLIPS_FROM_SELECTED_FOOTAGE",
-	label = "Clips from &Selected Footage",
-	help = "Inserts clips from the selected footage track at the current playhead position"
+	label = "Clips from &Selected Footage"
 })
 commands:add({
+	help = "Browse for an audio file to insert into the voice-over track at the current playhead position",
 	id = "INSERT_AUDIO_FILE",
-	label = "&Audio File...",
-	help = "Browse for an audio file to insert into the voice-over track at the current playhead position"
+	label = "&Audio File..."
 })
 commands:add({
-	image = "sequencer\\loop_16x16.png",
-	key = "Ctrl+L",
 	help = "Toggle playback looping",
 	id = "LOOP_TOGGLE",
+	image = "sequencer\\loop_16x16.png",
+	key = "Ctrl+L",
 	label = "&Loop Playback"
 })
 commands:add({
-	image = "sequencer\\play_16x16.png",
-	key = "Ctrl+Space",
 	help = "Start or pause playback from the current playhead position",
 	id = "PLAY_TOGGLE",
+	image = "sequencer\\play_16x16.png",
+	key = "Ctrl+Space",
 	label = "&Play / Pause"
 })
 commands:add({
-	image = "sequencer\\play_from_start_16x16.png",
-	key = "Ctrl+Shift+Space",
 	help = "Start playback from the start of the selected region or cutscene",
 	id = "PLAY_FROM_START",
+	image = "sequencer\\play_from_start_16x16.png",
+	key = "Ctrl+Shift+Space",
 	label = "Play from Start"
 })
 commands:add({
-	image = "sequencer\\play_16x16.png",
-	key = "Ctrl+Space",
 	help = "Start playback from the current playhead position",
 	id = "PLAY",
+	image = "sequencer\\play_16x16.png",
+	key = "Ctrl+Space",
 	label = "Play"
 })
 commands:add({
-	image = "sequencer\\pause_16x16.png",
-	key = "Ctrl+Space",
 	help = "Pause playback at the current playhead position",
 	id = "PAUSE",
+	image = "sequencer\\pause_16x16.png",
+	key = "Ctrl+Space",
 	label = "Pause"
 })
 commands:add({
-	image = "sequencer\\stop_16x16.png",
-	key = "Escape",
 	help = "Stop playback and return to the start of the selected region or cutscene",
 	id = "STOP",
+	image = "sequencer\\stop_16x16.png",
+	key = "Escape",
 	label = "&Stop"
 })
 commands:add({
-	image = "sequencer\\go_to_start_16x16.png",
-	key = "Ctrl+Up",
 	help = "Go to the start of the selection or cutscene",
 	id = "GO_TO_START",
+	image = "sequencer\\go_to_start_16x16.png",
+	key = "Ctrl+Up",
 	label = "Go to &Start"
 })
 commands:add({
-	image = "sequencer\\go_to_end_16x16.png",
-	key = "Ctrl+Down",
 	help = "Go to the end of the selection or cutscene",
 	id = "GO_TO_END",
+	image = "sequencer\\go_to_end_16x16.png",
+	key = "Ctrl+Down",
 	label = "Go to &End"
 })
 commands:add({
+	help = "Go to the previous frame",
 	id = "GO_TO_NEXT_FRAME",
-	label = "Go to &Next Frame",
 	key = "Ctrl+Right",
-	help = "Go to the previous frame"
+	label = "Go to &Next Frame"
 })
 commands:add({
+	help = "Go to the next frame",
 	id = "GO_TO_PREVIOUS_FRAME",
-	label = "Go to &Previous Frame",
 	key = "Ctrl+Left",
-	help = "Go to the next frame"
+	label = "Go to &Previous Frame"
 })
 commands:add({
-	image = "sequencer\\zoom_in_16x16.png",
-	key = "Ctrl++",
 	help = "Increase sequencer track zoom level",
 	id = "ZOOM_IN",
+	image = "sequencer\\zoom_in_16x16.png",
+	key = "Ctrl++",
 	label = "Zoom &In"
 })
 commands:add({
-	image = "sequencer\\zoom_out_16x16.png",
-	key = "Ctrl+-",
 	help = "Decrease sequencer track zoom level",
 	id = "ZOOM_OUT",
+	image = "sequencer\\zoom_out_16x16.png",
+	key = "Ctrl+-",
 	label = "Zoom &Out"
 })
 
@@ -318,12 +318,12 @@ function CoreCutsceneEditor:camera_attributes()
 	if self._player then
 		return self._player:camera_attributes()
 	else
-		local attributes = {
-			aspect_ratio = self._camera:aspect_ratio(),
-			fov = self._camera:fov(),
-			near_range = self._camera:near_range(),
-			far_range = self._camera:far_range()
-		}
+		local attributes = {}
+
+		attributes.aspect_ratio = self._camera:aspect_ratio()
+		attributes.fov = self._camera:fov()
+		attributes.near_range = self._camera:near_range()
+		attributes.far_range = self._camera:far_range()
 
 		return attributes
 	end
@@ -397,7 +397,9 @@ function CoreCutsceneEditor:_create_window()
 	main_box:add(tool_bar_divider_line, 0, 0, "EXPAND")
 
 	local main_area_top_bottom_splitter = EWS:SplitterWindow(self._window)
+
 	self._top_area_splitter = EWS:SplitterWindow(main_area_top_bottom_splitter)
+
 	local bottom_area_left_right_splitter = EWS:SplitterWindow(main_area_top_bottom_splitter)
 	local bottom_left_area_top_bottom_splitter = EWS:SplitterWindow(bottom_area_left_right_splitter)
 
@@ -414,7 +416,7 @@ function CoreCutsceneEditor:_create_window()
 	self._top_area_splitter:set_sash_gravity(1)
 	bottom_area_left_right_splitter:set_minimum_pane_size(160)
 	bottom_area_left_right_splitter:set_sash_gravity(1)
-	bottom_left_area_top_bottom_splitter:connect("EVT_COMMAND_SPLITTER_SASH_POS_CHANGING", function (_, event)
+	bottom_left_area_top_bottom_splitter:connect("EVT_COMMAND_SPLITTER_SASH_POS_CHANGING", function(_, event)
 		event:veto()
 	end, "")
 	main_area_top_bottom_splitter:split_horizontally(self._top_area_splitter, bottom_area_left_right_splitter, 400)
@@ -499,7 +501,7 @@ function CoreCutsceneEditor:_create_menu_bar()
 	self._insert_menu:set_enabled("INSERT_AUDIO_FILE", false)
 	self._insert_menu:append_separator()
 
-	for label, command in table.sorted_map_iterator(table.remap(cutscene_key_insertion_commands, function (command, key_type)
+	for label, command in table.sorted_map_iterator(table.remap(cutscene_key_insertion_commands, function(command, key_type)
 		return key_type.NAME, command
 	end)) do
 		self._insert_menu:append_command(command)
@@ -571,6 +573,7 @@ function CoreCutsceneEditor:_time_code_string_for_frame(frame)
 	-- Lines 366-370
 	local function consume_frames(frames_per_unit)
 		local whole_units = math.floor(frame / frames_per_unit)
+
 		frame = frame - whole_units * frames_per_unit
 
 		return whole_units
@@ -586,6 +589,7 @@ end
 -- Lines 378-393
 function CoreCutsceneEditor:_create_sequencer(parent_frame)
 	self._sequencer_panel = EWS:Panel(parent_frame)
+
 	local panel_sizer = EWS:BoxSizer("VERTICAL")
 
 	self._sequencer_panel:set_background_colour((EWS:get_system_colour("3DSHADOW") * 255):unpack())
@@ -604,6 +608,7 @@ end
 -- Lines 395-405
 function CoreCutsceneEditor:_create_attribute_panel(parent_frame)
 	self._attribute_panel = EWS:Panel(parent_frame)
+
 	local panel_sizer = EWS:BoxSizer("VERTICAL")
 
 	self._attribute_panel:set_background_colour((EWS:get_system_colour("3DSHADOW") * 255):unpack())
@@ -647,7 +652,7 @@ function CoreCutsceneEditor:_refresh_selected_footage_track()
 	local selected_clips = self._sequencer:selected_film_clips()
 	local clip = #selected_clips == 1 and selected_clips[1] or nil
 
-	if clip and clip.start_time_in_source and clip.end_time_in_source and clip:start_time_in_source() < clip:end_time_in_source() then
+	if clip and clip.start_time_in_source and clip.end_time_in_source and clip:end_time_in_source() > clip:start_time_in_source() then
 		self._selected_footage_track_region:set_range(clip:start_time_in_source(), clip:end_time_in_source())
 		self._selected_footage_track_region:set_visible(true)
 	else
@@ -670,7 +675,7 @@ function CoreCutsceneEditor:_selected_footage()
 	local selected_clips = self._sequencer:selected_film_clips()
 
 	if not table.empty(selected_clips) then
-		local selected_clip_footages = table.list_union(table.collect(selected_clips, function (clip)
+		local selected_clip_footages = table.list_union(table.collect(selected_clips, function(clip)
 			return clip:metadata() and clip:metadata().footage and clip:metadata():footage() or nil
 		end))
 
@@ -727,7 +732,9 @@ function CoreCutsceneEditor:_create_selected_footage_track(parent_frame)
 	panel:set_sizer(panel_sizer)
 
 	self._selected_footage_track_scrolled_area = EWS:ScrolledWindow(panel, "", "HSCROLL,NO_BORDER,ALWAYS_SHOW_SB")
+
 	local scrolled_area_sizer = EWS:BoxSizer("VERTICAL")
+
 	self._selected_footage_track = EWS:SequencerTrack(self._selected_footage_track_scrolled_area)
 	self._selected_footage_track_region = self._selected_footage_track:add_ornament(EWS:SequencerRangeOrnament())
 
@@ -750,7 +757,9 @@ end
 -- Lines 528-542
 function CoreCutsceneEditor:_create_footage_list(parent_frame)
 	self._footage_list_ctrl = EWS:ListCtrl(parent_frame, "", "LC_LIST")
+
 	local image_list = EWS:ImageList(16, 16)
+
 	self._reel_icon = image_list:add(CoreEWS.image_path("film_reel_16x16.png"))
 	self._optimized_reel_icon = image_list:add(CoreEWS.image_path("film_reel_bw_16x16.png"))
 
@@ -768,10 +777,10 @@ function CoreCutsceneEditor:_refresh_footage_list()
 	self._footage_list_ctrl:clear_all()
 
 	local cutscene_names = managers.cutscene:get_cutscene_names()
-	local optimized_cutscene_names = table.find_all_values(cutscene_names, function (name)
+	local optimized_cutscene_names = table.find_all_values(cutscene_names, function(name)
 		return managers.cutscene:get_cutscene(name):is_optimized()
 	end)
-	local unoptimized_cutscene_names = table.find_all_values(cutscene_names, function (name)
+	local unoptimized_cutscene_names = table.find_all_values(cutscene_names, function(name)
 		return not managers.cutscene:get_cutscene(name):is_optimized()
 	end)
 
@@ -825,6 +834,7 @@ end
 -- Lines 591-620
 function CoreCutsceneEditor:_evaluate_editor_cutscene_keys_for_frame(frame)
 	local time = frame / self:frames_per_second()
+
 	self._last_evaluated_time = self._last_evaluated_time or 0
 
 	if self._last_evaluated_time == 0 and time > 0 then
@@ -910,6 +920,7 @@ end
 function CoreCutsceneEditor:_camera_icons_image_list()
 	if self.__camera_icons_image_list == nil then
 		self.__camera_icons_image_list = EWS:ImageList(16, 16)
+
 		local camera_icon_base_path = CoreEWS.image_path("sequencer\\clip_icon_camera_")
 
 		for i = 0, 30 do
@@ -922,7 +933,7 @@ end
 
 -- Lines 676-683
 function CoreCutsceneEditor:_camera_icon_index(icon_index)
-	if icon_index < 0 or self:_camera_icons_image_list():image_count() <= icon_index then
+	if icon_index < 0 or icon_index >= self:_camera_icons_image_list():image_count() then
 		return 0
 	else
 		return icon_index
@@ -983,7 +994,7 @@ function CoreCutsceneEditor:_serialized_audio_clips()
 		table.insert(clips, serialized_data)
 	end
 
-	table.sort(clips, function (a, b)
+	table.sort(clips, function(a, b)
 		return a.offset < b.offset
 	end)
 
@@ -1011,7 +1022,7 @@ function CoreCutsceneEditor:_serialized_film_clips()
 		end
 	end
 
-	table.sort(clips, function (a, b)
+	table.sort(clips, function(a, b)
 		return a.offset < b.offset
 	end)
 
@@ -1020,7 +1031,7 @@ end
 
 -- Lines 755-757
 function CoreCutsceneEditor:_serialized_cutscene_keys()
-	return table.collect(self._sequencer:key_track():clips(), function (sequencer_key)
+	return table.collect(self._sequencer:key_track():clips(), function(sequencer_key)
 		return sequencer_key:metadata()
 	end)
 end
@@ -1043,6 +1054,7 @@ end
 -- Lines 771-775
 function CoreCutsceneEditor:_set_current_project(project)
 	self._current_project = project
+
 	local title = self._current_project and string.format("%s - %s", self:project_name(), CoreCutsceneEditor.EDITOR_TITLE) or CoreCutsceneEditor.EDITOR_TITLE
 
 	self._window:set_title(title)
@@ -1125,6 +1137,7 @@ end
 -- Lines 839-845
 function CoreCutsceneEditor:zoom_around_playhead(multiplier)
 	multiplier = multiplier or 1
+
 	local time = self:playhead_position()
 	local offset_in_window = self._sequencer:panel():get_size().x / 2
 	local delta = self._sequencer:ruler():pixels_per_major_division() / self._sequencer:ruler():subdivision_count()
@@ -1440,7 +1453,7 @@ end
 function CoreCutsceneEditor:_on_export_to_maya()
 	local clips_on_active_track = self:_evaluated_track() and self:_evaluated_track():clips() or {}
 	local start_frame = 0
-	local end_frame = table.inject(clips_on_active_track, 0, function (final_frame, clip)
+	local end_frame = table.inject(clips_on_active_track, 0, function(final_frame, clip)
 		return math.max(final_frame, clip:end_time())
 	end)
 
@@ -1475,7 +1488,7 @@ end
 function CoreCutsceneEditor:_on_export_playblast()
 	local clips_on_active_track = self:_evaluated_track() and self:_evaluated_track():clips() or {}
 	local start_frame = 0
-	local end_frame = table.inject(clips_on_active_track, 0, function (final_frame, clip)
+	local end_frame = table.inject(clips_on_active_track, 0, function(final_frame, clip)
 		return math.max(final_frame, clip:end_time())
 	end)
 
@@ -1526,7 +1539,7 @@ function CoreCutsceneEditor:_request_asset_name_from_user(asset_db_type, default
 
 			return self:_request_asset_name_from_user(asset_db_type, default_name, duplicate_name_check_func)
 		else
-			duplicate_name_check_func = duplicate_name_check_func or function (name)
+			duplicate_name_check_func = duplicate_name_check_func or function(name)
 				return ProjectDatabase:has(asset_db_type, name)
 			end
 
@@ -1615,7 +1628,7 @@ end
 
 -- Lines 1248-1264
 function CoreCutsceneEditor:_on_paste()
-	local earliest_item_time = table.inject(self._clipboard or {}, math.huge, function (earliest_time, item)
+	local earliest_item_time = table.inject(self._clipboard or {}, math.huge, function(earliest_time, item)
 		return math.min(earliest_time, item:start_time())
 	end)
 	local offset = self:playhead_position() - earliest_item_time
@@ -1892,11 +1905,11 @@ function CoreCutsceneEditor:_on_insert_clips_from_selected_footage(sender, event
 
 		cutscene_metadata:prime_cast(self._cast)
 
-		local earliest_clip_time = table.inject(clips_to_add, math.huge, function (earliest_time_yet, clip)
+		local earliest_clip_time = table.inject(clips_to_add, math.huge, function(earliest_time_yet, clip)
 			return math.min(earliest_time_yet, clip:start_time())
 		end)
 		local offset = self:playhead_position() - earliest_clip_time
-		local cutscene_keys = table.find_all_values(cutscene:_all_keys_sorted_by_time(), function (key)
+		local cutscene_keys = table.find_all_values(cutscene:_all_keys_sorted_by_time(), function(key)
 			return key.ELEMENT_NAME ~= CoreChangeCameraCutsceneKey.ELEMENT_NAME
 		end)
 
@@ -1904,7 +1917,7 @@ function CoreCutsceneEditor:_on_insert_clips_from_selected_footage(sender, event
 			destination_track:add_clip(clip, offset):set_selected(true)
 
 			for _, template_key in ipairs(cutscene_keys) do
-				if clip:start_time_in_source() <= template_key:frame() and template_key:frame() < clip:end_time_in_source() then
+				if template_key:frame() >= clip:start_time_in_source() and template_key:frame() < clip:end_time_in_source() then
 					local cutscene_key = template_key:clone()
 
 					cutscene_key:set_frame(template_key:frame() + offset)
@@ -1921,7 +1934,7 @@ function CoreCutsceneEditor:_on_insert_clips_from_selected_footage(sender, event
 
 		if selected_item_index > 0 then
 			local selected_footage = self._footage_list_ctrl:get_item_data(selected_item_index)
-			local cutscene_keys = table.find_all_values(selected_footage:keys(), function (key)
+			local cutscene_keys = table.find_all_values(selected_footage:keys(), function(key)
 				return key.ELEMENT_NAME ~= CoreChangeCameraCutsceneKey.ELEMENT_NAME
 			end)
 
@@ -2160,6 +2173,7 @@ end
 -- Lines 1707-1720
 function CoreCutsceneEditor:_draw_unit_hierarchy(unit, unit_name, draw_root_point)
 	unit_name = unit_name or unit:name()
+
 	local root_point = unit:orientation_object()
 
 	if draw_root_point then
@@ -2200,6 +2214,7 @@ end
 -- Lines 1741-1767
 function CoreCutsceneEditor:_draw_joint(start_object, end_object, radius)
 	radius = radius or 1
+
 	local end_position = end_object and end_object.position and end_object:position()
 
 	if end_position then
@@ -2267,22 +2282,27 @@ end
 
 -- Lines 1803-1805
 function CoreCutsceneEditor:prime_cutscene_key(player, key, cast)
+	return
 end
 
 -- Lines 1807-1809
 function CoreCutsceneEditor:evaluate_cutscene_key(player, key, time, last_evaluated_time)
+	return
 end
 
 -- Lines 1811-1813
 function CoreCutsceneEditor:revert_cutscene_key(player, key, time, last_evaluated_time)
+	return
 end
 
 -- Lines 1815-1817
 function CoreCutsceneEditor:update_cutscene_key(player, key, time, last_evaluated_time)
+	return
 end
 
 -- Lines 1819-1821
 function CoreCutsceneEditor:skip_cutscene_key(player)
+	return
 end
 
 -- Lines 1823-1825
@@ -2321,6 +2341,7 @@ end
 -- Lines 1854-1861
 function CoreCutsceneEditor:_debug_dump_hierarchy(object, indent)
 	indent = indent or 0
+
 	local object_type = type_name(object)
 
 	cat_print("debug", string.rep("  ", indent) .. object:name() .. " : " .. object_type)

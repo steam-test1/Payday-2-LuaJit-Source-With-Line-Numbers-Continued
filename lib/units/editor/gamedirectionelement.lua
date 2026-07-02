@@ -7,8 +7,10 @@ end
 
 -- Lines 8-21
 function GameDirectionUnitElement:update_selected(t, dt)
+	return
 end
 
 -- Lines 24-29
 function GameDirectionUnitElement:_build_panel(panel, panel_sizer)
+	return
 end

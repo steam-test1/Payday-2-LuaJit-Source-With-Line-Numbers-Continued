@@ -1,7 +1,9 @@
 -- Lines 1-24
 function tprint(tbl, indent)
 	indent = indent or 0
+
 	local toprint = string.rep(" ", indent) .. "{\r\n"
+
 	indent = indent + 2
 
 	for k, v in pairs(tbl) do

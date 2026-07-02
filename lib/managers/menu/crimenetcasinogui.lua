@@ -18,10 +18,11 @@ function CrimeNetCasinoGui:init(ws, fullscreen_ws, node)
 	})
 
 	self._node = node
+
 	local blur = self._fullscreen_panel:bitmap({
-		texture = "guis/textures/test_blur_df",
-		render_template = "VertexColorTexturedBlur3D",
 		layer = 1,
+		render_template = "VertexColorTexturedBlur3D",
+		texture = "guis/textures/test_blur_df",
 		w = self._fullscreen_ws:panel():w(),
 		h = self._fullscreen_ws:panel():h()
 	})
@@ -30,7 +31,7 @@ function CrimeNetCasinoGui:init(ws, fullscreen_ws, node)
 	local function func(o)
 		local start_blur = 0
 
-		over(0.6, function (p)
+		over(0.6, function(p)
 			o:set_alpha(math.lerp(start_blur, 1, p))
 		end)
 	end
@@ -39,14 +40,16 @@ function CrimeNetCasinoGui:init(ws, fullscreen_ws, node)
 
 	local medium_font = tweak_data.menu.pd2_medium_font
 	local medium_font_size = tweak_data.menu.pd2_medium_font_size
+
 	self._button_panel = self._panel:panel({
 		layer = 1
 	})
+
 	local button_exit = self._button_panel:text({
-		name = "button_exit",
 		align = "right",
 		blend_mode = "add",
 		layer = 1,
+		name = "button_exit",
 		text = managers.localization:to_upper_text("menu_casino_choice_exit", {
 			BTN_X = managers.localization:btn_macro("menu_casino_exit")
 		}),
@@ -63,10 +66,10 @@ function CrimeNetCasinoGui:init(ws, fullscreen_ws, node)
 	button_exit:set_visible(managers.menu:is_pc_controller())
 
 	local button_bet = self._button_panel:text({
-		name = "button_bet",
 		align = "right",
 		blend_mode = "add",
 		layer = 1,
+		name = "button_bet",
 		text = managers.localization:to_upper_text("menu_casino_choice_bet", {
 			BTN_X = managers.localization:btn_macro("menu_casino_bet")
 		}),
@@ -217,11 +220,11 @@ function CrimeNetCasinoGui:_place_bet()
 		return
 	end
 
-	local params = {
-		contract_fee = managers.experience:cash_string(managers.money:get_cost_of_casino_fee(secure_cards, increase_infamous, preferred_card)),
-		offshore = managers.experience:cash_string(managers.money:offshore()),
-		yes_func = callback(self, self, "_crimenet_casino_pay_fee")
-	}
+	local params = {}
+
+	params.contract_fee = managers.experience:cash_string(managers.money:get_cost_of_casino_fee(secure_cards, increase_infamous, preferred_card))
+	params.offshore = managers.experience:cash_string(managers.money:offshore())
+	params.yes_func = callback(self, self, "_crimenet_casino_pay_fee")
 
 	managers.menu:show_confirm_pay_casino_fee(params)
 end
@@ -234,6 +237,7 @@ end
 -- Lines 173-192
 function CrimeNetCasinoGui:_crimenet_casino_pay_fee()
 	self._betting = true
+
 	local secure_cards, increase_infamous, preferred_card = self:_crimenet_casino_additional_cost()
 
 	if not managers.money:can_afford_casino_fee(secure_cards, increase_infamous, preferred_card) then
@@ -244,12 +248,12 @@ function CrimeNetCasinoGui:_crimenet_casino_pay_fee()
 		managers.money:on_buy_casino_fee(secure_cards, increase_infamous, preferred_card)
 		managers.menu:active_menu().renderer:selected_node():set_offshore_text()
 
-		local node_data = {
-			preferred_item = preferred_card,
-			secure_cards = secure_cards,
-			increase_infamous = increase_infamous,
-			back_callback = callback(self, self, "_crimenet_casino_lootdrop_back")
-		}
+		local node_data = {}
+
+		node_data.preferred_item = preferred_card
+		node_data.secure_cards = secure_cards
+		node_data.increase_infamous = increase_infamous
+		node_data.back_callback = callback(self, self, "_crimenet_casino_lootdrop_back")
 
 		managers.menu:open_node("crimenet_contract_casino_lootdrop", {
 			node_data

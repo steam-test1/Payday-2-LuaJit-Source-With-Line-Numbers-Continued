@@ -2,32 +2,32 @@ require("lib/network/matchmaking/NetworkAccount")
 
 NetworkAccountEPIC = NetworkAccountEPIC or class(NetworkAccount)
 NetworkAccountEPIC.static_lifetime_stat = {
-	pda_stat_b = 1,
-	pda_stat_a = 1,
 	gsu = 4,
-	pda_stat_d = 1,
-	pda_stat_c = 1
+	pda_stat_a = 1,
+	pda_stat_b = 1,
+	pda_stat_c = 1,
+	pda_stat_d = 1
 }
 NetworkAccountEPIC.lb_diffs = {
+	easy = "Easy",
+	easy_wish = "Easy Wish",
 	hard = "Hard",
+	normal = "Normal",
 	overkill = "Very Hard",
 	overkill_145 = "Overkill",
-	normal = "Normal",
-	easy_wish = "Easy Wish",
 	overkill_290 = "Death Wish",
-	sm_wish = "SM Wish",
-	easy = "Easy"
+	sm_wish = "SM Wish"
 }
 NetworkAccountEPIC.lb_levels = {
-	slaughter_house = "Slaughterhouse",
-	diamond_heist = "Diamond Heist",
-	hospital = "No Mercy",
-	suburbia = "Counterfeit",
-	bridge = "Green Bridge",
-	secret_stash = "Undercover",
 	apartment = "Panic Room",
 	bank = "First World Bank",
-	heat_street = "Heat Street"
+	bridge = "Green Bridge",
+	diamond_heist = "Diamond Heist",
+	heat_street = "Heat Street",
+	hospital = "No Mercy",
+	secret_stash = "Undercover",
+	slaughter_house = "Slaughterhouse",
+	suburbia = "Counterfeit"
 }
 
 -- Lines 41-64
@@ -63,6 +63,7 @@ end
 
 -- Lines 88-90
 function NetworkAccountEPIC:set_presences_peer_id(peer_id)
+	return
 end
 
 -- Lines 93-98
@@ -193,10 +194,11 @@ end
 -- Lines 198-224
 function NetworkAccountEPIC:get_global_stat(key, days)
 	local value = 0
-	local global_stat = nil
+	local global_stat
 
 	if days and days < 0 then
 		local day = math.abs(days) + 1
+
 		global_stat = {}
 
 		return global_stat[day] or 0
@@ -226,7 +228,7 @@ function NetworkAccountEPIC:publish_statistics(stats, force_store)
 	cat_tag_print("NetworkAccountEPIC", "Publishing statistics to Epic!")
 
 	local err = false
-	local val, mval, res = nil
+	local val, mval, res
 
 	for key, stat in pairs(stats) do
 		res = false
@@ -236,7 +238,7 @@ function NetworkAccountEPIC:publish_statistics(stats, force_store)
 			val = math.max(0, val)
 
 			if stat.method == "lowest" then
-				if stat.value < val then
+				if val > stat.value then
 					res = false
 				else
 					res = true
@@ -388,16 +390,18 @@ end
 
 -- Lines 405-407
 function NetworkAccountEPIC:set_playing(state)
+	return
 end
 
 -- Lines 409-410
 function NetworkAccountEPIC:set_played_with(peer)
+	return
 end
 
 -- Lines 412-414
 function NetworkAccountEPIC:get_friend_user(user_id)
 	return {
-		invite = function (self, lobby_id)
+		invite = function(self, lobby_id)
 			EpicSocialHub:invite_user_to_lobby(user_id, lobby_id)
 		end
 	}
@@ -424,9 +428,8 @@ end
 -- Lines 433-438
 function NetworkAccountEPIC:_save_globals()
 	Global.epic = Global.epic or {}
-	Global.epic.account = {
-		outfit_signature = self._outfit_signature and Application:create_luabuffer(self._outfit_signature)
-	}
+	Global.epic.account = {}
+	Global.epic.account.outfit_signature = self._outfit_signature and Application:create_luabuffer(self._outfit_signature)
 end
 
 -- Lines 440-446
@@ -462,6 +465,7 @@ end
 
 -- Lines 475-476
 function NetworkAccountEPIC:inventory_load()
+	return
 end
 
 -- Lines 478-480
@@ -476,22 +480,27 @@ end
 
 -- Lines 486-487
 function NetworkAccount:inventory_reward_unlock(safe, safe_instance_id, drill_instance_id, reward_unlock_callback)
+	return
 end
 
 -- Lines 489-490
 function NetworkAccount:inventory_reward_open(safe, safe_instance_id, reward_unlock_callback)
+	return
 end
 
 -- Lines 492-493
 function NetworkAccountEPIC:inventory_reward_dlc(def_id, reward_promo_callback)
+	return
 end
 
 -- Lines 495-496
 function NetworkAccountEPIC:inventory_outfit_refresh()
+	return
 end
 
 -- Lines 498-499
 function NetworkAccountEPIC:_inventory_outfit_refresh()
+	return
 end
 
 -- Lines 501-513
@@ -521,26 +530,32 @@ end
 
 -- Lines 524-525
 function NetworkAccountEPIC:_on_item_converted(error, items_new, items_removed)
+	return
 end
 
 -- Lines 527-528
 function NetworkAccountEPIC:inventory_repair_list(list)
+	return
 end
 
 -- Lines 530-531
 function NetworkAccountEPIC:_clbk_inventory_load(error, list)
+	return
 end
 
 -- Lines 533-534
 function NetworkAccountEPIC:_clbk_tradable_outfit_data(error, outfit_signature)
+	return
 end
 
 -- Lines 537-538
 function NetworkAccountEPIC:_on_drill_converted(data, error, items_new, items_removed)
+	return
 end
 
 -- Lines 540-541
 function NetworkAccountEPIC:convert_drills_to_safes(list)
+	return
 end
 
 -- Lines 547-550
@@ -563,13 +578,13 @@ function NetworkAccountEPIC:publish_statistics(stats, force_store)
 	local err = false
 
 	for key, stat in pairs(stats) do
-		local res = nil
+		local res
 
 		if stat.type == "int" then
 			local val = math.max(0, handler:get_stat(key))
 
 			if stat.method == "lowest" then
-				if stat.value < val then
+				if val > stat.value then
 					res = handler:set_stat(key, stat.value)
 				else
 					res = true
@@ -598,6 +613,7 @@ function NetworkAccountEPIC:publish_statistics(stats, force_store)
 		elseif stat.type == "float" then
 			if stat.value > 0 then
 				local val = handler:get_stat_float(key)
+
 				res = handler:set_stat_float(key, val + stat.value)
 			else
 				res = true

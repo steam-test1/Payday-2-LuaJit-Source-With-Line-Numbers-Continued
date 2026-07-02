@@ -56,7 +56,8 @@ function _M.bind(host, port, backlog)
 		return nil, err
 	end
 
-	local sock, res = nil
+	local sock, res
+
 	err = "no info on address"
 
 	for i, alt in base.ipairs(addrinfo) do
@@ -94,11 +95,9 @@ _M.try = _M.newtry()
 
 -- Lines 78-87
 function _M.choose(table)
-	return function (name, opt1, opt2)
+	return function(name, opt1, opt2)
 		if base.type(name) ~= "string" then
-			opt2 = opt1
-			opt1 = name
-			name = "default"
+			name, opt1, opt2 = "default", name, opt1
 		end
 
 		local f = table[name or "nil"]
@@ -111,22 +110,21 @@ function _M.choose(table)
 	end
 end
 
-local sourcet = {}
-local sinkt = {}
+local sourcet, sinkt = {}, {}
+
 _M.sourcet = sourcet
 _M.sinkt = sinkt
 _M.BLOCKSIZE = 2048
-
-sinkt["close-when-done"] = function (sock)
+sinkt["close-when-done"] = function(sock)
 	return base.setmetatable({
-		getfd = function ()
+		getfd = function()
 			return sock:getfd()
 		end,
-		dirty = function ()
+		dirty = function()
 			return sock:dirty()
 		end
 	}, {
-		__call = function (self, chunk, err)
+		__call = function(self, chunk, err)
 			if not chunk then
 				sock:close()
 
@@ -137,17 +135,16 @@ sinkt["close-when-done"] = function (sock)
 		end
 	})
 end
-
-sinkt["keep-open"] = function (sock)
+sinkt["keep-open"] = function(sock)
 	return base.setmetatable({
-		getfd = function ()
+		getfd = function()
 			return sock:getfd()
 		end,
-		dirty = function ()
+		dirty = function()
 			return sock:dirty()
 		end
 	}, {
-		__call = function (self, chunk, err)
+		__call = function(self, chunk, err)
 			if chunk then
 				return sock:send(chunk)
 			else
@@ -156,20 +153,18 @@ sinkt["keep-open"] = function (sock)
 		end
 	})
 end
-
 sinkt.default = sinkt["keep-open"]
 _M.sink = _M.choose(sinkt)
-
-sourcet["by-length"] = function (sock, length)
+sourcet["by-length"] = function(sock, length)
 	return base.setmetatable({
-		getfd = function ()
+		getfd = function()
 			return sock:getfd()
 		end,
-		dirty = function ()
+		dirty = function()
 			return sock:dirty()
 		end
 	}, {
-		__call = function ()
+		__call = function()
 			if length <= 0 then
 				return nil
 			end
@@ -187,19 +182,18 @@ sourcet["by-length"] = function (sock, length)
 		end
 	})
 end
-
-sourcet["until-closed"] = function (sock)
-	local done = nil
+sourcet["until-closed"] = function(sock)
+	local done
 
 	return base.setmetatable({
-		getfd = function ()
+		getfd = function()
 			return sock:getfd()
 		end,
-		dirty = function ()
+		dirty = function()
 			return sock:dirty()
 		end
 	}, {
-		__call = function ()
+		__call = function()
 			if done then
 				return nil
 			end
@@ -220,7 +214,6 @@ sourcet["until-closed"] = function (sock)
 		end
 	})
 end
-
 sourcet.default = sourcet["until-closed"]
 _M.source = _M.choose(sourcet)
 

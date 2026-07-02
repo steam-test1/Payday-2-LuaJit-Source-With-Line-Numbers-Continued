@@ -97,8 +97,8 @@ function MedicDamage:heal_unit(unit)
 	unit:character_damage():do_medic_heal()
 
 	local action_data = {
-		client_interrupt = true,
 		body_part = 3,
+		client_interrupt = true,
 		type = "heal",
 		blocks = {
 			action = -1
@@ -125,7 +125,8 @@ end
 -- Lines 163-199
 function MedicDamage:sync_heal_action()
 	self._heal_cooldown_t = TimerManager:game():time() + self._heal_cooldown
-	local action_data = nil
+
+	local action_data
 
 	if Network:is_server() then
 		if not self._unit:anim_data().act then
@@ -140,8 +141,8 @@ function MedicDamage:sync_heal_action()
 	else
 		action_data = {
 			block_type = "action",
-			type = "heal",
 			body_part = 3,
+			type = "heal",
 			client_interrupt = not self._unit:anim_data().act,
 			blocks = {
 				action = -1

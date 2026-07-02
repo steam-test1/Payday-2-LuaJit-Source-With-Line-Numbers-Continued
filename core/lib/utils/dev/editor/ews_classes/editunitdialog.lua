@@ -98,10 +98,12 @@ end
 
 -- Lines 91-93
 function EditUnitBase:update()
+	return
 end
 
 -- Lines 95-97
 function EditUnitBase:dialog_closed()
+	return
 end
 
 -- Lines 99-101

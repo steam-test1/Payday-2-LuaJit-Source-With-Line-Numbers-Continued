@@ -9,6 +9,7 @@ end
 
 -- Lines 9-11
 function ElementProfileFilter:client_on_executed(...)
+	return
 end
 
 -- Lines 13-40
@@ -38,7 +39,7 @@ end
 
 -- Lines 42-46
 function ElementProfileFilter:_check_player_lvl()
-	local pass = self._values.player_lvl <= managers.experience:current_level()
+	local pass = managers.experience:current_level() >= self._values.player_lvl
 
 	return pass
 end

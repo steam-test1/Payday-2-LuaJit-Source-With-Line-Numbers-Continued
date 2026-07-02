@@ -10,6 +10,7 @@ end
 
 -- Lines 10-12
 function MissionScriptElement:client_on_executed()
+	return
 end
 
 -- Lines 20-25

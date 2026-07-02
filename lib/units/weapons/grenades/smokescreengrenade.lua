@@ -41,6 +41,7 @@ end
 
 -- Lines 35-37
 function SmokeScreenGrenade:bullet_hit()
+	return
 end
 
 -- Lines 41-43

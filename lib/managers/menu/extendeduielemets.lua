@@ -43,6 +43,7 @@ function GrowPanel:init(parent, config)
 	local padd_y = config.padding_y or config.padding or 0
 	local bord_x = config.border_x or config.border or padd_x
 	local bord_y = config.border_y or config.border or padd_y
+
 	self._placer = ResizingPlacer:new(self, {
 		border_x = bord_x,
 		border_y = bord_y,
@@ -147,9 +148,9 @@ ScrollableList = ScrollableList or class(ExtendedPanel)
 -- Lines 144-187
 function ScrollableList:init(parent, scroll_config, canvas_config)
 	scroll_config = set_defaults(scroll_config, {
+		ignore_down_indicator = true,
 		ignore_up_indicator = true,
 		padding = 0,
-		ignore_down_indicator = true,
 		layer = parent:layer()
 	})
 
@@ -160,14 +161,19 @@ function ScrollableList:init(parent, scroll_config, canvas_config)
 	end
 
 	scroll_config.use_given = true
+
 	local add_as_input = scroll_config.input
+
 	scroll_config.input = nil
 
 	ScrollableList.super.init(self, self._scroll:panel(), scroll_config)
 
 	local scrollbar_padding = scroll_config.scrollbar_padding or scroll_config.padding or self._scroll:padding()
+
 	canvas_config = canvas_config or {}
+
 	local add_canvas = canvas_config.input or add_as_input
+
 	canvas_config.input = nil
 
 	if not scroll_config.horizontal then
@@ -227,6 +233,7 @@ function ScrollableList:mouse_moved(button, x, y)
 	end
 
 	local hover, cursor = ScrollableList.super.mouse_moved(self, button, x, y)
+
 	hover = hover or h
 	cursor = cursor or c
 
@@ -327,7 +334,7 @@ end
 
 -- Lines 294-312
 function ScrollableList:scroll_to_show(top_or_item, bottom)
-	local top = nil
+	local top
 
 	if type(top_or_item) == "table" and top_or_item.top and top_or_item.bottom then
 		top = top_or_item:top()
@@ -447,7 +454,7 @@ function ScrollItemList:mouse_moved(button, x, y)
 		return
 	end
 
-	local used, pointer = nil
+	local used, pointer
 
 	for k, v in pairs(self._current_items) do
 		if v:inside(x, y) then
@@ -527,6 +534,7 @@ function ScrollItemList:move_selection(move)
 	else
 		local index = table.index_of(self._current_items, self._selected_item)
 		local new_index = index + move
+
 		new_index = math.clamp(new_index, 1, #self._current_items)
 
 		if self._current_items[new_index].skip_selection and self._current_items[new_index]:skip_selection() then
@@ -668,6 +676,7 @@ function ScrollItemList:filter_items(filter_function, mod_start, keep_selection)
 	end
 
 	local w_y = self._selected_item and self._selected_item:world_y()
+
 	self._current_items = {}
 
 	for _, item in ipairs(self._all_items) do
@@ -731,7 +740,7 @@ end
 
 -- Lines 631-649
 function HorizontalScrollItemList:scroll_to_show(left_or_item, right)
-	local left = nil
+	local left
 
 	if type(left_or_item) == "table" and left_or_item.left and left_or_item.right then
 		left = left_or_item:left()
@@ -838,14 +847,17 @@ end
 
 -- Lines 728-729
 function BaseButton:_enabled_changed(state)
+	return
 end
 
 -- Lines 731-732
 function BaseButton:_hover_changed(state)
+	return
 end
 
 -- Lines 734-735
 function BaseButton:_trigger()
+	return
 end
 
 -- Lines 737-739
@@ -909,7 +921,8 @@ function TextButton:init(parent, text_config, func, panel_config)
 	end
 
 	self._text = self:fine_text(text_config)
-	self._trigger = func or function ()
+	self._trigger = func or function()
+		return
 	end
 	self._is_fixed = panel_config.fixed_size
 
@@ -960,7 +973,8 @@ function IconButton:init(parent, icon_config, func)
 
 	self:_set_color(self._normal_color)
 
-	self._trigger = func or function ()
+	self._trigger = func or function()
+		return
 	end
 
 	self:set_size(self._button:size())
@@ -1009,7 +1023,8 @@ function ToggleButton:init(parent, toggle_config, panel_config, func)
 			24
 		}
 	})
-	self._toggle_trigger = func or function (state)
+	self._toggle_trigger = func or function(state)
+		return
 	end
 	self._normal_color = toggle_config.normal_color or toggle_config.color or tweak_data.screen_colors.button_stage_3
 	self._hover_color = toggle_config.hover_color or toggle_config.color or tweak_data.screen_colors.button_stage_2
@@ -1027,6 +1042,7 @@ end
 
 -- Lines 900-901
 function ToggleButton:_toggle_trigger(state)
+	return
 end
 
 -- Lines 903-906
@@ -1071,7 +1087,8 @@ function CompositeButton:init(parent, composite_button_config, panel_config, fun
 	CompositeButton.super.init(self, parent, panel_config)
 
 	self._child_list = {}
-	self._trigger_func = func or function ()
+	self._trigger_func = func or function()
+		return
 	end
 	self._normal_color = composite_button_config.normal_color or composite_button_config.color or tweak_data.screen_colors.button_stage_3
 	self._hover_color = composite_button_config.hover_color or composite_button_config.color or tweak_data.screen_colors.button_stage_2
@@ -1149,21 +1166,20 @@ function ProgressBar:init(parent, config, progress)
 			y = 0
 		end
 
-		self._edges = {
-			left = self:rect({
-				w = 3,
-				rotation = 360,
-				color = self._back_color,
-				h = h,
-				y = y
-			})
-		}
+		self._edges = {}
+		self._edges.left = self:rect({
+			rotation = 360,
+			w = 3,
+			color = self._back_color,
+			h = h,
+			y = y
+		})
 
 		self._edges.left:set_right(0)
 
 		self._edges.right = self:rect({
-			w = 3,
 			rotation = 360,
+			w = 3,
 			color = self._back_color,
 			h = h,
 			y = y
@@ -1192,7 +1208,7 @@ function ProgressBar:set_progress(v)
 
 	if self._edges then
 		self._edges.left:set_color(self._at > 0 and self._progress_color or self._back_color)
-		self._edges.right:set_color(self._max <= self._at and self._progress_color or self._back_color)
+		self._edges.right:set_color(self._at >= self._max and self._progress_color or self._back_color)
 	end
 
 	return self._at
@@ -1201,6 +1217,7 @@ end
 -- Lines 1060-1065
 function ProgressBar:set_max(v, dont_scale_current)
 	local current = dont_scale_current and self._at or self._at / self._max * v
+
 	self._max = v
 
 	self:set_progress(current)
@@ -1276,7 +1293,8 @@ SpecialButtonBinding = SpecialButtonBinding or class()
 -- Lines 1140-1149
 function SpecialButtonBinding:init(binding, func, add_to_panel)
 	self._binding = Idstring(binding)
-	self._on_trigger = func or function ()
+	self._on_trigger = func or function()
+		return
 	end
 	self._enabled = true
 
@@ -1311,8 +1329,8 @@ ButtonLegendsBar.PADDING = 10
 function ButtonLegendsBar:init(panel, config, panel_config)
 	panel_config = set_defaults(panel_config, {
 		border = 0,
-		padding_y = 0,
 		input = true,
+		padding_y = 0,
 		w = panel:w(),
 		padding = self.PADDING
 	})
@@ -1343,7 +1361,7 @@ function ButtonLegendsBar:add_item(data, id, dont_update)
 		local text = data.text or managers.localization:to_upper_text(data.text_id, {
 			[macro_name] = managers.localization:btn_macro(data.binding, true) or ""
 		})
-		local item = nil
+		local item
 
 		if data.func and not self._legends_only then
 			table.insert(self._items, self:_create_btn(data, text))
@@ -1366,8 +1384,10 @@ end
 -- Lines 1236-1246
 function ButtonLegendsBar:_create_btn(data, text)
 	local config = clone(self._text_config)
+
 	config.text = text
 	config.binding = data.binding
+
 	local button = TextButton:new(self, config, data.func)
 
 	button:set_visible(false)
@@ -1385,8 +1405,11 @@ end
 -- Lines 1248-1262
 function ButtonLegendsBar:_create_legend(data, text)
 	data = data or {}
+
 	local config = data.config or clone(self._text_config)
+
 	config.text = text
+
 	local text = self:fine_text(config)
 
 	text:set_visible(false)
@@ -1464,9 +1487,9 @@ function TextLegendsBar:init(panel, config, panel_config)
 	TextLegendsBar.super.init(self, panel, config, panel_config)
 
 	self._text_config = set_defaults(self._text_config, {
-		text = " ",
 		align = "right",
-		keep_w = true
+		keep_w = true,
+		text = " "
 	})
 	self._seperator = self._text_config.seperator or TextLegendsBar.SEPERATOR
 	self._lines = {}
@@ -1480,6 +1503,7 @@ end
 -- Lines 1323-1332
 function TextLegendsBar:_create_legend(data, text)
 	data = data or {}
+
 	local item = {
 		item = text,
 		enabled = data.enabled ~= false,
@@ -1500,6 +1524,7 @@ function TextLegendsBar:_update_items()
 	end
 
 	self._lines = {}
+
 	local placer = self:placer()
 
 	placer:clear()
@@ -1515,7 +1540,7 @@ function TextLegendsBar:_update_items()
 		table.insert(self._lines, text_item)
 	end
 
-	local text_item = nil
+	local text_item
 
 	for _, v in pairs(self._items) do
 		if v.force_break then
@@ -1530,7 +1555,7 @@ function TextLegendsBar:_update_items()
 
 				local _, _, w, _ = text_item:text_rect()
 
-				if self._wrap and self:w() < w then
+				if self._wrap and w > self:w() then
 					text_item:set_text(str)
 					complete_line(text_item)
 
@@ -1563,24 +1588,25 @@ function TabItem:init(parent, panel_data, tab_data)
 	self._active_state = tab_data.initial_state or false
 	self._tab_panel = parent:panel(panel_data)
 	self._tab_text = self._tab_panel:text({
-		valign = "grow",
-		vertical = "center",
 		align = "center",
 		halign = "grow",
 		layer = 5,
+		valign = "grow",
+		vertical = "center",
 		text = managers.localization:to_upper_text(tab_data.name_id),
 		color = Color.black,
 		font = medium_font,
 		font_size = medium_font_size
 	})
+
 	local _, _, tw, th = self._tab_text:text_rect()
 
 	self._tab_panel:set_size(tw + 10, th + 10)
 
 	self._tab_rect = self._tab_panel:bitmap({
+		layer = 3,
 		texture = "guis/textures/pd2/shared_tab_box",
 		visible = true,
-		layer = 3,
 		color = tweak_data.screen_colors.text,
 		w = self._tab_panel:w(),
 		h = self._tab_panel:h()

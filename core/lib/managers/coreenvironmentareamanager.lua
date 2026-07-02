@@ -18,13 +18,14 @@ function EnvironmentAreaManager:init()
 		1
 	})
 
-	local skip_default_list = {
-		[CoreEnvironmentFeeder.UnderlayPathFeeder.FILTER_CATEGORY] = true,
-		[CoreEnvironmentFeeder.CubeMapTextureFeeder.FILTER_CATEGORY] = true,
-		[CoreEnvironmentFeeder.WorldOverlayTextureFeeder.FILTER_CATEGORY] = true,
-		[CoreEnvironmentFeeder.WorldOverlayMaskTextureFeeder.FILTER_CATEGORY] = true,
-		[CoreEnvironmentFeeder.PostShadowSlice0Feeder.FILTER_CATEGORY] = true
-	}
+	local skip_default_list = {}
+
+	skip_default_list[CoreEnvironmentFeeder.UnderlayPathFeeder.FILTER_CATEGORY] = true
+	skip_default_list[CoreEnvironmentFeeder.CubeMapTextureFeeder.FILTER_CATEGORY] = true
+	skip_default_list[CoreEnvironmentFeeder.WorldOverlayTextureFeeder.FILTER_CATEGORY] = true
+	skip_default_list[CoreEnvironmentFeeder.WorldOverlayMaskTextureFeeder.FILTER_CATEGORY] = true
+	skip_default_list[CoreEnvironmentFeeder.PostShadowSlice0Feeder.FILTER_CATEGORY] = true
+
 	local default_filter_list = {}
 
 	for name, data_path_key_list in pairs(managers.viewport:get_predefined_environment_filter_map()) do
@@ -94,7 +95,7 @@ end
 
 -- Lines 76-78
 function EnvironmentAreaManager:prio_order_areas()
-	table.sort(self._areas, function (a, b)
+	table.sort(self._areas, function(a, b)
 		return a:is_higher_prio(b:prio())
 	end)
 end
@@ -275,7 +276,7 @@ end
 -- Lines 222-228
 function EnvironmentArea:is_higher_prio(min_prio)
 	if min_prio then
-		return self._properties.prio < min_prio
+		return min_prio > self._properties.prio
 	else
 		return true
 	end

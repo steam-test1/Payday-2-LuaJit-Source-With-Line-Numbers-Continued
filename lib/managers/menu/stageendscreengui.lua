@@ -8,14 +8,16 @@ function StatsTabItem:init(panel, tab_panel, text, i)
 		h = self._main_panel:h() - 70
 	})
 	self._index = i
+
 	local prev_item_title_text = tab_panel:child("tab_text_" .. tostring(i - 1))
 	local offset = prev_item_title_text and prev_item_title_text:right() or 0
+
 	self._tab_text = tab_panel:text({
-		vertical = "center",
-		h = 32,
-		blend_mode = "add",
 		align = "center",
+		blend_mode = "add",
+		h = 32,
 		layer = 1,
+		vertical = "center",
 		name = "tab_text_" .. tostring(self._index),
 		text = text,
 		x = offset + 5,
@@ -23,14 +25,15 @@ function StatsTabItem:init(panel, tab_panel, text, i)
 		font = tweak_data.menu.pd2_medium_font,
 		color = tweak_data.screen_colors.button_stage_3
 	})
+
 	local x, y, w, h = self._tab_text:text_rect()
 
 	self._tab_text:set_size(w + 15, h + 10)
 
 	self._select_rect = tab_panel:bitmap({
+		layer = 0,
 		texture = "guis/textures/pd2/shared_tab_box",
 		visible = false,
-		layer = 0,
 		name = "tab_select_rect_" .. tostring(self._index),
 		color = tweak_data.screen_colors.text
 	})
@@ -123,7 +126,8 @@ end
 -- Lines 91-245
 function StatsTabItem:set_stats(stats_data)
 	self._stats = stats_data or {}
-	local prev_stat_panel = nil
+
+	local prev_stat_panel
 	local widest_text = 0
 	local create_gage_assignment = table.contains(stats_data, "gage_assignment_summary")
 
@@ -135,7 +139,7 @@ function StatsTabItem:set_stats(stats_data)
 			table.insert(assignment_list, assignment)
 		end
 
-		table.sort(assignment_list, function (x, y)
+		table.sort(assignment_list, function(x, y)
 			return gage_tweak_data:get_value(x, "aquire") < gage_tweak_data:get_value(y, "aquire")
 		end)
 
@@ -144,7 +148,7 @@ function StatsTabItem:set_stats(stats_data)
 			y = 10,
 			h = tweak_data.menu.pd2_medium_font_size
 		})
-		local num_text = nil
+		local num_text
 		local desc_text = new_stat_panel:text({
 			name = "desc",
 			text = managers.localization:to_upper_text("menu_es_gage_assignments_found"),
@@ -159,10 +163,10 @@ function StatsTabItem:set_stats(stats_data)
 			font = tweak_data.menu.pd2_small_font,
 			color = tweak_data.screen_colors.text
 		})
-		local reward_text, nx, ny, nw, nh = nil
+		local reward_text, nx, ny, nw, nh
 		local dx, dy, dw, dh = self:make_fine_text(desc_text)
 		local sx, sy, sw, sh = self:make_fine_text(stat_text)
-		local rx, ry, rw, rh = nil
+		local rx, ry, rw, rh
 
 		new_stat_panel:set_h(math.max(dh, sh))
 		desc_text:set_x(10)
@@ -173,9 +177,10 @@ function StatsTabItem:set_stats(stats_data)
 		end
 
 		prev_stat_panel = new_stat_panel
+
 		local title_desc = desc_text
 		local title_stat = stat_text
-		local num_string, desc_string, stat_string, reward_string, found, progress, completed, to_aquire, dlc, has_dlc, last_dlc = nil
+		local num_string, desc_string, stat_string, reward_string, found, progress, completed, to_aquire, dlc, has_dlc, last_dlc
 
 		for i, assignment in ipairs(assignment_list) do
 			to_aquire = gage_tweak_data:get_value(assignment, "aquire")
@@ -257,7 +262,7 @@ function StatsTabItem:set_stats(stats_data)
 					reward_text:set_alpha(1)
 					reward_text:set_x(title_stat:x())
 
-					if new_stat_panel:w() < reward_text:right() then
+					if reward_text:right() > new_stat_panel:w() then
 						reward_text:set_right(new_stat_panel:w())
 					end
 				else
@@ -273,76 +278,75 @@ function StatsTabItem:set_stats(stats_data)
 
 			prev_stat_panel = new_stat_panel
 		end
+	else
+		for i, stat in ipairs(self._stats) do
+			local new_stat_panel = self._panel:panel({
+				y = 10,
+				name = tostring(stat),
+				h = tweak_data.menu.pd2_medium_font_size
+			})
+			local desc_text = new_stat_panel:text({
+				align = "right",
+				name = "desc",
+				vertical = "top",
+				word_wrap = true,
+				wrap = true,
+				x = 10,
+				text = managers.localization:to_upper_text("victory_" .. stat),
+				font_size = tweak_data.menu.pd2_small_font_size,
+				font = tweak_data.menu.pd2_small_font,
+				color = tweak_data.screen_colors.text,
+				w = math.round(self._panel:w() / 2) - 5 - 10
+			})
+			local stat_text = new_stat_panel:text({
+				align = "left",
+				name = "stat",
+				text = "",
+				vertical = "top",
+				word_wrap = true,
+				wrap = true,
+				font_size = tweak_data.menu.pd2_small_font_size,
+				font = tweak_data.menu.pd2_small_font,
+				color = tweak_data.screen_colors.text,
+				w = math.round(self._panel:w() / 2) - 10,
+				x = math.round(self._panel:w() / 2) + 5
+			})
+			local use_medium_font = stat == "stage_cash_summary"
 
-		return
-	end
+			use_medium_font = use_medium_font or stat == "stage_safehouse_summary"
 
-	for i, stat in ipairs(self._stats) do
-		local new_stat_panel = self._panel:panel({
-			y = 10,
-			name = tostring(stat),
-			h = tweak_data.menu.pd2_medium_font_size
-		})
-		local desc_text = new_stat_panel:text({
-			vertical = "top",
-			name = "desc",
-			wrap = true,
-			align = "right",
-			word_wrap = true,
-			x = 10,
-			text = managers.localization:to_upper_text("victory_" .. stat),
-			font_size = tweak_data.menu.pd2_small_font_size,
-			font = tweak_data.menu.pd2_small_font,
-			color = tweak_data.screen_colors.text,
-			w = math.round(self._panel:w() / 2) - 5 - 10
-		})
-		local stat_text = new_stat_panel:text({
-			vertical = "top",
-			name = "stat",
-			wrap = true,
-			align = "left",
-			word_wrap = true,
-			text = "",
-			font_size = tweak_data.menu.pd2_small_font_size,
-			font = tweak_data.menu.pd2_small_font,
-			color = tweak_data.screen_colors.text,
-			w = math.round(self._panel:w() / 2) - 10,
-			x = math.round(self._panel:w() / 2) + 5
-		})
-		local use_medium_font = stat == "stage_cash_summary"
-		use_medium_font = use_medium_font or stat == "stage_safehouse_summary"
+			if use_medium_font then
+				desc_text:hide()
+				stat_text:set_w(new_stat_panel:w() - 20)
+				desc_text:set_font(tweak_data.menu.pd2_medium_font_id)
+				stat_text:set_font(tweak_data.menu.pd2_medium_font_id)
+				desc_text:set_font_size(tweak_data.menu.pd2_medium_font_size)
+				stat_text:set_font_size(tweak_data.menu.pd2_medium_font_size)
+				new_stat_panel:set_h(self._panel:h() - new_stat_panel:y() - 10)
+				stat_text:set_h(new_stat_panel:h())
+				stat_text:set_x(10)
+			end
 
-		if use_medium_font then
-			desc_text:hide()
-			stat_text:set_w(new_stat_panel:w() - 20)
-			desc_text:set_font(tweak_data.menu.pd2_medium_font_id)
-			stat_text:set_font(tweak_data.menu.pd2_medium_font_id)
-			desc_text:set_font_size(tweak_data.menu.pd2_medium_font_size)
-			stat_text:set_font_size(tweak_data.menu.pd2_medium_font_size)
-			new_stat_panel:set_h(self._panel:h() - new_stat_panel:y() - 10)
-			stat_text:set_h(new_stat_panel:h())
-			stat_text:set_x(10)
+			local _, _, _, dh = desc_text:text_rect()
+			local _, _, _, sh = stat_text:text_rect()
+			local max_h = math.max(dh, sh)
+
+			desc_text:set_h(max_h)
+			stat_text:set_h(max_h)
+			new_stat_panel:set_h(max_h)
+
+			if prev_stat_panel then
+				new_stat_panel:set_top(prev_stat_panel:bottom())
+			end
+
+			prev_stat_panel = new_stat_panel
 		end
-
-		local _, _, _, dh = desc_text:text_rect()
-		local _, _, _, sh = stat_text:text_rect()
-		local max_h = math.max(dh, sh)
-
-		desc_text:set_h(max_h)
-		stat_text:set_h(max_h)
-		new_stat_panel:set_h(max_h)
-
-		if prev_stat_panel then
-			new_stat_panel:set_top(prev_stat_panel:bottom())
-		end
-
-		prev_stat_panel = new_stat_panel
 	end
 end
 
 -- Lines 247-355
 function StatsTabItem:feed_statistics(stats_data)
-	local text, stat_text = nil
+	local text, stat_text
 
 	for i, stat in ipairs(self._stats) do
 		if stats_data[stat] then
@@ -353,11 +357,12 @@ function StatsTabItem:feed_statistics(stats_data)
 		end
 	end
 
-	local desc, stat, prev_stat_panel = nil
+	local desc, stat, prev_stat_panel
 
 	for i, child in ipairs(self._panel:children()) do
 		desc = child:child("desc")
 		stat = child:child("stat")
+
 		local _, _, _, dh = desc:text_rect()
 		local _, _, _, sh = stat:text_rect()
 		local max_h = math.max(dh, sh)
@@ -367,6 +372,7 @@ function StatsTabItem:feed_statistics(stats_data)
 		child:set_h(max_h)
 
 		local format_color = child:name() == "stage_cash_summary"
+
 		format_color = format_color or child:name() == "stage_safehouse_summary"
 
 		if format_color then
@@ -378,11 +384,12 @@ function StatsTabItem:feed_statistics(stats_data)
 
 			local text = stat:text()
 			local resource_color = tweak_data.screen_colors.friend_color
-			local start_ci, end_ci, first_ci = nil
+			local start_ci, end_ci, first_ci
 
 			if resource_color then
 				local text_dissected = utf8.characters(text)
 				local idsp = Idstring("#")
+
 				start_ci = {}
 				end_ci = {}
 				first_ci = true
@@ -403,7 +410,9 @@ function StatsTabItem:feed_statistics(stats_data)
 					end
 				end
 
-				if #start_ci == #end_ci then
+				if #start_ci ~= #end_ci then
+					-- Nothing
+				else
 					for i = 1, #start_ci do
 						start_ci[i] = start_ci[i] - ((i - 1) * 4 + 1)
 						end_ci[i] = end_ci[i] - (i * 4 - 1)
@@ -429,7 +438,7 @@ function StatsTabItem:feed_statistics(stats_data)
 
 			local _, _, _, h = stat:text_rect()
 
-			if stat:h() < h then
+			if h > stat:h() then
 				stat:set_font(tweak_data.menu.pd2_small_font_id)
 				stat:set_font_size(tweak_data.menu.pd2_small_font_size)
 			else
@@ -483,14 +492,17 @@ end
 
 -- Lines 384-385
 function StatsTabItem:move_left()
+	return
 end
 
 -- Lines 387-388
 function StatsTabItem:move_right()
+	return
 end
 
 -- Lines 390-391
 function StatsTabItem:confirm_pressed()
+	return
 end
 
 -- Lines 393-401
@@ -502,7 +514,7 @@ function StatsTabItem.animate_select(o)
 		return
 	end
 
-	over(math.abs(100 - size) / 100, function (p)
+	over(math.abs(100 - size) / 100, function(p)
 		local s = math.lerp(size, 100, p)
 
 		o:set_size(s, s)
@@ -519,7 +531,7 @@ function StatsTabItem.animate_deselect(o)
 		return
 	end
 
-	over(math.abs(65 - size) / 100, function (p)
+	over(math.abs(65 - size) / 100, function(p)
 		local s = math.lerp(size, 65, p)
 
 		o:set_size(s, s)
@@ -528,6 +540,7 @@ function StatsTabItem.animate_deselect(o)
 end
 
 StageEndScreenGui = StageEndScreenGui or class()
+
 local padding = 10
 
 -- Lines 419-623
@@ -537,6 +550,7 @@ function StageEndScreenGui:init(saferect_ws, fullrect_ws, statistics_data)
 	self._fullscreen_panel = self._full_workspace:panel():panel({
 		layer = 1
 	})
+
 	local w = self._safe_workspace:panel():w() / 2 - padding
 
 	if managers.crime_spree:is_active() then
@@ -567,16 +581,17 @@ function StageEndScreenGui:init(saferect_ws, fullrect_ws, statistics_data)
 	end
 
 	self._continue_button = self._panel:text({
+		align = "right",
+		h = 32,
+		layer = 1,
 		name = "ready_button",
 		vertical = "center",
-		h = 32,
-		align = "right",
-		layer = 1,
 		text = continue_text,
 		font_size = tweak_data.menu.pd2_large_font_size,
 		font = tweak_data.menu.pd2_large_font,
 		color = tweak_data.screen_colors.button_stage_3
 	})
+
 	local _, _, w, h = self._continue_button:text_rect()
 
 	self._continue_button:set_size(w, h)
@@ -593,12 +608,13 @@ function StageEndScreenGui:init(saferect_ws, fullrect_ws, statistics_data)
 	self._tab_panel = self._scroll_panel:panel({
 		name = "tab_panel"
 	})
+
 	local big_text = self._fullscreen_panel:text({
+		align = "right",
+		alpha = 0.4,
+		h = 90,
 		name = "continue_big_text",
 		vertical = "bottom",
-		h = 90,
-		alpha = 0.4,
-		align = "right",
 		text = continue_text,
 		font_size = tweak_data.menu.pd2_massive_font_size,
 		font = tweak_data.menu.pd2_massive_font,
@@ -617,11 +633,11 @@ function StageEndScreenGui:init(saferect_ws, fullrect_ws, statistics_data)
 	local text = managers.menu:is_pc_controller() and "" or managers.localization:get_default_macro("BTN_BOTTOM_L")
 	local color = managers.menu:is_pc_controller() and tweak_data.screen_colors.button_stage_3 or Color.white
 	local prev_page = self._panel:text({
-		w = 0,
+		layer = 2,
 		name = "prev_page",
 		vertical = "top",
+		w = 0,
 		y = 0,
-		layer = 2,
 		h = tweak_data.menu.pd2_medium_font_size,
 		font_size = tweak_data.menu.pd2_medium_font_size,
 		font = tweak_data.menu.pd2_medium_font,
@@ -638,7 +654,8 @@ function StageEndScreenGui:init(saferect_ws, fullrect_ws, statistics_data)
 	self._scroll_panel:move(w, 0)
 
 	self._items = {}
-	local item = nil
+
+	local item
 	local tab_height = 0
 	local show_summary = true
 
@@ -722,10 +739,10 @@ function StageEndScreenGui:init(saferect_ws, fullrect_ws, statistics_data)
 	local text = managers.menu:is_pc_controller() and "" or managers.localization:get_default_macro("BTN_BOTTOM_R")
 	local color = managers.menu:is_pc_controller() and tweak_data.screen_colors.button_stage_3 or Color.white
 	local next_page = self._panel:text({
-		w = 0,
-		vertical = "top",
-		y = 0,
 		layer = 2,
+		vertical = "top",
+		w = 0,
+		y = 0,
 		name = "tab_text_" .. tostring(#self._items + 1),
 		h = tweak_data.menu.pd2_medium_font_size,
 		font_size = tweak_data.menu.pd2_medium_font_size,
@@ -740,6 +757,7 @@ function StageEndScreenGui:init(saferect_ws, fullrect_ws, statistics_data)
 
 	self._next_page = next_page
 	scroll_w = scroll_w - next_page:w() - 5
+
 	local ix, iy, iw, ih = self._items[#self._items]:tab_text_shape()
 
 	self._tab_panel:set_w(ix + iw + 5)
@@ -815,12 +833,13 @@ function StageEndScreenGui:play_bain_debrief()
 	local variant = managers.groupai:state():endscreen_variant() or 0
 	local level_data = Global.level_data.level_id and tweak_data.levels[Global.level_data.level_id]
 	local outro_event = level_data and (variant == 0 and level_data.outro_event or level_data.outro_event[variant])
+
 	outro_event = managers.mutators:get_outro_event(outro_event)
 
 	Application:debug("StageEndScreenGui:play_bain_debrief()", outro_event)
 
 	if outro_event then
-		local snd_event = nil
+		local snd_event
 		local tactic = managers.groupai:state():enemy_weapons_hot() and "loud" or "stealth"
 
 		if type(outro_event) == "table" then
@@ -865,12 +884,12 @@ function StageEndScreenGui:console_subtitle_callback(event, string_id, duration,
 		self._console_subtitle_panel:set_size(self._panel:x() - 10 - 10, self._panel:h() - 70)
 		self._console_subtitle_panel:set_leftbottom(0, self._panel:bottom() - 70)
 		self._console_subtitle_panel:text({
-			text = "",
-			name = "subtitle_text",
-			wrap = true,
 			align = "center",
+			name = "subtitle_text",
+			text = "",
 			vertical = "bottom",
 			word_wrap = true,
+			wrap = true,
 			font = tweak_data.menu.pd2_medium_font,
 			font_size = tweak_data.menu.pd2_medium_font_size
 		})
@@ -893,13 +912,13 @@ end
 
 -- Lines 721-758
 function StageEndScreenGui:update(t, dt)
-	if self._bain_debrief_t and self._bain_debrief_t < t then
+	if self._bain_debrief_t and t > self._bain_debrief_t then
 		self._bain_debrief_t = nil
 
 		self:play_bain_debrief()
 	end
 
-	if self._contact_debrief_t and self._contact_debrief_t < t then
+	if self._contact_debrief_t and t > self._contact_debrief_t then
 		self._contact_debrief_t = nil
 
 		if managers.job:on_last_stage() then
@@ -918,7 +937,7 @@ function StageEndScreenGui:update(t, dt)
 		end
 	end
 
-	if self._console_subtitle_duration and self._console_subtitle_duration < t then
+	if self._console_subtitle_duration and t > self._console_subtitle_duration then
 		local text = self._console_subtitle_panel:child("subtitle_text")
 
 		text:set_text("")
@@ -974,6 +993,7 @@ function StageEndScreenGui:set_continue_button_text(text, not_clickable)
 	self._fullscreen_panel:child("continue_big_text"):set_text(text)
 
 	self._button_not_clickable = not_clickable
+
 	local _, _, w = self._continue_button:text_rect()
 
 	self._continue_button:set_width(w)
@@ -1012,7 +1032,7 @@ function StageEndScreenGui:select_tab(selected_item, no_sound)
 
 	if left < 0 then
 		self._tab_panel:move(-left, 0)
-	elseif self._scroll_panel:w() < right then
+	elseif right > self._scroll_panel:w() then
 		self._tab_panel:move(-(right - self._scroll_panel:w()), 0)
 	end
 
@@ -1184,10 +1204,12 @@ end
 
 -- Lines 987-988
 function StageEndScreenGui:move_up()
+	return
 end
 
 -- Lines 990-991
 function StageEndScreenGui:move_down()
+	return
 end
 
 -- Lines 993-1001

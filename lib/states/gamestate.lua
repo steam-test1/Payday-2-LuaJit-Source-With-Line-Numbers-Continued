@@ -11,6 +11,7 @@ end
 
 -- Lines 11-11
 function GameState:set_controller_enabled(enabled)
+	return
 end
 
 -- Lines 13-23
@@ -32,6 +33,7 @@ end
 
 -- Lines 29-30
 function GameState:on_disconnected_from_service()
+	return
 end
 
 -- Lines 32-34

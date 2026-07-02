@@ -14,20 +14,22 @@ ContractBrokerHeistItem = ContractBrokerHeistItem or class()
 function ContractBrokerHeistItem:init(parent_panel, job_data, idx)
 	self._parent = parent_panel
 	self._job_data = job_data
+
 	local job_tweak = tweak_data.narrative:job_data(job_data.job_id)
 	local contact = job_tweak.contact
 	local contact_tweak = tweak_data.narrative.contacts[contact]
+
 	self._panel = parent_panel:panel({
+		h = 90,
 		halign = "grow",
 		layer = 10,
-		h = 90,
-		x = 0,
 		valign = "top",
+		x = 0,
 		y = 90 * (idx - 1)
 	})
 	self._background = self._panel:rect({
-		blend_mode = "add",
 		alpha = 0.4,
+		blend_mode = "add",
 		halign = "grow",
 		layer = -1,
 		valign = "grow",
@@ -39,20 +41,22 @@ function ContractBrokerHeistItem:init(parent_panel, job_data, idx)
 	self._background:set_visible(false)
 
 	local img_size = self._panel:h() - padding
+
 	self._image_panel = self._panel:panel({
 		halign = "left",
 		layer = 1,
-		x = 0,
 		valign = "top",
+		x = 0,
 		y = padding,
 		w = img_size * 1.7777777777777777,
 		h = img_size
 	})
+
 	local has_image = false
 
 	if job_tweak.contract_visuals and job_tweak.contract_visuals.preview_image then
 		local data = job_tweak.contract_visuals.preview_image
-		local path, rect = nil
+		local path, rect
 
 		if data.id then
 			path = "guis/dlcs/" .. (data.folder or "bro") .. "/textures/pd2/crimenet/" .. data.id
@@ -63,10 +67,10 @@ function ContractBrokerHeistItem:init(parent_panel, job_data, idx)
 
 		if path and DB:has(Idstring("texture"), path) then
 			self._image_panel:bitmap({
-				valign = "scale",
-				layer = 2,
 				blend_mode = "add",
 				halign = "scale",
+				layer = 2,
+				valign = "scale",
 				texture = path,
 				texture_rect = rect,
 				w = self._image_panel:w(),
@@ -93,11 +97,11 @@ function ContractBrokerHeistItem:init(parent_panel, job_data, idx)
 			color = color
 		})
 		self._image_panel:text({
-			vertical = "center",
-			wrap = true,
 			align = "center",
-			word_wrap = true,
 			layer = 2,
+			vertical = "center",
+			word_wrap = true,
+			wrap = true,
 			text = error_message,
 			font = tweak_data.menu.pd2_small_font,
 			font_size = tweak_data.menu.pd2_small_font_size
@@ -115,11 +119,11 @@ function ContractBrokerHeistItem:init(parent_panel, job_data, idx)
 	end
 
 	local job_name = self._panel:text({
-		layer = 1,
-		vertical = "top",
 		align = "left",
 		halign = "left",
+		layer = 1,
 		valign = "top",
+		vertical = "top",
 		text = managers.localization:to_upper_text(job_tweak.name_id),
 		font = tweak_data.menu.pd2_medium_font,
 		font_size = tweak_data.menu.pd2_medium_font_size,
@@ -131,12 +135,12 @@ function ContractBrokerHeistItem:init(parent_panel, job_data, idx)
 	job_name:set_top(self._panel:h() * 0.5 + padding * 0.5)
 
 	local contact_name = self._panel:text({
-		alpha = 0.8,
-		vertical = "top",
-		layer = 1,
 		align = "left",
+		alpha = 0.8,
 		halign = "left",
+		layer = 1,
 		valign = "top",
+		vertical = "top",
 		text = managers.localization:to_upper_text(contact_tweak.name_id),
 		font = tweak_data.menu.pd2_medium_font,
 		font_size = tweak_data.menu.pd2_medium_font_size * 0.9,
@@ -149,12 +153,12 @@ function ContractBrokerHeistItem:init(parent_panel, job_data, idx)
 
 	local dlc_name, dlc_color = self:get_dlc_name_and_color(job_tweak)
 	local dlc_name = self._panel:text({
-		alpha = 1,
-		vertical = "top",
-		layer = 1,
 		align = "left",
+		alpha = 1,
 		halign = "left",
+		layer = 1,
 		valign = "top",
+		vertical = "top",
 		text = dlc_name,
 		font = tweak_data.menu.pd2_medium_font,
 		font_size = tweak_data.menu.pd2_medium_font_size * 0.9,
@@ -167,12 +171,12 @@ function ContractBrokerHeistItem:init(parent_panel, job_data, idx)
 
 	if job_data.is_new then
 		local new_name = self._panel:text({
-			alpha = 1,
-			vertical = "top",
-			layer = 1,
 			align = "left",
+			alpha = 1,
 			halign = "left",
+			layer = 1,
 			valign = "top",
+			vertical = "top",
 			text = managers.localization:to_upper_text("menu_new"),
 			font = tweak_data.menu.pd2_medium_font,
 			font_size = tweak_data.menu.pd2_medium_font_size * 0.9,
@@ -185,12 +189,12 @@ function ContractBrokerHeistItem:init(parent_panel, job_data, idx)
 	end
 
 	local last_played = self._panel:text({
-		alpha = 0.7,
-		vertical = "top",
-		layer = 1,
 		align = "right",
+		alpha = 0.7,
 		halign = "right",
+		layer = 1,
 		valign = "top",
+		vertical = "top",
 		text = self:get_last_played_text(),
 		font = tweak_data.menu.pd2_medium_font,
 		font_size = tweak_data.menu.pd2_medium_font_size * 0.8,
@@ -202,8 +206,8 @@ function ContractBrokerHeistItem:init(parent_panel, job_data, idx)
 	last_played:set_bottom(job_name:top())
 
 	local icons_panel = self._panel:panel({
-		valign = "top",
 		halign = "right",
+		valign = "top",
 		h = job_name:h(),
 		w = self._panel:w() * 0.3
 	})
@@ -212,11 +216,12 @@ function ContractBrokerHeistItem:init(parent_panel, job_data, idx)
 	icons_panel:set_top(job_name:top())
 
 	local icon_size = icons_panel:h()
-	local last_icon = nil
+	local last_icon
+
 	self._favourite = icons_panel:bitmap({
-		texture = "guis/dlcs/bro/textures/pd2/favourite",
-		halign = "right",
 		alpha = 0.8,
+		halign = "right",
+		texture = "guis/dlcs/bro/textures/pd2/favourite",
 		valign = "top",
 		color = Color.white,
 		w = icon_size,
@@ -226,12 +231,13 @@ function ContractBrokerHeistItem:init(parent_panel, job_data, idx)
 	self._favourite:set_right(icons_panel:w())
 
 	last_icon = self._favourite
+
 	local day_text = icons_panel:text({
-		layer = 1,
-		vertical = "bottom",
 		align = "right",
 		halign = "right",
+		layer = 1,
 		valign = "top",
+		vertical = "bottom",
 		text = self:get_heist_day_text(),
 		font = tweak_data.menu.pd2_medium_font,
 		font_size = tweak_data.menu.pd2_medium_font_size * 0.9,
@@ -243,12 +249,13 @@ function ContractBrokerHeistItem:init(parent_panel, job_data, idx)
 	day_text:set_bottom(icons_panel:h())
 
 	last_icon = day_text
+
 	local length_icon = icons_panel:text({
-		layer = 1,
-		vertical = "bottom",
 		align = "right",
 		halign = "right",
+		layer = 1,
 		valign = "top",
+		vertical = "bottom",
 		text = self:get_heist_day_icon(),
 		font = tweak_data.menu.pd2_medium_font,
 		font_size = tweak_data.menu.pd2_medium_font_size * 0.8,
@@ -263,11 +270,11 @@ function ContractBrokerHeistItem:init(parent_panel, job_data, idx)
 
 	if self:is_stealthable() then
 		local stealth = icons_panel:text({
-			layer = 1,
-			vertical = "top",
 			align = "right",
 			halign = "right",
+			layer = 1,
 			valign = "top",
+			vertical = "top",
 			text = managers.localization:get_default_macro("BTN_GHOST"),
 			font = tweak_data.menu.pd2_medium_font,
 			font_size = tweak_data.menu.pd2_medium_font_size,
@@ -282,11 +289,11 @@ function ContractBrokerHeistItem:init(parent_panel, job_data, idx)
 
 	if self:is_holiday_event() then
 		local holiday = icons_panel:text({
-			layer = 1,
-			vertical = "top",
 			align = "right",
 			halign = "right",
+			layer = 1,
 			valign = "top",
+			vertical = "top",
 			text = managers.localization:get_default_macro("BTN_XMAS"),
 			font = tweak_data.menu.pd2_medium_font,
 			font_size = tweak_data.menu.pd2_medium_font_size,
@@ -399,6 +406,7 @@ function ContractBrokerHeistItem:is_stealthable()
 
 	if job_tweak.job_wrapper then
 		local wrapped_tweak = tweak_data.narrative.jobs[job_tweak.job_wrapper[1]]
+
 		job_tweak = wrapped_tweak or job_tweak
 	end
 
@@ -497,12 +505,10 @@ end
 
 -- Lines 485-512
 function ContractBrokerHeistItem:mouse_moved(button, x, y, used)
-	local used = used
-	local pointer = nil
+	local used, pointer = used
 
 	if not used and self._favourite:inside(x, y) then
-		pointer = "link"
-		used = true
+		used, pointer = true, "link"
 
 		if not self._favourite_selected then
 			self._favourite:set_alpha(1)
@@ -520,8 +526,7 @@ function ContractBrokerHeistItem:mouse_moved(button, x, y, used)
 	if not used and self._background:inside(x, y) then
 		self:select()
 
-		pointer = "link"
-		used = true
+		used, pointer = true, "link"
 	else
 		self:deselect()
 	end

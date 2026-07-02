@@ -63,4 +63,5 @@ end
 
 -- Lines 53-55
 function HandExt:update_variables()
+	return
 end

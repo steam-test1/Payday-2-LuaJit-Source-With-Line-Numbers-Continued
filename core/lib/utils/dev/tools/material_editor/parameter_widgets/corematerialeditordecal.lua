@@ -2,6 +2,7 @@ require("core/lib/utils/dev/tools/material_editor/CoreSmartNode")
 
 local CoreMaterialEditorParameter = require("core/lib/utils/dev/tools/material_editor/parameter_widgets/CoreMaterialEditorParameter")
 local CoreMaterialEditorDecal = CoreMaterialEditorDecal or class(CoreMaterialEditorParameter)
+
 CoreMaterialEditorDecal.DECAL_MATERIAL_FILE = "settings/decals"
 
 -- Lines 10-50
@@ -108,7 +109,7 @@ end
 
 -- Lines 104-122
 function CoreMaterialEditorDecal:_copy_to_parent(name)
-	local material_node = nil
+	local material_node
 
 	if name then
 		material_node = self._editor._global_material_config_node:make_child("material")

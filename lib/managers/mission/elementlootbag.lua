@@ -16,7 +16,7 @@ function ElementLootBag:on_script_activated()
 	end
 
 	if self._values.zipline_unit_id then
-		local unit = nil
+		local unit
 
 		if Application:editor() then
 			unit = managers.editor:unit_with_id(self._values.zipline_unit_id)
@@ -39,6 +39,7 @@ end
 
 -- Lines 45-47
 function ElementLootBag:client_on_executed(...)
+	return
 end
 
 -- Lines 49-84
@@ -47,7 +48,7 @@ function ElementLootBag:on_executed(instigator)
 		return
 	end
 
-	local unit = nil
+	local unit
 	local pos, rot = self:get_orientation()
 	local dir = self._values.push_multiplier and self._values.spawn_dir * self._values.push_multiplier or Vector3(0, 0, 0)
 
@@ -121,6 +122,7 @@ end
 
 -- Lines 130-132
 function ElementLootBagTrigger:client_on_executed(...)
+	return
 end
 
 -- Lines 134-142

@@ -21,6 +21,7 @@ end
 function Tween:update(t, dt)
 	if not self._finished then
 		self._time = self._time + dt
+
 		local time = math.max(self._time - self._delay, 0)
 
 		if time < self._duration then
@@ -55,7 +56,9 @@ local function make_value_string(number, additional_zeroes)
 	end
 
 	local num_string = string.format("%.0f", number)
+
 	num_string = num_string .. string.rep("0", additional_zeroes)
+
 	local len = #num_string
 	local i = len
 	local result = ""
@@ -167,6 +170,7 @@ function CommunityChallengeProgressBar:init(parent, config)
 	self._value_tween = Tween:new(self, "_current_value")
 	self._width = config.width or 300
 	self._height = 43
+
 	local font = tweak_data.menu.pd2_small_font
 	local font_size = tweak_data.menu.pd2_small_font_size
 	local color_text = tweak_data.menu.default_font_row_item_color
@@ -285,6 +289,7 @@ function CommunityChallengeProgressTotal:init(parent, config)
 	self._additional_zeroes = config.additional_zeroes or 0
 	self._width = config.width or 300
 	self._height = 43
+
 	local font = tweak_data.menu.pd2_small_font
 	local font_size = tweak_data.menu.pd2_small_font_size
 	local color_text = tweak_data.menu.default_font_row_item_color
@@ -323,6 +328,7 @@ end
 function CommunityChallengeProgressTotal:config(config)
 	self._total_value = config.total_value or 0
 	self._additional_zeroes = config.additional_zeroes or 0
+
 	local stage_roman = make_roman_numerals(config.stage or 1)
 	local stage_text = managers.localization:to_upper_text("menu_community_challenges_stage", {
 		stage = stage_roman
@@ -342,6 +348,7 @@ end
 
 -- Lines 322-323
 function CommunityChallengeProgressTotal:update(t, dt)
+	return
 end
 
 -- Lines 325-328
@@ -365,6 +372,7 @@ function CommunityChallengesGui:init(parent)
 	self.super.init(self, panel)
 
 	self._panel = panel
+
 	local width = 346
 
 	panel:set_size(width, 100)
@@ -374,6 +382,7 @@ function CommunityChallengesGui:init(parent)
 	local color_text = tweak_data.menu.default_font_row_item_color
 	local color_muted = Color(0.5, 1, 1, 1)
 	local progress_bar_width = panel:width() - 20
+
 	self._title_text = FineText:new(panel, {
 		text = managers.localization:to_upper_text("menu_community_challenges_title"),
 		font = tweak_data.menu.pd2_medium_font,
@@ -385,8 +394,8 @@ function CommunityChallengesGui:init(parent)
 
 	for _, challenge in ipairs(tweak_data.community_challenges) do
 		self:add_progress_bar({
-			total_value = 0,
 			current_value = 0,
+			total_value = 0,
 			title = managers.localization:to_upper_text(challenge.text_id),
 			statistic_id = challenge.statistic_id,
 			target_value = challenge.base_target,
@@ -395,6 +404,7 @@ function CommunityChallengesGui:init(parent)
 	end
 
 	local active_bonus = managers.community_challenges:get_active_experience_bonus()
+
 	self._total_bonus_text = FineText:new(self._stats_container, {
 		text = managers.localization:to_upper_text("menu_community_challenges_active_bonus", {
 			bonus = active_bonus * 100
@@ -426,6 +436,7 @@ function CommunityChallengesGui:init(parent)
 			1
 		}
 	})
+
 	local challenge_data = managers.community_challenges:get_challenge_data()
 
 	if challenge_data then
@@ -490,6 +501,7 @@ function CommunityChallengesGui:consume_community_challenges_data(data)
 
 		if challenge then
 			local config = clone(challenge)
+
 			config.index = i - 1
 
 			pbar:config(config)

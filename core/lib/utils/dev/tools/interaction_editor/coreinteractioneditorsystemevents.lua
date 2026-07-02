@@ -14,18 +14,22 @@ end
 
 -- Lines 16-18
 function InteractionEditorSystemEvents:undo_add_node(node_id, node_type)
+	return
 end
 
 -- Lines 20-22
 function InteractionEditorSystemEvents:redo_add_node(node_id, node_type)
+	return
 end
 
 -- Lines 24-26
 function InteractionEditorSystemEvents:undo_remove_node(node_id)
+	return
 end
 
 -- Lines 28-30
 function InteractionEditorSystemEvents:redo_remove_node(node_id)
+	return
 end
 
 -- Lines 32-35
@@ -49,15 +53,11 @@ end
 
 -- Lines 46-55
 function InteractionEditorSystemEvents:on_connect_node(data, event)
-	local md_src = event:source():metadata()
-	local output = event:outslot()
-	local md_dest = event:dest():metadata()
-	local input = event:inslot()
+	local md_src, output, md_dest, input = event:source():metadata(), event:outslot(), event:dest():metadata(), event:inslot()
 
 	assert(md_src ~= "" and output ~= "" and md_dest ~= "", input ~= "")
 
-	local src_type = self._desc:transput_type(md_src, output)
-	local dest_type = self._desc:transput_type(md_dest, input)
+	local src_type, dest_type = self._desc:transput_type(md_src, output), self._desc:transput_type(md_dest, input)
 
 	if src_type == "undefined" or dest_type == "undefined" or src_type == dest_type then
 		self._desc:transition_add(md_src, output, md_dest, input)
@@ -67,10 +67,7 @@ end
 
 -- Lines 57-62
 function InteractionEditorSystemEvents:on_disconnect_node(data, event)
-	local md_src = event:source():metadata()
-	local output = event:outslot()
-	local md_dest = event:dest():metadata()
-	local input = event:inslot()
+	local md_src, output, md_dest, input = event:source():metadata(), event:outslot(), event:dest():metadata(), event:inslot()
 
 	assert(md_src ~= "" and output ~= "" and md_dest ~= "", input ~= "")
 	self._desc:transition_remove(md_src, output, md_dest, input)

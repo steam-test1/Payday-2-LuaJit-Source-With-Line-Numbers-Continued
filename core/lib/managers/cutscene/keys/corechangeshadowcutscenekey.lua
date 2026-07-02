@@ -12,6 +12,7 @@ function CoreChangeShadowCutsceneKey:init(keycollection)
 
 	self._modify_func_map = {}
 	self._shadow_interface_id_map = nil
+
 	local list = {
 		"slice0",
 		"slice1",

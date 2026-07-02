@@ -37,6 +37,7 @@ end
 -- Lines 32-48
 function ColorPickerPanel:_create_panel(parent_frame, enable_alpha, orientation, enable_value)
 	self._panel = EWS:Panel(parent_frame)
+
 	local panel_sizer = EWS:BoxSizer(orientation)
 
 	self._panel:set_sizer(panel_sizer)

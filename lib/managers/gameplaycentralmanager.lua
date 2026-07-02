@@ -19,6 +19,7 @@ local mvec3_spread = mvector3.spread
 local mvec3_dist_sq = mvector3.distance_sq
 local mvec3_dist = mvector3.distance
 local mvec3_dot = mvector3.dot
+
 GamePlayCentralManager = GamePlayCentralManager or class()
 GamePlayCentralManager.MAX_BULLET_HITS_PERFRAME = 5
 
@@ -41,6 +42,7 @@ function GamePlayCentralManager:init()
 	self:_init_impact_sources()
 
 	local lvl_tweak_data = Global.level_data and Global.level_data.level_id and tweak_data.levels[Global.level_data.level_id]
+
 	self._flashlights_on = lvl_tweak_data and lvl_tweak_data.flashlights_on
 	self._dropped_weapons = {
 		index = 1,
@@ -60,8 +62,10 @@ function GamePlayCentralManager:init()
 		start_time = 0
 	}
 	self._access_cameras = {}
+
 	local is_ps3 = SystemInfo:platform() == Idstring("PS3")
 	local is_x360 = SystemInfo:platform() == Idstring("X360")
+
 	self._block_bullet_decals = is_ps3 or is_x360
 	self._block_blood_decals = is_x360
 	self._decal_unit_redirect = {}
@@ -113,6 +117,7 @@ function GamePlayCentralManager:add_access_camera(channel_id, camera)
 	local entry = {
 		access_camera = camera
 	}
+
 	self._access_cameras[channel_id] = self._access_cameras[channel_id] or {}
 
 	table.insert(self._access_cameras[channel_id], entry)
@@ -188,6 +193,7 @@ end
 -- Lines 191-195
 function GamePlayCentralManager:_get_impact_source()
 	local source = self._impact_sounds.sources[self._impact_sounds.index]
+
 	self._impact_sounds.index = self._impact_sounds.index < self._impact_sounds.max_index and self._impact_sounds.index + 1 or 1
 
 	return source
@@ -248,7 +254,7 @@ end
 
 -- Lines 245-329
 function GamePlayCentralManager:update(t, dt)
-	if alive(self._test_weapon) and self._blueprint_t and self._blueprint_t < t then
+	if alive(self._test_weapon) and self._blueprint_t and t > self._blueprint_t then
 		self._blueprint_t = Application:time() + 0.1
 
 		if not self._pause_weapon_cycle then
@@ -259,8 +265,10 @@ function GamePlayCentralManager:update(t, dt)
 	if #self._dropped_weapons.units > 0 then
 		local data = self._dropped_weapons.units[self._dropped_weapons.index]
 		local unit = data.unit
-		data.t = data.t + t - data.last_t
+
+		data.t = data.t + (t - data.last_t)
 		data.last_t = t
+
 		local alive = alive(unit)
 
 		if not alive then
@@ -296,7 +304,9 @@ function GamePlayCentralManager:update(t, dt)
 
 		if Network:is_server() and self._heist_timer.next_sync < Application:time() then
 			local sync_interval = 9
+
 			self._heist_timer.next_sync = Application:time() + sync_interval
+
 			local heist_time = Application:time() - self._heist_timer.start_time
 
 			for peer_id, peer in pairs(managers.network:session():peers()) do
@@ -355,6 +365,7 @@ end
 -- Lines 387-423
 function GamePlayCentralManager:physics_push(col_ray, push_multiplier)
 	local unit = col_ray.unit
+
 	push_multiplier = push_multiplier or 1
 
 	if unit:in_slot(self._slotmask_physics_push) then
@@ -362,11 +373,11 @@ function GamePlayCentralManager:physics_push(col_ray, push_multiplier)
 
 		if not body:dynamic() then
 			local original_body_com = body:center_of_mass()
-			local closest_body_dis_sq = nil
+			local closest_body_dis_sq
 			local nr_bodies = unit:num_bodies()
 			local i_body = 0
 
-			while nr_bodies > i_body do
+			while i_body < nr_bodies do
 				local test_body = unit:body(i_body)
 
 				if test_body:enabled() and test_body:dynamic() then
@@ -393,6 +404,7 @@ function GamePlayCentralManager:physics_push(col_ray, push_multiplier)
 
 		if vel_dot < max_vel then
 			local push_vel = max_vel - math.max(vel_dot, 0)
+
 			push_vel = math.lerp(push_vel * 0.7, push_vel, math.random()) * push_multiplier
 
 			mvec3_mul(tmp_vec1, push_vel)
@@ -495,7 +507,7 @@ function GamePlayCentralManager:_flush_bullet_hits()
 	while not table.empty(self._bullet_hits) do
 		self:_play_bullet_hit(table.remove(self._bullet_hits, 1))
 
-		if not self._bullet_hits_max_frame or GamePlayCentralManager.MAX_BULLET_HITS_PERFRAME < self._bullet_hits_max_frame then
+		if not self._bullet_hits_max_frame or self._bullet_hits_max_frame > GamePlayCentralManager.MAX_BULLET_HITS_PERFRAME then
 			self._bullet_hits_max_frame = 0
 
 			break
@@ -568,12 +580,14 @@ function GamePlayCentralManager:_play_bullet_hit(params)
 	mvec3_spread(effect_normal, 10)
 
 	local material_name, pos, norm = World:pick_decal_material(unit, decal_ray_from, decal_ray_to, slot_mask)
+
 	material_name = material_name ~= empty_idstr and material_name
+
 	local effect = overrides and overrides.effect_name and Idstring(overrides.effect_name) or params.effect
 
 	if material_name then
 		local offset = col_ray.sphere_cast_radius and col_ray.ray * col_ray.sphere_cast_radius or zero_vector
-		local redir_name = nil
+		local redir_name
 
 		if need_decal then
 			redir_name, pos, norm = World:project_decal(decal, hit_pos + offset, col_ray.ray, unit, math.UP, col_ray.normal)
@@ -597,6 +611,7 @@ function GamePlayCentralManager:_play_bullet_hit(params)
 	else
 		if need_effect then
 			local generic_effect = effect or idstr_fallback
+
 			effect = {
 				effect = generic_effect,
 				position = hit_pos,
@@ -635,7 +650,7 @@ function GamePlayCentralManager:_flush_footsteps()
 	local footstep = table.remove(self._footsteps, 1)
 
 	if footstep and alive(footstep.unit) then
-		local sound_switch_name = nil
+		local sound_switch_name
 
 		if footstep.dis < 2000000 then
 			local ext_movement = footstep.unit:movement()
@@ -647,7 +662,7 @@ function GamePlayCentralManager:_flush_footsteps()
 			mvec3_mul(decal_ray_to, -250)
 			mvec3_add(decal_ray_to, decal_ray_from)
 
-			local material_name, pos, norm = nil
+			local material_name, pos, norm
 			local ground_ray = ext_movement:ground_ray()
 
 			if ground_ray and ground_ray.unit then
@@ -693,8 +708,8 @@ function GamePlayCentralManager:weapon_dropped(weapon)
 
 	weapon:set_flashlight_light_lod_enabled(true)
 	table.insert(self._dropped_weapons.units, {
-		t = 0,
 		state = "wait",
+		t = 0,
 		unit = weapon,
 		flashlight_data = flashlight_data,
 		last_t = Application:time()
@@ -708,6 +723,7 @@ function GamePlayCentralManager:set_flashlights_on(flashlights_on)
 	end
 
 	self._flashlights_on = flashlights_on
+
 	local weapons = World:find_units_quick("all", 13)
 
 	for _, weapon in ipairs(weapons) do
@@ -739,6 +755,7 @@ function GamePlayCentralManager:set_flashlights_on_player_on(flashlights_on_play
 	end
 
 	self._flashlights_on_player_on = flashlights_on_player_on
+
 	local player_unit = managers.player:player_unit()
 
 	if player_unit and alive(player_unit:camera():camera_unit()) then
@@ -903,7 +920,7 @@ end
 function GamePlayCentralManager:auto_highlight_enemy(unit, use_player_upgrades)
 	self._auto_highlighted_enemies = self._auto_highlighted_enemies or {}
 
-	if self._auto_highlighted_enemies[unit:key()] and Application:time() < self._auto_highlighted_enemies[unit:key()] then
+	if self._auto_highlighted_enemies[unit:key()] and self._auto_highlighted_enemies[unit:key()] > Application:time() then
 		return false
 	end
 
@@ -942,7 +959,7 @@ end
 
 -- Lines 951-966
 function GamePlayCentralManager:do_shotgun_push(unit, hit_pos, dir, distance, attacker)
-	if self:get_shotgun_push_range(attacker) < distance then
+	if distance > self:get_shotgun_push_range(attacker) then
 		return
 	end
 
@@ -957,20 +974,25 @@ end
 
 -- Lines 969-1041
 function GamePlayCentralManager:_do_shotgun_push(unit, hit_pos, dir, distance, attacker)
-	local mov_ext = unit:movement()
-	local full_body_action = mov_ext and mov_ext:get_action(1)
+	do
+		local mov_ext = unit:movement()
+		local full_body_action = mov_ext and mov_ext:get_action(1)
 
-	if full_body_action and full_body_action:type() == "hurt" then
-		full_body_action:force_ragdoll(true)
+		if full_body_action and full_body_action:type() == "hurt" then
+			full_body_action:force_ragdoll(true)
+		end
 	end
 
 	local scale = math.clamp(1 - distance / self:get_shotgun_push_range(attacker), 0.5, 1)
 	local rot_time = 1 + math.rand(2)
-	local asm = unit:anim_state_machine()
 
-	if asm and asm:get_global("tank") == 1 then
-		scale = scale * 0.3
-		rot_time = rot_time * 0.2
+	do
+		local asm = unit:anim_state_machine()
+
+		if asm and asm:get_global("tank") == 1 then
+			scale = scale * 0.3
+			rot_time = rot_time * 0.2
+		end
 	end
 
 	local push_vec = tmp_vec1
@@ -993,7 +1015,7 @@ function GamePlayCentralManager:_do_shotgun_push(unit, hit_pos, dir, distance, a
 	mvec3_add(rot_acc, tmp_vec4)
 	mvec3_mul(rot_acc, -1000 * height_sign)
 
-	local u_body = nil
+	local u_body
 	local i_u_body = 0
 	local get_body_f = unit.body
 	local nr_u_bodies = unit:num_bodies()
@@ -1025,6 +1047,7 @@ function GamePlayCentralManager:add_projectile_trail(unit, object, effect)
 		effect = effect_ids,
 		parent = object
 	})
+
 	self._projectile_trails[unit:key()] = {
 		effect = effect
 	}
@@ -1055,6 +1078,7 @@ function GamePlayCentralManager:_update_projectile_trails(t, dt)
 	for unit_key, data in pairs(self._projectile_trails) do
 		if data.t then
 			data.t = math.max(data.t - dt, 0)
+
 			local opacity = data.t / data.total_t
 
 			World:effect_manager():set_simulator_var_float(data.effect, atom_ids, simulator_ids, opacity_ids, opacity)
@@ -1154,6 +1178,7 @@ function GamePlayCentralManager:save(data)
 		pubg_cargos_spawned = self._pubg_cargos_spawned,
 		pubg_cargos_spawned_units = self._pubg_cargos_spawned_units
 	}
+
 	data.GamePlayCentralManager = state
 end
 
@@ -1215,7 +1240,9 @@ function GamePlayCentralManager:debug_weapon()
 		end
 
 		local text = ""
+
 		text = add_line(text, weapon:base()._name_id)
+
 		local base_stats = weapon:base():weapon_tweak_data().stats
 		local stats = base_stats and deep_clone(base_stats) or {}
 

@@ -14,19 +14,21 @@ end
 
 -- Lines 19-37
 function RaidMenuGui:launch_raid()
-	local dialog_data = {
-		title = managers.localization:text("dialog_play_raid_beta"),
-		text = managers.localization:text("dialog_play_raid_beta_text")
-	}
-	local yes_button = {
-		text = managers.localization:text("dialog_yes"),
-		callback_func = callback(self, self, "_launch_raid_dialog_yes")
-	}
-	local no_button = {
-		text = managers.localization:text("dialog_no"),
-		callback_func = callback(self, self, "_launch_raid_dialog_no"),
-		cancel_button = true
-	}
+	local dialog_data = {}
+
+	dialog_data.title = managers.localization:text("dialog_play_raid_beta")
+	dialog_data.text = managers.localization:text("dialog_play_raid_beta_text")
+
+	local yes_button = {}
+
+	yes_button.text = managers.localization:text("dialog_yes")
+	yes_button.callback_func = callback(self, self, "_launch_raid_dialog_yes")
+
+	local no_button = {}
+
+	no_button.text = managers.localization:text("dialog_no")
+	no_button.callback_func = callback(self, self, "_launch_raid_dialog_no")
+	no_button.cancel_button = true
 	dialog_data.button_list = {
 		yes_button,
 		no_button
@@ -44,6 +46,7 @@ end
 
 -- Lines 55-56
 function RaidMenuGui:_launch_raid_dialog_no()
+	return
 end
 
 -- Lines 60-63
@@ -113,24 +116,24 @@ end
 -- Lines 114-116
 function RaidMenuGui:preview_breech()
 	managers.blackmarket:view_weapon_platform("breech", callback(self, self, "_open_preview_node", {
-		id = "breech",
-		category = "secondaries"
+		category = "secondaries",
+		id = "breech"
 	}))
 end
 
 -- Lines 118-120
 function RaidMenuGui:preview_ching()
 	managers.blackmarket:view_weapon_platform("ching", callback(self, self, "_open_preview_node", {
-		id = "ching",
-		category = "primaries"
+		category = "primaries",
+		id = "ching"
 	}))
 end
 
 -- Lines 122-124
 function RaidMenuGui:preview_erma()
 	managers.blackmarket:view_weapon_platform("erma", callback(self, self, "_open_preview_node", {
-		id = "erma",
-		category = "secondaries"
+		category = "secondaries",
+		id = "erma"
 	}))
 end
 

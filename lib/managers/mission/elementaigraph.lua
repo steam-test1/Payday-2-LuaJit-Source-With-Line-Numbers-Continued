@@ -9,6 +9,7 @@ end
 
 -- Lines 10-12
 function ElementAIGraph:on_script_activated()
+	return
 end
 
 -- Lines 14-16
@@ -22,7 +23,7 @@ function ElementAIGraph:on_executed(instigator)
 		return
 	end
 
-	local handler_func = nil
+	local handler_func
 	local is_meta_operation = table.contains(NavigationManager.nav_meta_operations, self._values.operation)
 
 	if is_meta_operation then

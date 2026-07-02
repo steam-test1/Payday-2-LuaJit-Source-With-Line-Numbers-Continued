@@ -8,6 +8,7 @@ function UnitBreakdownView:init(...)
 	local panel = self._panel
 	local panel_sizer = self._panel_sizer
 	local tree_sizer = EWS:StaticBoxSizer(panel, "HORIZONTAL", "Units:")
+
 	self._tree = EWS:TreeCtrl(panel, "", "")
 
 	self._tree:connect("", "EVT_COMMAND_TREE_SEL_CHANGED", callback(self, self, "on_tree_ctrl_change"), "")
@@ -16,6 +17,7 @@ function UnitBreakdownView:init(...)
 	panel_sizer:add(tree_sizer, 1, 1, "EXPAND")
 
 	local buttons_sizer = EWS:StaticBoxSizer(panel, "HORIZONTAL", "Filter:")
+
 	self._filter_text = EWS:TextCtrl(panel, "", "", "")
 
 	self._filter_text:connect("", "EVT_COMMAND_TEXT_UPDATED", callback(self, self, "on_update_filter"), "")
@@ -28,6 +30,7 @@ function UnitBreakdownView:init(...)
 	panel_sizer:add(buttons_sizer, 0, 0, "EXPAND")
 
 	local buttons_sizer = EWS:StaticBoxSizer(panel, "HORIZONTAL", "Options:")
+
 	self._unique_check = EWS:CheckBox(panel, "Unique Only", "")
 
 	self._unique_check:set_value(true)
@@ -93,7 +96,9 @@ function UnitBreakdownView:_perform_update(name_filter, require_unique, name_fun
 	self:get_continents()
 
 	self._layer_units = {}
+
 	local expand_nodes = {}
+
 	self._root_world = self._tree:append_root("World")
 
 	table.insert(expand_nodes, self._root_world)
@@ -104,6 +109,7 @@ function UnitBreakdownView:_perform_update(name_filter, require_unique, name_fun
 
 	for continent_idx, data in pairs(self._ordered_continents) do
 		self._layer_units[data.name] = {}
+
 		local continent_units = self._layer_units[data.name]
 		local node_name = string.format("%s [%i]", data.name, #data.continent._units)
 		local continent_id = self._tree:append(self._root_continents, node_name)
@@ -115,6 +121,7 @@ function UnitBreakdownView:_perform_update(name_filter, require_unique, name_fun
 		for layer_name, layer in pairs(managers.editor:layers()) do
 			if layer:uses_continents() and layer_name ~= "Instances" then
 				local layer_node = self._tree:append(continent_id, layer_name)
+
 				continent_units[layer_name] = {}
 
 				for i, unit in pairs(layer:created_units()) do
@@ -145,7 +152,7 @@ function UnitBreakdownView:_perform_update(name_filter, require_unique, name_fun
 					end
 				end
 
-				table.sort(continent_units[layer_name], function (a, b)
+				table.sort(continent_units[layer_name], function(a, b)
 					return a:unit_data().unit_id < b:unit_data().unit_id
 				end)
 
@@ -191,6 +198,7 @@ end
 -- Lines 232-244
 function UnitBreakdownView:get_continents()
 	local continents = managers.editor:continents()
+
 	self._ordered_continents = {}
 
 	for name, continent in pairs(continents) do
@@ -200,13 +208,14 @@ function UnitBreakdownView:get_continents()
 		})
 	end
 
-	table.sort(self._ordered_continents, function (a, b)
+	table.sort(self._ordered_continents, function(a, b)
 		return a.name < b.name
 	end)
 end
 
 -- Lines 246-247
 function UnitBreakdownView:on_tree_ctrl_change()
+	return
 end
 
 -- Lines 249-281
@@ -255,6 +264,7 @@ end
 
 -- Lines 296-298
 function UnitBreakdownView:select_units_by_path(path)
+	return
 end
 
 -- Lines 300-323
@@ -305,6 +315,7 @@ end
 
 -- Lines 352-353
 function UnitBreakdownView:on_update_filter()
+	return
 end
 
 -- Lines 355-357
@@ -333,7 +344,9 @@ function UnitBreakdownView:on_export_clicked()
 	local export_text = ""
 	local sep_char = "\t"
 	local unit_format = "%s,%s,%s,%s,%s,%s,%s"
+
 	unit_format = string.gsub(unit_format, ",", sep_char)
+
 	local export_layers = {
 		"Statics"
 	}
@@ -359,6 +372,7 @@ function UnitBreakdownView:on_export_clicked()
 				if allow_export then
 					local split_name = string.split(name, "/")
 					local unit_data = string.format(unit_format, "LEAVE AS IS", "0", "NONE", "", split_name and split_name[#split_name] or name, name, "")
+
 					export_text = export_text .. (export_text ~= "" and "\n" or "") .. unit_data
 				end
 			end

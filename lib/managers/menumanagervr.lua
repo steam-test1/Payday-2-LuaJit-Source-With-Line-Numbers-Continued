@@ -16,10 +16,10 @@ function MenuManagerVR:init(is_start_menu)
 
 	self._exit_fade_in = {
 		blend_mode = "normal",
-		sustain = 0,
-		play_paused = true,
 		fade_in = 0,
 		fade_out = 0.5,
+		play_paused = true,
+		sustain = 0,
 		color = Color(1, 0, 0, 0),
 		timer = TimerManager:game()
 	}
@@ -37,22 +37,22 @@ function MenuManagerVR:init(is_start_menu)
 
 	if not is_start_menu then
 		local system_menu = {
+			content_file = "gamedata/menus/menu_room",
+			id = "menu_room",
 			input = "MenuInput",
 			name = "system_menu",
 			renderer = "MenuHiddenRenderer",
-			id = "menu_room",
-			content_file = "gamedata/menus/menu_room",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(system_menu)
 
 		local waiting_for_players = {
+			content_file = "gamedata/menus/menu_room",
+			id = "menu_room",
 			input = "MenuInput",
 			name = "waiting_for_players",
 			renderer = "MenuHiddenRenderer",
-			id = "menu_room",
-			content_file = "gamedata/menus/menu_room",
 			callback_handler = MenuCallbackHandler:new(),
 			on_enter = callback(self, self, "on_enter_menu_disable_ingame_camera")
 		}
@@ -60,22 +60,22 @@ function MenuManagerVR:init(is_start_menu)
 		self:register_menu(waiting_for_players)
 
 		local zipline = {
+			content_file = "gamedata/menus/menu_room",
+			id = "menu_room",
 			input = "MenuInput",
 			name = "zipline",
 			renderer = "MenuHiddenRenderer",
-			id = "menu_room",
-			content_file = "gamedata/menus/menu_room",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
 		self:register_menu(zipline)
 
 		local ingame_access_camera_menu = {
+			content_file = "gamedata/menus/menu_room",
+			id = "menu_room",
 			input = "MenuInput",
 			name = "ingame_access_camera_menu",
 			renderer = "MenuHiddenRenderer",
-			id = "menu_room",
-			content_file = "gamedata/menus/menu_room",
 			callback_handler = MenuCallbackHandler:new(),
 			on_enter = callback(self, self, "on_enter_menu_disable_ingame_camera_active_bg")
 		}
@@ -83,11 +83,11 @@ function MenuManagerVR:init(is_start_menu)
 		self:register_menu(ingame_access_camera_menu)
 
 		local custody = {
+			content_file = "gamedata/menus/menu_room",
+			id = "menu_room",
 			input = "MenuInput",
 			name = "custody",
 			renderer = "MenuHiddenRenderer",
-			id = "menu_room",
-			content_file = "gamedata/menus/menu_room",
 			callback_handler = MenuCallbackHandler:new()
 		}
 
@@ -115,6 +115,7 @@ function MenuManagerVR:_setup_ingame_viewport()
 		local resolution = VRManager:target_resolution()
 		local scale_x = rt_resolution.x / resolution.x
 		local scale_y = rt_resolution.y / resolution.y
+
 		self._ingame_viewport = managers.viewport:new_vp(0, 0, scale_x, scale_y, "menu_ingame_spectator", CoreManagerBase.PRIO_WORLDCAMERA)
 
 		self._ingame_viewport:set_enable_adaptive_quality(false)
@@ -296,6 +297,7 @@ function MenuManagerVR:_setup_workspaces(is_start_menu)
 		self._ws_ingame_camera:set_timer(TimerManager:main())
 
 		local panel = self._ws_ingame_camera:panel()
+
 		self._ingame_camera_bm = panel:bitmap()
 
 		self._ingame_camera_bm:set_layer(0)
@@ -392,7 +394,7 @@ end
 
 -- Lines 389-399
 function MenuManagerVR:set_ingame_subtitle_presenter(ingame)
-	local presenter = nil
+	local presenter
 
 	if ingame then
 		presenter = CoreSubtitlePresenter.IngamePresenterVR:new(tweak_data.menu.pd2_medium_font, tweak_data.menu.pd2_medium_font_size, managers.hud:subtitle_workspace())

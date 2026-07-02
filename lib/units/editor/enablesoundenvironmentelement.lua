@@ -36,6 +36,7 @@ end
 
 -- Lines 31-32
 function EnableSoundEnvironmentElement:update_editing()
+	return
 end
 
 -- Lines 34-42
@@ -44,8 +45,8 @@ function EnableSoundEnvironmentElement:update_selected(t, dt)
 		for _, name in ipairs(self._hed.elements) do
 			if area:name() == name then
 				self:_draw_link({
-					g = 0.5,
 					b = 1,
+					g = 0.5,
 					r = 0.9,
 					from_unit = self._unit,
 					to_unit = area:unit()
@@ -69,8 +70,8 @@ end
 -- Lines 56-66
 function EnableSoundEnvironmentElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	if ray and ray.unit and string.find(ray.unit:name():s(), "core/units/sound_environment/sound_environment", 1, true) then
@@ -111,8 +112,8 @@ function EnableSoundEnvironmentElement:add_unit_list_btn()
 
 	local dialog = SelectUnitByNameModal:new("Add Trigger Unit", f)
 	local ray = managers.editor:unit_by_raycast({
-		ray_type = "editor",
-		mask = 10
+		mask = 10,
+		ray_type = "editor"
 	})
 
 	for _, unit in ipairs(dialog:selected_units()) do
