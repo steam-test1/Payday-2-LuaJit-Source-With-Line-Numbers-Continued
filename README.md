@@ -2,7 +2,7 @@
 
 Uses DorentuZ decompiler from update 188 to current
 
-Uses the following decompiler
+Now uses the following decompiler
 
 https://github.com/steam-test1/luajit-decompiler-v2
 
