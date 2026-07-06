@@ -97,7 +97,7 @@ end
 
 -- Lines 66-100
 function CrimenetSearchLobbyCodeGui:on_search_lobby_fetched(lobby, result, intended_lobby_id)
-	if not lobby or not result == "success" then
+	if not lobby or result ~= "success" then
 		return
 	end
 

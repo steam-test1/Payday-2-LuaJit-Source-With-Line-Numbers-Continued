@@ -4,7 +4,8 @@ QuickCsGrenade = QuickCsGrenade or class(GrenadeBase)
 
 -- Lines 7-15
 function QuickCsGrenade:init(unit)
-	self._unit = unit
+	UnitBase.init(self, unit, true)
+
 	self._state = 0
 	self._has_played_VO = false
 
@@ -174,8 +175,10 @@ function QuickCsGrenade:_play_sound_and_effects()
 	end
 end
 
--- Lines 165-177
-function QuickCsGrenade:destroy()
+-- Lines 165-179
+function QuickCsGrenade:pre_destroy(unit)
+	QuickCsGrenade.super.pre_destroy(self, unit)
+
 	if self._smoke_effect then
 		World:effect_manager():fade_kill(self._smoke_effect)
 
@@ -185,6 +188,6 @@ function QuickCsGrenade:destroy()
 	if self._set_blurzone then
 		self._set_blurzone = nil
 
-		managers.environment_controller:set_blurzone(self._unit:key(), 0)
+		managers.environment_controller:set_blurzone(unit:key(), 0)
 	end
 end

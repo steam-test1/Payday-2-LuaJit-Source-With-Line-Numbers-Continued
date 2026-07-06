@@ -102,31 +102,45 @@ function ControllerManager:clear_user_mod(category, CONTROLS_INFO)
 	self:load_user_mod()
 end
 
--- Lines 98-117
+-- Lines 98-129
 function ControllerManager:load_user_mod()
 	if Global.controller_manager.user_mod then
-		local connections = managers.controller:get_settings(managers.user:get_setting("controller_mod_type")):get_connection_map()
+		local mod_type = managers.user:get_setting("controller_mod_type")
+		local user_controller_settings = managers.controller:get_settings(mod_type)
 
-		for connection_name, params in pairs(Global.controller_manager.user_mod) do
-			if params.axis and connections[params.axis] then
-				for button, button_params in pairs(params) do
-					if type(button_params) == "table" and button_params.button and connections[params.axis]._btn_connections[button_params.button] then
-						connections[params.axis]._btn_connections[button_params.button].name = button_params.connection
-					end
-				end
-			elseif params.button and connections[params.button] then
-				connections[params.button]:set_controller_id(params.controller_id)
-				connections[params.button]:set_input_name_list({
-					params.connection
-				})
-			end
+		if not user_controller_settings then
+			Application:error("[ControllerManager:load_user_mod] Can't get controller settings for mod_type, falling back to default.", mod_type)
+
+			mod_type = managers.user:get_default_setting("controller_mod_type")
+			user_controller_settings = managers.controller:get_settings(mod_type)
 		end
 
-		self:rebind_connections()
+		if user_controller_settings then
+			local connections = user_controller_settings:get_connection_map()
+
+			for connection_name, params in pairs(Global.controller_manager.user_mod) do
+				if params.axis and connections[params.axis] then
+					for button, button_params in pairs(params) do
+						if type(button_params) == "table" and button_params.button and connections[params.axis]._btn_connections[button_params.button] then
+							connections[params.axis]._btn_connections[button_params.button].name = button_params.connection
+						end
+					end
+				elseif params.button and connections[params.button] then
+					connections[params.button]:set_controller_id(params.controller_id)
+					connections[params.button]:set_input_name_list({
+						params.connection
+					})
+				end
+			end
+
+			self:rebind_connections()
+		else
+			Application:error("[ControllerManager:load_user_mod] Can't get controller settings even with default mod type setting..?", mod_type)
+		end
 	end
 end
 
--- Lines 119-125
+-- Lines 131-137
 function ControllerManager:init_finalize()
 	managers.user:add_setting_changed_callback("controller_mod", callback(self, self, "controller_mod_changed"), true)
 
@@ -137,7 +151,7 @@ function ControllerManager:init_finalize()
 	self:_check_dialog()
 end
 
--- Lines 127-144
+-- Lines 139-156
 function ControllerManager:default_controller_connect_change(connected)
 	ControllerManager.super.default_controller_connect_change(self, connected)
 
@@ -146,19 +160,19 @@ function ControllerManager:default_controller_connect_change(connected)
 	end
 end
 
--- Lines 146-151
+-- Lines 158-163
 function ControllerManager:_check_dialog()
 	if Global.controller_manager.connect_controller_dialog_visible and not self:_controller_changed_dialog_active() then
 		self:_show_controller_changed_dialog()
 	end
 end
 
--- Lines 153-155
+-- Lines 165-167
 function ControllerManager:_controller_changed_dialog_active()
 	return managers.system_menu:is_active_by_id("connect_controller_dialog") and true or false
 end
 
--- Lines 157-179
+-- Lines 169-191
 function ControllerManager:_show_controller_changed_dialog()
 	if self:_controller_changed_dialog_active() then
 		return
@@ -190,12 +204,12 @@ function ControllerManager:_show_controller_changed_dialog()
 	managers.system_menu:show(data)
 end
 
--- Lines 181-186
+-- Lines 193-198
 function ControllerManager:_change_mode(mode)
 	self:change_default_wrapper_mode(mode)
 end
 
--- Lines 188-202
+-- Lines 200-214
 function ControllerManager:set_menu_mode_enabled(enabled)
 	if IS_PC then
 		self._menu_mode_enabled = self._menu_mode_enabled or 0
@@ -213,12 +227,12 @@ function ControllerManager:set_menu_mode_enabled(enabled)
 	end
 end
 
--- Lines 204-206
+-- Lines 216-218
 function ControllerManager:get_menu_mode_enabled()
 	return self._menu_mode_enabled and self._menu_mode_enabled > 0
 end
 
--- Lines 208-218
+-- Lines 220-230
 function ControllerManager:set_ingame_mode(mode)
 	if IS_PC then
 		if mode then
@@ -231,7 +245,7 @@ function ControllerManager:set_ingame_mode(mode)
 	end
 end
 
--- Lines 227-235
+-- Lines 239-247
 function ControllerManager:_close_controller_changed_dialog(hard)
 	if Global.controller_manager.connect_controller_dialog_visible or self:_controller_changed_dialog_active() then
 		print("[ControllerManager:_close_controller_changed_dialog] closing")
@@ -240,12 +254,12 @@ function ControllerManager:_close_controller_changed_dialog(hard)
 	end
 end
 
--- Lines 237-246
+-- Lines 249-258
 function ControllerManager:connect_controller_dialog_callback()
 	Global.controller_manager.connect_controller_dialog_visible = nil
 end
 
--- Lines 248-263
+-- Lines 260-275
 function ControllerManager:get_mouse_controller()
 	local index = Global.controller_manager.default_wrapper_index or self:get_preferred_default_wrapper_index()
 	local wrapper_class = self._wrapper_class_map and self._wrapper_class_map[index]
@@ -262,7 +276,7 @@ function ControllerManager:get_mouse_controller()
 	return Input:mouse()
 end
 
--- Lines 266-273
+-- Lines 278-285
 function ControllerManager:get_vr_wrapper_index()
 	for index = 1, self._wrapper_count do
 		local wrapper_class = self._wrapper_class_map and self._wrapper_class_map[index]
@@ -273,7 +287,7 @@ function ControllerManager:get_vr_wrapper_index()
 	end
 end
 
--- Lines 275-284
+-- Lines 287-296
 function ControllerManager:get_vr_controller()
 	for index = 1, self._wrapper_count do
 		local wrapper_class = self._wrapper_class_map and self._wrapper_class_map[index]

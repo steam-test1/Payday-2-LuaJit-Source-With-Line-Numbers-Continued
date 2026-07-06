@@ -48,8 +48,3 @@ function SmallLootBase:_set_empty()
 		self._unit:set_slot(0)
 	end
 end
-
--- Lines 56-58
-function SmallLootBase:destroy(...)
-	SmallLootBase.super.destroy(self, ...)
-end

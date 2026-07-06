@@ -224,8 +224,3 @@ end
 function SimpleVehicle:load(data)
 	local state = data.SimpleVehicle
 end
-
--- Lines 281-283
-function SimpleVehicle:destroy()
-	return
-end

@@ -43,7 +43,7 @@ function ExplosionManager:give_local_player_dmg(pos, range, damage)
 	end
 end
 
--- Lines 453-490
+-- Lines 469-506
 function ExplosionManager:units_to_push(units_to_push, hit_pos, range)
 	for u_key, unit in pairs(units_to_push) do
 		if alive(unit) then
@@ -85,7 +85,7 @@ function ExplosionManager:units_to_push(units_to_push, hit_pos, range)
 	end
 end
 
--- Lines 492-543
+-- Lines 508-559
 function ExplosionManager:_apply_body_damage(is_server, hit_body, user_unit, dir, damage)
 	local hit_unit = hit_body:unit()
 	local local_damage = is_server or hit_unit:id() == -1
@@ -130,13 +130,13 @@ function ExplosionManager:_apply_body_damage(is_server, hit_body, user_unit, dir
 	end
 end
 
--- Lines 546-549
+-- Lines 562-565
 function ExplosionManager:explode_on_client(position, normal, user_unit, dmg, range, curve_pow, custom_params)
 	self:play_sound_and_effects(position, normal, range, custom_params)
 	self:client_damage_and_push(position, normal, user_unit, dmg, range, curve_pow)
 end
 
--- Lines 551-572
+-- Lines 567-588
 function ExplosionManager:client_damage_and_push(position, normal, user_unit, dmg, range, curve_pow)
 	local bodies = World:find_bodies("intersect", "sphere", position, range, managers.slot:get_mask("bullet_impact_targets"))
 	local units_to_push = {}
@@ -162,13 +162,13 @@ function ExplosionManager:client_damage_and_push(position, normal, user_unit, dm
 	self:units_to_push(units_to_push, position, range)
 end
 
--- Lines 575-579
+-- Lines 591-595
 function ExplosionManager:play_sound_and_effects(position, normal, range, custom_params, molotov_damage_effect_table)
 	self:player_feedback(position, normal, range, custom_params)
 	self:spawn_sound_and_effects(position, normal, range, custom_params and custom_params.effect, custom_params and custom_params.sound_event, custom_params and custom_params.on_unit, custom_params and custom_params.idstr_decal, custom_params and custom_params.idstr_effect, molotov_damage_effect_table)
 end
 
--- Lines 581-620
+-- Lines 597-636
 function ExplosionManager:player_feedback(position, normal, range, custom_params)
 	local player = managers.player:player_unit()
 
@@ -233,7 +233,7 @@ end
 local decal_ray_from = Vector3()
 local decal_ray_to = Vector3()
 
--- Lines 624-704
+-- Lines 640-720
 function ExplosionManager:spawn_sound_and_effects(position, normal, range, effect_name, sound_event, on_unit, idstr_decal, idstr_effect, molotov_damage_effect_table)
 	effect_name = effect_name or "effects/particles/explosions/explosion_grenade_launcher"
 
@@ -315,7 +315,7 @@ function ExplosionManager:spawn_sound_and_effects(position, normal, range, effec
 	end
 end
 
--- Lines 706-733
+-- Lines 722-749
 function ExplosionManager:project_decal(ray, from, to, on_unit, idstr_decal, idstr_effect)
 	local slotmask_world_geometry = managers.slot:get_mask("world_geometry")
 
@@ -367,7 +367,7 @@ function ExplosionManager:project_decal(ray, from, to, on_unit, idstr_decal, ids
 	end
 end
 
--- Lines 737-865
+-- Lines 753-881
 function ExplosionManager:_detect_hits(params)
 	local hit_pos = params.hit_pos
 	local slotmask = params.collision_slotmask
@@ -415,7 +415,7 @@ function ExplosionManager:_detect_hits(params)
 		end
 	end
 
-	-- Lines 780-782
+	-- Lines 796-798
 	local function is_alive_character(unit)
 		return unit:character_damage() and unit:character_damage().dead and not unit:character_damage():dead()
 	end
@@ -494,7 +494,7 @@ function ExplosionManager:_detect_hits(params)
 	return results
 end
 
--- Lines 867-973
+-- Lines 883-989
 function ExplosionManager:_damage_characters(detect_results, params, variant, damage_func_name)
 	local user_unit = params.user
 	local owner = params.owner
@@ -527,7 +527,7 @@ function ExplosionManager:_damage_characters(detect_results, params, variant, da
 	}
 	local criminal_names = CriminalsManager.character_names()
 
-	-- Lines 889-895
+	-- Lines 905-911
 	local function get_first_body_hit(bodies_hit)
 		for _, hit_body in ipairs(bodies_hit or {}) do
 			if alive(hit_body) then
@@ -615,7 +615,7 @@ function ExplosionManager:_damage_characters(detect_results, params, variant, da
 	return results
 end
 
--- Lines 975-995
+-- Lines 991-1011
 function ExplosionManager:_damage_bodies(detect_results, params)
 	local user_unit = params.user
 	local hit_pos = params.hit_pos
@@ -640,7 +640,7 @@ function ExplosionManager:_damage_bodies(detect_results, params)
 	end
 end
 
--- Lines 997-1030
+-- Lines 1013-1046
 function ExplosionManager:detect_and_tase(params)
 	local user_unit = params.user
 	local owner = params.owner
@@ -679,7 +679,7 @@ function ExplosionManager:detect_and_tase(params)
 	return detect_results.units_hit, detect_results.splinters, results
 end
 
--- Lines 1033-1065
+-- Lines 1049-1081
 function ExplosionManager:detect_and_stun(params)
 	local user_unit = params.user
 	local owner = params.owner
@@ -717,7 +717,7 @@ function ExplosionManager:detect_and_stun(params)
 	return detect_results.units_hit, detect_results.splinters, results
 end
 
--- Lines 1068-1119
+-- Lines 1084-1135
 function ExplosionManager:detect_and_give_dmg(params)
 	local user_unit = params.user
 	local owner = params.owner
@@ -781,7 +781,7 @@ function ExplosionManager:detect_and_give_dmg(params)
 	return detect_results.units_hit, detect_results.splinters, results
 end
 
--- Lines 1123-1144
+-- Lines 1139-1160
 function ExplosionManager.sort_units_target_prio(units)
 	table.sort(units, function(unit_a, unit_b)
 		local base_a_ext = alive(unit_a) and unit_a:base()

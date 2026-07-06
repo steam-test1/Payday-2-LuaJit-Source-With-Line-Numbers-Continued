@@ -2463,7 +2463,7 @@ function RaycastWeaponBase:remove_ignore_unit(unit)
 end
 
 -- Lines 2711-2717
-function RaycastWeaponBase:destroy(unit)
+function RaycastWeaponBase:pre_destroy(unit)
 	RaycastWeaponBase.super.pre_destroy(self, unit)
 
 	if self._shooting then

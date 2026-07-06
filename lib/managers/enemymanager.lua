@@ -1584,12 +1584,12 @@ function EnemyManager:load(data)
 	end
 end
 
--- Lines 1744-1746
+-- Lines 1744-1754
 function EnemyManager:get_corpse_unit_data_from_key(u_key)
 	return self._enemy_data.corpses[u_key]
 end
 
--- Lines 1750-1756
+-- Lines 1758-1768
 function EnemyManager:get_corpse_unit_data_from_id(u_id)
 	for u_key, u_data in pairs(self._enemy_data.corpses) do
 		if u_id == u_data.u_id then
@@ -1598,7 +1598,7 @@ function EnemyManager:get_corpse_unit_data_from_id(u_id)
 	end
 end
 
--- Lines 1760-1767
+-- Lines 1772-1779
 function EnemyManager:remove_corpse_by_id(u_id)
 	for u_key, u_data in pairs(self._enemy_data.corpses) do
 		if u_id == u_data.u_id then
@@ -1609,22 +1609,22 @@ function EnemyManager:remove_corpse_by_id(u_id)
 	end
 end
 
--- Lines 1773-1775
+-- Lines 1785-1787
 function EnemyManager:register_medic(medic_unit)
 	self._medic_units[medic_unit:key()] = medic_unit
 end
 
--- Lines 1777-1779
+-- Lines 1789-1791
 function EnemyManager:unregister_medic(medic_unit)
 	self._medic_units[medic_unit:key()] = nil
 end
 
--- Lines 1781-1783
+-- Lines 1793-1795
 function EnemyManager:is_unit_registered_as_medic(test_unit)
 	return self._medic_units[test_unit:key()] and true or false
 end
 
--- Lines 1786-1823
+-- Lines 1798-1835
 function EnemyManager:get_nearby_medic(requesting_unit)
 	local valid_medics = {}
 
@@ -1663,7 +1663,7 @@ function EnemyManager:get_nearby_medic(requesting_unit)
 	return closest_medic
 end
 
--- Lines 1827-1856
+-- Lines 1839-1868
 function EnemyManager:find_nearby_affiliated_medics(requesting_unit)
 	local valid_medics = {}
 	local medics_in_range = {}
@@ -1696,7 +1696,7 @@ function EnemyManager:find_nearby_affiliated_medics(requesting_unit)
 	return medics_in_range
 end
 
--- Lines 1860-1903
+-- Lines 1872-1915
 function EnemyManager:add_magazine(mag_unit, col_unit)
 	if alive(mag_unit) then
 		local body_ray_type = Idstring("body")
@@ -1739,7 +1739,7 @@ function EnemyManager:add_magazine(mag_unit, col_unit)
 	end
 end
 
--- Lines 1908-1932
+-- Lines 1920-1944
 function EnemyManager:cleanup_magazines(remove_to_i)
 	local all_mags = self._magazines
 	local nr_mags = #all_mags
@@ -1767,7 +1767,7 @@ function EnemyManager:cleanup_magazines(remove_to_i)
 	self._magazines = new_mags_table
 end
 
--- Lines 1936-1948
+-- Lines 1948-1960
 function EnemyManager:_clbk_unit_tweak_data_changed(u_key, old_tweak_data, new_tweak_data)
 	local u_data = self._enemy_data.unit_data[u_key] or self._civilian_data.unit_data[u_key] or self._enemy_data.corpses[u_key]
 

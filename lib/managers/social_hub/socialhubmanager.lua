@@ -172,7 +172,7 @@ end
 
 -- Lines 217-229
 function SocialHubManager:on_search_lobby_fetched(lobby, success, intended_id)
-	if not lobby or not success == "success" then
+	if not lobby or success ~= "success" then
 		return
 	end
 

@@ -613,8 +613,8 @@ function PlayerTurretBase:damage_multiplier()
 end
 
 -- Lines 598-602
-function PlayerTurretBase:pre_destroy()
-	PlayerTurretBase.super.pre_destroy(self, self._unit)
+function PlayerTurretBase:pre_destroy(unit)
+	PlayerTurretBase.super.pre_destroy(self, unit)
 	self:remove_dead_owner()
 end
 

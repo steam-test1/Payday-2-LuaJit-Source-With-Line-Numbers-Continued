@@ -340,8 +340,10 @@ function AnimatedVehicleBase:load(save_data)
 	end
 end
 
--- Lines 347-357
+-- Lines 347-358
 function AnimatedVehicleBase:destroy(unit)
+	AnimatedVehicleBase.super.destroy(self, unit)
+
 	if self._modules then
 		local modules = self._modules
 
@@ -354,12 +356,12 @@ function AnimatedVehicleBase:destroy(unit)
 	end
 end
 
--- Lines 361-363
+-- Lines 362-364
 function AnimatedVehicleBase:allow_sync_stored_pos(sync)
 	self._allow_sync = sync
 end
 
--- Lines 365-378
+-- Lines 366-379
 function AnimatedVehicleBase:store_current_pos()
 	local pos = Vector3(self._unit:position().x / 10, self._unit:position().y / 10, self._unit:position().z / 10)
 	local rot = Vector3(self._unit:rotation():yaw() / 10, self._unit:rotation():pitch() / 10, self._unit:rotation():roll() / 10)
@@ -368,7 +370,7 @@ function AnimatedVehicleBase:store_current_pos()
 	self._stored_rot = rot
 end
 
--- Lines 380-397
+-- Lines 381-398
 function AnimatedVehicleBase:move_to_stored_pos()
 	if self._stored_pos ~= nil and self._stored_rot ~= nil then
 		self._unit:play_state(Idstring("std/empty"))
@@ -381,7 +383,7 @@ function AnimatedVehicleBase:move_to_stored_pos()
 	end
 end
 
--- Lines 399-403
+-- Lines 400-404
 function AnimatedVehicleBase:sync_stored_pos(sync, pos, rot)
 	self._allow_sync = sync
 	self._stored_pos = pos

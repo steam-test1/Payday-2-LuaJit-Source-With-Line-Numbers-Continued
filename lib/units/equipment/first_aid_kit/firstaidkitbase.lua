@@ -254,8 +254,10 @@ function FirstAidKitBase:load(data)
 	self._was_dropin = true
 end
 
--- Lines 244-253
-function FirstAidKitBase:destroy()
+-- Lines 244-255
+function FirstAidKitBase:destroy(unit)
+	FirstAidKitBase.super.destroy(self, unit)
+
 	if self._min_distance then
 		FirstAidKitBase.Remove(self)
 	end

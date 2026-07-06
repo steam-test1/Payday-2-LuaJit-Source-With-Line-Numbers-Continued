@@ -451,10 +451,12 @@ function SpyCameraBase:load(data)
 	self._was_dropin = true
 end
 
-SpyCameraDummyBase = SpyCameraDummyBase or class()
+SpyCameraDummyBase = SpyCameraDummyBase or class(UnitBase)
 
--- Lines 452-470
+-- Lines 452-472
 function SpyCameraDummyBase:init(unit)
+	SpyCameraDummyBase.super.init(self, unit, false)
+
 	if not unit:damage() then
 		return
 	end
@@ -477,9 +479,9 @@ end
 
 SpyAccessCameraBase = SpyAccessCameraBase or class(UnitBase)
 
--- Lines 478-500
+-- Lines 480-502
 function SpyAccessCameraBase:init(unit)
-	SpyAccessCameraBase.super.init(self, unit, true)
+	SpyAccessCameraBase.super.init(self, unit, false)
 
 	self._tweak_data = tweak_data.equipments.spy_camera
 	self._camera_object = self._unit:get_object(Idstring("a_camera"))
@@ -499,38 +501,39 @@ function SpyAccessCameraBase:init(unit)
 	managers.game_play_central:add_access_camera(self._tweak_data.access_channel, self)
 end
 
--- Lines 502-510
-function SpyAccessCameraBase:destroy()
+-- Lines 504-513
+function SpyAccessCameraBase:destroy(unit)
+	SpyAccessCameraBase.super.destroy(self, unit)
 	managers.game_play_central:remove_access_camera(self._tweak_data.access_channel, self)
 
 	local current_state = game_state_machine:current_state()
 
 	if current_state and current_state.on_camera_access_changed then
-		current_state:on_camera_access_changed(self._unit)
+		current_state:on_camera_access_changed(unit)
 	end
 end
 
--- Lines 512-516
+-- Lines 515-519
 function SpyAccessCameraBase:add_trigger(id, type, callback)
 	if type == "destroyed" then
 		self:add_destroy_listener(id, callback)
 	end
 end
 
--- Lines 518-522
+-- Lines 521-525
 function SpyAccessCameraBase:remove_trigger(id, type)
 	if type == "destroyed" then
 		self:remove_destroy_listener(id)
 	end
 end
 
--- Lines 524-527
+-- Lines 527-530
 function SpyAccessCameraBase:trigger_accessed(instigator)
 	self._values.position = self:camera_position()
 	self._values.rotation = self:camera_rotation()
 end
 
--- Lines 531-545
+-- Lines 534-548
 function SpyAccessCameraBase:is_moving()
 	if self._destroyed then
 		return
@@ -546,37 +549,37 @@ function SpyAccessCameraBase:is_moving()
 	end
 end
 
--- Lines 547-549
+-- Lines 550-552
 function SpyAccessCameraBase:enabled()
 	return true
 end
 
--- Lines 551-553
+-- Lines 554-556
 function SpyAccessCameraBase:has_camera_unit()
 	return alive(self._unit)
 end
 
--- Lines 555-557
+-- Lines 558-560
 function SpyAccessCameraBase:camera_unit()
 	return self._unit
 end
 
--- Lines 559-561
+-- Lines 562-564
 function SpyAccessCameraBase:camera_position()
 	return self._camera_object:position()
 end
 
--- Lines 563-565
+-- Lines 566-568
 function SpyAccessCameraBase:camera_rotation()
 	return self._camera_object:rotation()
 end
 
--- Lines 567-569
+-- Lines 570-572
 function SpyAccessCameraBase:value(value)
 	return self._values[value]
 end
 
--- Lines 571-578
+-- Lines 574-581
 function SpyAccessCameraBase:set_destroyed(value)
 	self._values.destroyed = value
 	self._destroyed = value
@@ -586,7 +589,7 @@ function SpyAccessCameraBase:set_destroyed(value)
 	end
 end
 
--- Lines 580-595
+-- Lines 583-598
 function SpyAccessCameraBase:set_owner_id(owner_id)
 	local owner_peer = managers.network:session():peer(owner_id)
 
@@ -605,7 +608,7 @@ function SpyAccessCameraBase:set_owner_id(owner_id)
 	self._values.text_macros.NAME = managers.localization:text("menu_" .. character_name)
 end
 
--- Lines 597-605
+-- Lines 600-608
 function SpyAccessCameraBase:m_camera_rotation(m_rot)
 	if not m_rot then
 		return self:camera_rotation()
@@ -616,7 +619,7 @@ function SpyAccessCameraBase:m_camera_rotation(m_rot)
 	return m_rot
 end
 
--- Lines 607-615
+-- Lines 610-618
 function SpyAccessCameraBase:m_camera_position(m_vec)
 	if not m_vec then
 		return self:camera_position()
@@ -627,7 +630,7 @@ function SpyAccessCameraBase:m_camera_position(m_vec)
 	return m_vec
 end
 
--- Lines 617-624
+-- Lines 620-627
 function SpyAccessCameraBase:save(data)
 	local state = {
 		owner_id = self._owner_id,
@@ -637,7 +640,7 @@ function SpyAccessCameraBase:save(data)
 	data.SpyAccessCameraBase = state
 end
 
--- Lines 626-631
+-- Lines 629-634
 function SpyAccessCameraBase:load(data)
 	local state = data.SpyAccessCameraBase
 

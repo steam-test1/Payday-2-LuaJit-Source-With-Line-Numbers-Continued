@@ -280,8 +280,10 @@ function DoctorBagBase:load(data)
 	self._was_dropin = true
 end
 
--- Lines 325-330
-function DoctorBagBase:destroy()
+-- Lines 325-331
+function DoctorBagBase:destroy(unit)
+	DoctorBagBase.super.destroy(self, unit)
+
 	if self._validate_clbk_id then
 		managers.enemy:remove_delayed_clbk(self._validate_clbk_id)
 
@@ -291,7 +293,7 @@ end
 
 CustomDoctorBagBase = CustomDoctorBagBase or class(DoctorBagBase)
 
--- Lines 335-345
+-- Lines 336-346
 function CustomDoctorBagBase:init(unit)
 	CustomDoctorBagBase.super.init(self, unit)
 
@@ -306,7 +308,7 @@ function CustomDoctorBagBase:init(unit)
 	self:setup(self.upgrade_lvl or 0)
 end
 
--- Lines 347-355
+-- Lines 348-356
 function CustomDoctorBagBase:_set_empty()
 	self._empty = true
 

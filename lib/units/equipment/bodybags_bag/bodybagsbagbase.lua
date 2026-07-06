@@ -247,8 +247,10 @@ function BodyBagsBagBase:load(data)
 	self._was_dropin = true
 end
 
--- Lines 249-254
-function BodyBagsBagBase:destroy()
+-- Lines 249-256
+function BodyBagsBagBase:destroy(unit)
+	BodyBagsBagBase.super.destroy(self, unit)
+
 	if self._validate_clbk_id then
 		managers.enemy:remove_delayed_clbk(self._validate_clbk_id)
 
@@ -258,7 +260,7 @@ end
 
 CustomBodyBagsBagBase = CustomBodyBagsBagBase or class(BodyBagsBagBase)
 
--- Lines 260-270
+-- Lines 262-272
 function CustomBodyBagsBagBase:init(unit)
 	CustomBodyBagsBagBase.super.init(self, unit)
 
@@ -273,7 +275,7 @@ function CustomBodyBagsBagBase:init(unit)
 	self:setup(self.upgrade_lvl or 0)
 end
 
--- Lines 272-280
+-- Lines 274-282
 function CustomBodyBagsBagBase:_set_empty()
 	self._empty = true
 

@@ -288,8 +288,10 @@ function AmmoBagBase:round_value(val)
 	return math.floor(val * dec_mul) / dec_mul
 end
 
--- Lines 323-329
-function AmmoBagBase:destroy()
+-- Lines 323-331
+function AmmoBagBase:destroy(unit)
+	AmmoBagBase.super.destroy(self, unit)
+
 	if self._validate_clbk_id then
 		managers.enemy:remove_delayed_clbk(self._validate_clbk_id)
 
@@ -299,7 +301,7 @@ end
 
 CustomAmmoBagBase = CustomAmmoBagBase or class(AmmoBagBase)
 
--- Lines 334-346
+-- Lines 336-348
 function CustomAmmoBagBase:init(unit)
 	CustomAmmoBagBase.super.init(self, unit)
 
@@ -314,7 +316,7 @@ function CustomAmmoBagBase:init(unit)
 	self:setup(self.upgrade_lvl or 0)
 end
 
--- Lines 348-358
+-- Lines 350-360
 function CustomAmmoBagBase:_set_empty()
 	self._empty = true
 

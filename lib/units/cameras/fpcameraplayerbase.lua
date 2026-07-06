@@ -2085,8 +2085,10 @@ function FPCameraPlayerBase:load_fps_mask_units()
 	end
 end
 
--- Lines 2283-2303
-function FPCameraPlayerBase:destroy()
+-- Lines 2283-2304
+function FPCameraPlayerBase:destroy(unit)
+	FPCameraPlayerBase.super.destroy(self, unit)
+
 	if self._parent_unit then
 		self._parent_unit:base():remove_destroy_listener("FPCameraPlayerBase")
 	end
@@ -2112,22 +2114,22 @@ function FPCameraPlayerBase:destroy()
 	end
 end
 
--- Lines 2307-2309
+-- Lines 2308-2310
 function FPCameraPlayerBase:set_spin(_spin)
 	self._camera_properties.spin = _spin
 end
 
--- Lines 2313-2315
+-- Lines 2314-2316
 function FPCameraPlayerBase:set_pitch(_pitch)
 	self._camera_properties.pitch = _pitch
 end
 
--- Lines 2319-2321
+-- Lines 2320-2322
 function FPCameraPlayerBase:current_tilt()
 	return self._camera_properties.current_tilt
 end
 
--- Lines 2325-2331
+-- Lines 2326-2332
 function FPCameraPlayerBase:animate_pitch(start_t, start_pitch, end_pitch, total_duration)
 	self._animate_pitch = {}
 	self._animate_pitch.start_t = start_t
@@ -2136,7 +2138,7 @@ function FPCameraPlayerBase:animate_pitch(start_t, start_pitch, end_pitch, total
 	self._animate_pitch.duration = total_duration
 end
 
--- Lines 2335-2349
+-- Lines 2336-2350
 function FPCameraPlayerBase:animate_pitch_upd()
 	local t = Application:time()
 	local elapsed_t = t - self._animate_pitch.start_t
@@ -2150,7 +2152,7 @@ function FPCameraPlayerBase:animate_pitch_upd()
 	end
 end
 
--- Lines 2353-2374
+-- Lines 2354-2375
 function FPCameraPlayerBase:update_tilt_smooth(direction, max_tilt, tilt_speed, dt)
 	self._tilt_dt = self._tilt_dt or 0
 
@@ -2179,12 +2181,12 @@ function FPCameraPlayerBase:update_tilt_smooth(direction, max_tilt, tilt_speed, 
 	end
 end
 
--- Lines 2378-2385
+-- Lines 2379-2386
 function FPCameraPlayerBase:catmullrom(t, p0, p1, p2, p3)
 	return 0.5 * (2 * p1 + (-p0 + p2) * t + (2 * p0 - 5 * p1 + 4 * p2 - p3) * t * t + (-p0 + 3 * p1 - 3 * p2 + p3) * t * t * t)
 end
 
--- Lines 2389-2398
+-- Lines 2390-2399
 function FPCameraPlayerBase:smoothstep(a, b, step, n)
 	local v = step / n
 
@@ -2195,7 +2197,7 @@ function FPCameraPlayerBase:smoothstep(a, b, step, n)
 	return x
 end
 
--- Lines 2400-2406
+-- Lines 2401-2407
 function FPCameraPlayerBase:set_visible(visible)
 	self._unit:set_visible(visible)
 
@@ -2204,7 +2206,7 @@ function FPCameraPlayerBase:set_visible(visible)
 	end
 end
 
--- Lines 2412-2419
+-- Lines 2413-2420
 function FPCameraPlayerBase:_update_fadeout(mover_position, head_position, rotation, t, dt)
 	local ignore_head_collision = FPCameraPlayerBase.NO_FADEOUT or self._parent_movement_ext:warping() or self._parent_movement_ext:current_state_name() == "driving" or self._parent_movement_ext:on_zipline()
 	local ignore_ghost_distance = FPCameraPlayerBase.NO_FADEOUT or self._parent_movement_ext:warping() or self._parent_movement_ext:on_zipline()
@@ -2214,37 +2216,37 @@ function FPCameraPlayerBase:_update_fadeout(mover_position, head_position, rotat
 	end
 end
 
--- Lines 2423-2425
+-- Lines 2424-2426
 function FPCameraPlayerBase:set_hmd_tracking(enabled)
 	self._hmd_tracking = enabled
 end
 
--- Lines 2427-2429
+-- Lines 2428-2430
 function FPCameraPlayerBase:set_block_input(block)
 	self._block_input = block
 end
 
--- Lines 2431-2433
+-- Lines 2432-2434
 function FPCameraPlayerBase:reset_base_rotation(rot)
 	self._base_rotation = Rotation(self._output_data.rotation:yaw(), 0, 0) * rot
 end
 
--- Lines 2435-2437
+-- Lines 2436-2438
 function FPCameraPlayerBase:rotate_base(rot)
 	self._base_rotation = self._base_rotation * rot
 end
 
--- Lines 2439-2441
+-- Lines 2440-2442
 function FPCameraPlayerBase:set_base_rotation(rot)
 	self._base_rotation = Rotation(self._base_rotation:yaw() - self._output_data.rotation:yaw(), 0, 0) * rot
 end
 
--- Lines 2443-2445
+-- Lines 2444-2446
 function FPCameraPlayerBase:base_rotation()
 	return self._base_rotation
 end
 
--- Lines 2447-2449
+-- Lines 2448-2450
 function FPCameraPlayerBase:enter_vehicle()
 	self._initial_hmd_rotation = VRManager:hmd_rotation()
 end

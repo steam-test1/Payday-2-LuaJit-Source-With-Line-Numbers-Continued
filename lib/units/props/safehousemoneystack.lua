@@ -85,7 +85,7 @@ function SafehouseMoneyStack:_hide()
 	end
 end
 
--- Lines 89-97
+-- Lines 89-98
 function SafehouseMoneyStack:update()
 	if self._test_money then
 		self:_run_sequences(self._test_money)
@@ -94,11 +94,8 @@ function SafehouseMoneyStack:update()
 
 		if self._test_money >= SafehouseMoneyStack.MAX_SUM then
 			self._test_money = nil
+
+			self._unit:set_extension_update_enabled(Idstring("base"), false)
 		end
 	end
-end
-
--- Lines 99-101
-function SafehouseMoneyStack:destroy(...)
-	SafehouseMoneyStack.super.destroy(self, ...)
 end

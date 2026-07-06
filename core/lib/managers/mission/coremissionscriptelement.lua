@@ -247,22 +247,29 @@ function MissionScriptElement:enabled()
 	return self._values.enabled
 end
 
--- Lines 414-416
+-- Lines 414-418
 function MissionScriptElement:set_enabled(enabled)
 	self._values.enabled = enabled
+
+	self:on_set_enabled(enabled)
 end
 
--- Lines 420-422
+-- Lines 422-424
+function MissionScriptElement:on_set_enabled(enabled)
+	return
+end
+
+-- Lines 428-430
 function MissionScriptElement:on_toggle()
 	return
 end
 
--- Lines 426-428
+-- Lines 434-436
 function MissionScriptElement:set_trigger_times(trigger_times)
 	self._values.trigger_times = trigger_times
 end
 
--- Lines 432-440
+-- Lines 440-448
 function MissionScriptElement:_reduce_trigger_times()
 	if self._values.trigger_times > 0 then
 		self._values.trigger_times = self._values.trigger_times - 1
@@ -273,28 +280,28 @@ function MissionScriptElement:_reduce_trigger_times()
 	end
 end
 
--- Lines 444-448
+-- Lines 452-456
 function MissionScriptElement:operation_add()
 	if Application:editor() then
 		managers.editor:output_error("Element " .. self:editor_name() .. " doesn't have an 'add' operator implemented.")
 	end
 end
 
--- Lines 452-456
+-- Lines 460-464
 function MissionScriptElement:operation_remove()
 	if Application:editor() then
 		managers.editor:output_error("Element " .. self:editor_name() .. " doesn't have a 'remove' operator implemented.")
 	end
 end
 
--- Lines 461-465
+-- Lines 469-473
 function MissionScriptElement:apply_job_value()
 	if Application:editor() then
 		managers.editor:output_error("Element " .. self:editor_name() .. " doesn't have a 'apply_job_value' function implemented.")
 	end
 end
 
--- Lines 470-499
+-- Lines 478-507
 function MissionScriptElement:get_orientation(use_last_orientation_index)
 	local index = use_last_orientation_index and self._last_orientation_index
 
@@ -320,7 +327,7 @@ function MissionScriptElement:get_orientation(use_last_orientation_index)
 	return self:_get_orientation_by_index(index)
 end
 
--- Lines 504-512
+-- Lines 512-520
 function MissionScriptElement:set_synced_orientation_element_index(orientation_element_index)
 	if orientation_element_index and orientation_element_index > 0 then
 		self._synced_orientation_element_index = orientation_element_index
@@ -329,7 +336,7 @@ function MissionScriptElement:set_synced_orientation_element_index(orientation_e
 	end
 end
 
--- Lines 515-536
+-- Lines 523-544
 function MissionScriptElement:_get_orientation_by_index(index)
 	if not index or index == 0 then
 		return self._values.position, self._values.rotation
@@ -349,7 +356,7 @@ function MissionScriptElement:_get_orientation_by_index(index)
 	return element:_get_orientation_by_index(0)
 end
 
--- Lines 539-587
+-- Lines 547-595
 function MissionScriptElement:_get_orientation_index()
 	if self._values.orientation_elements and #self._values.orientation_elements > 0 then
 		if not self._unused_orientation_indices then
@@ -394,27 +401,27 @@ function MissionScriptElement:_get_orientation_index()
 	end
 end
 
--- Lines 591-594
+-- Lines 599-602
 function MissionScriptElement:is_debug()
 	return self._values.debug or self._mission_script:is_debug()
 end
 
--- Lines 598-600
+-- Lines 606-608
 function MissionScriptElement:debug_draw()
 	return
 end
 
--- Lines 604-606
+-- Lines 612-614
 function MissionScriptElement:stop_simulation(...)
 	return
 end
 
--- Lines 610-612
+-- Lines 618-620
 function MissionScriptElement:pre_destroy()
 	return
 end
 
--- Lines 616-618
+-- Lines 624-626
 function MissionScriptElement:destroy()
 	return
 end

@@ -197,6 +197,7 @@ end
 
 -- Lines 207-221
 function HuskPlayerBase:pre_destroy(unit)
+	UnitBase.pre_destroy(self, unit)
 	self._unit:movement():attention_handler():set_attention(nil)
 	managers.groupai:state():unregister_criminal(self._unit)
 
@@ -207,8 +208,6 @@ function HuskPlayerBase:pre_destroy(unit)
 			peer:set_unit(nil)
 		end
 	end
-
-	UnitBase.pre_destroy(self, unit)
 end
 
 -- Lines 225-228

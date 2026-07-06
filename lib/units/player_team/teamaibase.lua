@@ -33,9 +33,9 @@ end
 
 -- Lines 41-49
 function TeamAIBase:pre_destroy(unit)
+	UnitBase.pre_destroy(self, unit)
 	self:remove_upgrades()
 	self:unregister()
-	UnitBase.pre_destroy(self, unit)
 end
 
 -- Lines 54-72

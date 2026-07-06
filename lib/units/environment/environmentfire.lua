@@ -22,26 +22,27 @@ function EnvironmentFire.spawn(position, rotation, data, normal, user_unit, weap
 	return unit, time_until_destruction
 end
 
--- Lines 27-33
+-- Lines 27-34
 function EnvironmentFire:init(unit)
-	self._unit = unit
+	EnvironmentFire.super.init(self, unit, true)
+
 	self._burn_tick_counter = 0
 	self._burn_duration = 0
 	self._burn_duration_destroy = 1
 	self._molotov_damage_effect_table = {}
 end
 
--- Lines 35-37
+-- Lines 36-38
 function EnvironmentFire:get_name_id()
 	return "environment_fire"
 end
 
--- Lines 39-41
+-- Lines 40-42
 function EnvironmentFire:get_duration_until_destruction()
 	return self._burn_duration + self._burn_duration_destroy
 end
 
--- Lines 43-216
+-- Lines 44-217
 function EnvironmentFire:on_spawn(data, normal, user_unit, weapon_unit, added_time, range_multiplier)
 	local custom_params = {
 		camera_shake_max_mul = 4,
@@ -209,7 +210,7 @@ function EnvironmentFire:on_spawn(data, normal, user_unit, weapon_unit, added_ti
 	self._unit:set_visible(false)
 end
 
--- Lines 218-258
+-- Lines 219-259
 function EnvironmentFire:update(unit, t, dt)
 	if self._burn_duration <= 0 then
 		if self._burn_duration_destroy <= 0 then
@@ -256,7 +257,7 @@ function EnvironmentFire:update(unit, t, dt)
 	end
 end
 
--- Lines 261-336
+-- Lines 262-337
 function EnvironmentFire:_do_damage()
 	local pos = self._unit:position()
 	local normal = math.UP
@@ -331,13 +332,10 @@ function EnvironmentFire:_do_damage()
 	self._burn_tick_counter = 0
 end
 
--- Lines 338-339
+-- Lines 339-345
 function EnvironmentFire:pre_destroy(unit)
-	return
-end
+	EnvironmentFire.super.pre_destroy(self, unit)
 
--- Lines 341-345
-function EnvironmentFire:destroy(unit)
 	for _, damage_effect_entry in pairs(self._molotov_damage_effect_table) do
 		World:effect_manager():fade_kill(damage_effect_entry.effect_id)
 	end

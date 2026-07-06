@@ -268,7 +268,7 @@ function NPCRaycastWeaponBase:fire_blank(direction, impact)
 end
 
 -- Lines 279-291
-function NPCRaycastWeaponBase:destroy(unit)
+function NPCRaycastWeaponBase:pre_destroy(unit)
 	if self._flashlight_data and alive(self._flashlight_data.light) then
 		World:delete_light(self._flashlight_data.light)
 
