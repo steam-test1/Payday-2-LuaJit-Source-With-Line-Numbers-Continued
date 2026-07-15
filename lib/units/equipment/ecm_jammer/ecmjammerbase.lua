@@ -22,27 +22,31 @@ function ECMJammerBase.spawn(pos, rot, battery_life_upgrade_lvl, owner, peer_id)
 
 	local unit = World:spawn_unit(Idstring("units/payday2/equipment/gen_equipment_jammer/gen_equipment_jammer"), pos, rot)
 
-	managers.network:session():send_to_peers_synched("sync_equipment_setup", unit, battery_life_upgrade_lvl, peer_id or 0)
+	managers.network:send_to_peers_synched("sync_equipment_setup", unit, battery_life_upgrade_lvl, peer_id or 0)
 	unit:base():setup(battery_life_upgrade_lvl, owner)
 
 	return unit
 end
 
--- Lines 37-43
+-- Lines 37-47
 function ECMJammerBase:set_server_information(peer_id)
 	self._server_information = {
 		owner_peer_id = peer_id
 	}
 
-	managers.network:session():peer(peer_id):set_used_deployable(true)
+	local peer = managers.network:get_peer_safe(peer_id)
+
+	if peer then
+		peer:set_used_deployable(true)
+	end
 end
 
--- Lines 48-50
+-- Lines 52-54
 function ECMJammerBase:server_information()
 	return self._server_information
 end
 
--- Lines 54-81
+-- Lines 58-85
 function ECMJammerBase:init(unit)
 	UnitBase.init(self, unit, true)
 
@@ -66,7 +70,7 @@ function ECMJammerBase:init(unit)
 	end
 end
 
--- Lines 85-95
+-- Lines 89-99
 function ECMJammerBase:_setup_glows()
 	local glow_f1_on = Idstring("g_glow_func1_green")
 	local glow_f1_off = Idstring("g_glow_func1_red")
@@ -79,18 +83,22 @@ function ECMJammerBase:_setup_glows()
 	self._g_glow_feedback_red = self._unit:get_object(glow_f2_off) or nil
 end
 
--- Lines 99-106
+-- Lines 103-115
 function ECMJammerBase:_clbk_validate()
 	self._validate_clbk_id = nil
 
-	if not self._was_dropin then
-		local peer = managers.network:session():server_peer()
+	if self._was_dropin then
+		return
+	end
 
-		peer:mark_cheater(VoteManager.REASON.many_assets)
+	local server_peer = managers.network:get_server_peer_safe()
+
+	if server_peer then
+		server_peer:mark_cheater(VoteManager.REASON.many_assets)
 	end
 end
 
--- Lines 110-121
+-- Lines 119-130
 function ECMJammerBase:sync_setup(upgrade_lvl, peer_id)
 	if self._validate_clbk_id then
 		managers.enemy:remove_delayed_clbk(self._validate_clbk_id)
@@ -104,17 +112,17 @@ function ECMJammerBase:sync_setup(upgrade_lvl, peer_id)
 	managers.player:verify_equipment(peer_id, "ecm_jammer")
 end
 
--- Lines 125-127
+-- Lines 134-136
 function ECMJammerBase:get_name_id()
 	return "ecm_jammer"
 end
 
--- Lines 130-141
+-- Lines 139-150
 function ECMJammerBase:set_owner(owner)
 	self._owner = owner
 
 	if owner then
-		local peer = managers.network:session():peer_by_unit(owner)
+		local peer = managers.network:get_peer_by_unit_safe(owner)
 
 		if peer then
 			self._owner_id = peer:id()
@@ -124,25 +132,23 @@ function ECMJammerBase:set_owner(owner)
 	self:contour_interaction()
 end
 
--- Lines 145-155
+-- Lines 154-162
 function ECMJammerBase:owner()
 	if not alive(self._owner) then
-		local peer = managers.network:session():peer(self._owner_id)
+		local peer = managers.network:get_peer_safe(self._owner_id)
 
-		if peer then
-			self._owner = peer:unit()
-		end
+		self._owner = peer and peer:unit() or nil
 	end
 
 	return self._owner
 end
 
--- Lines 159-161
+-- Lines 166-168
 function ECMJammerBase:battery_life()
 	return self._battery_life or 0
 end
 
--- Lines 165-182
+-- Lines 172-189
 function ECMJammerBase:sync_net_event(event_id)
 	local net_events = self._NET_EVENTS
 
@@ -163,17 +169,17 @@ function ECMJammerBase:sync_net_event(event_id)
 	end
 end
 
--- Lines 186-188
+-- Lines 193-195
 function ECMJammerBase:_send_net_event(event_id)
-	managers.network:session():send_to_peers_synched("sync_unit_event_id_16", self._unit, "base", event_id)
+	managers.network:send_to_peers_synched("sync_unit_event_id_16", self._unit, "base", event_id)
 end
 
--- Lines 192-194
+-- Lines 199-201
 function ECMJammerBase:_send_net_event_to_host(event_id)
-	managers.network:session():send_to_host("sync_unit_event_id_16", self._unit, "base", event_id)
+	managers.network:send_to_host("sync_unit_event_id_16", self._unit, "base", event_id)
 end
 
--- Lines 198-225
+-- Lines 205-232
 function ECMJammerBase:setup(battery_life_upgrade_lvl, owner)
 	self._slotmask = managers.slot:get_mask("trip_mine_targets")
 	self._max_battery_life = tweak_data.upgrades.ecm_jammer_base_battery_life * self.battery_life_multiplier[battery_life_upgrade_lvl]
@@ -181,7 +187,7 @@ function ECMJammerBase:setup(battery_life_upgrade_lvl, owner)
 	self._owner = owner
 
 	if alive(owner) then
-		local peer = managers.network:session():peer_by_unit(owner)
+		local peer = managers.network:get_peer_by_unit_safe(owner)
 
 		if peer then
 			self._owner_id = peer:id()
@@ -203,7 +209,7 @@ function ECMJammerBase:setup(battery_life_upgrade_lvl, owner)
 	end
 end
 
--- Lines 229-239
+-- Lines 236-246
 function ECMJammerBase:link_attachment(body, relative_pos, relative_rot)
 	if relative_pos then
 		body:unit():link(body:root_object():name(), self._unit, self._unit:orientation_object():name())
@@ -216,7 +222,7 @@ function ECMJammerBase:link_attachment(body, relative_pos, relative_rot)
 	self._attached_body = body
 end
 
--- Lines 241-288
+-- Lines 248-295
 function ECMJammerBase:set_active(active)
 	active = active and true
 
@@ -272,12 +278,12 @@ function ECMJammerBase:set_active(active)
 	self._jammer_active = active
 end
 
--- Lines 292-294
+-- Lines 299-301
 function ECMJammerBase:active()
 	return self._jammer_active
 end
 
--- Lines 298-322
+-- Lines 305-329
 function ECMJammerBase:update(unit, t, dt)
 	if self._battery_life > 0 then
 		self._battery_life = self._battery_life - dt
@@ -306,7 +312,7 @@ function ECMJammerBase:update(unit, t, dt)
 	end
 end
 
--- Lines 325-331
+-- Lines 332-338
 function ECMJammerBase:check_battery()
 	if self._battery_life <= 0 then
 		self:set_battery_empty()
@@ -315,7 +321,7 @@ function ECMJammerBase:check_battery()
 	end
 end
 
--- Lines 333-341
+-- Lines 340-348
 function ECMJammerBase:set_battery_empty()
 	if self._battery_empty then
 		return
@@ -326,7 +332,7 @@ function ECMJammerBase:set_battery_empty()
 	self:_set_battery_empty()
 end
 
--- Lines 343-360
+-- Lines 350-367
 function ECMJammerBase:_set_battery_empty()
 	self._battery_empty = true
 
@@ -345,7 +351,7 @@ function ECMJammerBase:_set_battery_empty()
 	end
 end
 
--- Lines 362-370
+-- Lines 369-377
 function ECMJammerBase:set_battery_low()
 	if self._battery_low then
 		return
@@ -356,7 +362,7 @@ function ECMJammerBase:set_battery_low()
 	self:_set_battery_low()
 end
 
--- Lines 372-387
+-- Lines 379-394
 function ECMJammerBase:_set_battery_low()
 	self._battery_low = true
 
@@ -373,31 +379,27 @@ function ECMJammerBase:_set_battery_low()
 	end
 end
 
--- Lines 389-392
+-- Lines 396-399
 function ECMJammerBase:sync_set_battery_life(battery_life)
 	self._battery_life = battery_life
 
 	self:check_battery()
 end
 
--- Lines 396-402
+-- Lines 403-409
 function ECMJammerBase:_check_body()
 	if not alive(self._attached_body) or not self._attached_body:enabled() then
 		self:_force_remove()
 	end
 end
 
--- Lines 406-408
+-- Lines 413-415
 function ECMJammerBase:feedback_active()
 	return self._feedback_active
 end
 
--- Lines 412-423
+-- Lines 419-426
 function ECMJammerBase:set_feedback_active()
-	if not managers.network:session() then
-		return
-	end
-
 	if Network:is_client() then
 		self:_send_net_event_to_host(self._NET_EVENTS.feedback_start)
 	else
@@ -405,7 +407,7 @@ function ECMJammerBase:set_feedback_active()
 	end
 end
 
--- Lines 426-502
+-- Lines 429-505
 function ECMJammerBase:_set_feedback_active(state)
 	state = state and true
 
@@ -482,12 +484,12 @@ function ECMJammerBase:_set_feedback_active(state)
 	self._feedback_active = state
 end
 
--- Lines 506-508
+-- Lines 509-511
 function ECMJammerBase:sync_set_feedback_active()
 	self:_set_feedback_active()
 end
 
--- Lines 512-540
+-- Lines 515-543
 function ECMJammerBase:clbk_feedback()
 	local t = TimerManager:game():time()
 
@@ -528,24 +530,34 @@ function ECMJammerBase:clbk_feedback()
 	end
 end
 
--- Lines 544-546
+-- Lines 547-549
 function ECMJammerBase:contour_selected()
 	self._unit:contour():add("deployable_selected")
 end
 
--- Lines 548-550
+-- Lines 551-553
 function ECMJammerBase:contour_unselected()
 	self._unit:contour():remove("deployable_selected")
 end
 
--- Lines 552-558
+-- Lines 555-569
 function ECMJammerBase:contour_interaction()
-	if managers.player:has_category_upgrade("ecm_jammer", "can_activate_feedback") and managers.network:session() and self._unit:contour() and self._owner_id == managers.network:session():local_peer():id() then
-		self._unit:contour():add("deployable_interactable")
+	if not self._owner_id or not managers.player:has_category_upgrade("ecm_jammer", "can_activate_feedback") then
+		return
+	end
+
+	local contour_ext = self._unit:contour()
+
+	if contour_ext then
+		local local_peer = managers.network:get_local_peer_safe()
+
+		if local_peer and local_peer:id() == self._owner_id then
+			contour_ext:add("deployable_interactable")
+		end
 	end
 end
 
--- Lines 562-669
+-- Lines 573-680
 function ECMJammerBase._detect_and_give_dmg(hit_pos, device_unit, user_unit, range)
 	local mvec3_dis_sq = mvector3.distance_sq
 	local slotmask = managers.slot:get_mask("bullet_impact_targets")
@@ -590,7 +602,7 @@ function ECMJammerBase._detect_and_give_dmg(hit_pos, device_unit, user_unit, ran
 
 	half_range_sq = half_range_sq * half_range_sq
 
-	-- Lines 621-661
+	-- Lines 632-672
 	local function _chk_apply_dmg_to_char(u_data)
 		if not u_data.char_tweak.ecm_vulnerability then
 			return
@@ -646,12 +658,12 @@ function ECMJammerBase._detect_and_give_dmg(hit_pos, device_unit, user_unit, ran
 	end
 end
 
--- Lines 673-675
+-- Lines 684-686
 function ECMJammerBase:_force_remove()
 	self._unit:set_slot(0)
 end
 
--- Lines 679-687
+-- Lines 690-698
 function ECMJammerBase:save(data)
 	local state = {
 		jammer_active = self._jammer_active or nil,
@@ -663,7 +675,7 @@ function ECMJammerBase:save(data)
 	data.ECMJammerBase = state
 end
 
--- Lines 691-710
+-- Lines 702-721
 function ECMJammerBase:load(data)
 	local state = data.ECMJammerBase
 
@@ -686,7 +698,7 @@ function ECMJammerBase:load(data)
 	self._was_dropin = true
 end
 
--- Lines 714-724
+-- Lines 725-735
 function ECMJammerBase:pre_destroy(unit)
 	ECMJammerBase.super.pre_destroy(self, unit)
 

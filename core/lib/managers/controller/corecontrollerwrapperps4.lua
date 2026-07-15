@@ -37,5 +37,5 @@ end
 
 -- Lines 38-40
 function ControllerWrapperPS4:is_confirm_cancel_inverted()
-	return IS_PS4 and PS3:pad_cross_circle_inverted()
+	return IS_PS4 and PS4:pad_cross_circle_inverted()
 end

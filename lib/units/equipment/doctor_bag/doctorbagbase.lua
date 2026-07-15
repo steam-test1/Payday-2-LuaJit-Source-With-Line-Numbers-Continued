@@ -8,32 +8,36 @@ local IDS_MEDIC_BAG = Idstring("units/payday2/equipment/gen_equipment_medicbag/g
 function DoctorBagBase.spawn(pos, rot, bits, peer_id)
 	local unit = World:spawn_unit(IDS_MEDIC_BAG, pos, rot)
 
-	managers.network:session():send_to_peers_synched("sync_equipment_setup", unit, bits, peer_id or 0)
+	managers.network:send_to_peers_synched("sync_equipment_setup", unit, bits, peer_id or 0)
 	unit:base():setup(bits)
 
 	return unit
 end
 
--- Lines 24-30
+-- Lines 24-34
 function DoctorBagBase:set_server_information(peer_id)
 	self._server_information = {
 		owner_peer_id = peer_id
 	}
 
-	managers.network:session():peer(peer_id):set_used_deployable(true)
+	local peer = managers.network:get_peer_safe(peer_id)
+
+	if peer then
+		peer:set_used_deployable(true)
+	end
 end
 
--- Lines 34-36
+-- Lines 38-40
 function DoctorBagBase:server_information()
 	return self._server_information
 end
 
--- Lines 40-42
+-- Lines 44-46
 function DoctorBagBase:get_name_id()
 	return "doctor_bag"
 end
 
--- Lines 46-63
+-- Lines 50-67
 function DoctorBagBase:init(unit)
 	UnitBase.init(self, unit, false)
 
@@ -53,18 +57,22 @@ function DoctorBagBase:init(unit)
 	self._damage_reduction_upgrade = false
 end
 
--- Lines 67-75
+-- Lines 71-83
 function DoctorBagBase:_clbk_validate()
 	self._validate_clbk_id = nil
 
-	if not self._was_dropin then
-		local peer = managers.network:session():server_peer()
+	if self._was_dropin then
+		return
+	end
 
-		peer:mark_cheater(VoteManager.REASON.many_assets)
+	local server_peer = managers.network:get_server_peer_safe()
+
+	if server_peer then
+		server_peer:mark_cheater(VoteManager.REASON.many_assets)
 	end
 end
 
--- Lines 79-89
+-- Lines 87-97
 function DoctorBagBase:sync_setup(bits, peer_id)
 	if self._validate_clbk_id then
 		managers.enemy:remove_delayed_clbk(self._validate_clbk_id)
@@ -76,7 +84,7 @@ function DoctorBagBase:sync_setup(bits, peer_id)
 	self:setup(bits)
 end
 
--- Lines 93-134
+-- Lines 101-142
 function DoctorBagBase:setup(bits)
 	local amount_upgrade_lvl, dmg_reduction_lvl = self:_get_upgrade_levels(bits)
 
@@ -106,12 +114,12 @@ function DoctorBagBase:setup(bits)
 	end
 end
 
--- Lines 138-140
+-- Lines 146-148
 function DoctorBagBase:update(unit, t, dt)
 	self:_check_body()
 end
 
--- Lines 144-169
+-- Lines 152-177
 function DoctorBagBase:_check_body()
 	if self._is_dynamic then
 		return
@@ -138,28 +146,25 @@ function DoctorBagBase:_check_body()
 	self._attached_data.index = (self._attached_data.index < self._attached_data.max_index and self._attached_data.index or 0) + 1
 end
 
--- Lines 173-179
+-- Lines 181-185
 function DoctorBagBase:server_set_dynamic()
 	self:_set_dynamic()
-
-	if managers.network:session() then
-		managers.network:session():send_to_peers_synched("sync_unit_event_id_16", self._unit, "base", 1)
-	end
+	managers.network:send_to_peers_synched("sync_unit_event_id_16", self._unit, "base", 1)
 end
 
--- Lines 183-186
+-- Lines 189-192
 function DoctorBagBase:sync_net_event(event_id)
 	self:_set_dynamic()
 end
 
--- Lines 190-193
+-- Lines 196-199
 function DoctorBagBase:_set_dynamic()
 	self._is_dynamic = true
 
 	self._unit:body("dynamic"):set_enabled(true)
 end
 
--- Lines 197-223
+-- Lines 203-229
 function DoctorBagBase:take(unit)
 	if self._empty then
 		return
@@ -173,7 +178,7 @@ function DoctorBagBase:take(unit)
 
 	if taken > 0 then
 		unit:sound():play("pickup_ammo")
-		managers.network:session():send_to_peers_synched("sync_doctor_bag_taken", self._unit, taken)
+		managers.network:send_to_peers_synched("sync_doctor_bag_taken", self._unit, taken)
 		managers.mission:call_global_event("player_refill_doctorbag")
 	end
 
@@ -186,7 +191,7 @@ function DoctorBagBase:take(unit)
 	return taken > 0
 end
 
--- Lines 228-242
+-- Lines 234-248
 function DoctorBagBase:_take(unit)
 	local taken = 1
 
@@ -203,7 +208,7 @@ function DoctorBagBase:_take(unit)
 	return taken
 end
 
--- Lines 246-254
+-- Lines 252-260
 function DoctorBagBase:_set_visual_stage()
 	local percentage = self._amount / self._max_amount
 
@@ -216,7 +221,7 @@ function DoctorBagBase:_set_visual_stage()
 	end
 end
 
--- Lines 258-266
+-- Lines 264-272
 function DoctorBagBase:sync_taken(amount)
 	self._amount = self._amount - amount
 
@@ -227,7 +232,7 @@ function DoctorBagBase:sync_taken(amount)
 	end
 end
 
--- Lines 270-291
+-- Lines 276-297
 function DoctorBagBase:_set_empty()
 	self._empty = true
 
@@ -248,7 +253,7 @@ function DoctorBagBase:_set_empty()
 	end
 end
 
--- Lines 295-300
+-- Lines 301-306
 function DoctorBagBase:_get_upgrade_levels(bits)
 	local dmg_reduction = Bitwise:rshift(bits, DoctorBagBase.damage_reduce_lvl_shift)
 	local amount_lvl = Bitwise:rshift(bits, DoctorBagBase.amount_upgrade_lvl_shift) % 2^DoctorBagBase.amount_upgrade_lvl_shift
@@ -256,7 +261,7 @@ function DoctorBagBase:_get_upgrade_levels(bits)
 	return amount_lvl, dmg_reduction
 end
 
--- Lines 304-309
+-- Lines 310-315
 function DoctorBagBase:save(data)
 	local state = {}
 
@@ -265,7 +270,7 @@ function DoctorBagBase:save(data)
 	data.DoctorBagBase = state
 end
 
--- Lines 311-321
+-- Lines 317-327
 function DoctorBagBase:load(data)
 	local state = data.DoctorBagBase
 
@@ -280,7 +285,7 @@ function DoctorBagBase:load(data)
 	self._was_dropin = true
 end
 
--- Lines 325-331
+-- Lines 331-337
 function DoctorBagBase:destroy(unit)
 	DoctorBagBase.super.destroy(self, unit)
 
@@ -293,7 +298,7 @@ end
 
 CustomDoctorBagBase = CustomDoctorBagBase or class(DoctorBagBase)
 
--- Lines 336-346
+-- Lines 342-352
 function CustomDoctorBagBase:init(unit)
 	CustomDoctorBagBase.super.init(self, unit)
 
@@ -308,7 +313,7 @@ function CustomDoctorBagBase:init(unit)
 	self:setup(self.upgrade_lvl or 0)
 end
 
--- Lines 348-356
+-- Lines 354-362
 function CustomDoctorBagBase:_set_empty()
 	self._empty = true
 

@@ -814,7 +814,7 @@ function ZipLine:save(data)
 	data.ZipLine = state
 end
 
--- Lines 750-762
+-- Lines 750-771
 function ZipLine:load(data)
 	local state = data.ZipLine
 

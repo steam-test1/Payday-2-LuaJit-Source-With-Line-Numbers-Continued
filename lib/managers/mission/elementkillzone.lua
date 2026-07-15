@@ -18,7 +18,7 @@ function ElementKillZone:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines 23-43
+-- Lines 23-40
 function ElementKillZone:client_local_on_executed(instigator, element_id)
 	if not self._values.enabled or not self._can_client_local_on_execute or not self._can_client_local_on_execute[element_id] then
 		return
@@ -31,7 +31,7 @@ function ElementKillZone:client_local_on_executed(instigator, element_id)
 	end
 end
 
--- Lines 45-89
+-- Lines 42-79
 function ElementKillZone:on_executed(instigator, alternative, skip_execute_on_executed, sync_id_from)
 	if not self._values.enabled then
 		return

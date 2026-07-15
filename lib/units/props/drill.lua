@@ -708,7 +708,7 @@ function Drill:on_autorepair()
 	unit:damage():run_sequence_simple("interact")
 
 	if Network:is_server() then
-		managers.network:session():send_to_peers_synched("sync_unit_event_id_16", unit, "base", Drill.EVENT_IDS.autorepair)
+		managers.network:send_to_peers_synched("sync_unit_event_id_16", unit, "base", Drill.EVENT_IDS.autorepair)
 	end
 
 	int_ext:set_active(false)
@@ -970,17 +970,16 @@ function Drill:_reset_melee_autorepair()
 	self._peer_ids = {}
 end
 
--- Lines 938-979
+-- Lines 938-978
 function Drill:on_melee_hit(peer_id)
 	if self._disable_upgrades or not self._jammed or self:_does_peer_exist(peer_id) then
 		return
 	end
 
 	local unit = self._unit
-	local session = managers.network:session()
-	local local_peer = session:local_peer()
+	local local_peer = managers.network:get_local_peer_safe()
 
-	if local_peer:id() == peer_id then
+	if local_peer and local_peer:id() == peer_id then
 		local peer_unit = local_peer and local_peer:unit()
 
 		if not alive(peer_unit) or not unit:interaction():can_interact(peer_unit) then
@@ -1005,7 +1004,7 @@ function Drill:on_melee_hit(peer_id)
 	end
 end
 
--- Lines 981-999
+-- Lines 980-998
 function Drill:on_melee_hit_success()
 	local unit = self._unit
 	local int_ext = unit:interaction()
@@ -1014,7 +1013,7 @@ function Drill:on_melee_hit_success()
 	unit:damage():run_sequence_simple("interact")
 
 	if Network:is_server() then
-		managers.network:session():send_to_peers_synched("sync_unit_event_id_16", unit, "base", Drill.EVENT_IDS.melee_restart_success)
+		managers.network:send_to_peers_synched("sync_unit_event_id_16", unit, "base", Drill.EVENT_IDS.melee_restart_success)
 	end
 
 	int_ext:set_active(false)
@@ -1025,7 +1024,7 @@ function Drill:on_melee_hit_success()
 	end
 end
 
--- Lines 1001-1009
+-- Lines 1000-1008
 function Drill:_does_peer_exist(peer_id)
 	local count = #self._peer_ids
 
@@ -1038,7 +1037,7 @@ function Drill:_does_peer_exist(peer_id)
 	return false
 end
 
--- Lines 1011-1020
+-- Lines 1010-1019
 function Drill:compare_skill_upgrades(skill_upgrades)
 	if self._disable_upgrades then
 		return false

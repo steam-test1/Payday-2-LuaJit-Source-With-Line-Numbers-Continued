@@ -747,7 +747,7 @@ function PS4SystemMenuManager:init()
 
 	self._is_ps_button_menu_visible = false
 
-	PS3:set_ps_button_callback(callback(self, self, "ps_button_menu_callback"))
+	PS4:set_ps_button_callback(callback(self, self, "ps_button_menu_callback"))
 end
 
 -- Lines 745-747
@@ -757,10 +757,10 @@ end
 
 -- Lines 749-751
 function PS4SystemMenuManager:block_exec()
-	return GenericSystemMenuManager.is_active(self) or PS3:is_displaying_box()
+	return GenericSystemMenuManager.is_active(self) or PS4:is_displaying_box()
 end
 
 -- Lines 753-755
 function PS4SystemMenuManager:is_active()
-	return GenericSystemMenuManager.is_active(self) or PS3:is_displaying_box() or self._is_ps_button_menu_visible
+	return GenericSystemMenuManager.is_active(self) or PS4:is_displaying_box() or self._is_ps_button_menu_visible
 end

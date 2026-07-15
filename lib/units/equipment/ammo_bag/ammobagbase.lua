@@ -11,27 +11,31 @@ local UNIT_IDS = Idstring("units/payday2/equipment/gen_equipment_ammobag/gen_equ
 function AmmoBagBase.spawn(pos, rot, ammo_upgrade_lvl, peer_id, bullet_storm_level)
 	local unit = World:spawn_unit(UNIT_IDS, pos, rot)
 
-	managers.network:session():send_to_peers_synched("sync_ammo_bag_setup", unit, ammo_upgrade_lvl, peer_id or 0, bullet_storm_level or 0)
+	managers.network:send_to_peers_synched("sync_ammo_bag_setup", unit, ammo_upgrade_lvl, peer_id or 0, bullet_storm_level or 0)
 	unit:base():setup(ammo_upgrade_lvl, bullet_storm_level)
 
 	return unit
 end
 
--- Lines 31-34
+-- Lines 31-39
 function AmmoBagBase:set_server_information(peer_id)
 	self._server_information = {
 		owner_peer_id = peer_id
 	}
 
-	managers.network:session():peer(peer_id):set_used_deployable(true)
+	local peer = managers.network:get_peer_safe(peer_id)
+
+	if peer then
+		peer:set_used_deployable(true)
+	end
 end
 
--- Lines 37-39
+-- Lines 42-44
 function AmmoBagBase:server_information()
 	return self._server_information
 end
 
--- Lines 43-60
+-- Lines 48-65
 function AmmoBagBase:init(unit)
 	UnitBase.init(self, unit, false)
 
@@ -49,23 +53,27 @@ function AmmoBagBase:init(unit)
 	end
 end
 
--- Lines 62-64
+-- Lines 67-69
 function AmmoBagBase:get_name_id()
 	return "ammo_bag"
 end
 
--- Lines 68-75
+-- Lines 73-85
 function AmmoBagBase:_clbk_validate()
 	self._validate_clbk_id = nil
 
-	if not self._was_dropin then
-		local peer = managers.network:session():server_peer()
+	if self._was_dropin then
+		return
+	end
 
-		peer:mark_cheater(VoteManager.REASON.many_assets)
+	local server_peer = managers.network:get_server_peer_safe()
+
+	if server_peer then
+		server_peer:mark_cheater(VoteManager.REASON.many_assets)
 	end
 end
 
--- Lines 79-89
+-- Lines 89-99
 function AmmoBagBase:sync_setup(ammo_upgrade_lvl, peer_id, bullet_storm_level)
 	if self._validate_clbk_id then
 		managers.enemy:remove_delayed_clbk(self._validate_clbk_id)
@@ -77,7 +85,7 @@ function AmmoBagBase:sync_setup(ammo_upgrade_lvl, peer_id, bullet_storm_level)
 	self:setup(ammo_upgrade_lvl, bullet_storm_level)
 end
 
--- Lines 93-134
+-- Lines 103-144
 function AmmoBagBase:setup(ammo_upgrade_lvl, bullet_storm_level)
 	self._bullet_storm_level = bullet_storm_level
 	self._ammo_amount = self._ammo_amount or tweak_data.upgrades.ammo_bag_base + managers.player:upgrade_value_by_level("ammo_bag", "ammo_increase", ammo_upgrade_lvl)
@@ -102,12 +110,12 @@ function AmmoBagBase:setup(ammo_upgrade_lvl, bullet_storm_level)
 	end
 end
 
--- Lines 136-138
+-- Lines 146-148
 function AmmoBagBase:update(unit, t, dt)
 	self:_check_body()
 end
 
--- Lines 141-169
+-- Lines 151-179
 function AmmoBagBase:_check_body()
 	if self._is_dynamic then
 		return
@@ -134,28 +142,25 @@ function AmmoBagBase:_check_body()
 	self._attached_data.index = (self._attached_data.index < self._attached_data.max_index and self._attached_data.index or 0) + 1
 end
 
--- Lines 173-178
+-- Lines 183-187
 function AmmoBagBase:server_set_dynamic()
 	self:_set_dynamic()
-
-	if managers.network:session() then
-		managers.network:session():send_to_peers_synched("sync_unit_event_id_16", self._unit, "base", 1)
-	end
+	managers.network:send_to_peers_synched("sync_unit_event_id_16", self._unit, "base", 1)
 end
 
--- Lines 180-183
+-- Lines 189-192
 function AmmoBagBase:sync_net_event(event_id)
 	self:_set_dynamic()
 end
 
--- Lines 185-188
+-- Lines 194-197
 function AmmoBagBase:_set_dynamic()
 	self._is_dynamic = true
 
 	self._unit:body("dynamic"):set_enabled(true)
 end
 
--- Lines 192-217
+-- Lines 201-226
 function AmmoBagBase:take_ammo(unit)
 	if self._empty then
 		return false, false
@@ -165,7 +170,7 @@ function AmmoBagBase:take_ammo(unit)
 
 	if taken > 0 then
 		unit:sound():play("pickup_ammo")
-		managers.network:session():send_to_peers_synched("sync_ammo_bag_ammo_taken", self._unit, taken)
+		managers.network:send_to_peers_synched("sync_ammo_bag_ammo_taken", self._unit, taken)
 	end
 
 	if self._ammo_amount <= 0 then
@@ -185,7 +190,7 @@ function AmmoBagBase:take_ammo(unit)
 	return taken > 0, bullet_storm
 end
 
--- Lines 219-229
+-- Lines 228-238
 function AmmoBagBase:_set_visual_stage()
 	local percentage = self._ammo_amount / self._max_ammo_amount
 
@@ -198,7 +203,7 @@ function AmmoBagBase:_set_visual_stage()
 	end
 end
 
--- Lines 231-241
+-- Lines 240-250
 function AmmoBagBase:sync_ammo_taken(amount)
 	amount = self:round_value(amount)
 	self._ammo_amount = self:round_value(self._ammo_amount - amount)
@@ -210,7 +215,7 @@ function AmmoBagBase:sync_ammo_taken(amount)
 	end
 end
 
--- Lines 243-264
+-- Lines 252-273
 function AmmoBagBase:_take_ammo(unit)
 	local taken = 0
 	local inventory = unit:inventory()
@@ -235,7 +240,7 @@ function AmmoBagBase:_take_ammo(unit)
 	return taken
 end
 
--- Lines 266-288
+-- Lines 275-297
 function AmmoBagBase:_set_empty()
 	self._ammo_amount = 0
 	self._empty = true
@@ -257,7 +262,7 @@ function AmmoBagBase:_set_empty()
 	end
 end
 
--- Lines 292-300
+-- Lines 301-309
 function AmmoBagBase:save(data)
 	local state = {}
 
@@ -267,7 +272,7 @@ function AmmoBagBase:save(data)
 	data.AmmoBagBase = state
 end
 
--- Lines 302-315
+-- Lines 311-324
 function AmmoBagBase:load(data)
 	local state = data.AmmoBagBase
 
@@ -283,12 +288,12 @@ function AmmoBagBase:load(data)
 	self._was_dropin = true
 end
 
--- Lines 317-319
+-- Lines 326-328
 function AmmoBagBase:round_value(val)
 	return math.floor(val * dec_mul) / dec_mul
 end
 
--- Lines 323-331
+-- Lines 332-340
 function AmmoBagBase:destroy(unit)
 	AmmoBagBase.super.destroy(self, unit)
 
@@ -301,7 +306,7 @@ end
 
 CustomAmmoBagBase = CustomAmmoBagBase or class(AmmoBagBase)
 
--- Lines 336-348
+-- Lines 345-357
 function CustomAmmoBagBase:init(unit)
 	CustomAmmoBagBase.super.init(self, unit)
 
@@ -316,7 +321,7 @@ function CustomAmmoBagBase:init(unit)
 	self:setup(self.upgrade_lvl or 0)
 end
 
--- Lines 350-360
+-- Lines 359-369
 function CustomAmmoBagBase:_set_empty()
 	self._empty = true
 

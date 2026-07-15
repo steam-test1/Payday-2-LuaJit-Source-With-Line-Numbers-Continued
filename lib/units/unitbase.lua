@@ -40,12 +40,12 @@ function UnitBase:save(data)
 	return
 end
 
--- Lines 58-60
+-- Lines 58-68
 function UnitBase:load(data)
 	managers.worlddefinition:use_me(self._unit)
 end
 
--- Lines 64-76
+-- Lines 72-84
 function UnitBase:pre_destroy(unit)
 	self._destroying = true
 
@@ -54,7 +54,7 @@ function UnitBase:pre_destroy(unit)
 	end
 end
 
--- Lines 80-94
+-- Lines 88-102
 function UnitBase:destroy(unit)
 	if self._destroying then
 		return
@@ -65,7 +65,7 @@ function UnitBase:destroy(unit)
 	end
 end
 
--- Lines 98-100
+-- Lines 106-108
 function UnitBase:set_slot(unit, slot)
 	unit:set_slot(slot)
 end

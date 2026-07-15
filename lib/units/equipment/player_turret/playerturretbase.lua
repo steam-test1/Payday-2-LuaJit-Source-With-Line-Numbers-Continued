@@ -282,8 +282,8 @@ function PlayerTurretBase:change_state(state)
 
 	self._current_state = state
 
-	if managers.network:session() and Network:is_server() then
-		managers.network:session():send_to_peers_synched("sync_unit_event_id_16", self._unit, "base", state)
+	if Network:is_server() then
+		managers.network:send_to_peers_synched("sync_unit_event_id_16", self._unit, "base", state)
 	end
 
 	return true
@@ -433,39 +433,33 @@ function PlayerTurretBase:third_person_important()
 	return true
 end
 
--- Lines 423-429
+-- Lines 423-427
 function PlayerTurretBase:start_shooting()
 	PlayerTurretBase.super.start_shooting(self)
-
-	if managers.network:session() then
-		managers.network:session():send_to_peers_synched("sync_unit_event_id_16", self._unit, "base", PlayerTurretBase.SYNC_START_FIRE)
-	end
+	managers.network:send_to_peers_synched("sync_unit_event_id_16", self._unit, "base", PlayerTurretBase.SYNC_START_FIRE)
 end
 
--- Lines 431-437
+-- Lines 429-433
 function PlayerTurretBase:stop_shooting()
 	PlayerTurretBase.super.stop_shooting(self)
-
-	if managers.network:session() then
-		managers.network:session():send_to_peers_synched("sync_unit_event_id_16", self._unit, "base", PlayerTurretBase.SYNC_STOP_FIRE)
-	end
+	managers.network:send_to_peers_synched("sync_unit_event_id_16", self._unit, "base", PlayerTurretBase.SYNC_STOP_FIRE)
 end
 
--- Lines 439-444
+-- Lines 435-440
 function PlayerTurretBase:set_ammo_remaining_in_clip(ammo_remaining_in_clip)
 	PlayerTurretBase.super.set_ammo_remaining_in_clip(self, ammo_remaining_in_clip)
 	self._sound_fire:set_rtpc("ammo_left", ammo_remaining_in_clip)
 	self:check_bullet_objects()
 end
 
--- Lines 446-450
+-- Lines 442-446
 function PlayerTurretBase:check_bullet_objects()
 	if self._bullet_objects then
 		self:_update_bullet_objects("get_ammo_remaining_in_clip")
 	end
 end
 
--- Lines 452-465
+-- Lines 448-461
 function PlayerTurretBase:_update_bullet_objects(func_name)
 	if self._bullet_objects then
 		local ammo_base = self:ammo_base()
@@ -483,7 +477,7 @@ function PlayerTurretBase:_update_bullet_objects(func_name)
 	end
 end
 
--- Lines 469-486
+-- Lines 465-482
 function PlayerTurretBase:auto_trigger_held(direction)
 	local fired = false
 
@@ -506,7 +500,7 @@ local mto = Vector3()
 local mfrom = Vector3()
 local mspread = Vector3()
 
--- Lines 491-561
+-- Lines 487-557
 function PlayerTurretBase:auto_fire_blank(direction)
 	local user_unit = self._setup.user_unit
 
@@ -581,12 +575,12 @@ function PlayerTurretBase:auto_fire_blank(direction)
 	return true
 end
 
--- Lines 565-567
+-- Lines 561-563
 function PlayerTurretBase:_get_spread()
 	return self._spread * (tweak_data.weapon[self._name_id] and tweak_data.weapon[self._name_id].spread.standing or 1)
 end
 
--- Lines 571-578
+-- Lines 567-574
 function PlayerTurretBase:update_damage()
 	local weapon_stats = tweak_data.weapon.stats
 	local damage_modifier = weapon_stats.stats_modifiers and weapon_stats.stats_modifiers.damage or 1
@@ -596,7 +590,7 @@ function PlayerTurretBase:update_damage()
 	self._damage = (base_damage + self:damage_addend()) * self:damage_multiplier()
 end
 
--- Lines 582-587
+-- Lines 578-583
 function PlayerTurretBase:damage_addend()
 	local user_unit = self._setup and self._setup.user_unit
 	local current_state = alive(user_unit) and user_unit:movement() and user_unit:movement()._current_state
@@ -604,7 +598,7 @@ function PlayerTurretBase:damage_addend()
 	return managers.blackmarket:damage_addend(self._name_id, self:categories(), self._silencer, nil, current_state, self._blueprint)
 end
 
--- Lines 589-594
+-- Lines 585-590
 function PlayerTurretBase:damage_multiplier()
 	local user_unit = self._setup and self._setup.user_unit
 	local current_state = alive(user_unit) and user_unit:movement() and user_unit:movement()._current_state
@@ -612,13 +606,13 @@ function PlayerTurretBase:damage_multiplier()
 	return managers.blackmarket:damage_multiplier(self._name_id, self:categories(), self._silencer, nil, current_state, self._blueprint)
 end
 
--- Lines 598-602
+-- Lines 594-598
 function PlayerTurretBase:pre_destroy(unit)
 	PlayerTurretBase.super.pre_destroy(self, unit)
 	self:remove_dead_owner()
 end
 
--- Lines 606-613
+-- Lines 602-609
 function PlayerTurretBase:save(save_data)
 	local my_save_data = {}
 
@@ -628,7 +622,7 @@ function PlayerTurretBase:save(save_data)
 	my_save_data.next_fire_allowed = self._next_fire_allowed - self._unit:timer():time()
 end
 
--- Lines 617-623
+-- Lines 613-619
 function PlayerTurretBase:load(save_data)
 	local my_save_data = save_data.base
 
@@ -638,7 +632,7 @@ function PlayerTurretBase:load(save_data)
 	self._next_fire_allowed = self._unit:timer():time() + my_save_data.next_fire_allowed
 end
 
--- Lines 627-638
+-- Lines 623-634
 function PlayerTurretBase:sync_net_event(state)
 	if state == PlayerTurretBase.SYNC_START_FIRE then
 		self._shooting = true

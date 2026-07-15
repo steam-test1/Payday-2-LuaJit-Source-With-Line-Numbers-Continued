@@ -369,15 +369,19 @@ function MissionManager:activate_script(...)
 	MissionManager.super.activate_script(self, ...)
 end
 
--- Lines 395-414
+-- Lines 395-419
 function MissionManager:client_run_mission_element(id, unit, orientation_element_index, id_from)
 	for name, data in pairs(self._scripts) do
-		if data:element(id) then
-			if data:element(id).client_on_executed then
-				data:element(id):set_synced_orientation_element_index(orientation_element_index)
-				data:element(id):client_on_executed(unit)
+		local element = data:element(id)
+
+		if element then
+			local sync_id_from = id_from > 0 and id_from or nil
+
+			if element.client_on_executed then
+				element:set_synced_orientation_element_index(orientation_element_index)
+				element:client_on_executed(unit, nil, nil, sync_id_from)
 			else
-				debug_pause("[MissionManager:client_run_mission_element] Trying to run client_on_executed on an element that doesn't implement it:", data:element(id):editor_name(), mission_id, id, inspect(unit), orientation_element_index)
+				debug_pause("[MissionManager:client_run_mission_element] Trying to run client_on_executed on an element that doesn't implement it:", element:editor_name(), mission_id, id, sync_id_from and "synced id: " .. tostring(sync_id_from) or "no synced id", inspect(unit), orientation_element_index)
 			end
 
 			return
@@ -385,14 +389,18 @@ function MissionManager:client_run_mission_element(id, unit, orientation_element
 	end
 end
 
--- Lines 417-429
+-- Lines 422-436
 function MissionManager:client_run_mission_element_end_screen(id, unit, orientation_element_index, id_from)
 	for name, data in pairs(self._scripts) do
-		if data:element(id) then
-			data:element(id):set_synced_orientation_element_index(orientation_element_index)
+		local element = data:element(id)
 
-			if data:element(id).client_on_executed_end_screen then
-				data:element(id):client_on_executed_end_screen(unit, nil, nil, id_from > 0 and id_from or nil)
+		if element then
+			element:set_synced_orientation_element_index(orientation_element_index)
+
+			if element.client_on_executed_end_screen then
+				local sync_id_from = id_from > 0 and id_from or nil
+
+				element:client_on_executed_end_screen(unit, nil, nil, sync_id_from)
 			end
 
 			return
@@ -400,7 +408,7 @@ function MissionManager:client_run_mission_element_end_screen(id, unit, orientat
 	end
 end
 
--- Lines 431-440
+-- Lines 438-447
 function MissionManager:server_run_mission_element_trigger(id, unit)
 	for name, data in pairs(self._scripts) do
 		local element = data:element(id)
@@ -413,7 +421,7 @@ function MissionManager:server_run_mission_element_trigger(id, unit)
 	end
 end
 
--- Lines 443-458
+-- Lines 450-465
 function MissionManager:to_server_area_event(event_id, id, unit)
 	for name, data in pairs(self._scripts) do
 		local element = data:element(id)
@@ -432,7 +440,7 @@ function MissionManager:to_server_area_event(event_id, id, unit)
 	end
 end
 
--- Lines 482-489
+-- Lines 489-496
 function MissionManager:to_server_access_camera_trigger(id, trigger, instigator)
 	for name, data in pairs(self._scripts) do
 		local element = data:element(id)
@@ -443,7 +451,7 @@ function MissionManager:to_server_access_camera_trigger(id, trigger, instigator)
 	end
 end
 
--- Lines 491-498
+-- Lines 498-505
 function MissionManager:save_job_values(data)
 	local state = {
 		saved_job_values = Global.mission_manager.saved_job_values,
@@ -454,7 +462,7 @@ function MissionManager:save_job_values(data)
 	data.ProductMissionManager = state
 end
 
--- Lines 500-507
+-- Lines 507-514
 function MissionManager:load_job_values(data)
 	local state = data.ProductMissionManager
 
@@ -465,7 +473,7 @@ function MissionManager:load_job_values(data)
 	end
 end
 
--- Lines 510-515
+-- Lines 517-522
 function MissionManager:stop_simulation(...)
 	MissionManager.super.stop_simulation(self, ...)
 
@@ -475,7 +483,7 @@ function MissionManager:stop_simulation(...)
 	managers.loot:reset()
 end
 
--- Lines 517-525
+-- Lines 524-532
 function MissionManager:get_mission_element_by_name(name)
 	for _, data in pairs(self._scripts) do
 		for id, element in pairs(data:elements()) do
@@ -490,7 +498,7 @@ CoreClass.override_class(CoreMissionManager.MissionManager, MissionManager)
 
 MissionScript = MissionScript or class(CoreMissionManager.MissionScript)
 
--- Lines 560-576
+-- Lines 567-583
 function MissionScript:activate(...)
 	if Network:is_server() then
 		MissionScript.super.activate(self, ...)

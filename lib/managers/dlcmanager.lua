@@ -1741,7 +1741,7 @@ end
 -- Lines 1910-1942
 function PS4DLCManager:_verify_dlcs()
 	local unlock_all_test = false
-	local titleVersion = PS3:get_titleVersion()
+	local titleVersion = PS4:get_titleVersion()
 
 	for dlc_name, dlc_data in pairs(Global.dlc_manager.all_dlc_data) do
 		if titleVersion == 2 or unlock_all_test then
@@ -1750,7 +1750,7 @@ function PS4DLCManager:_verify_dlcs()
 			if dlc_data.is_default or dlc_data.verified == true then
 				dlc_data.verified = true
 			else
-				dlc_data.verified = PS3:has_entitlement(dlc_data.product_id)
+				dlc_data.verified = PS4:has_entitlement(dlc_data.product_id)
 			end
 
 			if titleVersion == 1 and dlc_data.verified_for_TheBigScore == true then
@@ -2239,12 +2239,27 @@ function WINDLCManager:_check_dlc_data(dlc_data)
 	return false
 end
 
--- Lines 2685-2706
+-- Lines 2685-2704
 function WINDLCManager:chk_content_updated()
-	return
+	local has_content
+	local content_updated = false
+
+	for dlc_name, dlc_data in pairs(Global.dlc_manager.all_dlc_data) do
+		has_content = self:_check_dlc_data(dlc_data)
+		content_updated = content_updated or has_content ~= dlc_data.verified
+		dlc_data.verified = has_content
+	end
+
+	if content_updated then
+		if (game_state_machine and game_state_machine:current_state_name()) == "menu_main" then
+			self:give_dlc_and_verify_blackmarket()
+		else
+			Global.dlc_manager.verify_content_update = true
+		end
+	end
 end
 
--- Lines 2709-2726
+-- Lines 2707-2724
 function WINDLCManager:set_entitlements(entitlements)
 	Global.dlc_manager.entitlements = table.list_to_set(entitlements or {})
 	Global.dlc_manager.received_entitlements = true
@@ -2252,19 +2267,19 @@ function WINDLCManager:set_entitlements(entitlements)
 	self:chk_content_updated()
 end
 
--- Lines 2752-2754
+-- Lines 2750-2752
 function WINDLCManager:has_entitlement(entitlement_id)
 	return Global.dlc_manager.entitlements[entitlement_id]
 end
 
--- Lines 2756-2760
+-- Lines 2754-2758
 function WINDLCManager:save(data)
 	WINDLCManager.super.save(self, data)
 
 	data.dlc_entitlements = Global.dlc_manager.entitlements
 end
 
--- Lines 2762-2771
+-- Lines 2760-2769
 function WINDLCManager:load(data)
 	WINDLCManager.super.load(self, data)
 
@@ -2275,7 +2290,7 @@ function WINDLCManager:load(data)
 	end
 end
 
--- Lines 2773-2779
+-- Lines 2771-2777
 function WINDLCManager:init_finalize()
 	WINDLCManager.super.init_finalize(self)
 
@@ -2287,17 +2302,17 @@ end
 WinSteamDLCManager = WinSteamDLCManager or class(WINDLCManager)
 DLCManager.PLATFORM_CLASS_MAP[Idstring("STEAM"):key()] = WinSteamDLCManager
 
--- Lines 2830-2832
+-- Lines 2828-2830
 function WinSteamDLCManager:init()
 	WinSteamDLCManager.super.init(self)
 end
 
--- Lines 2834-2870
+-- Lines 2832-2868
 function WinSteamDLCManager:_init_promoted_dlc_list()
 	WinSteamDLCManager.super._init_promoted_dlc_list(self)
 end
 
--- Lines 2872-2875
+-- Lines 2870-2873
 function WinSteamDLCManager:has_stat(data)
 	local sa_handler = Steam:sa_handler()
 
@@ -2307,7 +2322,7 @@ end
 local IDS_STEAM = Idstring("STEAM")
 local IDS_EPIC = Idstring("EPIC")
 
--- Lines 2880-2952
+-- Lines 2878-2950
 function WinSteamDLCManager:_check_dlc_data(dlc_data)
 	if dlc_data.blocked then
 		return false
@@ -2376,12 +2391,12 @@ function WinSteamDLCManager:_check_dlc_data(dlc_data)
 	return false
 end
 
--- Lines 2954-2960
+-- Lines 2952-2958
 function WinSteamDLCManager:_verify_dlcs()
 	WinSteamDLCManager.super._verify_dlcs(self)
 end
 
--- Lines 2963-3007
+-- Lines 2961-3005
 function WinSteamDLCManager:check_pdth(clbk)
 	if Distribution:type() ~= Idstring("STEAM") then
 		clbk(false, false)
@@ -2406,7 +2421,7 @@ function WinSteamDLCManager:check_pdth(clbk)
 	Global.dlc_manager.has_pdth = has_pdth
 
 	if has_pdth then
-		-- Lines 2983-3002
+		-- Lines 2981-3000
 		local function result_function(success, page)
 			if success then
 				local json_reply_match = "\"([^,:\"]+)\"%s*:%s*\"([^\"]+)\""
@@ -2441,7 +2456,7 @@ function WinSteamDLCManager:check_pdth(clbk)
 	end
 end
 
--- Lines 3011-3022
+-- Lines 3009-3020
 function WinSteamDLCManager:chk_vr_dlc()
 	local steam_vr = Steam:is_app_installed("250820")
 	local payday2_vr = Steam:is_product_installed("826090")
@@ -2471,18 +2486,18 @@ WinEpicDLCManager.blocked_dlcs = table.list_to_set({
 	"bobblehead"
 })
 
--- Lines 3053-3056
+-- Lines 3051-3054
 function WinEpicDLCManager:init()
 	WinEpicDLCManager.super.init(self)
 	self:check_ownerships()
 end
 
--- Lines 3058-3084
+-- Lines 3056-3082
 function WinEpicDLCManager:check_ownerships()
 	if DistributionMatchmaking:logged_on() and not Global.dlc_manager.catalog_ownerships then
 		local catalog_item_ids = {}
 
-		-- Lines 3061-3070
+		-- Lines 3059-3068
 		local function chk_func(chk_id)
 			local epic_id
 
@@ -2515,22 +2530,22 @@ function WinEpicDLCManager:check_ownerships()
 	return false
 end
 
--- Lines 3086-3088
+-- Lines 3084-3086
 function WinEpicDLCManager:on_ownership_received(catalog_ownerships)
 	Global.dlc_manager.catalog_ownerships = catalog_ownerships
 end
 
--- Lines 3090-3092
+-- Lines 3088-3090
 function WinEpicDLCManager:has_catalog_ownerships()
 	return not not Global.dlc_manager.catalog_ownerships
 end
 
--- Lines 3094-3096
+-- Lines 3092-3094
 function WinEpicDLCManager:on_signin_complete()
 	self:_verify_dlcs()
 end
 
--- Lines 3098-3147
+-- Lines 3096-3145
 function WinEpicDLCManager:_check_dlc_data(dlc_data)
 	if dlc_data.blocked then
 		return false
@@ -2569,7 +2584,7 @@ function WinEpicDLCManager:_check_dlc_data(dlc_data)
 	return false
 end
 
--- Lines 3149-3158
+-- Lines 3147-3156
 function WinEpicDLCManager:_verify_dlcs()
 	if not Global.dlc_manager.catalog_ownerships then
 		return

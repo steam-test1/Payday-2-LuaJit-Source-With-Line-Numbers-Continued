@@ -41,27 +41,31 @@ function FirstAidKitBase.spawn(pos, rot, bits, peer_id)
 	local unit_name = "units/pd2_dlc_old_hoxton/equipment/gen_equipment_first_aid_kit/gen_equipment_first_aid_kit"
 	local unit = World:spawn_unit(Idstring(unit_name), pos, rot)
 
-	managers.network:session():send_to_peers_synched("sync_equipment_setup", unit, bits, peer_id or 0)
+	managers.network:send_to_peers_synched("sync_equipment_setup", unit, bits, peer_id or 0)
 	unit:base():setup(bits)
 
 	return unit
 end
 
--- Lines 45-48
+-- Lines 45-53
 function FirstAidKitBase:set_server_information(peer_id)
 	self._server_information = {
 		owner_peer_id = peer_id
 	}
 
-	managers.network:session():peer(peer_id):set_used_deployable(true)
+	local peer = managers.network:get_peer_safe(peer_id)
+
+	if peer then
+		peer:set_used_deployable(true)
+	end
 end
 
--- Lines 51-53
+-- Lines 56-58
 function FirstAidKitBase:server_information()
 	return self._server_information
 end
 
--- Lines 57-67
+-- Lines 62-72
 function FirstAidKitBase:init(unit)
 	UnitBase.init(self, unit, false)
 
@@ -76,7 +80,7 @@ function FirstAidKitBase:init(unit)
 	end
 end
 
--- Lines 69-74
+-- Lines 74-79
 function FirstAidKitBase:_get_upgrade_levels(bits)
 	local auto_recovery = Bitwise:rshift(bits, FirstAidKitBase.auto_recovery_shift)
 	local upgrade_lvl = Bitwise:rshift(bits, FirstAidKitBase.upgrade_lvl_shift) % 2^FirstAidKitBase.upgrade_lvl_shift
@@ -84,18 +88,22 @@ function FirstAidKitBase:_get_upgrade_levels(bits)
 	return upgrade_lvl, auto_recovery
 end
 
--- Lines 78-85
+-- Lines 83-95
 function FirstAidKitBase:_clbk_validate()
 	self._validate_clbk_id = nil
 
-	if not self._was_dropin then
-		local peer = managers.network:session():server_peer()
+	if self._was_dropin then
+		return
+	end
 
-		peer:mark_cheater(VoteManager.REASON.many_assets)
+	local server_peer = managers.network:get_server_peer_safe()
+
+	if server_peer then
+		server_peer:mark_cheater(VoteManager.REASON.many_assets)
 	end
 end
 
--- Lines 89-98
+-- Lines 99-108
 function FirstAidKitBase:sync_setup(bits, peer_id)
 	if self._validate_clbk_id then
 		managers.enemy:remove_delayed_clbk(self._validate_clbk_id)
@@ -107,7 +115,7 @@ function FirstAidKitBase:sync_setup(bits, peer_id)
 	self:setup(bits)
 end
 
--- Lines 102-127
+-- Lines 112-137
 function FirstAidKitBase:setup(bits)
 	local upgrade_lvl, auto_recovery = self:_get_upgrade_levels(bits)
 
@@ -133,17 +141,16 @@ function FirstAidKitBase:setup(bits)
 	if auto_recovery == 1 then
 		self._min_distance = tweak_data.upgrades.values.first_aid_kit.first_aid_kit_auto_recovery[1]
 
-		print("min distance ", self._min_distance)
 		FirstAidKitBase.Add(self, self._unit:position(), self._min_distance)
 	end
 end
 
--- Lines 129-131
+-- Lines 139-141
 function FirstAidKitBase:update(unit, t, dt)
 	self:_check_body()
 end
 
--- Lines 134-162
+-- Lines 144-172
 function FirstAidKitBase:_check_body()
 	if self._is_dynamic then
 		return
@@ -170,16 +177,13 @@ function FirstAidKitBase:_check_body()
 	self._attached_data.index = (self._attached_data.index < self._attached_data.max_index and self._attached_data.index or 0) + 1
 end
 
--- Lines 166-171
+-- Lines 176-179
 function FirstAidKitBase:server_set_dynamic()
 	self:_set_dynamic()
-
-	if managers.network:session() then
-		managers.network:session():send_to_peers_synched("sync_unit_event_id_16", self._unit, "base", 1)
-	end
+	managers.network:send_to_peers_synched("sync_unit_event_id_16", self._unit, "base", 1)
 end
 
--- Lines 173-179
+-- Lines 181-187
 function FirstAidKitBase:sync_net_event(event_id)
 	if event_id == 1 then
 		self:_set_dynamic()
@@ -188,14 +192,14 @@ function FirstAidKitBase:sync_net_event(event_id)
 	end
 end
 
--- Lines 181-184
+-- Lines 189-192
 function FirstAidKitBase:_set_dynamic()
 	self._is_dynamic = true
 
 	self._unit:body("dynamic"):set_enabled(true)
 end
 
--- Lines 188-202
+-- Lines 196-208
 function FirstAidKitBase:take(unit)
 	if self._empty then
 		return
@@ -207,14 +211,11 @@ function FirstAidKitBase:take(unit)
 		managers.player:activate_temporary_upgrade("temporary", "first_aid_damage_reduction")
 	end
 
-	if managers.network:session() then
-		managers.network:session():send_to_peers_synched("sync_unit_event_id_16", self._unit, "base", 2)
-	end
-
+	managers.network:send_to_peers_synched("sync_unit_event_id_16", self._unit, "base", 2)
 	self:_set_empty()
 end
 
--- Lines 204-223
+-- Lines 210-229
 function FirstAidKitBase:_set_empty()
 	self._empty = true
 
@@ -235,7 +236,7 @@ function FirstAidKitBase:_set_empty()
 	end
 end
 
--- Lines 227-231
+-- Lines 233-237
 function FirstAidKitBase:save(data)
 	local state = {}
 
@@ -243,7 +244,7 @@ function FirstAidKitBase:save(data)
 	data.FirstAidKitBase = state
 end
 
--- Lines 233-240
+-- Lines 239-246
 function FirstAidKitBase:load(data)
 	local state = data.FirstAidKitBase
 
@@ -254,9 +255,9 @@ function FirstAidKitBase:load(data)
 	self._was_dropin = true
 end
 
--- Lines 244-255
-function FirstAidKitBase:destroy(unit)
-	FirstAidKitBase.super.destroy(self, unit)
+-- Lines 250-261
+function FirstAidKitBase:pre_destroy(unit)
+	FirstAidKitBase.super.pre_destroy(self, unit)
 
 	if self._min_distance then
 		FirstAidKitBase.Remove(self)

@@ -1959,7 +1959,7 @@ function MenuNodeMainGui:set_visible(visible)
 	self:_add_version_string()
 end
 
--- Lines 1829-1882
+-- Lines 1829-1889
 function MenuNodeMainGui:_add_version_string()
 	if alive(self._version_string) then
 		self._version_string:parent():remove(self._version_string)
@@ -1969,6 +1969,12 @@ function MenuNodeMainGui:_add_version_string()
 
 	if Application:debug_enabled() or IS_PC then
 		local version = Application:version()
+
+		if IS_STEAM_MM then
+			version = version .. " SteamMM"
+		elseif IS_EPIC_MM then
+			version = version .. " EpicMM"
+		end
 
 		self._version_string = self.ws:panel():text({
 			align = "left",
@@ -1980,7 +1986,7 @@ function MenuNodeMainGui:_add_version_string()
 			font_size = tweak_data.menu.pd2_small_font_size
 		})
 
-		-- Lines 1857-1877
+		-- Lines 1864-1884
 		local function fade_in(o)
 			local from = Color(0, 1, 1, 1)
 			local to = Color(1, 1, 1, 1)

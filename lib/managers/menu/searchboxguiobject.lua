@@ -21,7 +21,12 @@ function SearchBoxGuiObject:init(parent_panel, ws, current_search, override_pane
 	self.placeholder_text:set_visible(not self._focus and #self.text:text() == 0)
 end
 
--- Lines 26-32
+-- Lines 25-27
+function SearchBoxGuiObject:allow_input()
+	return true
+end
+
+-- Lines 29-35
 function SearchBoxGuiObject:destroy()
 	self._disconnect_callback = nil
 	self._finish_sorting_callback = nil
@@ -30,7 +35,7 @@ function SearchBoxGuiObject:destroy()
 	self.panel:parent():remove(self.panel)
 end
 
--- Lines 34-78
+-- Lines 37-81
 function SearchBoxGuiObject:set_searchbox(parent_panel, override_panel_parameters)
 	local panel_parameters = {
 		alpha = 1,
@@ -93,22 +98,22 @@ function SearchBoxGuiObject:set_searchbox(parent_panel, override_panel_parameter
 	self.caret:set_right(self.panel:w() * 0.5)
 end
 
--- Lines 80-82
+-- Lines 83-85
 function SearchBoxGuiObject:register_callback(callback)
 	self._finish_sorting_callback = callback
 end
 
--- Lines 84-86
+-- Lines 87-89
 function SearchBoxGuiObject:register_disconnect_callback(callback)
 	self._disconnect_callback = callback
 end
 
--- Lines 88-91
+-- Lines 91-94
 function SearchBoxGuiObject:register_list(list)
 	self._sorting_list = list
 end
 
--- Lines 93-103
+-- Lines 96-106
 function SearchBoxGuiObject:mouse_pressed(button, x, y)
 	if button == Idstring("0") and alive(self.panel) and self.panel:inside(x, y) then
 		self:connect_search_input()
@@ -123,7 +128,7 @@ function SearchBoxGuiObject:mouse_pressed(button, x, y)
 	return false
 end
 
--- Lines 105-112
+-- Lines 108-115
 function SearchBoxGuiObject:mouse_moved(o, x, y)
 	local inside = alive(self.panel) and self.panel:inside(x, y) or false
 
@@ -134,7 +139,7 @@ function SearchBoxGuiObject:mouse_moved(o, x, y)
 	return false, "arrow"
 end
 
--- Lines 114-132
+-- Lines 117-135
 function SearchBoxGuiObject:build_and_apply_filter(search_string)
 	local index_list = {}
 
@@ -156,14 +161,14 @@ function SearchBoxGuiObject:build_and_apply_filter(search_string)
 	end
 end
 
--- Lines 134-136
+-- Lines 137-139
 function SearchBoxGuiObject:input_focus()
 	return self._focus
 end
 
 SearchBoxGuiObject.MAX_SEARCH_LENGTH = 32
 
--- Lines 142-161
+-- Lines 145-164
 function SearchBoxGuiObject:connect_search_input()
 	if self._adding_to_data or self._focus then
 		return
@@ -186,7 +191,7 @@ function SearchBoxGuiObject:connect_search_input()
 	managers.menu_component:post_event("menu_enter")
 end
 
--- Lines 163-182
+-- Lines 166-185
 function SearchBoxGuiObject:disconnect_search_input()
 	if self._focus then
 		self._ws:disconnect_keyboard()
@@ -208,7 +213,7 @@ function SearchBoxGuiObject:disconnect_search_input()
 	end
 end
 
--- Lines 188-218
+-- Lines 191-221
 function SearchBoxGuiObject:search_key_press(o, k)
 	if self._skip_first then
 		self._skip_first = false
@@ -239,7 +244,7 @@ function SearchBoxGuiObject:search_key_press(o, k)
 	self:update_caret()
 end
 
--- Lines 220-226
+-- Lines 223-229
 function SearchBoxGuiObject:search_key_release(o, k)
 	if self._key_pressed == k then
 		self._key_pressed = false
@@ -248,7 +253,7 @@ function SearchBoxGuiObject:search_key_release(o, k)
 	self:update_caret()
 end
 
--- Lines 228-241
+-- Lines 231-244
 function SearchBoxGuiObject:update_key_down(o, k)
 	wait(0.6)
 
@@ -261,14 +266,14 @@ function SearchBoxGuiObject:update_key_down(o, k)
 	end
 end
 
--- Lines 243-247
+-- Lines 246-250
 function SearchBoxGuiObject:clear_text()
 	if self.text then
 		self.text:set_text("")
 	end
 end
 
--- Lines 249-286
+-- Lines 252-289
 function SearchBoxGuiObject:enter_text(o, s)
 	local byte = s and string.byte(s)
 
@@ -306,12 +311,12 @@ function SearchBoxGuiObject:enter_text(o, s)
 	self:build_and_apply_filter()
 end
 
--- Lines 288-290
+-- Lines 291-293
 function SearchBoxGuiObject:enter_key_callback()
 	self:build_and_apply_filter()
 end
 
--- Lines 292-297
+-- Lines 295-300
 function SearchBoxGuiObject:esc_key_callback()
 	call_on_next_update(function()
 		self:build_and_apply_filter()
@@ -319,7 +324,7 @@ function SearchBoxGuiObject:esc_key_callback()
 	end)
 end
 
--- Lines 299-306
+-- Lines 302-309
 function SearchBoxGuiObject.blink(o)
 	while true do
 		o:set_color(Color(0, 1, 1, 1))
@@ -329,7 +334,7 @@ function SearchBoxGuiObject.blink(o)
 	end
 end
 
--- Lines 308-322
+-- Lines 311-325
 function SearchBoxGuiObject:set_blinking(b)
 	local caret = self.caret
 
@@ -350,7 +355,7 @@ function SearchBoxGuiObject:set_blinking(b)
 	end
 end
 
--- Lines 324-330
+-- Lines 327-333
 function SearchBoxGuiObject:update_caret()
 	local text = self.text
 	local caret = self.caret
