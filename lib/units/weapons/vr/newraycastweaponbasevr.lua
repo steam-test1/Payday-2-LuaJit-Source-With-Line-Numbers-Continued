@@ -6,7 +6,7 @@ local __check_autoaim = NewRaycastWeaponBase.check_autoaim
 local __get_spread = NewRaycastWeaponBase._get_spread
 local __reload_speed_multiplier = NewRaycastWeaponBase.reload_speed_multiplier
 local __clbk_assembly_complete = NewRaycastWeaponBase.clbk_assembly_complete
-local __destroy = NewRaycastWeaponBase.destroy
+local __pre_destroy = NewRaycastWeaponBase.pre_destroy
 
 -- Lines 12-17
 function NewRaycastWeaponBaseVR:clbk_assembly_complete(...)
@@ -16,8 +16,8 @@ function NewRaycastWeaponBaseVR:clbk_assembly_complete(...)
 end
 
 -- Lines 19-23
-function NewRaycastWeaponBaseVR:destroy(...)
-	__destroy(self, ...)
+function NewRaycastWeaponBaseVR:pre_destroy(...)
+	__pre_destroy(self, ...)
 	tweak_data:remove_reload_callback(self)
 end
 

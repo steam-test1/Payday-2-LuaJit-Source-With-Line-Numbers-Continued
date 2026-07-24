@@ -30,9 +30,9 @@ function NewFlamethrowerBase:init(...)
 end
 
 -- Lines 35-39
-function NewFlamethrowerBase:destroy(...)
+function NewFlamethrowerBase:pre_destroy(...)
 	self:kill_effects()
-	NewFlamethrowerBase.super.destroy(self, ...)
+	NewFlamethrowerBase.super.pre_destroy(self, ...)
 end
 
 -- Lines 41-131

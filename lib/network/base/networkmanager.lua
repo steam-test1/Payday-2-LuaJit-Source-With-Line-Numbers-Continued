@@ -348,58 +348,59 @@ function NetworkManager:prepare_stop_network(...)
 	end
 end
 
--- Lines 346-391
+-- Lines 346-393
 function NetworkManager:stop_network(clean)
-	if self._started then
-		self._session:on_network_stopped()
+	if not self._started then
+		return
+	end
 
-		self._started = false
+	self._session:on_network_stopped()
 
-		if clean and self._session then
-			local peers = self._session:peers()
+	self._started = false
 
-			for k, peer in pairs(peers) do
-				local rpc = peer:rpc()
+	if clean and self._session then
+		local peers = self._session:peers()
 
-				if rpc then
-					Network:reset_connection(rpc)
-					Network:remove_client(rpc)
-				end
+		for k, peer in pairs(peers) do
+			local rpc = peer:rpc()
+
+			if rpc then
+				Network:reset_connection(rpc)
+				Network:remove_client(rpc)
 			end
 		end
+	end
 
-		self._handlers = nil
-		self._shared_handler_data = nil
+	self._handlers = nil
+	self._shared_handler_data = nil
 
-		self._session:destroy()
+	self._session:destroy()
 
-		self._session = nil
+	self._session = nil
+	self._stop_network = nil
+	self._stop_next_frame = nil
+	self._network_bound = nil
 
-		if managers.enemy then
-			managers.enemy:stop_everything()
-		end
+	Network:unbind()
+	Network:set_disconnected()
 
-		self._stop_network = nil
-		self._stop_next_frame = nil
-		self._network_bound = nil
+	if not Application:editor() then
+		Network:set_multiplayer(false)
+	end
 
-		Network:unbind()
-		Network:set_disconnected()
+	cat_print("multiplayer_base", "[NetworkManager:stop_network]")
 
-		if not Application:editor() then
-			Network:set_multiplayer(false)
-		end
-
-		cat_print("multiplayer_base", "[NetworkManager:stop_network]")
+	if managers.enemy then
+		managers.enemy:stop_activity()
 	end
 end
 
--- Lines 395-397
+-- Lines 397-399
 function NetworkManager:queue_stop_network()
 	self._stop_network = true
 end
 
--- Lines 401-415
+-- Lines 403-417
 function NetworkManager:is_ready_to_load()
 	if self._stop_next_frame or self._stop_network then
 		return false
@@ -416,7 +417,7 @@ function NetworkManager:is_ready_to_load()
 	return true
 end
 
--- Lines 419-429
+-- Lines 421-431
 function NetworkManager:stopping()
 	if not self._started then
 		return true
@@ -429,7 +430,7 @@ function NetworkManager:stopping()
 	return false
 end
 
--- Lines 434-444
+-- Lines 436-446
 function NetworkManager:start_client()
 	self:stop_network(true)
 	self:start_network()
@@ -443,7 +444,7 @@ function NetworkManager:start_client()
 	self._session:create_local_peer(true)
 end
 
--- Lines 449-457
+-- Lines 451-459
 function NetworkManager:discover_hosts(result_cb)
 	self:stop_network(true)
 	self:start_network()
@@ -457,7 +458,7 @@ function NetworkManager:discover_hosts(result_cb)
 	self._session:discover_hosts()
 end
 
--- Lines 462-483
+-- Lines 464-485
 function NetworkManager:on_discover_host_received(sender)
 	if Global.game_settings.single_player then
 		return
@@ -485,7 +486,7 @@ function NetworkManager:on_discover_host_received(sender)
 	sender:discover_host_reply(my_name, level_id, level_name, sender:ip_at_index(0), state, difficulty)
 end
 
--- Lines 488-495
+-- Lines 490-497
 function NetworkManager:on_discover_host_reply(host, host_name, level_name, my_ip, state, difficulty)
 	print("on_discover_host_reply", host, host_name, level_name, my_ip, state)
 
@@ -497,7 +498,7 @@ function NetworkManager:on_discover_host_reply(host, host_name, level_name, my_i
 	end
 end
 
--- Lines 499-523
+-- Lines 501-530
 function NetworkManager:host_game()
 	self:stop_network(true)
 	self:start_network()
@@ -513,9 +514,13 @@ function NetworkManager:host_game()
 	if self.is_ps3 then
 		self._session:broadcast_server_up()
 	end
+
+	if managers.enemy then
+		managers.enemy:resume_activity()
+	end
 end
 
--- Lines 527-535
+-- Lines 534-542
 function NetworkManager:join_game_at_host_rpc(host_rpc, is_invite, result_cb)
 	self._discover_hosts_cb = nil
 
@@ -526,7 +531,7 @@ function NetworkManager:join_game_at_host_rpc(host_rpc, is_invite, result_cb)
 	end
 end
 
--- Lines 539-542
+-- Lines 546-549
 function NetworkManager:register_spawn_point(id, data)
 	local runtime_data = {
 		pos_rot = {
@@ -539,27 +544,27 @@ function NetworkManager:register_spawn_point(id, data)
 	self._spawn_points[id] = runtime_data
 end
 
--- Lines 546-548
+-- Lines 553-555
 function NetworkManager:unregister_spawn_point(id)
 	self._spawn_points[id] = nil
 end
 
--- Lines 552-554
+-- Lines 559-561
 function NetworkManager:unregister_all_spawn_points()
 	self._spawn_points = {}
 end
 
--- Lines 558-560
+-- Lines 565-567
 function NetworkManager:has_spawn_points()
 	return next(self._spawn_points)
 end
 
--- Lines 564-566
+-- Lines 571-573
 function NetworkManager:spawn_point(sp_id)
 	return self._spawn_points[sp_id]
 end
 
--- Lines 570-582
+-- Lines 577-589
 function NetworkManager:sanitize_peer_name(name)
 	if not name then
 		return "[unknown]"
@@ -571,7 +576,7 @@ function NetworkManager:sanitize_peer_name(name)
 	return name
 end
 
--- Lines 586-610
+-- Lines 593-617
 function NetworkManager:_register_PSN_matchmaking_callbacks()
 	local gen_clbk = callback(self, self, "clbk_PSN_event")
 
@@ -599,12 +604,12 @@ function NetworkManager:_register_PSN_matchmaking_callbacks()
 	PSN:set_matchmaking_callback("error", gen_clbk)
 end
 
--- Lines 614-616
+-- Lines 621-623
 function NetworkManager:clbk_PSN_event(...)
 	print("[NetworkManager:clbk_PSN_event]", inspect(...))
 end
 
--- Lines 620-628
+-- Lines 627-635
 function NetworkManager:search_ses()
 	PSN:set_matchmaking_callback("session_search", callback(self, self, "clbk_search_session"))
 
@@ -618,7 +623,7 @@ function NetworkManager:search_ses()
 	PSN:search_session(search_params, {}, PSN:get_world_list()[1].world_id)
 end
 
--- Lines 632-637
+-- Lines 639-644
 function NetworkManager:clbk_search_session(search_results)
 	print("[NetworkManager:clbk_search_session]", search_results)
 
@@ -627,7 +632,7 @@ function NetworkManager:clbk_search_session(search_results)
 	end
 end
 
--- Lines 641-652
+-- Lines 648-659
 function NetworkManager.clbk_msg_overwrite(overwrite_data, msg_queue, ...)
 	if msg_queue then
 		if overwrite_data.index then
@@ -646,14 +651,14 @@ function NetworkManager.clbk_msg_overwrite(overwrite_data, msg_queue, ...)
 	end
 end
 
--- Lines 656-660
+-- Lines 663-667
 function NetworkManager:set_packet_throttling_enabled(state)
 	if self._session and self._is_win32 then
 		self._session:set_packet_throttling_enabled(state)
 	end
 end
 
--- Lines 664-700
+-- Lines 671-707
 function NetworkManager:on_peer_added(peer, peer_id)
 	cat_print("multiplayer_base", "NetworkManager:on_peer_added", peer, peer_id)
 
@@ -688,37 +693,37 @@ function NetworkManager:on_peer_added(peer, peer_id)
 	end
 end
 
--- Lines 706-708
+-- Lines 713-715
 function NetworkManager:get_peer_safe(peer_id)
 	return self._session and self._session:peer(peer_id) or nil
 end
 
--- Lines 710-712
+-- Lines 717-719
 function NetworkManager:get_local_peer_safe()
 	return self._session and self._session:local_peer() or nil
 end
 
--- Lines 714-716
+-- Lines 721-723
 function NetworkManager:get_server_peer_safe()
 	return self._session and self._session:server_peer() or nil
 end
 
--- Lines 718-720
+-- Lines 725-727
 function NetworkManager:get_peer_by_unit_safe(unit)
 	return self._session and self._session:peer_by_unit(unit) or nil
 end
 
--- Lines 722-724
+-- Lines 729-731
 function NetworkManager:get_dropin_peer_safe()
 	return self._session and self._session:dropin_peer() or nil
 end
 
--- Lines 730-732
+-- Lines 737-739
 local function PrintError(fn_name, ...)
 	Application:stack_dump_error("[NetworkManager] Tried to call " .. tostring(fn_name) .. ", but the network session has been destroyed.", inspect(...))
 end
 
--- Lines 734-742
+-- Lines 741-749
 function NetworkManager:send_to_peers(...)
 	if not self._session then
 		PrintError("send_to_peers", ...)
@@ -729,7 +734,7 @@ function NetworkManager:send_to_peers(...)
 	self._session:send_to_peers(...)
 end
 
--- Lines 744-752
+-- Lines 751-759
 function NetworkManager:send_to_peers_ip_verified(...)
 	if not self._session then
 		PrintError("send_to_peers_ip_verified", ...)
@@ -740,7 +745,7 @@ function NetworkManager:send_to_peers_ip_verified(...)
 	self._session:send_to_peers_ip_verified(...)
 end
 
--- Lines 754-762
+-- Lines 761-769
 function NetworkManager:send_to_peers_except(...)
 	if not self._session then
 		PrintError("send_to_peers_except", ...)
@@ -751,7 +756,7 @@ function NetworkManager:send_to_peers_except(...)
 	self._session:send_to_peers_except(...)
 end
 
--- Lines 764-772
+-- Lines 771-779
 function NetworkManager:send_to_peers_synched(...)
 	if not self._session then
 		PrintError("send_to_peers_synched", ...)
@@ -762,7 +767,7 @@ function NetworkManager:send_to_peers_synched(...)
 	self._session:send_to_peers_synched(...)
 end
 
--- Lines 774-782
+-- Lines 781-789
 function NetworkManager:send_to_peers_synched_except(...)
 	if not self._session then
 		PrintError("send_to_peers_synched_except", ...)
@@ -773,7 +778,7 @@ function NetworkManager:send_to_peers_synched_except(...)
 	self._session:send_to_peers_synched_except(...)
 end
 
--- Lines 784-792
+-- Lines 791-799
 function NetworkManager:send_to_peers_loaded(...)
 	if not self._session then
 		PrintError("send_to_peers_loaded", ...)
@@ -784,7 +789,7 @@ function NetworkManager:send_to_peers_loaded(...)
 	self._session:send_to_peers_loaded(...)
 end
 
--- Lines 794-802
+-- Lines 801-809
 function NetworkManager:send_to_peers_loaded_except(...)
 	if not self._session then
 		PrintError("send_to_peers_loaded_except", ...)
@@ -795,7 +800,7 @@ function NetworkManager:send_to_peers_loaded_except(...)
 	self._session:send_to_peers_loaded_except(...)
 end
 
--- Lines 804-812
+-- Lines 811-819
 function NetworkManager:send_to_peer(...)
 	if not self._session then
 		PrintError("send_to_peer", ...)
@@ -806,7 +811,7 @@ function NetworkManager:send_to_peer(...)
 	self._session:send_to_peer(...)
 end
 
--- Lines 814-822
+-- Lines 821-829
 function NetworkManager:send_to_peer_synched(...)
 	if not self._session then
 		PrintError("send_to_peer_synched", ...)
@@ -817,7 +822,7 @@ function NetworkManager:send_to_peer_synched(...)
 	self._session:send_to_peer_synched(...)
 end
 
--- Lines 824-832
+-- Lines 831-839
 function NetworkManager:send_to_host(...)
 	if not self._session then
 		PrintError("send_to_host", ...)

@@ -111,10 +111,10 @@ function MaskExt:swap_to_fps()
 	end
 end
 
--- Lines 155-391
+-- Lines 155-393
 function MaskExt:apply_blueprint(blueprint, async_clbk)
-	if not blueprint then
-		Application:error("[MaskExt:apply_blueprint] NO BLUEPRINT GIVEN!!")
+	if not blueprint or not blueprint.material then
+		Application:error("[MaskExt:apply_blueprint] No blueprint or not even a base material applied", blueprint and inspect(blueprint))
 
 		return
 	end
@@ -299,7 +299,7 @@ function MaskExt:apply_blueprint(blueprint, async_clbk)
 	end
 end
 
--- Lines 394-419
+-- Lines 396-421
 function MaskExt:_apply_mask_textures(texture_data)
 	texture_data.ready = texture_data.ready and texture_data.ready + 1 or 1
 
@@ -312,7 +312,7 @@ function MaskExt:_apply_mask_textures(texture_data)
 	end
 end
 
--- Lines 422-435
+-- Lines 424-437
 function MaskExt:_apply_mask_variables()
 	for _, material in ipairs(self._materials_mat3 or {}) do
 		material:set_variable(IDS_MATERIAL_AMOUNT, self._material_amount or 1)
@@ -326,7 +326,7 @@ function MaskExt:_apply_mask_variables()
 	end
 end
 
--- Lines 438-454
+-- Lines 440-456
 function MaskExt:clbk_texture_loaded(async_clbk, tex_name)
 	if not alive(self._unit) then
 		return
@@ -341,7 +341,7 @@ function MaskExt:clbk_texture_loaded(async_clbk, tex_name)
 	self:_chk_load_complete(async_clbk)
 end
 
--- Lines 457-477
+-- Lines 459-479
 function MaskExt:_chk_load_complete(async_clbk)
 	if self._requesting then
 		return
@@ -361,7 +361,7 @@ function MaskExt:_chk_load_complete(async_clbk)
 	async_clbk()
 end
 
--- Lines 480-490
+-- Lines 482-492
 function MaskExt:destroy(unit)
 	for tex_id, texture_data in pairs(self._textures) do
 		if not texture_data.ready or texture_data.ready <= 0 then

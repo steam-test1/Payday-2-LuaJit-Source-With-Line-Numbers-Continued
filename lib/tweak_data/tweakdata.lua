@@ -53,47 +53,47 @@ require("lib/tweak_data/SkirmishTweakData")
 
 TweakData = TweakData or class()
 
--- Lines 89-89
+-- Lines 87-87
 function TweakData:_init_wip_tweak_data()
 	return
 end
 
--- Lines 90-90
+-- Lines 88-88
 function TweakData:_init_wip_blackmarket(tweak_data)
 	return
 end
 
--- Lines 91-91
+-- Lines 89-89
 function TweakData:_init_wip_levels()
 	return
 end
 
--- Lines 92-92
+-- Lines 90-90
 function TweakData:_init_wip_narrative()
 	return
 end
 
--- Lines 93-93
+-- Lines 91-91
 function TweakData:_init_wip_assets(tweak_data)
 	return
 end
 
--- Lines 94-94
+-- Lines 92-92
 function TweakData:_init_wip_weapon_factory(tweak_data)
 	return
 end
 
--- Lines 95-95
+-- Lines 93-93
 function TweakData:_init_wip_skilltree()
 	return
 end
 
--- Lines 96-96
+-- Lines 94-94
 function TweakData:_init_wip_upgrades()
 	return
 end
 
--- Lines 97-97
+-- Lines 95-95
 function TweakData:_init_wip_economy()
 	return
 end
@@ -102,7 +102,7 @@ require("lib/tweak_data/TweakDataPD2")
 
 TweakData.RELOAD = true
 
--- Lines 107-115
+-- Lines 105-113
 function TweakData:digest_tweak_data()
 	Application:debug("TweakData: Digesting tweak_data. <('O'<)")
 
@@ -117,7 +117,7 @@ function TweakData:digest_tweak_data()
 	end
 end
 
--- Lines 117-126
+-- Lines 115-124
 function TweakData:digest_recursive(key, parent)
 	local value = parent and parent[key] or key
 
@@ -130,7 +130,7 @@ function TweakData:digest_recursive(key, parent)
 	end
 end
 
--- Lines 128-147
+-- Lines 126-145
 function TweakData:get_value(...)
 	local arg = {
 		...
@@ -156,7 +156,7 @@ function TweakData:get_value(...)
 	return value
 end
 
--- Lines 149-162
+-- Lines 147-160
 function TweakData:get_raw_value(...)
 	local arg = {
 		...
@@ -177,7 +177,7 @@ function TweakData:get_raw_value(...)
 	return value
 end
 
--- Lines 165-169
+-- Lines 163-167
 function TweakData:get_mutatable_value(id, ...)
 	local value = self:get_raw_value(...)
 
@@ -186,7 +186,7 @@ function TweakData:get_mutatable_value(id, ...)
 	return value
 end
 
--- Lines 172-182
+-- Lines 170-180
 function TweakData:set_mode()
 	if not Global.game_settings then
 		return
@@ -199,17 +199,17 @@ function TweakData:set_mode()
 	end
 end
 
--- Lines 184-186
+-- Lines 182-184
 function TweakData:_set_singleplayer()
 	self.player:_set_singleplayer()
 end
 
--- Lines 188-190
+-- Lines 186-188
 function TweakData:_set_multiplayer()
 	self.player:_set_multiplayer()
 end
 
--- Lines 193-207
+-- Lines 191-205
 function TweakData:set_difficulty()
 	if not Global.game_settings then
 		return
@@ -234,7 +234,7 @@ function TweakData:set_difficulty()
 	end
 end
 
--- Lines 209-228
+-- Lines 207-226
 function TweakData:_set_easy()
 	self.player:_set_easy()
 	self.character:_set_easy()
@@ -249,7 +249,7 @@ function TweakData:_set_easy()
 	self.experience_manager.total_objectives_finished = 750
 end
 
--- Lines 230-249
+-- Lines 228-247
 function TweakData:_set_normal()
 	self.player:_set_normal()
 	self.character:_set_normal()
@@ -264,7 +264,7 @@ function TweakData:_set_normal()
 	self.experience_manager.total_objectives_finished = 1000
 end
 
--- Lines 251-270
+-- Lines 249-268
 function TweakData:_set_hard()
 	self.player:_set_hard()
 	self.character:_set_hard()
@@ -279,7 +279,7 @@ function TweakData:_set_hard()
 	self.experience_manager.total_objectives_finished = 1500
 end
 
--- Lines 272-291
+-- Lines 270-289
 function TweakData:_set_overkill()
 	self.player:_set_overkill()
 	self.character:_set_overkill()
@@ -294,7 +294,7 @@ function TweakData:_set_overkill()
 	self.experience_manager.total_objectives_finished = 3000
 end
 
--- Lines 293-312
+-- Lines 291-310
 function TweakData:_set_overkill_145()
 	self.player:_set_overkill_145()
 	self.character:_set_overkill_145()
@@ -309,7 +309,7 @@ function TweakData:_set_overkill_145()
 	self.experience_manager.total_objectives_finished = 3000
 end
 
--- Lines 314-333
+-- Lines 312-331
 function TweakData:_set_easy_wish()
 	self.player:_set_easy_wish()
 	self.character:_set_easy_wish()
@@ -324,7 +324,7 @@ function TweakData:_set_easy_wish()
 	self.experience_manager.total_objectives_finished = 3000
 end
 
--- Lines 335-354
+-- Lines 333-352
 function TweakData:_set_overkill_290()
 	self.player:_set_overkill_290()
 	self.character:_set_overkill_290()
@@ -339,7 +339,7 @@ function TweakData:_set_overkill_290()
 	self.experience_manager.total_objectives_finished = 3000
 end
 
--- Lines 356-375
+-- Lines 354-373
 function TweakData:_set_sm_wish()
 	self.player:_set_sm_wish()
 	self.character:_set_sm_wish()
@@ -354,37 +354,37 @@ function TweakData:_set_sm_wish()
 	self.experience_manager.total_objectives_finished = 3000
 end
 
--- Lines 377-379
+-- Lines 375-377
 function TweakData:difficulty_to_index(difficulty)
 	return table.index_of(self.difficulties, difficulty)
 end
 
--- Lines 381-383
+-- Lines 379-381
 function TweakData:index_to_difficulty(index)
 	return self.difficulties[index]
 end
 
--- Lines 385-387
+-- Lines 383-385
 function TweakData:permission_to_index(permission)
 	return table.index_of(self.permissions, permission)
 end
 
--- Lines 389-391
+-- Lines 387-389
 function TweakData:index_to_permission(index)
 	return self.permissions[index]
 end
 
--- Lines 393-395
+-- Lines 391-393
 function TweakData:server_state_to_index(state)
 	return table.index_of(self.server_states, state)
 end
 
--- Lines 397-399
+-- Lines 395-397
 function TweakData:index_to_server_state(index)
 	return self.server_states[index]
 end
 
--- Lines 402-411
+-- Lines 400-409
 function TweakData:menu_sync_state_to_index(state)
 	if not state then
 		return false
@@ -397,12 +397,12 @@ function TweakData:menu_sync_state_to_index(state)
 	end
 end
 
--- Lines 412-414
+-- Lines 410-412
 function TweakData:index_to_menu_sync_state(index)
 	return self.menu_sync_states[index]
 end
 
--- Lines 416-2962
+-- Lines 414-2931
 function TweakData:init()
 	self.max_players = 4
 	self.difficulties = {
@@ -3091,7 +3091,7 @@ function TweakData:init()
 	self:digest_tweak_data()
 end
 
--- Lines 2966-2992
+-- Lines 2935-2961
 function TweakData:load_movie_list()
 	self.movies = {
 		{
@@ -3120,7 +3120,7 @@ function TweakData:load_movie_list()
 	end
 end
 
--- Lines 2997-3103
+-- Lines 2966-3072
 function TweakData:init_screen_colors()
 	self.screen_colors = {}
 	self.screen_colors.text = Color(255, 255, 255, 255) / 255
@@ -3205,7 +3205,7 @@ function TweakData:init_screen_colors()
 	end
 end
 
--- Lines 3106-3137
+-- Lines 3075-3106
 function TweakData:init_accessibility_colors()
 	self.accessibility_colors = {}
 	self.accessibility_colors.dot = {}
@@ -3235,14 +3235,14 @@ function TweakData:init_accessibility_colors()
 	self.accessibility_colors.screenflash.blurzone.gray_dark = Color(0.19607843137254902, 0.19607843137254902, 0.19607843137254902)
 end
 
--- Lines 3142-3220
+-- Lines 3111-3189
 function TweakData:free_dlc_list()
 	local free_dlcs = {}
 
 	return free_dlcs
 end
 
--- Lines 3230-3238
+-- Lines 3199-3207
 function TweakData:_execute_reload_clbks()
 	if self._reload_clbks then
 		for key, clbk_data in pairs(self._reload_clbks) do
@@ -3253,7 +3253,7 @@ function TweakData:_execute_reload_clbks()
 	end
 end
 
--- Lines 3242-3245
+-- Lines 3211-3214
 function TweakData:add_reload_callback(object, func)
 	self._reload_clbks = self._reload_clbks or {}
 
@@ -3263,7 +3263,7 @@ function TweakData:add_reload_callback(object, func)
 	})
 end
 
--- Lines 3249-3258
+-- Lines 3218-3227
 function TweakData:remove_reload_callback(object)
 	if self._reload_clbks then
 		for i, k in ipairs(self._reload_clbks) do
@@ -3276,7 +3276,7 @@ function TweakData:remove_reload_callback(object)
 	end
 end
 
--- Lines 3262-3438
+-- Lines 3231-3407
 function TweakData:set_scale()
 	local lang_key = SystemInfo:language():key()
 	local lang_mods = {
@@ -3466,7 +3466,7 @@ function TweakData:set_scale()
 	self.scale.victory_title_multiplier = victory_title_multiplier or 1
 end
 
--- Lines 3440-3619
+-- Lines 3409-3588
 function TweakData:set_menu_scale()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -3580,7 +3580,7 @@ function TweakData:set_menu_scale()
 	self.load_level.stonecold_small_logo = "guis/textures/game_small_logo"
 end
 
--- Lines 3621-3701
+-- Lines 3590-3670
 function TweakData:set_hud_values()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -3659,7 +3659,7 @@ function TweakData:set_hud_values()
 	self.hud.revive_colors[4] = Color(255, 91, 87, 87) / 255
 end
 
--- Lines 3705-3753
+-- Lines 3674-3722
 function TweakData:_setup_access_cameras()
 	self.camera_channels = {
 		alpha = true,
@@ -3704,7 +3704,7 @@ function TweakData:_setup_access_cameras()
 	end
 end
 
--- Lines 3758-3762
+-- Lines 3727-3731
 function TweakData:resolution_changed()
 	self:set_scale()
 	self:set_menu_scale()
@@ -3723,7 +3723,7 @@ if (not tweak_data or tweak_data.RELOAD) and managers.dlc then
 	end
 end
 
--- Lines 3779-3948
+-- Lines 3748-3917
 function TweakData:get_controller_help_coords()
 	if managers.controller:get_default_wrapper_type() == "pc" or managers.controller:get_default_wrapper_type() == "steam" then
 		return false

@@ -846,10 +846,9 @@ end
 
 BrushHeader = BrushHeader or class()
 
--- Lines 698-701
+-- Lines 698-700
 function BrushHeader:init()
 	self._name = ""
-	self._distance = 0
 end
 
 -- Lines 702-708
@@ -859,33 +858,11 @@ function BrushHeader:set_name(name)
 	if self._name then
 		CoreUnit.editor_load_unit(self._name)
 	end
-
-	self:setup_brush_distance()
 end
 
--- Lines 709-720
-function BrushHeader:setup_brush_distance()
-	if self._name then
-		local node = CoreEngineAccess._editor_unit_data(self._name:id()):script_data()
-
-		if node then
-			for data in node:children() do
-				if data:name() == "brush" then
-					self._distance = tonumber(data:parameter("distance"))
-				end
-			end
-		end
-	end
-end
-
--- Lines 721-723
-function BrushHeader:get_spawn_dist()
-	return self._distance
-end
-
--- Lines 725-729
+-- Lines 710-715
 function BrushHeader:spawn_brush(position, rotation)
-	position = position + rotation:z() * self:get_spawn_dist()
+	position = position + rotation:z()
 
 	MassUnitManager:spawn_unit(Idstring(self._name), position, rotation)
 

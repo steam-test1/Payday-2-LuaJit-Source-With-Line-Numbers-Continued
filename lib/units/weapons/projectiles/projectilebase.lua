@@ -391,7 +391,7 @@ function ProjectileBase:create_sweep_data()
 	self._sweep_data.last_pos = mvector3.copy(self._sweep_data.current_pos)
 end
 
--- Lines 408-462
+-- Lines 408-464
 function ProjectileBase:throw(params)
 	self._owner = params.owner
 
@@ -453,7 +453,7 @@ function ProjectileBase:throw(params)
 	end
 end
 
--- Lines 466-468
+-- Lines 468-470
 function ProjectileBase:sync_throw_projectile(dir, projectile_type)
 	self:throw({
 		dir = dir,
@@ -461,7 +461,7 @@ function ProjectileBase:sync_throw_projectile(dir, projectile_type)
 	})
 end
 
--- Lines 472-536
+-- Lines 474-538
 function ProjectileBase:update(unit, t, dt)
 	if not self._simulated and not self._collided then
 		self._unit:m_position(mvec1)
@@ -539,7 +539,7 @@ function ProjectileBase:update(unit, t, dt)
 	end
 end
 
--- Lines 540-621
+-- Lines 542-623
 function ProjectileBase:_warning_fx_vfx_upd(unit, t, dt, warning_data)
 	if self._detonated then
 		self:_warning_fx_vfx_remove()
@@ -589,7 +589,7 @@ function ProjectileBase:_warning_fx_vfx_upd(unit, t, dt, warning_data)
 	end
 end
 
--- Lines 623-671
+-- Lines 625-673
 function ProjectileBase:_warning_fx_vfx_progress(unit, t, dt, warning_data)
 	if not warning_data.enabled then
 		self:_warning_fx_vfx_enable(warning_data)
@@ -637,7 +637,7 @@ function ProjectileBase:_warning_fx_vfx_progress(unit, t, dt, warning_data)
 	end
 end
 
--- Lines 673-712
+-- Lines 675-714
 function ProjectileBase:_warning_fx_vfx_enable(warning_data)
 	if warning_data.enabled then
 		return
@@ -679,7 +679,7 @@ function ProjectileBase:_warning_fx_vfx_enable(warning_data)
 	end
 end
 
--- Lines 714-741
+-- Lines 716-743
 function ProjectileBase:_warning_fx_vfx_disable(warning_data)
 	if not warning_data.enabled then
 		return
@@ -710,7 +710,7 @@ function ProjectileBase:_warning_fx_vfx_disable(warning_data)
 	end
 end
 
--- Lines 743-771
+-- Lines 745-773
 function ProjectileBase:_warning_fx_vfx_remove()
 	local warning_data = self._warning_fx_vfx_data
 
@@ -741,7 +741,7 @@ function ProjectileBase:_warning_fx_vfx_remove()
 	end
 end
 
--- Lines 776-805
+-- Lines 778-807
 function ProjectileBase:clbk_impact(tag, unit, body, other_unit, other_body, position, normal, collision_velocity, velocity, other_velocity, new_velocity, direction, damage, ...)
 	if self._sweep_data and not self._collided then
 		mvector3.set(mvec2, position)
@@ -771,17 +771,17 @@ function ProjectileBase:clbk_impact(tag, unit, body, other_unit, other_body, pos
 	end
 end
 
--- Lines 809-811
+-- Lines 811-813
 function ProjectileBase:_on_collision(col_ray)
 	print("_on_collision", inspect(col_ray))
 end
 
--- Lines 815-817
+-- Lines 817-819
 function ProjectileBase:_bounce(...)
 	print("_bounce", ...)
 end
 
--- Lines 821-826
+-- Lines 823-828
 function ProjectileBase:save(data)
 	local state = {}
 
@@ -790,7 +790,7 @@ function ProjectileBase:save(data)
 	data.ProjectileBase = state
 end
 
--- Lines 830-839
+-- Lines 832-841
 function ProjectileBase:load(data)
 	local state = data.ProjectileBase
 
@@ -801,7 +801,7 @@ function ProjectileBase:load(data)
 	end
 end
 
--- Lines 843-859
+-- Lines 845-861
 function ProjectileBase:outside_worlds_bounding_box()
 	if Network:is_server() or self._unit:id() == -1 then
 		self._unit:set_slot(0)
@@ -819,7 +819,7 @@ function ProjectileBase:outside_worlds_bounding_box()
 	end
 end
 
--- Lines 863-928
+-- Lines 865-930
 function ProjectileBase:destroy(...)
 	ProjectileBase.super.destroy(self, ...)
 
@@ -890,7 +890,7 @@ end
 
 local ids_unit = IDS_UNIT
 
--- Lines 936-979
+-- Lines 938-981
 function ProjectileBase.throw_projectile(projectile_type, pos, dir, owner_peer_id)
 	if not ProjectileBase.check_time_cheat(projectile_type, owner_peer_id) then
 		return
@@ -941,7 +941,7 @@ function ProjectileBase.throw_projectile(projectile_type, pos, dir, owner_peer_i
 	return unit
 end
 
--- Lines 983-1006
+-- Lines 985-1008
 function ProjectileBase.throw_projectile_npc(projectile_type, pos, dir, thrower_unit)
 	local tweak_entry = tweak_data.blackmarket.projectiles[projectile_type]
 	local unit_name = Idstring(not Network:is_server() and tweak_entry.local_unit or tweak_entry.unit)
@@ -971,14 +971,14 @@ function ProjectileBase.throw_projectile_npc(projectile_type, pos, dir, thrower_
 	return unit
 end
 
--- Lines 1010-1013
+-- Lines 1012-1015
 function ProjectileBase:add_trail_effect()
 	managers.game_play_central:add_projectile_trail(self._unit, self._unit:orientation_object(), self.trail_effect)
 
 	self._added_trail_effect = true
 end
 
--- Lines 1015-1020
+-- Lines 1017-1022
 function ProjectileBase:remove_trail_effect()
 	if self._added_trail_effect then
 		managers.game_play_central:remove_projectile_trail(self._unit)
@@ -987,7 +987,7 @@ function ProjectileBase:remove_trail_effect()
 	end
 end
 
--- Lines 1024-1073
+-- Lines 1026-1075
 function ProjectileBase:_hide_and_freeze(skip_bodies)
 	if not skip_bodies then
 		local body_ray_type = Idstring("body")
@@ -1032,7 +1032,7 @@ function ProjectileBase:_hide_and_freeze(skip_bodies)
 	self:_warning_fx_vfx_remove()
 end
 
--- Lines 1075-1095
+-- Lines 1077-1097
 function ProjectileBase:_handle_hiding_and_destroying(destroy, destruction_delay)
 	self:_hide_and_freeze(true)
 	self._unit:set_enabled(false)
@@ -1050,12 +1050,12 @@ function ProjectileBase:_handle_hiding_and_destroying(destroy, destruction_delay
 	end
 end
 
--- Lines 1099-1101
+-- Lines 1101-1103
 function ProjectileBase:_destruct_delay()
 	return nil
 end
 
--- Lines 1103-1109
+-- Lines 1105-1111
 function ProjectileBase:_clbk_destroy()
 	self._destroy_clbk_id = nil
 
@@ -1064,40 +1064,45 @@ function ProjectileBase:_clbk_destroy()
 	end
 end
 
--- Lines 1113-1130
+-- Lines 1115-1143
 function ProjectileBase.check_time_cheat(projectile_type, owner_peer_id)
 	if not owner_peer_id then
 		return true
 	end
 
 	local projectile_type_index = tweak_data.blackmarket:get_index_from_projectile_id(projectile_type)
+	local proj_time_cheat = tweak_data.blackmarket.projectiles[projectile_type].time_cheat
 
-	if tweak_data.blackmarket.projectiles[projectile_type].time_cheat then
+	if proj_time_cheat then
 		ProjectileBase.time_cheat[projectile_type_index] = ProjectileBase.time_cheat[projectile_type_index] or {}
 
-		if ProjectileBase.time_cheat[projectile_type_index][owner_peer_id] and ProjectileBase.time_cheat[projectile_type_index][owner_peer_id] > Application:time() then
+		local record_time = ProjectileBase.time_cheat[projectile_type_index][owner_peer_id]
+
+		if record_time and record_time > Application:time() then
+			print("[ProjectileBase.check_time_cheat] Shot too quick", record_time, Application:time())
+
 			return false
 		end
 
-		ProjectileBase.time_cheat[projectile_type_index][owner_peer_id] = Application:time() + tweak_data.blackmarket.projectiles[projectile_type].time_cheat
+		ProjectileBase.time_cheat[projectile_type_index][owner_peer_id] = Application:time() + proj_time_cheat
 	end
 
 	return true
 end
 
--- Lines 1134-1145
+-- Lines 1147-1151
 function ProjectileBase.spawn(unit_name, pos, rot)
 	local unit = World:spawn_unit(Idstring(unit_name), pos, rot)
 
 	return unit
 end
 
--- Lines 1149-1150
+-- Lines 1155-1156
 function ProjectileBase._dispose_of_sound(...)
 	return
 end
 
--- Lines 1152-1168
+-- Lines 1158-1174
 function ProjectileBase:_detect_and_give_dmg(hit_pos)
 	local params = {}
 
@@ -1118,13 +1123,13 @@ function ProjectileBase:_detect_and_give_dmg(hit_pos)
 	return hit_units, splinters
 end
 
--- Lines 1171-1174
+-- Lines 1177-1180
 function ProjectileBase._explode_on_client(position, normal, user_unit, dmg, range, curve_pow, custom_params)
 	managers.explosion:play_sound_and_effects(position, normal, range, custom_params)
 	managers.explosion:client_damage_and_push(position, normal, user_unit, dmg, range, curve_pow)
 end
 
--- Lines 1176-1178
+-- Lines 1182-1184
 function ProjectileBase._play_sound_and_effects(position, normal, range, custom_params)
 	managers.explosion:play_sound_and_effects(position, normal, range, custom_params)
 end

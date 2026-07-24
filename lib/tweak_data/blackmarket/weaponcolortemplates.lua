@@ -10,7 +10,7 @@ function WeaponColorTemplates.setup_weapon_color_templates(tweak_data)
 	return weapon_color_templates
 end
 
--- Lines 12-137
+-- Lines 12-107
 function WeaponColorTemplates._setup_color_variation_template(tweak_data)
 	local weapon_color_variation_template = {
 		{
@@ -107,7 +107,7 @@ function WeaponColorTemplates._setup_color_variation_template(tweak_data)
 	return weapon_color_variation_template
 end
 
--- Lines 139-193
+-- Lines 109-161
 function WeaponColorTemplates._setup_color_skin_template(tweak_data)
 	local weapon_color_skin_template = {
 		base_gradient = "base_default",
@@ -175,28 +175,28 @@ function WeaponColorTemplates._setup_color_skin_template(tweak_data)
 	return weapon_color_skin_template
 end
 
--- Lines 196-200
+-- Lines 164-168
 function WeaponColorTemplates._setup_color_skin_parts(tweak_data)
 	local parts = {}
 
 	return parts
 end
 
--- Lines 202-206
+-- Lines 170-174
 function WeaponColorTemplates._setup_akimbo_weapons(tweak_data, weapons)
 	for weapon_id, akimbo_id in pairs(tweak_data.weapon_akimbo_mappings) do
 		weapons[akimbo_id] = weapons[weapon_id]
 	end
 end
 
--- Lines 207-211
+-- Lines 175-179
 function WeaponColorTemplates._setup_npc_weapons(tweak_data, weapons)
 	for weapon_id, npc_id in pairs(tweak_data.weapon_npc_mappings) do
 		weapons[npc_id] = weapons[weapon_id]
 	end
 end
 
--- Lines 213-1882
+-- Lines 181-1848
 function WeaponColorTemplates._setup_color_skin_weapons(tweak_data)
 	local weapons = {}
 

@@ -212,7 +212,7 @@ function CoreEditor:next_cube()
 	return false
 end
 
--- Lines 174-231
+-- Lines 174-249
 function CoreEditor:cube_map_done()
 	if self:next_cube() then
 		return

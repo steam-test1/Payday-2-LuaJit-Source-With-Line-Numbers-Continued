@@ -1,6 +1,6 @@
 GuiTweakData = GuiTweakData or class()
 
--- Lines 3-2273
+-- Lines 3-2118
 function GuiTweakData:init(tweak_data)
 	local is_win_32 = IS_PC
 	local is_nextgen = IS_PS4 or IS_XB1
@@ -5782,7 +5782,7 @@ function GuiTweakData:init(tweak_data)
 	})
 end
 
--- Lines 2275-2294
+-- Lines 2120-2139
 function GuiTweakData:_create_location_bounding_boxes()
 	for _, location in ipairs(self.crime_net.locations) do
 		local params = location[1]
@@ -5810,7 +5810,7 @@ function GuiTweakData:_create_location_bounding_boxes()
 	end
 end
 
--- Lines 2296-2364
+-- Lines 2141-2209
 function GuiTweakData:_create_location_spawning_dots()
 	local map_w = 2048
 	local map_h = 1024
@@ -5889,17 +5889,17 @@ function GuiTweakData:_create_location_spawning_dots()
 	self.crime_net.locations = new_locations
 end
 
--- Lines 2366-2368
+-- Lines 2211-2213
 function GuiTweakData:create_narrative_locations(locations)
 	return
 end
 
--- Lines 2370-2379
+-- Lines 2215-2224
 function GuiTweakData:print_locations()
 	return
 end
 
--- Lines 2381-2415
+-- Lines 2226-2260
 function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	skipnewlines = skipnewlines or false
 	depth = depth or 0
@@ -5940,7 +5940,7 @@ function GuiTweakData:serializeTable(val, name, skipnewlines, depth)
 	return tmp
 end
 
--- Lines 2417-2542
+-- Lines 2262-2394
 function GuiTweakData:tradable_inventory_sort_func(index)
 	if type(index) == "string" then
 		index = self:tradable_inventory_sort_index(index)
@@ -5948,7 +5948,7 @@ function GuiTweakData:tradable_inventory_sort_func(index)
 
 	if index == 1 then
 		return function(x, y)
-			return y < x
+			return (tonumber(x) or -1) > (tonumber(y) or -1)
 		end
 	elseif index == 2 then
 		local inventory_tradable = managers.blackmarket:get_inventory_tradable()
@@ -6009,11 +6009,13 @@ function GuiTweakData:tradable_inventory_sort_func(index)
 			y_item = inventory_tradable[y]
 			x_td = (tweak_data.economy[x_item.category] or tweak_data.blackmarket[x_item.category])[x_item.entry]
 			y_td = (tweak_data.economy[y_item.category] or tweak_data.blackmarket[y_item.category])[y_item.entry]
-			x_rarity = tweak_data.economy.rarities[x_td.rarity or "common"]
-			y_rarity = tweak_data.economy.rarities[y_td.rarity or "common"]
+			x_rarity = tweak_data.economy.rarities[x_td.rarity]
+			x_rarity = x_rarity and x_rarity.index or -1
+			y_rarity = tweak_data.economy.rarities[y_td.rarity]
+			y_rarity = y_rarity and y_rarity.index or -1
 
-			if x_rarity.index ~= y_rarity.index then
-				return x_rarity.index > y_rarity.index
+			if x_rarity ~= y_rarity then
+				return x_rarity > y_rarity
 			end
 
 			if x_item.entry ~= y_item.entry then
@@ -6063,12 +6065,12 @@ function GuiTweakData:tradable_inventory_sort_func(index)
 	return nil
 end
 
--- Lines 2544-2546
+-- Lines 2396-2398
 function GuiTweakData:tradable_inventory_sort_name(index)
 	return self.tradable_inventory_sort_list[index] or "none"
 end
 
--- Lines 2548-2555
+-- Lines 2400-2407
 function GuiTweakData:tradable_inventory_sort_index(name)
 	for index, n in ipairs(self.tradable_inventory_sort_list) do
 		if n == name then
@@ -6079,7 +6081,7 @@ function GuiTweakData:tradable_inventory_sort_index(name)
 	return 0
 end
 
--- Lines 2557-2577
+-- Lines 2409-2429
 function GuiTweakData:get_locked_sort_number(dlc, ...)
 	local dlc_data = dlc and Global.dlc_manager.all_dlc_data[dlc]
 	local is_dlc_locked = dlc and not managers.dlc:is_dlc_unlocked(dlc) or false

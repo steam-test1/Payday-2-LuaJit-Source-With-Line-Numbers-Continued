@@ -1,20 +1,22 @@
 GroupAIStateBesiege = GroupAIStateBesiege or class(GroupAIStateBase)
 GroupAIStateBesiege._MAX_SIMULTANEOUS_SPAWNS = 3
+GroupAIStateBesiege._POLICE_ACTIVITY_DELAY = 2
+GroupAIStateBesiege._POLICE_ACTIVITY_DELAY_FAST = 0.4
 GroupAIStateBesiege._HOSTAGE_TASK_DELAY = 0.125
 
--- Lines 7-17
+-- Lines 10-20
 function GroupAIStateBesiege:init(group_ai_state)
 	GroupAIStateBesiege.super.init(self)
 
-	if Network:is_server() and managers.navigation:is_data_ready() then
-		self:_queue_police_upd_task()
-	end
-
 	self._tweak_data = tweak_data.group_ai[group_ai_state]
 	self._graph_distance_cache = {}
+
+	if self._is_server and managers.navigation:is_data_ready() then
+		self:_queue_police_upd_task()
+	end
 end
 
--- Lines 21-45
+-- Lines 34-58
 function GroupAIStateBesiege:_init_misc_data()
 	GroupAIStateBesiege.super._init_misc_data(self)
 
@@ -53,40 +55,46 @@ function GroupAIStateBesiege:_init_misc_data()
 	end
 end
 
--- Lines 49-110
+-- Lines 62-123
 function GroupAIStateBesiege:update(t, dt)
 	GroupAIStateBesiege.super.update(self, t, dt)
 
-	if Network:is_server() then
+	if self._is_server and managers.navigation:is_data_ready() then
 		self:_queue_police_upd_task()
 
-		if managers.navigation:is_data_ready() and self._draw_enabled then
+		if self._draw_enabled then
 			self:_draw_enemy_activity(t)
 			self:_draw_spawn_points()
 		end
 	end
 end
 
--- Lines 114-122
+-- Lines 127-134
 function GroupAIStateBesiege:paused_update(t, dt)
 	GroupAIStateBesiege.super.paused_update(self, t, dt)
 
-	if Network:is_server() and managers.navigation:is_data_ready() and self._draw_enabled then
+	if self._is_server and self._draw_enabled and managers.navigation:is_data_ready() then
 		self:_draw_enemy_activity(t)
 		self:_draw_spawn_points()
 	end
 end
 
--- Lines 126-131
+-- Lines 139-150
 function GroupAIStateBesiege:_queue_police_upd_task()
-	if not self._police_upd_task_queued then
-		self._police_upd_task_queued = true
+	if self._police_upd_task_queued then
+		if self._t < self._police_upd_task_queued then
+			return
+		end
 
-		managers.enemy:queue_task("GroupAIStateBesiege._upd_police_activity", self._upd_police_activity, self, self._t + (next(self._spawning_groups) and 0.4 or 2))
+		self:_upd_police_activity()
 	end
+
+	local next_upd_t = next(self._spawning_groups) and GroupAIStateBesiege._POLICE_ACTIVITY_DELAY_FAST or GroupAIStateBesiege._POLICE_ACTIVITY_DELAY
+
+	self._police_upd_task_queued = self._t + next_upd_t
 end
 
--- Lines 135-171
+-- Lines 154-190
 function GroupAIStateBesiege:assign_enemy_to_group_ai(unit, team_id)
 	local u_tracker = unit:movement():nav_tracker()
 	local seg = u_tracker:nav_segment()
@@ -124,13 +132,13 @@ function GroupAIStateBesiege:assign_enemy_to_group_ai(unit, team_id)
 	self:set_enemy_assigned(area, unit:key())
 end
 
--- Lines 174-177
+-- Lines 193-196
 function GroupAIStateBesiege:assign_enemy_to_existing_group(unit, group)
 	self:_add_group_member(group, unit:key())
 	self:set_enemy_assigned(group.objective.area, unit:key())
 end
 
--- Lines 182-193
+-- Lines 201-212
 function GroupAIStateBesiege:on_enemy_unregistered(unit)
 	GroupAIStateBesiege.super.on_enemy_unregistered(self, unit)
 
@@ -149,37 +157,31 @@ function GroupAIStateBesiege:on_enemy_unregistered(unit)
 	end
 end
 
--- Lines 197-230
+-- Lines 216-247
 function GroupAIStateBesiege:_upd_police_activity()
-	self._police_upd_task_queued = false
-
-	if self._police_activity_blocked then
+	if not self._ai_enabled or self._police_activity_blocked then
 		return
 	end
 
-	if self._ai_enabled then
-		self:_upd_SO()
-		self:_upd_grp_SO()
-		self:_check_spawn_phalanx()
-		self:_check_phalanx_group_has_spawned()
-		self:_check_phalanx_damage_reduction_increase()
+	self:_upd_SO()
+	self:_upd_grp_SO()
+	self:_check_spawn_phalanx()
+	self:_check_phalanx_group_has_spawned()
+	self:_check_phalanx_damage_reduction_increase()
 
-		if self._enemy_weapons_hot then
-			self:_claculate_drama_value()
-			self:_upd_regroup_task()
-			self:_upd_reenforce_tasks()
-			self:_upd_recon_tasks()
-			self:_upd_assault_task()
-			self:_begin_new_tasks()
-			self:_upd_group_spawning()
-			self:_upd_groups()
-		end
+	if self._enemy_weapons_hot then
+		self:_claculate_drama_value()
+		self:_upd_regroup_task()
+		self:_upd_reenforce_tasks()
+		self:_upd_recon_tasks()
+		self:_upd_assault_task()
+		self:_begin_new_tasks()
+		self:_upd_group_spawning()
+		self:_upd_groups()
 	end
-
-	self:_queue_police_upd_task()
 end
 
--- Lines 234-280
+-- Lines 251-297
 function GroupAIStateBesiege:_upd_SO()
 	local t = self._t
 	local trash
@@ -237,7 +239,7 @@ function GroupAIStateBesiege:_upd_SO()
 	end
 end
 
--- Lines 284-504
+-- Lines 301-521
 function GroupAIStateBesiege:_begin_new_tasks()
 	local all_areas = self._area_data
 	local nav_manager = managers.navigation
@@ -419,7 +421,7 @@ function GroupAIStateBesiege:_begin_new_tasks()
 	end
 end
 
--- Lines 508-549
+-- Lines 525-566
 function GroupAIStateBesiege:_begin_assault_task(assault_areas)
 	local assault_task = self._task_data.assault
 
@@ -466,7 +468,7 @@ function GroupAIStateBesiege:_begin_assault_task(assault_areas)
 	self._task_data.recon.tasks = {}
 end
 
--- Lines 560-569
+-- Lines 577-586
 function GroupAIStateBesiege:assault_phase_end_time()
 	local task_data = self._task_data.assault
 	local end_t = task_data and task_data.phase_end_t
@@ -478,7 +480,7 @@ function GroupAIStateBesiege:assault_phase_end_time()
 	return end_t
 end
 
--- Lines 571-808
+-- Lines 588-825
 function GroupAIStateBesiege:_upd_assault_task()
 	local task_data = self._task_data.assault
 
@@ -710,7 +712,7 @@ function GroupAIStateBesiege:_upd_assault_task()
 	self:_assign_enemy_groups_to_assault(task_data.phase)
 end
 
--- Lines 812-827
+-- Lines 829-844
 function GroupAIStateBesiege:_verify_anticipation_spawn_point(sp_data)
 	local sp_nav_seg = sp_data.nav_seg
 	local area = self:get_area_from_nav_seg_id(sp_nav_seg)
@@ -728,7 +730,7 @@ function GroupAIStateBesiege:_verify_anticipation_spawn_point(sp_data)
 	return true
 end
 
--- Lines 831-840
+-- Lines 848-857
 function GroupAIStateBesiege:_begin_reenforce_task(reenforce_area)
 	local new_task = {
 		use_spawn_event = true,
@@ -742,7 +744,7 @@ function GroupAIStateBesiege:_begin_reenforce_task(reenforce_area)
 	self._task_data.reenforce.next_dispatch_t = self._t + self:_get_difficulty_dependent_value(self._tweak_data.reenforce.interval)
 end
 
--- Lines 844-853
+-- Lines 861-870
 function GroupAIStateBesiege:_begin_recon_task(recon_area)
 	local new_task = {
 		use_smoke = true,
@@ -756,7 +758,7 @@ function GroupAIStateBesiege:_begin_recon_task(recon_area)
 	self._task_data.recon.next_dispatch_t = nil
 end
 
--- Lines 857-867
+-- Lines 874-884
 function GroupAIStateBesiege:_begin_regroup_task(force_regroup)
 	self._task_data.regroup.start_t = self._t
 	self._task_data.regroup.end_t = self._t + (force_regroup and 0.1 or self:_get_difficulty_dependent_value(self._tweak_data.regroup.duration))
@@ -771,7 +773,7 @@ function GroupAIStateBesiege:_begin_regroup_task(force_regroup)
 	self:_assign_assault_groups_to_retire()
 end
 
--- Lines 871-903
+-- Lines 888-920
 function GroupAIStateBesiege:_end_regroup_task()
 	if self._task_data.regroup.active then
 		self._task_data.regroup.active = nil
@@ -780,7 +782,7 @@ function GroupAIStateBesiege:_end_regroup_task()
 		self:set_assault_mode(false)
 
 		if not self._smoke_grenade_ignore_control then
-			managers.network:session():send_to_peers_synched("sync_smoke_grenade_kill")
+			managers.network:send_to_peers_synched("sync_smoke_grenade_kill")
 			self:sync_smoke_grenade_kill()
 		end
 
@@ -808,7 +810,7 @@ function GroupAIStateBesiege:_end_regroup_task()
 	end
 end
 
--- Lines 907-917
+-- Lines 924-934
 function GroupAIStateBesiege:_upd_regroup_task()
 	local regroup_task = self._task_data.regroup
 
@@ -821,7 +823,7 @@ function GroupAIStateBesiege:_upd_regroup_task()
 	end
 end
 
--- Lines 921-980
+-- Lines 938-997
 function GroupAIStateBesiege:_upd_recon_tasks()
 	local task_data = self._task_data.recon.tasks[1]
 
@@ -884,7 +886,7 @@ function GroupAIStateBesiege:_upd_recon_tasks()
 	end
 end
 
--- Lines 984-1049
+-- Lines 1001-1066
 function GroupAIStateBesiege:_find_spawn_points_near_area(target_area, nr_wanted, target_pos, max_dis, verify_clbk)
 	local all_areas = self._area_data
 	local all_nav_segs = managers.navigation._nav_segments
@@ -957,19 +959,19 @@ function GroupAIStateBesiege:_find_spawn_points_near_area(target_area, nr_wanted
 	return #s_points > 0 and s_points
 end
 
--- Lines 1053-1056
+-- Lines 1070-1073
 local function make_dis_id(from, to)
 	local f, t = from < to and from or to, to < from and from or to
 
 	return tostring(f) .. "-" .. tostring(t)
 end
 
--- Lines 1058-1060
+-- Lines 1075-1077
 local function spawn_group_id(spawn_group)
 	return spawn_group.mission_element:id()
 end
 
--- Lines 1062-1182
+-- Lines 1079-1199
 function GroupAIStateBesiege:_find_spawn_group_near_area(target_area, allowed_groups, target_pos, max_dis, verify_clbk)
 	local all_areas = self._area_data
 	local mvec3_dis = mvector3.distance_sq
@@ -1094,7 +1096,7 @@ function GroupAIStateBesiege:_find_spawn_group_near_area(target_area, allowed_gr
 	return self:_choose_best_group(candidate_groups, total_weight)
 end
 
--- Lines 1184-1211
+-- Lines 1201-1228
 function GroupAIStateBesiege:_choose_best_groups(best_groups, group, group_types, allowed_groups, weight)
 	local total_weight = 0
 
@@ -1124,7 +1126,7 @@ function GroupAIStateBesiege:_choose_best_groups(best_groups, group, group_types
 	return total_weight
 end
 
--- Lines 1213-1246
+-- Lines 1230-1263
 function GroupAIStateBesiege:_choose_best_group(best_groups, total_weight)
 	local rand_wgt = total_weight * math.random()
 	local best_grp, best_grp_type
@@ -1155,7 +1157,7 @@ function GroupAIStateBesiege:_choose_best_group(best_groups, total_weight)
 	return best_grp, best_grp_type
 end
 
--- Lines 1248-1269
+-- Lines 1265-1286
 function GroupAIStateBesiege:force_spawn_group(group, group_types, guarantee)
 	local best_groups = {}
 	local total_weight = self:_choose_best_groups(best_groups, group, group_types, self._tweak_data[self._task_data.assault.active and "assault" or "recon"].groups, 1)
@@ -1184,7 +1186,7 @@ function GroupAIStateBesiege:force_spawn_group(group, group_types, guarantee)
 	end
 end
 
--- Lines 1271-1281
+-- Lines 1288-1298
 function GroupAIStateBesiege:get_force_spawn_group(group, group_types)
 	local best_groups = {}
 	local total_weight = self:_choose_best_groups(best_groups, group, group_types, self._tweak_data[self._task_data.assault.active and "assault" or "recon"].groups, 1)
@@ -1200,7 +1202,7 @@ function GroupAIStateBesiege:get_force_spawn_group(group, group_types)
 	return nil
 end
 
--- Lines 1286-1309
+-- Lines 1303-1326
 function GroupAIStateBesiege:_spawn_in_individual_groups(grp_objective, spawn_points, task)
 	for i_sp, spawn_point in ipairs(spawn_points) do
 		local group_desc = {
@@ -1229,7 +1231,7 @@ function GroupAIStateBesiege:_spawn_in_individual_groups(grp_objective, spawn_po
 	end
 end
 
--- Lines 1313-1341
+-- Lines 1330-1358
 function GroupAIStateBesiege._extract_group_desc_structure(spawn_entry_outer, valid_unit_entries)
 	for spawn_entry_key, spawn_entry in ipairs(spawn_entry_outer) do
 		if spawn_entry.unit then
@@ -1253,7 +1255,7 @@ function GroupAIStateBesiege._extract_group_desc_structure(spawn_entry_outer, va
 	end
 end
 
--- Lines 1345-1350
+-- Lines 1362-1367
 function GroupAIStateBesiege:_get_special_unit_type_count(special_type)
 	if not self._special_units[special_type] then
 		return 0
@@ -1262,7 +1264,7 @@ function GroupAIStateBesiege:_get_special_unit_type_count(special_type)
 	return table.size(self._special_units[special_type])
 end
 
--- Lines 1352-1481
+-- Lines 1369-1498
 function GroupAIStateBesiege:_spawn_in_group(spawn_group, spawn_group_type, grp_objective, ai_task)
 	local spawn_group_desc = tweak_data.group_ai.enemy_spawn_groups[spawn_group_type]
 	local wanted_nr_units
@@ -1317,7 +1319,7 @@ function GroupAIStateBesiege:_spawn_in_group(spawn_group, spawn_group_type, grp_
 
 	table.insert(self._spawning_groups, spawn_task)
 
-	-- Lines 1407-1422
+	-- Lines 1424-1439
 	local function _add_unit_type_to_spawn_task(i, spawn_entry)
 		local spawn_amount_mine = 1 + (spawn_task.units_remaining[spawn_entry.unit] and spawn_task.units_remaining[spawn_entry.unit].amount or 0)
 
@@ -1405,7 +1407,7 @@ function GroupAIStateBesiege:_spawn_in_group(spawn_group, spawn_group_type, grp_
 	return group
 end
 
--- Lines 1485-1502
+-- Lines 1502-1519
 function GroupAIStateBesiege:_upd_group_spawning(use_last)
 	local spawn_task = self._spawning_groups[use_last and #self._spawning_groups or 1]
 
@@ -1416,7 +1418,7 @@ function GroupAIStateBesiege:_upd_group_spawning(use_last)
 	self:_perform_group_spawning(spawn_task, nil, use_last)
 end
 
--- Lines 1504-1664
+-- Lines 1521-1681
 function GroupAIStateBesiege:_perform_group_spawning(spawn_task, force, use_last)
 	local nr_units_spawned = 0
 	local produce_data = {
@@ -1426,7 +1428,7 @@ function GroupAIStateBesiege:_perform_group_spawning(spawn_task, force, use_last
 	local group_ai_tweak = tweak_data.group_ai
 	local spawn_points = spawn_task.spawn_group.spawn_pts
 
-	-- Lines 1516-1618
+	-- Lines 1533-1635
 	local function _try_spawn_unit(u_type_name, spawn_entry)
 		if nr_units_spawned >= GroupAIStateBesiege._MAX_SIMULTANEOUS_SPAWNS and not force then
 			return
@@ -1564,7 +1566,7 @@ function GroupAIStateBesiege:_perform_group_spawning(spawn_task, force, use_last
 	end
 end
 
--- Lines 1668-1767
+-- Lines 1685-1784
 function GroupAIStateBesiege:_upd_reenforce_tasks()
 	local reenforce_tasks = self._task_data.reenforce.tasks
 	local t = self._t
@@ -1670,11 +1672,11 @@ function GroupAIStateBesiege:_upd_reenforce_tasks()
 	self:_assign_enemy_groups_to_reenforce()
 end
 
--- Lines 1771-1780
+-- Lines 1788-1797
 function GroupAIStateBesiege:register_criminal(unit)
 	GroupAIStateBesiege.super.register_criminal(self, unit)
 
-	if not Network:is_server() then
+	if not self._is_server then
 		return
 	end
 
@@ -1685,9 +1687,9 @@ function GroupAIStateBesiege:register_criminal(unit)
 	area_data.criminal.units[u_key] = record
 end
 
--- Lines 1784-1795
+-- Lines 1801-1812
 function GroupAIStateBesiege:unregister_criminal(unit)
-	if Network:is_server() then
+	if self._is_server then
 		local u_key = unit:key()
 		local record = self._criminals[u_key]
 
@@ -1701,7 +1703,7 @@ function GroupAIStateBesiege:unregister_criminal(unit)
 	GroupAIStateBesiege.super.unregister_criminal(self, unit)
 end
 
--- Lines 1799-1871
+-- Lines 1816-1888
 function GroupAIStateBesiege:on_objective_complete(unit, objective)
 	local new_objective, so_element
 
@@ -1791,7 +1793,7 @@ function GroupAIStateBesiege:on_objective_complete(unit, objective)
 	end
 end
 
--- Lines 1875-1882
+-- Lines 1892-1899
 function GroupAIStateBesiege:on_defend_travel_end(unit, objective)
 	local seg = objective.nav_seg
 	local area = self:get_area_from_nav_seg_id(seg)
@@ -1806,7 +1808,7 @@ function GroupAIStateBesiege:on_defend_travel_end(unit, objective)
 	end
 end
 
--- Lines 1886-1924
+-- Lines 1903-1941
 function GroupAIStateBesiege:on_cop_jobless(unit)
 	local u_key = unit:key()
 
@@ -1858,7 +1860,7 @@ function GroupAIStateBesiege:on_cop_jobless(unit)
 	end
 end
 
--- Lines 1928-2163
+-- Lines 1945-2180
 function GroupAIStateBesiege:_draw_enemy_activity(t)
 	local draw_data = self._AI_draw_data
 	local brush_area = draw_data.brush_area
@@ -1892,7 +1894,7 @@ function GroupAIStateBesiege:_draw_enemy_activity(t)
 		end
 	end
 
-	-- Lines 1958-2032
+	-- Lines 1975-2049
 	local function _f_draw_logic_name(u_key, l_data, draw_color)
 		local logic_name_text = logic_name_texts[u_key]
 		local text_str = l_data.name
@@ -1976,7 +1978,7 @@ function GroupAIStateBesiege:_draw_enemy_activity(t)
 		end
 	end
 
-	-- Lines 2034-2077
+	-- Lines 2051-2094
 	local function _f_draw_obj_pos(unit)
 		local brush
 		local objective = unit:brain():objective()
@@ -2077,7 +2079,7 @@ function GroupAIStateBesiege:_draw_enemy_activity(t)
 		mvector3.set_zero(group_center)
 	end
 
-	-- Lines 2115-2128
+	-- Lines 2132-2145
 	local function _f_draw_attention_on_player(l_data)
 		if l_data.attention_obj then
 			local my_head_pos = l_data.unit:movement():m_head_pos()
@@ -2150,26 +2152,26 @@ function GroupAIStateBesiege:_draw_enemy_activity(t)
 	end
 end
 
--- Lines 2168-2171
+-- Lines 2185-2188
 function GroupAIStateBesiege:verify_occupation_in_area(objective)
 	local nav_seg = objective.nav_seg
 
 	return self:find_occupation_in_area(nav_seg)
 end
 
--- Lines 2175-2177
+-- Lines 2192-2194
 function GroupAIStateBesiege:filter_nav_seg_unsafe(nav_seg)
 	return not self:is_nav_seg_safe(nav_seg)
 end
 
--- Lines 2181-2184
+-- Lines 2198-2201
 function GroupAIStateBesiege:_on_nav_seg_safety_status(seg, event)
 	local area = self:get_area_from_nav_seg_id(seg)
 
 	self:_on_area_safety_status(area, event)
 end
 
--- Lines 2188-2200
+-- Lines 2205-2217
 function GroupAIStateBesiege:add_flee_point(id, pos)
 	local nav_seg = managers.navigation:get_nav_seg_from_pos(pos, true)
 	local area = self:get_area_from_nav_seg_id(nav_seg)
@@ -2184,7 +2186,7 @@ function GroupAIStateBesiege:add_flee_point(id, pos)
 	area.flee_points[id] = flee_point
 end
 
--- Lines 2204-2217
+-- Lines 2221-2234
 function GroupAIStateBesiege:remove_flee_point(id)
 	local flee_point = self._flee_points[id]
 
@@ -2203,7 +2205,7 @@ function GroupAIStateBesiege:remove_flee_point(id)
 	end
 end
 
--- Lines 2221-2242
+-- Lines 2238-2259
 function GroupAIStateBesiege:flee_point(start_nav_seg, ignore_segs)
 	local start_area = self:get_area_from_nav_seg_id(start_nav_seg)
 	local to_search_areas = {
@@ -2234,7 +2236,7 @@ function GroupAIStateBesiege:flee_point(start_nav_seg, ignore_segs)
 	until #to_search_areas == 0
 end
 
--- Lines 2246-2274
+-- Lines 2263-2291
 function GroupAIStateBesiege:safe_flee_point(start_nav_seg, ignore_segs)
 	local start_area = self:get_area_from_nav_seg_id(start_nav_seg)
 
@@ -2270,7 +2272,7 @@ function GroupAIStateBesiege:safe_flee_point(start_nav_seg, ignore_segs)
 	until #to_search_areas == 0
 end
 
--- Lines 2278-2290
+-- Lines 2295-2307
 function GroupAIStateBesiege:add_enemy_loot_drop_point(id, pos)
 	local nav_seg = managers.navigation:get_nav_seg_from_pos(pos, true)
 	local area = self:get_area_from_nav_seg_id(nav_seg)
@@ -2285,7 +2287,7 @@ function GroupAIStateBesiege:add_enemy_loot_drop_point(id, pos)
 	area.enemy_loot_drop_points[id] = drop_point
 end
 
--- Lines 2294-2307
+-- Lines 2311-2324
 function GroupAIStateBesiege:remove_enemy_loot_drop_point(id)
 	local drop_point = self._enemy_loot_drop_points[id]
 
@@ -2304,7 +2306,7 @@ function GroupAIStateBesiege:remove_enemy_loot_drop_point(id)
 	end
 end
 
--- Lines 2311-2346
+-- Lines 2328-2363
 function GroupAIStateBesiege:get_safe_enemy_loot_drop_point(start_nav_seg)
 	local start_area = self:get_area_from_nav_seg_id(start_nav_seg)
 
@@ -2345,7 +2347,7 @@ function GroupAIStateBesiege:get_safe_enemy_loot_drop_point(start_nav_seg)
 	until #to_search_areas == 0
 end
 
--- Lines 2350-2403
+-- Lines 2367-2420
 function GroupAIStateBesiege:_draw_spawn_points()
 	local all_areas = self._area_data
 	local tmp_vec3 = Vector3()
@@ -2410,22 +2412,22 @@ function GroupAIStateBesiege:_draw_spawn_points()
 	end
 end
 
--- Lines 2407-2409
+-- Lines 2424-2426
 function GroupAIStateBesiege:on_hostage_fleeing(unit)
 	self._hostage_fleeing = unit
 end
 
--- Lines 2413-2415
+-- Lines 2430-2432
 function GroupAIStateBesiege:on_hostage_flee_end()
 	self._hostage_fleeing = nil
 end
 
--- Lines 2419-2421
+-- Lines 2436-2438
 function GroupAIStateBesiege:can_hostage_flee()
 	return not self._hostage_fleeing
 end
 
--- Lines 2425-2443
+-- Lines 2442-2460
 function GroupAIStateBesiege:add_to_surrendered(unit, update)
 	table.insert(self._hostage_data, {
 		u_key = unit:key(),
@@ -2439,7 +2441,7 @@ function GroupAIStateBesiege:add_to_surrendered(unit, update)
 	end
 end
 
--- Lines 2447-2465
+-- Lines 2464-2482
 function GroupAIStateBesiege:remove_from_surrendered(unit)
 	local hostage_data = self._hostage_data
 	local u_key = unit:key()
@@ -2459,7 +2461,7 @@ function GroupAIStateBesiege:remove_from_surrendered(unit)
 	end
 end
 
--- Lines 2469-2493
+-- Lines 2486-2510
 function GroupAIStateBesiege:_upd_hostage_task()
 	self._hostage_upd_key = nil
 
@@ -2476,7 +2478,7 @@ function GroupAIStateBesiege:_upd_hostage_task()
 	end
 end
 
--- Lines 2499-2514
+-- Lines 2516-2531
 function GroupAIStateBesiege:set_area_min_police_force(id, force, pos)
 	if force then
 		local nav_seg_id = managers.navigation:get_nav_seg_from_pos(pos, true)
@@ -2500,7 +2502,7 @@ function GroupAIStateBesiege:set_area_min_police_force(id, force, pos)
 	end
 end
 
--- Lines 2519-2555
+-- Lines 2536-2572
 function GroupAIStateBesiege:set_wave_mode(flag)
 	local old_wave_mode = self._wave_mode
 
@@ -2539,7 +2541,7 @@ function GroupAIStateBesiege:set_wave_mode(flag)
 	end
 end
 
--- Lines 2559-2574
+-- Lines 2576-2589
 function GroupAIStateBesiege:on_simulation_ended()
 	GroupAIStateBesiege.super.on_simulation_ended(self)
 
@@ -2561,15 +2563,9 @@ function GroupAIStateBesiege:on_simulation_ended()
 		}
 		self._task_data.regroup = {}
 	end
-
-	if self._police_upd_task_queued then
-		self._police_upd_task_queued = nil
-
-		managers.enemy:unqueue_task("GroupAIStateBesiege._upd_police_activity")
-	end
 end
 
--- Lines 2578-2590
+-- Lines 2594-2605
 function GroupAIStateBesiege:on_simulation_started()
 	GroupAIStateBesiege.super.on_simulation_started(self)
 
@@ -2591,11 +2587,9 @@ function GroupAIStateBesiege:on_simulation_started()
 		}
 		self._task_data.regroup = {}
 	end
-
-	self:_queue_police_upd_task()
 end
 
--- Lines 2594-2603
+-- Lines 2609-2618
 function GroupAIStateBesiege:on_enemy_weapons_hot(is_delayed_callback)
 	if not self._ai_enabled then
 		return
@@ -2609,12 +2603,12 @@ function GroupAIStateBesiege:on_enemy_weapons_hot(is_delayed_callback)
 	GroupAIStateBesiege.super.on_enemy_weapons_hot(self, is_delayed_callback)
 end
 
--- Lines 2607-2609
+-- Lines 2622-2624
 function GroupAIStateBesiege:is_detection_persistent()
 	return self._task_data.assault.active
 end
 
--- Lines 2613-2646
+-- Lines 2628-2661
 function GroupAIStateBesiege:_assign_enemy_groups_to_assault(phase)
 	for group_id, group in pairs(self._groups) do
 		if group.has_spawned and group.objective.type == "assault_area" then
@@ -2649,7 +2643,7 @@ function GroupAIStateBesiege:_assign_enemy_groups_to_assault(phase)
 	end
 end
 
--- Lines 2650-2687
+-- Lines 2665-2702
 function GroupAIStateBesiege:_assign_enemy_groups_to_recon()
 	for group_id, group in pairs(self._groups) do
 		if group.has_spawned and group.objective.type == "recon_area" then
@@ -2689,7 +2683,7 @@ function GroupAIStateBesiege:_assign_enemy_groups_to_recon()
 	end
 end
 
--- Lines 2691-2876
+-- Lines 2706-2891
 function GroupAIStateBesiege:_set_recon_objective_to_group(group)
 	local current_objective = group.objective
 	local target_area = current_objective.target_area or current_objective.area
@@ -2867,7 +2861,7 @@ function GroupAIStateBesiege:_set_recon_objective_to_group(group)
 	end
 end
 
--- Lines 2880-2898
+-- Lines 2895-2913
 function GroupAIStateBesiege:_set_objective_to_enemy_group(group, grp_objective)
 	group.objective = grp_objective
 
@@ -2888,7 +2882,7 @@ function GroupAIStateBesiege:_set_objective_to_enemy_group(group, grp_objective)
 	end
 end
 
--- Lines 2902-2923
+-- Lines 2917-2938
 function GroupAIStateBesiege:_upd_groups()
 	for group_id, group in pairs(self._groups) do
 		self:_verify_group_objective(group)
@@ -2914,7 +2908,7 @@ function GroupAIStateBesiege:_upd_groups()
 	end
 end
 
--- Lines 2927-3266
+-- Lines 2942-3281
 function GroupAIStateBesiege:_set_assault_objective_to_group(group, phase)
 	if not group.has_spawned then
 		return
@@ -3267,7 +3261,7 @@ function GroupAIStateBesiege:_set_assault_objective_to_group(group, phase)
 	end
 end
 
--- Lines 3270-3343
+-- Lines 3285-3358
 function GroupAIStateBesiege._create_objective_from_group_objective(grp_objective, receiving_unit)
 	local objective = {
 		grp_objective = grp_objective
@@ -3346,7 +3340,7 @@ function GroupAIStateBesiege._create_objective_from_group_objective(grp_objectiv
 	return objective
 end
 
--- Lines 3347-3355
+-- Lines 3362-3370
 function GroupAIStateBesiege:_assign_groups_to_retire(allowed_groups, suitable_grp_func)
 	for group_id, group in pairs(self._groups) do
 		if not allowed_groups[group.type] and group.objective.type ~= "reenforce_area" and group.objective.type ~= "retire" then
@@ -3357,7 +3351,7 @@ function GroupAIStateBesiege:_assign_groups_to_retire(allowed_groups, suitable_g
 	end
 end
 
--- Lines 3359-3394
+-- Lines 3374-3409
 function GroupAIStateBesiege:_assign_group_to_retire(group)
 	local retire_area, retire_pos
 	local to_search_areas = {
@@ -3410,7 +3404,7 @@ function GroupAIStateBesiege:_assign_group_to_retire(group)
 	self:_set_objective_to_enemy_group(group, grp_objective)
 end
 
--- Lines 3398-3409
+-- Lines 3413-3424
 function GroupAIStateBesiege._determine_group_leader(units)
 	local highest_rank, highest_ranking_u_key, highest_ranking_u_data
 
@@ -3425,7 +3419,7 @@ function GroupAIStateBesiege._determine_group_leader(units)
 	return highest_ranking_u_key, highest_ranking_u_data
 end
 
--- Lines 3413-3425
+-- Lines 3428-3440
 function GroupAIStateBesiege._get_closest_group_unit_to_pos(pos, units)
 	local closest_dis_sq, closest_u_key, closest_u_data
 
@@ -3442,7 +3436,7 @@ function GroupAIStateBesiege._get_closest_group_unit_to_pos(pos, units)
 	return closest_u_key, closest_u_data, closest_dis_sq
 end
 
--- Lines 3429-3473
+-- Lines 3444-3488
 function GroupAIStateBesiege:_chk_group_use_smoke_grenade(group, task_data, detonate_pos)
 	if task_data.use_smoke and not self:is_smoke_grenade_active() then
 		local shooter_pos, shooter_u_data
@@ -3491,7 +3485,7 @@ function GroupAIStateBesiege:_chk_group_use_smoke_grenade(group, task_data, deto
 	end
 end
 
--- Lines 3477-3519
+-- Lines 3492-3534
 function GroupAIStateBesiege:_chk_group_use_flash_grenade(group, task_data, detonate_pos)
 	if task_data.use_smoke and not self:is_smoke_grenade_active() then
 		local shooter_pos, shooter_u_data
@@ -3538,9 +3532,9 @@ function GroupAIStateBesiege:_chk_group_use_flash_grenade(group, task_data, deto
 	end
 end
 
--- Lines 3523-3549
+-- Lines 3538-3564
 function GroupAIStateBesiege:_assign_assault_groups_to_retire()
-	-- Lines 3524-3547
+	-- Lines 3539-3562
 	local function suitable_grp_func(group)
 		if group.objective.type == "assault_area" then
 			local regroup_area
@@ -3572,9 +3566,9 @@ function GroupAIStateBesiege:_assign_assault_groups_to_retire()
 	self:_assign_groups_to_retire(self._tweak_data.recon.groups, suitable_grp_func)
 end
 
--- Lines 3553-3567
+-- Lines 3568-3582
 function GroupAIStateBesiege:_assign_recon_groups_to_retire()
-	-- Lines 3554-3565
+	-- Lines 3569-3580
 	local function suitable_grp_func(group)
 		if group.objective.type == "recon_area" then
 			local grp_objective = {
@@ -3592,7 +3586,7 @@ function GroupAIStateBesiege:_assign_recon_groups_to_retire()
 	self:_assign_groups_to_retire(self._tweak_data.assault.groups, suitable_grp_func)
 end
 
--- Lines 3571-3614
+-- Lines 3586-3629
 function GroupAIStateBesiege:_assign_enemy_groups_to_reenforce()
 	for group_id, group in pairs(self._groups) do
 		if group.has_spawned and group.objective.type == "reenforce_area" then
@@ -3639,7 +3633,7 @@ function GroupAIStateBesiege:_assign_enemy_groups_to_reenforce()
 	end
 end
 
--- Lines 3618-3746
+-- Lines 3633-3761
 function GroupAIStateBesiege:_set_reenforce_objective_to_group(group)
 	if not group.has_spawned then
 		return
@@ -3724,7 +3718,7 @@ function GroupAIStateBesiege:_set_reenforce_objective_to_group(group)
 	end
 end
 
--- Lines 3750-3764
+-- Lines 3765-3779
 function GroupAIStateBesiege:_get_group_forwardmost_coarse_path_index(group)
 	local coarse_path = group.objective.coarse_path
 	local forwardmost_i_nav_point = #coarse_path
@@ -3743,7 +3737,7 @@ function GroupAIStateBesiege:_get_group_forwardmost_coarse_path_index(group)
 	end
 end
 
--- Lines 3768-3775
+-- Lines 3783-3790
 function GroupAIStateBesiege:_voice_deathguard_start(group)
 	local time = self._t
 
@@ -3754,7 +3748,7 @@ function GroupAIStateBesiege:_voice_deathguard_start(group)
 	end
 end
 
--- Lines 3779-3785
+-- Lines 3794-3800
 function GroupAIStateBesiege:_voice_open_fire_start(group)
 	for u_key, unit_data in pairs(group.units) do
 		if unit_data.char_tweak.chatter.aggressive and self:chk_say_enemy_chatter(unit_data.unit, unit_data.m_pos, "aggressive") then
@@ -3763,7 +3757,7 @@ function GroupAIStateBesiege:_voice_open_fire_start(group)
 	end
 end
 
--- Lines 3789-3795
+-- Lines 3804-3810
 function GroupAIStateBesiege:_voice_move_in_start(group)
 	for u_key, unit_data in pairs(group.units) do
 		if unit_data.char_tweak.chatter.go_go and self:chk_say_enemy_chatter(unit_data.unit, unit_data.m_pos, "go_go") then
@@ -3772,7 +3766,7 @@ function GroupAIStateBesiege:_voice_move_in_start(group)
 	end
 end
 
--- Lines 3799-3805
+-- Lines 3814-3820
 function GroupAIStateBesiege:_voice_move_complete(group)
 	for u_key, unit_data in pairs(group.units) do
 		if unit_data.char_tweak.chatter.ready and self:chk_say_enemy_chatter(unit_data.unit, unit_data.m_pos, "ready") then
@@ -3781,7 +3775,7 @@ function GroupAIStateBesiege:_voice_move_complete(group)
 	end
 end
 
--- Lines 3809-3819
+-- Lines 3824-3834
 function GroupAIStateBesiege:_voice_delay_assault(group)
 	local time = self._t
 
@@ -3796,7 +3790,7 @@ function GroupAIStateBesiege:_voice_delay_assault(group)
 	return false
 end
 
--- Lines 3823-3840
+-- Lines 3838-3855
 function GroupAIStateBesiege:_chk_group_areas_tresspassed(group)
 	local objective = group.objective
 	local occupied_areas = {}
@@ -3818,7 +3812,7 @@ function GroupAIStateBesiege:_chk_group_areas_tresspassed(group)
 	end
 end
 
--- Lines 3844-3862
+-- Lines 3859-3877
 function GroupAIStateBesiege:_chk_coarse_path_obstructed(group)
 	local current_objective = group.objective
 
@@ -3839,7 +3833,7 @@ function GroupAIStateBesiege:_chk_coarse_path_obstructed(group)
 	end
 end
 
--- Lines 3866-3900
+-- Lines 3881-3915
 function GroupAIStateBesiege:_count_criminals_engaged_force(max_count)
 	local count = 0
 	local all_enemies = self._police
@@ -3881,7 +3875,7 @@ function GroupAIStateBesiege:_count_criminals_engaged_force(max_count)
 	return count
 end
 
--- Lines 3904-3963
+-- Lines 3919-3978
 function GroupAIStateBesiege:_verify_group_objective(group)
 	local is_objective_broken
 	local grp_objective = group.objective
@@ -3950,12 +3944,12 @@ function GroupAIStateBesiege:_verify_group_objective(group)
 	}
 end
 
--- Lines 3967-3969
+-- Lines 3982-3984
 function GroupAIStateBesiege:team_data(team_id)
 	return self._teams[team_id]
 end
 
--- Lines 3973-3988
+-- Lines 3988-4003
 function GroupAIStateBesiege:set_char_team(unit, team_id)
 	local u_key = unit:key()
 	local team = self._teams[team_id]
@@ -3974,7 +3968,7 @@ function GroupAIStateBesiege:set_char_team(unit, team_id)
 	unit:movement():set_team(team)
 end
 
--- Lines 3992-4011
+-- Lines 4007-4026
 function GroupAIStateBesiege:set_team_relation(team1_id, team2_id, relation, mutual)
 	if mutual then
 		self:set_team_relation(team1_id, team2_id, relation, nil)
@@ -3989,16 +3983,16 @@ function GroupAIStateBesiege:set_team_relation(team1_id, team2_id, relation, mut
 		self._teams[team1_id].foes[team2_id] = nil
 	end
 
-	if Network:is_server() then
+	if self._is_server then
 		local team1_index = tweak_data.levels:get_team_index(team1_id)
 		local team2_index = tweak_data.levels:get_team_index(team2_id)
 		local relation_code = relation == "neutral" and 1 or relation == "friend" and 2 or 3
 
-		managers.network:session():send_to_peers_synched("sync_team_relation", team1_index, team2_index, relation_code)
+		managers.network:send_to_peers_synched("sync_team_relation", team1_index, team2_index, relation_code)
 	end
 end
 
--- Lines 4015-4055
+-- Lines 4030-4070
 function GroupAIStateBesiege:_check_spawn_phalanx()
 	if not Global.game_settings.single_player and self._phalanx_center_pos and self._task_data and self._task_data.assault.active and not self._phalanx_spawn_group and (self._task_data.assault.phase == "build" or self._task_data.assault.phase == "sustain") then
 		local now = TimerManager:game():time()
@@ -4038,7 +4032,7 @@ function GroupAIStateBesiege:_check_spawn_phalanx()
 	end
 end
 
--- Lines 4059-4108
+-- Lines 4074-4123
 function GroupAIStateBesiege:_spawn_phalanx()
 	if not self._phalanx_center_pos then
 		Application:error("self._phalanx_center_pos NOT SET!!!")
@@ -4089,12 +4083,12 @@ function GroupAIStateBesiege:_spawn_phalanx()
 
 			self:set_assault_endless(true)
 			managers.game_play_central:announcer_say("cpa_a02_01")
-			managers.network:session():send_to_peers_synched("group_ai_event", self:get_sync_event_id("phalanx_spawned"), 0)
+			managers.network:send_to_peers_synched("group_ai_event", self:get_sync_event_id("phalanx_spawned"), 0)
 		end
 	end
 end
 
--- Lines 4112-4139
+-- Lines 4127-4154
 function GroupAIStateBesiege:_check_phalanx_group_has_spawned()
 	if self._phalanx_spawn_group then
 		if self._phalanx_spawn_group.has_spawned then
@@ -4123,7 +4117,7 @@ function GroupAIStateBesiege:_check_phalanx_group_has_spawned()
 	end
 end
 
--- Lines 4143-4147
+-- Lines 4158-4162
 function GroupAIStateBesiege:phalanx_damage_reduction_enable()
 	local law1team = self:_get_law1_team()
 
@@ -4132,21 +4126,21 @@ function GroupAIStateBesiege:phalanx_damage_reduction_enable()
 	self._phalanx_damage_reduction_last_increase = self._phalanx_damage_reduction_last_increase or TimerManager:game():time()
 end
 
--- Lines 4151-4154
+-- Lines 4166-4169
 function GroupAIStateBesiege:phalanx_damage_reduction_disable()
 	self:set_phalanx_damage_reduction_buff(-1)
 
 	self._phalanx_damage_reduction_last_increase = nil
 end
 
--- Lines 4158-4161
+-- Lines 4173-4176
 function GroupAIStateBesiege:_get_law1_team()
 	local team_id = tweak_data.levels:get_default_team_ID("combatant")
 
 	return self:team_data(team_id)
 end
 
--- Lines 4165-4190
+-- Lines 4180-4205
 function GroupAIStateBesiege:_check_phalanx_damage_reduction_increase()
 	local law1team = self:_get_law1_team()
 	local damage_reduction_max = tweak_data.group_ai.phalanx.vip.damage_reduction.max
@@ -4174,7 +4168,7 @@ function GroupAIStateBesiege:_check_phalanx_damage_reduction_increase()
 	end
 end
 
--- Lines 4194-4212
+-- Lines 4209-4227
 function GroupAIStateBesiege:set_phalanx_damage_reduction_buff(damage_reduction)
 	local law1team = self:_get_law1_team()
 
@@ -4190,12 +4184,12 @@ function GroupAIStateBesiege:set_phalanx_damage_reduction_buff(damage_reduction)
 		self:set_damage_reduction_buff_hud()
 	end
 
-	if Network:is_server() then
-		managers.network:session():send_to_peers_synched("sync_damage_reduction_buff", damage_reduction)
+	if self._is_server then
+		managers.network:send_to_peers_synched("sync_damage_reduction_buff", damage_reduction)
 	end
 end
 
--- Lines 4216-4230
+-- Lines 4231-4245
 function GroupAIStateBesiege:set_damage_reduction_buff_hud()
 	local law1team = self:_get_law1_team()
 
@@ -4212,18 +4206,18 @@ function GroupAIStateBesiege:set_damage_reduction_buff_hud()
 	end
 end
 
--- Lines 4235-4245
+-- Lines 4250-4260
 function GroupAIStateBesiege:set_assault_endless(enabled)
 	self._hunt_mode = enabled
 
 	managers.hud:sync_set_assault_mode(enabled and "phalanx" or "normal")
 
-	if Network:is_server() then
-		managers.network:session():send_to_peers_synched("sync_assault_endless", enabled)
+	if self._is_server then
+		managers.network:send_to_peers_synched("sync_assault_endless", enabled)
 	end
 end
 
--- Lines 4249-4256
+-- Lines 4264-4271
 function GroupAIStateBesiege:phalanx_despawned()
 	self._phalanx_despawn_time = TimerManager:game():time()
 	self._phalanx_spawn_group = nil
@@ -4233,17 +4227,17 @@ function GroupAIStateBesiege:phalanx_despawned()
 	self._phalanx_current_spawn_chance = math.max(0, self._phalanx_current_spawn_chance or tweak_data.group_ai.phalanx.spawn_chance.start - spawn_chance_decrease)
 end
 
--- Lines 4260-4262
+-- Lines 4275-4277
 function GroupAIStateBesiege:phalanx_spawn_group()
 	return self._phalanx_spawn_group
 end
 
--- Lines 4266-4283
+-- Lines 4281-4301
 function GroupAIStateBesiege:force_end_assault_phase(force_regroup)
 	local task_data = self._task_data.assault
 
 	if task_data.active then
-		print("GroupAIStateBesiege:force_end_assault_phase()")
+		cat_print("groupai", "[GroupAI] GroupAIStateBesiege:force_end_assault_phase - Forcing current assault to end.", force_regroup and "Forcing regroup." or "")
 
 		task_data.phase = "fade"
 		task_data.force_end = true
@@ -4251,24 +4245,26 @@ function GroupAIStateBesiege:force_end_assault_phase(force_regroup)
 		if force_regroup then
 			task_data.force_regroup = true
 
-			managers.enemy:update_queue_task("GroupAIStateBesiege._upd_police_activity", nil, nil, self._t + 0.1, nil, nil)
+			if self._police_upd_task_queued then
+				self._police_upd_task_queued = self._t + 0.1
+			end
 		end
 	end
 
 	self:set_assault_endless(false)
 end
 
--- Lines 4287-4289
+-- Lines 4305-4307
 function GroupAIStateBesiege:get_assault_number()
 	return self._assault_number
 end
 
--- Lines 4294-4296
+-- Lines 4312-4314
 function GroupAIStateBesiege:terminate_assaults()
 	self._police_activity_blocked = true
 end
 
--- Lines 4299-4364
+-- Lines 4317-4382
 function GroupAIStateBesiege:create_timed_groups_table()
 	local timed_groups = {}
 	local all_categories = tweak_data.group_ai.unit_categories
@@ -4311,7 +4307,7 @@ function GroupAIStateBesiege:create_timed_groups_table()
 			else
 				for idx, spawn_data in ipairs(group_tweak_data.spawn) do
 					if spawn_data.respawn_cooldown then
-						Application:error("[GroupAIStateBesiege:create_timed_groups_table] Respawn cooldown for individual units can't be used if only one unit can spawn. Spawn cooldown is used instead. In group: ", group_id)
+						cat_error("groupai_unique_spawns", "[GroupAI] GroupAIStateBesiege:create_timed_groups_table - Respawn cooldown for individual units can't be used if only one unit can spawn. Spawn cooldown is used instead. In group: ", group_id)
 
 						break
 					end
@@ -4336,7 +4332,7 @@ function GroupAIStateBesiege:create_timed_groups_table()
 	end
 end
 
--- Lines 4368-4413
+-- Lines 4386-4431
 function GroupAIStateBesiege:_check_spawn_timed_groups(target_area, task_data)
 	if not self._timed_groups then
 		return
@@ -4393,7 +4389,7 @@ function GroupAIStateBesiege:_check_spawn_timed_groups(target_area, task_data)
 	end
 end
 
--- Lines 4415-4457
+-- Lines 4433-4475
 function GroupAIStateBesiege:_spawn_timed_group(task_data, group_data, target_area, group_to_allow)
 	local spawn_group, spawn_group_type = self:_find_spawn_group_near_area(target_area, group_to_allow, nil, nil, nil)
 
@@ -4424,7 +4420,7 @@ function GroupAIStateBesiege:_spawn_timed_group(task_data, group_data, target_ar
 	end
 end
 
--- Lines 4459-4508
+-- Lines 4477-4526
 function GroupAIStateBesiege:_respawn_unit_for_group(task_data, group_data, target_area, respawn_data, spawn_unit_type, group_to_allow)
 	local spawn_group, spawn_group_type = self:_find_spawn_group_near_area(target_area, group_to_allow, nil, nil, nil)
 
@@ -4460,7 +4456,7 @@ function GroupAIStateBesiege:_respawn_unit_for_group(task_data, group_data, targ
 	end
 end
 
--- Lines 4511-4563
+-- Lines 4529-4581
 function GroupAIStateBesiege:spawn_snowman_boss()
 	local assault_candidates = {}
 
@@ -4507,7 +4503,7 @@ function GroupAIStateBesiege:spawn_snowman_boss()
 	return false
 end
 
--- Lines 4567-4619
+-- Lines 4585-4637
 function GroupAIStateBesiege:spawn_piggydozer()
 	local assault_candidates = {}
 

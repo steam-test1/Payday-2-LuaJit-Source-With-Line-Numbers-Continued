@@ -168,7 +168,7 @@ end
 local mvec_to = Vector3()
 local mvec_spread_direction = Vector3()
 
--- Lines 193-270
+-- Lines 193-256
 function SawWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul)
 	local result = {}
 	local hit_unit
@@ -231,29 +231,45 @@ function SawWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, sh
 	return result, valid_hit
 end
 
--- Lines 288-290
+-- Lines 274-276
 function SawWeaponBase:can_reload()
 	return self:clip_empty() and SawWeaponBase.super.can_reload(self)
 end
 
 SawHit = SawHit or class(InstantBulletBase)
-SawHit.TAG_DAMAGE_MULTIPLIER_TANK = 1.5
+SawHit.TAG_DAMAGE_MULTIPLIERS = {
+	tank = 1.5
+}
 
--- Lines 300-344
+-- Lines 287-344
 function SawHit:on_collision(col_ray, weapon_unit, user_unit, damage)
 	local hit_unit = col_ray.unit
+	local hit_unit_damage_ext = hit_unit:damage()
 
-	do
+	if hit_unit_damage_ext and not hit_unit:dead() then
 		local base_ext = hit_unit:base()
 
-		if base_ext and base_ext.has_tag and base_ext:has_tag("tank") then
-			damage = damage * SawHit.TAG_DAMAGE_MULTIPLIER_TANK
+		if base_ext and base_ext.get_tags then
+			local tags = base_ext:get_tags()
+			local highest_tag
+
+			if tags then
+				for tag, damage_mul in pairs(SawHit.TAG_DAMAGE_MULTIPLIERS) do
+					if tags[tag] and (not highest_tag or highest_tag < damage_mul) then
+						highest_tag = damage_mul
+					end
+				end
+			end
+
+			if highest_tag then
+				damage = damage * highest_tag
+			end
 		end
 	end
 
 	local result = InstantBulletBase.on_collision(self, col_ray, weapon_unit, user_unit, damage)
 
-	if hit_unit:damage() and col_ray.body:extension() and col_ray.body:extension().damage then
+	if hit_unit_damage_ext and col_ray.body:extension() and col_ray.body:extension().damage then
 		local lock_damage = damage
 
 		lock_damage = damage * managers.player:upgrade_value("saw", "lock_damage_multiplier", 1)

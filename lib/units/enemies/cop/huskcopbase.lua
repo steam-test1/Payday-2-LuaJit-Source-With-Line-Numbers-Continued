@@ -1,6 +1,6 @@
 HuskCopBase = HuskCopBase or class(CopBase)
 
--- Lines 5-24
+-- Lines 5-33
 function HuskCopBase:post_init()
 	self._ext_movement = self._unit:movement()
 	self._ext_anim = self._unit:anim_data()
@@ -17,7 +17,7 @@ function HuskCopBase:post_init()
 	self:hide_and_remove_collisions_for_a_few_frames()
 end
 
--- Lines 28-34
+-- Lines 37-43
 function HuskCopBase:pre_destroy(unit)
 	if alive(self._headwear_unit) then
 		self._headwear_unit:set_slot(0)

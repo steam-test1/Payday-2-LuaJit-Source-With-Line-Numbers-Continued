@@ -45,7 +45,7 @@ function TankCopLogicAttack.enter(data, new_logic_name, enter_params)
 	})
 end
 
--- Lines 48-60
+-- Lines 48-62
 function TankCopLogicAttack.exit(data, new_logic_name, enter_params)
 	CopLogicBase.exit(data, new_logic_name, enter_params)
 
@@ -58,7 +58,7 @@ function TankCopLogicAttack.exit(data, new_logic_name, enter_params)
 	data.unit:brain():set_update_enabled_state(true)
 end
 
--- Lines 64-152
+-- Lines 66-179
 function TankCopLogicAttack.update(data)
 	local t = data.t
 	local unit = data.unit
@@ -88,7 +88,7 @@ function TankCopLogicAttack.update(data)
 
 	local enemy_visible = focus_enemy.verified
 	local engage = my_data.attitude == "engage"
-	local action_taken = my_data.turning or data.unit:movement():chk_action_forbidden("walk") or my_data.walking_to_chase_pos
+	local action_taken = my_data.turning or unit:movement():chk_action_forbidden("walk") or my_data.walking_to_chase_pos
 
 	if action_taken then
 		return
@@ -111,23 +111,21 @@ function TankCopLogicAttack.update(data)
 	end
 
 	local chase
-	local z_dist = math.abs(data.m_pos.z - focus_enemy.m_pos.z)
+	local within_z_distance = math.abs(data.m_pos.z - focus_enemy.m_pos.z) < 300
 
 	if focus_enemy.reaction >= AIAttentionObject.REACT_COMBAT then
 		if enemy_visible then
-			if z_dist < 300 or focus_enemy.verified_dis > 2000 or engage and focus_enemy.verified_dis > 500 then
+			if within_z_distance or focus_enemy.verified_dis > 2000 or engage and focus_enemy.verified_dis > 500 then
 				chase = true
 			end
 
 			if focus_enemy.verified_dis < 800 and unit:anim_data().run then
-				local new_action = {
+				unit:brain():action_request({
 					body_part = 2,
 					type = "idle"
-				}
-
-				data.unit:brain():action_request(new_action)
+				})
 			end
-		elseif z_dist < 300 or focus_enemy.verified_dis > 2000 or engage and (not focus_enemy.verified_t or t - focus_enemy.verified_t > 5 or focus_enemy.verified_dis > 700) then
+		elseif within_z_distance or focus_enemy.verified_dis > 2000 or engage and (not focus_enemy.verified_t or t - focus_enemy.verified_t > 5 or focus_enemy.verified_dis > 700) then
 			chase = true
 		end
 	end
@@ -164,7 +162,7 @@ function TankCopLogicAttack.update(data)
 	end
 end
 
--- Lines 156-164
+-- Lines 183-194
 function TankCopLogicAttack.queued_update(data)
 	local my_data = data.internal_data
 
@@ -178,7 +176,7 @@ function TankCopLogicAttack.queued_update(data)
 	end
 end
 
--- Lines 168-184
+-- Lines 198-216
 function TankCopLogicAttack._process_pathing_results(data, my_data)
 	if data.pathing_results then
 		local pathing_results = data.pathing_results
@@ -190,8 +188,6 @@ function TankCopLogicAttack._process_pathing_results(data, my_data)
 		if path then
 			if path ~= "failed" then
 				my_data.chase_path = path
-			else
-				print("[TankCopLogicAttack._process_pathing_results] chase path failed")
 			end
 
 			my_data.pathing_to_chase_pos = nil
@@ -200,17 +196,15 @@ function TankCopLogicAttack._process_pathing_results(data, my_data)
 	end
 end
 
--- Lines 188-208
+-- Lines 220-246
 function TankCopLogicAttack._cancel_chase_attempt(data, my_data)
 	my_data.chase_path = nil
 
 	if my_data.walking_to_chase_pos then
-		local new_action = {
+		data.unit:brain():action_request({
 			body_part = 2,
 			type = "idle"
-		}
-
-		data.unit:brain():action_request(new_action)
+		})
 	elseif my_data.pathing_to_chase_pos then
 		data.brain:rem_pos_rsrv("path")
 
@@ -231,7 +225,7 @@ function TankCopLogicAttack._cancel_chase_attempt(data, my_data)
 	end
 end
 
--- Lines 213-231
+-- Lines 251-270
 function TankCopLogicAttack.action_complete_clbk(data, action)
 	local action_type = action:type()
 	local my_data = data.internal_data
@@ -251,19 +245,19 @@ function TankCopLogicAttack.action_complete_clbk(data, action)
 	end
 end
 
--- Lines 233-235
+-- Lines 272-274
 function TankCopLogicAttack.chk_should_turn(data, my_data)
 	return not my_data.turning and not data.unit:movement():chk_action_forbidden("walk") and not my_data.surprised and not my_data.walking_to_chase_pos
 end
 
--- Lines 239-242
+-- Lines 278-281
 function TankCopLogicAttack.queue_update(data, my_data)
 	my_data.update_queued = true
 
 	CopLogicBase.queue_task(my_data, my_data.update_queue_id, TankCopLogicAttack.queued_update, data, data.t + 1.5, data.important)
 end
 
--- Lines 246-265
+-- Lines 285-304
 function TankCopLogicAttack._chk_request_action_walk_to_chase_pos(data, my_data, speed, end_rot)
 	if not data.unit:movement():chk_action_forbidden("walk") then
 		TankCopLogicAttack._correct_path_start_pos(data, my_data.chase_path)
@@ -285,21 +279,21 @@ function TankCopLogicAttack._chk_request_action_walk_to_chase_pos(data, my_data,
 	end
 end
 
--- Lines 269-273
+-- Lines 308-314
 function TankCopLogicAttack.is_advancing(data)
 	if data.internal_data.walking_to_chase_pos and data.pos_rsrv.move_dest then
 		return data.pos_rsrv.move_dest.position
 	end
 end
 
--- Lines 277-281
+-- Lines 318-322
 function TankCopLogicAttack._get_all_paths(data)
 	return {
 		chase_path = data.internal_data.chase_path
 	}
 end
 
--- Lines 285-287
+-- Lines 326-328
 function TankCopLogicAttack._set_verified_paths(data, verified_paths)
 	data.internal_data.chase_path = verified_paths.chase_path
 end

@@ -30,9 +30,9 @@ function NewNPCFlamethrowerBase:init(...)
 end
 
 -- Lines 36-40
-function NewNPCFlamethrowerBase:destroy(...)
+function NewNPCFlamethrowerBase:pre_destroy(...)
 	self:kill_effects()
-	NewNPCFlamethrowerBase.super.destroy(self, ...)
+	NewNPCFlamethrowerBase.super.pre_destroy(self, ...)
 end
 
 -- Lines 42-48
@@ -279,9 +279,9 @@ function NPCFlamethrowerBase:init(...)
 end
 
 -- Lines 292-296
-function NPCFlamethrowerBase:destroy(...)
+function NPCFlamethrowerBase:pre_destroy(...)
 	self:kill_effects()
-	NPCFlamethrowerBase.super.destroy(self, ...)
+	NPCFlamethrowerBase.super.pre_destroy(self, ...)
 end
 
 -- Lines 298-300
