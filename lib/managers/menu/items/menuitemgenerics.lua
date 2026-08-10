@@ -319,7 +319,7 @@ MenuGuiSmallTabItem.TEXT_PADDING_W = 15
 MenuGuiSmallTabItem.TEXT_PADDING_H = 4
 MenuGuiTabPage = MenuGuiTabPage or class(MenuGuiItem)
 
--- Lines 264-284
+-- Lines 264-288
 function MenuGuiTabPage:init(page_id, page_panel, fullscreen_panel, gui)
 	MenuGuiTabPage.super.init(self)
 
@@ -329,6 +329,10 @@ function MenuGuiTabPage:init(page_id, page_panel, fullscreen_panel, gui)
 	self._page_name = page_id
 	self._panel = ExtendedPanel:new(page_panel)
 	self._info_panel = ExtendedPanel:new(gui:info_panel())
+	self._page_panel = page_panel
+	self._fullscreen_panel = fullscreen_panel
+	self._ws = gui._ws
+	self._fullscreen_ws = gui._fullscreen_ws
 
 	self:add_input_component(self._panel)
 	self:add_input_component(self._info_panel)
@@ -344,23 +348,23 @@ function MenuGuiTabPage:init(page_id, page_panel, fullscreen_panel, gui)
 	self:refresh()
 end
 
--- Lines 286-287
+-- Lines 290-291
 function MenuGuiTabPage:update(t, dt)
 	return
 end
 
--- Lines 289-291
+-- Lines 293-295
 function MenuGuiTabPage:event_listener()
 	return self._event_listener
 end
 
--- Lines 293-296
+-- Lines 297-300
 function MenuGuiTabPage:refresh()
 	self:panel():set_visible(self._active)
 	self:info_panel():set_visible(self._active)
 end
 
--- Lines 298-302
+-- Lines 302-306
 function MenuGuiTabPage:set_active(active)
 	self._active = active
 
@@ -369,27 +373,27 @@ function MenuGuiTabPage:set_active(active)
 	return active
 end
 
--- Lines 304-305
+-- Lines 308-309
 function MenuGuiTabPage:on_notify(tree, msg)
 	return
 end
 
--- Lines 307-309
+-- Lines 311-313
 function MenuGuiTabPage:name()
 	return self._page_name
 end
 
--- Lines 311-313
+-- Lines 315-317
 function MenuGuiTabPage:panel()
 	return self._panel
 end
 
--- Lines 315-317
+-- Lines 319-321
 function MenuGuiTabPage:info_panel()
 	return self._info_panel
 end
 
--- Lines 319-326
+-- Lines 323-330
 function MenuGuiTabPage:stack_panels(padding, panels)
 	for idx, panel in ipairs(panels) do
 		panel:set_left(0)
@@ -397,12 +401,12 @@ function MenuGuiTabPage:stack_panels(padding, panels)
 	end
 end
 
--- Lines 327-329
+-- Lines 331-333
 function MenuGuiTabItem:allow_input()
 	return true
 end
 
--- Lines 331-347
+-- Lines 335-351
 function MenuGuiTabPage:special_btn_pressed(button)
 	if not self:is_active() or not self:allow_input() then
 		return
@@ -422,7 +426,7 @@ function MenuGuiTabPage:special_btn_pressed(button)
 	return MenuGuiTabPage.super.special_btn_pressed(self, button)
 end
 
--- Lines 349-351
+-- Lines 353-355
 function MenuGuiTabPage:get_legend()
 	return {
 		"move",
@@ -432,7 +436,7 @@ end
 
 MenuGuiButtonItem = MenuGuiButtonItem or class(MenuGuiItem)
 
--- Lines 357-400
+-- Lines 361-404
 function MenuGuiButtonItem:init(panel, data, x, priority)
 	MenuGuiButtonItem.super.init(self, panel, data)
 
@@ -478,7 +482,7 @@ function MenuGuiButtonItem:init(panel, data, x, priority)
 	end
 end
 
--- Lines 402-407
+-- Lines 406-411
 function MenuGuiButtonItem:set_text(text)
 	self._btn_text:set_text(utf8.to_upper(text))
 
@@ -488,27 +492,27 @@ function MenuGuiButtonItem:set_text(text)
 	self._btn_text:set_h(h)
 end
 
--- Lines 409-411
+-- Lines 413-415
 function MenuGuiButtonItem:inside(x, y)
 	return self._panel:inside(x, y)
 end
 
--- Lines 413-415
+-- Lines 417-419
 function MenuGuiButtonItem:show()
 	self._select_rect:set_visible(true)
 end
 
--- Lines 417-419
+-- Lines 421-423
 function MenuGuiButtonItem:hide()
 	self._select_rect:set_visible(false)
 end
 
--- Lines 421-423
+-- Lines 425-427
 function MenuGuiButtonItem:visible()
 	return self._select_rect:visible()
 end
 
--- Lines 425-431
+-- Lines 429-435
 function MenuGuiButtonItem:refresh()
 	if self._selected then
 		self:show()
@@ -517,7 +521,7 @@ function MenuGuiButtonItem:refresh()
 	end
 end
 
--- Lines 433-436
+-- Lines 437-440
 function MenuGuiButtonItem:trigger()
 	MenuGuiButtonItem.super.trigger(self)
 	self._callback()

@@ -336,19 +336,21 @@ function MenuInput:focus(focus)
 	end
 end
 
--- Lines 365-374
+-- Lines 374-388
 function MenuInput:create_controller()
-	if not self._controller then
-		local controller = managers.controller:create_controller(nil, nil, false)
-
-		controller:add_trigger("cancel", callback(self, self, "back"))
-		controller:set_enabled(true)
-
-		self._controller = controller
+	if self._controller then
+		return
 	end
+
+	local controller = managers.controller:create_controller("menu_input", nil, false)
+
+	controller:add_trigger("cancel", callback(self, self, "back"))
+	controller:set_enabled(true)
+
+	self._controller = controller
 end
 
--- Lines 376-381
+-- Lines 390-399
 function MenuInput:destroy_controller()
 	if self._controller then
 		self._controller:destroy()
@@ -357,12 +359,12 @@ function MenuInput:destroy_controller()
 	end
 end
 
--- Lines 383-384
+-- Lines 401-402
 function MenuInput:logic_changed()
 	return
 end
 
--- Lines 386-415
+-- Lines 404-433
 function MenuInput:next_item()
 	if not self._accept_input then
 		return
@@ -397,7 +399,7 @@ function MenuInput:next_item()
 	end
 end
 
--- Lines 417-442
+-- Lines 435-460
 function MenuInput:prev_item()
 	local current_item = self._logic:selected_item()
 
@@ -428,7 +430,7 @@ function MenuInput:prev_item()
 	end
 end
 
--- Lines 446-456
+-- Lines 464-474
 function MenuInput:back(queue, skip_nodes)
 	if self:_input_hijacked() == true then
 		return
@@ -441,7 +443,7 @@ function MenuInput:back(queue, skip_nodes)
 	self._logic:navigate_back(queue == true or false, type(skip_nodes) == "number" and skip_nodes or false)
 end
 
--- Lines 458-472
+-- Lines 476-490
 function MenuInput:select_node()
 	local item = self._logic:selected_item()
 
@@ -458,7 +460,7 @@ function MenuInput:select_node()
 	end
 end
 
--- Lines 474-486
+-- Lines 492-504
 function MenuInput:any_keyboard_used()
 	if self._keyboard_used or not self._controller or managers.controller:get_default_wrapper_type() ~= "pc" and managers.controller:get_default_wrapper_type() ~= "steam" then
 		return

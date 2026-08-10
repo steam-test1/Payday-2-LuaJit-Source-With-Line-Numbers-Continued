@@ -8,7 +8,7 @@ function HostStateInGame:enter(data, enter_params)
 	self._new_peers = {}
 end
 
--- Lines 13-284
+-- Lines 13-266
 function HostStateInGame:on_join_request_received(data, peer_name, peer_account_type_str, peer_account_id, is_invite, client_preferred_character, xuid, peer_level, peer_rank, peer_stinger_index, join_attempt_identifier, sender)
 	local peer_id = sender:ip_at_index(0)
 	local my_user_id = data.local_peer:user_id() or ""
@@ -177,7 +177,7 @@ function HostStateInGame:on_join_request_received(data, peer_name, peer_account_
 	new_peer:set_rank(peer_rank)
 	new_peer:set_join_stinger_index(peer_stinger_index)
 
-	-- Lines 272-278
+	-- Lines 254-260
 	local function ticket_callback(ticket)
 		if TDVS:should_chunk_auth_ticket(ticket) then
 			TDVS:send_auth_ticket_in_chunks(ticket, new_peer:rpc(), true, HostNetworkSession.JOIN_REPLY.OK)
@@ -189,7 +189,7 @@ function HostStateInGame:on_join_request_received(data, peer_name, peer_account_
 	new_peer:create_ticket(data.local_peer:account_id(), ticket_callback)
 end
 
--- Lines 286-366
+-- Lines 268-342
 function HostStateInGame:on_join_auth_received(data, auth_ticket, sender)
 	print("[HostStateInGame:on_join_auth_received] auth ticket received")
 
@@ -255,7 +255,7 @@ function HostStateInGame:on_join_auth_received(data, auth_ticket, sender)
 	self._new_peers[new_peer_id] = true
 end
 
--- Lines 370-396
+-- Lines 346-372
 function HostStateInGame:on_peer_finished_loading(data, peer)
 	self:_introduce_new_peer_to_old_peers(data, peer, false, peer:name(), peer:character(), peer:xuid(), peer:xnaddr())
 	self:_introduce_old_peers_to_new_peer(data, peer)
@@ -273,7 +273,7 @@ function HostStateInGame:on_peer_finished_loading(data, peer)
 	end
 end
 
--- Lines 400-402
+-- Lines 376-378
 function HostStateInGame:is_joinable(data)
 	return not data.wants_to_load_level
 end

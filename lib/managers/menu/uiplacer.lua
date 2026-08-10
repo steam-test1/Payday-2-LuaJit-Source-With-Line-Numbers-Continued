@@ -396,8 +396,9 @@ end
 
 ResizingPlacer = ResizingPlacer or class(UiPlacer)
 
--- Lines 333-339
+-- Lines 333-341
 function ResizingPlacer:init(panel, config)
+	config = config or {}
 	self._panel = panel
 	self._border_padding_x = config.border_x or config.border or 0
 	self._border_padding_y = config.border_y or config.border or 0
@@ -405,7 +406,7 @@ function ResizingPlacer:init(panel, config)
 	ResizingPlacer.super.init(self, config.x or self._border_padding_x, config.y or self._border_padding_y, config.padding_x or config.padding, config.padding_y or config.padding)
 end
 
--- Lines 341-356
+-- Lines 343-358
 function ResizingPlacer:clear(keep_stack)
 	if not keep_stack and #self._stack > 0 then
 		self._start_x, self._start_y = unpack(self._stack[1])
@@ -422,7 +423,7 @@ function ResizingPlacer:clear(keep_stack)
 	self._first = true
 end
 
--- Lines 358-366
+-- Lines 360-368
 function ResizingPlacer:_update_most(...)
 	ResizingPlacer.super._update_most(self, ...)
 
@@ -430,5 +431,73 @@ function ResizingPlacer:_update_most(...)
 		self._panel:_ensure_size(self._most.right + self._border_padding_x, self._most.bottom + self._border_padding_y)
 	else
 		self._panel:set_size(self._most.right + self._border_padding_x, self._most.bottom + self._border_padding_y)
+	end
+end
+
+MemoPlacer = MemoPlacer or class(ResizingPlacer)
+MemoPlacer.MEMO_FUNCS = {
+	"add_right",
+	"add_right_center",
+	"add_left",
+	"add_left_center",
+	"add_top",
+	"add_top_ralign",
+	"add_bottom",
+	"add_bottom_ralign",
+	"add_row"
+}
+
+-- Lines 387-406
+function MemoPlacer:init(panel, config)
+	MemoPlacer.super.init(self, panel, config)
+
+	if config and config.resizer then
+		self._resizer = true
+	end
+
+	self._record = {}
+
+	for _, func in pairs(self.MEMO_FUNCS) do
+		local orig = self[func]
+
+		self[func] = function(...)
+			if not self._placing then
+				table.insert(self._record, {
+					func = func,
+					args = {
+						n = select("#", ...),
+						...
+					}
+				})
+			end
+
+			return orig(...)
+		end
+	end
+end
+
+-- Lines 408-416
+function MemoPlacer:place_items_in_order()
+	self:clear()
+
+	self._placing = true
+
+	for _, action in pairs(self._record) do
+		self[action.func](unpack(action.args))
+	end
+
+	self._placing = false
+end
+
+-- Lines 418-428
+function MemoPlacer:_update_most(...)
+	ResizingPlacer.super._update_most(self, ...)
+
+	if self._resizer then
+		if self._panel._ensure_size then
+			self._panel:_ensure_size(self._most.right + self._border_padding_x, self._most.bottom + self._border_padding_y)
+		else
+			self._panel:set_size(self._most.right + self._border_padding_x, self._most.bottom + self._border_padding_y)
+		end
 	end
 end

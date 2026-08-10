@@ -52,7 +52,7 @@ function GroupAIManager:paused_update(t, dt)
 	self._state:paused_update(t, dt)
 end
 
--- Lines 49-73
+-- Lines 49-86
 function GroupAIManager:set_state(name)
 	local new_state_getter = GroupAIManager.STATE_CLASS_LOOKUP[name]
 
@@ -62,7 +62,7 @@ function GroupAIManager:set_state(name)
 		return
 	end
 
-	local new_state_class, state_type = new_state_getter()
+	local new_state_class, state_tweak_type = new_state_getter()
 
 	if not new_state_class then
 		Application:error("[GroupAIManager:set_state] Inexistent state class..?", name)
@@ -70,40 +70,48 @@ function GroupAIManager:set_state(name)
 		return
 	end
 
+	local persisting_data
+
 	if self._state ~= nil then
+		persisting_data = self._state:get_persisting_data()
+
 		self._state:destroy()
 	end
 
 	self._state_name = name
-	self._state = new_state_class:new(state_type)
+	self._state = new_state_class:new(state_tweak_type)
+
+	if persisting_data then
+		self._state:set_persisting_data(persisting_data)
+	end
 end
 
--- Lines 77-79
+-- Lines 90-92
 function GroupAIManager:state()
 	return self._state
 end
 
--- Lines 83-85
+-- Lines 96-98
 function GroupAIManager:state_name()
 	return self._state_name
 end
 
--- Lines 89-91
+-- Lines 102-104
 function GroupAIManager:state_names()
 	return table.map_keys(GroupAIManager.STATE_CLASS_LOOKUP)
 end
 
--- Lines 95-98
+-- Lines 108-111
 function GroupAIManager:on_simulation_started()
 	self:set_state(self:state_name())
 end
 
--- Lines 102-104
+-- Lines 115-117
 function GroupAIManager:on_simulation_ended()
 	self._state:on_simulation_ended()
 end
 
--- Lines 108-110
+-- Lines 121-123
 function GroupAIManager:visualization_enabled()
 	return self._state._draw_enabled
 end

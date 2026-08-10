@@ -824,7 +824,7 @@ function Entitlement:UpdateCrossGameRecognition()
 	HttpRequest:get(url, on_stats_received, headers)
 end
 
--- Lines 831-955
+-- Lines 831-966
 function Entitlement:CheckAndVerifyUserEntitlement(callback)
 	Entitlement.result.data = {}
 
@@ -837,16 +837,18 @@ function Entitlement:CheckAndVerifyUserEntitlement(callback)
 		Entitlement:SetDLCEntitlements()
 	end
 
-	-- Lines 848-866
+	-- Lines 848-870
 	local function login_callback(error_code, status_code, response_body)
 		cat_print("accelbyte", "Callback login_callback ")
 
-		Global.telemetry._has_account_checked = true
+		if Global.telemetry ~= nil then
+			Global.telemetry._has_account_checked = true
+		end
 
 		Telemetry:on_login()
 		Telemetry:on_login_screen_passed()
 
-		-- Lines 856-863
+		-- Lines 860-867
 		local function update_stat_callback(error_code, status_code, response_body)
 			cat_print("accelbyte", "Callback update_stat_callback ")
 			Entitlement:QueryEntitlementAsString(0, 100, entitlement_callback)
@@ -856,7 +858,7 @@ function Entitlement:CheckAndVerifyUserEntitlement(callback)
 		Entitlement:UpdateStat("sync-platformupgrade", 1, "INCREMENT", update_stat_callback)
 	end
 
-	-- Lines 868-931
+	-- Lines 872-938
 	local function check_platform_callback(success)
 		cat_print("accelbyte", "Callback Platform Check -- Success: " .. tostring(success))
 
@@ -866,7 +868,7 @@ function Entitlement:CheckAndVerifyUserEntitlement(callback)
 			cat_print("accelbyte", "[AccelByte] Linked Starbreeze User for this Platform ID is found")
 
 			if IS_STEAM then
-				-- Lines 881-892
+				-- Lines 885-896
 				local function get_steamticket_callback(ticket)
 					if ticket == "" then
 						cat_print("accelbyte", "[AccelByte] Failed to authenticate Steam Ticket, reason : " .. reason)
@@ -881,7 +883,7 @@ function Entitlement:CheckAndVerifyUserEntitlement(callback)
 
 				Distribution:create_secure_ticket_for_services("steam_ticket", get_steamticket_callback)
 			elseif IS_EPIC then
-				-- Lines 899-906
+				-- Lines 903-910
 				local function get_epicticket_callback(ticket)
 					if ticket == "" then
 						cat_print("accelbyte", "[AccelByte] Failed to retrieve Epic Ticket")
@@ -898,7 +900,10 @@ function Entitlement:CheckAndVerifyUserEntitlement(callback)
 			end
 		else
 			Login.has_account = false
-			Global.telemetry._has_account_checked = true
+
+			if Global.telemetry ~= nil then
+				Global.telemetry._has_account_checked = true
+			end
 
 			Telemetry:on_login()
 			Telemetry:on_login_screen_passed()
@@ -907,13 +912,16 @@ function Entitlement:CheckAndVerifyUserEntitlement(callback)
 		end
 	end
 
-	-- Lines 934-946
+	-- Lines 941-957
 	local function get_client_token_callback(success)
 		if success then
 			Login:CheckPlatformIdForExistingAccount(player_id, check_platform_callback)
 		else
 			Login.has_account = false
-			Global.telemetry._has_account_checked = true
+
+			if Global.telemetry ~= nil then
+				Global.telemetry._has_account_checked = true
+			end
 
 			Telemetry:on_login()
 			Telemetry:on_login_screen_passed()
@@ -929,7 +937,7 @@ function Entitlement:CheckAndVerifyUserEntitlement(callback)
 	end
 end
 
--- Lines 957-1113
+-- Lines 968-1124
 function Entitlement:SerializeJsonString(document)
 	cat_print("accelbyte", "[AccelByte] Entitlement:SerializeJsonString")
 

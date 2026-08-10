@@ -14039,7 +14039,7 @@ function CharacterTweakData:print_character_map()
 	end
 end
 
--- Lines 6398-7315
+-- Lines 6398-7316
 function CharacterTweakData:character_map()
 	local char_map = {
 		basic = {

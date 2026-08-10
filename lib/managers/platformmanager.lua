@@ -7,16 +7,14 @@ local tmp_vector = Vector3()
 PlatformManager = PlatformManager or class()
 PlatformManager.PLATFORM_CLASS_MAP = {}
 
--- Lines 11-15
+-- Lines 11-13
 function PlatformManager:new(...)
-	local platform = PLATFORM:key()
-
 	return (self.PLATFORM_CLASS_MAP[Idstring("WIN32"):key()] or GenericPlatformManager):new(...)
 end
 
 GenericPlatformManager = GenericPlatformManager or class()
 
--- Lines 21-27
+-- Lines 19-25
 function GenericPlatformManager:init()
 	self._event_queue_list = {}
 	self._event_callback_handler_map = {}
@@ -24,7 +22,7 @@ function GenericPlatformManager:init()
 	self._current_rich_presence = "Idle"
 end
 
--- Lines 29-32
+-- Lines 27-30
 function GenericPlatformManager:event(event_type, ...)
 	table.insert(self._event_queue_list, {
 		event_type = event_type,
@@ -34,19 +32,19 @@ function GenericPlatformManager:event(event_type, ...)
 	})
 end
 
--- Lines 34-34
+-- Lines 32-32
 function GenericPlatformManager:destroy_context()
 	return
 end
 
--- Lines 36-39
+-- Lines 34-37
 function GenericPlatformManager:add_event_callback(event_type, callback_func)
 	self._event_callback_handler_map[event_type] = self._event_callback_handler_map[event_type] or CoreEvent.CallbackEventHandler:new()
 
 	self._event_callback_handler_map[event_type]:add(callback_func)
 end
 
--- Lines 41-49
+-- Lines 39-47
 function GenericPlatformManager:remove_event_callback(event_type, callback_func)
 	assert(event_type and self._event_callback_handler_map[event_type], "Tried to remove non-existing callback on event type \"" .. tostring(event_type) .. "\".")
 	self._event_callback_handler_map[event_type]:remove(callback_func)
@@ -56,7 +54,7 @@ function GenericPlatformManager:remove_event_callback(event_type, callback_func)
 	end
 end
 
--- Lines 51-63
+-- Lines 49-61
 function GenericPlatformManager:update(t, dt)
 	if next(self._event_queue_list) then
 		for _, event in ipairs(self._event_queue_list) do
@@ -71,278 +69,59 @@ function GenericPlatformManager:update(t, dt)
 	end
 end
 
--- Lines 65-67
+-- Lines 63-65
 function GenericPlatformManager:paused_update(t, dt)
 	self:update(t, dt)
 end
 
--- Lines 69-71
+-- Lines 67-69
 function GenericPlatformManager:set_presence(name)
 	self._current_presence = name
 end
 
--- Lines 73-75
+-- Lines 71-73
 function GenericPlatformManager:presence()
 	return self._current_presence
 end
 
--- Lines 77-78
+-- Lines 75-76
 function GenericPlatformManager:set_rich_presence(Key, value)
 	return
 end
 
--- Lines 80-82
+-- Lines 78-80
 function GenericPlatformManager:set_rich_presence_state(name)
 	self._current_rich_presence = name
 end
 
--- Lines 84-86
+-- Lines 82-84
 function GenericPlatformManager:refresh_rich_presence_state()
 	self:set_rich_presence_state(self._current_rich_presence)
 end
 
--- Lines 88-90
+-- Lines 86-88
 function GenericPlatformManager:rich_presence_state()
 	return self._current_rich_presence
 end
 
--- Lines 92-94
+-- Lines 90-92
 function GenericPlatformManager:translate_path(path)
 	return string.gsub(path, "/+([~/]*)", "\\%1")
 end
 
--- Lines 96-98
+-- Lines 94-96
 function GenericPlatformManager:set_playing(is_playing)
 	Global.game_settings.is_playing = is_playing
 end
 
--- Lines 100-101
+-- Lines 98-99
 function GenericPlatformManager:set_progress(progress)
 	return
 end
 
--- Lines 103-104
+-- Lines 101-102
 function GenericPlatformManager:set_feedback_color(color)
 	return
-end
-
-Xbox360PlatformManager = Xbox360PlatformManager or class(GenericPlatformManager)
-PlatformManager.PLATFORM_CLASS_MAP[_G.Idstring("X360"):key()] = Xbox360PlatformManager
-
--- Lines 110-114
-function Xbox360PlatformManager:init()
-	GenericPlatformManager.init(self)
-	XboxLive:set_callback(callback(self, self, "event"))
-end
-
--- Lines 116-120
-function Xbox360PlatformManager:destroy_context()
-	GenericPlatformManager.destroy_context(self)
-	XboxLive:set_callback(nil)
-end
-
--- Lines 122-130
-function Xbox360PlatformManager:set_rich_presence_state(name, callback)
-	print("Xbox360PlatformManager:set_rich_presence_state", name)
-	GenericPlatformManager.set_rich_presence_state(self, name)
-
-	if callback then
-		XboxLive:set_context("presence", name, callback)
-	else
-		XboxLive:set_context("presence", name, function()
-			return
-		end)
-	end
-end
-
--- Lines 132-143
-function Xbox360PlatformManager:set_presence(name, callback)
-	GenericPlatformManager.set_presence(self, name)
-end
-
-XB1PlatformManager = XB1PlatformManager or class(GenericPlatformManager)
-PlatformManager.PLATFORM_CLASS_MAP[_G.Idstring("XB1"):key()] = XB1PlatformManager
-
--- Lines 148-152
-function XB1PlatformManager:init()
-	GenericPlatformManager.init(self)
-	XboxLive:set_callback(callback(self, self, "event"))
-end
-
--- Lines 154-158
-function XB1PlatformManager:destroy_context()
-	GenericPlatformManager.destroy_context(self)
-	XboxLive:set_callback(nil)
-end
-
--- Lines 160-168
-function XB1PlatformManager:set_rich_presence_state(name, callback)
-	print("XB1PlatformManager:set_rich_presence_state", name)
-	GenericPlatformManager.set_rich_presence_state(self, name)
-
-	if callback then
-		XboxLive:set_context("presence", name, callback)
-	else
-		XboxLive:set_context("presence", name, function()
-			return
-		end)
-	end
-end
-
--- Lines 170-181
-function XB1PlatformManager:set_presence(name, callback)
-	GenericPlatformManager.set_presence(self, name)
-end
-
--- Lines 183-195
-function XB1PlatformManager:set_playing(is_playing)
-	if not Global.game_settings.is_playing ~= not is_playing then
-		if not Global.game_settings.single_player then
-			if managers.network.matchmake._session and is_playing then
-				XboxLive:set_mp_begin(managers.network.matchmake._session)
-			end
-
-			if not is_playing then
-				XboxLive:set_mp_end()
-			end
-		end
-
-		XB1PlatformManager.super.set_playing(self, is_playing)
-	end
-end
-
--- Lines 197-199
-function XB1PlatformManager:set_progress(progress)
-	XboxLive:write_game_progress(progress * 100)
-end
-
-PS3PlatformManager = PS3PlatformManager or class(GenericPlatformManager)
-PlatformManager.PLATFORM_CLASS_MAP[_G.Idstring("PS3"):key()] = PS3PlatformManager
-
--- Lines 205-209
-function PS3PlatformManager:init(...)
-	PS3PlatformManager.super.init(self, ...)
-
-	self._current_psn_presence = ""
-	self._psn_set_presence_time = 0
-end
-
--- Lines 211-213
-function PS3PlatformManager:translate_path(path)
-	return string.gsub(path, "\\+([~\\]*)", "/%1")
-end
-
--- Lines 215-223
-function PS3PlatformManager:update(t, dt)
-	PS3PlatformManager.super.update(self, t, dt)
-
-	if self._current_psn_presence ~= self:presence() and t >= self._psn_set_presence_time then
-		self._psn_set_presence_time = t + 10
-		self._current_psn_presence = self:presence()
-
-		print("SET PRESENCE", self._current_psn_presence)
-		PSN:set_presence_info(self._current_psn_presence)
-	end
-end
-
--- Lines 225-228
-function PS3PlatformManager:set_presence(name)
-	GenericPlatformManager.set_presence(self, name)
-end
-
-PS4PlatformManager = PS4PlatformManager or class(GenericPlatformManager)
-PlatformManager.PLATFORM_CLASS_MAP[_G.Idstring("PS4"):key()] = PS4PlatformManager
-
--- Lines 233-237
-function PS4PlatformManager:init(...)
-	PS4PlatformManager.super.init(self, ...)
-
-	self._current_psn_presence = ""
-	self._psn_set_presence_time = 0
-end
-
--- Lines 239-244
-function PS4PlatformManager:destroy_context()
-	GenericPlatformManager.destroy_context(self)
-	PSN:set_online_callback(nil)
-	self:set_feedback_color(nil)
-end
-
--- Lines 246-248
-function PS4PlatformManager:translate_path(path)
-	return string.gsub(path, "\\+([~\\]*)", "/%1")
-end
-
--- Lines 250-258
-function PS4PlatformManager:update(t, dt)
-	PS4PlatformManager.super.update(self, t, dt)
-
-	if self._current_psn_presence ~= self:presence() and t >= self._psn_set_presence_time then
-		self._psn_set_presence_time = t + 10
-		self._current_psn_presence = self:presence()
-
-		print("SET PRESENCE", self._current_psn_presence)
-	end
-end
-
--- Lines 260-272
-function PS4PlatformManager:set_playing(is_playing)
-	if not Global.game_settings.is_playing ~= not is_playing then
-		if not Global.game_settings.single_player then
-			PSN:set_mp_round(is_playing)
-		end
-
-		if not is_playing then
-			self:set_feedback_color(nil)
-		end
-
-		PS4PlatformManager.super.set_playing(self, is_playing)
-	end
-end
-
--- Lines 274-277
-function PS4PlatformManager:set_presence(name)
-	GenericPlatformManager.set_presence(self, name)
-end
-
--- Lines 279-283
-function PS4PlatformManager:set_rich_presence_state(name)
-	print("PS4PlatformManager:set_rich_presence_state", name)
-	GenericPlatformManager.set_rich_presence_state(self, name)
-	PSN:set_presence_info(managers.localization:text("ps4_presence_" .. name))
-end
-
--- Lines 286-314
-function PS4PlatformManager:set_feedback_color(color)
-	local wrapper_index = managers.controller:get_default_wrapper_index()
-
-	if not wrapper_index then
-		return
-	end
-
-	local controller_index_list = managers.controller:get_controller_index_list(wrapper_index)
-
-	if not controller_index_list then
-		return
-	end
-
-	for _, controller_index in ipairs(controller_index_list) do
-		local controller = Input:controller(controller_index)
-
-		if controller.type_name == "PS4Controller" then
-			if Global.game_settings.is_playing and color and not rawget(_G, "setup"):has_queued_exec() then
-				local min_value = 2
-				local red = math.max(min_value, 255 * color.red * color.alpha)
-				local green = math.max(min_value, 255 * color.green * color.alpha)
-				local blue = math.max(min_value, 255 * color.blue * color.alpha)
-
-				mvector3.set_static(tmp_vector, red, green, blue)
-				controller:set_color(tmp_vector)
-			else
-				controller:set_color(empty_vector)
-			end
-		end
-	end
 end
 
 WinPlatformManager = WinPlatformManager or class(GenericPlatformManager)
@@ -352,7 +131,7 @@ local is_steam = IS_STEAM
 local is_epic = IS_EPIC
 local is_mm_eos = IS_EPIC_MM
 
--- Lines 324-330
+-- Lines 111-117
 function WinPlatformManager:set_rich_presence(key, value)
 	if is_steam then
 		Steam:set_rich_presence(key, value)
@@ -361,7 +140,7 @@ function WinPlatformManager:set_rich_presence(key, value)
 	end
 end
 
--- Lines 332-439
+-- Lines 119-226
 function WinPlatformManager:set_rich_presence_state(name)
 	self._current_rich_presence = name
 
@@ -461,7 +240,7 @@ function WinPlatformManager:set_rich_presence_state(name)
 	self:set_rich_presence_discord(name)
 end
 
--- Lines 441-486
+-- Lines 228-273
 function WinPlatformManager:_build_legacy_presence_string()
 	local presence = ""
 	local in_lobby = _G.game_state_machine and (_G.game_state_machine:current_state_name() == "ingame_lobby_menu" or _G.game_state_machine:current_state_name() == "menu_main")
@@ -517,7 +296,7 @@ function WinPlatformManager:_build_legacy_presence_string()
 	return presence
 end
 
--- Lines 489-510
+-- Lines 276-297
 function WinPlatformManager:update_discord_party_size()
 	if Global.game_settings.permission == "private" then
 		return
@@ -533,7 +312,7 @@ function WinPlatformManager:update_discord_party_size()
 	end
 end
 
--- Lines 512-531
+-- Lines 299-318
 function WinPlatformManager:update_discord_character()
 	if Global.game_settings.permission == "private" then
 		return
@@ -547,7 +326,7 @@ function WinPlatformManager:update_discord_character()
 	print("[Discord] update_discord_character", small_image, character_name)
 end
 
--- Lines 533-584
+-- Lines 320-371
 function WinPlatformManager:update_discord_heist()
 	if Global.game_settings.permission == "private" then
 		return
@@ -593,7 +372,7 @@ function WinPlatformManager:update_discord_heist()
 	end
 end
 
--- Lines 586-698
+-- Lines 373-485
 function WinPlatformManager:set_rich_presence_discord(name)
 	Discord:set_status("", "")
 	Discord:set_start_time(0)

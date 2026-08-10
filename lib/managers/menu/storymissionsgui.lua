@@ -959,25 +959,12 @@ function StoryActGuiSidebarItem:init(panel, parameters)
 	self:set_h(self._text:bottom())
 end
 
--- Lines 798-806
-local function set_defaults(target, source)
-	target = target or {}
-
-	for k, v in pairs(source) do
-		if target[k] == nil then
-			target[k] = v
-		end
-	end
-
-	return target
-end
-
 StoryMissionGuiRewardItem = StoryMissionGuiRewardItem or class(ExtendedPanel)
 StoryMissionGuiRewardItem.SIZE = 128
 
--- Lines 813-899
+-- Lines 801-887
 function StoryMissionGuiRewardItem:init(panel, reward_data, config, skipped_mission)
-	config = set_defaults(config, {
+	config = table.set_defaults(config, {
 		input = true,
 		w = self.SIZE,
 		h = self.SIZE
@@ -1084,7 +1071,7 @@ function StoryMissionGuiRewardItem:init(panel, reward_data, config, skipped_miss
 	self._text:set_x(self:w() * 0.5 - self._text:w() * 0.5)
 end
 
--- Lines 901-903
+-- Lines 889-891
 function StoryMissionGuiRewardItem:mouse_moved(button, x, y)
 	self._text:set_visible(self:inside(x, y))
 end

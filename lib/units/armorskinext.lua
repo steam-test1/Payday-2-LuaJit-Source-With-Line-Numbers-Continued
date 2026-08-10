@@ -338,11 +338,10 @@ function ArmorSkinExt:set_character(character_name)
 	end
 end
 
--- Lines 317-350
+-- Lines 317-349
 function ArmorSkinExt:_update_materials()
 	local use = self:use_cc()
 	local use_cc_material_config = use and self._cosmetics_data and not self._cosmetics_data.ignore_cc and true or false
-	local material_config_ids = Idstring("material_config")
 
 	if use_cc_material_config then
 		local new_material_config_ids = self:_get_cc_material_config()
@@ -353,7 +352,7 @@ function ArmorSkinExt:_update_materials()
 
 		self._materials = {}
 
-		local materials = self._unit:get_objects_by_type(Idstring("material"))
+		local materials = self._unit:get_objects_by_type(IDS_MATERIAL)
 
 		for _, m in ipairs(materials) do
 			if m:variable_exists(Idstring("wear_tear_value")) then
@@ -363,13 +362,13 @@ function ArmorSkinExt:_update_materials()
 	else
 		local new_material_config_ids = self:_get_original_material_config()
 
-		if new_material_config_ids and DB:has(material_config_ids, new_material_config_ids) then
+		if new_material_config_ids and DB:has(IDS_MATERIAL, new_material_config_ids) then
 			self._unit:set_material_config(new_material_config_ids, true)
 		end
 	end
 end
 
--- Lines 352-358
+-- Lines 351-357
 function ArmorSkinExt:use_cc()
 	return true
 end

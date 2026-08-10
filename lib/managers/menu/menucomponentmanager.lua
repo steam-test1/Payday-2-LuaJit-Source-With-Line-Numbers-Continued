@@ -4230,7 +4230,7 @@ function MenuComponentManager:create_weapon_mod_icon_list(weapon, category, fact
 	return icon_list
 end
 
--- Lines 4052-4096
+-- Lines 4052-4110
 function MenuComponentManager:create_melee_status_icon_list(melee_weapon)
 	local icon_list = {}
 	local melee_data = tweak_data.blackmarket.melee_weapons[melee_weapon]
@@ -4243,7 +4243,7 @@ function MenuComponentManager:create_melee_status_icon_list(melee_weapon)
 	local fire_weapon = false
 	local poison_weapon = false
 
-	-- Lines 4064-4071
+	-- Lines 4068-4075
 	local function check_dot(dot_name)
 		if dot_name then
 			local dot_data = tweak_data.dot:get_dot_data(dot_name)
@@ -4278,7 +4278,7 @@ function MenuComponentManager:create_melee_status_icon_list(melee_weapon)
 	return icon_list
 end
 
--- Lines 4099-4104
+-- Lines 4113-4118
 function MenuComponentManager:create_game_installing_gui()
 	if self._game_installing then
 		return
@@ -4287,7 +4287,7 @@ function MenuComponentManager:create_game_installing_gui()
 	self:_create_game_installing_gui()
 end
 
--- Lines 4105-4110
+-- Lines 4119-4124
 function MenuComponentManager:_create_game_installing_gui()
 	self:close_game_installing_gui()
 
@@ -4296,7 +4296,7 @@ function MenuComponentManager:_create_game_installing_gui()
 	end
 end
 
--- Lines 4112-4147
+-- Lines 4126-4161
 function MenuComponentManager:_update_game_installing_gui(t, dt)
 	if not self._crimenet_enabled or not self._crimenet_offline_enabled then
 		local is_installing, install_progress = managers.dlc:is_installing()
@@ -4340,7 +4340,7 @@ function MenuComponentManager:_update_game_installing_gui(t, dt)
 	end
 end
 
--- Lines 4149-4154
+-- Lines 4163-4168
 function MenuComponentManager:close_game_installing_gui()
 	if self._game_installing then
 		self._game_installing:close()
@@ -4349,19 +4349,19 @@ function MenuComponentManager:close_game_installing_gui()
 	end
 end
 
--- Lines 4201-4203
+-- Lines 4215-4217
 function MenuComponentManager:create_inventory_gui(node)
 	self:_create_inventory_gui(node)
 end
 
--- Lines 4205-4209
+-- Lines 4219-4223
 function MenuComponentManager:reload_inventory_gui()
 	if self._player_inventory_gui then
 		self:_create_inventory_gui(self._player_inventory_gui._node)
 	end
 end
 
--- Lines 4211-4220
+-- Lines 4225-4234
 function MenuComponentManager:_create_inventory_gui(node)
 	self:close_inventory_gui()
 
@@ -4376,21 +4376,21 @@ function MenuComponentManager:_create_inventory_gui(node)
 	end
 end
 
--- Lines 4222-4226
+-- Lines 4236-4240
 function MenuComponentManager:enable_inventory_gui()
 	if self._player_inventory_gui then
 		self._player_inventory_gui:enable()
 	end
 end
 
--- Lines 4228-4232
+-- Lines 4242-4246
 function MenuComponentManager:disable_inventory_gui()
 	if self._player_inventory_gui then
 		self._player_inventory_gui:disable()
 	end
 end
 
--- Lines 4234-4244
+-- Lines 4248-4258
 function MenuComponentManager:close_inventory_gui()
 	if self._player_inventory_gui then
 		self._player_inventory_gui:close()
@@ -4405,7 +4405,7 @@ function MenuComponentManager:close_inventory_gui()
 	end
 end
 
--- Lines 4247-4252
+-- Lines 4261-4266
 function MenuComponentManager:_create_newsfeed_gui()
 	if self._newsfeed_gui then
 		return
@@ -4414,7 +4414,7 @@ function MenuComponentManager:_create_newsfeed_gui()
 	self:create_newsfeed_gui()
 end
 
--- Lines 4253-4258
+-- Lines 4267-4272
 function MenuComponentManager:create_newsfeed_gui()
 	self:close_newsfeed_gui()
 
@@ -4423,14 +4423,14 @@ function MenuComponentManager:create_newsfeed_gui()
 	end
 end
 
--- Lines 4260-4264
+-- Lines 4274-4278
 function MenuComponentManager:_update_newsfeed_gui(t, dt)
 	if self._newsfeed_gui then
 		self._newsfeed_gui:update(t, dt)
 	end
 end
 
--- Lines 4266-4271
+-- Lines 4280-4285
 function MenuComponentManager:close_newsfeed_gui()
 	if self._newsfeed_gui then
 		self._newsfeed_gui:close()
@@ -4439,7 +4439,7 @@ function MenuComponentManager:close_newsfeed_gui()
 	end
 end
 
--- Lines 4276-4291
+-- Lines 4290-4305
 function MenuComponentManager:create_preplanning_map_gui(node)
 	self._preplanning_map = self._preplanning_map or self:_create_preplanning_map_gui(node)
 
@@ -4460,17 +4460,17 @@ function MenuComponentManager:create_preplanning_map_gui(node)
 	end
 end
 
--- Lines 4293-4295
+-- Lines 4307-4309
 function MenuComponentManager:_create_preplanning_map_gui(node)
 	return PrePlanningMapGui:new(self._ws, self._fullscreen_ws, node)
 end
 
--- Lines 4297-4299
+-- Lines 4311-4313
 function MenuComponentManager:is_preplanning_enabled()
 	return self._preplanning_map and self._preplanning_map:enabled()
 end
 
--- Lines 4301-4309
+-- Lines 4315-4323
 function MenuComponentManager:close_preplanning_map_gui()
 	self:_close_preplanning_map_gui()
 
@@ -4483,7 +4483,7 @@ function MenuComponentManager:close_preplanning_map_gui()
 	end
 end
 
--- Lines 4311-4321
+-- Lines 4325-4335
 function MenuComponentManager:kill_preplanning_map_gui()
 	if self._preplanning_map then
 		if Network:is_server() then
@@ -4499,98 +4499,98 @@ function MenuComponentManager:kill_preplanning_map_gui()
 	end
 end
 
--- Lines 4323-4327
+-- Lines 4337-4341
 function MenuComponentManager:_close_preplanning_map_gui()
 	if self._preplanning_map then
 		self._preplanning_map:disable()
 	end
 end
 
--- Lines 4329-4333
+-- Lines 4343-4347
 function MenuComponentManager:preplanning_flash_error(...)
 	if self._preplanning_map then
 		self._preplanning_map:flash_error(...)
 	end
 end
 
--- Lines 4335-4339
+-- Lines 4349-4353
 function MenuComponentManager:set_preplanning_category_filter(category)
 	if self._preplanning_map then
 		self._preplanning_map:set_category_filter(category)
 	end
 end
 
--- Lines 4341-4345
+-- Lines 4355-4359
 function MenuComponentManager:set_preplanning_type_filter(type)
 	if self._preplanning_map then
 		self._preplanning_map:set_type_filter(type)
 	end
 end
 
--- Lines 4347-4351
+-- Lines 4361-4365
 function MenuComponentManager:get_preplanning_filter()
 	if self._preplanning_map then
 		return self._preplanning_map:current_type_filter()
 	end
 end
 
--- Lines 4353-4357
+-- Lines 4367-4371
 function MenuComponentManager:set_preplanning_selected_element_item(item)
 	if self._preplanning_map then
 		return self._preplanning_map:set_selected_element_item(item)
 	end
 end
 
--- Lines 4359-4363
+-- Lines 4373-4377
 function MenuComponentManager:set_preplanning_map_position_to_item(item)
 	if self._preplanning_map then
 		return self._preplanning_map:set_map_position_to_item(item)
 	end
 end
 
--- Lines 4365-4369
+-- Lines 4379-4383
 function MenuComponentManager:set_preplanning_map_position(x, y, location)
 	if self._preplanning_map then
 		return self._preplanning_map:set_map_position(x, y, location)
 	end
 end
 
--- Lines 4371-4375
+-- Lines 4385-4389
 function MenuComponentManager:update_preplanning_element(type, id)
 	if self._preplanning_map then
 		return self._preplanning_map:update_element(type, id)
 	end
 end
 
--- Lines 4377-4381
+-- Lines 4391-4395
 function MenuComponentManager:preplanning_post_event(event, listener_clbk, ignore_prefix)
 	if self._preplanning_map then
 		return self._preplanning_map:post_event(event, listener_clbk, ignore_prefix)
 	end
 end
 
--- Lines 4383-4387
+-- Lines 4397-4401
 function MenuComponentManager:preplanning_stop_event()
 	if self._preplanning_map then
 		return self._preplanning_map:stop_event()
 	end
 end
 
--- Lines 4389-4393
+-- Lines 4403-4407
 function MenuComponentManager:preplanning_start_custom_talk(id)
 	if self._preplanning_map then
 		return self._preplanning_map:start_custom_talk(id)
 	end
 end
 
--- Lines 4395-4399
+-- Lines 4409-4413
 function MenuComponentManager:toggle_preplanning_drawing(peer_id)
 	if self._preplanning_map then
 		return self._preplanning_map:toggle_drawing(peer_id)
 	end
 end
 
--- Lines 4401-4422
+-- Lines 4415-4436
 function MenuComponentManager:sync_preplanning_draw_event(peer_id, event_id, var1, var2)
 	if self._preplanning_map then
 		if event_id == 1 then
@@ -4621,7 +4621,7 @@ function MenuComponentManager:sync_preplanning_draw_event(peer_id, event_id, var
 	end
 end
 
--- Lines 4424-4430
+-- Lines 4438-4444
 function MenuComponentManager:sync_preplanning_draw_point(peer_id, x, y)
 	if self._preplanning_map then
 		return self._preplanning_map:sync_draw_point(peer_id, x, y)
@@ -4635,7 +4635,7 @@ function MenuComponentManager:sync_preplanning_draw_point(peer_id, x, y)
 	end
 end
 
--- Lines 4432-4442
+-- Lines 4446-4456
 function MenuComponentManager:clear_preplanning_draws(peer_id)
 	if self._preplanning_map then
 		self._preplanning_map:sync_erase_drawing(peer_id)
@@ -4648,7 +4648,7 @@ function MenuComponentManager:clear_preplanning_draws(peer_id)
 	end
 end
 
--- Lines 4444-4459
+-- Lines 4458-4473
 function MenuComponentManager:preplanning_sync_save(data)
 	if not data then
 		return
@@ -4667,7 +4667,7 @@ function MenuComponentManager:preplanning_sync_save(data)
 	end
 end
 
--- Lines 4461-4480
+-- Lines 4475-4494
 function MenuComponentManager:preplanning_sync_load(data)
 	if not data then
 		return
@@ -4687,7 +4687,7 @@ function MenuComponentManager:preplanning_sync_load(data)
 	end
 end
 
--- Lines 4482-4495
+-- Lines 4496-4509
 function MenuComponentManager:_set_preplanning_saved_draws(preplanning_saved_draws)
 	local clbk, vars
 
@@ -4708,7 +4708,7 @@ function MenuComponentManager:_set_preplanning_saved_draws(preplanning_saved_dra
 	self._preplanning_saved_draws = {}
 end
 
--- Lines 4497-4501
+-- Lines 4511-4515
 function MenuComponentManager:_set_preplanning_drawings(peer_draw_lines, peer_draw_line_index)
 	self._preplanning_map:set_drawings(peer_draw_lines, peer_draw_line_index)
 
@@ -4716,35 +4716,35 @@ function MenuComponentManager:_set_preplanning_drawings(peer_draw_lines, peer_dr
 	self._preplanning_peer_draw_line_index = nil
 end
 
--- Lines 4504-4508
+-- Lines 4518-4522
 function MenuComponentManager:hide_preplanning_drawboard()
 	if self._preplanning_map then
 		self._preplanning_map:hide_drawboard()
 	end
 end
 
--- Lines 4510-4514
+-- Lines 4524-4528
 function MenuComponentManager:set_preplanning_drawboard(x, y)
 	if self._preplanning_map then
 		self._preplanning_map:set_drawboard_button_position(x, y)
 	end
 end
 
--- Lines 4516-4520
+-- Lines 4530-4534
 function MenuComponentManager:get_game_chat_button_shape()
 	if self._game_chat_gui then
 		return self._game_chat_gui:get_chat_button_shape()
 	end
 end
 
--- Lines 4524-4528
+-- Lines 4538-4542
 function MenuComponentManager:set_blackmarket_tradable_loaded(error)
 	if self._blackmarket_gui then
 		self._blackmarket_gui:set_tradable_loaded(error)
 	end
 end
 
--- Lines 4531-4538
+-- Lines 4545-4552
 function MenuComponentManager:_create_debug_fonts_gui()
 	if self._debug_fonts_gui then
 		self._debug_fonts_gui:set_enabled(true)
@@ -4755,21 +4755,21 @@ function MenuComponentManager:_create_debug_fonts_gui()
 	self:create_debug_fonts_gui()
 end
 
--- Lines 4540-4543
+-- Lines 4554-4557
 function MenuComponentManager:create_debug_fonts_gui()
 	self:close_debug_fonts_gui()
 
 	self._debug_fonts_gui = DebugDrawFonts:new(self._fullscreen_ws)
 end
 
--- Lines 4545-4549
+-- Lines 4559-4563
 function MenuComponentManager:_disable_debug_fonts_gui()
 	if self._debug_fonts_gui then
 		self._debug_fonts_gui:set_enabled(false)
 	end
 end
 
--- Lines 4551-4556
+-- Lines 4565-4570
 function MenuComponentManager:close_debug_fonts_gui()
 	if self._debug_fonts_gui then
 		self._debug_fonts_gui:close()
@@ -4778,19 +4778,19 @@ function MenuComponentManager:close_debug_fonts_gui()
 	end
 end
 
--- Lines 4558-4566
+-- Lines 4572-4580
 function MenuComponentManager:toggle_debug_fonts_gui()
 	return
 end
 
--- Lines 4568-4572
+-- Lines 4582-4586
 function MenuComponentManager:reload_debug_fonts_gui()
 	if self._debug_fonts_gui then
 		self._debug_fonts_gui:reload()
 	end
 end
 
--- Lines 4575-4582
+-- Lines 4589-4596
 function MenuComponentManager:_create_debug_strings_gui()
 	if self._debug_strings_book then
 		self._debug_strings_book:set_enabled(true)
@@ -4801,7 +4801,7 @@ function MenuComponentManager:_create_debug_strings_gui()
 	self:create_debug_strings_gui()
 end
 
--- Lines 4584-4599
+-- Lines 4598-4613
 function MenuComponentManager:create_debug_strings_gui()
 	self:close_debug_strings_gui()
 
@@ -4842,14 +4842,14 @@ function MenuComponentManager:create_debug_strings_gui()
 	self._debug_strings_book:set_centered()
 end
 
--- Lines 4607-4611
+-- Lines 4621-4625
 function MenuComponentManager:_disable_debug_strings_gui()
 	if self._debug_strings_book then
 		self._debug_strings_book:set_enabled(false)
 	end
 end
 
--- Lines 4613-4623
+-- Lines 4627-4637
 function MenuComponentManager:close_debug_strings_gui()
 	if self._debug_strings_book then
 		self._debug_strings_book:close()
@@ -4858,7 +4858,7 @@ function MenuComponentManager:close_debug_strings_gui()
 	end
 end
 
--- Lines 4627-4631
+-- Lines 4641-4645
 function MenuComponentManager:_maximize_weapon_box(data)
 	self._weapon_text_box:set_visible(true)
 
@@ -4867,7 +4867,7 @@ function MenuComponentManager:_maximize_weapon_box(data)
 	self:remove_minimized(data.id)
 end
 
--- Lines 4633-4671
+-- Lines 4647-4685
 function MenuComponentManager:add_minimized(config)
 	self._minimized_list = self._minimized_list or {}
 	self._minimized_id = (self._minimized_id or 0) + 1
@@ -4955,7 +4955,7 @@ function MenuComponentManager:add_minimized(config)
 	return self._minimized_id
 end
 
--- Lines 4673-4680
+-- Lines 4687-4694
 function MenuComponentManager:_layout_minimized()
 	local x = 0
 
@@ -4967,7 +4967,7 @@ function MenuComponentManager:_layout_minimized()
 	end
 end
 
--- Lines 4682-4693
+-- Lines 4696-4707
 function MenuComponentManager:remove_minimized(id)
 	for i, data in ipairs(self._minimized_list) do
 		if data.id == id then
@@ -4983,7 +4983,7 @@ function MenuComponentManager:remove_minimized(id)
 	self:_layout_minimized()
 end
 
--- Lines 4696-4713
+-- Lines 4710-4727
 function MenuComponentManager:_request_done_callback(texture_ids)
 	local key = texture_ids:key()
 	local entry = self._requested_textures[key]
@@ -5005,7 +5005,7 @@ function MenuComponentManager:_request_done_callback(texture_ids)
 	end
 end
 
--- Lines 4715-4760
+-- Lines 4729-4774
 function MenuComponentManager:request_texture(texture, done_cb)
 	if type_name(texture) ~= "string" then
 		Application:error("[MenuComponentManager:request_texture] texture needs to be of type string", texture, type_name(texture))
@@ -5067,7 +5067,7 @@ function MenuComponentManager:request_texture(texture, done_cb)
 	return index
 end
 
--- Lines 4762-4775
+-- Lines 4776-4789
 function MenuComponentManager:unretrieve_texture(texture, index)
 	local texture_ids = Idstring(texture)
 	local key = texture_ids:key()
@@ -5084,12 +5084,12 @@ function MenuComponentManager:unretrieve_texture(texture, index)
 	end
 end
 
--- Lines 4778-4782
+-- Lines 4792-4796
 function MenuComponentManager:retrieve_texture(texture)
 	return TextureCache:retrieve(texture, "NORMAL")
 end
 
--- Lines 4785-4839
+-- Lines 4799-4853
 function MenuComponentManager:add_colors_to_text_object(text_object, ...)
 	local text = text_object:text()
 	local unchanged_text = text
@@ -5149,13 +5149,13 @@ end
 
 MenuComponentPostEventInstance = MenuComponentPostEventInstance or class()
 
--- Lines 4842-4845
+-- Lines 4856-4859
 function MenuComponentPostEventInstance:init(sound_source)
 	self._sound_source = sound_source
 	self._post_event = false
 end
 
--- Lines 4847-4856
+-- Lines 4861-4870
 function MenuComponentPostEventInstance:post_event(event)
 	if alive(self._post_event) then
 		self._post_event:stop()
@@ -5168,7 +5168,7 @@ function MenuComponentPostEventInstance:post_event(event)
 	end
 end
 
--- Lines 4858-4863
+-- Lines 4872-4877
 function MenuComponentPostEventInstance:stop_event()
 	if alive(self._post_event) then
 		self._post_event:stop()
@@ -5177,7 +5177,7 @@ function MenuComponentPostEventInstance:stop_event()
 	self._post_event = false
 end
 
--- Lines 4865-4870
+-- Lines 4879-4884
 function MenuComponentManager:new_post_event_instance()
 	local event_instance = MenuComponentPostEventInstance:new(self._sound_source)
 
@@ -5188,7 +5188,7 @@ function MenuComponentManager:new_post_event_instance()
 	return event_instance
 end
 
--- Lines 4872-4888
+-- Lines 4886-4902
 function MenuComponentManager:post_event(event, unique)
 	if _G.IS_VR then
 		managers.menu:post_event_vr(event)
@@ -5209,7 +5209,7 @@ function MenuComponentManager:post_event(event, unique)
 	return post_event
 end
 
--- Lines 4890-4896
+-- Lines 4904-4910
 function MenuComponentManager:stop_event()
 	print("MenuComponentManager:stop_event()")
 
@@ -5220,7 +5220,7 @@ function MenuComponentManager:stop_event()
 	end
 end
 
--- Lines 4898-4953
+-- Lines 4912-4967
 function MenuComponentManager:close()
 	print("[MenuComponentManager:close]")
 
@@ -5275,7 +5275,7 @@ function MenuComponentManager:close()
 	end
 end
 
--- Lines 4955-4980
+-- Lines 4969-4994
 function MenuComponentManager:play_transition(run_in_pause)
 	if self._transition_panel then
 		self._transition_panel:parent():remove(self._transition_panel)
@@ -5293,7 +5293,7 @@ function MenuComponentManager:play_transition(run_in_pause)
 		color = Color.black
 	})
 
-	-- Lines 4962-4978
+	-- Lines 4976-4992
 	local function animate_transition(o)
 		local fade1 = o:child("fade1")
 		local seconds = 0.5
@@ -5317,7 +5317,7 @@ function MenuComponentManager:play_transition(run_in_pause)
 	self._transition_panel:animate(animate_transition)
 end
 
--- Lines 4982-5007
+-- Lines 4996-5021
 function MenuComponentManager:test_camera_shutter_tech()
 	if not self._tcst then
 		self._tcst = managers.gui_data:create_fullscreen_16_9_workspace()
@@ -5333,7 +5333,7 @@ function MenuComponentManager:test_camera_shutter_tech()
 			color = Color.black
 		})
 
-		-- Lines 4989-4993
+		-- Lines 5003-5007
 		local function one_frame_hide(o)
 			o:hide()
 			coroutine.yield()
@@ -5345,7 +5345,7 @@ function MenuComponentManager:test_camera_shutter_tech()
 
 	local o = self._tcst:panel():children()[1]
 
-	-- Lines 4998-5003
+	-- Lines 5012-5017
 	local function animate_fade(o)
 		local black = o:child("black")
 
@@ -5358,7 +5358,7 @@ function MenuComponentManager:test_camera_shutter_tech()
 	o:animate(animate_fade)
 end
 
--- Lines 5010-5031
+-- Lines 5024-5045
 function MenuComponentManager:create_test_gui()
 	if alive(Global.test_gui) then
 		managers.gui_data:destroy_workspace(Global.test_gui)
@@ -5392,7 +5392,7 @@ function MenuComponentManager:create_test_gui()
 	end
 end
 
--- Lines 5033-5038
+-- Lines 5047-5052
 function MenuComponentManager:destroy_test_gui()
 	if alive(Global.test_gui) then
 		managers.gui_data:destroy_workspace(Global.test_gui)
@@ -5401,17 +5401,17 @@ function MenuComponentManager:destroy_test_gui()
 	end
 end
 
--- Lines 5043-5045
+-- Lines 5057-5059
 function MenuComponentManager:create_custom_safehouse_primaries(node)
 	self:create_ingame_custom_safehouse_menu(node, "primaries")
 end
 
--- Lines 5047-5049
+-- Lines 5061-5063
 function MenuComponentManager:create_custom_safehouse_secondaries(node)
 	self:create_ingame_custom_safehouse_menu(node, "secondaries")
 end
 
--- Lines 5051-5115
+-- Lines 5065-5129
 function MenuComponentManager:create_ingame_custom_safehouse_menu(node, category)
 	if not node then
 		return
@@ -5484,22 +5484,22 @@ function MenuComponentManager:create_ingame_custom_safehouse_menu(node, category
 	})
 end
 
--- Lines 5117-5119
+-- Lines 5131-5133
 function MenuComponentManager:close_custom_safehouse_primaries()
 	self:close_custom_safehouse_menu("primaries")
 end
 
--- Lines 5121-5123
+-- Lines 5135-5137
 function MenuComponentManager:close_custom_safehouse_secondaries()
 	self:close_custom_safehouse_menu("secondaries")
 end
 
--- Lines 5125-5126
+-- Lines 5139-5140
 function MenuComponentManager:close_custom_safehouse_menu(category)
 	return
 end
 
--- Lines 5128-5134
+-- Lines 5142-5148
 function MenuComponentManager:create_new_heists_gui(node)
 	if not node then
 		return
@@ -5510,7 +5510,7 @@ function MenuComponentManager:create_new_heists_gui(node)
 	self:register_component("new_heists", self._new_heists_gui)
 end
 
--- Lines 5136-5142
+-- Lines 5150-5156
 function MenuComponentManager:close_new_heists_gui()
 	if self._new_heists_gui then
 		self._new_heists_gui:close()
@@ -5521,7 +5521,7 @@ function MenuComponentManager:close_new_heists_gui()
 	end
 end
 
--- Lines 5148-5155
+-- Lines 5162-5169
 function MenuComponentManager:create_crime_spree_contract_gui(node)
 	if not node then
 		return
@@ -5533,7 +5533,7 @@ function MenuComponentManager:create_crime_spree_contract_gui(node)
 	self:disable_crimenet()
 end
 
--- Lines 5157-5164
+-- Lines 5171-5178
 function MenuComponentManager:close_crime_spree_contract_gui(node)
 	if self._crime_spree_contract_menu_comp then
 		self._crime_spree_contract_menu_comp:close()
@@ -5545,7 +5545,7 @@ function MenuComponentManager:close_crime_spree_contract_gui(node)
 	end
 end
 
--- Lines 5168-5174
+-- Lines 5182-5188
 function MenuComponentManager:create_crime_spree_missions_gui(node)
 	if not node or not managers.crime_spree:is_active() then
 		return
@@ -5556,7 +5556,7 @@ function MenuComponentManager:create_crime_spree_missions_gui(node)
 	self:register_component("crime_spree_missions", self._crime_spree_missions)
 end
 
--- Lines 5176-5182
+-- Lines 5190-5196
 function MenuComponentManager:close_crime_spree_missions_gui(node)
 	if self._crime_spree_missions then
 		self._crime_spree_missions:close()
@@ -5567,12 +5567,12 @@ function MenuComponentManager:close_crime_spree_missions_gui(node)
 	end
 end
 
--- Lines 5184-5186
+-- Lines 5198-5200
 function MenuComponentManager:crime_spree_missions_gui()
 	return self._crime_spree_missions
 end
 
--- Lines 5190-5196
+-- Lines 5204-5210
 function MenuComponentManager:create_crime_spree_details_gui(node)
 	if not node or not managers.crime_spree:is_active() then
 		return
@@ -5583,7 +5583,7 @@ function MenuComponentManager:create_crime_spree_details_gui(node)
 	self:register_component("crime_spree_details", self._crime_spree_details)
 end
 
--- Lines 5198-5204
+-- Lines 5212-5218
 function MenuComponentManager:close_crime_spree_details_gui(node)
 	if self._crime_spree_details then
 		self._crime_spree_details:close()
@@ -5594,7 +5594,7 @@ function MenuComponentManager:close_crime_spree_details_gui(node)
 	end
 end
 
--- Lines 5206-5213
+-- Lines 5220-5227
 function MenuComponentManager:refresh_crime_spree_details_gui()
 	local node
 
@@ -5606,12 +5606,12 @@ function MenuComponentManager:refresh_crime_spree_details_gui()
 	self:create_crime_spree_details_gui(node)
 end
 
--- Lines 5215-5217
+-- Lines 5229-5231
 function MenuComponentManager:crime_spree_details_gui()
 	return self._crime_spree_details
 end
 
--- Lines 5221-5227
+-- Lines 5235-5241
 function MenuComponentManager:create_crime_spree_modifiers_gui(node)
 	if not node then
 		return
@@ -5622,7 +5622,7 @@ function MenuComponentManager:create_crime_spree_modifiers_gui(node)
 	self:register_component("crime_spree_modifiers", self._crime_spree_modifiers)
 end
 
--- Lines 5229-5235
+-- Lines 5243-5249
 function MenuComponentManager:close_crime_spree_modifiers_gui(node)
 	if self._crime_spree_modifiers then
 		self._crime_spree_modifiers:close()
@@ -5633,17 +5633,17 @@ function MenuComponentManager:close_crime_spree_modifiers_gui(node)
 	end
 end
 
--- Lines 5237-5239
+-- Lines 5251-5253
 function MenuComponentManager:crime_spree_modifiers()
 	return self._crime_spree_modifiers
 end
 
--- Lines 5243-5245
+-- Lines 5257-5259
 function MenuComponentManager:check_crime_spree_forced_modifiers(node)
 	managers.crime_spree:check_forced_modifiers()
 end
 
--- Lines 5247-5254
+-- Lines 5261-5268
 function MenuComponentManager:create_crime_spree_forced_modifiers_gui(node)
 	if not node then
 		return
@@ -5654,7 +5654,7 @@ function MenuComponentManager:create_crime_spree_forced_modifiers_gui(node)
 	self:register_component("crime_spree_forced_modifiers", self._crime_spree_forced_modifiers)
 end
 
--- Lines 5256-5262
+-- Lines 5270-5276
 function MenuComponentManager:close_crime_spree_forced_modifiers_gui(node)
 	if self._crime_spree_forced_modifiers then
 		self._crime_spree_forced_modifiers:close()
@@ -5665,12 +5665,12 @@ function MenuComponentManager:close_crime_spree_forced_modifiers_gui(node)
 	end
 end
 
--- Lines 5264-5266
+-- Lines 5278-5280
 function MenuComponentManager:crime_spree_forced_modifiers()
 	return self._crime_spree_forced_modifiers
 end
 
--- Lines 5270-5276
+-- Lines 5284-5290
 function MenuComponentManager:create_crime_spree_rewards_gui(node)
 	if not node then
 		return
@@ -5681,7 +5681,7 @@ function MenuComponentManager:create_crime_spree_rewards_gui(node)
 	self:register_component("crime_spree_rewards", self._crime_spree_rewards)
 end
 
--- Lines 5278-5284
+-- Lines 5292-5298
 function MenuComponentManager:close_crime_spree_rewards_gui(node)
 	if self._crime_spree_rewards then
 		self._crime_spree_rewards:close()
@@ -5692,7 +5692,7 @@ function MenuComponentManager:close_crime_spree_rewards_gui(node)
 	end
 end
 
--- Lines 5288-5294
+-- Lines 5302-5308
 function MenuComponentManager:create_crime_spree_mission_end_gui(node)
 	if not node or not managers.crime_spree:is_active() then
 		return
@@ -5703,7 +5703,7 @@ function MenuComponentManager:create_crime_spree_mission_end_gui(node)
 	self:register_component("crime_spree_mission_end", self._crime_spree_mission_end, -1)
 end
 
--- Lines 5296-5302
+-- Lines 5310-5316
 function MenuComponentManager:close_crime_spree_mission_end_gui(node)
 	if self._crime_spree_mission_end then
 		self._crime_spree_mission_end:close()
@@ -5714,22 +5714,22 @@ function MenuComponentManager:close_crime_spree_mission_end_gui(node)
 	end
 end
 
--- Lines 5304-5306
+-- Lines 5318-5320
 function MenuComponentManager:crime_spree_mission_end_gui()
 	return self._crime_spree_mission_end
 end
 
--- Lines 5312-5322
+-- Lines 5326-5336
 function MenuComponentManager:create_debug_quicklaunch_gui(node)
 	return
 end
 
--- Lines 5324-5334
+-- Lines 5338-5348
 function MenuComponentManager:close_debug_quicklaunch_gui()
 	return
 end
 
--- Lines 5339-5345
+-- Lines 5353-5359
 function MenuComponentManager:create_crew_management_gui(node)
 	if not node then
 		return
@@ -5740,7 +5740,7 @@ function MenuComponentManager:create_crew_management_gui(node)
 	self:register_component("crew_management", self._crew_management_gui)
 end
 
--- Lines 5347-5353
+-- Lines 5361-5367
 function MenuComponentManager:close_crew_management_gui()
 	if self._crew_management_gui then
 		self._crew_management_gui:close()
@@ -5751,7 +5751,7 @@ function MenuComponentManager:close_crew_management_gui()
 	end
 end
 
--- Lines 5377-5381
+-- Lines 5391-5395
 function MenuComponentManager:create_story_missions_gui(node)
 	self:close_story_missions_gui()
 
@@ -5760,7 +5760,7 @@ function MenuComponentManager:create_story_missions_gui(node)
 	self:register_component("story_missions", self._story_missions_gui)
 end
 
--- Lines 5383-5389
+-- Lines 5397-5403
 function MenuComponentManager:close_story_missions_gui()
 	if self._story_missions_gui then
 		self._story_missions_gui:close()
@@ -5771,12 +5771,12 @@ function MenuComponentManager:close_story_missions_gui()
 	end
 end
 
--- Lines 5391-5393
+-- Lines 5405-5407
 function MenuComponentManager:story_missions_gui()
 	return self._story_missions_gui
 end
 
--- Lines 5397-5401
+-- Lines 5411-5415
 function MenuComponentManager:create_crimenet_sidebar_gui(node)
 	self:close_crimenet_sidebar_gui()
 
@@ -5785,7 +5785,7 @@ function MenuComponentManager:create_crimenet_sidebar_gui(node)
 	self:register_component("crimenet_sidebar", self._crimenet_sidebar_gui)
 end
 
--- Lines 5403-5409
+-- Lines 5417-5423
 function MenuComponentManager:close_crimenet_sidebar_gui()
 	if self._crimenet_sidebar_gui then
 		self._crimenet_sidebar_gui:close()
@@ -5796,12 +5796,12 @@ function MenuComponentManager:close_crimenet_sidebar_gui()
 	end
 end
 
--- Lines 5411-5413
+-- Lines 5425-5427
 function MenuComponentManager:crimenet_sidebar_gui()
 	return self._crimenet_sidebar_gui
 end
 
--- Lines 5417-5421
+-- Lines 5431-5435
 function MenuComponentManager:create_social_hub_gui(node)
 	self:close_social_hub_gui()
 
@@ -5810,7 +5810,7 @@ function MenuComponentManager:create_social_hub_gui(node)
 	self:register_component("social_hub", self._social_hub_gui)
 end
 
--- Lines 5423-5429
+-- Lines 5437-5443
 function MenuComponentManager:close_social_hub_gui()
 	if self._social_hub_gui then
 		self._social_hub_gui:close()
@@ -5821,26 +5821,26 @@ function MenuComponentManager:close_social_hub_gui()
 	end
 end
 
--- Lines 5431-5433
+-- Lines 5445-5447
 function MenuComponentManager:social_hub_gui()
 	return self._social_hub_gui
 end
 
--- Lines 5435-5439
+-- Lines 5449-5453
 function MenuComponentManager:social_hub_gui_reset_tab_by_index(index)
 	if self._social_hub_gui then
 		self._social_hub_gui:reset_tab_by_index(index)
 	end
 end
 
--- Lines 5441-5445
+-- Lines 5455-5459
 function MenuComponentManager:social_hub_gui_reset_tab_by_name(name)
 	if self._social_hub_gui then
 		self._social_hub_gui:reset_tab_by_name(name)
 	end
 end
 
--- Lines 5447-5456
+-- Lines 5461-5470
 function MenuComponentManager:create_lobby_code_gui(node)
 	self:close_lobby_code_gui()
 
@@ -5855,7 +5855,7 @@ function MenuComponentManager:create_lobby_code_gui(node)
 	end
 end
 
--- Lines 5458-5464
+-- Lines 5472-5478
 function MenuComponentManager:close_lobby_code_gui()
 	if self._lobby_code_gui then
 		self._lobby_code_gui:close()
@@ -5866,7 +5866,7 @@ function MenuComponentManager:close_lobby_code_gui()
 	end
 end
 
--- Lines 5466-5475
+-- Lines 5480-5489
 function MenuComponentManager:create_ingame_lobby_code_gui(node)
 	self:close_ingame_lobby_code_gui()
 
@@ -5881,7 +5881,7 @@ function MenuComponentManager:create_ingame_lobby_code_gui(node)
 	panel:set_layer(tweak_data.gui.MENU_COMPONENT_LAYER + 100)
 end
 
--- Lines 5477-5483
+-- Lines 5491-5497
 function MenuComponentManager:close_ingame_lobby_code_gui()
 	if self._ingame_lobby_code_gui then
 		self._ingame_lobby_code_gui:close()
@@ -5892,12 +5892,12 @@ function MenuComponentManager:close_ingame_lobby_code_gui()
 	end
 end
 
--- Lines 5485-5487
+-- Lines 5499-5501
 function MenuComponentManager:user_code_gui()
 	return self._user_code_gui
 end
 
--- Lines 5489-5495
+-- Lines 5503-5509
 function MenuComponentManager:create_user_code_gui(node)
 	self:close_user_code_gui()
 
@@ -5907,7 +5907,7 @@ function MenuComponentManager:create_user_code_gui(node)
 	self._user_code_gui:panel():set_righttop(self._ws:panel():righttop())
 end
 
--- Lines 5497-5503
+-- Lines 5511-5517
 function MenuComponentManager:close_user_code_gui()
 	if self._user_code_gui then
 		self._user_code_gui:close()
@@ -5918,12 +5918,12 @@ function MenuComponentManager:close_user_code_gui()
 	end
 end
 
--- Lines 5505-5507
+-- Lines 5519-5521
 function MenuComponentManager:user_code_gui()
 	return self._lobby_code_gui
 end
 
--- Lines 5509-5515
+-- Lines 5523-5529
 function MenuComponentManager:create_socialhub_notification_gui(node)
 	if not self._socialhub_notification_gui then
 		self._socialhub_notification_gui = SocialHubNotification:new(self._ws, self._fullscreen_ws, node)
@@ -5932,19 +5932,19 @@ function MenuComponentManager:create_socialhub_notification_gui(node)
 	end
 end
 
--- Lines 5517-5523
+-- Lines 5531-5537
 function MenuComponentManager:close_socialhub_notification_gui()
 	return
 end
 
--- Lines 5525-5529
+-- Lines 5539-5543
 function MenuComponentManager:push_socialhub_notification(type, user, size)
 	if self._socialhub_notification_gui then
 		self._socialhub_notification_gui:push_notification(type, user, size)
 	end
 end
 
--- Lines 5531-5535
+-- Lines 5545-5549
 function MenuComponentManager:create_crimenet_search_lobby_code_gui(node)
 	self:close_crimenet_search_lobby_code_gui()
 
@@ -5953,7 +5953,7 @@ function MenuComponentManager:create_crimenet_search_lobby_code_gui(node)
 	self:register_component("crimenet_search_lobby_code", self._crimenet_search_lobby_code_gui)
 end
 
--- Lines 5537-5543
+-- Lines 5551-5557
 function MenuComponentManager:close_crimenet_search_lobby_code_gui()
 	if self._crimenet_search_lobby_code_gui then
 		self._crimenet_search_lobby_code_gui:close()
@@ -5964,7 +5964,7 @@ function MenuComponentManager:close_crimenet_search_lobby_code_gui()
 	end
 end
 
--- Lines 5549-5553
+-- Lines 5563-5567
 function MenuComponentManager:create_raid_menu_gui(node)
 	self:close_raid_menu_gui()
 
@@ -5973,7 +5973,7 @@ function MenuComponentManager:create_raid_menu_gui(node)
 	self:register_component("raid_menu", self._raid_menu_gui)
 end
 
--- Lines 5555-5561
+-- Lines 5569-5575
 function MenuComponentManager:close_raid_menu_gui()
 	if self._raid_menu_gui then
 		self._raid_menu_gui:close()
@@ -5984,12 +5984,12 @@ function MenuComponentManager:close_raid_menu_gui()
 	end
 end
 
--- Lines 5563-5565
+-- Lines 5577-5579
 function MenuComponentManager:raid_menu_gui()
 	return self._raid_menu_gui
 end
 
--- Lines 5569-5573
+-- Lines 5583-5587
 function MenuComponentManager:create_raid_weapons_menu_gui(node)
 	self:close_raid_weapons_menu_gui()
 
@@ -5998,7 +5998,7 @@ function MenuComponentManager:create_raid_weapons_menu_gui(node)
 	self:register_component("raid_weapons_menu", self._raid_weapons_menu_gui)
 end
 
--- Lines 5575-5581
+-- Lines 5589-5595
 function MenuComponentManager:close_raid_weapons_menu_gui()
 	if self._raid_weapons_menu_gui then
 		self._raid_weapons_menu_gui:close()
@@ -6009,12 +6009,12 @@ function MenuComponentManager:close_raid_weapons_menu_gui()
 	end
 end
 
--- Lines 5583-5585
+-- Lines 5597-5599
 function MenuComponentManager:raid_weapons_menu_gui()
 	return self._raid_weapons_menu_gui
 end
 
--- Lines 5589-5593
+-- Lines 5603-5607
 function MenuComponentManager:create_raid_preorder_menu_gui(node)
 	self:close_raid_preorder_menu_gui()
 
@@ -6023,7 +6023,7 @@ function MenuComponentManager:create_raid_preorder_menu_gui(node)
 	self:register_component("raid_preorder_menu", self._raid_preorder_menu_gui)
 end
 
--- Lines 5595-5601
+-- Lines 5609-5615
 function MenuComponentManager:close_raid_preorder_menu_gui()
 	if self._raid_preorder_menu_gui then
 		self._raid_preorder_menu_gui:close()
@@ -6034,12 +6034,12 @@ function MenuComponentManager:close_raid_preorder_menu_gui()
 	end
 end
 
--- Lines 5603-5605
+-- Lines 5617-5619
 function MenuComponentManager:raid_preorder_menu_gui()
 	return self._raid_preorder_menu_gui
 end
 
--- Lines 5609-5613
+-- Lines 5623-5627
 function MenuComponentManager:create_raid_special_menu_gui(node)
 	self:close_raid_special_menu_gui()
 
@@ -6048,7 +6048,7 @@ function MenuComponentManager:create_raid_special_menu_gui(node)
 	self:register_component("raid_special_menu", self._raid_special_menu_gui)
 end
 
--- Lines 5615-5621
+-- Lines 5629-5635
 function MenuComponentManager:close_raid_special_menu_gui()
 	if self._raid_special_menu_gui then
 		self._raid_special_menu_gui:close()
@@ -6059,12 +6059,12 @@ function MenuComponentManager:close_raid_special_menu_gui()
 	end
 end
 
--- Lines 5623-5625
+-- Lines 5637-5639
 function MenuComponentManager:raid_special_menu_gui()
 	return self._raid_special_menu_gui
 end
 
--- Lines 5629-5633
+-- Lines 5643-5647
 function MenuComponentManager:create_raid_weapon_preview_gui(node)
 	self:close_raid_weapon_preview_gui()
 
@@ -6073,7 +6073,7 @@ function MenuComponentManager:create_raid_weapon_preview_gui(node)
 	self:register_component("raid_weapon_preview", self._raid_weapon_preview_gui)
 end
 
--- Lines 5635-5641
+-- Lines 5649-5655
 function MenuComponentManager:close_raid_weapon_preview_gui()
 	if self._raid_weapon_preview_gui then
 		self._raid_weapon_preview_gui:close()
@@ -6084,12 +6084,12 @@ function MenuComponentManager:close_raid_weapon_preview_gui()
 	end
 end
 
--- Lines 5643-5645
+-- Lines 5657-5659
 function MenuComponentManager:raid_weapon_preview_gui()
 	return self._raid_weapon_preview_gui
 end
 
--- Lines 5652-5656
+-- Lines 5666-5670
 function MenuComponentManager:create_contract_broker_gui(node)
 	self:close_contract_broker_gui()
 
@@ -6098,7 +6098,7 @@ function MenuComponentManager:create_contract_broker_gui(node)
 	self:register_component("contract_broker", self._contract_broker_gui)
 end
 
--- Lines 5658-5664
+-- Lines 5672-5678
 function MenuComponentManager:close_contract_broker_gui()
 	if self._contract_broker_gui then
 		self._contract_broker_gui:close()
@@ -6109,12 +6109,12 @@ function MenuComponentManager:close_contract_broker_gui()
 	end
 end
 
--- Lines 5666-5668
+-- Lines 5680-5682
 function MenuComponentManager:contract_broker_gui()
 	return self._contract_broker_gui
 end
 
--- Lines 5674-5678
+-- Lines 5688-5692
 function MenuComponentManager:create_side_jobs_gui(node)
 	self:close_side_jobs_gui()
 
@@ -6123,7 +6123,7 @@ function MenuComponentManager:create_side_jobs_gui(node)
 	self:register_component("side_jobs", self._side_jobs_gui)
 end
 
--- Lines 5680-5686
+-- Lines 5694-5700
 function MenuComponentManager:close_side_jobs_gui()
 	if self._side_jobs_gui then
 		self._side_jobs_gui:close()
@@ -6134,12 +6134,12 @@ function MenuComponentManager:close_side_jobs_gui()
 	end
 end
 
--- Lines 5688-5690
+-- Lines 5702-5704
 function MenuComponentManager:side_jobs_gui()
 	return self._side_jobs_gui
 end
 
--- Lines 5696-5710
+-- Lines 5710-5724
 function MenuComponentManager:create_skirmish_contract_join_gui(node)
 	self:close_skirmish_contract_join_gui()
 
@@ -6158,7 +6158,7 @@ function MenuComponentManager:create_skirmish_contract_join_gui(node)
 	self:disable_crimenet()
 end
 
--- Lines 5712-5719
+-- Lines 5726-5733
 function MenuComponentManager:close_skirmish_contract_join_gui()
 	if self._skirmish_contract_join_gui then
 		self._skirmish_contract_join_gui:close()
@@ -6170,12 +6170,12 @@ function MenuComponentManager:close_skirmish_contract_join_gui()
 	end
 end
 
--- Lines 5721-5723
+-- Lines 5735-5737
 function MenuComponentManager:skirmish_contract_join_gui()
 	return self._skirmish_contract_join_gui
 end
 
--- Lines 5728-5735
+-- Lines 5742-5749
 function MenuComponentManager:create_movie_theater_gui(node)
 	if not node then
 		return
@@ -6188,7 +6188,7 @@ function MenuComponentManager:create_movie_theater_gui(node)
 	self:register_component("movie_theater_gui", self._movie_theater_gui)
 end
 
--- Lines 5737-5743
+-- Lines 5751-5757
 function MenuComponentManager:close_movie_theater_gui()
 	if self._movie_theater_gui then
 		self._movie_theater_gui:close()
@@ -6199,7 +6199,7 @@ function MenuComponentManager:close_movie_theater_gui()
 	end
 end
 
--- Lines 5745-5747
+-- Lines 5759-5761
 function MenuComponentManager:movie_theater_gui()
 	return self._movie_theater_gui
 end

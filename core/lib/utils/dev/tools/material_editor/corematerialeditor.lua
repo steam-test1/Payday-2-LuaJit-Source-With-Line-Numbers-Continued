@@ -27,7 +27,7 @@ CoreMaterialEditor.PROBLEM_SOLVER_ICON = CoreEWS.image_path("help_16x16.png")
 CoreMaterialEditor.RENDER_TEMPLATE_PATH = "settings/render_templates"
 CoreMaterialEditor.SHADER_LIB_PATH = "settings/shader_libs"
 
--- Lines 33-57
+-- Lines 34-58
 function CoreMaterialEditor:init()
 	self:_read_config()
 
@@ -55,7 +55,7 @@ function CoreMaterialEditor:init()
 	self._material_lock = false
 end
 
--- Lines 59-76
+-- Lines 60-77
 function CoreMaterialEditor:update(t, dt)
 	if self._start_dialog:running() then
 		self._start_dialog:update(t, dt)
@@ -74,19 +74,19 @@ function CoreMaterialEditor:update(t, dt)
 	end
 end
 
--- Lines 78-82
+-- Lines 79-83
 function CoreMaterialEditor:set_position(pos)
 	if alive(self._main_frame) then
 		self._main_frame:set_position(pos)
 	end
 end
 
--- Lines 84-86
+-- Lines 85-87
 function CoreMaterialEditor:destroy()
 	self:close()
 end
 
--- Lines 88-104
+-- Lines 89-105
 function CoreMaterialEditor:version_check(path, node, show_popup)
 	if node:parameter("version") ~= self.MATERIAL_CONFIG_VERSION_TAG then
 		if show_popup then
@@ -107,7 +107,7 @@ function CoreMaterialEditor:version_check(path, node, show_popup)
 	return true
 end
 
--- Lines 106-113
+-- Lines 107-114
 function CoreMaterialEditor:close()
 	self:_write_config()
 
@@ -118,7 +118,7 @@ function CoreMaterialEditor:close()
 	end
 end
 
--- Lines 117-121
+-- Lines 118-122
 function CoreMaterialEditor:_on_change_remote_server()
 	local host = EWS:get_text_from_user(self._main_frame, "Host:", "Remote Compiler", self._remote_host or "", Vector3(-1, -1, -1), true)
 
@@ -127,7 +127,7 @@ function CoreMaterialEditor:_on_change_remote_server()
 	self._remote_compile_checkbox:set_enabled(self._remote_host)
 end
 
--- Lines 123-132
+-- Lines 124-133
 function CoreMaterialEditor:_on_close()
 	self:_save_current()
 
@@ -138,12 +138,12 @@ function CoreMaterialEditor:_on_close()
 	managers.toolhub:close(self.TOOLHUB_NAME)
 end
 
--- Lines 134-136
+-- Lines 135-137
 function CoreMaterialEditor:_on_check_news()
 	CoreEWS.check_news(self._main_frame, self.NEWS_STREAM)
 end
 
--- Lines 138-148
+-- Lines 139-149
 function CoreMaterialEditor:_on_new()
 	self:_save_current()
 
@@ -159,7 +159,7 @@ function CoreMaterialEditor:_on_new()
 	end
 end
 
--- Lines 150-160
+-- Lines 151-161
 function CoreMaterialEditor:_on_open()
 	local current_path
 
@@ -176,13 +176,13 @@ function CoreMaterialEditor:_on_open()
 	end
 end
 
--- Lines 162-165
+-- Lines 163-166
 function CoreMaterialEditor:_on_save()
 	self:_save_to_disk(self._material_config_path)
 	EWS:message_box(self._main_frame, "All data in this material config was saved to disk!", "Save", "OK,ICON_INFORMATION", Vector3(-1, -1, -1))
 end
 
--- Lines 167-185
+-- Lines 168-186
 function CoreMaterialEditor:_on_save_as()
 	local current_path
 
@@ -203,7 +203,7 @@ function CoreMaterialEditor:_on_save_as()
 	end
 end
 
--- Lines 187-191
+-- Lines 188-192
 function CoreMaterialEditor:_on_save_global()
 	local global = self._global_material_config_node:to_real_node()
 
@@ -211,14 +211,14 @@ function CoreMaterialEditor:_on_save_global()
 	EWS:message_box(self._main_frame, "All data in the global material config was saved to disk!", "Save", "OK,ICON_INFORMATION", Vector3(-1, -1, -1))
 end
 
--- Lines 193-197
+-- Lines 194-198
 function CoreMaterialEditor:_on_reload()
 	if self._material_config_path then
 		Application:reload_material_config(Idstring(managers.database:entry_path(self._material_config_path)))
 	end
 end
 
--- Lines 199-206
+-- Lines 200-207
 function CoreMaterialEditor:_on_toggle_lock()
 	if self._material_lock == true then
 		self._material_lock = false
@@ -229,23 +229,35 @@ function CoreMaterialEditor:_on_toggle_lock()
 	end
 end
 
--- Lines 209-221
+-- Lines 210-234
 function CoreMaterialEditor:_on_rebuild()
 	if EWS:MessageDialog(self._main_frame, "Do a complete rebuild?", "Rebuild", "YES_NO,ICON_QUESTION"):show_modal() == "ID_NO" then
 		return
 	end
 
 	if EWS:message_box(self._main_frame, "All unsaved data in this material config will be saved before compiling!", "Compile", "OK,CANCEL,ICON_INFORMATION", Vector3(-1, -1, -1)) == "OK" then
-		local make_params, temp_params = self:_create_make_file(true)
+		local shader = self._compilable_shaders[self._compilable_shader_combo_box:get_value()]._entry
 
-		if self:_run_compiler() then
-			self:_insert_libs_in_database(temp_params, make_params)
-			self:_load_shaders(true)
-		end
+		Application:data_compile({
+			send_idstrings = false,
+			verbose = false,
+			build_profile = Application:build_profile_path(),
+			source_files = {
+				"core/shader_sources"
+			},
+			shader_compiler_settings = {
+				force_recompile_shaders = {
+					shader
+				}
+			}
+		})
+		DB:reload()
+		managers.database:clear_all_cached_indices()
+		self:_load_shaders(true)
 	end
 end
 
--- Lines 223-234
+-- Lines 236-247
 function CoreMaterialEditor:_on_edit_global()
 	if EWS:message_box(self._main_frame, "All unsaved data in this material config will be lost unless you save it first. Saved data now?", "Edit Global", "YES_NO,ICON_QUESTION", Vector3(-1, -1, -1)) == "ID_YES" then
 		self:_save_current()
@@ -260,12 +272,12 @@ function CoreMaterialEditor:_on_edit_global()
 	self._start_dialog:show_modal()
 end
 
--- Lines 236-238
+-- Lines 249-251
 function CoreMaterialEditor:_on_feedback()
 	self._disable_live_feedback = not self._disable_live_feedback
 end
 
--- Lines 240-249
+-- Lines 253-262
 function CoreMaterialEditor:_on_parent_combo_box_change()
 	local parent = self._parent_combo_box:get_value()
 
@@ -278,7 +290,7 @@ function CoreMaterialEditor:_on_parent_combo_box_change()
 	self:_create_parameter_panel()
 end
 
--- Lines 251-316
+-- Lines 264-311
 function CoreMaterialEditor:_on_compile_btn()
 	if self._remote_compile_checkbox:get_value() then
 		if EWS:message_box(self._main_frame, "Do you want to send this shader config to the remote compiler?", "Remote Compile", "YES_NO", Vector3(-1, -1, -1)) == "YES" then
@@ -286,69 +298,44 @@ function CoreMaterialEditor:_on_compile_btn()
 			EWS:message_box(self._main_frame, "The request has been sent to the server. It might take up to a minute before it is commited in to the project repository.", "Remote Compile", "OK", Vector3(-1, -1, -1))
 		end
 	elseif EWS:message_box(self._main_frame, "All unsaved data in this material config will be saved before compiling!", "Compile", "OK,CANCEL,ICON_INFORMATION", Vector3(-1, -1, -1)) == "OK" then
-		local make_params, temp_params = self:_create_make_file()
-		local to_file_path = ""
-		local renderer = ""
-		local platform = ""
+		local shader = self._compilable_shaders[self._compilable_shader_combo_box:get_value()]._entry
+		local defines
 
-		if SystemInfo:renderer() == Idstring("DX11") then
-			renderer = "d3d11"
-			platform = "PCD3D11"
-			to_file_path = temp_params.win32d3d11
-		elseif SystemInfo:renderer() == Idstring("DX9") then
-			renderer = "d3d9"
-			platform = "PCD3D9"
-			to_file_path = temp_params.win32d3d9
-		elseif SystemInfo:renderer() == Idstring("DX10") then
-			renderer = "d3d10"
-			platform = "PCD3D10"
-			to_file_path = temp_params.win32d3d10
+		for k, v in pairs(self._shader_defines) do
+			if v._checked then
+				if not defines then
+					defines = k
+				else
+					defines = defines .. " " .. k
+				end
+			end
 		end
 
-		local properties = {
-			renderer
-		}
-		local to_file = SystemFS:open(to_file_path, "w")
-		local from_file = DB:open_with_properties("shaders", "core/temp/base", properties)
-		local path = from_file:path()
-		local bin_str = from_file:read("*a")
-
-		to_file:write(bin_str)
-		to_file:close()
-		from_file:close()
-
-		if self:_run_compiler(platform) then
-			print("opening writable " .. path)
-
-			local new_to_file = SystemFS:open(path, "w")
-			local new_from_file = SystemFS:open(to_file_path, "r")
-			local new_bin_str = new_from_file:read("*a")
-
-			new_to_file:write(new_bin_str)
-			new_to_file:close()
-			new_from_file:close()
-
-			local rtd_to_file = DB:open("render_template_database", "shaders/base")
-			local rtd_to_file_path = rtd_to_file:path()
-
-			rtd_to_file:close()
-
-			local new_rtd_to_file = SystemFS:open(rtd_to_file_path, "w")
-			local new_rtd_from_file = SystemFS:open(temp_params.render_templates, "r")
-			local new_rtd_str = new_rtd_from_file:read("*a")
-
-			new_rtd_to_file:write(new_rtd_str)
-			new_rtd_to_file:close()
-			new_rtd_from_file:close()
-			self:_load_shaders()
-		end
-
-		assert(SystemFS:copy_file(temp_params.render_templates, make_params.render_templates), string.format("Could not copy %s -> %s", temp_params.render_templates, make_params.render_templates))
-		self:_cleanup_temp_files(temp_params)
+		Application:data_compile({
+			send_idstrings = false,
+			verbose = false,
+			build_profile = Application:build_profile_path(),
+			source_files = {
+				"core/shader_sources"
+			},
+			shader_compiler_settings = {
+				compile_specific_shaders = {
+					[shader] = {
+						{
+							shader = self._compilable_shader_combo_box:get_value(),
+							defines = defines
+						}
+					}
+				}
+			}
+		})
+		DB:reload()
+		managers.database:clear_all_cached_indices()
+		self:_load_shaders()
 	end
 end
 
--- Lines 318-333
+-- Lines 313-328
 function CoreMaterialEditor:_on_material_selected(data, event)
 	local selected = event:get_string()
 	local mat = self._material_nodes[selected]
@@ -365,7 +352,7 @@ function CoreMaterialEditor:_on_material_selected(data, event)
 	self:_find_render_template()
 end
 
--- Lines 335-351
+-- Lines 330-346
 function CoreMaterialEditor:_on_add_material(default_name)
 	local name = EWS:get_text_from_user(self._main_frame, "Material name: ", "Add Material", default_name, Vector3(-1, -1, 0), true)
 
@@ -385,12 +372,12 @@ function CoreMaterialEditor:_on_add_material(default_name)
 	end
 end
 
--- Lines 353-355
+-- Lines 348-350
 function CoreMaterialEditor:_on_copy_material()
 	self._material_clipboard = self._current_material_node:to_xml()
 end
 
--- Lines 357-374
+-- Lines 352-369
 function CoreMaterialEditor:_on_paste_as_material()
 	local node = Node.from_xml(self._material_clipboard)
 	local name = EWS:get_text_from_user(self._main_frame, "Material name: ", "Paste As", node:parameter("name"), Vector3(-1, -1, 0), true)
@@ -412,7 +399,7 @@ function CoreMaterialEditor:_on_paste_as_material()
 	end
 end
 
--- Lines 376-388
+-- Lines 371-383
 function CoreMaterialEditor:_on_rename_material(default_name)
 	local name = EWS:get_text_from_user(self._main_frame, "Material name: ", "Rename Material", default_name, Vector3(-1, -1, 0), true)
 
@@ -428,7 +415,7 @@ function CoreMaterialEditor:_on_rename_material(default_name)
 	end
 end
 
--- Lines 390-396
+-- Lines 385-391
 function CoreMaterialEditor:_on_remove_material()
 	if EWS:MessageDialog(self._main_frame, "Do you want to remove the selected material?", "Remove Material", "YES_NO,ICON_QUESTION"):show_modal() == "ID_YES" then
 		self._material_config_node:remove_child_at(self._material_config_node:index_of_child(self._current_material_node))
@@ -437,14 +424,14 @@ function CoreMaterialEditor:_on_remove_material()
 	end
 end
 
--- Lines 398-402
+-- Lines 393-397
 function CoreMaterialEditor:_on_shader_combobox_selected()
 	self._current_material_node:set_parameter("render_template", self._compilable_shader_combo_box:get_value())
 	self:_load_shader_options()
 	self:_find_render_template()
 end
 
--- Lines 404-422
+-- Lines 399-417
 function CoreMaterialEditor:_on_shader_option_chaged(define_struct, data)
 	if define_struct._check_box:id() == data._id then
 		define_struct._checked = data._state == 1
@@ -464,7 +451,7 @@ function CoreMaterialEditor:_on_shader_option_chaged(define_struct, data)
 	end
 end
 
--- Lines 424-452
+-- Lines 419-443
 function CoreMaterialEditor:_load_shaders(load_only)
 	local render_templates_node = DB:has("render_templates", self.RENDER_TEMPLATE_PATH) and DB:load_node("render_templates", self.RENDER_TEMPLATE_PATH)
 
@@ -472,7 +459,7 @@ function CoreMaterialEditor:_load_shaders(load_only)
 		for child in render_templates_node:children() do
 			if child:name() == "render_template_database" and child:has_parameter("name") then
 				cat_print("debug", "render_templates", child:parameter("name"))
-				Application:reload_render_template_database(Idstring(child:parameter("name")))
+				RenderDevice:reload_render_template_database(Idstring(child:parameter("name")))
 			end
 		end
 	end
@@ -483,7 +470,7 @@ function CoreMaterialEditor:_load_shaders(load_only)
 		for child in shader_libs_node:children() do
 			if child:name() == "shaders" and child:has_parameter("name") then
 				cat_print("debug", "shader_config", child:parameter("name"))
-				Application:reload_shader_lib(Idstring(child:parameter("name")))
+				RenderDevice:reload_shader_database(Idstring(child:parameter("name")))
 			end
 		end
 	end
@@ -493,7 +480,7 @@ function CoreMaterialEditor:_load_shaders(load_only)
 	end
 end
 
--- Lines 454-459
+-- Lines 445-450
 function CoreMaterialEditor:_save_current()
 	if self._material_config_path and self._material_config_node and self:_data_diff() and EWS:message_box(self._main_frame, "Do you want to save the current settings?", "Open", "YES_NO,ICON_QUESTION", Vector3(-1, -1, -1)) == "YES" then
 		self:_save_to_disk(self._material_config_path)
@@ -501,7 +488,7 @@ function CoreMaterialEditor:_save_current()
 	end
 end
 
--- Lines 461-491
+-- Lines 452-482
 function CoreMaterialEditor:_save_to_disk(path)
 	local node = self._material_config_node:to_real_node()
 	local valid, str = self:_check_valid_xml_on_save(node)
@@ -535,7 +522,7 @@ function CoreMaterialEditor:_save_to_disk(path)
 	self._text_in_node = node:to_xml()
 end
 
--- Lines 493-513
+-- Lines 484-504
 function CoreMaterialEditor:_save_global_to_disk(recompile)
 	local global = self._global_material_config_node:to_real_node()
 	local global_file = self._global_material_config_path
@@ -560,17 +547,17 @@ function CoreMaterialEditor:_save_global_to_disk(recompile)
 	return global_file
 end
 
--- Lines 515-517
+-- Lines 506-508
 function CoreMaterialEditor:_data_diff()
 	return self._text_in_node ~= self._material_config_node:to_xml() or self._text_in_global_node ~= self._global_material_config_node:to_xml()
 end
 
--- Lines 519-521
+-- Lines 510-512
 function CoreMaterialEditor:_reset_diff()
 	self._text_in_node = ""
 end
 
--- Lines 523-535
+-- Lines 514-526
 function CoreMaterialEditor:_ok_by_law(node)
 	local rule = node:parameter("rule")
 
@@ -589,7 +576,7 @@ function CoreMaterialEditor:_ok_by_law(node)
 	return true
 end
 
--- Lines 537-544
+-- Lines 528-535
 function CoreMaterialEditor:_is_options_valid_by_law()
 	for k, v in pairs(self._shader_defines) do
 		if v._checked and not self:_ok_by_law(v._define_node) then
@@ -600,7 +587,7 @@ function CoreMaterialEditor:_is_options_valid_by_law()
 	return true, ""
 end
 
--- Lines 546-553
+-- Lines 537-544
 function CoreMaterialEditor:_load_shader_options()
 	local rt_name = self._current_material_node:parameter("render_template")
 	local v = RenderTemplateDatabase:render_template_name_to_defines(rt_name)
@@ -610,7 +597,7 @@ function CoreMaterialEditor:_load_shader_options()
 	self:_set_shader_options(v.defines)
 end
 
--- Lines 555-587
+-- Lines 546-578
 function CoreMaterialEditor:_find_render_template()
 	local t = {}
 
@@ -645,7 +632,7 @@ function CoreMaterialEditor:_find_render_template()
 	self:_update_output()
 end
 
--- Lines 589-612
+-- Lines 580-603
 function CoreMaterialEditor:_clean_parameters()
 	if self._current_render_template then
 		local remove_list = {}
@@ -673,7 +660,7 @@ function CoreMaterialEditor:_clean_parameters()
 	end
 end
 
--- Lines 614-622
+-- Lines 605-613
 function CoreMaterialEditor:_update_interface_after_material_list_change(listbox_select_material)
 	self:_freeze_frame()
 	self:_load_material_list(listbox_select_material)
@@ -685,7 +672,7 @@ function CoreMaterialEditor:_update_interface_after_material_list_change(listbox
 	self._parameter_collapse_box:lower_panel():set_enabled(false)
 end
 
--- Lines 624-630
+-- Lines 615-621
 function CoreMaterialEditor:_create_new_material_config(path)
 	local node = Node("materials")
 
@@ -694,7 +681,7 @@ function CoreMaterialEditor:_create_new_material_config(path)
 	self:_save_to_disk(path)
 end
 
--- Lines 632-658
+-- Lines 623-649
 function CoreMaterialEditor:_load_node(path, node)
 	local prev_node = self._material_config_node
 	local prev_entry = self._material_config_path
@@ -724,7 +711,7 @@ function CoreMaterialEditor:_load_node(path, node)
 	return true
 end
 
--- Lines 660-665
+-- Lines 651-656
 function CoreMaterialEditor:_update_output()
 	if not self._lock_output and self._material_config_node and self._output_collapse_box:expanded() then
 		self._output_text_ctrl:set_value(self._material_config_node:to_xml())
@@ -732,18 +719,18 @@ function CoreMaterialEditor:_update_output()
 	end
 end
 
--- Lines 667-669
+-- Lines 658-660
 function CoreMaterialEditor:_layout_all()
 	self._main_scroll_window:fit_inside()
 end
 
--- Lines 671-674
+-- Lines 662-665
 function CoreMaterialEditor:_layout_output()
 	self._output_collapse_box:panel():layout()
 	self:_layout_all()
 end
 
--- Lines 676-687
+-- Lines 667-678
 function CoreMaterialEditor:_set_shader_options(options)
 	for k, v in pairs(self._shader_defines) do
 		v._check_box:set_state(0)
@@ -760,7 +747,7 @@ function CoreMaterialEditor:_set_shader_options(options)
 	end
 end
 
--- Lines 689-707
+-- Lines 680-698
 function CoreMaterialEditor:_load_material_list(listbox_select_material)
 	self._material_nodes = {}
 
@@ -783,7 +770,7 @@ function CoreMaterialEditor:_load_material_list(listbox_select_material)
 	end
 end
 
--- Lines 709-715
+-- Lines 700-706
 function CoreMaterialEditor:_check_loaded_shader_sources(t, s)
 	for i, source in ipairs(t) do
 		if source._entry == s then
@@ -792,15 +779,14 @@ function CoreMaterialEditor:_check_loaded_shader_sources(t, s)
 	end
 end
 
--- Lines 717-721
+-- Lines 708-711
 function CoreMaterialEditor:_load_shader_sources()
 	self._shader_sources = {}
 
 	self:_load_shader_sources_from_db(self._shader_sources)
-	self:_load_shader_sources_from_db(self._shader_sources)
 end
 
--- Lines 723-735
+-- Lines 713-727
 function CoreMaterialEditor:_load_shader_sources_from_db(t)
 	local sources = managers.database:list_entries_of_type("shader_source")
 
@@ -822,7 +808,7 @@ function CoreMaterialEditor:_load_shader_sources_from_db(t)
 	end
 end
 
--- Lines 737-759
+-- Lines 729-753
 function CoreMaterialEditor:_load_shader_dropdown()
 	self:_freeze_frame()
 
@@ -857,7 +843,7 @@ function CoreMaterialEditor:_load_shader_dropdown()
 	self:_unfreeze_frame()
 end
 
--- Lines 761-777
+-- Lines 755-771
 function CoreMaterialEditor:_load_parent_dropdown()
 	self:_freeze_frame()
 	self._parent_combo_box:clear()

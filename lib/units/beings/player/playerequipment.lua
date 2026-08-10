@@ -588,7 +588,7 @@ function PlayerEquipment:remove_sentry_deployement_cost(sentry_uid)
 	end
 end
 
--- Lines 708-754
+-- Lines 708-756
 function PlayerEquipment:use_sentry_gun(selected_index, unit_idstring_index)
 	if self._sentrygun_placement_requested then
 		return
@@ -639,28 +639,28 @@ function PlayerEquipment:use_sentry_gun(selected_index, unit_idstring_index)
 	return false
 end
 
--- Lines 757-761
+-- Lines 759-763
 function PlayerEquipment:use_flash_grenade()
 	self._grenade_name = "units/weapons/flash_grenade/flash_grenade"
 
 	return true, "throw_grenade"
 end
 
--- Lines 763-766
+-- Lines 765-768
 function PlayerEquipment:use_smoke_grenade()
 	self._grenade_name = "units/weapons/smoke_grenade/smoke_grenade"
 
 	return true, "throw_grenade"
 end
 
--- Lines 768-771
+-- Lines 770-773
 function PlayerEquipment:use_frag_grenade()
 	self._grenade_name = "units/weapons/frag_grenade/frag_grenade"
 
 	return true, "throw_grenade"
 end
 
--- Lines 774-786
+-- Lines 776-788
 function PlayerEquipment:throw_flash_grenade()
 	if not self._grenade_name then
 		Application:error("Tried to throw a grenade with no name")
@@ -678,7 +678,7 @@ function PlayerEquipment:throw_flash_grenade()
 	self._grenade_name = nil
 end
 
--- Lines 788-819
+-- Lines 790-821
 function PlayerEquipment:throw_projectile()
 	local projectile_entry = managers.blackmarket:equipped_projectile()
 	local projectile_data = tweak_data.blackmarket.projectiles[projectile_entry]
@@ -713,7 +713,7 @@ function PlayerEquipment:throw_projectile()
 	managers.player:on_throw_grenade()
 end
 
--- Lines 821-850
+-- Lines 823-852
 function PlayerEquipment:throw_grenade()
 	local grenade_name = managers.blackmarket:equipped_grenade()
 	local grenade_tweak = tweak_data.blackmarket.projectiles[grenade_name]
@@ -742,7 +742,7 @@ function PlayerEquipment:throw_grenade()
 	managers.player:on_throw_grenade()
 end
 
--- Lines 855-870
+-- Lines 857-872
 function PlayerEquipment:use_throwable()
 	local projectile_entry = managers.blackmarket:equipped_projectile()
 	local projectile_data = tweak_data.blackmarket.projectiles[projectile_entry]
@@ -760,7 +760,7 @@ function PlayerEquipment:use_throwable()
 	end
 end
 
--- Lines 872-913
+-- Lines 874-915
 function PlayerEquipment:use_throwable_watch(watch_unit)
 	local projectile_data = tweak_data.projectiles.laser_watch
 
@@ -807,7 +807,7 @@ function PlayerEquipment:use_throwable_watch(watch_unit)
 	end
 end
 
--- Lines 918-922
+-- Lines 920-924
 function PlayerEquipment:use_duck()
 	local soundsource = SoundDevice:create_source("duck")
 
@@ -816,7 +816,7 @@ function PlayerEquipment:use_duck()
 	return true
 end
 
--- Lines 926-931
+-- Lines 928-933
 function PlayerEquipment:from_server_sentry_gun_place_result(sentry_gun_id)
 	if self._sentrygun_placement_requested then
 		self:_sentry_gun_ammo_cost(sentry_gun_id)
@@ -825,7 +825,7 @@ function PlayerEquipment:from_server_sentry_gun_place_result(sentry_gun_id)
 	self._sentrygun_placement_requested = nil
 end
 
--- Lines 935-940
+-- Lines 937-942
 function PlayerEquipment:destroy()
 	if alive(self._dummy_unit) then
 		World:delete_unit(self._dummy_unit)

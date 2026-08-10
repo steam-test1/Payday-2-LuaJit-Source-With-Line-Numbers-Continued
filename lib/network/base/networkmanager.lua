@@ -2,27 +2,14 @@ require("lib/network/base/BaseNetworkSession")
 require("lib/network/base/ClientNetworkSession")
 require("lib/network/base/HostNetworkSession")
 require("lib/network/matchmaking/NetworkAccount")
-require("lib/network/matchmaking/NetworkAccountPSN")
 require("lib/network/matchmaking/NetworkAccountSTEAM")
 require("lib/network/matchmaking/NetworkAccountSTEAMDebug")
-require("lib/network/matchmaking/NetworkAccountEPIC")
-require("lib/network/matchmaking/NetworkAccountEPICDebug")
-require("lib/network/matchmaking/NetworkAccountXBL")
 require("lib/network/matchmaking/NetworkFriend")
-require("lib/network/matchmaking/NetworkFriendsPSN")
-require("lib/network/matchmaking/NetworkFriendsXBL")
-require("lib/network/matchmaking/NetworkGenericPSN")
 require("lib/network/matchmaking/NetworkGroupLobby")
-require("lib/network/matchmaking/NetworkGroupLobbyPSN")
 require("lib/network/matchmaking/NetworkMatchMaking")
-require("lib/network/matchmaking/NetworkMatchMakingPSN")
 require("lib/network/matchmaking/NetworkMatchMakingSTEAM")
-require("lib/network/matchmaking/NetworkMatchMakingEPIC")
-require("lib/network/matchmaking/NetworkMatchMakingXBL")
 require("lib/network/matchmaking/NetworkVoiceChatDisabled")
-require("lib/network/matchmaking/NetworkVoiceChatPSN")
 require("lib/network/matchmaking/NetworkVoiceChatSTEAM")
-require("lib/network/matchmaking/NetworkVoiceChatXBL")
 require("lib/network/base/NetworkPeer")
 require("lib/network/base/handlers/BaseNetworkHandler")
 require("lib/network/base/handlers/DefaultNetworkHandler")
@@ -45,7 +32,7 @@ end
 NetworkManager.DROPIN_ENABLED = true
 NetworkManager.MAX_PEER_NAME_LENGTH = 32
 
--- Lines 53-105
+-- Lines 40-64
 function NetworkManager:init()
 	self.OVERWRITEABLE_MSGS = {
 		set_look_dir = {
@@ -61,44 +48,9 @@ function NetworkManager:init()
 		}
 	}
 	self._event_listener_holder = EventListenerHolder:new()
-
-	if IS_PS4 then
-		self._is_ps4 = true
-	elseif IS_XB1 then
-		self._is_xb1 = true
-	else
-		self._is_win32 = true
-	end
-
 	self._spawn_points = {}
-
-	if self._is_ps3 then
-		Network:set_use_psn_network(true)
-
-		if #PSN:get_world_list() == 0 then
-			PSN:init_matchmaking()
-		end
-
-		self:_register_PSN_matchmaking_callbacks()
-	elseif self._is_ps4 then
-		Network:set_use_psn_network(true)
-
-		if #PSN:get_world_list() == 0 then
-			PSN:init_matchmaking()
-		end
-
-		self:_register_PSN_matchmaking_callbacks()
-	elseif self._is_xb1 then
-		self.account = NetworkAccountXBL:new()
-		self.voice_chat = NetworkVoiceChatXBL:new()
-	elseif self._is_win32 then
-		self.account = NetworkAccountSTEAM:new()
-		self.voice_chat = NetworkVoiceChatSTEAM:new()
-	elseif self._is_x360 then
-		self.account = NetworkAccountXBL:new()
-		self.voice_chat = NetworkVoiceChatXBL:new()
-	end
-
+	self.account = NetworkAccountSTEAM:new()
+	self.voice_chat = NetworkVoiceChatSTEAM:new()
 	self._started = false
 	managers.network = self
 
@@ -106,7 +58,7 @@ function NetworkManager:init()
 	self:load()
 end
 
--- Lines 109-118
+-- Lines 68-77
 function NetworkManager:init_finalize()
 	print("NetworkManager:init_finalize()")
 
@@ -119,93 +71,37 @@ function NetworkManager:init_finalize()
 	end
 end
 
--- Lines 120-147
+-- Lines 79-82
 function NetworkManager:_create_lobby()
-	if self._is_win32 then
-		cat_print("lobby", "Online Lobby is PC")
-
-		self.matchmake = NetworkMatchMakingSTEAM:new()
-	elseif self._is_ps4 then
-		cat_print("lobby", "Online Lobby is PS4")
-
-		self.friends = NetworkFriendsPSN:new()
-		self.group = NetworkGroupLobbyPSN:new()
-		self.matchmake = NetworkMatchMakingPSN:new()
-		self.shared_psn = NetworkGenericPSN:new()
-		self.shared = self.shared_psn
-		self.account = NetworkAccountPSN:new()
-		self.match = nil
-
-		self:ps3_determine_voice()
-
-		self._shared_update = self.shared_psn
-	elseif self._is_xb1 then
-		self.friends = NetworkFriendsXBL:new()
-		self.matchmake = NetworkMatchMakingXBL:new()
-	else
-		Global._boot_invite_mp = nil
-
-		Application:error("NetworkManager:create_lobby failed to get a valid lobby for online play.")
-
-		return
-	end
+	self.matchmake = NetworkMatchMakingSTEAM:new()
 end
 
--- Lines 151-151
+-- Lines 86-86
 function NetworkManager:add_event_listener(...)
 	self._event_listener_holder:add(...)
 end
 
--- Lines 152-152
+-- Lines 87-87
 function NetworkManager:remove_event_listener(...)
 	self._event_listener_holder:remove(...)
 end
 
--- Lines 153-153
+-- Lines 88-88
 function NetworkManager:dispatch_event(...)
 	self._event_listener_holder:call(...)
 end
 
--- Lines 157-189
-function NetworkManager:ps3_determine_voice(lan)
-	local voice = "voice_quiet"
-
-	if lan == true then
-		voice = "voice_quiet"
-	elseif PSN:is_online() then
-		voice = PSN:online_chat_allowed() and "voice_psn" or "voice_disabled"
-	end
-
-	if self.voice_chat and self.voice_chat:voice_type() == voice then
-		return
-	end
-
-	if self.voice_chat and self.voice_chat:voice_type() ~= voice then
-		self.voice_chat:close_all(true)
-
-		self.voice_chat = nil
-	end
-
-	if voice == "voice_psn" then
-		self.voice_chat = NetworkVoiceChatPSN:new()
-	elseif voice == "voice_disabled" then
-		self.voice_chat = NetworkVoiceChatDisabled:new()
-	else
-		self.voice_chat = NetworkVoiceChatDisabled:new(true)
-	end
-end
-
--- Lines 193-193
+-- Lines 92-92
 function NetworkManager:session()
 	return self._session
 end
 
--- Lines 197-197
+-- Lines 96-96
 function NetworkManager:shared_handler_data()
 	return self._shared_handler_data
 end
 
--- Lines 201-234
+-- Lines 100-127
 function NetworkManager:load()
 	if Global.network then
 		self._network_bound = Global.network.network_bound
@@ -227,18 +123,11 @@ function NetworkManager:load()
 		self._session:load(Global.network.session)
 		managers.network.matchmake:_load_globals()
 		managers.network.account:_load_globals()
-
-		if self._is_x360 then
-			managers.network.voice_chat:resume()
-		else
-			managers.network.voice_chat:_load_globals()
-		end
+		managers.network.voice_chat:_load_globals()
 
 		Global.network = nil
 
-		if self._is_win32 then
-			managers.network.voice_chat:open()
-		end
+		managers.network.voice_chat:open()
 	end
 
 	if Network.set_loading_state then
@@ -246,7 +135,7 @@ function NetworkManager:load()
 	end
 end
 
--- Lines 238-259
+-- Lines 131-149
 function NetworkManager:save()
 	if self._started then
 		Global.network = {}
@@ -262,14 +151,11 @@ function NetworkManager:save()
 		managers.network.matchmake:_save_globals()
 		managers.network.account:_save_globals()
 		managers.network.voice_chat:_save_globals(true)
-
-		if self._is_win32 then
-			managers.network.voice_chat:destroy_voice()
-		end
+		managers.network.voice_chat:destroy_voice()
 	end
 end
 
--- Lines 263-283
+-- Lines 153-173
 function NetworkManager:update(t, dt)
 	if self._stop_next_frame then
 		self:stop_network(true)
@@ -296,7 +182,7 @@ function NetworkManager:update(t, dt)
 	end
 end
 
--- Lines 287-296
+-- Lines 177-186
 function NetworkManager:end_update()
 	if self._stop_network then
 		self._stop_next_frame = true
@@ -308,7 +194,7 @@ function NetworkManager:end_update()
 	end
 end
 
--- Lines 300-318
+-- Lines 190-208
 function NetworkManager:start_network()
 	if not self._started then
 		self:register_handler("connection", ConnectionNetworkHandler)
@@ -323,7 +209,7 @@ function NetworkManager:start_network()
 	end
 end
 
--- Lines 322-331
+-- Lines 212-221
 function NetworkManager:register_handler(name, handler_class)
 	if not self._handlers then
 		self._handlers = {}
@@ -337,18 +223,18 @@ function NetworkManager:register_handler(name, handler_class)
 	Network:set_receiver(Idstring(name), new_handler)
 end
 
--- Lines 335-342
+-- Lines 225-232
 function NetworkManager:prepare_stop_network(...)
 	if self._session then
 		self._session:prepare_to_close(...)
 
-		if self.voice_chat and self._is_win32 then
+		if self.voice_chat then
 			self.voice_chat:destroy_voice()
 		end
 	end
 end
 
--- Lines 346-393
+-- Lines 236-283
 function NetworkManager:stop_network(clean)
 	if not self._started then
 		return
@@ -395,12 +281,12 @@ function NetworkManager:stop_network(clean)
 	end
 end
 
--- Lines 397-399
+-- Lines 287-289
 function NetworkManager:queue_stop_network()
 	self._stop_network = true
 end
 
--- Lines 403-417
+-- Lines 293-307
 function NetworkManager:is_ready_to_load()
 	if self._stop_next_frame or self._stop_network then
 		return false
@@ -417,7 +303,7 @@ function NetworkManager:is_ready_to_load()
 	return true
 end
 
--- Lines 421-431
+-- Lines 311-321
 function NetworkManager:stopping()
 	if not self._started then
 		return true
@@ -430,21 +316,18 @@ function NetworkManager:stopping()
 	return false
 end
 
--- Lines 436-446
+-- Lines 326-334
 function NetworkManager:start_client()
 	self:stop_network(true)
 	self:start_network()
-
-	if self._is_win32 then
-		self.voice_chat:open()
-	end
+	self.voice_chat:open()
 
 	self._session = ClientNetworkSession:new()
 
 	self._session:create_local_peer(true)
 end
 
--- Lines 451-459
+-- Lines 339-347
 function NetworkManager:discover_hosts(result_cb)
 	self:stop_network(true)
 	self:start_network()
@@ -458,7 +341,7 @@ function NetworkManager:discover_hosts(result_cb)
 	self._session:discover_hosts()
 end
 
--- Lines 464-485
+-- Lines 352-373
 function NetworkManager:on_discover_host_received(sender)
 	if Global.game_settings.single_player then
 		return
@@ -486,7 +369,7 @@ function NetworkManager:on_discover_host_received(sender)
 	sender:discover_host_reply(my_name, level_id, level_name, sender:ip_at_index(0), state, difficulty)
 end
 
--- Lines 490-497
+-- Lines 378-385
 function NetworkManager:on_discover_host_reply(host, host_name, level_name, my_ip, state, difficulty)
 	print("on_discover_host_reply", host, host_name, level_name, my_ip, state)
 
@@ -498,29 +381,22 @@ function NetworkManager:on_discover_host_reply(host, host_name, level_name, my_i
 	end
 end
 
--- Lines 501-530
+-- Lines 389-406
 function NetworkManager:host_game()
 	self:stop_network(true)
 	self:start_network()
-
-	if self._is_win32 then
-		self.voice_chat:open()
-	end
+	self.voice_chat:open()
 
 	self._session = HostNetworkSession:new()
 
 	self._session:create_local_peer(true)
-
-	if self.is_ps3 then
-		self._session:broadcast_server_up()
-	end
 
 	if managers.enemy then
 		managers.enemy:resume_activity()
 	end
 end
 
--- Lines 534-542
+-- Lines 410-418
 function NetworkManager:join_game_at_host_rpc(host_rpc, is_invite, result_cb)
 	self._discover_hosts_cb = nil
 
@@ -531,7 +407,7 @@ function NetworkManager:join_game_at_host_rpc(host_rpc, is_invite, result_cb)
 	end
 end
 
--- Lines 546-549
+-- Lines 422-425
 function NetworkManager:register_spawn_point(id, data)
 	local runtime_data = {
 		pos_rot = {
@@ -544,27 +420,27 @@ function NetworkManager:register_spawn_point(id, data)
 	self._spawn_points[id] = runtime_data
 end
 
--- Lines 553-555
+-- Lines 429-431
 function NetworkManager:unregister_spawn_point(id)
 	self._spawn_points[id] = nil
 end
 
--- Lines 559-561
+-- Lines 435-437
 function NetworkManager:unregister_all_spawn_points()
 	self._spawn_points = {}
 end
 
--- Lines 565-567
+-- Lines 441-443
 function NetworkManager:has_spawn_points()
 	return next(self._spawn_points)
 end
 
--- Lines 571-573
+-- Lines 447-449
 function NetworkManager:spawn_point(sp_id)
 	return self._spawn_points[sp_id]
 end
 
--- Lines 577-589
+-- Lines 453-465
 function NetworkManager:sanitize_peer_name(name)
 	if not name then
 		return "[unknown]"
@@ -576,40 +452,7 @@ function NetworkManager:sanitize_peer_name(name)
 	return name
 end
 
--- Lines 593-617
-function NetworkManager:_register_PSN_matchmaking_callbacks()
-	local gen_clbk = callback(self, self, "clbk_PSN_event")
-
-	PSN:set_matchmaking_callback("session_destroyed", gen_clbk)
-	PSN:set_matchmaking_callback("session_created", gen_clbk)
-	PSN:set_matchmaking_callback("session_kickout", gen_clbk)
-	PSN:set_matchmaking_callback("member_left", gen_clbk)
-	PSN:set_matchmaking_callback("member_joined", gen_clbk)
-	PSN:set_matchmaking_callback("owner_changed", gen_clbk)
-	PSN:set_matchmaking_callback("server_ready", gen_clbk)
-	PSN:set_matchmaking_callback("lobby_refresh", gen_clbk)
-	PSN:set_matchmaking_callback("lobby_joined", gen_clbk)
-	PSN:set_matchmaking_callback("lobby_left", gen_clbk)
-	PSN:set_matchmaking_callback("friends_updated", gen_clbk)
-	PSN:set_matchmaking_callback("receive_group_invitation", gen_clbk)
-	PSN:set_matchmaking_callback("room_custom_info", gen_clbk)
-	PSN:set_matchmaking_callback("invitation_received", gen_clbk)
-	PSN:set_matchmaking_callback("invitation_received_result", gen_clbk)
-	PSN:set_matchmaking_callback("invitation_gui_opened", gen_clbk)
-	PSN:set_matchmaking_callback("invitation_gui_closed", gen_clbk)
-	PSN:set_matchmaking_callback("connection_etablished", gen_clbk)
-	PSN:set_matchmaking_callback("session_search", gen_clbk)
-	PSN:set_matchmaking_callback("custom_message", gen_clbk)
-	PSN:set_matchmaking_callback("session_update", gen_clbk)
-	PSN:set_matchmaking_callback("error", gen_clbk)
-end
-
--- Lines 621-623
-function NetworkManager:clbk_PSN_event(...)
-	print("[NetworkManager:clbk_PSN_event]", inspect(...))
-end
-
--- Lines 627-635
+-- Lines 469-477
 function NetworkManager:search_ses()
 	PSN:set_matchmaking_callback("session_search", callback(self, self, "clbk_search_session"))
 
@@ -623,7 +466,7 @@ function NetworkManager:search_ses()
 	PSN:search_session(search_params, {}, PSN:get_world_list()[1].world_id)
 end
 
--- Lines 639-644
+-- Lines 481-486
 function NetworkManager:clbk_search_session(search_results)
 	print("[NetworkManager:clbk_search_session]", search_results)
 
@@ -632,7 +475,7 @@ function NetworkManager:clbk_search_session(search_results)
 	end
 end
 
--- Lines 648-659
+-- Lines 490-501
 function NetworkManager.clbk_msg_overwrite(overwrite_data, msg_queue, ...)
 	if msg_queue then
 		if overwrite_data.index then
@@ -651,14 +494,14 @@ function NetworkManager.clbk_msg_overwrite(overwrite_data, msg_queue, ...)
 	end
 end
 
--- Lines 663-667
+-- Lines 505-509
 function NetworkManager:set_packet_throttling_enabled(state)
-	if self._session and self._is_win32 then
+	if self._session then
 		self._session:set_packet_throttling_enabled(state)
 	end
 end
 
--- Lines 671-707
+-- Lines 513-545
 function NetworkManager:on_peer_added(peer, peer_id)
 	cat_print("multiplayer_base", "NetworkManager:on_peer_added", peer, peer_id)
 
@@ -668,10 +511,6 @@ function NetworkManager:on_peer_added(peer, peer_id)
 
 	if Network:is_server() then
 		managers.network.matchmake:set_num_players(managers.network:session():amount_of_players())
-	end
-
-	if IS_XB1 then
-		managers.network.matchmake:on_peer_added(peer)
 	end
 
 	if managers.chat then
@@ -693,37 +532,37 @@ function NetworkManager:on_peer_added(peer, peer_id)
 	end
 end
 
--- Lines 713-715
+-- Lines 551-553
 function NetworkManager:get_peer_safe(peer_id)
 	return self._session and self._session:peer(peer_id) or nil
 end
 
--- Lines 717-719
+-- Lines 555-557
 function NetworkManager:get_local_peer_safe()
 	return self._session and self._session:local_peer() or nil
 end
 
--- Lines 721-723
+-- Lines 559-561
 function NetworkManager:get_server_peer_safe()
 	return self._session and self._session:server_peer() or nil
 end
 
--- Lines 725-727
+-- Lines 563-565
 function NetworkManager:get_peer_by_unit_safe(unit)
 	return self._session and self._session:peer_by_unit(unit) or nil
 end
 
--- Lines 729-731
+-- Lines 567-569
 function NetworkManager:get_dropin_peer_safe()
 	return self._session and self._session:dropin_peer() or nil
 end
 
--- Lines 737-739
+-- Lines 575-577
 local function PrintError(fn_name, ...)
 	Application:stack_dump_error("[NetworkManager] Tried to call " .. tostring(fn_name) .. ", but the network session has been destroyed.", inspect(...))
 end
 
--- Lines 741-749
+-- Lines 579-587
 function NetworkManager:send_to_peers(...)
 	if not self._session then
 		PrintError("send_to_peers", ...)
@@ -734,7 +573,7 @@ function NetworkManager:send_to_peers(...)
 	self._session:send_to_peers(...)
 end
 
--- Lines 751-759
+-- Lines 589-597
 function NetworkManager:send_to_peers_ip_verified(...)
 	if not self._session then
 		PrintError("send_to_peers_ip_verified", ...)
@@ -745,7 +584,7 @@ function NetworkManager:send_to_peers_ip_verified(...)
 	self._session:send_to_peers_ip_verified(...)
 end
 
--- Lines 761-769
+-- Lines 599-607
 function NetworkManager:send_to_peers_except(...)
 	if not self._session then
 		PrintError("send_to_peers_except", ...)
@@ -756,7 +595,7 @@ function NetworkManager:send_to_peers_except(...)
 	self._session:send_to_peers_except(...)
 end
 
--- Lines 771-779
+-- Lines 609-617
 function NetworkManager:send_to_peers_synched(...)
 	if not self._session then
 		PrintError("send_to_peers_synched", ...)
@@ -767,7 +606,7 @@ function NetworkManager:send_to_peers_synched(...)
 	self._session:send_to_peers_synched(...)
 end
 
--- Lines 781-789
+-- Lines 619-627
 function NetworkManager:send_to_peers_synched_except(...)
 	if not self._session then
 		PrintError("send_to_peers_synched_except", ...)
@@ -778,7 +617,7 @@ function NetworkManager:send_to_peers_synched_except(...)
 	self._session:send_to_peers_synched_except(...)
 end
 
--- Lines 791-799
+-- Lines 629-637
 function NetworkManager:send_to_peers_loaded(...)
 	if not self._session then
 		PrintError("send_to_peers_loaded", ...)
@@ -789,7 +628,7 @@ function NetworkManager:send_to_peers_loaded(...)
 	self._session:send_to_peers_loaded(...)
 end
 
--- Lines 801-809
+-- Lines 639-647
 function NetworkManager:send_to_peers_loaded_except(...)
 	if not self._session then
 		PrintError("send_to_peers_loaded_except", ...)
@@ -800,7 +639,7 @@ function NetworkManager:send_to_peers_loaded_except(...)
 	self._session:send_to_peers_loaded_except(...)
 end
 
--- Lines 811-819
+-- Lines 649-657
 function NetworkManager:send_to_peer(...)
 	if not self._session then
 		PrintError("send_to_peer", ...)
@@ -811,7 +650,7 @@ function NetworkManager:send_to_peer(...)
 	self._session:send_to_peer(...)
 end
 
--- Lines 821-829
+-- Lines 659-667
 function NetworkManager:send_to_peer_synched(...)
 	if not self._session then
 		PrintError("send_to_peer_synched", ...)
@@ -822,7 +661,7 @@ function NetworkManager:send_to_peer_synched(...)
 	self._session:send_to_peer_synched(...)
 end
 
--- Lines 831-839
+-- Lines 669-677
 function NetworkManager:send_to_host(...)
 	if not self._session then
 		PrintError("send_to_host", ...)

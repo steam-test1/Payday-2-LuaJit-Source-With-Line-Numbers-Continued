@@ -1,6 +1,6 @@
 CarryTweakData = CarryTweakData or class()
 
--- Lines 3-1501
+-- Lines 3-1529
 function CarryTweakData:init(tweak_data)
 	self.value_multiplier = tweak_data.money_manager.bag_value_multiplier
 	self.dye = {}
@@ -1016,7 +1016,7 @@ function CarryTweakData:init(tweak_data)
 	self.cg22_bag_yellow.no_area_trigger_detection = true
 end
 
--- Lines 1517-1531
+-- Lines 1545-1559
 function CarryTweakData:get_carry_ids()
 	local t = {}
 
@@ -1031,7 +1031,7 @@ function CarryTweakData:get_carry_ids()
 	return t
 end
 
--- Lines 1533-1543
+-- Lines 1561-1571
 function CarryTweakData:get_carry_ids_lookup_for_area_trigger()
 	local lookup_table = {}
 
@@ -1044,7 +1044,7 @@ function CarryTweakData:get_carry_ids_lookup_for_area_trigger()
 	return lookup_table
 end
 
--- Lines 1546-1554
+-- Lines 1574-1582
 function CarryTweakData:get_zipline_offset(carry_id)
 	local unit_name = tweak_data.carry[carry_id].unit or "units/payday2/pickups/gen_pku_lootbag/gen_pku_lootbag"
 

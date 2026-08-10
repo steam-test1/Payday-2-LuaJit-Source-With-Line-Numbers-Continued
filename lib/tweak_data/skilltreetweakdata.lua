@@ -1,6 +1,6 @@
 SkillTreeTweakData = SkillTreeTweakData or class()
 
--- Lines 3-2448
+-- Lines 3-2455
 function SkillTreeTweakData:init()
 	-- Lines 10-10
 	local function digest(value)
@@ -5537,7 +5537,7 @@ function SkillTreeTweakData:init()
 	}
 end
 
--- Lines 2450-2466
+-- Lines 2457-2473
 function SkillTreeTweakData:get_tier_position_from_skill_name(skill_name)
 	for tree_idx in pairs(self.trees) do
 		local count = 0
@@ -5559,7 +5559,7 @@ function SkillTreeTweakData:get_tier_position_from_skill_name(skill_name)
 	return -1
 end
 
--- Lines 2468-2477
+-- Lines 2475-2484
 function SkillTreeTweakData:get_tree(tree_name)
 	local list = {}
 
@@ -5572,16 +5572,16 @@ function SkillTreeTweakData:get_tree(tree_name)
 	return list
 end
 
--- Lines 2479-2482
+-- Lines 2486-2489
 function SkillTreeTweakData:get_tiers(tree_idx)
 	local tiers = deep_clone(self.trees[tree_idx].tiers)
 
 	return tiers
 end
 
--- Lines 2484-2492
+-- Lines 2491-2499
 function SkillTreeTweakData:get_tier_unlocks()
-	-- Lines 2485-2485
+	-- Lines 2492-2492
 	local function digest(value)
 		return Application:digest_value(value, false)
 	end
@@ -5596,7 +5596,7 @@ function SkillTreeTweakData:get_tier_unlocks()
 	return unlock_values
 end
 
--- Lines 2494-2517
+-- Lines 2501-2524
 function SkillTreeTweakData:get_specialization_icon_data(spec, no_fallback)
 	spec = spec or managers.skilltree:get_specialization_value("current_specialization")
 

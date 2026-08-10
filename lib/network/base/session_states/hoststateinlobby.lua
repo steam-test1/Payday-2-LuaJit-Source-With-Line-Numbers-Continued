@@ -1,6 +1,6 @@
 HostStateInLobby = HostStateInLobby or class(HostStateBase)
 
--- Lines 4-261
+-- Lines 4-243
 function HostStateInLobby:on_join_request_received(data, peer_name, peer_account_type_str, peer_account_id, is_invite, client_preferred_character, xuid, peer_level, peer_rank, peer_stinger_index, join_attempt_identifier, sender)
 	local peer_id = sender:ip_at_index(0)
 	local my_user_id = data.local_peer:user_id() or ""
@@ -153,7 +153,7 @@ function HostStateInLobby:on_join_request_received(data, peer_name, peer_account
 	new_peer:set_entering_lobby(true)
 	new_peer:set_join_stinger_index(peer_stinger_index)
 
-	-- Lines 249-255
+	-- Lines 231-237
 	local function ticket_callback(ticket)
 		if TDVS:should_chunk_auth_ticket(ticket) then
 			TDVS:send_auth_ticket_in_chunks(ticket, new_peer:rpc(), true, HostNetworkSession.JOIN_REPLY.OK)
@@ -165,7 +165,7 @@ function HostStateInLobby:on_join_request_received(data, peer_name, peer_account
 	new_peer:create_ticket(data.local_peer:account_id(), ticket_callback)
 end
 
--- Lines 263-363
+-- Lines 245-339
 function HostStateInLobby:on_join_auth_received(data, auth_ticket, sender)
 	print("[HostStateInLobby:on_join_auth_received] auth ticket received")
 	print("[HostStateInLobby:on_join_auth_received] " .. Application:stack())
@@ -236,7 +236,7 @@ function HostStateInLobby:on_join_auth_received(data, auth_ticket, sender)
 	managers.crime_spree:on_peer_finished_loading(new_peer)
 end
 
--- Lines 367-369
+-- Lines 343-345
 function HostStateInLobby:is_joinable(data)
 	return not data.wants_to_load_level
 end
