@@ -2,7 +2,7 @@ IngameContractGuiCrimeSpree = IngameContractGuiCrimeSpree or class()
 
 -- Lines 4-116
 function IngameContractGuiCrimeSpree:init(ws, node)
-	local padding = SystemInfo:platform() == Idstring("WIN32") and 10 or 5
+	local padding = IS_PC and 10 or 5
 
 	self._ws = ws
 	self._panel = ws:panel():panel({

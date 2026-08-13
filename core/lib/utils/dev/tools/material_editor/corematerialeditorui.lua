@@ -3,7 +3,7 @@ require("core/lib/utils/dev/ews/tree_control/CoreManagedTreeControl")
 
 CoreMaterialEditor = CoreMaterialEditor or class()
 
--- Lines 8-222
+-- Lines 8-221
 function CoreMaterialEditor:_create_main_frame()
 	self._main_frame = EWS:Frame(self.FRAME_TITLE, Vector3(-1, -1, 0), Vector3(650, 1200, 0), "FRAME_FLOAT_ON_PARENT,DEFAULT_FRAME_STYLE", Global.frame)
 
@@ -216,14 +216,13 @@ function CoreMaterialEditor:_create_main_frame()
 	main_frame_box:add(self._main_scroll_window, 1, 0, "EXPAND")
 	self._main_scroll_window:set_sizer(main_scroll_window_box)
 	self._main_scroll_window:set_scroll_rate(Vector3(0, 20, 0))
-	self._main_scroll_window:set_virtual_size_hints(Vector3(0, 0, 0), Vector3(1, -1, -1))
 	self._main_scroll_window:set_virtual_size(Vector3(-1, -1, 0))
 	self._main_scroll_window:enable_scrolling(false, true)
 	self._main_frame:set_sizer(main_frame_box)
 	self._main_frame:set_visible(true)
 end
 
--- Lines 224-241
+-- Lines 223-240
 function CoreMaterialEditor:_build_shader_options()
 	local shader_name = self._compilable_shader_combo_box:get_value()
 
@@ -244,14 +243,14 @@ function CoreMaterialEditor:_build_shader_options()
 	end
 end
 
--- Lines 243-246
+-- Lines 242-245
 function CoreMaterialEditor:_set_shader_option_tooltip(node, item)
 	local tooltip = node:parameter("tooltip") or ""
 
 	self._shader_option_tree:set_tooltip(item, tooltip)
 end
 
--- Lines 248-267
+-- Lines 247-266
 function CoreMaterialEditor:_build_section(shader_name, shader, node, tree)
 	for child in node:children() do
 		local project = child:parameter("project")
@@ -280,7 +279,7 @@ function CoreMaterialEditor:_build_section(shader_name, shader, node, tree)
 	end
 end
 
--- Lines 269-335
+-- Lines 268-334
 function CoreMaterialEditor:_create_parameter_panel()
 	local progress_dialog
 

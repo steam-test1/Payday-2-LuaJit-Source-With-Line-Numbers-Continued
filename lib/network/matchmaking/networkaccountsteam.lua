@@ -23,7 +23,7 @@ NetworkAccountSTEAM.lb_levels = {
 	suburbia = "Counterfeit"
 }
 
--- Lines 32-67
+-- Lines 32-65
 function NetworkAccountSTEAM:init()
 	NetworkAccount.init(self)
 	Steam:init()
@@ -31,11 +31,9 @@ function NetworkAccountSTEAM:init()
 	Steam:error_listener(NetworkAccountSTEAM._on_disconnected, NetworkAccountSTEAM._on_ipc_fail, NetworkAccountSTEAM._on_connect_fail)
 	Steam:overlay_listener(callback(self, self, "_on_open_overlay"), callback(self, self, "_on_close_overlay"))
 
-	if SystemInfo:matchmaking() == Idstring("MM_EPIC") and Steam.set_connect_string then
-		self.connect_string = "-join_game"
+	self.connect_string = "-join_game"
 
-		Steam:set_connect_string(self.connect_string)
-	end
+	Distribution:set_connect_string(self.connect_string)
 
 	self._gamepad_text_listeners = {}
 
@@ -52,18 +50,18 @@ function NetworkAccountSTEAM:init()
 	self:inventory_load()
 end
 
--- Lines 69-72
+-- Lines 67-70
 function NetworkAccountSTEAM:_load_done(...)
 	print("NetworkAccountSTEAM:_load_done()", ...)
 	self:_set_presences()
 end
 
--- Lines 74-76
+-- Lines 72-74
 function NetworkAccountSTEAM:update()
 	self:_chk_inventory_outfit_refresh()
 end
 
--- Lines 78-90
+-- Lines 76-88
 function NetworkAccountSTEAM:_set_presences()
 	managers.platform:set_rich_presence("level", managers.experience:current_level())
 
@@ -74,12 +72,12 @@ function NetworkAccountSTEAM:_set_presences()
 	end
 end
 
--- Lines 92-94
+-- Lines 90-92
 function NetworkAccountSTEAM:set_presences_peer_id(peer_id)
 	managers.platform:set_rich_presence("peer_id", peer_id)
 end
 
--- Lines 97-114
+-- Lines 95-112
 function NetworkAccountSTEAM:get_win_ratio(difficulty, level)
 	local plays = Steam:sa_handler():get_global_stat(difficulty .. "_" .. level .. "_plays", 30)
 	local wins = Steam:sa_handler():get_global_stat(difficulty .. "_" .. level .. "_wins", 30)
@@ -98,7 +96,7 @@ function NetworkAccountSTEAM:get_win_ratio(difficulty, level)
 	return ratio[#ratio / 2]
 end
 
--- Lines 116-124
+-- Lines 114-122
 function NetworkAccountSTEAM._on_troll_group_recieved(success, page)
 	if success and string.find(page, "<steamID64>" .. Steam:userid() .. "</steamID64>") then
 		managers.network.account._masks.troll = true
@@ -107,7 +105,7 @@ function NetworkAccountSTEAM._on_troll_group_recieved(success, page)
 	HttpRequest:get("http://steamcommunity.com/gid/103582791432592205/memberslistxml/?xml=1", NetworkAccountSTEAM._on_com_group_recieved)
 end
 
--- Lines 126-134
+-- Lines 124-132
 function NetworkAccountSTEAM._on_com_group_recieved(success, page)
 	if success and string.find(page, "<steamID64>" .. Steam:userid() .. "</steamID64>") then
 		managers.network.account._masks.hockey_com = true
@@ -116,19 +114,19 @@ function NetworkAccountSTEAM._on_com_group_recieved(success, page)
 	HttpRequest:get("http://steamcommunity.com/gid/103582791432508229/memberslistxml/?xml=1", NetworkAccountSTEAM._on_dev_group_recieved)
 end
 
--- Lines 136-142
+-- Lines 134-140
 function NetworkAccountSTEAM._on_dev_group_recieved(success, page)
 	if success and string.find(page, "<steamID64>" .. Steam:userid() .. "</steamID64>") then
 		managers.network.account._masks.developer = true
 	end
 end
 
--- Lines 144-146
+-- Lines 142-144
 function NetworkAccountSTEAM:is_overlay_enabled()
 	return Steam:overlay_enabled() or false
 end
 
--- Lines 148-154
+-- Lines 146-152
 function NetworkAccountSTEAM:overlay_activate(...)
 	if self:is_overlay_enabled() then
 		Steam:overlay_activate(...)
@@ -137,7 +135,7 @@ function NetworkAccountSTEAM:overlay_activate(...)
 	end
 end
 
--- Lines 156-163
+-- Lines 154-161
 function NetworkAccountSTEAM:_on_open_overlay()
 	if self._overlay_opened then
 		return
@@ -149,7 +147,7 @@ function NetworkAccountSTEAM:_on_open_overlay()
 	game_state_machine:_set_controller_enabled(false)
 end
 
--- Lines 165-176
+-- Lines 163-174
 function NetworkAccountSTEAM:_on_close_overlay()
 	if not self._overlay_opened then
 		return
@@ -163,7 +161,7 @@ function NetworkAccountSTEAM:_on_close_overlay()
 	Entitlement:CheckAndVerifyUserEntitlement()
 end
 
--- Lines 178-184
+-- Lines 176-182
 function NetworkAccountSTEAM:_on_gamepad_text_submitted(submitted, submitted_text)
 	print("[NetworkAccountSTEAM:_on_gamepad_text_submitted]", "submitted", submitted, "submitted_text", submitted_text)
 
@@ -174,12 +172,12 @@ function NetworkAccountSTEAM:_on_gamepad_text_submitted(submitted, submitted_tex
 	self._gamepad_text_listeners = {}
 end
 
--- Lines 186-208
+-- Lines 184-206
 function NetworkAccountSTEAM:show_gamepad_text_input(id, callback, params)
 	return false
 end
 
--- Lines 210-215
+-- Lines 208-213
 function NetworkAccountSTEAM:add_gamepad_text_listener(id, clbk)
 	if self._gamepad_text_listeners[id] then
 		debug_pause("[NetworkAccountSTEAM:add_gamepad_text_listener] ID already added!", id, "Old Clbk", self._gamepad_text_listeners[id], "New Clbk", clbk)
@@ -188,7 +186,7 @@ function NetworkAccountSTEAM:add_gamepad_text_listener(id, clbk)
 	self._gamepad_text_listeners[id] = clbk
 end
 
--- Lines 217-222
+-- Lines 215-220
 function NetworkAccountSTEAM:remove_gamepad_text_listener(id)
 	if not self._gamepad_text_listeners[id] then
 		debug_pause("[NetworkAccountSTEAM:remove_gamepad_text_listener] ID do not exist!", id)
@@ -197,70 +195,70 @@ function NetworkAccountSTEAM:remove_gamepad_text_listener(id)
 	self._gamepad_text_listeners[id] = nil
 end
 
--- Lines 224-226
+-- Lines 222-224
 function NetworkAccountSTEAM:achievements_fetched()
 	self._achievements_fetched = true
 end
 
--- Lines 228-230
+-- Lines 226-228
 function NetworkAccountSTEAM:challenges_loaded()
 	self._challenges_loaded = true
 end
 
--- Lines 232-234
+-- Lines 230-232
 function NetworkAccountSTEAM:experience_loaded()
 	self._experience_loaded = true
 end
 
--- Lines 236-238
+-- Lines 234-236
 function NetworkAccountSTEAM._on_leaderboard_stored(status)
 	print("[NetworkAccountSTEAM:_on_leaderboard_stored] Leaderboard stored, ", status, ".")
 end
 
--- Lines 240-244
+-- Lines 238-242
 function NetworkAccountSTEAM._on_leaderboard_mapped()
 	print("[NetworkAccountSTEAM:_on_leaderboard_stored] Leaderboard mapped.")
 	Steam:lb_handler():request_storage()
 end
 
--- Lines 246-265
+-- Lines 244-263
 function NetworkAccountSTEAM._on_stats_stored(status)
 	print("[NetworkAccountSTEAM:_on_stats_stored] Statistics stored, ", status, ". Publishing leaderboard score to Steam!")
 end
 
--- Lines 267-269
+-- Lines 265-267
 function NetworkAccountSTEAM:get_sa_handler()
 	return Steam:sa_handler()
 end
 
--- Lines 271-273
+-- Lines 269-271
 function NetworkAccountSTEAM:set_stat(key, value)
 	Steam:sa_handler():set_stat(key, value)
 end
 
--- Lines 275-277
+-- Lines 273-275
 function NetworkAccountSTEAM:get_stat(key)
 	return Steam:sa_handler():get_stat(key)
 end
 
--- Lines 280-282
+-- Lines 278-280
 function NetworkAccountSTEAM:has_stat(key)
 	return Steam:sa_handler():has_stat(key)
 end
 
--- Lines 284-287
+-- Lines 282-285
 function NetworkAccountSTEAM:achievement_unlock_time(key)
 	local res = Steam:sa_handler():achievement_unlock_time(key)
 
 	return res ~= -1 and res or nil
 end
 
--- Lines 290-292
+-- Lines 288-290
 function NetworkAccountSTEAM:get_lifetime_stat(key)
 	return Steam:sa_handler():get_lifetime_stat(key)
 end
 
--- Lines 294-320
+-- Lines 292-318
 function NetworkAccountSTEAM:get_global_stat(key, days)
 	local value = 0
 	local global_stat
@@ -288,7 +286,7 @@ function NetworkAccountSTEAM:get_global_stat(key, days)
 	return value
 end
 
--- Lines 322-416
+-- Lines 320-414
 function NetworkAccountSTEAM:publish_statistics(stats, force_store)
 	if managers.dlc:is_trial() then
 		return
@@ -357,7 +355,7 @@ function NetworkAccountSTEAM:publish_statistics(stats, force_store)
 	end
 end
 
--- Lines 418-432
+-- Lines 416-430
 function NetworkAccountSTEAM._on_disconnected(lobby_id, friend_id)
 	print("[NetworkAccountSTEAM._on_disconnected]", lobby_id, friend_id)
 
@@ -374,12 +372,12 @@ function NetworkAccountSTEAM._on_disconnected(lobby_id, friend_id)
 	end
 end
 
--- Lines 434-436
+-- Lines 432-434
 function NetworkAccountSTEAM._on_ipc_fail(lobby_id, friend_id)
 	print("[NetworkAccountSTEAM._on_ipc_fail]")
 end
 
--- Lines 439-467
+-- Lines 437-465
 function NetworkAccountSTEAM._on_join_request(lobby_id, friend_id)
 	print("[NetworkAccountSTEAM._on_join_request]")
 
@@ -418,17 +416,17 @@ function NetworkAccountSTEAM._on_join_request(lobby_id, friend_id)
 	end
 end
 
--- Lines 469-472
+-- Lines 467-470
 function NetworkAccountSTEAM._on_server_request(ip, pw)
 	print("[NetworkAccountSTEAM._on_server_request]")
 end
 
--- Lines 474-477
+-- Lines 472-475
 function NetworkAccountSTEAM._on_connect_fail(ip, pw)
 	print("[NetworkAccountSTEAM._on_connect_fail]")
 end
 
--- Lines 481-486
+-- Lines 479-484
 function NetworkAccountSTEAM:signin_state()
 	if self:local_signin_state() == true then
 		return "signed in"
@@ -437,49 +435,49 @@ function NetworkAccountSTEAM:signin_state()
 	return "not signed in"
 end
 
--- Lines 488-490
+-- Lines 486-488
 function NetworkAccountSTEAM:local_signin_state()
 	return Steam:logged_on()
 end
 
--- Lines 492-494
+-- Lines 490-492
 function NetworkAccountSTEAM:username_id()
 	return Steam:username()
 end
 
--- Lines 496-498
+-- Lines 494-496
 function NetworkAccountSTEAM:username_by_id(id)
 	return Steam:username(id)
 end
 
--- Lines 500-502
+-- Lines 498-500
 function NetworkAccountSTEAM:player_id()
-	return Steam:userid()
+	return Distribution:local_account_id()
 end
 
--- Lines 504-506
+-- Lines 502-504
 function NetworkAccountSTEAM:is_connected()
 	return true
 end
 
--- Lines 508-510
+-- Lines 506-508
 function NetworkAccountSTEAM:lan_connection()
 	return true
 end
 
--- Lines 512-514
+-- Lines 510-512
 function NetworkAccountSTEAM:set_playing(state)
 	Steam:set_playing(state)
 end
 
--- Lines 516-522
+-- Lines 514-520
 function NetworkAccountSTEAM:set_played_with(peer)
 	if peer and peer:account_type() == Idstring("STEAM") then
 		Steam:set_played_with(peer:account_id())
 	end
 end
 
--- Lines 524-531
+-- Lines 522-529
 function NetworkAccountSTEAM:get_friend_user(player_id)
 	local friends = Steam:logged_on() and Steam:friends() or {}
 
@@ -490,7 +488,7 @@ function NetworkAccountSTEAM:get_friend_user(player_id)
 	end
 end
 
--- Lines 533-542
+-- Lines 531-540
 function NetworkAccountSTEAM:is_player_friend(player_id)
 	local friends = Steam:logged_on() and Steam:friends() or {}
 
@@ -503,7 +501,7 @@ function NetworkAccountSTEAM:is_player_friend(player_id)
 	return NetworkAccountSTEAM.super.is_player_friend(self, player_id)
 end
 
--- Lines 544-554
+-- Lines 542-552
 function NetworkAccountSTEAM:_load_globals()
 	if Global.steam and Global.steam.account then
 		self._outfit_signature = Global.steam.account.outfit_signature and Global.steam.account.outfit_signature:get_data()
@@ -516,19 +514,19 @@ function NetworkAccountSTEAM:_load_globals()
 	end
 end
 
--- Lines 556-561
+-- Lines 554-559
 function NetworkAccountSTEAM:_save_globals()
 	Global.steam = Global.steam or {}
 	Global.steam.account = {}
 	Global.steam.account.outfit_signature = self._outfit_signature and Application:create_luabuffer(self._outfit_signature)
 end
 
--- Lines 563-569
+-- Lines 561-567
 function NetworkAccountSTEAM:is_ready_to_close()
 	return not self._inventory_is_loading and not self._inventory_outfit_refresh_requested and not self._inventory_outfit_refresh_in_progress
 end
 
--- Lines 571-591
+-- Lines 569-589
 function NetworkAccountSTEAM:open_dlc_store_page(dlc_data, context)
 	if dlc_data then
 		if context == "buy_dlc" and dlc_data.webpage then
@@ -549,7 +547,7 @@ function NetworkAccountSTEAM:open_dlc_store_page(dlc_data, context)
 	return false
 end
 
--- Lines 593-598
+-- Lines 591-596
 function NetworkAccountSTEAM:open_new_heist_page(new_heist_data)
 	if new_heist_data then
 		return self:overlay_activate("url", new_heist_data.url)
@@ -558,7 +556,7 @@ function NetworkAccountSTEAM:open_new_heist_page(new_heist_data)
 	return false
 end
 
--- Lines 600-620
+-- Lines 598-618
 function NetworkAccountSTEAM:inventory_load()
 	if self._inventory_is_loading then
 		return
@@ -573,19 +571,19 @@ function NetworkAccountSTEAM:inventory_load()
 	Steam:inventory_load(callback(self, self, "_clbk_inventory_load"))
 end
 
--- Lines 622-628
+-- Lines 620-626
 function NetworkAccountSTEAM:inventory_is_loading()
 	return self._inventory_is_loading or self._inventory_is_converting_drills or self._inventory_is_converting_items
 end
 
--- Lines 630-646
+-- Lines 628-644
 function NetworkAccountSTEAM:inventory_reward(reward_callback, item)
 	Steam:inventory_reward(reward_callback, item or 1)
 
 	return true
 end
 
--- Lines 648-682
+-- Lines 646-680
 function NetworkAccountSTEAM:inventory_reward_unlock(safe, safe_instance_id, drill_instance_id, reward_unlock_callback)
 	local safe_tweak = tweak_data.economy.safes[safe]
 
@@ -617,7 +615,7 @@ function NetworkAccountSTEAM:inventory_reward_unlock(safe, safe_instance_id, dri
 	Steam:inventory_reward_unlock(safe_instance_id, drill_instance_id, content_tweak.def_id, reward_unlock_callback)
 end
 
--- Lines 684-708
+-- Lines 682-706
 function NetworkAccountSTEAM:inventory_reward_open(safe, safe_instance_id, reward_unlock_callback)
 	local safe_tweak = tweak_data.economy.safes[safe]
 	local content_tweak = safe_tweak and tweak_data.economy.contents[safe_tweak.content]
@@ -636,17 +634,17 @@ function NetworkAccountSTEAM:inventory_reward_open(safe, safe_instance_id, rewar
 	Steam:inventory_reward_open(safe_instance_id, content_tweak.def_id, reward_unlock_callback)
 end
 
--- Lines 710-725
+-- Lines 708-723
 function NetworkAccountSTEAM:inventory_reward_dlc(def_id, reward_promo_callback)
 	Steam:inventory_reward_promo(def_id, reward_promo_callback)
 end
 
--- Lines 727-736
+-- Lines 725-734
 function NetworkAccountSTEAM:inventory_outfit_refresh()
 	self._inventory_outfit_refresh_requested = true
 end
 
--- Lines 738-750
+-- Lines 736-748
 function NetworkAccountSTEAM:_inventory_outfit_refresh()
 	local outfit = managers.blackmarket:tradable_outfit()
 
@@ -664,7 +662,7 @@ function NetworkAccountSTEAM:_inventory_outfit_refresh()
 	end
 end
 
--- Lines 752-764
+-- Lines 750-762
 function NetworkAccountSTEAM:_chk_inventory_outfit_refresh()
 	if not self._inventory_outfit_refresh_requested then
 		return
@@ -679,7 +677,7 @@ function NetworkAccountSTEAM:_chk_inventory_outfit_refresh()
 	self:_inventory_outfit_refresh()
 end
 
--- Lines 766-774
+-- Lines 764-772
 function NetworkAccountSTEAM:inventory_outfit_verify(steam_id, outfit_data, outfit_callback)
 	print("[NetworkAccountSTEAM:inventory_outfit_verify]", steam_id, "/", outfit_data, "/", outfit_callback)
 
@@ -690,12 +688,12 @@ function NetworkAccountSTEAM:inventory_outfit_verify(steam_id, outfit_data, outf
 	Steam:inventory_signature_verify(steam_id, outfit_data, outfit_callback)
 end
 
--- Lines 776-778
+-- Lines 774-776
 function NetworkAccountSTEAM:inventory_outfit_signature()
 	return self._outfit_signature
 end
 
--- Lines 780-798
+-- Lines 778-796
 function NetworkAccountSTEAM:_on_item_converted(error, items_new, items_removed)
 	if not error then
 		managers.blackmarket:tradable_exchange(items_new, items_removed)
@@ -717,7 +715,7 @@ function NetworkAccountSTEAM:_on_item_converted(error, items_new, items_removed)
 	end
 end
 
--- Lines 800-829
+-- Lines 798-827
 function NetworkAccountSTEAM:inventory_repair_list(list)
 	if list then
 		self._inventory_is_converting_items = 0
@@ -755,7 +753,7 @@ function NetworkAccountSTEAM:inventory_repair_list(list)
 	end
 end
 
--- Lines 831-853
+-- Lines 829-851
 function NetworkAccountSTEAM:_clbk_inventory_load(error, list)
 	print("[NetworkAccountSTEAM:_clbk_inventory_load]", "error: ", error, "list: ", list)
 
@@ -780,7 +778,7 @@ function NetworkAccountSTEAM:_clbk_inventory_load(error, list)
 	end
 end
 
--- Lines 855-872
+-- Lines 853-870
 function NetworkAccountSTEAM:_clbk_tradable_outfit_data(error, outfit_signature)
 	print("[NetworkAccountSTEAM:_clbk_tradable_outfit_data] error: ", error, ", self._outfit_signature: ", self._outfit_signature, "\n outfit_signature: ", outfit_signature, "\n")
 
@@ -801,7 +799,7 @@ function NetworkAccountSTEAM:_clbk_tradable_outfit_data(error, outfit_signature)
 	end
 end
 
--- Lines 875-895
+-- Lines 873-893
 function NetworkAccountSTEAM:_on_drill_converted(data, error, items_new, items_removed)
 	local drills_to_convert, instance_id = unpack(data)
 
@@ -826,7 +824,7 @@ function NetworkAccountSTEAM:_on_drill_converted(data, error, items_new, items_r
 	end
 end
 
--- Lines 897-929
+-- Lines 895-927
 function NetworkAccountSTEAM:convert_drills_to_safes(list)
 	if not list then
 		return
@@ -865,7 +863,7 @@ function NetworkAccountSTEAM:convert_drills_to_safes(list)
 	end
 end
 
--- Lines 932-1051
+-- Lines 930-1049
 function NetworkAccountSTEAM.output_global_stats(file)
 	local num_days = 100
 	local sa = Steam:sa_handler()
@@ -880,7 +878,7 @@ function NetworkAccountSTEAM.output_global_stats(file)
 	invalid[51] = 1
 	invalid[57] = 1
 
-	-- Lines 948-970
+	-- Lines 946-968
 	local function get_lvl_stat(diff, heist, stat, i)
 		if i == 0 then
 			local st = NetworkAccountSTEAM.lb_levels[heist] .. ", " .. NetworkAccountSTEAM.lb_diffs[diff] .. " - "
@@ -906,7 +904,7 @@ function NetworkAccountSTEAM.output_global_stats(file)
 		return num
 	end
 
-	-- Lines 973-995
+	-- Lines 971-993
 	local function get_weapon_stat(weapon, stat, i)
 		if i == 0 then
 			local st = weapon .. " - "

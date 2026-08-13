@@ -29,7 +29,16 @@ local IDS_PATTERN_TWEAK = Idstring("pattern_tweak")
 local IDS_UV_SCALE = Idstring("uv_scale")
 local IDS_WEAR_TEAR_VALUE = Idstring("wear_tear_value")
 
--- Lines 60-64
+-- Lines 93-97
+function NewRaycastWeaponBase:change_workshop_cosmetics(cosmetics, async_clbk)
+	self._cosmetics_data = cosmetics
+
+	self:_apply_cosmetics(async_clbk or function()
+		return
+	end)
+end
+
+-- Lines 99-103
 function NewRaycastWeaponBase:change_cosmetics(cosmetics, async_clbk)
 	self:set_cosmetics_data(cosmetics)
 	self:_apply_cosmetics(async_clbk or function()
@@ -37,7 +46,7 @@ function NewRaycastWeaponBase:change_cosmetics(cosmetics, async_clbk)
 	end)
 end
 
--- Lines 66-141
+-- Lines 105-216
 function NewRaycastWeaponBase:set_cosmetics_data(cosmetics)
 	self._cosmetics = cosmetics
 
@@ -52,12 +61,12 @@ function NewRaycastWeaponBase:set_cosmetics_data(cosmetics)
 		return
 	end
 
-	self._cosmetics_id = cosmetics and cosmetics.id
-	self._cosmetics_quality = cosmetics and cosmetics.quality
-	self._cosmetics_bonus = cosmetics and cosmetics.bonus
+	self._cosmetics_id = cosmetics.id
+	self._cosmetics_quality = cosmetics.quality
+	self._cosmetics_bonus = cosmetics.bonus
 	self._cosmetics_data = self._cosmetics_id and tweak_data.blackmarket.weapon_skins[self._cosmetics_id]
-	self._cosmetics_color_index = cosmetics and cosmetics.color_index
-	self._cosmetics_pattern_scale = cosmetics and cosmetics.pattern_scale or tweak_data.blackmarket.weapon_color_pattern_scale_default
+	self._cosmetics_color_index = cosmetics.color_index
+	self._cosmetics_pattern_scale = cosmetics.pattern_scale or tweak_data.blackmarket.weapon_color_pattern_scale_default
 
 	if self._cosmetics_color_index and self._cosmetics_data and self._cosmetics_data.color_skin_data then
 		local color_skin_data = self._cosmetics_data.color_skin_data
@@ -96,42 +105,42 @@ function NewRaycastWeaponBase:set_cosmetics_data(cosmetics)
 	end
 end
 
--- Lines 144-146
+-- Lines 218-220
 function NewRaycastWeaponBase:get_cosmetics_color_index()
 	return self._cosmetics_color_index
 end
 
--- Lines 150-152
+-- Lines 222-224
 function NewRaycastWeaponBase:get_cosmetics_pattern_scale()
 	return self._cosmetics_pattern_scale
 end
 
--- Lines 155-157
+-- Lines 226-228
 function NewRaycastWeaponBase:get_cosmetics_bonus()
 	return self._cosmetics_bonus
 end
 
--- Lines 159-161
+-- Lines 230-232
 function NewRaycastWeaponBase:get_cosmetics_quality()
 	return self._cosmetics_quality
 end
 
--- Lines 163-165
+-- Lines 234-236
 function NewRaycastWeaponBase:get_cosmetics_id()
 	return self._cosmetics_id
 end
 
--- Lines 167-169
+-- Lines 248-250
 function NewRaycastWeaponBase:get_cosmetics()
 	return self._cosmetics
 end
 
--- Lines 171-173
+-- Lines 252-254
 function NewRaycastWeaponBase:get_cosmetics_data()
 	return self._cosmetics_data
 end
 
--- Lines 175-204
+-- Lines 256-290
 function NewRaycastWeaponBase:_material_config_name(part_id, part_data, use_cc_material_config, force_third_person)
 	local unit_name = part_data.unit
 
@@ -159,7 +168,7 @@ function NewRaycastWeaponBase:_material_config_name(part_id, part_data, use_cc_m
 	return Idstring(unit_name .. "_cc")
 end
 
--- Lines 206-272
+-- Lines 292-372
 function NewRaycastWeaponBase:_update_materials()
 	if not self._parts then
 		return
@@ -179,7 +188,12 @@ function NewRaycastWeaponBase:_update_materials()
 				if part_data and (not self:_third_person() or not part_data.skip_third_thq) then
 					local new_material_config_ids = self:_material_config_name(part_id, part_data, use_cc_material_config)
 
-					if part.unit:material_config() ~= new_material_config_ids and DB:has(IDS_MATERIAL_CONFIG, new_material_config_ids) then
+					if part.unit:material_config() ~= new_material_config_ids then
+						if DB:has(IDS_MATERIAL_CONFIG, new_material_config_ids) then
+							part.unit:set_material_config(new_material_config_ids, true)
+						end
+					elseif use_cc_material_config then
+						part.unit:set_material_config(Idstring(part_data.unit), true)
 						part.unit:set_material_config(new_material_config_ids, true)
 					end
 				end
@@ -218,7 +232,7 @@ function NewRaycastWeaponBase:_update_materials()
 	end
 end
 
--- Lines 274-284
+-- Lines 374-382
 function NewRaycastWeaponBase:get_cosmetic_value(...)
 	local cosmetic_value = self:get_cosmetics_data()
 
@@ -231,7 +245,7 @@ function NewRaycastWeaponBase:get_cosmetic_value(...)
 	return cosmetic_value
 end
 
--- Lines 286-409
+-- Lines 384-584
 function NewRaycastWeaponBase:_apply_cosmetics(async_clbk)
 	material_variables.wear_and_tear = (managers.blackmarket and managers.blackmarket:skin_editor() and managers.blackmarket:skin_editor():active() or Application:production_build()) and "wear_tear_value" or nil
 
@@ -272,12 +286,14 @@ function NewRaycastWeaponBase:_apply_cosmetics(async_clbk)
 						value = mvec1
 					end
 
-					material:set_variable(Idstring(variable), value)
+					if value then
+						material:set_variable(Idstring(variable), value)
+					end
 				end
 			end
 
-			for key, material_texture in pairs(material_textures) do
-				value = self:get_cosmetic_value("weapons", self._name_id, "parts", part_id, material:name():key(), key) or self:get_cosmetic_value("weapons", self._name_id, "types", p_type, key) or self:get_cosmetic_value("weapons", self._name_id, key) or self:get_cosmetic_value("parts", part_id, material:name():key(), key) or self:get_cosmetic_value("types", p_type, key) or self:get_cosmetic_value(key) or material_defaults[material_texture]
+			for key, variable in pairs(material_textures) do
+				value = self:get_cosmetic_value("weapons", self._name_id, "parts", part_id, material:name():key(), key) or self:get_cosmetic_value("weapons", self._name_id, "types", p_type, key) or self:get_cosmetic_value("weapons", self._name_id, key) or self:get_cosmetic_value("parts", part_id, material:name():key(), key) or self:get_cosmetic_value("types", p_type, key) or self:get_cosmetic_value(key) or material_defaults[variable]
 
 				if value then
 					if type_name(value) ~= "Idstring" then
@@ -297,7 +313,11 @@ function NewRaycastWeaponBase:_apply_cosmetics(async_clbk)
 
 	for key, old_texture in pairs(self._textures) do
 		if not textures[key] and not old_texture.applied then
-			TextureCache:unretrieve(old_texture.name)
+			if DB:has(IDS_TEXTURE, old_texture.name) then
+				TextureCache:unretrieve(old_texture.name)
+			else
+				Application:error("[NewRaycastWeaponBase:_apply_cosmetics] Weapon cosmetics tried to unload no-existing texture!", "old_texture", old_texture.name)
+			end
 		end
 	end
 
@@ -323,7 +343,7 @@ function NewRaycastWeaponBase:_apply_cosmetics(async_clbk)
 	self:_chk_load_complete(async_clbk)
 end
 
--- Lines 411-425
+-- Lines 586-600
 function NewRaycastWeaponBase:clbk_texture_loaded(async_clbk, tex_name)
 	if not alive(self._unit) then
 		return
@@ -338,7 +358,7 @@ function NewRaycastWeaponBase:clbk_texture_loaded(async_clbk, tex_name)
 	self:_chk_load_complete(async_clbk)
 end
 
--- Lines 427-446
+-- Lines 602-618
 function NewRaycastWeaponBase:_chk_load_complete(async_clbk)
 	if self._requesting then
 		return
@@ -357,7 +377,7 @@ function NewRaycastWeaponBase:_chk_load_complete(async_clbk)
 	end
 end
 
--- Lines 448-494
+-- Lines 620-697
 function NewRaycastWeaponBase:_set_material_textures()
 	local cosmetics_data = self:get_cosmetics_data()
 
@@ -371,15 +391,15 @@ function NewRaycastWeaponBase:_set_material_textures()
 		p_type = managers.weapon_factory:get_type_from_part_id(part_id)
 
 		for _, material in pairs(materials) do
-			for key, material_texture in pairs(material_textures) do
-				value = self:get_cosmetic_value("weapons", self._name_id, "parts", part_id, material:name():key(), key) or self:get_cosmetic_value("weapons", self._name_id, "types", p_type, key) or self:get_cosmetic_value("weapons", self._name_id, key) or self:get_cosmetic_value("parts", part_id, material:name():key(), key) or self:get_cosmetic_value("types", p_type, key) or self:get_cosmetic_value(key) or material_defaults[material_texture]
+			for key, variable in pairs(material_textures) do
+				value = self:get_cosmetic_value("weapons", self._name_id, "parts", part_id, material:name():key(), key) or self:get_cosmetic_value("weapons", self._name_id, "types", p_type, key) or self:get_cosmetic_value("weapons", self._name_id, key) or self:get_cosmetic_value("parts", part_id, material:name():key(), key) or self:get_cosmetic_value("types", p_type, key) or self:get_cosmetic_value(key) or material_defaults[variable]
 
 				if value then
 					if type_name(value) ~= "Idstring" then
 						value = Idstring(value)
 					end
 
-					Application:set_material_texture(material, Idstring(material_texture), value, IDS_NORMAL)
+					Application:set_material_texture(material, Idstring(variable), value, IDS_NORMAL)
 				end
 			end
 		end
@@ -389,12 +409,16 @@ function NewRaycastWeaponBase:_set_material_textures()
 		if not texture_data.applied then
 			texture_data.applied = true
 
-			TextureCache:unretrieve(texture_data.name)
+			if DB:has(IDS_TEXTURE, texture_data.name) then
+				TextureCache:unretrieve(texture_data.name)
+			else
+				Application:error("[NewRaycastWeaponBase:_apply_cosmetics] Weapon cosmetics tried to unload no-existing texture!", "texture", texture_data.name)
+			end
 		end
 	end
 end
 
--- Lines 498-610
+-- Lines 701-818
 function NewRaycastWeaponBase:spawn_magazine_unit(pos, rot, hide_bullets, part_type)
 	part_type = part_type or "magazine"
 
@@ -531,7 +555,7 @@ local mvec3_add = mvector3.add
 local mvec3_sub = mvector3.subtract
 local mvec3_mul = mvector3.multiply
 
--- Lines 631-685
+-- Lines 839-893
 function NewRaycastWeaponBase:drop_magazine_object()
 	if not managers.weapon_factory:use_thq_weapon_parts() then
 		return
@@ -579,7 +603,7 @@ function NewRaycastWeaponBase:drop_magazine_object()
 	end
 end
 
--- Lines 687-697
+-- Lines 895-905
 function NewRaycastWeaponBase:is_part_type_dropped(type)
 	if not managers.weapon_factory:use_thq_weapon_parts() then
 		return false
@@ -592,7 +616,7 @@ function NewRaycastWeaponBase:is_part_type_dropped(type)
 	end
 end
 
--- Lines 699-705
+-- Lines 907-913
 function NewRaycastWeaponBase:get_part_type_dropped()
 	if self._reload_part_types then
 		return self._reload_part_types[1]

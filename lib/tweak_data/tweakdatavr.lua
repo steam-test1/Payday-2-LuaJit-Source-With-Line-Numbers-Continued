@@ -1,6 +1,6 @@
 TweakDataVR = TweakDataVR or class()
 
--- Lines 4-6490
+-- Lines 4-6496
 function TweakDataVR:init(tweak_data)
 	self.melee_offsets = {
 		default = {
@@ -11280,7 +11280,7 @@ function TweakDataVR:init(tweak_data)
 	}
 end
 
--- Lines 6496-6607
+-- Lines 6502-6613
 function TweakDataVR:init_specializations(tweak_data)
 	local addon_indices = {
 		"health",
@@ -11501,7 +11501,7 @@ function TweakDataVR:init_specializations(tweak_data)
 	end
 end
 
--- Lines 6611-6671
+-- Lines 6617-6677
 function TweakDataVR:init_skills(tweak_data)
 	self.post_warp = {}
 	self.post_warp.min = 1
@@ -11581,7 +11581,7 @@ function TweakDataVR:init_skills(tweak_data)
 	}
 end
 
--- Lines 6674-6686
+-- Lines 6680-6692
 function TweakDataVR:is_locked(category, id, ...)
 	local locked = self.locked[category] and self.locked[category][id]
 
@@ -11602,7 +11602,7 @@ function TweakDataVR:is_locked(category, id, ...)
 	return locked
 end
 
--- Lines 6688-6714
+-- Lines 6694-6720
 function TweakDataVR:get_offset_by_id(id, ...)
 	if id == "magazine" then
 		return self:_get_magazine_offsets_by_id(...)
@@ -11623,14 +11623,14 @@ function TweakDataVR:get_offset_by_id(id, ...)
 	return {}
 end
 
--- Lines 6716-6720
+-- Lines 6722-6726
 local function combine_offset(offset, new)
 	for key, value in pairs(new) do
 		offset[key] = offset[key] or value
 	end
 end
 
--- Lines 6722-6734
+-- Lines 6728-6740
 function TweakDataVR:_get_melee_offset_by_id(id)
 	local offset = {}
 	local tweak = tweak_data.blackmarket.melee_weapons[id]
@@ -11648,7 +11648,7 @@ function TweakDataVR:_get_melee_offset_by_id(id)
 	return offset
 end
 
--- Lines 6736-6744
+-- Lines 6742-6750
 function TweakDataVR:_get_weapon_offset_by_id(id)
 	local offset = {}
 
@@ -11661,7 +11661,7 @@ function TweakDataVR:_get_weapon_offset_by_id(id)
 	return offset
 end
 
--- Lines 6746-6750
+-- Lines 6752-6756
 function TweakDataVR:_get_mask_offsets_by_id(id)
 	local offset = {}
 
@@ -11670,7 +11670,7 @@ function TweakDataVR:_get_mask_offsets_by_id(id)
 	return offset
 end
 
--- Lines 6752-6760
+-- Lines 6758-6766
 function TweakDataVR:_get_throwable_offsets_by_id(id)
 	local offset = {}
 
@@ -11685,7 +11685,7 @@ function TweakDataVR:_get_throwable_offsets_by_id(id)
 	return offset
 end
 
--- Lines 6762-6769
+-- Lines 6768-6775
 function TweakDataVR:_get_magazine_offsets_by_id(id)
 	local offset = {}
 
@@ -11698,7 +11698,7 @@ function TweakDataVR:_get_magazine_offsets_by_id(id)
 	return offset
 end
 
--- Lines 6771-6778
+-- Lines 6777-6784
 function TweakDataVR:_get_bow_offsets_by_id(id)
 	local offset = {}
 

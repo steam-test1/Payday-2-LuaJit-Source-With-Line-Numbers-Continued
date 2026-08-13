@@ -8871,7 +8871,7 @@ function init_auto_generated_achievement_data(tags)
 			tags = {
 				tags.progress.heisting,
 				tags.difficulty.normal,
-				tags.unlock.exclusive_weapon_set,
+				tags.unlock.exclusive_set,
 				tags.tactics.loud,
 				tags.tactics.killer,
 				tags.inventory.weapon,
@@ -9589,7 +9589,7 @@ function init_auto_generated_achievement_data(tags)
 			tags = {
 				tags.progress.heisting,
 				tags.difficulty.normal,
-				tags.unlock.exclusive_weapon_set,
+				tags.unlock.exclusive_set,
 				tags.tactics.loud,
 				tags.tactics.killer,
 				tags.inventory.weapon,
@@ -9606,7 +9606,7 @@ function init_auto_generated_achievement_data(tags)
 			tags = {
 				tags.progress.heisting,
 				tags.difficulty.normal,
-				tags.unlock.exclusive_weapon_set,
+				tags.unlock.exclusive_set,
 				tags.tactics.loud,
 				tags.tactics.killer,
 				tags.inventory.weapon,
@@ -9622,7 +9622,7 @@ function init_auto_generated_achievement_data(tags)
 			tags = {
 				tags.progress.heisting,
 				tags.difficulty.overkill,
-				tags.unlock.weapon_mod,
+				tags.unlock.weapon,
 				tags.tactics.loud,
 				tags.tactics.killer,
 				tags.inventory.weapon,

@@ -5020,20 +5020,12 @@ function MissionBriefingGui:close()
 	end
 end
 
--- Lines 4081-4111
+-- Lines 4081-4103
 function MissionBriefingGui:reload_loadout()
 	self._node:parameters().menu_component_data = self._node:parameters().menu_component_data or {}
 	self._node:parameters().menu_component_data.loadout = self._node:parameters().menu_component_data.loadout or {}
 
 	local loadout_data = self._node:parameters().menu_component_data.loadout
-
-	if SystemInfo:platform() == Idstring("X360") then
-		if loadout_data.changing_loadout == "primary" and loadout_data.current_slot ~= managers.blackmarket:equipped_weapon_slot("primaries") then
-			managers.blackmarket:preload_primary_weapon()
-		elseif loadout_data.changing_loadout == "secondary" and loadout_data.current_slot ~= managers.blackmarket:equipped_weapon_slot("secondaries") then
-			managers.blackmarket:preload_secondary_weapon()
-		end
-	end
 
 	loadout_data.changing_loadout = nil
 	loadout_data.current_slot = nil
@@ -5053,7 +5045,7 @@ function MissionBriefingGui:reload_loadout()
 	WalletGuiObject.set_wallet(self._safe_workspace:panel(), 10)
 end
 
--- Lines 4114-4118
+-- Lines 4106-4110
 function MissionBriefingGui:reload()
 	self:close()
 	MissionBriefingGui.init(self, self._safe_workspace, self._full_workspace, self._node)
@@ -5061,7 +5053,7 @@ end
 
 JukeboxItem = JukeboxItem or class(MissionBriefingTabItem)
 
--- Lines 4124-4131
+-- Lines 4116-4123
 function JukeboxItem:init(panel, text, i, assets_names, max_assets, menu_component_data)
 	JukeboxItem.super.init(self, panel, text, i)
 	self._panel:set_w(self._main_panel:w())
@@ -5070,12 +5062,12 @@ function JukeboxItem:init(panel, text, i, assets_names, max_assets, menu_compone
 	self._my_menu_component_data = menu_component_data
 end
 
--- Lines 4133-4134
+-- Lines 4125-4126
 function JukeboxItem:post_init()
 	return
 end
 
--- Lines 4136-4147
+-- Lines 4128-4139
 function JukeboxItem:select(no_sound)
 	JukeboxItem.super.select(self, no_sound)
 
@@ -5090,7 +5082,7 @@ function JukeboxItem:select(no_sound)
 	end
 end
 
--- Lines 4149-4161
+-- Lines 4141-4153
 function JukeboxItem:deselect()
 	self.closing = true
 
@@ -5106,7 +5098,7 @@ function JukeboxItem:deselect()
 	JukeboxItem.super.deselect(self)
 end
 
--- Lines 4163-4174
+-- Lines 4155-4166
 function JukeboxItem:set_enabled(state)
 	if not self.displayed then
 		return
@@ -5123,7 +5115,7 @@ end
 
 JukeboxGhostItem = JukeboxGhostItem or class(MissionBriefingTabItem)
 
--- Lines 4179-4186
+-- Lines 4171-4178
 function JukeboxGhostItem:init(panel, text, i, assets_names, max_assets, menu_component_data)
 	JukeboxGhostItem.super.init(self, panel, text, i)
 	self._panel:set_w(self._main_panel:w())
@@ -5132,12 +5124,12 @@ function JukeboxGhostItem:init(panel, text, i, assets_names, max_assets, menu_co
 	self._my_menu_component_data = menu_component_data
 end
 
--- Lines 4188-4189
+-- Lines 4180-4181
 function JukeboxGhostItem:post_init()
 	return
 end
 
--- Lines 4191-4202
+-- Lines 4183-4194
 function JukeboxGhostItem:select(no_sound)
 	JukeboxGhostItem.super.select(self, no_sound)
 
@@ -5152,7 +5144,7 @@ function JukeboxGhostItem:select(no_sound)
 	end
 end
 
--- Lines 4204-4216
+-- Lines 4196-4208
 function JukeboxGhostItem:deselect()
 	self.closing = true
 
@@ -5168,7 +5160,7 @@ function JukeboxGhostItem:deselect()
 	JukeboxGhostItem.super.deselect(self)
 end
 
--- Lines 4218-4229
+-- Lines 4210-4221
 function JukeboxGhostItem:set_enabled(state)
 	if not self.displayed then
 		return

@@ -759,19 +759,12 @@ function SentryGunDamage:melee_hit_sfx()
 	return "hit_gen"
 end
 
--- Lines 795-799
-function SentryGunDamage:destroy(unit)
-	unit:brain():pre_destroy()
-	unit:movement():pre_destroy()
-	unit:base():pre_destroy()
-end
-
--- Lines 803-805
+-- Lines 795-797
 function SentryGunDamage:shield_smoke_level()
 	return self._shield_smoke_level
 end
 
--- Lines 809-811
+-- Lines 801-803
 function SentryGunDamage:set_parent_unit(unit)
 	self._parent_unit = unit
 end

@@ -1,6 +1,6 @@
 HuskPlayerInventory = HuskPlayerInventory or class(PlayerInventory)
 
-local ids_unit = Idstring("unit")
+local ids_unit = IDS_UNIT
 
 -- Lines 5-11
 function HuskPlayerInventory:init(unit)

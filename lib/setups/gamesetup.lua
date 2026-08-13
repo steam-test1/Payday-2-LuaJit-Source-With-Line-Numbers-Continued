@@ -538,7 +538,7 @@ function GameSetup:unload_packages()
 	Setup.unload_packages(self)
 end
 
--- Lines 658-698
+-- Lines 658-693
 function GameSetup:init_managers(managers)
 	Setup.init_managers(self, managers)
 
@@ -566,13 +566,9 @@ function GameSetup:init_managers(managers)
 	managers.motion_path = MotionPathManager:new()
 	managers.dot = DOTManager:new()
 	managers.wait = WaitManager:new()
-
-	if SystemInfo:platform() == Idstring("X360") then
-		managers.blackmarket:load_equipped_weapons()
-	end
 end
 
--- Lines 700-749
+-- Lines 695-743
 function GameSetup:init_game()
 	local gsm = Setup.init_game(self)
 
@@ -615,13 +611,12 @@ function GameSetup:init_game()
 		end
 
 		managers.worlddefinition:init_done()
-		Application:resource_soft_reset()
 	end
 
 	return gsm
 end
 
--- Lines 751-801
+-- Lines 745-795
 function GameSetup:init_finalize()
 	if script_data.level_script and script_data.level_script.post_init then
 		script_data.level_script:post_init()
@@ -648,7 +643,7 @@ function GameSetup:init_finalize()
 		game_state_machine:change_state_by_name("ingame_waiting_for_players")
 	end
 
-	if SystemInfo:platform() == Idstring("PS3") or SystemInfo:platform() == Idstring("PS4") then
+	if IS_PS4 then
 		managers.achievment:chk_install_trophies()
 	end
 
@@ -665,7 +660,7 @@ function GameSetup:init_finalize()
 	managers.custom_safehouse:init_finalize()
 end
 
--- Lines 803-849
+-- Lines 797-843
 function GameSetup:update(t, dt)
 	Setup.update(self, t, dt)
 	managers.interaction:update(t, dt)
@@ -693,7 +688,7 @@ function GameSetup:update(t, dt)
 	end
 end
 
--- Lines 851-863
+-- Lines 845-857
 function GameSetup:paused_update(t, dt)
 	Setup.paused_update(self, t, dt)
 	managers.groupai:paused_update(t, dt)
@@ -703,7 +698,7 @@ function GameSetup:paused_update(t, dt)
 	end
 end
 
--- Lines 865-881
+-- Lines 859-875
 function GameSetup:destroy()
 	Setup.destroy(self)
 
@@ -717,13 +712,13 @@ function GameSetup:destroy()
 	managers.network.account:set_playing(false)
 end
 
--- Lines 883-888
+-- Lines 877-882
 function GameSetup:end_update(t, dt)
 	Setup.end_update(self, t, dt)
 	managers.game_play_central:end_update(t, dt)
 end
 
--- Lines 890-923
+-- Lines 884-917
 function GameSetup:save(data)
 	Setup.save(self, data)
 	managers.game_play_central:save(data)
@@ -750,7 +745,7 @@ function GameSetup:save(data)
 	managers.worlddefinition:sync_save(data)
 end
 
--- Lines 925-959
+-- Lines 919-953
 function GameSetup:load(data)
 	Setup.load(self, data)
 	managers.game_play_central:load(data)

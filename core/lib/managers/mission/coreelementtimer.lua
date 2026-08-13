@@ -11,7 +11,7 @@ function ElementTimer:init(...)
 	self._triggers = {}
 end
 
--- Lines 14-43
+-- Lines 14-40
 function ElementTimer:on_script_activated()
 	self._timer = self:get_random_table_value_float(self:value("timer"))
 
@@ -38,18 +38,18 @@ function ElementTimer:on_script_activated()
 	end
 end
 
--- Lines 45-48
+-- Lines 42-45
 function ElementTimer:_load_unit(unit)
 	table.insert(self._digital_gui_units, unit)
 	unit:digital_gui():timer_set(self._timer)
 end
 
--- Lines 50-57
+-- Lines 47-54
 function ElementTimer:set_enabled(enabled)
 	ElementTimer.super.set_enabled(self, enabled)
 end
 
--- Lines 59-69
+-- Lines 56-66
 function ElementTimer:add_updator()
 	if not Network:is_server() then
 		return
@@ -62,7 +62,7 @@ function ElementTimer:add_updator()
 	end
 end
 
--- Lines 71-76
+-- Lines 68-73
 function ElementTimer:remove_updator()
 	if self._updator then
 		self._mission_script:remove_updator(self._id)
@@ -71,7 +71,7 @@ function ElementTimer:remove_updator()
 	end
 end
 
--- Lines 78-92
+-- Lines 75-89
 function ElementTimer:update_timer(t, dt)
 	self._timer = self._timer - dt
 
@@ -88,12 +88,12 @@ function ElementTimer:update_timer(t, dt)
 	end
 end
 
--- Lines 94-96
+-- Lines 91-93
 function ElementTimer:client_on_executed(...)
 	return
 end
 
--- Lines 98-104
+-- Lines 95-101
 function ElementTimer:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -102,47 +102,47 @@ function ElementTimer:on_executed(instigator)
 	ElementTimer.super.on_executed(self, instigator)
 end
 
--- Lines 106-109
+-- Lines 103-106
 function ElementTimer:timer_operation_pause()
 	self:remove_updator()
 	self:_pause_digital_guis()
 end
 
--- Lines 111-114
+-- Lines 108-111
 function ElementTimer:timer_operation_start()
 	self:add_updator()
 	self:_start_digital_guis_count_down()
 end
 
--- Lines 116-119
+-- Lines 113-116
 function ElementTimer:timer_operation_add_time(time)
 	self._timer = self._timer + time
 
 	self:_update_digital_guis_timer()
 end
 
--- Lines 121-124
+-- Lines 118-121
 function ElementTimer:timer_operation_subtract_time(time)
 	self._timer = self._timer - time
 
 	self:_update_digital_guis_timer()
 end
 
--- Lines 126-129
+-- Lines 123-130
 function ElementTimer:timer_operation_reset()
 	self._timer = self:get_random_table_value_float(self:value("timer"))
 
 	self:_update_digital_guis_timer()
 end
 
--- Lines 131-134
+-- Lines 132-135
 function ElementTimer:timer_operation_set_time(time)
 	self._timer = time
 
 	self:_update_digital_guis_timer()
 end
 
--- Lines 136-142
+-- Lines 137-143
 function ElementTimer:_update_digital_guis_timer()
 	for _, unit in ipairs(self._digital_gui_units) do
 		if alive(unit) then
@@ -151,7 +151,7 @@ function ElementTimer:_update_digital_guis_timer()
 	end
 end
 
--- Lines 144-150
+-- Lines 145-151
 function ElementTimer:_start_digital_guis_count_down()
 	for _, unit in ipairs(self._digital_gui_units) do
 		if alive(unit) then
@@ -160,7 +160,7 @@ function ElementTimer:_start_digital_guis_count_down()
 	end
 end
 
--- Lines 152-158
+-- Lines 153-159
 function ElementTimer:_start_digital_guis_count_up()
 	for _, unit in ipairs(self._digital_gui_units) do
 		if alive(unit) then
@@ -169,7 +169,7 @@ function ElementTimer:_start_digital_guis_count_up()
 	end
 end
 
--- Lines 160-166
+-- Lines 161-167
 function ElementTimer:_pause_digital_guis()
 	for _, unit in ipairs(self._digital_gui_units) do
 		if alive(unit) then
@@ -178,7 +178,7 @@ function ElementTimer:_pause_digital_guis()
 	end
 end
 
--- Lines 168-170
+-- Lines 169-171
 function ElementTimer:add_trigger(id, time, callback, disabled)
 	self._triggers[id] = {
 		time = time,
@@ -187,14 +187,14 @@ function ElementTimer:add_trigger(id, time, callback, disabled)
 	}
 end
 
--- Lines 172-176
+-- Lines 173-177
 function ElementTimer:remove_trigger(id)
 	if not self._triggers[id].disabled then
 		self._triggers[id] = nil
 	end
 end
 
--- Lines 178-182
+-- Lines 179-183
 function ElementTimer:enable_trigger(id)
 	if self._triggers[id] then
 		self._triggers[id].disabled = false
@@ -203,17 +203,17 @@ end
 
 ElementTimerOperator = ElementTimerOperator or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines 188-190
+-- Lines 189-191
 function ElementTimerOperator:init(...)
 	ElementTimerOperator.super.init(self, ...)
 end
 
--- Lines 192-194
+-- Lines 193-195
 function ElementTimerOperator:client_on_executed(...)
 	return
 end
 
--- Lines 196-223
+-- Lines 197-228
 function ElementTimerOperator:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -246,22 +246,22 @@ end
 
 ElementTimerTrigger = ElementTimerTrigger or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines 229-231
+-- Lines 234-236
 function ElementTimerTrigger:init(...)
 	ElementTimerTrigger.super.init(self, ...)
 end
 
--- Lines 233-235
+-- Lines 238-240
 function ElementTimerTrigger:on_script_activated()
 	self:activate_trigger()
 end
 
--- Lines 237-239
+-- Lines 242-244
 function ElementTimerTrigger:client_on_executed(...)
 	return
 end
 
--- Lines 241-247
+-- Lines 246-252
 function ElementTimerTrigger:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -270,7 +270,7 @@ function ElementTimerTrigger:on_executed(instigator)
 	ElementTimerTrigger.super.on_executed(self, instigator)
 end
 
--- Lines 249-255
+-- Lines 254-260
 function ElementTimerTrigger:activate_trigger()
 	for _, id in ipairs(self._values.elements) do
 		local element = self:get_mission_element(id)
@@ -279,12 +279,12 @@ function ElementTimerTrigger:activate_trigger()
 	end
 end
 
--- Lines 257-259
+-- Lines 262-264
 function ElementTimerTrigger:operation_add()
 	self:activate_trigger()
 end
 
--- Lines 261-268
+-- Lines 266-273
 function ElementTimerTrigger:set_enabled(enabled)
 	ElementTimerTrigger.super.set_enabled(self, enabled)
 

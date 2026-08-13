@@ -29,7 +29,7 @@ end
 
 -- Lines 30-61
 function TripMineBase:init(unit)
-	UnitBase.init(self, unit, false)
+	TripMineBase.super.init(self, unit, false)
 
 	self._unit = unit
 	self._position = self._unit:position()
@@ -42,7 +42,7 @@ function TripMineBase:init(unit)
 	self._ids_laser = Idstring("laser")
 	self._g_laser = self._unit:get_object(Idstring("g_laser"))
 	self._g_laser_sensor = self._unit:get_object(Idstring("g_laser_sensor"))
-	self._use_draw_laser = SystemInfo:platform() == Idstring("PS3")
+	self._use_draw_laser = false
 
 	if self._use_draw_laser then
 		self._laser_color = Color(0.15, 1, 0, 0)
@@ -739,8 +739,10 @@ function TripMineBase:_debug_draw(from, to)
 	brush:cylinder(from, to, 1)
 end
 
--- Lines 713-722
-function TripMineBase:destroy()
+-- Lines 713-724
+function TripMineBase:pre_destroy(unit)
+	TripMineBase.super.pre_destroy(self, unit)
+
 	if self._validate_clbk_id then
 		managers.enemy:remove_delayed_clbk(self._validate_clbk_id)
 

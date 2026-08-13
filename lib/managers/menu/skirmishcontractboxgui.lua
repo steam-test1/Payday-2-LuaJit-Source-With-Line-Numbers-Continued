@@ -2,19 +2,19 @@ require("lib/managers/menu/ContractBoxGui")
 
 SkirmishContractBoxGui = SkirmishContractBoxGui or class(ContractBoxGui)
 
--- Lines 5-8
+-- Lines 7-10
 function SkirmishContractBoxGui:_is_weekly()
 	local lobby_data = managers.network.matchmake:get_lobby_data()
 
 	return lobby_data and tonumber(lobby_data.skirmish) == SkirmishManager.LOBBY_WEEKLY
 end
 
--- Lines 10-12
+-- Lines 13-15
 function SkirmishContractBoxGui:_crewpage_text()
 	return managers.localization:to_upper_text(self:_is_weekly() and "menu_weekly_skirmish" or "menu_skirmish")
 end
 
--- Lines 14-164
+-- Lines 17-176
 function SkirmishContractBoxGui:create_contract_box()
 	if not managers.network:session() then
 		return
@@ -59,9 +59,11 @@ function SkirmishContractBoxGui:create_contract_box()
 	local font_size = tweak_data.menu.pd2_small_font_size
 
 	if contact_data then
+		local job_title = utf8.to_upper(managers.localization:text(self:_is_weekly() and "menu_weekly_skirmish" or "menu_skirmish") .. ": " .. managers.localization:text(job_data.name_id))
+
 		self._contract_text_header = self._panel:text({
 			blend_mode = "add",
-			text = managers.localization:to_upper_text(self:_is_weekly() and "menu_weekly_skirmish" or "menu_skirmish"),
+			text = job_title,
 			h = tweak_data.menu.pd2_medium_font_size,
 			font_size = tweak_data.menu.pd2_medium_font_size,
 			font = tweak_data.menu.pd2_medium_font,
@@ -95,7 +97,7 @@ function SkirmishContractBoxGui:create_contract_box()
 		local lines = {}
 		local heading_max_width = 0
 
-		-- Lines 74-97
+		-- Lines 86-109
 		local function add_line(heading_text, value_text)
 			local heading = FineText:new(self._contract_panel, {
 				text = heading_text,

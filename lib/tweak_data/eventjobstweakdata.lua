@@ -1162,7 +1162,7 @@ function EventJobsTweakData:_init_pda10_challenges(tweak_data)
 	})
 end
 
--- Lines 1066-1089
+-- Lines 1065-1094
 function EventJobsTweakData:_init_community_challenges(tweak_data)
 	self.community_challenges = {}
 	self.community_challenges.pda9 = {
@@ -1170,6 +1170,10 @@ function EventJobsTweakData:_init_community_challenges(tweak_data)
 		event_data = {
 			pigs = "pigs",
 			stage = "unlockstage"
+		},
+		event_over = {
+			pigs = 20000000,
+			unlockstage = 5
 		}
 	}
 	self.community_challenges.cg22 = {
@@ -1177,6 +1181,10 @@ function EventJobsTweakData:_init_community_challenges(tweak_data)
 		event_data = {
 			bags = "bags",
 			stage = "unlockstage"
+		},
+		event_over = {
+			bags = 6417206,
+			unlockstage = 6
 		}
 	}
 	self.community_challenges.pda10 = {
@@ -1184,11 +1192,15 @@ function EventJobsTweakData:_init_community_challenges(tweak_data)
 		event_data = {
 			bags = "bucks",
 			stage = "unlockstage"
+		},
+		event_over = {
+			bucks = 21825945,
+			unlockstage = 6
 		}
 	}
 end
 
--- Lines 1092-1116
+-- Lines 1096-1120
 function EventJobsTweakData:_collective(collective_id, max_progress, data)
 	data.collective_id = collective_id
 
@@ -1222,7 +1234,7 @@ function EventJobsTweakData:_collective(collective_id, max_progress, data)
 	return obj
 end
 
--- Lines 1119-1154
+-- Lines 1123-1158
 function EventJobsTweakData:_choice(challenge_choices, max_progress, data)
 	local save_values = {
 		"choice_id",
@@ -1269,7 +1281,7 @@ function EventJobsTweakData:_choice(challenge_choices, max_progress, data)
 	return obj
 end
 
--- Lines 1184-1209
+-- Lines 1188-1213
 function EventJobsTweakData:_stage(stage_id, max_progress, data)
 	data.stage_id = stage_id
 

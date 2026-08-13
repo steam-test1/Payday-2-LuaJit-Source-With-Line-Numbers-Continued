@@ -660,7 +660,7 @@ end
 
 -- Lines 474-544
 function ChatGui:_show_crimenet_chat()
-	if SystemInfo:platform() == Idstring("WIN32") and managers.controller:get_default_wrapper_type() ~= "pc" then
+	if IS_PC and managers.controller:get_default_wrapper_type() ~= "pc" then
 		local desc = managers.localization:text("menu_chat_input")
 		local id = Idstring("ChatGui:_show_crimenet_chat")
 		local key = id:key()
@@ -684,7 +684,7 @@ function ChatGui:_show_crimenet_chat()
 			return
 		elseif Input:keyboard() then
 			-- Nothing
-		elseif SystemInfo:distribution() == Idstring("STEAM") then
+		elseif IS_STEAM then
 			if MenuCallbackHandler:is_overlay_enabled() then
 				managers.menu:show_requires_big_picture()
 			else
@@ -837,7 +837,7 @@ end
 
 local command_list
 
-if SystemInfo:platform() == Idstring("WIN32") then
+if IS_PC then
 	command_list = {
 		[Idstring("ready"):key()] = true,
 		[Idstring("fbi_files"):key()] = true,
@@ -1592,7 +1592,7 @@ function ChatGui:set_blinking(b)
 	end
 end
 
--- Lines 1257-1286
+-- Lines 1257-1287
 function ChatGui:update_caret()
 	local text = self._input_panel:child("input_text")
 	local caret = self._input_panel:child("caret")
@@ -1620,15 +1620,16 @@ function ChatGui:update_caret()
 		h = 0
 	end
 
-	caret:set_world_shape(x, y + 2, w, h - 4)
-	self:set_blinking(s == e and self._focus)
+	local blink = InputUtils.common_text_input_update_caret(text, caret, self._focus, nil)
+
+	self:set_blinking(blink)
 
 	local mid = x / self._input_panel:child("input_bg"):w()
 
 	self._input_panel:child("input_bg"):set_color(Color.black:with_alpha(0.4))
 end
 
--- Lines 1289-1322
+-- Lines 1290-1323
 function ChatGui:enter_text(o, s)
 	if managers.hud and managers.hud:showing_stats_screen() then
 		return
@@ -1661,86 +1662,37 @@ function ChatGui:enter_text(o, s)
 	self:update_caret()
 end
 
--- Lines 1325-1388
+-- Lines 1326-1345
 function ChatGui:update_key_down(o, k)
 	wait(0.6)
 
 	local text = self._input_panel:child("input_text")
 
 	while self._key_pressed == k do
-		local s, e = text:selection()
-		local n = utf8.len(text:text())
-		local d = math.abs(e - s)
-
-		if self._key_pressed == Idstring("backspace") then
-			if s == e and s > 0 then
-				text:set_selection(s - 1, e)
+		InputUtils.common_text_input_key_press(text, k, nil, false, self._enter_callback, self._esc_callback, function(arrow)
+			if arrow == "up" then
+				self:scroll_up()
+				self:set_scroll_indicators()
+			elseif arrow == "down" then
+				self:scroll_down()
+				self:set_scroll_indicators()
 			end
-
-			text:replace_text("")
-
-			if utf8.len(text:text()) < 1 and type(self._esc_callback) ~= "number" then
-				-- Nothing
-			end
-		elseif self._key_pressed == Idstring("delete") then
-			if s == e and s < n then
-				text:set_selection(s, e + 1)
-			end
-
-			text:replace_text("")
-
-			if utf8.len(text:text()) < 1 and type(self._esc_callback) ~= "number" then
-				-- Nothing
-			end
-		elseif self._key_pressed == Idstring("insert") then
-			local clipboard = Application:get_clipboard() or ""
-
-			text:replace_text(clipboard)
-
-			local lbs = text:line_breaks()
-
-			if #lbs > 1 then
-				local s = lbs[2]
-				local e = utf8.len(text:text())
-
-				text:set_selection(s, e)
-				text:replace_text("")
-			end
-		elseif self._key_pressed == Idstring("left") then
-			if s < e then
-				text:set_selection(s, s)
-			elseif s > 0 then
-				text:set_selection(s - 1, s - 1)
-			end
-		elseif self._key_pressed == Idstring("right") then
-			if s < e then
-				text:set_selection(e, e)
-			elseif s < n then
-				text:set_selection(s + 1, s + 1)
-			end
-		elseif self._key_pressed == Idstring("up") then
-			self:scroll_up()
-			self:set_scroll_indicators()
-		elseif self._key_pressed == Idstring("down") then
-			self:scroll_down()
-			self:set_scroll_indicators()
-		else
-			self._key_pressed = false
-		end
-
+		end)
 		self:update_caret()
 		wait(0.03)
 	end
 end
 
--- Lines 1390-1394
+-- Lines 1347-1352
 function ChatGui:key_release(o, k)
 	if self._key_pressed == k then
 		self._key_pressed = false
 	end
+
+	self:update_caret()
 end
 
--- Lines 1397-1488
+-- Lines 1355-1393
 function ChatGui:key_press(o, k)
 	if self._skip_first then
 		if k == Idstring("enter") then
@@ -1765,82 +1717,24 @@ function ChatGui:key_press(o, k)
 
 	text:stop()
 	text:animate(callback(self, self, "update_key_down"), k)
-
-	if k == Idstring("backspace") then
-		if s == e and s > 0 then
-			text:set_selection(s - 1, e)
+	InputUtils.common_text_input_key_press(text, k, nil, false, self._enter_callback, self._esc_callback, function(arrow)
+		if arrow == "up" then
+			self:scroll_up()
+			self:set_scroll_indicators()
+		elseif arrow == "down" then
+			self:scroll_down()
+			self:set_scroll_indicators()
 		end
-
-		text:replace_text("")
-
-		if utf8.len(text:text()) < 1 and type(self._esc_callback) ~= "number" then
-			-- Nothing
-		end
-	elseif k == Idstring("delete") then
-		if s == e and s < n then
-			text:set_selection(s, e + 1)
-		end
-
-		text:replace_text("")
-
-		if utf8.len(text:text()) < 1 and type(self._esc_callback) ~= "number" then
-			-- Nothing
-		end
-	elseif k == Idstring("insert") then
-		local clipboard = Application:get_clipboard() or ""
-
-		text:replace_text(clipboard)
-
-		local lbs = text:line_breaks()
-
-		if #lbs > 1 then
-			local s = lbs[2]
-			local e = utf8.len(text:text())
-
-			text:set_selection(s, e)
-			text:replace_text("")
-		end
-	elseif k == Idstring("left") then
-		if s < e then
-			text:set_selection(s, s)
-		elseif s > 0 then
-			text:set_selection(s - 1, s - 1)
-		end
-	elseif k == Idstring("right") then
-		if s < e then
-			text:set_selection(e, e)
-		elseif s < n then
-			text:set_selection(s + 1, s + 1)
-		end
-	elseif k == Idstring("up") then
-		self:scroll_up()
-		self:set_scroll_indicators()
-	elseif k == Idstring("down") then
-		self:scroll_down()
-		self:set_scroll_indicators()
-	elseif self._key_pressed == Idstring("end") then
-		text:set_selection(n, n)
-	elseif self._key_pressed == Idstring("home") then
-		text:set_selection(0, 0)
-	elseif k == Idstring("enter") then
-		if type(self._enter_callback) ~= "number" then
-			self._enter_callback()
-		end
-	elseif k == Idstring("esc") and type(self._esc_callback) ~= "number" then
-		text:set_text("")
-		text:set_selection(0, 0)
-		self._esc_callback()
-	end
-
+	end)
 	self:update_caret()
 end
 
--- Lines 1492-1493
+-- Lines 1397-1398
 function ChatGui:send_message(name, message)
 	return
 end
 
--- Lines 1495-1596
+-- Lines 1400-1501
 function ChatGui:receive_message(name, message, color, icon)
 	if not alive(self._panel) or not managers.network:session() then
 		return
@@ -1916,7 +1810,7 @@ function ChatGui:receive_message(name, message, color, icon)
 	end
 end
 
--- Lines 1598-1616
+-- Lines 1503-1521
 function ChatGui:_animate_fade_output()
 	if self._is_crimenet_chat then
 		return
@@ -1945,7 +1839,7 @@ function ChatGui:_animate_fade_output()
 	self:set_output_alpha(0)
 end
 
--- Lines 1618-1629
+-- Lines 1523-1534
 function ChatGui:_animate_show_component(panel, start_alpha)
 	local TOTAL_T = 0.25
 	local t = 0
@@ -1963,7 +1857,7 @@ function ChatGui:_animate_show_component(panel, start_alpha)
 	panel:set_alpha(1)
 end
 
--- Lines 1631-1636
+-- Lines 1536-1541
 function ChatGui:_animate_show_input(input_panel)
 	local TOTAL_T = 0.2
 	local start_alpha = input_panel:alpha()
@@ -1974,7 +1868,7 @@ function ChatGui:_animate_show_input(input_panel)
 	end)
 end
 
--- Lines 1638-1652
+-- Lines 1543-1557
 function ChatGui:_animate_hide_input(input_panel)
 	local TOTAL_T = 0.2
 	local start_alpha = input_panel:alpha()
@@ -1985,7 +1879,7 @@ function ChatGui:_animate_hide_input(input_panel)
 	end)
 end
 
--- Lines 1654-1663
+-- Lines 1559-1568
 function ChatGui:_animate_input_bg(input_bg)
 	local t = 0
 
@@ -2000,12 +1894,12 @@ function ChatGui:_animate_input_bg(input_bg)
 	end
 end
 
--- Lines 1665-1667
+-- Lines 1570-1572
 function ChatGui:set_output_alpha(alpha)
 	self._panel:child("output_panel"):set_alpha(alpha)
 end
 
--- Lines 1669-1680
+-- Lines 1574-1585
 function ChatGui:close(...)
 	self._panel:child("output_panel"):stop()
 	self._input_panel:stop()

@@ -94,13 +94,12 @@ function BootupState:on_savefile_loaded(slot, success, is_setting_slot, cache_on
 	end
 end
 
--- Lines 47-116
+-- Lines 47-108
 function BootupState:setup()
 	local res = RenderSettings.resolution
 	local safe_rect_pixels = managers.gui_data:scaled_size()
 	local gui = Overlay:gui()
-	local is_win32 = SystemInfo:platform() == Idstring("WIN32")
-	local is_x360 = SystemInfo:platform() == Idstring("X360")
+	local is_win32 = IS_PC
 	local show_esrb = false
 
 	if _G.IS_VR then
@@ -121,7 +120,6 @@ function BootupState:setup()
 	local esrb_y = safe_rect_pixels.height / 1.9
 	local has_full_game = managers.dlc:has_full_game()
 	local item_layer = self._back_drop_gui:background_layers()
-	local intro_trailer_layer = self._back_drop_gui:foreground_layers()
 
 	managers.savefile:add_load_done_callback(callback(self, self, "on_savefile_loaded"))
 
@@ -149,16 +147,7 @@ function BootupState:setup()
 		can_skip = has_full_game,
 		duration = show_esrb and 6.5 or 0
 	})
-
-	local play_intros = not Application:production_build()
-
-	if play_intros then
-		if SystemInfo:distribution() == Idstring("EPIC") and EpicMM.wait_for_logged_on then
-			EpicMM:wait_for_logged_on(5)
-		end
-
-		self:setup_intro_videos()
-	end
+	self:setup_intro_videos()
 
 	self._full_panel = self._full_workspace:panel()
 	self._panel = self._workspace:panel()
@@ -180,23 +169,13 @@ function BootupState:setup()
 	end
 end
 
--- Lines 118-133
+-- Lines 110-143
 function BootupState:setup_intro_videos()
 	local res = RenderSettings.resolution
 	local safe_rect_pixels = managers.gui_data:scaled_size()
 	local legal_text = managers.localization:text("legal_text")
 	local item_layer = self._back_drop_gui:background_layers()
-	local intro_trailer_layer = self._back_drop_gui:foreground_layers()
 
-	table.insert(self._play_data_list, {
-		can_skip = true,
-		limit_file_streamer = true,
-		padding = 200,
-		video = "movies/intro_trailer",
-		layer = intro_trailer_layer,
-		width = res.x,
-		height = res.y
-	})
 	table.insert(self._play_data_list, {
 		can_skip = true,
 		duration = 6,
@@ -223,7 +202,7 @@ function BootupState:setup_intro_videos()
 	})
 end
 
--- Lines 135-169
+-- Lines 145-179
 function BootupState:at_enter()
 	managers.menu:input_enabled(false)
 
@@ -258,14 +237,14 @@ function BootupState:at_enter()
 	end
 end
 
--- Lines 171-175
+-- Lines 181-185
 function BootupState:clbk_game_has_music_control(status)
 	if self._play_data and self._play_data.video then
 		self._gui_obj:set_volume_gain(status and self._bootup_volume or 0)
 	end
 end
 
--- Lines 177-196
+-- Lines 187-206
 function BootupState:update(t, dt)
 	if self._wait_for_textures then
 		if TextureCache:check_textures_loaded() then
@@ -288,7 +267,7 @@ function BootupState:update(t, dt)
 	end
 end
 
--- Lines 198-210
+-- Lines 208-220
 function BootupState:check_confirm_pressed()
 	for index, controller in ipairs(self._controller_list) do
 		if controller:get_input_pressed("confirm") then
@@ -304,7 +283,7 @@ function BootupState:check_confirm_pressed()
 	end
 end
 
--- Lines 212-252
+-- Lines 222-262
 function BootupState:update_fades()
 	local time, duration
 	local old_fade = self._fade
@@ -347,7 +326,7 @@ function BootupState:update_fades()
 	end
 end
 
--- Lines 254-266
+-- Lines 264-276
 function BootupState:apply_fade()
 	if self._play_data and self._play_data.gui then
 		local script = self._gui_obj.script and self._gui_obj:script()
@@ -362,7 +341,7 @@ function BootupState:apply_fade()
 	end
 end
 
--- Lines 268-276
+-- Lines 278-286
 function BootupState:is_skipped()
 	for _, controller in ipairs(self._controller_list) do
 		if controller:get_any_input_pressed() then
@@ -373,7 +352,7 @@ function BootupState:is_skipped()
 	return false
 end
 
--- Lines 278-288
+-- Lines 288-298
 function BootupState:is_playing()
 	if alive(self._gui_obj) then
 		if self._gui_obj.loop_count then
@@ -386,7 +365,7 @@ function BootupState:is_playing()
 	return false
 end
 
--- Lines 290-394
+-- Lines 300-404
 function BootupState:play_next(is_skipped)
 	self._play_time = TimerManager:game():time()
 	self._play_index = (self._play_index or 0) + 1
@@ -501,7 +480,7 @@ function BootupState:play_next(is_skipped)
 	end
 end
 
--- Lines 396-441
+-- Lines 406-451
 function BootupState:at_exit()
 	managers.platform:remove_event_callback("media_player_control", self._clbk_game_has_music_control_callback)
 

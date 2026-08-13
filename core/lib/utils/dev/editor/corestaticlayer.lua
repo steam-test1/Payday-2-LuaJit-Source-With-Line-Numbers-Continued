@@ -554,14 +554,13 @@ function StaticLayer:draw_units(t, dt)
 	Application:draw(self._selected_unit, 0, 1, 0)
 end
 
--- Lines 499-530
+-- Lines 499-529
 function StaticLayer:build_panel(notebook, settings)
 	cat_print("editor", "StaticLayer:build_panel")
 
 	self._ews_panel = EWS:ScrolledWindow(notebook, "", "VSCROLL")
 
 	self._ews_panel:set_scroll_rate(Vector3(0, 20, 0))
-	self._ews_panel:set_virtual_size_hints(Vector3(0, 0, 0), Vector3(1, -1, -1))
 
 	self._main_sizer = EWS:BoxSizer("VERTICAL")
 
@@ -585,12 +584,12 @@ function StaticLayer:build_panel(notebook, settings)
 	return self._ews_panel
 end
 
--- Lines 532-534
+-- Lines 531-533
 function StaticLayer:build_btn_toolbar()
 	return
 end
 
--- Lines 536-542
+-- Lines 535-541
 function StaticLayer:add_btns_to_toolbar()
 	self._btn_toolbar:add_tool("HIDE_ALL", "Hide All", CoreEws.image_path("toolbar\\hide_16x16.png"), "Hide All")
 	self._btn_toolbar:connect("HIDE_ALL", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "hide_all"), nil)
@@ -598,7 +597,7 @@ function StaticLayer:add_btns_to_toolbar()
 	self._btn_toolbar:connect("UNHIDE_ALL", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "unhide_all"), nil)
 end
 
--- Lines 544-564
+-- Lines 543-563
 function StaticLayer:get_help(text)
 	local t = "\t"
 	local n = "\n"
@@ -623,12 +622,12 @@ function StaticLayer:get_help(text)
 	return text
 end
 
--- Lines 566-568
+-- Lines 565-567
 function StaticLayer:deactivate()
 	StaticLayer.super.deactivate(self)
 end
 
--- Lines 570-590
+-- Lines 569-589
 function StaticLayer:add_triggers()
 	StaticLayer.super.add_triggers(self)
 

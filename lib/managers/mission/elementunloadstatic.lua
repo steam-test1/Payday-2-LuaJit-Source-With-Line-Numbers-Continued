@@ -21,7 +21,7 @@ function ElementUnloadStatic:_get_unit(unit_id)
 	end
 end
 
--- Lines 21-37
+-- Lines 21-38
 function ElementUnloadStatic:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -33,7 +33,6 @@ function ElementUnloadStatic:on_executed(instigator)
 
 			if alive(unit) then
 				print("[Mission] unload unit ", unit_id, unit)
-				World:delete_unit_free_assets(unit)
 			end
 		end
 	end

@@ -74,7 +74,7 @@ function MenuMainState:at_enter(old_state)
 		managers.menu:check_vr_dlc()
 	end
 
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if IS_PC then
 		local signed_in = managers.network and managers.network.account and managers.network.account:local_signin_state()
 
 		if not signed_in then
@@ -82,7 +82,7 @@ function MenuMainState:at_enter(old_state)
 		end
 	end
 
-	if SystemInfo:platform() == Idstring("WIN32") and not Global.use_telemetry_gamesight_eula_decided then
+	if IS_PC and not Global.use_telemetry_gamesight_eula_decided then
 		-- Lines 92-95
 		local function gamesight_accept_func()
 			managers.user:set_setting("use_gamesight", true, true)
@@ -138,7 +138,7 @@ function MenuMainState:at_enter(old_state)
 
 	local has_invite = false
 
-	if SystemInfo:platform() == Idstring("PS3") or SystemInfo:platform() == Idstring("PS4") then
+	if IS_PS4 then
 		local is_boot = not Global.psn_boot_invite_checked and Application:is_booted_from_invitation()
 
 		if not is_boot then
@@ -164,7 +164,7 @@ function MenuMainState:at_enter(old_state)
 		end
 
 		Global.psn_boot_invite_checked = true
-	elseif SystemInfo:platform() == Idstring("WIN32") then
+	elseif IS_PC then
 		if Global.boot_invite then
 			has_invite = true
 
@@ -174,7 +174,7 @@ function MenuMainState:at_enter(old_state)
 
 			managers.network.matchmake:join_server_with_check(lobby)
 		end
-	elseif SystemInfo:platform() == Idstring("X360") or SystemInfo:platform() == Idstring("XB1") then
+	elseif IS_XB1 then
 		if XboxLive:has_boot_invite() then
 			has_invite = true
 		end

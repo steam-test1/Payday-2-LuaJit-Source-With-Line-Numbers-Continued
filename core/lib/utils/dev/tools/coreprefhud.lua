@@ -70,7 +70,7 @@ function PrefHud:build_gui()
 	local res = RenderSettings.resolution
 	local safe_rect = 0.05
 
-	if SystemInfo:platform() == Idstring("WIN32") then
+	if IS_WIN32 then
 		safe_rect = 0
 	end
 
@@ -198,17 +198,16 @@ function PrefHud:update_bars(t, dt)
 	end
 end
 
-local ids_win32 = Idstring("WIN32")
 local ids_left_ctrl = Idstring("left ctrl")
 local ids_f1 = Idstring("f1")
-local is_win32 = SystemInfo:platform() == ids_win32
+local is_win32 = IS_WIN32
 
--- Lines 198-206
+-- Lines 197-205
 function PrefHud:update_keys()
 	return
 end
 
--- Lines 208-213
+-- Lines 207-212
 function PrefHud:update(t, dt)
 	if self._visible then
 		self:update_bars(t, dt)
@@ -217,12 +216,12 @@ function PrefHud:update(t, dt)
 	self:update_keys()
 end
 
--- Lines 215-217
+-- Lines 214-216
 function PrefHud:paused_update(t, dt)
 	self:update(t, dt)
 end
 
--- Lines 219-223
+-- Lines 218-222
 function PrefHud:destroy()
 	if alive(self._workspace) then
 		Overlay:newgui():destroy_workspace(self._workspace)

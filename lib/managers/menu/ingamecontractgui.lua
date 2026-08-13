@@ -2,7 +2,7 @@ IngameContractGui = IngameContractGui or class()
 
 -- Lines 3-310
 function IngameContractGui:init(ws, node)
-	local padding = SystemInfo:platform() == Idstring("WIN32") and 10 or 5
+	local padding = IS_PC and 10 or 5
 
 	self._panel = ws:panel():panel({
 		w = math.round(ws:panel():w() * 0.6),

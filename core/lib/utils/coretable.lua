@@ -813,10 +813,34 @@ function table.upper_bound(t, target, func)
 	end
 end
 
+-- Lines 730-738
+function table.set_defaults(target, source)
+	target = target or {}
+
+	for k, v in pairs(source) do
+		if target[k] == nil then
+			target[k] = v
+		end
+	end
+
+	return target
+end
+
+-- Lines 740-748
+function table.value_as_key(t, key)
+	local new_table = {}
+
+	for _, v in pairs(t) do
+		new_table[v[key]] = v
+	end
+
+	return new_table
+end
+
 if Application:ews_enabled() then
 	local __lua_representation, __write_lua_representation_to_file
 
-	-- Lines 739-748
+	-- Lines 759-768
 	function __lua_representation(value)
 		local t = type(value)
 
@@ -829,7 +853,7 @@ if Application:ews_enabled() then
 		end
 	end
 
-	-- Lines 750-769
+	-- Lines 770-789
 	function __write_lua_representation_to_file(value, file, indentation)
 		indentation = indentation or 1
 
@@ -855,7 +879,7 @@ if Application:ews_enabled() then
 		end
 	end
 
-	-- Lines 777-783
+	-- Lines 797-803
 	function write_lua_representation_to_path(value, path)
 		assert(type(path) == "string", "Invalid path argument. Expected string.")
 
@@ -866,7 +890,7 @@ if Application:ews_enabled() then
 		file:close()
 	end
 
-	-- Lines 785-793
+	-- Lines 805-813
 	function read_lua_representation_from_path(path)
 		assert(type(path) == "string", "Invalid path argument. Expected string.")
 
@@ -881,7 +905,7 @@ end
 
 local default_unpack = default_unpack or unpack
 
--- Lines 801-808
+-- Lines 821-828
 function _G.unpack(t, i, n)
 	if i == nil and n == nil then
 		return default_unpack(t, 1, table.maxn(t))

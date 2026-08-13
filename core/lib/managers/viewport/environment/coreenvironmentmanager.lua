@@ -312,7 +312,7 @@ function EnvironmentManager:editor_add_created_callback(func)
 	table.insert(self._created_callback_list, func)
 end
 
--- Lines 189-223
+-- Lines 189-219
 function EnvironmentManager:editor_reload(path)
 	local entry_path = managers.database:entry_relative_path(path .. "." .. extension)
 	local is_new = not managers.database:has(entry_path)
@@ -325,13 +325,9 @@ function EnvironmentManager:editor_reload(path)
 	end
 
 	local compile_settings = {
-		preprocessor_definitions = "preprocessor_definitions",
 		send_idstrings = false,
-		target_db_name = "all",
 		verbose = false,
-		platform = string.lower(SystemInfo:platform():s()),
-		source_root = managers.database:base_path(),
-		target_db_root = Application:base_path() .. "assets",
+		build_profile = Application:build_profile_path(),
 		source_files = source_files
 	}
 
@@ -351,7 +347,7 @@ function EnvironmentManager:editor_reload(path)
 	end
 end
 
--- Lines 225-238
+-- Lines 221-234
 function EnvironmentManager:_get_data(path)
 	local env_data = self._env_data_map[path]
 
@@ -367,7 +363,7 @@ function EnvironmentManager:_get_data(path)
 	return env_data
 end
 
--- Lines 240-249
+-- Lines 236-245
 function EnvironmentManager:_create_feeder(data_path_key, value)
 	local feeder = self._feeder_class_map[data_path_key]:new(value)
 	local global_modifier_data = self._global_environment_modifier_map[data_path_key]
@@ -379,7 +375,7 @@ function EnvironmentManager:_create_feeder(data_path_key, value)
 	return feeder
 end
 
--- Lines 251-275
+-- Lines 247-271
 function EnvironmentManager:_load(path)
 	local raw_data
 
@@ -408,7 +404,7 @@ function EnvironmentManager:_load(path)
 	return env_data
 end
 
--- Lines 277-293
+-- Lines 273-289
 function EnvironmentManager:_load_env_data(data_path, env_data, raw_data)
 	for _, sub_raw_data in ipairs(raw_data) do
 		if sub_raw_data._meta == "param" then

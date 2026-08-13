@@ -1,6 +1,6 @@
 SmokeScreenEffect = SmokeScreenEffect or class()
 
--- Lines 4-24
+-- Lines 4-29
 function SmokeScreenEffect:init(position, normal, time, has_dodge_bonus, grenade_unit)
 	self._timer = time
 	self._position = position
@@ -17,41 +17,48 @@ function SmokeScreenEffect:init(position, normal, time, has_dodge_bonus, grenade
 		position = position,
 		normal = normal
 	})
-	self._variant = grenade_unit and grenade_unit:base() and grenade_unit:base()._projectile_entry
-	self._mine = grenade_unit and grenade_unit:base():thrower_unit() == managers.player:player_unit()
+
+	if alive(grenade_unit) then
+		local base_ext = grenade_unit:base()
+
+		if base_ext then
+			self._variant = base_ext._projectile_entry
+			self._mine = base_ext:thrower_unit() == managers.player:player_unit()
+		end
+	end
 end
 
--- Lines 26-28
+-- Lines 31-33
 function SmokeScreenEffect:variant()
 	return self._variant
 end
 
--- Lines 30-32
+-- Lines 35-37
 function SmokeScreenEffect:dodge_bonus()
 	return self._dodge_bonus
 end
 
--- Lines 34-36
+-- Lines 39-41
 function SmokeScreenEffect:position()
 	return self._position
 end
 
--- Lines 38-40
+-- Lines 43-45
 function SmokeScreenEffect:alive()
 	return not not self._timer
 end
 
--- Lines 42-44
+-- Lines 47-49
 function SmokeScreenEffect:is_in_smoke(unit)
 	return self._unit_list[unit:key()], self._variant
 end
 
--- Lines 46-48
+-- Lines 87-89
 function SmokeScreenEffect:mine()
 	return self._mine
 end
 
--- Lines 50-71
+-- Lines 91-112
 function SmokeScreenEffect:update(t, dt)
 	if self._timer then
 		self._timer = self._timer - dt
@@ -83,7 +90,7 @@ function SmokeScreenEffect:update(t, dt)
 	end
 end
 
--- Lines 73-77
+-- Lines 114-118
 function SmokeScreenEffect:destroy()
 	if self._effect then
 		World:effect_manager():kill(self._effect)

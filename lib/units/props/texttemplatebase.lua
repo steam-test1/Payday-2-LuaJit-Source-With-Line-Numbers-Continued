@@ -292,12 +292,7 @@ function TextTemplateBase:_big_bank_welcome()
 	end
 end
 
--- Lines 85-87
-function TextTemplateBase:destroy()
-	return
-end
-
--- Lines 89-95
+-- Lines 85-91
 function TextTemplateBase:save(data)
 	local state = {}
 
@@ -305,7 +300,7 @@ function TextTemplateBase:save(data)
 	data.TextTemplateBase = state
 end
 
--- Lines 97-103
+-- Lines 93-99
 function TextTemplateBase:load(data)
 	local state = data.TextTemplateBase
 

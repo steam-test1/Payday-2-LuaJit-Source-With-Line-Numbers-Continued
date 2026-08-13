@@ -47,7 +47,7 @@ function VitHelicopterSync:save(data)
 	return
 end
 
--- Lines 45-47
+-- Lines 45-55
 function VitHelicopterSync:load(data)
 	managers.worlddefinition:use_me(self._unit)
 end

@@ -236,7 +236,7 @@ function CoreEditor:layout_edit_panel()
 	self._lower_panel:layout()
 end
 
--- Lines 252-308
+-- Lines 252-321
 function CoreEditor:unit_output(unit)
 	if alive(unit) then
 		local n = "\n"
@@ -302,11 +302,11 @@ function CoreEditor:unit_output(unit)
 	end
 end
 
--- Lines 311-319
+-- Lines 324-332
 function CoreEditor:_unit_materials(unit)
 	local names = {}
 
-	for _, material in ipairs(unit:get_objects_by_type(Idstring("material"))) do
+	for _, material in ipairs(unit:get_objects_by_type(IDS_MATERIAL)) do
 		if not table.contains(names, material:name():s()) then
 			table.insert(names, material:name():s())
 		end

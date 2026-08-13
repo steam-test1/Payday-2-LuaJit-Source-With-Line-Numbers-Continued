@@ -30,7 +30,7 @@ function ElementModifyPlayer:client_local_on_executed(instigator, element_id)
 	end
 end
 
--- Lines 46-93
+-- Lines 46-87
 function ElementModifyPlayer:on_executed(instigator, alternative, skip_execute_on_executed, sync_id_from)
 	if not self._values.enabled then
 		return

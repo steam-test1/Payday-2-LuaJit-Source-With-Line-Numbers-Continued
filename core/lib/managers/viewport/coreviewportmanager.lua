@@ -343,9 +343,9 @@ function ViewportManager:active_vp()
 	return #vps > 0 and vps[1]
 end
 
-local is_win32 = SystemInfo:platform() == Idstring("WIN32")
-local is_ps4 = SystemInfo:platform() == Idstring("PS4")
-local is_xb1 = SystemInfo:platform() == Idstring("XB1")
+local is_win32 = IS_WIN32
+local is_ps4 = IS_PS4
+local is_xb1 = IS_XB1
 
 -- Lines 313-318
 function ViewportManager:get_safe_rect()

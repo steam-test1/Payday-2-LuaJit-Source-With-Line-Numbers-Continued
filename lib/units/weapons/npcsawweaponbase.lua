@@ -97,7 +97,7 @@ function NPCSawWeaponBase:third_person_important()
 end
 
 -- Lines 88-91
-function NPCSawWeaponBase:destroy(...)
-	NPCSawWeaponBase.super.destroy(self, ...)
+function NPCSawWeaponBase:pre_destroy(...)
+	NPCSawWeaponBase.super.pre_destroy(self, ...)
 	SawWeaponBase._stop_sawing_effect(self)
 end

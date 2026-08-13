@@ -225,21 +225,21 @@ function DialogManager:_play_dialog(dialog, params, line)
 	end
 end
 
--- Lines 205-209
+-- Lines 205-211
 function DialogManager:_stop_dialog()
-	if self._current_dialog and self._current_dialog.unit then
+	if self._current_dialog and alive(self._current_dialog.unit) then
 		self._current_dialog.unit:drama():stop_cue()
 	end
 end
 
--- Lines 211-215
+-- Lines 213-217
 function DialogManager:_call_done_callback(done_cbk, reason)
 	if done_cbk then
 		done_cbk(reason)
 	end
 end
 
--- Lines 217-226
+-- Lines 219-228
 function DialogManager:_load_dialogs()
 	local file_name = "gamedata/dialogs/index"
 	local data = PackageManager:script_data(Idstring("dialog_index"), file_name:id())
@@ -251,7 +251,7 @@ function DialogManager:_load_dialogs()
 	end
 end
 
--- Lines 228-254
+-- Lines 230-256
 function DialogManager:_load_dialog_data(name)
 	local file_name = "gamedata/dialogs/" .. name
 	local data = PackageManager:script_data(Idstring("dialog"), file_name:id())

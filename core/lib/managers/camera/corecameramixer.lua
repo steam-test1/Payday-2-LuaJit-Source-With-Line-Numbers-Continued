@@ -39,6 +39,7 @@ end
 -- Lines 34-41
 function CameraMixer:add_camera(camera, blend_time)
 	table.insert(self._cameras, {
+		cam_data = nil,
 		time = 0,
 		camera = camera,
 		blend_time = blend_time

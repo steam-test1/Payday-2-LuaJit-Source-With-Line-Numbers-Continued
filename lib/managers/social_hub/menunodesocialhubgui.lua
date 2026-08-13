@@ -36,7 +36,7 @@ end
 
 SocialHubGui = SocialHubGui or class(MenuGuiComponentGeneric)
 
--- Lines 44-59
+-- Lines 44-54
 function SocialHubGui:init(ws, fullscreen_ws, node)
 	self._ws = ws
 	self._fullscreen_ws = fullscreen_ws
@@ -45,16 +45,11 @@ function SocialHubGui:init(ws, fullscreen_ws, node)
 	})
 	self._fullscreen_panel = self._fullscreen_ws:panel():panel()
 
-	if SystemInfo:distribution() == Idstring("STEAM") then
-		managers.socialhub:fetch_steam_friends(callback(self, self, "update_setup_pre_progress", "platform_friends"))
-	elseif SystemInfo:distribution() == Idstring("EPIC") then
-		managers.socialhub:fetch_epic_friends(callback(self, self, "update_setup_pre_progress", "platform_friends"))
-	end
-
+	managers.socialhub:fetch_friends(callback(self, self, "update_setup_pre_progress", "platform_friends"))
 	managers.socialhub:fetch_users(callback(self, self, "update_setup_pre_progress", "friends"))
 end
 
--- Lines 61-75
+-- Lines 56-70
 function SocialHubGui:update_setup_pre_progress(progress_id)
 	if self._initialized == true or not self:socialhub_valid() then
 		return
@@ -71,7 +66,7 @@ function SocialHubGui:update_setup_pre_progress(progress_id)
 	end
 end
 
--- Lines 77-126
+-- Lines 72-121
 function SocialHubGui:setup()
 	self._initialized = true
 	self._categories_runtime = {
@@ -151,18 +146,18 @@ function SocialHubGui:setup()
 	self._active_panel = 1
 end
 
--- Lines 128-131
+-- Lines 123-126
 function SocialHubGui:close()
 	self._fullscreen_ws:panel():remove(self._fullscreen_panel)
 	self._ws:panel():remove(self._panel)
 end
 
--- Lines 133-135
+-- Lines 128-130
 function SocialHubGui:socialhub_valid()
 	return alive(self._panel)
 end
 
--- Lines 139-148
+-- Lines 134-143
 function SocialHubGui:create_tab_panel()
 	local x_position = 0
 
@@ -182,7 +177,7 @@ function SocialHubGui:create_tab_panel()
 	self._categories_runtime[1].tab_item:selected_changed(true)
 end
 
--- Lines 150-167
+-- Lines 145-162
 function SocialHubGui:on_tab_item_pressed(index)
 	if not self:socialhub_valid() then
 		return
@@ -204,7 +199,7 @@ function SocialHubGui:on_tab_item_pressed(index)
 	self._active_panel = index
 end
 
--- Lines 169-174
+-- Lines 164-169
 function SocialHubGui:reset_tab_by_name(tab_name)
 	local index = tab_name == "friend" and 1 or tab_name == "invite" and 2 or tab_name == "blocked" and 3 or -1
 
@@ -213,14 +208,14 @@ function SocialHubGui:reset_tab_by_name(tab_name)
 	end
 end
 
--- Lines 176-180
+-- Lines 171-175
 function SocialHubGui:reset_tab_by_index(index)
 	if self._initialized then
 		self._categories_runtime[index].tab:reset_tab()
 	end
 end
 
--- Lines 182-214
+-- Lines 177-209
 function SocialHubGui:mouse_moved(o, x, y)
 	local used
 	local pointer = "arrow"
@@ -260,7 +255,7 @@ function SocialHubGui:mouse_moved(o, x, y)
 	return used, pointer
 end
 
--- Lines 216-232
+-- Lines 211-227
 function SocialHubGui:mouse_pressed(button, x, y)
 	local active_tab = self._categories_runtime and self._categories_runtime[self._active_panel].tab or false
 
@@ -281,7 +276,7 @@ function SocialHubGui:mouse_pressed(button, x, y)
 	end
 end
 
--- Lines 234-242
+-- Lines 229-237
 function SocialHubGui:mouse_released(o, button, x, y)
 	local active_tab = self._categories_runtime and self._categories_runtime[self._active_panel].tab or false
 
@@ -294,7 +289,7 @@ function SocialHubGui:mouse_released(o, button, x, y)
 	end
 end
 
--- Lines 244-260
+-- Lines 239-255
 function SocialHubGui:special_btn_pressed(button)
 	if button == Idstring("next_page") then
 		self._active_panel = (self._active_panel + 1 - 1) % #self._categories_runtime + 1
@@ -317,7 +312,7 @@ function SocialHubGui:special_btn_pressed(button)
 	end
 end
 
--- Lines 262-275
+-- Lines 257-270
 function SocialHubGui:mouse_wheel_up(x, y)
 	if self._tab_panel and self._tab_panel:inside(x, y) then
 		self._active_panel = (self._active_panel - 1 - 1) % #self._categories_runtime + 1
@@ -336,7 +331,7 @@ function SocialHubGui:mouse_wheel_up(x, y)
 	end
 end
 
--- Lines 277-290
+-- Lines 272-285
 function SocialHubGui:mouse_wheel_down(x, y)
 	if self._tab_panel and self._tab_panel:inside(x, y) then
 		self._active_panel = (self._active_panel + 1 - 1) % #self._categories_runtime + 1
@@ -355,7 +350,7 @@ function SocialHubGui:mouse_wheel_down(x, y)
 	end
 end
 
--- Lines 292-300
+-- Lines 287-295
 function SocialHubGui:move_up()
 	local active_tab = self._categories_runtime and self._categories_runtime[self._active_panel].tab or false
 
@@ -368,7 +363,7 @@ function SocialHubGui:move_up()
 	end
 end
 
--- Lines 302-310
+-- Lines 297-305
 function SocialHubGui:move_down()
 	local active_tab = self._categories_runtime and self._categories_runtime[self._active_panel].tab or false
 
@@ -381,7 +376,7 @@ function SocialHubGui:move_down()
 	end
 end
 
--- Lines 312-320
+-- Lines 307-315
 function SocialHubGui:move_left()
 	local active_tab = self._categories_runtime and self._categories_runtime[self._active_panel].tab or false
 
@@ -394,7 +389,7 @@ function SocialHubGui:move_left()
 	end
 end
 
--- Lines 322-330
+-- Lines 317-325
 function SocialHubGui:move_right()
 	local active_tab = self._categories_runtime and self._categories_runtime[self._active_panel].tab or false
 
@@ -407,7 +402,7 @@ function SocialHubGui:move_right()
 	end
 end
 
--- Lines 332-340
+-- Lines 327-335
 function SocialHubGui:confirm_pressed()
 	local active_tab = self._categories_runtime and self._categories_runtime[self._active_panel].tab or false
 

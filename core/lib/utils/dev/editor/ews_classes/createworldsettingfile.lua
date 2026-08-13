@@ -79,37 +79,31 @@ function CreateWorldSettingFile:on_create()
 	self:_compile(self._path)
 end
 
--- Lines 73-87
+-- Lines 73-82
 function CreateWorldSettingFile:_compile(path)
-	local t = {
-		preprocessor_definitions = "preprocessor_definitions",
+	Application:data_compile({
 		send_idstrings = false,
-		target_db_name = "all",
 		verbose = false,
-		platform = string.lower(SystemInfo:platform():s()),
-		source_root = managers.database:root_path() .. "/assets",
-		target_db_root = Application:base_path() .. "assets",
+		build_profile = Application:build_profile_path(),
 		source_files = {
 			managers.database:entry_path_with_properties(path)
 		}
-	}
-
-	Application:data_compile(t)
+	})
 	DB:reload()
 	managers.database:clear_all_cached_indices()
 end
 
--- Lines 89-91
+-- Lines 84-86
 function CreateWorldSettingFile:on_save()
 	self:on_create()
 end
 
--- Lines 93-95
+-- Lines 88-90
 function CreateWorldSettingFile:_serialize_to_script(type, name)
 	return PackageManager:editor_load_script_data(type:id(), name:id())
 end
 
--- Lines 97-112
+-- Lines 92-107
 function CreateWorldSettingFile:_parse_file(path)
 	if not DB:has("world_setting", path) then
 		return
@@ -130,7 +124,7 @@ function CreateWorldSettingFile:_parse_file(path)
 	end
 end
 
--- Lines 114-116
+-- Lines 109-111
 function CreateWorldSettingFile:on_cancel()
 	self:end_modal()
 end

@@ -885,7 +885,7 @@ function CoreParticleEditorPanel:on_save_as()
 	return self:do_save(true)
 end
 
--- Lines 755-784
+-- Lines 755-780
 function CoreParticleEditorPanel:do_save(warn_on_overwrite)
 	if warn_on_overwrite and managers.database:has(self._effect:name()) then
 		local ret = EWS:message_box(self._panel, "An effect named " .. self._effect:name() .. " already exists, overwrite?", "Overwrite", "YES_NO", Vector3(-1, -1, 0))
@@ -904,13 +904,9 @@ function CoreParticleEditorPanel:do_save(warn_on_overwrite)
 
 	if self._valid_effect then
 		Application:data_compile({
-			preprocessor_definitions = "preprocessor_definitions",
 			send_idstrings = false,
-			target_db_name = "all",
 			verbose = false,
-			platform = string.lower(SystemInfo:platform():s()),
-			source_root = managers.database:base_path(),
-			target_db_root = Application:base_path() .. "/assets",
+			build_profile = Application:build_profile_path(),
 			source_files = {
 				managers.database:entry_relative_path(self._effect:name())
 			}
@@ -924,7 +920,7 @@ function CoreParticleEditorPanel:do_save(warn_on_overwrite)
 	return true
 end
 
--- Lines 786-814
+-- Lines 782-810
 function CoreParticleEditorPanel:close()
 	local n = Node("effect")
 
@@ -962,7 +958,7 @@ end
 
 CoreUndoStack = CoreUndoStack or class()
 
--- Lines 819-823
+-- Lines 815-819
 function CoreUndoStack:init(startstate, stacksize)
 	self._stacksize = stacksize
 	self._stack = {
@@ -971,7 +967,7 @@ function CoreUndoStack:init(startstate, stacksize)
 	self._ptr = 1
 end
 
--- Lines 825-835
+-- Lines 821-831
 function CoreUndoStack:push(state)
 	if self._stack[self._ptr] == state then
 		return
@@ -990,7 +986,7 @@ function CoreUndoStack:push(state)
 	self._ptr = #self._stack
 end
 
--- Lines 837-841
+-- Lines 833-837
 function CoreUndoStack:undo()
 	if self._ptr == 1 then
 		return nil
@@ -1001,7 +997,7 @@ function CoreUndoStack:undo()
 	return self._stack[self._ptr]
 end
 
--- Lines 843-847
+-- Lines 839-843
 function CoreUndoStack:redo()
 	if self._ptr == #self._stack then
 		return nil

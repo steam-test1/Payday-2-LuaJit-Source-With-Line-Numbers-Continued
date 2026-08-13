@@ -127,7 +127,7 @@ TimerGui.EVENT_IDS = {}
 TimerGui.EVENT_IDS.jammed = 1
 TimerGui.EVENT_IDS.unjammed = 2
 
--- Lines 176-210
+-- Lines 186-220
 function TimerGui:init(unit)
 	self._unit = unit
 	self._visible = true
@@ -152,12 +152,12 @@ function TimerGui:init(unit)
 	self._update_enabled = false
 end
 
--- Lines 212-214
+-- Lines 222-224
 function TimerGui:set_can_jam(can_jam)
 	self._can_jam = can_jam
 end
 
--- Lines 216-228
+-- Lines 226-238
 function TimerGui:set_jam_times(amount)
 	if not self._can_jam then
 		Application:error("[Drill]", "This Drill cannot jam, use another one.")
@@ -174,19 +174,19 @@ function TimerGui:set_jam_times(amount)
 	self._jam_times = amount
 end
 
--- Lines 230-232
+-- Lines 240-242
 function TimerGui:set_override_timer(override_timer)
 	self._override_timer = override_timer
 end
 
--- Lines 234-238
+-- Lines 244-248
 function TimerGui:add_workspace(gui_object)
 	self._ws = self._new_gui:create_object_workspace(0, 0, gui_object, Vector3(0, 0, 0))
 	self._gui = self._ws:panel():gui(Idstring("guis/timer_gui"))
 	self._gui_script = self._gui:script()
 end
 
--- Lines 240-248
+-- Lines 250-258
 function TimerGui:get_upgrade_icon_color(upgrade_color)
 	if not self.THEME then
 		return TimerGui.upgrade_colors[upgrade_color]
@@ -197,7 +197,7 @@ function TimerGui:get_upgrade_icon_color(upgrade_color)
 	return theme and theme[upgrade_color] or TimerGui.upgrade_colors[upgrade_color]
 end
 
--- Lines 250-317
+-- Lines 260-342
 function TimerGui:_set_theme(theme_name)
 	local theme = TimerGui.themes[theme_name]
 
@@ -277,7 +277,7 @@ function TimerGui:_set_theme(theme_name)
 	self:_set_original_colors()
 end
 
--- Lines 319-325
+-- Lines 344-350
 function TimerGui:_set_original_colors()
 	self._original_colors = {}
 
@@ -286,7 +286,7 @@ function TimerGui:_set_original_colors()
 	end
 end
 
--- Lines 327-376
+-- Lines 352-400
 function TimerGui:setup()
 	self._gui_script.working_text:set_render_template(Idstring("Text"))
 	self._gui_script.time_header_text:set_render_template(Idstring("Text"))
@@ -330,10 +330,10 @@ function TimerGui:setup()
 		self._original_colors[child:key()] = child:color()
 	end
 
-	self._gui_script.panel:set_alpha(1)
+	self._gui_script.panel:set_alpha(0.8)
 end
 
--- Lines 379-385
+-- Lines 403-409
 function TimerGui:reset()
 	self._started = false
 
@@ -343,7 +343,7 @@ function TimerGui:reset()
 	end
 end
 
--- Lines 387-395
+-- Lines 411-419
 function TimerGui:stop_and_reset()
 	self._started = false
 
@@ -356,7 +356,7 @@ function TimerGui:stop_and_reset()
 	end
 end
 
--- Lines 397-431
+-- Lines 421-455
 function TimerGui:_start(timer, current_timer)
 	self._started = true
 	self._done = false
@@ -393,7 +393,7 @@ function TimerGui:_start(timer, current_timer)
 	self:_set_jamming_values()
 end
 
--- Lines 434-447
+-- Lines 458-471
 function TimerGui:_set_jamming_values()
 	if not self._can_jam then
 		return
@@ -413,12 +413,12 @@ function TimerGui:_set_jamming_values()
 	self._current_jam_timer = table.remove(self._jamming_intervals, 1)
 end
 
--- Lines 449-451
+-- Lines 473-475
 function TimerGui:set_timer_multiplier(multiplier)
 	self._timer_multiplier = multiplier
 end
 
--- Lines 453-465
+-- Lines 477-489
 function TimerGui:get_timer_multiplier()
 	local timer_multiplier = self._timer_multiplier or 1
 	local mutator
@@ -434,14 +434,14 @@ function TimerGui:get_timer_multiplier()
 	return math.max(timer_multiplier, 0.01)
 end
 
--- Lines 467-471
+-- Lines 491-495
 function TimerGui:set_skill(skill)
 	if self._skill == nil or skill > self._skill then
 		self._skill = skill
 	end
 end
 
--- Lines 473-496
+-- Lines 497-520
 function TimerGui:set_background_icons(background_icons)
 	local panel = self._gui_script.panel
 	local background_icons_panel = panel:child("background_icons_panel") or panel:panel({
@@ -459,9 +459,9 @@ function TimerGui:set_background_icons(background_icons)
 
 	background_icons_panel:clear()
 
-	local alpha = self._gui_script.panel:alpha()
+	local alpha = panel:alpha()
 
-	self._gui_script.panel:set_alpha(1)
+	panel:set_alpha(1)
 
 	self._original_colors = self._original_colors or {}
 
@@ -471,18 +471,18 @@ function TimerGui:set_background_icons(background_icons)
 		self._original_colors[icon:key()] = icon_data.color or icon:color()
 	end
 
-	self._gui_script.panel:set_alpha(alpha)
+	panel:set_alpha(alpha)
 end
 
--- Lines 498-516
+-- Lines 522-540
 function TimerGui:start(timer)
 	timer = self._override_timer or timer
 
 	if not self._started then
 		self:_start(timer)
 
-		if managers.network:session() then
-			managers.network:session():send_to_peers_synched("start_timer_gui", self._unit, timer)
+		if Network:is_server() then
+			managers.network:send_to_peers_synched("start_timer_gui", self._unit, timer)
 		end
 	end
 
@@ -495,12 +495,12 @@ function TimerGui:start(timer)
 	end
 end
 
--- Lines 518-520
+-- Lines 542-544
 function TimerGui:sync_start(timer)
 	self:_start(timer)
 end
 
--- Lines 530-591
+-- Lines 554-621
 function TimerGui:update(unit, t, dt)
 	if self._jammed then
 		self._gui_script.drill_screen_background:set_color(self._gui_script.drill_screen_background:color():with_alpha(0.5 + (math.sin(t * 750) + 1) / 4))
@@ -549,19 +549,19 @@ function TimerGui:update(unit, t, dt)
 	end
 end
 
--- Lines 593-596
+-- Lines 623-626
 function TimerGui:set_visible(visible)
 	self._visible = visible
 
 	self._gui:set_visible(visible)
 end
 
--- Lines 598-600
+-- Lines 628-630
 function TimerGui:is_visible()
 	return self._visible
 end
 
--- Lines 602-608
+-- Lines 632-638
 function TimerGui:sync_net_event(event_id)
 	if event_id == TimerGui.EVENT_IDS.jammed then
 		self:_set_jammed(true)
@@ -570,18 +570,18 @@ function TimerGui:sync_net_event(event_id)
 	end
 end
 
--- Lines 610-618
+-- Lines 640-648
 function TimerGui:set_jammed(jammed)
-	if managers.network:session() then
+	if Network:is_server() then
 		local event_id = jammed and TimerGui.EVENT_IDS.jammed or TimerGui.EVENT_IDS.unjammed
 
-		managers.network:session():send_to_peers_synched("sync_unit_event_id_16", self._unit, "timer_gui", event_id)
+		managers.network:send_to_peers_synched("sync_unit_event_id_16", self._unit, "timer_gui", event_id)
 	end
 
 	self:_set_jammed(jammed)
 end
 
--- Lines 620-699
+-- Lines 650-729
 function TimerGui:_set_jammed(jammed)
 	self._jammed = jammed
 
@@ -671,12 +671,12 @@ function TimerGui:_set_jammed(jammed)
 	end
 end
 
--- Lines 701-705
+-- Lines 731-735
 function TimerGui:set_powered(powered, enable_interaction)
 	self:_set_powered(powered, enable_interaction)
 end
 
--- Lines 707-765
+-- Lines 737-795
 function TimerGui:_set_powered(powered, enable_interaction)
 	self._powered = powered
 
@@ -737,7 +737,7 @@ function TimerGui:_set_powered(powered, enable_interaction)
 	self._unit:base():set_powered(powered)
 end
 
--- Lines 767-778
+-- Lines 797-808
 function TimerGui:done()
 	self:_set_done()
 
@@ -752,19 +752,19 @@ function TimerGui:done()
 	end
 end
 
--- Lines 780-782
+-- Lines 810-812
 function TimerGui:is_playing_done_event()
 	return self._is_playing_done_event
 end
 
--- Lines 784-787
+-- Lines 814-817
 function TimerGui:add_listener_to_done_event(clbk)
 	self._done_event_listeners = self._done_event_listeners or {}
 
 	table.insert(self._done_event_listeners, clbk)
 end
 
--- Lines 789-797
+-- Lines 819-827
 function TimerGui:on_done_event_ended()
 	self._is_playing_done_event = false
 
@@ -777,7 +777,7 @@ function TimerGui:on_done_event_ended()
 	end
 end
 
--- Lines 799-807
+-- Lines 829-837
 function TimerGui:_set_done()
 	self._done = true
 
@@ -789,7 +789,7 @@ function TimerGui:_set_done()
 	self._unit:base():done()
 end
 
--- Lines 809-815
+-- Lines 839-845
 function TimerGui:update_sound_event()
 	if self._done or not self._started or self._jammed or not self._powered then
 		return
@@ -798,23 +798,23 @@ function TimerGui:update_sound_event()
 	self:post_event(self._resume_event)
 end
 
--- Lines 817-819
+-- Lines 847-849
 function TimerGui:hide()
 	self._ws:hide()
 end
 
--- Lines 821-823
+-- Lines 851-853
 function TimerGui:show()
 	self._ws:show()
 end
 
--- Lines 825-828
+-- Lines 855-858
 function TimerGui:lock_gui()
 	self._ws:set_cull_distance(self._cull_distance)
 	self._ws:set_frozen(true)
 end
 
--- Lines 830-836
+-- Lines 860-866
 function TimerGui:destroy()
 	if alive(self._new_gui) and alive(self._ws) then
 		self._new_gui:destroy_workspace(self._ws)
@@ -824,7 +824,7 @@ function TimerGui:destroy()
 	end
 end
 
--- Lines 838-853
+-- Lines 868-883
 function TimerGui:save(data)
 	local state = {}
 
@@ -842,7 +842,7 @@ function TimerGui:save(data)
 	data.TimerGui = state
 end
 
--- Lines 855-883
+-- Lines 885-913
 function TimerGui:load(data)
 	local state = data.TimerGui
 
@@ -878,7 +878,7 @@ function TimerGui:load(data)
 	self._unit:set_extension_update_enabled(Idstring("timer_gui"), state.update_enabled and true or false)
 end
 
--- Lines 885-908
+-- Lines 915-938
 function TimerGui:post_event(event)
 	if not event then
 		return

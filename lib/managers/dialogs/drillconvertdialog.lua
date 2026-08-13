@@ -117,7 +117,7 @@ end
 
 -- Lines 99-120
 function DrillConvertDialog:dialog_cancel_callback()
-	if SystemInfo:platform() ~= Idstring("WIN32") then
+	if IS_PC then
 		return
 	end
 

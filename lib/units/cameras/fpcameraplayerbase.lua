@@ -1,6 +1,6 @@
 FPCameraPlayerBase = FPCameraPlayerBase or class(UnitBase)
 FPCameraPlayerBase.IDS_EMPTY = Idstring("empty")
-FPCameraPlayerBase.IDS_NOSTRING = Idstring("")
+FPCameraPlayerBase.IDS_NOSTRING = IDS_EMPTY
 FPCameraPlayerBase.bipod_location = nil
 FPCameraPlayerBase.camera_last_pos = nil
 
@@ -238,7 +238,7 @@ local bezier_values = {
 	1
 }
 
--- Lines 307-423
+-- Lines 307-422
 function FPCameraPlayerBase:_update_stance(t, dt)
 	if self._shoulder_stance.transition then
 		local trans_data = self._shoulder_stance.transition
@@ -257,9 +257,9 @@ function FPCameraPlayerBase:_update_stance(t, dt)
 				in_second_sight = false
 			end
 
-			if in_steelsight and not in_second_sight and not self._steelsight_swap_state then
+			if in_steelsight and not in_second_sight and not self:get_steelsight_swap_state() then
 				self:_set_steelsight_swap_state(true)
-			elseif (not in_steelsight or in_second_sight) and self._steelsight_swap_state then
+			elseif (not in_steelsight or in_second_sight) and self:get_steelsight_swap_state() then
 				self:_set_steelsight_swap_state(false)
 			end
 		else
@@ -285,9 +285,9 @@ function FPCameraPlayerBase:_update_stance(t, dt)
 				absolute_progress = trans_data.absolute_progress * (1 - progress_smooth)
 			end
 
-			if in_steelsight and not in_second_sight and not self._steelsight_swap_state and absolute_progress >= trans_data.steelsight_swap_progress_trigger then
+			if in_steelsight and not in_second_sight and not self:get_steelsight_swap_state() and absolute_progress >= trans_data.steelsight_swap_progress_trigger then
 				self:_set_steelsight_swap_state(true)
-			elseif (not in_steelsight or in_second_sight) and self._steelsight_swap_state and absolute_progress < trans_data.steelsight_swap_progress_trigger then
+			elseif (not in_steelsight or in_second_sight) and self:get_steelsight_swap_state() and absolute_progress < trans_data.steelsight_swap_progress_trigger then
 				self:_set_steelsight_swap_state(false)
 			end
 		end
@@ -364,7 +364,7 @@ local mvec2 = Vector3()
 local mvec3 = Vector3()
 local mvec4 = Vector3()
 
--- Lines 435-541
+-- Lines 434-540
 function FPCameraPlayerBase:_update_movement(t, dt)
 	local data = self._camera_properties
 	local new_head_pos = mvec2
@@ -447,7 +447,7 @@ end
 
 local mvec1 = Vector3()
 
--- Lines 545-755
+-- Lines 544-754
 function FPCameraPlayerBase:_update_rot(axis, unscaled_axis)
 	if self._animate_pitch then
 		self:animate_pitch_upd()
@@ -583,7 +583,7 @@ function FPCameraPlayerBase:_update_rot(axis, unscaled_axis)
 	end
 end
 
--- Lines 757-870
+-- Lines 756-869
 function FPCameraPlayerBase:_set_camera_position_in_vehicle()
 	local vehicle_data = managers.player:get_vehicle()
 
@@ -684,7 +684,7 @@ function FPCameraPlayerBase:_set_camera_position_in_vehicle()
 	end
 end
 
--- Lines 873-902
+-- Lines 872-901
 function FPCameraPlayerBase:_get_aim_assist(t, dt, speed, aim_data)
 	if aim_data.distance == 0 then
 		return 0, 0
@@ -714,7 +714,7 @@ function FPCameraPlayerBase:_get_aim_assist(t, dt, speed, aim_data)
 	return r_value_x, r_value_y
 end
 
--- Lines 906-939
+-- Lines 905-938
 function FPCameraPlayerBase:_vertical_recoil_kick(t, dt)
 	local player_state = managers.player:current_state()
 
@@ -753,7 +753,7 @@ function FPCameraPlayerBase:_vertical_recoil_kick(t, dt)
 	return r_value
 end
 
--- Lines 943-977
+-- Lines 942-976
 function FPCameraPlayerBase:_horizonatal_recoil_kick(t, dt)
 	local player_state = managers.player:current_state()
 
@@ -790,12 +790,12 @@ function FPCameraPlayerBase:_horizonatal_recoil_kick(t, dt)
 	return r_value
 end
 
--- Lines 981-983
+-- Lines 980-982
 function FPCameraPlayerBase:_pc_look_function(stick_input, stick_input_multiplier, dt)
 	return stick_input.x, stick_input.y
 end
 
--- Lines 987-1005
+-- Lines 986-1004
 function FPCameraPlayerBase:_gamepad_look_function(stick_input, stick_input_multiplier, dt)
 	if mvector3.length(stick_input) > self._tweak_data.look_speed_dead_zone * stick_input_multiplier.x then
 		local x = stick_input.x
@@ -815,7 +815,7 @@ end
 
 local multiplier = Vector3()
 
--- Lines 1010-1084
+-- Lines 1009-1083
 function FPCameraPlayerBase:_gamepad_look_function_ctl(stick_input, stick_input_multiplier, dt, unscaled_stick_input)
 	local aim_assist_x, aim_assist_y = 0, 0
 	local cs = managers.player:current_state()
@@ -895,7 +895,7 @@ function FPCameraPlayerBase:_gamepad_look_function_ctl(stick_input, stick_input_
 	return 0, 0
 end
 
--- Lines 1088-1100
+-- Lines 1087-1099
 function FPCameraPlayerBase:_steampad_look_function(stick_input, stick_input_multiplier, dt)
 	if mvector3.length(stick_input) > self._tweak_data.look_speed_dead_zone * stick_input_multiplier.x then
 		local x = stick_input.x
@@ -910,7 +910,7 @@ function FPCameraPlayerBase:_steampad_look_function(stick_input, stick_input_mul
 	return 0, 0
 end
 
--- Lines 1105-1125
+-- Lines 1104-1124
 function FPCameraPlayerBase:_get_look_speed(stick_input, stick_input_multiplier, dt)
 	if self._parent_unit:movement()._current_state:in_steelsight() then
 		return self._tweak_data.look_speed_steel_sight
@@ -941,7 +941,7 @@ function FPCameraPlayerBase:_get_look_speed(stick_input, stick_input_multiplier,
 	}, self._camera_properties.look_speed_transition_timer)
 end
 
--- Lines 1130-1135
+-- Lines 1129-1134
 local function get_look_setting(a, b, c, t)
 	if t < 0.5 then
 		return math.lerp(a, b, t / 0.5)
@@ -950,12 +950,12 @@ local function get_look_setting(a, b, c, t)
 	return math.lerp(b, c, (t - 0.5) / 0.5)
 end
 
--- Lines 1137-1139
+-- Lines 1136-1138
 local function get_look_setting_x_y(a, b, c, x, y)
 	return get_look_setting(a, b, c, x), get_look_setting(a, b, c, y)
 end
 
--- Lines 1141-1196
+-- Lines 1140-1195
 function FPCameraPlayerBase:_get_look_speed_ctl(stick_input, stick_input_multiplier, dt)
 	if self._parent_unit:movement()._current_state:in_steelsight() then
 		return self._tweak_data.look_speed_steel_sight
@@ -986,7 +986,7 @@ function FPCameraPlayerBase:_get_look_speed_ctl(stick_input, stick_input_multipl
 	}, self._camera_properties.look_speed_transition_timer)
 end
 
--- Lines 1200-1290
+-- Lines 1199-1289
 function FPCameraPlayerBase:_calculate_soft_velocity_overshot(dt)
 	local stick_input = self._input.look
 	local vel_overshot = self._vel_overshot
@@ -1070,27 +1070,27 @@ function FPCameraPlayerBase:_calculate_soft_velocity_overshot(dt)
 	mvector3.set(vel_overshot.translation, new_root)
 end
 
--- Lines 1294-1296
+-- Lines 1293-1295
 function FPCameraPlayerBase:set_position(pos)
 	self._unit:set_position(pos)
 end
 
--- Lines 1300-1302
+-- Lines 1299-1301
 function FPCameraPlayerBase:set_rotation(rot)
 	self._unit:set_rotation(rot)
 end
 
--- Lines 1306-1308
+-- Lines 1305-1307
 function FPCameraPlayerBase:eye_position()
 	return self._obj_eye:position()
 end
 
--- Lines 1312-1314
+-- Lines 1311-1313
 function FPCameraPlayerBase:eye_rotation()
 	return self._obj_eye:rotation()
 end
 
--- Lines 1318-1332
+-- Lines 1317-1331
 function FPCameraPlayerBase:play_redirect(redirect_name, speed, offset_time)
 	self:set_anims_enabled(true)
 
@@ -1109,7 +1109,7 @@ function FPCameraPlayerBase:play_redirect(redirect_name, speed, offset_time)
 	return result
 end
 
--- Lines 1334-1346
+-- Lines 1333-1345
 function FPCameraPlayerBase:play_redirect_timeblend(state, redirect_name, offset_time, t)
 	self:set_anims_enabled(true)
 
@@ -1126,7 +1126,7 @@ function FPCameraPlayerBase:play_redirect_timeblend(state, redirect_name, offset
 	return result
 end
 
--- Lines 1348-1356
+-- Lines 1347-1355
 function FPCameraPlayerBase:play_raw(name, params)
 	self:set_anims_enabled(true)
 
@@ -1138,14 +1138,14 @@ function FPCameraPlayerBase:play_raw(name, params)
 	return result ~= self.IDS_NOSTRING and result
 end
 
--- Lines 1358-1361
+-- Lines 1357-1360
 function FPCameraPlayerBase:set_steelsight_anim_enabled(enabled)
 	self._steelsight_anims_enabled = enabled
 
 	self:_check_play_empty_state()
 end
 
--- Lines 1365-1370
+-- Lines 1364-1369
 function FPCameraPlayerBase:play_state(state_name)
 	self:set_anims_enabled(true)
 
@@ -1156,23 +1156,23 @@ function FPCameraPlayerBase:play_state(state_name)
 	return result ~= self.IDS_NOSTRING and result
 end
 
--- Lines 1374-1376
+-- Lines 1373-1375
 function FPCameraPlayerBase:set_target_tilt(tilt)
 	self._camera_properties.target_tilt = tilt
 end
 
--- Lines 1378-1381
+-- Lines 1377-1380
 function FPCameraPlayerBase:set_lean_values(lean_position, lean_rotation)
 	self._camera_properties.lean_position = lean_position
 	self._camera_properties.lean_rotation = lean_rotation
 end
 
--- Lines 1383-1385
+-- Lines 1382-1384
 function FPCameraPlayerBase:set_camera_offset(camera_offset)
 	self._camera_properties.camera_offset = camera_offset
 end
 
--- Lines 1389-1416
+-- Lines 1388-1415
 function FPCameraPlayerBase:set_stance_instant(stance_name)
 	local new_stance = tweak_data.player.stances.default[stance_name].shoulders
 
@@ -1204,12 +1204,12 @@ function FPCameraPlayerBase:set_stance_instant(stance_name)
 	self:set_stance_fov_instant(stance_name)
 end
 
--- Lines 1418-1420
+-- Lines 1417-1419
 function FPCameraPlayerBase:is_stance_done()
 	return not self._shoulder_stance.transition and not self._head_stance.transition and not self._vel_overshot.transition
 end
 
--- Lines 1422-1433
+-- Lines 1421-1432
 function FPCameraPlayerBase:set_fov_instant(new_fov)
 	if new_fov then
 		self._fov.transition = nil
@@ -1222,7 +1222,7 @@ function FPCameraPlayerBase:set_fov_instant(new_fov)
 	end
 end
 
--- Lines 1435-1446
+-- Lines 1434-1445
 function FPCameraPlayerBase:set_stance_fov_instant(stance_name)
 	local new_fov = tweak_data.player.stances.default[stance_name].zoom_fov and managers.user:get_setting("fov_zoom") or managers.user:get_setting("fov_standard")
 
@@ -1237,12 +1237,12 @@ function FPCameraPlayerBase:set_stance_fov_instant(stance_name)
 	end
 end
 
--- Lines 1451-1453
+-- Lines 1450-1452
 function FPCameraPlayerBase:get_steelsight_swap_state()
 	return self._steelsight_swap_state
 end
 
--- Lines 1455-1462
+-- Lines 1454-1461
 function FPCameraPlayerBase:_set_steelsight_swap_state(steelsight_swap_state)
 	self._steelsight_swap_state = steelsight_swap_state
 
@@ -1253,7 +1253,7 @@ function FPCameraPlayerBase:_set_steelsight_swap_state(steelsight_swap_state)
 	end
 end
 
--- Lines 1465-1603
+-- Lines 1464-1600
 function FPCameraPlayerBase:clbk_stance_entered(new_shoulder_stance, new_head_stance, new_vel_overshot, new_fov, new_shakers, stance_mod, duration_multiplier, duration, head_duration_multiplier, head_duration)
 	local t = managers.player:player_timer():time()
 	local transition_duration = duration * duration_multiplier
@@ -1381,7 +1381,7 @@ function FPCameraPlayerBase:clbk_stance_entered(new_shoulder_stance, new_head_st
 	end
 end
 
--- Lines 1607-1634
+-- Lines 1604-1631
 function FPCameraPlayerBase:_start_aim_assist(col_ray, aim_data)
 	if col_ray then
 		local ray = col_ray.ray
@@ -1413,7 +1413,7 @@ function FPCameraPlayerBase:_start_aim_assist(col_ray, aim_data)
 	end
 end
 
--- Lines 1638-1643
+-- Lines 1635-1640
 function FPCameraPlayerBase:_stop_aim_assist(aim_data)
 	mvector3.set_static(aim_data.direction, 0, 0, 0)
 
@@ -1422,7 +1422,7 @@ function FPCameraPlayerBase:_stop_aim_assist(aim_data)
 	aim_data.distance_to_aim_line = 0
 end
 
--- Lines 1647-1658
+-- Lines 1644-1655
 function FPCameraPlayerBase:_update_aim_assist_sticky(t, dt)
 	if managers.controller:get_default_wrapper_type() ~= "pc" and managers.user:get_setting("sticky_aim") then
 		local weapon = self._parent_unit:inventory():equipped_unit()
@@ -1438,17 +1438,17 @@ function FPCameraPlayerBase:_update_aim_assist_sticky(t, dt)
 	end
 end
 
--- Lines 1662-1664
+-- Lines 1659-1661
 function FPCameraPlayerBase:clbk_aim_assist(col_ray)
 	self:_start_aim_assist(col_ray, self._aim_assist)
 end
 
--- Lines 1668-1670
+-- Lines 1665-1667
 function FPCameraPlayerBase:clbk_stop_aim_assist()
 	self:_stop_aim_assist(self._aim_assist)
 end
 
--- Lines 1674-1686
+-- Lines 1671-1683
 function FPCameraPlayerBase:animate_fov(new_fov, duration_multiplier)
 	if new_fov == self._fov.fov then
 		self._fov.transition = nil
@@ -1463,14 +1463,14 @@ function FPCameraPlayerBase:animate_fov(new_fov, duration_multiplier)
 	end
 end
 
--- Lines 1690-1694
+-- Lines 1687-1691
 function FPCameraPlayerBase:anim_clbk_idle_full_blend()
 	self._anim_empty_state_wanted = true
 
 	self:_check_play_empty_state()
 end
 
--- Lines 1696-1704
+-- Lines 1693-1701
 function FPCameraPlayerBase:_check_play_empty_state()
 	if not self._anim_empty_state_wanted then
 		return
@@ -1483,39 +1483,39 @@ function FPCameraPlayerBase:_check_play_empty_state()
 	self:play_redirect(self.IDS_EMPTY)
 end
 
--- Lines 1708-1709
+-- Lines 1705-1706
 function FPCameraPlayerBase:anim_clbk_idle_exit()
 	return
 end
 
--- Lines 1711-1714
+-- Lines 1708-1711
 function FPCameraPlayerBase:anim_clbk_empty_enter()
 	self._playing_empty_state = true
 end
 
--- Lines 1716-1719
+-- Lines 1713-1716
 function FPCameraPlayerBase:anim_clbk_empty_exit()
 	self._playing_empty_state = false
 end
 
--- Lines 1721-1723
+-- Lines 1718-1720
 function FPCameraPlayerBase:playing_empty_state()
 	return self._playing_empty_state
 end
 
--- Lines 1727-1730
+-- Lines 1724-1727
 function FPCameraPlayerBase:anim_clbk_empty_full_blend()
 	self._playing_empty_state = false
 
 	self:set_anims_enabled(false)
 end
 
--- Lines 1734-1736
+-- Lines 1731-1733
 function FPCameraPlayerBase:set_handcuff_units(units)
 	self._handcuff_units = units
 end
 
--- Lines 1740-1754
+-- Lines 1737-1751
 function FPCameraPlayerBase:anim_clbk_spawn_handcuffs()
 	if not self._handcuff_units then
 		local align_obj_l_name = Idstring("a_weapon_left")
@@ -1538,7 +1538,7 @@ function FPCameraPlayerBase:anim_clbk_spawn_handcuffs()
 	end
 end
 
--- Lines 1758-1768
+-- Lines 1755-1765
 function FPCameraPlayerBase:anim_clbk_unspawn_handcuffs()
 	if self._handcuff_units then
 		for _, handcuff_unit in pairs(self._handcuff_units) do
@@ -1552,7 +1552,7 @@ function FPCameraPlayerBase:anim_clbk_unspawn_handcuffs()
 	self:set_handcuff_units(nil)
 end
 
--- Lines 1772-1777
+-- Lines 1769-1774
 function FPCameraPlayerBase:get_weapon_offsets()
 	local weapon = self._parent_unit:inventory():equipped_unit()
 	local object = weapon:get_object(Idstring("a_sight"))
@@ -1561,7 +1561,7 @@ function FPCameraPlayerBase:get_weapon_offsets()
 	print(self._unit:rotation():inverse() * object:rotation())
 end
 
--- Lines 1781-1786
+-- Lines 1778-1783
 function FPCameraPlayerBase:set_anims_enabled(state)
 	if state ~= self._anims_enabled then
 		self._unit:set_animations_enabled(state)
@@ -1570,19 +1570,19 @@ function FPCameraPlayerBase:set_anims_enabled(state)
 	end
 end
 
--- Lines 1788-1790
+-- Lines 1785-1787
 function FPCameraPlayerBase:anims_enabled()
 	return self._anims_enabled
 end
 
--- Lines 1794-1798
+-- Lines 1791-1795
 function FPCameraPlayerBase:play_sound(unit, event)
 	if alive(self._parent_unit) then
 		self._parent_unit:sound():play(event)
 	end
 end
 
--- Lines 1800-1809
+-- Lines 1797-1806
 function FPCameraPlayerBase:play_melee_sound(unit, sound_id)
 	local melee_entry = managers.blackmarket:equipped_melee_weapon()
 	local tweak_data = tweak_data.blackmarket.melee_weapons[melee_entry]
@@ -1598,14 +1598,14 @@ end
 
 FPCameraPlayerBase.anim_sound_condition_functions = {}
 
--- Lines 1813-1816
+-- Lines 1810-1813
 function FPCameraPlayerBase.anim_sound_condition_functions:has_part(part_id)
 	local weapon = self._parent_unit:inventory():equipped_unit()
 
 	return alive(weapon) and weapon:base() and weapon:base().has_part and weapon:base():has_part(part_id)
 end
 
--- Lines 1818-1825
+-- Lines 1815-1822
 function FPCameraPlayerBase:play_sound_with_condition(unit, event, condition, condition_param)
 	if alive(self._parent_unit) then
 		local cond_func = self.anim_sound_condition_functions[condition]
@@ -1616,7 +1616,7 @@ function FPCameraPlayerBase:play_sound_with_condition(unit, event, condition, co
 	end
 end
 
--- Lines 1830-1839
+-- Lines 1827-1836
 function FPCameraPlayerBase:set_limits(spin, pitch)
 	self._limits = {}
 
@@ -1635,12 +1635,12 @@ function FPCameraPlayerBase:set_limits(spin, pitch)
 	end
 end
 
--- Lines 1843-1845
+-- Lines 1840-1842
 function FPCameraPlayerBase:remove_limits()
 	self._limits = nil
 end
 
--- Lines 1851-1859
+-- Lines 1848-1856
 function FPCameraPlayerBase:throw_projectile(unit)
 	self:unspawn_grenade()
 
@@ -1649,7 +1649,7 @@ function FPCameraPlayerBase:throw_projectile(unit)
 	end
 end
 
--- Lines 1861-1869
+-- Lines 1858-1866
 function FPCameraPlayerBase:throw_grenade(unit)
 	self:unspawn_grenade()
 
@@ -1658,7 +1658,7 @@ function FPCameraPlayerBase:throw_grenade(unit)
 	end
 end
 
--- Lines 1872-1880
+-- Lines 1869-1877
 function FPCameraPlayerBase:anim_clbk_grenade_sequence(unit, sequence)
 	if alive(self._grenade_unit) then
 		local grenade_damage_ext = self._grenade_unit:damage()
@@ -1669,7 +1669,7 @@ function FPCameraPlayerBase:anim_clbk_grenade_sequence(unit, sequence)
 	end
 end
 
--- Lines 1884-1898
+-- Lines 1881-1895
 function FPCameraPlayerBase:spawn_grenade()
 	if alive(self._grenade_unit) then
 		return
@@ -1686,7 +1686,7 @@ function FPCameraPlayerBase:spawn_grenade()
 	self._unit:link(align_obj_r:name(), self._grenade_unit, self._grenade_unit:orientation_object():name())
 end
 
--- Lines 1900-1906
+-- Lines 1897-1903
 function FPCameraPlayerBase:unspawn_grenade()
 	if alive(self._grenade_unit) then
 		self._grenade_unit:unlink()
@@ -1696,7 +1696,7 @@ function FPCameraPlayerBase:unspawn_grenade()
 	end
 end
 
--- Lines 1908-1963
+-- Lines 1905-1960
 function FPCameraPlayerBase:play_anim_melee_item(tweak_name)
 	if not self._melee_item_units then
 		return
@@ -1749,7 +1749,7 @@ function FPCameraPlayerBase:play_anim_melee_item(tweak_name)
 	end
 end
 
--- Lines 1965-2001
+-- Lines 1962-1998
 function FPCameraPlayerBase:spawn_melee_item()
 	if self._melee_item_units then
 		return
@@ -1792,7 +1792,7 @@ function FPCameraPlayerBase:spawn_melee_item()
 	end
 end
 
--- Lines 2003-2017
+-- Lines 2000-2014
 function FPCameraPlayerBase:unspawn_melee_item()
 	if not self._melee_item_units then
 		return
@@ -1809,30 +1809,32 @@ function FPCameraPlayerBase:unspawn_melee_item()
 	self._melee_item_anim = nil
 end
 
--- Lines 2020-2024
+-- Lines 2017-2021
 function FPCameraPlayerBase:hide_weapon()
 	if alive(self._parent_unit) then
 		self._parent_unit:inventory():hide_equipped_unit()
 	end
 end
 
--- Lines 2027-2031
+-- Lines 2024-2028
 function FPCameraPlayerBase:show_weapon()
 	if alive(self._parent_unit) then
 		self._parent_unit:inventory():show_equipped_unit()
 	end
 end
 
--- Lines 2034-2039
+-- Lines 2031-2038
 function FPCameraPlayerBase:enter_shotgun_reload_loop(unit, state, ...)
 	if alive(self._parent_unit) then
-		local speed_multiplier = self._parent_unit:inventory():equipped_unit():base():reload_speed_multiplier()
+		local equipped_unit = self._parent_unit:inventory():equipped_unit()
+		local weapon_base = alive(equipped_unit) and equipped_unit:base()
+		local speed_multiplier = weapon_base and weapon_base:reload_speed_multiplier() or 1
 
 		self._unit:anim_state_machine():set_speed(Idstring(state), speed_multiplier)
 	end
 end
 
--- Lines 2041-2087
+-- Lines 2040-2086
 function FPCameraPlayerBase:spawn_mask()
 	if not self._mask_unit then
 		local align_obj_l_name = Idstring("a_weapon_left")
@@ -1866,7 +1868,7 @@ function FPCameraPlayerBase:spawn_mask()
 		if not tweak_data.blackmarket.masks[mask_id].type then
 			local backside = World:spawn_unit(Idstring("units/payday2/masks/msk_fps_back_straps/msk_fps_back_straps"), align_obj_r:position(), align_obj_r:rotation())
 
-			for _, material in ipairs(backside:get_objects_by_type(Idstring("material"))) do
+			for _, material in ipairs(backside:get_objects_by_type(IDS_MATERIAL)) do
 				material:set_render_template(Idstring("generic:DEPTH_SCALING:DIFFUSE_TEXTURE:NORMALMAP:SKINNED_3WEIGHTS"))
 			end
 
@@ -1880,12 +1882,12 @@ function FPCameraPlayerBase:spawn_mask()
 	end
 end
 
--- Lines 2089-2090
+-- Lines 2088-2089
 function FPCameraPlayerBase:relink_mask()
 	return
 end
 
--- Lines 2092-2104
+-- Lines 2091-2103
 function FPCameraPlayerBase:unspawn_mask()
 	if alive(self._mask_unit) then
 		for _, linked_unit in ipairs(self._mask_unit:children()) do
@@ -1903,7 +1905,7 @@ function FPCameraPlayerBase:unspawn_mask()
 	end
 end
 
--- Lines 2106-2117
+-- Lines 2105-2116
 function FPCameraPlayerBase:counter_taser()
 	local current_state = self._parent_movement_ext._current_state
 
@@ -1922,13 +1924,13 @@ function FPCameraPlayerBase:counter_taser()
 	end
 end
 
--- Lines 2119-2134
+-- Lines 2118-2133
 function FPCameraPlayerBase:spawn_taser_hooks()
 	if not alive(self._taser_hooks_unit) and alive(self._parent_unit) then
 		local hooks_align = self._unit:get_object(Idstring("a_weapon_right"))
 		local taser_hooks_unit_name = "units/payday2/weapons/wpn_fps_taser_hooks/wpn_fps_taser_hooks"
 
-		managers.dyn_resource:load(Idstring("unit"), Idstring(taser_hooks_unit_name), DynamicResourceManager.DYN_RESOURCES_PACKAGE, false)
+		managers.dyn_resource:load(IDS_UNIT, Idstring(taser_hooks_unit_name), DynamicResourceManager.DYN_RESOURCES_PACKAGE, false)
 
 		self._taser_hooks_unit = World:spawn_unit(Idstring(taser_hooks_unit_name), hooks_align:position(), hooks_align:rotation())
 
@@ -1939,7 +1941,7 @@ function FPCameraPlayerBase:spawn_taser_hooks()
 	end
 end
 
--- Lines 2136-2144
+-- Lines 2135-2143
 function FPCameraPlayerBase:unspawn_taser_hooks()
 	if alive(self._taser_hooks_unit) then
 		self._taser_hooks_unit:unlink()
@@ -1947,13 +1949,13 @@ function FPCameraPlayerBase:unspawn_taser_hooks()
 		local name = self._taser_hooks_unit:name()
 
 		World:delete_unit(self._taser_hooks_unit)
-		managers.dyn_resource:unload(Idstring("unit"), name, DynamicResourceManager.DYN_RESOURCES_PACKAGE, false)
+		managers.dyn_resource:unload(IDS_UNIT, name, DynamicResourceManager.DYN_RESOURCES_PACKAGE, false)
 
 		self._taser_hooks_unit = nil
 	end
 end
 
--- Lines 2147-2152
+-- Lines 2146-2151
 function FPCameraPlayerBase:end_tase()
 	local current_state = self._parent_movement_ext._current_state
 
@@ -1962,7 +1964,7 @@ function FPCameraPlayerBase:end_tase()
 	end
 end
 
--- Lines 2155-2162
+-- Lines 2154-2161
 function FPCameraPlayerBase:anim_clbk_check_bullet_object()
 	if alive(self._parent_unit) then
 		local weapon = self._parent_unit:inventory():equipped_unit()
@@ -1973,7 +1975,7 @@ function FPCameraPlayerBase:anim_clbk_check_bullet_object()
 	end
 end
 
--- Lines 2164-2172
+-- Lines 2181-2189
 function FPCameraPlayerBase:anim_clbk_stop_weapon_reload()
 	if alive(self._parent_unit) then
 		local weapon = self._parent_unit:inventory():equipped_unit()
@@ -1985,7 +1987,7 @@ function FPCameraPlayerBase:anim_clbk_stop_weapon_reload()
 	end
 end
 
--- Lines 2174-2181
+-- Lines 2191-2198
 function FPCameraPlayerBase:anim_clbk_play_weapon_anim(unit, anim, speed)
 	if alive(self._parent_unit) then
 		local weapon = self._parent_unit:inventory():equipped_unit()
@@ -1996,7 +1998,7 @@ function FPCameraPlayerBase:anim_clbk_play_weapon_anim(unit, anim, speed)
 	end
 end
 
--- Lines 2183-2190
+-- Lines 2200-2207
 function FPCameraPlayerBase:anim_clbk_stop_weapon_anim(unit, anim)
 	if alive(self._parent_unit) then
 		local weapon = self._parent_unit:inventory():equipped_unit()
@@ -2007,7 +2009,7 @@ function FPCameraPlayerBase:anim_clbk_stop_weapon_anim(unit, anim)
 	end
 end
 
--- Lines 2192-2202
+-- Lines 2209-2219
 function FPCameraPlayerBase:anim_clbk_stop_weapon_reload_all()
 	if alive(self._parent_unit) then
 		local weapon = self._parent_unit:inventory():equipped_unit()
@@ -2019,7 +2021,7 @@ function FPCameraPlayerBase:anim_clbk_stop_weapon_reload_all()
 	end
 end
 
--- Lines 2204-2231
+-- Lines 2221-2248
 function FPCameraPlayerBase:anim_clbk_spawn_shotgun_shell()
 	if alive(self._parent_unit) then
 		local weapon = self._parent_unit:inventory():equipped_unit()
@@ -2050,12 +2052,12 @@ function FPCameraPlayerBase:anim_clbk_spawn_shotgun_shell()
 	end
 end
 
--- Lines 2233-2235
+-- Lines 2250-2252
 function FPCameraPlayerBase:anim_clbk_unspawn_shotgun_shell()
 	self:_unspawn_shotgun_shell()
 end
 
--- Lines 2237-2244
+-- Lines 2254-2261
 function FPCameraPlayerBase:_unspawn_shotgun_shell()
 	if not alive(self._shell) then
 		return
@@ -2067,7 +2069,7 @@ function FPCameraPlayerBase:_unspawn_shotgun_shell()
 	self._shell = nil
 end
 
--- Lines 2246-2253
+-- Lines 2263-2270
 function FPCameraPlayerBase:anim_clbk_stop_weapon_magazine_empty()
 	if alive(self._parent_unit) then
 		local weapon = self._parent_unit:inventory():equipped_unit()
@@ -2078,15 +2080,17 @@ function FPCameraPlayerBase:anim_clbk_stop_weapon_magazine_empty()
 	end
 end
 
--- Lines 2257-2261
+-- Lines 2274-2278
 function FPCameraPlayerBase:load_fps_mask_units()
 	if not self._mask_backface_loaded then
 		self._mask_backface_loaded = true
 	end
 end
 
--- Lines 2265-2285
-function FPCameraPlayerBase:destroy()
+-- Lines 2282-2303
+function FPCameraPlayerBase:destroy(unit)
+	FPCameraPlayerBase.super.destroy(self, unit)
+
 	if self._parent_unit then
 		self._parent_unit:base():remove_destroy_listener("FPCameraPlayerBase")
 	end
@@ -2112,22 +2116,22 @@ function FPCameraPlayerBase:destroy()
 	end
 end
 
--- Lines 2289-2291
+-- Lines 2307-2309
 function FPCameraPlayerBase:set_spin(_spin)
 	self._camera_properties.spin = _spin
 end
 
--- Lines 2295-2297
+-- Lines 2313-2315
 function FPCameraPlayerBase:set_pitch(_pitch)
 	self._camera_properties.pitch = _pitch
 end
 
--- Lines 2301-2303
+-- Lines 2319-2321
 function FPCameraPlayerBase:current_tilt()
 	return self._camera_properties.current_tilt
 end
 
--- Lines 2307-2313
+-- Lines 2325-2331
 function FPCameraPlayerBase:animate_pitch(start_t, start_pitch, end_pitch, total_duration)
 	self._animate_pitch = {}
 	self._animate_pitch.start_t = start_t
@@ -2136,7 +2140,7 @@ function FPCameraPlayerBase:animate_pitch(start_t, start_pitch, end_pitch, total
 	self._animate_pitch.duration = total_duration
 end
 
--- Lines 2317-2331
+-- Lines 2335-2349
 function FPCameraPlayerBase:animate_pitch_upd()
 	local t = Application:time()
 	local elapsed_t = t - self._animate_pitch.start_t
@@ -2150,7 +2154,7 @@ function FPCameraPlayerBase:animate_pitch_upd()
 	end
 end
 
--- Lines 2335-2356
+-- Lines 2353-2374
 function FPCameraPlayerBase:update_tilt_smooth(direction, max_tilt, tilt_speed, dt)
 	self._tilt_dt = self._tilt_dt or 0
 
@@ -2179,12 +2183,12 @@ function FPCameraPlayerBase:update_tilt_smooth(direction, max_tilt, tilt_speed, 
 	end
 end
 
--- Lines 2360-2367
+-- Lines 2378-2385
 function FPCameraPlayerBase:catmullrom(t, p0, p1, p2, p3)
 	return 0.5 * (2 * p1 + (-p0 + p2) * t + (2 * p0 - 5 * p1 + 4 * p2 - p3) * t * t + (-p0 + 3 * p1 - 3 * p2 + p3) * t * t * t)
 end
 
--- Lines 2371-2380
+-- Lines 2389-2398
 function FPCameraPlayerBase:smoothstep(a, b, step, n)
 	local v = step / n
 
@@ -2195,7 +2199,7 @@ function FPCameraPlayerBase:smoothstep(a, b, step, n)
 	return x
 end
 
--- Lines 2382-2388
+-- Lines 2400-2406
 function FPCameraPlayerBase:set_visible(visible)
 	self._unit:set_visible(visible)
 
@@ -2204,7 +2208,7 @@ function FPCameraPlayerBase:set_visible(visible)
 	end
 end
 
--- Lines 2394-2401
+-- Lines 2412-2419
 function FPCameraPlayerBase:_update_fadeout(mover_position, head_position, rotation, t, dt)
 	local ignore_head_collision = FPCameraPlayerBase.NO_FADEOUT or self._parent_movement_ext:warping() or self._parent_movement_ext:current_state_name() == "driving" or self._parent_movement_ext:on_zipline()
 	local ignore_ghost_distance = FPCameraPlayerBase.NO_FADEOUT or self._parent_movement_ext:warping() or self._parent_movement_ext:on_zipline()
@@ -2214,37 +2218,37 @@ function FPCameraPlayerBase:_update_fadeout(mover_position, head_position, rotat
 	end
 end
 
--- Lines 2405-2407
+-- Lines 2423-2425
 function FPCameraPlayerBase:set_hmd_tracking(enabled)
 	self._hmd_tracking = enabled
 end
 
--- Lines 2409-2411
+-- Lines 2427-2429
 function FPCameraPlayerBase:set_block_input(block)
 	self._block_input = block
 end
 
--- Lines 2413-2415
+-- Lines 2431-2433
 function FPCameraPlayerBase:reset_base_rotation(rot)
 	self._base_rotation = Rotation(self._output_data.rotation:yaw(), 0, 0) * rot
 end
 
--- Lines 2417-2419
+-- Lines 2435-2437
 function FPCameraPlayerBase:rotate_base(rot)
 	self._base_rotation = self._base_rotation * rot
 end
 
--- Lines 2421-2423
+-- Lines 2439-2441
 function FPCameraPlayerBase:set_base_rotation(rot)
 	self._base_rotation = Rotation(self._base_rotation:yaw() - self._output_data.rotation:yaw(), 0, 0) * rot
 end
 
--- Lines 2425-2427
+-- Lines 2443-2445
 function FPCameraPlayerBase:base_rotation()
 	return self._base_rotation
 end
 
--- Lines 2429-2431
+-- Lines 2447-2449
 function FPCameraPlayerBase:enter_vehicle()
 	self._initial_hmd_rotation = VRManager:hmd_rotation()
 end

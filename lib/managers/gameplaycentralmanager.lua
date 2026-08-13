@@ -2,7 +2,8 @@ local tmp_vec1 = Vector3()
 local tmp_vec2 = Vector3()
 local tmp_vec3 = Vector3()
 local tmp_vec4 = Vector3()
-local empty_idstr = Idstring("")
+local tmp_vec5 = Vector3()
+local empty_idstr = IDS_EMPTY
 local idstr_concrete = Idstring("concrete")
 local idstr_blood_spatter = Idstring("blood_spatter")
 local idstr_blood_screen = Idstring("effects/particles/character/player/blood_screen")
@@ -19,11 +20,12 @@ local mvec3_spread = mvector3.spread
 local mvec3_dist_sq = mvector3.distance_sq
 local mvec3_dist = mvector3.distance
 local mvec3_dot = mvector3.dot
+local mvec3_copy = mvector3.copy
 
 GamePlayCentralManager = GamePlayCentralManager or class()
 GamePlayCentralManager.MAX_BULLET_HITS_PERFRAME = 5
 
--- Lines 31-83
+-- Lines 33-83
 function GamePlayCentralManager:init()
 	self._bullet_hits = {}
 	self._play_effects = {}
@@ -62,12 +64,8 @@ function GamePlayCentralManager:init()
 		start_time = 0
 	}
 	self._access_cameras = {}
-
-	local is_ps3 = SystemInfo:platform() == Idstring("PS3")
-	local is_x360 = SystemInfo:platform() == Idstring("X360")
-
-	self._block_bullet_decals = is_ps3 or is_x360
-	self._block_blood_decals = is_x360
+	self._block_bullet_decals = false
+	self._block_blood_decals = false
 	self._decal_unit_redirect = {}
 	self._impact_override = {}
 end
@@ -362,58 +360,64 @@ function GamePlayCentralManager:request_play_footstep(unit, m_pos)
 	end
 end
 
--- Lines 387-423
+-- Lines 387-433
 function GamePlayCentralManager:physics_push(col_ray, push_multiplier)
 	local unit = col_ray.unit
 
+	if not unit:in_slot(self._slotmask_physics_push) then
+		return
+	end
+
+	local body = col_ray.body
+
+	if not body:enabled() or not body:dynamic() then
+		local original_body_com = body:center_of_mass()
+		local closest_body_dis_sq
+		local nr_bodies = unit:num_bodies()
+		local i_body = 0
+
+		while i_body < nr_bodies do
+			local test_body = unit:body(i_body)
+
+			if test_body:enabled() and test_body:dynamic() then
+				local test_dis_sq = mvec3_dist_sq(test_body:center_of_mass(), original_body_com)
+
+				if not closest_body_dis_sq or test_dis_sq < closest_body_dis_sq then
+					closest_body_dis_sq = test_dis_sq
+					body = test_body
+				end
+			end
+
+			i_body = i_body + 1
+		end
+
+		if not closest_body_dis_sq then
+			return
+		end
+	end
+
 	push_multiplier = push_multiplier or 1
 
-	if unit:in_slot(self._slotmask_physics_push) then
-		local body = col_ray.body
+	local body_mass = math.min(50, body:mass()) * push_multiplier
+	local len = mvec3_dist(col_ray.position, body:center_of_mass())
+	local body_vel = body:velocity()
 
-		if not body:dynamic() then
-			local original_body_com = body:center_of_mass()
-			local closest_body_dis_sq
-			local nr_bodies = unit:num_bodies()
-			local i_body = 0
+	mvec3_set(tmp_vec1, col_ray.ray)
 
-			while i_body < nr_bodies do
-				local test_body = unit:body(i_body)
+	local vel_dot = mvec3_dot(body_vel, tmp_vec1)
+	local max_vel = 600
 
-				if test_body:enabled() and test_body:dynamic() then
-					local test_dis_sq = mvec3_dist_sq(test_body:center_of_mass(), original_body_com)
+	if vel_dot < max_vel then
+		local push_vel = max_vel - math.max(vel_dot, 0)
 
-					if not closest_body_dis_sq or test_dis_sq < closest_body_dis_sq then
-						closest_body_dis_sq = test_dis_sq
-						body = test_body
-					end
-				end
+		push_vel = math.lerp(push_vel * 0.7, push_vel, math.random()) * push_multiplier
 
-				i_body = i_body + 1
-			end
-		end
-
-		local body_mass = math.min(50, body:mass()) * push_multiplier
-		local len = mvec3_dist(col_ray.position, body:center_of_mass())
-		local body_vel = body:velocity()
-
-		mvec3_set(tmp_vec1, col_ray.ray)
-
-		local vel_dot = mvec3_dot(body_vel, tmp_vec1)
-		local max_vel = 600
-
-		if vel_dot < max_vel then
-			local push_vel = max_vel - math.max(vel_dot, 0)
-
-			push_vel = math.lerp(push_vel * 0.7, push_vel, math.random()) * push_multiplier
-
-			mvec3_mul(tmp_vec1, push_vel)
-			body:push_at(body_mass, tmp_vec1, col_ray.position)
-		end
+		mvec3_mul(tmp_vec1, push_vel)
+		body:push_at(body_mass, tmp_vec1, col_ray.position)
 	end
 end
 
--- Lines 425-453
+-- Lines 435-463
 function GamePlayCentralManager:play_impact_flesh(params)
 	local col_ray = params.col_ray
 
@@ -444,7 +448,7 @@ function GamePlayCentralManager:play_impact_flesh(params)
 	end
 end
 
--- Lines 456-479
+-- Lines 466-489
 function GamePlayCentralManager:sync_play_impact_flesh(from, dir)
 	local splatter_from = from
 	local splatter_to = from + dir * 1000
@@ -476,7 +480,7 @@ function GamePlayCentralManager:sync_play_impact_flesh(from, dir)
 	sound_source:post_event("bullet_hit")
 end
 
--- Lines 482-489
+-- Lines 492-499
 function GamePlayCentralManager:material_name(idstring)
 	local material = tweak_data.materials[idstring:key()]
 
@@ -489,7 +493,7 @@ function GamePlayCentralManager:material_name(idstring)
 	return material
 end
 
--- Lines 491-502
+-- Lines 501-512
 function GamePlayCentralManager:spawn_pickup(params)
 	if not tweak_data.pickups[params.name] then
 		Application:error("No pickup definition for " .. tostring(params.name))
@@ -502,7 +506,7 @@ function GamePlayCentralManager:spawn_pickup(params)
 	safe_spawn_unit(unit_name, params.position, params.rotation)
 end
 
--- Lines 520-538
+-- Lines 530-548
 function GamePlayCentralManager:_flush_bullet_hits()
 	while not table.empty(self._bullet_hits) do
 		self:_play_bullet_hit(table.remove(self._bullet_hits, 1))
@@ -517,23 +521,21 @@ function GamePlayCentralManager:_flush_bullet_hits()
 	end
 end
 
--- Lines 541-545
+-- Lines 551-555
 function GamePlayCentralManager:_flush_play_effects()
 	while #self._play_effects > 0 do
 		self._effect_manager:spawn(table.remove(self._play_effects, 1))
 	end
 end
 
--- Lines 547-551
+-- Lines 557-561
 function GamePlayCentralManager:_flush_play_sounds()
 	while #self._play_sounds > 0 do
 		self:_play_sound(table.remove(self._play_sounds, 1))
 	end
 end
 
-local zero_vector = Vector3()
-
--- Lines 554-646
+-- Lines 563-681
 function GamePlayCentralManager:_play_bullet_hit(params)
 	local unit = params.col_ray.unit
 
@@ -558,9 +560,10 @@ function GamePlayCentralManager:_play_bullet_hit(params)
 
 	local col_ray = params.col_ray
 	local event = params.event or "bullet_hit"
-	local decal = overrides and overrides.decal and Idstring(overrides.decal) or params.decal and Idstring(params.decal) or idstr_bullet_hit
 	local slot_mask = params.slot_mask or self._slotmask_bullet_impact_targets
-	local sound_switch_name = overrides and overrides.sound_switch_name or nil
+	local decal = overrides and overrides.decal and Idstring(overrides.decal) or params.decal and Idstring(params.decal) or idstr_bullet_hit
+	local sound_switch_name = overrides and overrides.sound_switch_name or params.sound_switch_name or nil
+	local effect = overrides and overrides.effect_name and Idstring(overrides.effect_name) or params.effect or nil
 	local decal_ray_from = tmp_vec1
 	local decal_ray_to = tmp_vec2
 
@@ -570,63 +573,80 @@ function GamePlayCentralManager:_play_bullet_hit(params)
 	mvec3_add(decal_ray_to, decal_ray_from)
 	mvec3_neg(decal_ray_from)
 	mvec3_add(decal_ray_from, hit_pos)
-	mvec3_set(tmp_vec4, col_ray.ray)
-	mvec3_neg(tmp_vec4)
 
-	local effect_normal = tmp_vec3
+	local effect_normal
 
-	mvec3_set(effect_normal, col_ray.normal)
-	mvec3_lerp(effect_normal, col_ray.normal, tmp_vec4, math.random())
-	mvec3_spread(effect_normal, 10)
+	if need_effect then
+		effect_normal = tmp_vec3
 
-	local material_name, pos, norm = World:pick_decal_material(unit, decal_ray_from, decal_ray_to, slot_mask)
-
-	material_name = material_name ~= empty_idstr and material_name
-
-	local effect = overrides and overrides.effect_name and Idstring(overrides.effect_name) or params.effect
-
-	if material_name then
-		local offset = col_ray.sphere_cast_radius and col_ray.ray * col_ray.sphere_cast_radius or zero_vector
-		local redir_name
-
-		if need_decal then
-			redir_name, pos, norm = World:project_decal(decal, hit_pos + offset, col_ray.ray, unit, math.UP, col_ray.normal)
-		elseif need_effect then
-			redir_name, pos, norm = World:pick_decal_effect(decal, unit, decal_ray_from, decal_ray_to, slot_mask)
-		end
-
-		if redir_name == empty_idstr then
-			redir_name = idstr_fallback
-		end
-
-		if need_effect then
-			effect = {
-				effect = effect or redir_name,
-				position = hit_pos + offset,
-				normal = effect_normal
-			}
-		end
-
-		sound_switch_name = need_sound and (sound_switch_name or params.sound_switch_name or material_name)
-	else
-		if need_effect then
-			local generic_effect = effect or idstr_fallback
-
-			effect = {
-				effect = generic_effect,
-				position = hit_pos,
-				normal = effect_normal
-			}
-		end
-
-		sound_switch_name = need_sound and (sound_switch_name or params.sound_switch_name or idstr_no_material)
+		mvec3_set(effect_normal, col_ray.ray)
+		mvec3_neg(effect_normal)
+		mvec3_lerp(effect_normal, col_ray.normal, effect_normal, math.random())
+		mvec3_spread(effect_normal, 10)
 	end
 
-	if effect and effect.effect then
-		table.insert(self._play_effects, effect)
+	local material_name
+
+	if need_decal or need_effect and not effect or need_sound and not sound_switch_name then
+		material_name = World:pick_decal_material(unit, decal_ray_from, decal_ray_to, slot_mask)
+		material_name = material_name ~= empty_idstr and material_name or nil
+	end
+
+	local effect_entry
+
+	if material_name then
+		local offset_hitpos
+
+		if (need_effect or need_decal) and col_ray.sphere_cast_radius then
+			local offset = tmp_vec4
+
+			mvec3_set(offset, col_ray.ray)
+			mvec3_mul(offset, col_ray.sphere_cast_radius)
+
+			offset_hitpos = tmp_vec5
+
+			mvec3_set(offset_hitpos, hit_pos)
+			mvec3_add(offset_hitpos, offset)
+		end
+
+		if need_decal or need_effect and not effect then
+			local redir_name
+
+			if need_decal then
+				redir_name = World:project_decal(decal, offset_hitpos or hit_pos, col_ray.ray, unit, math.UP, col_ray.normal)
+			elseif need_effect then
+				redir_name = World:pick_decal_effect(decal, unit, decal_ray_from, decal_ray_to, slot_mask)
+			end
+
+			effect = effect or redir_name ~= empty_idstr and redir_name or nil
+		end
+
+		if need_effect then
+			local effect_pos = offset_hitpos and mvec3_copy(offset_hitpos) or hit_pos
+
+			effect_entry = {
+				effect = effect,
+				position = effect_pos,
+				normal = mvec3_copy(effect_normal)
+			}
+		end
+	elseif need_effect then
+		effect_entry = {
+			effect = effect,
+			position = hit_pos,
+			normal = mvec3_copy(effect_normal)
+		}
+	end
+
+	if effect_entry then
+		effect_entry.effect = effect_entry.effect or idstr_fallback
+
+		table.insert(self._play_effects, effect_entry)
 	end
 
 	if need_sound then
+		sound_switch_name = sound_switch_name or material_name or idstr_no_material
+
 		table.insert(self._play_sounds, {
 			sound_switch_name = sound_switch_name,
 			position = hit_pos,
@@ -635,7 +655,7 @@ function GamePlayCentralManager:_play_bullet_hit(params)
 	end
 end
 
--- Lines 648-655
+-- Lines 683-690
 function GamePlayCentralManager:_play_sound(params)
 	local sound_source = self:_get_impact_source()
 
@@ -645,7 +665,7 @@ function GamePlayCentralManager:_play_sound(params)
 	sound_source:post_event(params.event)
 end
 
--- Lines 657-696
+-- Lines 692-731
 function GamePlayCentralManager:_flush_footsteps()
 	local footstep = table.remove(self._footsteps, 1)
 
@@ -692,7 +712,7 @@ function GamePlayCentralManager:_flush_footsteps()
 	end
 end
 
--- Lines 700-712
+-- Lines 735-747
 function GamePlayCentralManager:weapon_dropped(weapon)
 	local flashlight_data = weapon:base():flashlight_data()
 
@@ -716,7 +736,7 @@ function GamePlayCentralManager:weapon_dropped(weapon)
 	})
 end
 
--- Lines 714-726
+-- Lines 749-761
 function GamePlayCentralManager:set_flashlights_on(flashlights_on)
 	if self._flashlights_on == flashlights_on then
 		return
@@ -733,12 +753,12 @@ function GamePlayCentralManager:set_flashlights_on(flashlights_on)
 	end
 end
 
--- Lines 728-730
+-- Lines 763-765
 function GamePlayCentralManager:flashlights_on()
 	return self._flashlights_on
 end
 
--- Lines 732-741
+-- Lines 767-776
 function GamePlayCentralManager:on_simulation_ended()
 	self._bullet_hits = {}
 	self._access_cameras = {}
@@ -748,7 +768,7 @@ function GamePlayCentralManager:on_simulation_ended()
 	self:stop_heist_timer()
 end
 
--- Lines 743-753
+-- Lines 778-788
 function GamePlayCentralManager:set_flashlights_on_player_on(flashlights_on_player_on)
 	if self._flashlights_on_player_on == flashlights_on_player_on then
 		return
@@ -763,12 +783,12 @@ function GamePlayCentralManager:set_flashlights_on_player_on(flashlights_on_play
 	end
 end
 
--- Lines 755-757
+-- Lines 790-792
 function GamePlayCentralManager:flashlights_on_player_on()
 	return self._flashlights_on_player_on
 end
 
--- Lines 760-771
+-- Lines 795-806
 function GamePlayCentralManager:mission_disable_unit(unit)
 	if alive(unit) then
 		self._mission_disabled_units[unit:unit_data().unit_id] = true
@@ -785,7 +805,7 @@ function GamePlayCentralManager:mission_disable_unit(unit)
 	end
 end
 
--- Lines 774-785
+-- Lines 809-820
 function GamePlayCentralManager:mission_enable_unit(unit)
 	if alive(unit) then
 		self._mission_disabled_units[unit:unit_data().unit_id] = nil
@@ -802,12 +822,12 @@ function GamePlayCentralManager:mission_enable_unit(unit)
 	end
 end
 
--- Lines 788-790
+-- Lines 823-825
 function GamePlayCentralManager:get_heist_timer()
 	return self._heist_timer and Application:time() - (self._heist_timer.start_time or 0) + (self._heist_timer.offset_time or 0) or 0
 end
 
--- Lines 793-804
+-- Lines 828-839
 function GamePlayCentralManager:start_heist_timer()
 	if self._heist_timer and self._heist_timer.inverted then
 		return
@@ -819,7 +839,7 @@ function GamePlayCentralManager:start_heist_timer()
 	self._heist_timer.next_sync = Application:time() + 10
 end
 
--- Lines 807-817
+-- Lines 842-852
 function GamePlayCentralManager:start_inverted_heist_timer(time)
 	self._heist_timer.running = true
 	self._heist_timer.start_time = Application:time() + time
@@ -828,19 +848,19 @@ function GamePlayCentralManager:start_inverted_heist_timer(time)
 	self._heist_timer.inverted = true
 end
 
--- Lines 819-822
+-- Lines 854-857
 function GamePlayCentralManager:modify_heist_timer(time)
 	self._heist_timer.start_time = self._heist_timer.start_time + time
 
 	managers.hud:modify_heist_time(time)
 end
 
--- Lines 826-828
+-- Lines 861-863
 function GamePlayCentralManager:stop_heist_timer()
 	self._heist_timer.running = false
 end
 
--- Lines 830-843
+-- Lines 865-878
 function GamePlayCentralManager:sync_heist_time(time, id)
 	if id == 1 then
 		self._heist_timer.offset_time = time
@@ -854,7 +874,7 @@ function GamePlayCentralManager:sync_heist_time(time, id)
 	end
 end
 
--- Lines 847-855
+-- Lines 882-890
 function GamePlayCentralManager:restart_the_game()
 	managers.criminals:save_current_character_names()
 	managers.job:stop_sounds()
@@ -864,7 +884,7 @@ function GamePlayCentralManager:restart_the_game()
 	MenuCallbackHandler:start_the_game()
 end
 
--- Lines 857-870
+-- Lines 892-905
 function GamePlayCentralManager:stop_the_game()
 	managers.job:stop_sounds()
 	managers.statistics:stop_session()
@@ -881,7 +901,7 @@ function GamePlayCentralManager:stop_the_game()
 	end
 end
 
--- Lines 874-882
+-- Lines 909-917
 function GamePlayCentralManager:queue_fire_raycast(expire_t, weapon_unit, ...)
 	self._queue_fire_raycast = self._queue_fire_raycast or {}
 
@@ -894,7 +914,7 @@ function GamePlayCentralManager:queue_fire_raycast(expire_t, weapon_unit, ...)
 	})
 end
 
--- Lines 884-904
+-- Lines 919-939
 function GamePlayCentralManager:_flush_queue_fire_raycast()
 	local i = 1
 
@@ -916,7 +936,7 @@ function GamePlayCentralManager:_flush_queue_fire_raycast()
 	end
 end
 
--- Lines 909-935
+-- Lines 944-970
 function GamePlayCentralManager:auto_highlight_enemy(unit, use_player_upgrades)
 	self._auto_highlighted_enemies = self._auto_highlighted_enemies or {}
 
@@ -946,7 +966,7 @@ function GamePlayCentralManager:auto_highlight_enemy(unit, use_player_upgrades)
 	return true
 end
 
--- Lines 939-949
+-- Lines 974-984
 function GamePlayCentralManager:get_shotgun_push_range(attacker)
 	local range = 500
 
@@ -957,7 +977,7 @@ function GamePlayCentralManager:get_shotgun_push_range(attacker)
 	return range
 end
 
--- Lines 951-966
+-- Lines 986-1001
 function GamePlayCentralManager:do_shotgun_push(unit, hit_pos, dir, distance, attacker)
 	if distance > self:get_shotgun_push_range(attacker) then
 		return
@@ -972,7 +992,7 @@ function GamePlayCentralManager:do_shotgun_push(unit, hit_pos, dir, distance, at
 	self:_do_shotgun_push(unit, hit_pos, dir, distance, attacker)
 end
 
--- Lines 969-1041
+-- Lines 1004-1076
 function GamePlayCentralManager:_do_shotgun_push(unit, hit_pos, dir, distance, attacker)
 	do
 		local mov_ext = unit:movement()
@@ -1036,7 +1056,7 @@ end
 
 local default_projectile_trail = Idstring("effects/payday2/particles/weapons/arrow_trail")
 
--- Lines 1046-1053
+-- Lines 1081-1088
 function GamePlayCentralManager:add_projectile_trail(unit, object, effect)
 	if self._projectile_trails[unit:key()] then
 		return
@@ -1053,7 +1073,7 @@ function GamePlayCentralManager:add_projectile_trail(unit, object, effect)
 	}
 end
 
--- Lines 1055-1067
+-- Lines 1090-1102
 function GamePlayCentralManager:remove_projectile_trail(unit)
 	local data = self._projectile_trails[unit:key()]
 
@@ -1073,7 +1093,7 @@ local atom_ids = Idstring("Trail - Straight")
 local simulator_ids = Idstring("opacity_1")
 local opacity_ids = Idstring("opacity")
 
--- Lines 1073-1085
+-- Lines 1108-1120
 function GamePlayCentralManager:_update_projectile_trails(t, dt)
 	for unit_key, data in pairs(self._projectile_trails) do
 		if data.t then
@@ -1092,7 +1112,7 @@ function GamePlayCentralManager:_update_projectile_trails(t, dt)
 	end
 end
 
--- Lines 1092-1169
+-- Lines 1127-1204
 function GamePlayCentralManager:server_spawn_pubg_cargos(airdrop_unit, from_pos, owner_pos)
 	print("[PUBGDROP] I am flun drop! Existing drops?", self._pubg_cargos_spawned, from_pos, owner_pos)
 
@@ -1158,7 +1178,7 @@ function GamePlayCentralManager:server_spawn_pubg_cargos(airdrop_unit, from_pos,
 	table.insert(self._pubg_cargos_spawned_units, airdrop_unit)
 end
 
--- Lines 1173-1179
+-- Lines 1208-1214
 function GamePlayCentralManager:announcer_say(event)
 	if not self._announcer_sound_source then
 		self._announcer_sound_source = SoundDevice:create_source("announcer")
@@ -1167,7 +1187,7 @@ function GamePlayCentralManager:announcer_say(event)
 	self._announcer_sound_source:post_event(event)
 end
 
--- Lines 1183-1198
+-- Lines 1218-1233
 function GamePlayCentralManager:save(data)
 	local state = {
 		flashlights_on = self._flashlights_on,
@@ -1182,7 +1202,7 @@ function GamePlayCentralManager:save(data)
 	data.GamePlayCentralManager = state
 end
 
--- Lines 1200-1235
+-- Lines 1235-1270
 function GamePlayCentralManager:load(data)
 	local state = data.GamePlayCentralManager
 
@@ -1206,12 +1226,12 @@ function GamePlayCentralManager:load(data)
 		self._pubg_cargos_spawned_units = state.pubg_cargos_spawned_units
 
 		for _, unit in ipairs(self._pubg_cargos_spawned_units) do
-			managers.dyn_resource:load(Idstring("unit"), Idstring(unit), managers.dyn_resource.DYN_RESOURCES_PACKAGE, nil)
+			managers.dyn_resource:load(IDS_UNIT, Idstring(unit), managers.dyn_resource.DYN_RESOURCES_PACKAGE, nil)
 		end
 	end
 end
 
--- Lines 1243-1299
+-- Lines 1278-1334
 function GamePlayCentralManager:debug_weapon()
 	managers.debug:set_enabled(true)
 	managers.debug:set_systems_enabled(true, {
@@ -1223,7 +1243,7 @@ function GamePlayCentralManager:debug_weapon()
 
 	gui:clear()
 
-	-- Lines 1250-1295
+	-- Lines 1285-1330
 	local function add_func()
 		if not managers.player:player_unit() or not managers.player:player_unit():alive() then
 			return ""
@@ -1234,7 +1254,7 @@ function GamePlayCentralManager:debug_weapon()
 		local blueprint = weapon:base()._blueprint
 		local parts_stats = managers.weapon_factory:debug_get_stats(weapon:base()._factory_id, blueprint)
 
-		-- Lines 1260-1262
+		-- Lines 1295-1297
 		local function add_line(text, s)
 			return text .. s .. "\n"
 		end

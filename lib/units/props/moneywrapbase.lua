@@ -117,8 +117,3 @@ function MoneyWrapBase:load(data)
 
 	self._money_amount = state.money_amount
 end
-
--- Lines 122-124
-function MoneyWrapBase:destroy(...)
-	MoneyWrapBase.super.destroy(self, ...)
-end

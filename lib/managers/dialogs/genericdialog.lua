@@ -341,7 +341,7 @@ end
 
 -- Lines 330-351
 function GenericDialog:dialog_cancel_callback()
-	if SystemInfo:platform() ~= Idstring("WIN32") then
+	if IS_CONSOLE then
 		return
 	end
 

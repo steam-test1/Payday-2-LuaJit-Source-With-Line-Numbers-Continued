@@ -5,7 +5,7 @@ core:import("CoreMenuItemToggle")
 
 MenuNode = MenuNode or class()
 
--- Lines 8-82
+-- Lines 8-83
 function MenuNode:init(data_node)
 	local parameters = {}
 
@@ -81,9 +81,10 @@ function MenuNode:init(data_node)
 	self:_parse_items(data_node)
 
 	self._selected_item = nil
+	self._allow_deselect = false
 end
 
--- Lines 84-103
+-- Lines 85-104
 function MenuNode:_parse_items(data_node)
 	self._items = {}
 	self._legends = {}
@@ -107,17 +108,17 @@ function MenuNode:_parse_items(data_node)
 	end
 end
 
--- Lines 105-107
+-- Lines 106-108
 function MenuNode:update(t, dt)
 	return
 end
 
--- Lines 109-111
+-- Lines 110-112
 function MenuNode:clean_items()
 	self._items = {}
 end
 
--- Lines 113-126
+-- Lines 114-127
 function MenuNode:create_item(data_node, parameters)
 	local item = CoreMenuItem.Item
 
@@ -135,27 +136,27 @@ function MenuNode:create_item(data_node, parameters)
 	return item
 end
 
--- Lines 128-130
+-- Lines 129-131
 function MenuNode:default_item_name()
 	return self._default_item_name
 end
 
--- Lines 132-134
+-- Lines 133-135
 function MenuNode:set_default_item_name(default_item_name)
 	self._default_item_name = default_item_name
 end
 
--- Lines 136-138
+-- Lines 137-139
 function MenuNode:parameters()
 	return self._parameters
 end
 
--- Lines 140-142
+-- Lines 141-143
 function MenuNode:set_parameters(parameters)
 	self._parameters = parameters
 end
 
--- Lines 144-156
+-- Lines 145-157
 function MenuNode:add_item(item)
 	item.dirty_callback = callback(self, self, "item_dirty")
 
@@ -173,7 +174,7 @@ function MenuNode:add_item(item)
 	end
 end
 
--- Lines 158-164
+-- Lines 159-165
 function MenuNode:insert_item(item, i)
 	item.dirty_callback = callback(self, self, "item_dirty")
 
@@ -184,7 +185,7 @@ function MenuNode:insert_item(item, i)
 	table.insert(self._items, i, item)
 end
 
--- Lines 166-177
+-- Lines 167-178
 function MenuNode:delete_item(item_name)
 	for i, item in ipairs(self:items()) do
 		if item:parameters().name == item_name then
@@ -201,9 +202,15 @@ function MenuNode:delete_item(item_name)
 	end
 end
 
--- Lines 179-192
+-- Lines 180-196
 function MenuNode:item(item_name)
-	item_name = item_name or self._default_item_name
+	if not item_name then
+		if self._allow_deselect then
+			return nil
+		end
+
+		item_name = self._default_item_name
+	end
 
 	local item
 
@@ -218,22 +225,22 @@ function MenuNode:item(item_name)
 	return item
 end
 
--- Lines 194-196
+-- Lines 198-200
 function MenuNode:items()
 	return self._items
 end
 
--- Lines 198-200
+-- Lines 202-204
 function MenuNode:set_items(items)
 	self._items = items
 end
 
--- Lines 202-204
+-- Lines 206-208
 function MenuNode:selected_item()
 	return self._selected_item
 end
 
--- Lines 206-218
+-- Lines 210-222
 function MenuNode:select_item(item_name)
 	if not item_name and self:item() and not self:item():visible() then
 		for i, item in ipairs(self:items()) do
@@ -248,7 +255,7 @@ function MenuNode:select_item(item_name)
 	self._selected_item = self:item(item_name)
 end
 
--- Lines 220-234
+-- Lines 224-238
 function MenuNode:set_callback_handler(callback_handler)
 	self.callback_handler = callback_handler
 
@@ -265,7 +272,7 @@ function MenuNode:set_callback_handler(callback_handler)
 	end
 end
 
--- Lines 236-247
+-- Lines 240-251
 function MenuNode:trigger_back()
 	if self:parameters().block_back then
 		return true
@@ -280,21 +287,21 @@ function MenuNode:trigger_back()
 	return block_back
 end
 
--- Lines 249-255
+-- Lines 253-259
 function MenuNode:trigger_focus_changed(in_focus, ...)
 	for _, callback in pairs(self:parameters().focus_changed_callback) do
 		callback(self, in_focus, ...)
 	end
 end
 
--- Lines 257-261
+-- Lines 261-265
 function MenuNode:item_dirty(item)
 	if self.dirty_callback then
 		self.dirty_callback(self, item)
 	end
 end
 
--- Lines 263-265
+-- Lines 267-269
 function MenuNode:legends()
 	return self._legends
 end

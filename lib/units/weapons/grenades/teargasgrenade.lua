@@ -1,17 +1,16 @@
-TearGasGrenade = TearGasGrenade or class()
+TearGasGrenade = TearGasGrenade or class(UnitBase)
 
--- Lines 3-13
+-- Lines 3-11
 function TearGasGrenade:init(unit)
-	self._unit = unit
+	TearGasGrenade.super.init(self, unit, false)
+
 	self.radius = 0
 	self.duration = 0
 	self.damage = 0
 	self._has_played_VO = false
-
-	unit:set_extension_update_enabled(Idstring("base"), false)
 end
 
--- Lines 15-51
+-- Lines 13-49
 function TearGasGrenade:set_properties(props)
 	if self._unit:id() ~= -1 and Network:is_server() then
 		local sync_diameter = 0
@@ -40,7 +39,7 @@ function TearGasGrenade:set_properties(props)
 	end
 end
 
--- Lines 53-84
+-- Lines 51-82
 function TearGasGrenade:update(unit, t, dt)
 	if self._damage_t and t > self._damage_t then
 		self._damage_t = self._damage_t + 1
@@ -77,7 +76,7 @@ function TearGasGrenade:update(unit, t, dt)
 	end
 end
 
--- Lines 86-121
+-- Lines 84-119
 function TearGasGrenade:detonate()
 	if self._detonated then
 		return
@@ -119,7 +118,7 @@ function TearGasGrenade:detonate()
 	self._unit:set_extension_update_enabled(Idstring("base"), true)
 end
 
--- Lines 123-135
+-- Lines 121-133
 function TearGasGrenade:_remove_effects()
 	if self._set_blurzone then
 		self._set_blurzone = nil
@@ -134,7 +133,7 @@ function TearGasGrenade:_remove_effects()
 	end
 end
 
--- Lines 137-146
+-- Lines 135-144
 function TearGasGrenade:_handle_hiding_and_destroying()
 	self:_remove_effects()
 	self._unit:set_extension_update_enabled(Idstring("base"), false)
@@ -145,7 +144,7 @@ function TearGasGrenade:_handle_hiding_and_destroying()
 	end
 end
 
--- Lines 148-166
+-- Lines 146-164
 function TearGasGrenade:save(data)
 	local my_save_data = {}
 
@@ -167,7 +166,7 @@ function TearGasGrenade:save(data)
 	end
 end
 
--- Lines 168-204
+-- Lines 166-202
 function TearGasGrenade:load(data)
 	local state = data.TearGasGrenade
 
@@ -206,7 +205,8 @@ function TearGasGrenade:load(data)
 	end
 end
 
--- Lines 206-208
-function TearGasGrenade:destroy()
+-- Lines 204-207
+function TearGasGrenade:pre_destroy(unit)
+	TearGasGrenade.super.pre_destroy(self, unit)
 	self:_remove_effects()
 end

@@ -1,11 +1,10 @@
 require("lib/tweak_data/blackmarket/WeaponColorTemplates")
 
--- Lines 350-39951
+-- Lines 350-39864
 function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins = {}
 	self.weapon_skins.serbu_woodland = {}
 	self.weapon_skins.serbu_woodland.name_id = "bm_wskn_serbu_woodland"
-	self.weapon_skins.serbu_woodland.desc_id = "bm_wskn_serbu_woodland_desc"
 	self.weapon_skins.serbu_woodland.weapon_id = "serbu"
 	self.weapon_skins.serbu_woodland.rarity = "common"
 	self.weapon_skins.serbu_woodland.bonus = "concealment_p1"
@@ -14,7 +13,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.serbu_woodland.base_gradient = Idstring("units/payday2_cash/safes/sputnik/base_gradient/base_sput_001_df")
 	self.weapon_skins.p90_woodland = {}
 	self.weapon_skins.p90_woodland.name_id = "bm_wskn_p90_woodland"
-	self.weapon_skins.p90_woodland.desc_id = "bm_wskn_p90_woodland_desc"
 	self.weapon_skins.p90_woodland.weapon_id = "p90"
 	self.weapon_skins.p90_woodland.rarity = "common"
 	self.weapon_skins.p90_woodland.bonus = "recoil_p1"
@@ -52,7 +50,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.plainsrider_woodland = {}
 	self.weapon_skins.plainsrider_woodland.name_id = "bm_wskn_plainsrider_woodland"
-	self.weapon_skins.plainsrider_woodland.desc_id = "bm_wskn_plainsrider_woodland_desc"
 	self.weapon_skins.plainsrider_woodland.weapon_id = "plainsrider"
 	self.weapon_skins.plainsrider_woodland.rarity = "common"
 	self.weapon_skins.plainsrider_woodland.bonus = "concealment_p1"
@@ -65,7 +62,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.plainsrider_woodland.pattern_pos = Vector3(1.40516, 1.00779, 0)
 	self.weapon_skins.rpg7_woodland = {}
 	self.weapon_skins.rpg7_woodland.name_id = "bm_wskn_rpg7_woodland"
-	self.weapon_skins.rpg7_woodland.desc_id = "bm_wskn_rpg7_woodland_desc"
 	self.weapon_skins.rpg7_woodland.weapon_id = "rpg7"
 	self.weapon_skins.rpg7_woodland.rarity = "common"
 	self.weapon_skins.rpg7_woodland.bonus = "spread_p1"
@@ -85,7 +81,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.ppk_woodland = {}
 	self.weapon_skins.ppk_woodland.name_id = "bm_wskn_ppk_woodland"
-	self.weapon_skins.ppk_woodland.desc_id = "bm_wskn_ppk_woodland_desc"
 	self.weapon_skins.ppk_woodland.weapon_id = "ppk"
 	self.weapon_skins.ppk_woodland.rarity = "common"
 	self.weapon_skins.ppk_woodland.bonus = "recoil_p1"
@@ -117,7 +112,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.judge_woodland = {}
 	self.weapon_skins.judge_woodland.name_id = "bm_wskn_judge_woodland"
-	self.weapon_skins.judge_woodland.desc_id = "bm_wskn_judge_woodland_desc"
 	self.weapon_skins.judge_woodland.weapon_id = "judge"
 	self.weapon_skins.judge_woodland.reserve_quality = true
 	self.weapon_skins.judge_woodland.rarity = "common"
@@ -143,7 +137,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.new_m4_goldstripes = {}
 	self.weapon_skins.new_m4_goldstripes.name_id = "bm_wskn_new_m4_goldstripes"
-	self.weapon_skins.new_m4_goldstripes.desc_id = "bm_wskn_new_m4_goldstripes_desc"
 	self.weapon_skins.new_m4_goldstripes.weapon_id = "new_m4"
 	self.weapon_skins.new_m4_goldstripes.rarity = "uncommon"
 	self.weapon_skins.new_m4_goldstripes.bonus = "concealment_p1"
@@ -156,7 +149,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.new_raging_bull_goldstripes = {}
 	self.weapon_skins.new_raging_bull_goldstripes.weapon_id = "new_raging_bull"
 	self.weapon_skins.new_raging_bull_goldstripes.name_id = "bm_wskn_new_raging_bull_goldstripes"
-	self.weapon_skins.new_raging_bull_goldstripes.desc_id = "bm_wskn_new_raging_bull_goldstripes_desc"
 	self.weapon_skins.new_raging_bull_goldstripes.rarity = "uncommon"
 	self.weapon_skins.new_raging_bull_goldstripes.bonus = "recoil_p1"
 	self.weapon_skins.new_raging_bull_goldstripes.base_gradient = Idstring("units/payday2_cash/safes/sputnik/base_gradient/base_sput_004_df")
@@ -164,7 +156,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.new_raging_bull_goldstripes.reserve_quality = true
 	self.weapon_skins.flamethrower_mk2_goldstripes = {}
 	self.weapon_skins.flamethrower_mk2_goldstripes.name_id = "bm_wskn_flamethrower_mk2_goldstripes"
-	self.weapon_skins.flamethrower_mk2_goldstripes.desc_id = "bm_wskn_flamethrower_mk2_goldstripes_desc"
 	self.weapon_skins.flamethrower_mk2_goldstripes.weapon_id = "flamethrower_mk2"
 	self.weapon_skins.flamethrower_mk2_goldstripes.rarity = "uncommon"
 	self.weapon_skins.flamethrower_mk2_goldstripes.bonus = "damage_p1"
@@ -199,7 +190,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.g36_goldstripes = {}
 	self.weapon_skins.g36_goldstripes.name_id = "bm_wskn_g36_goldstripes"
-	self.weapon_skins.g36_goldstripes.desc_id = "bm_wskn_g36_goldstripes_desc"
 	self.weapon_skins.g36_goldstripes.weapon_id = "g36"
 	self.weapon_skins.g36_goldstripes.rarity = "uncommon"
 	self.weapon_skins.g36_goldstripes.reserve_quality = true
@@ -211,7 +201,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.g36_goldstripes.pattern_tweak = Vector3(1.2, 0, 1)
 	self.weapon_skins.new_m14_luxury = {}
 	self.weapon_skins.new_m14_luxury.name_id = "bm_wskn_new_m14_luxury"
-	self.weapon_skins.new_m14_luxury.desc_id = "bm_wskn_new_m14_luxury_desc"
 	self.weapon_skins.new_m14_luxury.weapon_id = "new_m14"
 	self.weapon_skins.new_m14_luxury.reserve_quality = true
 	self.weapon_skins.new_m14_luxury.rarity = "rare"
@@ -282,7 +271,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.m95_luxury = {}
 	self.weapon_skins.m95_luxury.name_id = "bm_wskn_m95_luxury"
-	self.weapon_skins.m95_luxury.desc_id = "bm_wskn_m95_luxury_desc"
 	self.weapon_skins.m95_luxury.weapon_id = "m95"
 	self.weapon_skins.m95_luxury.rarity = "rare"
 	self.weapon_skins.m95_luxury.bonus = "total_ammo_p1"
@@ -323,7 +311,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.b92fs_luxury = {}
 	self.weapon_skins.b92fs_luxury.name_id = "bm_wskn_b92fs_luxury"
-	self.weapon_skins.b92fs_luxury.desc_id = "bm_wskn_b92fs_luxury_desc"
 	self.weapon_skins.b92fs_luxury.weapon_id = "b92fs"
 	self.weapon_skins.b92fs_luxury.rarity = "rare"
 	self.weapon_skins.b92fs_luxury.bonus = "concealment_p3"
@@ -372,7 +359,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.famas_hypno = {}
 	self.weapon_skins.famas_hypno.name_id = "bm_wskn_famas_hypno"
-	self.weapon_skins.famas_hypno.desc_id = "bm_wskn_famas_hypno_desc"
 	self.weapon_skins.famas_hypno.weapon_id = "famas"
 	self.weapon_skins.famas_hypno.reserve_quality = true
 	self.weapon_skins.famas_hypno.rarity = "epic"
@@ -432,7 +418,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.huntsman_hypno = {}
 	self.weapon_skins.huntsman_hypno.name_id = "bm_wskn_huntsman_hypno"
-	self.weapon_skins.huntsman_hypno.desc_id = "bm_wskn_huntsman_hypno_desc"
 	self.weapon_skins.huntsman_hypno.weapon_id = "huntsman"
 	self.weapon_skins.huntsman_hypno.reserve_quality = true
 	self.weapon_skins.huntsman_hypno.rarity = "epic"
@@ -576,7 +561,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.m95_forest = {}
 	self.weapon_skins.m95_forest.name_id = "bm_wskn_m95_forest"
-	self.weapon_skins.m95_forest.desc_id = "bm_wskn_m95_forest_desc"
 	self.weapon_skins.m95_forest.weapon_id = "m95"
 	self.weapon_skins.m95_forest.reserve_quality = true
 	self.weapon_skins.m95_forest.rarity = "common"
@@ -585,7 +569,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.m95_forest.texture_bundle_folder = "cf15"
 	self.weapon_skins.famas_forest = {}
 	self.weapon_skins.famas_forest.name_id = "bm_wskn_famas_forest"
-	self.weapon_skins.famas_forest.desc_id = "bm_wskn_famas_forest_desc"
 	self.weapon_skins.famas_forest.weapon_id = "famas"
 	self.weapon_skins.famas_forest.reserve_quality = true
 	self.weapon_skins.famas_forest.rarity = "common"
@@ -603,7 +586,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.huntsman_forest = {}
 	self.weapon_skins.huntsman_forest.name_id = "bm_wskn_huntsman_forest"
-	self.weapon_skins.huntsman_forest.desc_id = "bm_wskn_huntsman_forest_desc"
 	self.weapon_skins.huntsman_forest.weapon_id = "huntsman"
 	self.weapon_skins.huntsman_forest.reserve_quality = true
 	self.weapon_skins.huntsman_forest.rarity = "common"
@@ -612,7 +594,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.huntsman_forest.base_gradient = Idstring("units/payday2_cash/safes/cf15/base_gradient/base_cf15_001_df")
 	self.weapon_skins.r93_forest = {}
 	self.weapon_skins.r93_forest.name_id = "bm_wskn_r93_forest"
-	self.weapon_skins.r93_forest.desc_id = "bm_wskn_r93_forest_desc"
 	self.weapon_skins.r93_forest.weapon_id = "r93"
 	self.weapon_skins.r93_forest.reserve_quality = true
 	self.weapon_skins.r93_forest.rarity = "common"
@@ -657,7 +638,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.b92fs_forest = {}
 	self.weapon_skins.b92fs_forest.name_id = "bm_wskn_b92fs_forest"
-	self.weapon_skins.b92fs_forest.desc_id = "bm_wskn_b92fs_forest_desc"
 	self.weapon_skins.b92fs_forest.weapon_id = "b92fs"
 	self.weapon_skins.b92fs_forest.reserve_quality = true
 	self.weapon_skins.b92fs_forest.rarity = "common"
@@ -666,7 +646,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.b92fs_forest.base_gradient = Idstring("units/payday2_cash/safes/cf15/base_gradient/base_cf15_003_df")
 	self.weapon_skins.m134_forest = {}
 	self.weapon_skins.m134_forest.name_id = "bm_wskn_m134_forest"
-	self.weapon_skins.m134_forest.desc_id = "bm_wskn_m134_forest_desc"
 	self.weapon_skins.m134_forest.weapon_id = "m134"
 	self.weapon_skins.m134_forest.reserve_quality = true
 	self.weapon_skins.m134_forest.rarity = "common"
@@ -686,7 +665,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.serbu_camohex = {}
 	self.weapon_skins.serbu_camohex.weapon_id = "serbu"
 	self.weapon_skins.serbu_camohex.name_id = "bm_wskn_serbu_camohex"
-	self.weapon_skins.serbu_camohex.desc_id = "bm_wskn_serbu_camohex_desc"
 	self.weapon_skins.serbu_camohex.rarity = "uncommon"
 	self.weapon_skins.serbu_camohex.bonus = "spread_n1"
 	self.weapon_skins.serbu_camohex.base_gradient = Idstring("units/payday2_cash/safes/cf15/base_gradient/base_cf15_002_df")
@@ -695,7 +673,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.new_m14_camohex = {}
 	self.weapon_skins.new_m14_camohex.weapon_id = "new_m14"
 	self.weapon_skins.new_m14_camohex.name_id = "bm_wskn_new_m14_camohex"
-	self.weapon_skins.new_m14_camohex.desc_id = "bm_wskn_new_m14_camohex_desc"
 	self.weapon_skins.new_m14_camohex.rarity = "uncommon"
 	self.weapon_skins.new_m14_camohex.bonus = "recoil_p1"
 	self.weapon_skins.new_m14_camohex.base_gradient = Idstring("units/payday2_cash/safes/cf15/base_gradient/base_cf15_new_m14_df")
@@ -704,7 +681,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.judge_camohex = {}
 	self.weapon_skins.judge_camohex.weapon_id = "judge"
 	self.weapon_skins.judge_camohex.name_id = "bm_wskn_judge_camohex"
-	self.weapon_skins.judge_camohex.desc_id = "bm_wskn_judge_camohex_desc"
 	self.weapon_skins.judge_camohex.rarity = "uncommon"
 	self.weapon_skins.judge_camohex.bonus = "spread_n1"
 	self.weapon_skins.judge_camohex.base_gradient = Idstring("units/payday2_cash/safes/cf15/base_gradient/base_cf15_002_df")
@@ -720,7 +696,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.mg42_camohex = {}
 	self.weapon_skins.mg42_camohex.weapon_id = "mg42"
 	self.weapon_skins.mg42_camohex.name_id = "bm_wskn_mg42_camohex"
-	self.weapon_skins.mg42_camohex.desc_id = "bm_wskn_mg42_camohex_desc"
 	self.weapon_skins.mg42_camohex.rarity = "uncommon"
 	self.weapon_skins.mg42_camohex.bonus = "spread_p1"
 	self.weapon_skins.mg42_camohex.reserve_quality = true
@@ -739,7 +714,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.p90_luxury = {}
 	self.weapon_skins.p90_luxury.name_id = "bm_wskn_p90_luxury"
-	self.weapon_skins.p90_luxury.desc_id = "bm_wskn_p90_luxury_desc"
 	self.weapon_skins.p90_luxury.weapon_id = "p90"
 	self.weapon_skins.p90_luxury.reserve_quality = true
 	self.weapon_skins.p90_luxury.rarity = "rare"
@@ -795,7 +769,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.ak74_luxury = {}
 	self.weapon_skins.ak74_luxury.name_id = "bm_wskn_ak74_luxury"
-	self.weapon_skins.ak74_luxury.desc_id = "bm_wskn_ak74_luxury_desc"
 	self.weapon_skins.ak74_luxury.weapon_id = "ak74"
 	self.weapon_skins.ak74_luxury.reserve_quality = true
 	self.weapon_skins.ak74_luxury.rarity = "rare"
@@ -855,7 +828,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.ppk_luxury = {}
 	self.weapon_skins.ppk_luxury.name_id = "bm_wskn_ppk_luxury"
-	self.weapon_skins.ppk_luxury.desc_id = "bm_wskn_ppk_luxury_desc"
 	self.weapon_skins.ppk_luxury.weapon_id = "ppk"
 	self.weapon_skins.ppk_luxury.reserve_quality = true
 	self.weapon_skins.ppk_luxury.rarity = "rare"
@@ -926,7 +898,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.plainsrider_linked = {}
 	self.weapon_skins.plainsrider_linked.name_id = "bm_wskn_plainsrider_linked"
-	self.weapon_skins.plainsrider_linked.desc_id = "bm_wskn_plainsrider_linked_desc"
 	self.weapon_skins.plainsrider_linked.weapon_id = "plainsrider"
 	self.weapon_skins.plainsrider_linked.rarity = "epic"
 	self.weapon_skins.plainsrider_linked.bonus = "total_ammo_p3"
@@ -947,7 +918,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.new_m4_payday = {}
 	self.weapon_skins.new_m4_payday.name_id = "bm_wskn_new_m4_payday"
-	self.weapon_skins.new_m4_payday.desc_id = "bm_wskn_new_m4_payday_desc"
 	self.weapon_skins.new_m4_payday.weapon_id = "new_m4"
 	self.weapon_skins.new_m4_payday.reserve_quality = true
 	self.weapon_skins.new_m4_payday.rarity = "epic"
@@ -1093,17 +1063,17 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 			[Idstring("mtr_barrel"):key()] = {
 				base_gradient = Idstring("units/payday2_cash/safes/cf15/base_gradient/base_cf15_001_df"),
 				uv_offset_rot = Vector3(0.244694, 1.07465, 0),
-				pattern_pos = Vector3(0.005, 0.769457, 0),
 				uv_scale = Vector3(3.45688, 3.93363, 1),
-				pattern_tweak = Vector3(0.641791, 0, 0)
+				pattern_tweak = Vector3(0.641791, 0, 0),
+				pattern_pos = Vector3(0.005, 0.769457, 0)
 			},
 			[Idstring("mtr_legendcomp"):key()] = {
 				pattern = Idstring("units/payday2_cash/safes/cf15/pattern/fire_pattern_df"),
 				pattern_tweak = Vector3(0.200805, 4.71977, 0),
-				pattern_pos = Vector3(0.530885, 1.03795, 0),
 				uv_scale = Vector3(2.07432, 2.21734, 1),
 				uv_offset_rot = Vector3(-0.0128784, 0.712139, 4.72674),
-				pattern_gradient = Idstring("units/payday2_cash/safes/cf15/pattern_gradient/gradient_cf15_gold_df")
+				pattern_gradient = Idstring("units/payday2_cash/safes/cf15/pattern_gradient/gradient_cf15_gold_df"),
+				pattern_pos = Vector3(0.530885, 1.03795, 0)
 			}
 		},
 		wpn_fps_pis_deagle_b_standard = {
@@ -1131,7 +1101,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.new_m4_skullimov = {}
 	self.weapon_skins.new_m4_skullimov.name_id = "bm_wskn_new_m4_skullimov"
-	self.weapon_skins.new_m4_skullimov.desc_id = "bm_wskn_new_m4_skullimov_desc"
 	self.weapon_skins.new_m4_skullimov.weapon_id = "new_m4"
 	self.weapon_skins.new_m4_skullimov.reserve_quality = true
 	self.weapon_skins.new_m4_skullimov.rarity = "rare"
@@ -1219,7 +1188,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.deagle_skullimov = {}
 	self.weapon_skins.deagle_skullimov.name_id = "bm_wskn_deagle_skullimov"
-	self.weapon_skins.deagle_skullimov.desc_id = "bm_wskn_deagle_skullimov_desc"
 	self.weapon_skins.deagle_skullimov.weapon_id = "deagle"
 	self.weapon_skins.deagle_skullimov.reserve_quality = true
 	self.weapon_skins.deagle_skullimov.rarity = "rare"
@@ -1291,7 +1259,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.p90_skullimov = {}
 	self.weapon_skins.p90_skullimov.name_id = "bm_wskn_p90_skullimov"
-	self.weapon_skins.p90_skullimov.desc_id = "bm_wskn_p90_skullimov_desc"
 	self.weapon_skins.p90_skullimov.weapon_id = "p90"
 	self.weapon_skins.p90_skullimov.reserve_quality = true
 	self.weapon_skins.p90_skullimov.rarity = "rare"
@@ -1348,7 +1315,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.plainsrider_skullimov = {}
 	self.weapon_skins.plainsrider_skullimov.name_id = "bm_wskn_plainsrider_skullimov"
-	self.weapon_skins.plainsrider_skullimov.desc_id = "bm_wskn_plainsrider_skullimov_desc"
 	self.weapon_skins.plainsrider_skullimov.weapon_id = "plainsrider"
 	self.weapon_skins.plainsrider_skullimov.reserve_quality = true
 	self.weapon_skins.plainsrider_skullimov.rarity = "rare"
@@ -1377,7 +1343,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.m95_bombmatta = {}
 	self.weapon_skins.m95_bombmatta.name_id = "bm_wskn_m95_bombmatta"
-	self.weapon_skins.m95_bombmatta.desc_id = "bm_wskn_m95_bombmatta_desc"
 	self.weapon_skins.m95_bombmatta.weapon_id = "m95"
 	self.weapon_skins.m95_bombmatta.rarity = "rare"
 	self.weapon_skins.m95_bombmatta.bonus = "total_ammo_p1_tem_p1"
@@ -1444,7 +1409,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.huntsman_bloodsplat = {}
 	self.weapon_skins.huntsman_bloodsplat.name_id = "bm_wskn_huntsman_bloodsplat"
-	self.weapon_skins.huntsman_bloodsplat.desc_id = "bm_wskn_huntsman_bloodsplat_desc"
 	self.weapon_skins.huntsman_bloodsplat.weapon_id = "huntsman"
 	self.weapon_skins.huntsman_bloodsplat.reserve_quality = true
 	self.weapon_skins.huntsman_bloodsplat.rarity = "rare"
@@ -1491,7 +1455,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.r93_bloodsplat = {}
 	self.weapon_skins.r93_bloodsplat.name_id = "bm_wskn_r93_bloodsplat"
-	self.weapon_skins.r93_bloodsplat.desc_id = "bm_wskn_r93_bloodsplat_desc"
 	self.weapon_skins.r93_bloodsplat.weapon_id = "r93"
 	self.weapon_skins.r93_bloodsplat.reserve_quality = true
 	self.weapon_skins.r93_bloodsplat.rarity = "rare"
@@ -1522,7 +1485,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.judge_wooh = {}
 	self.weapon_skins.judge_wooh.name_id = "bm_wskn_judge_wooh"
-	self.weapon_skins.judge_wooh.desc_id = "bm_wskn_judge_wooh_desc"
 	self.weapon_skins.judge_wooh.weapon_id = "judge"
 	self.weapon_skins.judge_wooh.reserve_quality = true
 	self.weapon_skins.judge_wooh.rarity = "rare"
@@ -1597,7 +1559,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.b92fs_bloodsplat = {}
 	self.weapon_skins.b92fs_bloodsplat.name_id = "bm_wskn_b92fs_bloodsplat"
-	self.weapon_skins.b92fs_bloodsplat.desc_id = "bm_wskn_b92fs_bloodsplat_desc"
 	self.weapon_skins.b92fs_bloodsplat.weapon_id = "b92fs"
 	self.weapon_skins.b92fs_bloodsplat.reserve_quality = true
 	self.weapon_skins.b92fs_bloodsplat.rarity = "rare"
@@ -1669,7 +1630,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.mg42_bloodsplat = {}
 	self.weapon_skins.mg42_bloodsplat.name_id = "bm_wskn_mg42_bloodsplat"
-	self.weapon_skins.mg42_bloodsplat.desc_id = "bm_wskn_mg42_bloodsplat_desc"
 	self.weapon_skins.mg42_bloodsplat.weapon_id = "mg42"
 	self.weapon_skins.mg42_bloodsplat.reserve_quality = true
 	self.weapon_skins.mg42_bloodsplat.rarity = "rare"
@@ -1703,7 +1663,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.m134_bloodsplat = {}
 	self.weapon_skins.m134_bloodsplat.name_id = "bm_wskn_m134_bloodsplat"
-	self.weapon_skins.m134_bloodsplat.desc_id = "bm_wskn_m134_bloodsplat_desc"
 	self.weapon_skins.m134_bloodsplat.weapon_id = "m134"
 	self.weapon_skins.m134_bloodsplat.reserve_quality = true
 	self.weapon_skins.m134_bloodsplat.rarity = "rare"
@@ -1735,7 +1694,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.flamethrower_mk2_bloodsplat = {}
 	self.weapon_skins.flamethrower_mk2_bloodsplat.name_id = "bm_wskn_flamethrower_mk2_bloodsplat"
-	self.weapon_skins.flamethrower_mk2_bloodsplat.desc_id = "bm_wskn_flamethrower_mk2_bloodsplat_desc"
 	self.weapon_skins.flamethrower_mk2_bloodsplat.weapon_id = "flamethrower_mk2"
 	self.weapon_skins.flamethrower_mk2_bloodsplat.reserve_quality = true
 	self.weapon_skins.flamethrower_mk2_bloodsplat.rarity = "rare"
@@ -1774,7 +1732,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.rpg7_bloodsplat = {}
 	self.weapon_skins.rpg7_bloodsplat.name_id = "bm_wskn_rpg7_bloodsplat"
-	self.weapon_skins.rpg7_bloodsplat.desc_id = "bm_wskn_rpg7_bloodsplat_desc"
 	self.weapon_skins.rpg7_bloodsplat.weapon_id = "rpg7"
 	self.weapon_skins.rpg7_bloodsplat.reserve_quality = true
 	self.weapon_skins.rpg7_bloodsplat.rarity = "rare"
@@ -1801,7 +1758,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.g36_bloodsplat = {}
 	self.weapon_skins.g36_bloodsplat.name_id = "bm_wskn_g36_bloodsplat"
-	self.weapon_skins.g36_bloodsplat.desc_id = "bm_wskn_g36_bloodsplat_desc"
 	self.weapon_skins.g36_bloodsplat.weapon_id = "g36"
 	self.weapon_skins.g36_bloodsplat.rarity = "rare"
 	self.weapon_skins.g36_bloodsplat.reserve_quality = true
@@ -1862,7 +1818,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.serbu_stunner = {}
 	self.weapon_skins.serbu_stunner.name_id = "bm_wskn_serbu_stunner"
-	self.weapon_skins.serbu_stunner.desc_id = "bm_wskn_serbu_stunner_desc"
 	self.weapon_skins.serbu_stunner.weapon_id = "serbu"
 	self.weapon_skins.serbu_stunner.reserve_quality = true
 	self.weapon_skins.serbu_stunner.rarity = "epic"
@@ -1938,7 +1893,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.new_m14_bloodsplat = {}
 	self.weapon_skins.new_m14_bloodsplat.name_id = "bm_wskn_new_m14_bloodsplat"
-	self.weapon_skins.new_m14_bloodsplat.desc_id = "bm_wskn_new_m14_bloodsplat_desc"
 	self.weapon_skins.new_m14_bloodsplat.weapon_id = "new_m14"
 	self.weapon_skins.new_m14_bloodsplat.reserve_quality = true
 	self.weapon_skins.new_m14_bloodsplat.rarity = "epic"
@@ -1986,7 +1940,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.new_raging_bull_bloodsplat = {}
 	self.weapon_skins.new_raging_bull_bloodsplat.name_id = "bm_wskn_new_raging_bull_bloodsplat"
-	self.weapon_skins.new_raging_bull_bloodsplat.desc_id = "bm_wskn_new_raging_bull_bloodsplat_desc"
 	self.weapon_skins.new_raging_bull_bloodsplat.weapon_id = "new_raging_bull"
 	self.weapon_skins.new_raging_bull_bloodsplat.reserve_quality = true
 	self.weapon_skins.new_raging_bull_bloodsplat.rarity = "epic"
@@ -2085,7 +2038,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.famas_bloodsplat = {}
 	self.weapon_skins.famas_bloodsplat.name_id = "bm_wskn_famas_bloodsplat"
-	self.weapon_skins.famas_bloodsplat.desc_id = "bm_wskn_famas_bloodsplat_desc"
 	self.weapon_skins.famas_bloodsplat.weapon_id = "famas"
 	self.weapon_skins.famas_bloodsplat.reserve_quality = true
 	self.weapon_skins.famas_bloodsplat.rarity = "epic"
@@ -2146,7 +2098,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.r93_wooh = {}
 	self.weapon_skins.r93_wooh.name_id = "bm_wskn_r93_wooh"
-	self.weapon_skins.r93_wooh.desc_id = "bm_wskn_r93_wooh_desc"
 	self.weapon_skins.r93_wooh.weapon_id = "r93"
 	self.weapon_skins.r93_wooh.reserve_quality = true
 	self.weapon_skins.r93_wooh.rarity = "epic"
@@ -2191,7 +2142,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.ak74_bloodsplat = {}
 	self.weapon_skins.ak74_bloodsplat.name_id = "bm_wskn_ak74_bloodsplat"
-	self.weapon_skins.ak74_bloodsplat.desc_id = "bm_wskn_ak74_bloodsplat_desc"
 	self.weapon_skins.ak74_bloodsplat.weapon_id = "ak74"
 	self.weapon_skins.ak74_bloodsplat.reserve_quality = true
 	self.weapon_skins.ak74_bloodsplat.rarity = "epic"
@@ -2261,7 +2211,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.ppk_bloodsplat = {}
 	self.weapon_skins.ppk_bloodsplat.name_id = "bm_wskn_ppk_bloodsplat"
-	self.weapon_skins.ppk_bloodsplat.desc_id = "bm_wskn_ppk_bloodsplat_desc"
 	self.weapon_skins.ppk_bloodsplat.weapon_id = "ppk"
 	self.weapon_skins.ppk_bloodsplat.reserve_quality = true
 	self.weapon_skins.ppk_bloodsplat.rarity = "epic"
@@ -2291,7 +2240,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.b92fs_wooh = {}
 	self.weapon_skins.b92fs_wooh.name_id = "bm_wskn_b92fs_wooh"
-	self.weapon_skins.b92fs_wooh.desc_id = "bm_wskn_b92fs_wooh_desc"
 	self.weapon_skins.b92fs_wooh.weapon_id = "b92fs"
 	self.weapon_skins.b92fs_wooh.reserve_quality = true
 	self.weapon_skins.b92fs_wooh.rarity = "epic"
@@ -2507,7 +2455,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.p90_golddigger = {}
 	self.weapon_skins.p90_golddigger.name_id = "bm_wskn_p90_golddigger"
-	self.weapon_skins.p90_golddigger.desc_id = "bm_wskn_p90_golddigger_desc"
 	self.weapon_skins.p90_golddigger.weapon_id = "p90"
 	self.weapon_skins.p90_golddigger.rarity = "common"
 	self.weapon_skins.p90_golddigger.bonus = "recoil_p1"
@@ -2523,7 +2470,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.huntsman_golddigger = {}
 	self.weapon_skins.huntsman_golddigger.name_id = "bm_wskn_huntsman_golddigger"
-	self.weapon_skins.huntsman_golddigger.desc_id = "bm_wskn_huntsman_golddigger_desc"
 	self.weapon_skins.huntsman_golddigger.weapon_id = "huntsman"
 	self.weapon_skins.huntsman_golddigger.rarity = "common"
 	self.weapon_skins.huntsman_golddigger.bonus = "recoil_p1"
@@ -2556,7 +2502,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.r93_golddigger = {}
 	self.weapon_skins.r93_golddigger.name_id = "bm_wskn_r93_golddigger"
-	self.weapon_skins.r93_golddigger.desc_id = "bm_wskn_r93_golddigger_desc"
 	self.weapon_skins.r93_golddigger.weapon_id = "r93"
 	self.weapon_skins.r93_golddigger.rarity = "common"
 	self.weapon_skins.r93_golddigger.bonus = "spread_p1"
@@ -2569,7 +2514,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.r93_golddigger.pattern_pos = Vector3(1.26982, 0.0538995, 0)
 	self.weapon_skins.ak74_golddigger = {}
 	self.weapon_skins.ak74_golddigger.name_id = "bm_wskn_ak74_golddigger"
-	self.weapon_skins.ak74_golddigger.desc_id = "bm_wskn_ak74_golddigger_desc"
 	self.weapon_skins.ak74_golddigger.weapon_id = "ak74"
 	self.weapon_skins.ak74_golddigger.rarity = "rare"
 	self.weapon_skins.ak74_golddigger.bonus = "spread_p1"
@@ -2623,7 +2567,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.m134_golddigger = {}
 	self.weapon_skins.m134_golddigger.name_id = "bm_wskn_m134_golddigger"
-	self.weapon_skins.m134_golddigger.desc_id = "bm_wskn_m134_golddigger_desc"
 	self.weapon_skins.m134_golddigger.weapon_id = "m134"
 	self.weapon_skins.m134_golddigger.rarity = "uncommon"
 	self.weapon_skins.m134_golddigger.bonus = "recoil_p1"
@@ -2632,7 +2575,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.m134_golddigger.base_gradient = Idstring("units/payday2_cash/safes/shared/base_gradient/base_shared_005_df")
 	self.weapon_skins.serbu_golddigger = {}
 	self.weapon_skins.serbu_golddigger.name_id = "bm_wskn_serbu_golddigger"
-	self.weapon_skins.serbu_golddigger.desc_id = "bm_wskn_serbu_golddigger_desc"
 	self.weapon_skins.serbu_golddigger.weapon_id = "serbu"
 	self.weapon_skins.serbu_golddigger.rarity = "rare"
 	self.weapon_skins.serbu_golddigger.bonus = "spread_n1"
@@ -2690,7 +2632,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.famas_golddigger = {}
 	self.weapon_skins.famas_golddigger.name_id = "bm_wskn_famas_golddigger"
-	self.weapon_skins.famas_golddigger.desc_id = "bm_wskn_famas_golddigger_desc"
 	self.weapon_skins.famas_golddigger.weapon_id = "famas"
 	self.weapon_skins.famas_golddigger.rarity = "epic"
 	self.weapon_skins.famas_golddigger.bonus = "spread_p1"
@@ -2732,7 +2673,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.new_m14_golddigger = {}
 	self.weapon_skins.new_m14_golddigger.name_id = "bm_wskn_new_m14_golddigger"
-	self.weapon_skins.new_m14_golddigger.desc_id = "bm_wskn_new_m14_golddigger_desc"
 	self.weapon_skins.new_m14_golddigger.weapon_id = "new_m14"
 	self.weapon_skins.new_m14_golddigger.rarity = "uncommon"
 	self.weapon_skins.new_m14_golddigger.bonus = "recoil_p1"
@@ -2741,7 +2681,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.new_m14_golddigger.base_gradient = Idstring("units/payday2_cash/safes/cf15/base_gradient/base_cf15_004_df")
 	self.weapon_skins.ppk_golddigger = {}
 	self.weapon_skins.ppk_golddigger.name_id = "bm_wskn_ppk_golddigger"
-	self.weapon_skins.ppk_golddigger.desc_id = "bm_wskn_ppk_golddigger_desc"
 	self.weapon_skins.ppk_golddigger.weapon_id = "ppk"
 	self.weapon_skins.ppk_golddigger.rarity = "common"
 	self.weapon_skins.ppk_golddigger.bonus = "recoil_p1"
@@ -2792,7 +2731,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.m95_golddigger = {}
 	self.weapon_skins.m95_golddigger.name_id = "bm_wskn_m95_golddigger"
-	self.weapon_skins.m95_golddigger.desc_id = "bm_wskn_m95_golddigger_desc"
 	self.weapon_skins.m95_golddigger.weapon_id = "m95"
 	self.weapon_skins.m95_golddigger.rarity = "uncommon"
 	self.weapon_skins.m95_golddigger.bonus = "total_ammo_p1"
@@ -2858,7 +2796,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.judge_bloodbath = {}
 	self.weapon_skins.judge_bloodbath.name_id = "bm_wskn_judge_bloodbath"
-	self.weapon_skins.judge_bloodbath.desc_id = "bm_wskn_judge_bloodbath_desc"
 	self.weapon_skins.judge_bloodbath.weapon_id = "judge"
 	self.weapon_skins.judge_bloodbath.rarity = "common"
 	self.weapon_skins.judge_bloodbath.bonus = "spread_p1"
@@ -2898,7 +2835,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.b92fs_bloodbath = {}
 	self.weapon_skins.b92fs_bloodbath.name_id = "bm_wskn_b92fs_bloodbath"
-	self.weapon_skins.b92fs_bloodbath.desc_id = "bm_wskn_b92fs_bloodbath_desc"
 	self.weapon_skins.b92fs_bloodbath.weapon_id = "b92fs"
 	self.weapon_skins.b92fs_bloodbath.rarity = "uncommon"
 	self.weapon_skins.b92fs_bloodbath.bonus = "spread_p1"
@@ -2926,7 +2862,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.new_raging_bull_bloodbath = {}
 	self.weapon_skins.new_raging_bull_bloodbath.name_id = "bm_wskn_new_raging_bull_bloodbath"
-	self.weapon_skins.new_raging_bull_bloodbath.desc_id = "bm_wskn_new_raging_bull_bloodbath_desc"
 	self.weapon_skins.new_raging_bull_bloodbath.weapon_id = "new_raging_bull"
 	self.weapon_skins.new_raging_bull_bloodbath.rarity = "common"
 	self.weapon_skins.new_raging_bull_bloodbath.bonus = "recoil_p1"
@@ -3042,7 +2977,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.mg42_bloodbath = {}
 	self.weapon_skins.mg42_bloodbath.name_id = "bm_wskn_mg42_bloodbath"
-	self.weapon_skins.mg42_bloodbath.desc_id = "bm_wskn_mg42_bloodbath_desc"
 	self.weapon_skins.mg42_bloodbath.weapon_id = "mg42"
 	self.weapon_skins.mg42_bloodbath.rarity = "rare"
 	self.weapon_skins.mg42_bloodbath.bonus = "spread_p1"
@@ -3070,7 +3004,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.plainsrider_bloodbath = {}
 	self.weapon_skins.plainsrider_bloodbath.name_id = "bm_wskn_plainsrider_bloodbath"
-	self.weapon_skins.plainsrider_bloodbath.desc_id = "bm_wskn_plainsrider_bloodbath_desc"
 	self.weapon_skins.plainsrider_bloodbath.weapon_id = "plainsrider"
 	self.weapon_skins.plainsrider_bloodbath.rarity = "common"
 	self.weapon_skins.plainsrider_bloodbath.bonus = "concealment_p1"
@@ -3079,7 +3012,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.plainsrider_bloodbath.base_gradient = Idstring("units/payday2_cash/safes/dinner/base_gradient/base_dinner_001_df")
 	self.weapon_skins.new_m4_bloodbath = {}
 	self.weapon_skins.new_m4_bloodbath.name_id = "bm_wskn_new_m4_bloodbath"
-	self.weapon_skins.new_m4_bloodbath.desc_id = "bm_wskn_new_m4_bloodbath_desc"
 	self.weapon_skins.new_m4_bloodbath.weapon_id = "new_m4"
 	self.weapon_skins.new_m4_bloodbath.rarity = "uncommon"
 	self.weapon_skins.new_m4_bloodbath.bonus = "spread_p1"
@@ -3088,7 +3020,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.new_m4_bloodbath.base_gradient = Idstring("units/payday2_cash/safes/dinner/base_gradient/base_assault_001_df")
 	self.weapon_skins.g36_bloodbath = {}
 	self.weapon_skins.g36_bloodbath.name_id = "bm_wskn_g36_bloodbath"
-	self.weapon_skins.g36_bloodbath.desc_id = "bm_wskn_g36_bloodbath_desc"
 	self.weapon_skins.g36_bloodbath.weapon_id = "g36"
 	self.weapon_skins.g36_bloodbath.rarity = "epic"
 	self.weapon_skins.g36_bloodbath.bonus = "spread_p1"
@@ -3148,7 +3079,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.flamethrower_mk2_bloodbath = {}
 	self.weapon_skins.flamethrower_mk2_bloodbath.name_id = "bm_wskn_flamethrower_mk2_bloodbath"
-	self.weapon_skins.flamethrower_mk2_bloodbath.desc_id = "bm_wskn_flamethrower_mk2_bloodbath_desc"
 	self.weapon_skins.flamethrower_mk2_bloodbath.weapon_id = "flamethrower_mk2"
 	self.weapon_skins.flamethrower_mk2_bloodbath.rarity = "uncommon"
 	self.weapon_skins.flamethrower_mk2_bloodbath.bonus = "damage_p1"
@@ -3185,7 +3115,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.deagle_bloodbath = {}
 	self.weapon_skins.deagle_bloodbath.name_id = "bm_wskn_deagle_bloodbath"
-	self.weapon_skins.deagle_bloodbath.desc_id = "bm_wskn_deagle_bloodbath_desc"
 	self.weapon_skins.deagle_bloodbath.weapon_id = "deagle"
 	self.weapon_skins.deagle_bloodbath.rarity = "common"
 	self.weapon_skins.deagle_bloodbath.bonus = "recoil_p1"
@@ -3213,7 +3142,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.rpg7_bloodbath = {}
 	self.weapon_skins.rpg7_bloodbath.name_id = "bm_wskn_rpg7_bloodbath"
-	self.weapon_skins.rpg7_bloodbath.desc_id = "bm_wskn_rpg7_bloodbath_desc"
 	self.weapon_skins.rpg7_bloodbath.weapon_id = "rpg7"
 	self.weapon_skins.rpg7_bloodbath.rarity = "rare"
 	self.weapon_skins.rpg7_bloodbath.bonus = "spread_p1"
@@ -3239,7 +3167,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.new_raging_bull_dallas = {}
 	self.weapon_skins.new_raging_bull_dallas.name_id = "bm_wskn_new_raging_bull_dallas"
-	self.weapon_skins.new_raging_bull_dallas.desc_id = "bm_wskn_new_raging_bull_dallas_desc"
 	self.weapon_skins.new_raging_bull_dallas.weapon_id = "new_raging_bull"
 	self.weapon_skins.new_raging_bull_dallas.rarity = "common"
 	self.weapon_skins.new_raging_bull_dallas.bonus = "team_exp_money_p3"
@@ -3252,7 +3179,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.new_raging_bull_dallas.pattern_pos = Vector3(-0.00333858, -1.27212, 0)
 	self.weapon_skins.mg42_dallas = {}
 	self.weapon_skins.mg42_dallas.name_id = "bm_wskn_mg42_dallas"
-	self.weapon_skins.mg42_dallas.desc_id = "bm_wskn_mg42_dallas_desc"
 	self.weapon_skins.mg42_dallas.weapon_id = "mg42"
 	self.weapon_skins.mg42_dallas.reserve_quality = true
 	self.weapon_skins.mg42_dallas.rarity = "common"
@@ -3261,7 +3187,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.mg42_dallas.base_gradient = Idstring("units/payday2_cash/safes/dallas/base_gradient/base_dallas_003_df")
 	self.weapon_skins.famas_dallas = {}
 	self.weapon_skins.famas_dallas.name_id = "bm_wskn_famas_dallas"
-	self.weapon_skins.famas_dallas.desc_id = "bm_wskn_famas_dallas_desc"
 	self.weapon_skins.famas_dallas.weapon_id = "famas"
 	self.weapon_skins.famas_dallas.reserve_quality = true
 	self.weapon_skins.famas_dallas.rarity = "common"
@@ -3299,7 +3224,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.flamethrower_mk2_dallas = {}
 	self.weapon_skins.flamethrower_mk2_dallas.name_id = "bm_wskn_flamethrower_mk2_dallas"
-	self.weapon_skins.flamethrower_mk2_dallas.desc_id = "bm_wskn_flamethrower_mk2_dallas_desc"
 	self.weapon_skins.flamethrower_mk2_dallas.weapon_id = "flamethrower_mk2"
 	self.weapon_skins.flamethrower_mk2_dallas.rarity = "common"
 	self.weapon_skins.flamethrower_mk2_dallas.bonus = "team_exp_money_p3"
@@ -3313,7 +3237,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.huntsman_dallas = {}
 	self.weapon_skins.huntsman_dallas.name_id = "bm_wskn_huntsman_dallas"
-	self.weapon_skins.huntsman_dallas.desc_id = "bm_wskn_huntsman_dallas_desc"
 	self.weapon_skins.huntsman_dallas.weapon_id = "huntsman"
 	self.weapon_skins.huntsman_dallas.rarity = "common"
 	self.weapon_skins.huntsman_dallas.bonus = "team_exp_money_p3"
@@ -3325,7 +3248,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.huntsman_dallas.pattern_tweak = Vector3(2.54233, 0, 1)
 	self.weapon_skins.r93_dallas = {}
 	self.weapon_skins.r93_dallas.name_id = "bm_wskn_r93_dallas"
-	self.weapon_skins.r93_dallas.desc_id = "bm_wskn_r93_dallas_desc"
 	self.weapon_skins.r93_dallas.weapon_id = "r93"
 	self.weapon_skins.r93_dallas.reserve_quality = true
 	self.weapon_skins.r93_dallas.rarity = "common"
@@ -3355,7 +3277,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.ak74_dallas = {}
 	self.weapon_skins.ak74_dallas.name_id = "bm_wskn_ak74_dallas"
-	self.weapon_skins.ak74_dallas.desc_id = "bm_wskn_ak74_dallas_desc"
 	self.weapon_skins.ak74_dallas.weapon_id = "ak74"
 	self.weapon_skins.ak74_dallas.reserve_quality = true
 	self.weapon_skins.ak74_dallas.rarity = "uncommon"
@@ -3373,7 +3294,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.ppk_dallas = {}
 	self.weapon_skins.ppk_dallas.name_id = "bm_wskn_ppk_dallas"
-	self.weapon_skins.ppk_dallas.desc_id = "bm_wskn_ppk_dallas_desc"
 	self.weapon_skins.ppk_dallas.weapon_id = "ppk"
 	self.weapon_skins.ppk_dallas.reserve_quality = true
 	self.weapon_skins.ppk_dallas.rarity = "uncommon"
@@ -3398,7 +3318,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.deagle_dallas = {}
 	self.weapon_skins.deagle_dallas.name_id = "bm_wskn_deagle_dallas"
-	self.weapon_skins.deagle_dallas.desc_id = "bm_wskn_deagle_dallas_desc"
 	self.weapon_skins.deagle_dallas.weapon_id = "deagle"
 	self.weapon_skins.deagle_dallas.rarity = "uncommon"
 	self.weapon_skins.deagle_dallas.bonus = "team_exp_money_p3"
@@ -3416,14 +3335,13 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		},
 		grip = {
 			base_gradient = Idstring("units/payday2_cash/safes/dallas/base_gradient/base_dallas_001_df"),
-			pattern_pos = Vector3(0.168376, -0.089196, 0),
 			pattern = Idstring("units/payday2_cash/safes/dallas/pattern/pattern_snakeskin_df"),
-			pattern_tweak = Vector3(0.967981, 0, 1)
+			pattern_tweak = Vector3(0.967981, 0, 1),
+			pattern_pos = Vector3(0.168376, -0.089196, 0)
 		}
 	}
 	self.weapon_skins.new_m14_dallas = {}
 	self.weapon_skins.new_m14_dallas.name_id = "bm_wskn_new_m14_dallas"
-	self.weapon_skins.new_m14_dallas.desc_id = "bm_wskn_new_m14_dallas_desc"
 	self.weapon_skins.new_m14_dallas.weapon_id = "new_m14"
 	self.weapon_skins.new_m14_dallas.rarity = "uncommon"
 	self.weapon_skins.new_m14_dallas.bonus = "team_exp_money_p3"
@@ -3482,7 +3400,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.judge_dallas = {}
 	self.weapon_skins.judge_dallas.name_id = "bm_wskn_judge_dallas"
-	self.weapon_skins.judge_dallas.desc_id = "bm_wskn_judge_dallas_desc"
 	self.weapon_skins.judge_dallas.weapon_id = "judge"
 	self.weapon_skins.judge_dallas.reserve_quality = true
 	self.weapon_skins.judge_dallas.rarity = "rare"
@@ -3538,7 +3455,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.b92fs_dallas = {}
 	self.weapon_skins.b92fs_dallas.name_id = "bm_wskn_b92fs_dallas"
-	self.weapon_skins.b92fs_dallas.desc_id = "bm_wskn_b92fs_dallas_desc"
 	self.weapon_skins.b92fs_dallas.weapon_id = "b92fs"
 	self.weapon_skins.b92fs_dallas.reserve_quality = true
 	self.weapon_skins.b92fs_dallas.rarity = "rare"
@@ -3582,7 +3498,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.serbu_dallas = {}
 	self.weapon_skins.serbu_dallas.name_id = "bm_wskn_serbu_dallas"
-	self.weapon_skins.serbu_dallas.desc_id = "bm_wskn_serbu_dallas_desc"
 	self.weapon_skins.serbu_dallas.weapon_id = "serbu"
 	self.weapon_skins.serbu_dallas.rarity = "rare"
 	self.weapon_skins.serbu_dallas.bonus = "team_exp_money_p3"
@@ -3644,7 +3559,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.g36_dallas = {}
 	self.weapon_skins.g36_dallas.name_id = "bm_wskn_g36_dallas"
-	self.weapon_skins.g36_dallas.desc_id = "bm_wskn_g36_dallas_desc"
 	self.weapon_skins.g36_dallas.weapon_id = "g36"
 	self.weapon_skins.g36_dallas.rarity = "epic"
 	self.weapon_skins.g36_dallas.bonus = "team_exp_money_p3"
@@ -3699,7 +3613,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.m95_dallas = {}
 	self.weapon_skins.m95_dallas.name_id = "bm_wskn_m95_dallas"
-	self.weapon_skins.m95_dallas.desc_id = "bm_wskn_m95_dallas_desc"
 	self.weapon_skins.m95_dallas.weapon_id = "m95"
 	self.weapon_skins.m95_dallas.rarity = "epic"
 	self.weapon_skins.m95_dallas.bonus = "team_exp_money_p3"
@@ -3821,7 +3734,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.akm_waves = {}
 	self.weapon_skins.akm_waves.name_id = "bm_wskn_akm_waves"
-	self.weapon_skins.akm_waves.desc_id = "bm_wskn_akm_waves_desc"
 	self.weapon_skins.akm_waves.weapon_id = "akm"
 	self.weapon_skins.akm_waves.rarity = "common"
 	self.weapon_skins.akm_waves.bonus = "spread_p1"
@@ -3830,7 +3742,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.akm_waves.base_gradient = Idstring("units/payday2_cash/safes/surf/base_gradient/base_surf_001_df")
 	self.weapon_skins.asval_waves = {}
 	self.weapon_skins.asval_waves.name_id = "bm_wskn_asval_waves"
-	self.weapon_skins.asval_waves.desc_id = "bm_wskn_asval_waves_desc"
 	self.weapon_skins.asval_waves.weapon_id = "asval"
 	self.weapon_skins.asval_waves.rarity = "common"
 	self.weapon_skins.asval_waves.bonus = "spread_p1"
@@ -3847,7 +3758,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.m16_waves = {}
 	self.weapon_skins.m16_waves.name_id = "bm_wskn_m16_waves"
-	self.weapon_skins.m16_waves.desc_id = "bm_wskn_m16_waves_desc"
 	self.weapon_skins.m16_waves.weapon_id = "m16"
 	self.weapon_skins.m16_waves.rarity = "common"
 	self.weapon_skins.m16_waves.bonus = "recoil_p1"
@@ -3856,7 +3766,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.m16_waves.base_gradient = Idstring("units/payday2_cash/safes/surf/base_gradient/base_surf_003_df")
 	self.weapon_skins.baka_waves = {}
 	self.weapon_skins.baka_waves.name_id = "bm_wskn_baka_waves"
-	self.weapon_skins.baka_waves.desc_id = "bm_wskn_baka_waves_desc"
 	self.weapon_skins.baka_waves.weapon_id = "baka"
 	self.weapon_skins.baka_waves.rarity = "common"
 	self.weapon_skins.baka_waves.bonus = "recoil_p1"
@@ -3868,7 +3777,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.baka_waves.pattern_tweak = Vector3(1.96995, 0, 1)
 	self.weapon_skins.s552_waves = {}
 	self.weapon_skins.s552_waves.name_id = "bm_wskn_s552_waves"
-	self.weapon_skins.s552_waves.desc_id = "bm_wskn_s552_waves_desc"
 	self.weapon_skins.s552_waves.weapon_id = "s552"
 	self.weapon_skins.s552_waves.rarity = "common"
 	self.weapon_skins.s552_waves.bonus = "spread_p1"
@@ -3881,7 +3789,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.s552_waves.pattern_pos = Vector3(-0.0701165, -0.27999, 0)
 	self.weapon_skins.usp_waves = {}
 	self.weapon_skins.usp_waves.name_id = "bm_wskn_usp_waves"
-	self.weapon_skins.usp_waves.desc_id = "bm_wskn_usp_waves_desc"
 	self.weapon_skins.usp_waves.weapon_id = "usp"
 	self.weapon_skins.usp_waves.rarity = "common"
 	self.weapon_skins.usp_waves.bonus = "spread_p1"
@@ -3890,7 +3797,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.usp_waves.base_gradient = Idstring("units/payday2_cash/safes/surf/base_gradient/base_surf_006_df")
 	self.weapon_skins.mac10_waves = {}
 	self.weapon_skins.mac10_waves.name_id = "bm_wskn_mac10_waves"
-	self.weapon_skins.mac10_waves.desc_id = "bm_wskn_mac10_waves_desc"
 	self.weapon_skins.mac10_waves.weapon_id = "mac10"
 	self.weapon_skins.mac10_waves.rarity = "uncommon"
 	self.weapon_skins.mac10_waves.bonus = "recoil_p1"
@@ -3925,7 +3831,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.aug_waves = {}
 	self.weapon_skins.aug_waves.name_id = "bm_wskn_aug_waves"
-	self.weapon_skins.aug_waves.desc_id = "bm_wskn_aug_waves_desc"
 	self.weapon_skins.aug_waves.weapon_id = "aug"
 	self.weapon_skins.aug_waves.rarity = "uncommon"
 	self.weapon_skins.aug_waves.bonus = "recoil_p1"
@@ -3957,7 +3862,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.scar_waves = {}
 	self.weapon_skins.scar_waves.name_id = "bm_wskn_scar_waves"
-	self.weapon_skins.scar_waves.desc_id = "bm_wskn_scar_waves_desc"
 	self.weapon_skins.scar_waves.weapon_id = "scar"
 	self.weapon_skins.scar_waves.rarity = "uncommon"
 	self.weapon_skins.scar_waves.bonus = "spread_p1"
@@ -3997,7 +3901,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.colt_1911_waves = {}
 	self.weapon_skins.colt_1911_waves.name_id = "bm_wskn_colt_1911_waves"
-	self.weapon_skins.colt_1911_waves.desc_id = "bm_wskn_colt_1911_waves_desc"
 	self.weapon_skins.colt_1911_waves.weapon_id = "colt_1911"
 	self.weapon_skins.colt_1911_waves.rarity = "uncommon"
 	self.weapon_skins.colt_1911_waves.bonus = "spread_p1"
@@ -4037,7 +3940,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.polymer_waves = {}
 	self.weapon_skins.polymer_waves.name_id = "bm_wskn_polymer_waves"
-	self.weapon_skins.polymer_waves.desc_id = "bm_wskn_polymer_waves_desc"
 	self.weapon_skins.polymer_waves.weapon_id = "polymer"
 	self.weapon_skins.polymer_waves.rarity = "rare"
 	self.weapon_skins.polymer_waves.bonus = "spread_p1"
@@ -4085,7 +3987,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.ak5_waves = {}
 	self.weapon_skins.ak5_waves.name_id = "bm_wskn_ak5_waves"
-	self.weapon_skins.ak5_waves.desc_id = "bm_wskn_ak5_waves_desc"
 	self.weapon_skins.ak5_waves.weapon_id = "ak5"
 	self.weapon_skins.ak5_waves.rarity = "rare"
 	self.weapon_skins.ak5_waves.bonus = "spread_p1"
@@ -4116,7 +4017,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.mosin_waves = {}
 	self.weapon_skins.mosin_waves.name_id = "bm_wskn_mosin_waves"
-	self.weapon_skins.mosin_waves.desc_id = "bm_wskn_mosin_waves_desc"
 	self.weapon_skins.mosin_waves.weapon_id = "mosin"
 	self.weapon_skins.mosin_waves.rarity = "rare"
 	self.weapon_skins.mosin_waves.bonus = "total_ammo_p1"
@@ -4174,7 +4074,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.striker_waves = {}
 	self.weapon_skins.striker_waves.name_id = "bm_wskn_striker_waves"
-	self.weapon_skins.striker_waves.desc_id = "bm_wskn_striker_waves_desc"
 	self.weapon_skins.striker_waves.weapon_id = "striker"
 	self.weapon_skins.striker_waves.rarity = "epic"
 	self.weapon_skins.striker_waves.bonus = "spread_p1"
@@ -4300,7 +4199,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.x_g22c_waves = {}
 	self.weapon_skins.x_g22c_waves.name_id = "bm_wskn_x_g22c_waves"
-	self.weapon_skins.x_g22c_waves.desc_id = "bm_wskn_x_g22c_waves_desc"
 	self.weapon_skins.x_g22c_waves.weapon_id = "g22c"
 	self.weapon_skins.x_g22c_waves.rarity = "epic"
 	self.weapon_skins.x_g22c_waves.bonus = "recoil_p1"
@@ -4410,7 +4308,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.saiga_ginger = {}
 	self.weapon_skins.saiga_ginger.name_id = "bm_wskn_saiga_ginger"
-	self.weapon_skins.saiga_ginger.desc_id = "bm_wskn_saiga_ginger_desc"
 	self.weapon_skins.saiga_ginger.weapon_id = "saiga"
 	self.weapon_skins.saiga_ginger.rarity = "common"
 	self.weapon_skins.saiga_ginger.bonus = "total_ammo_p1"
@@ -4431,7 +4328,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.p226_ginger = {}
 	self.weapon_skins.p226_ginger.name_id = "bm_wskn_p226_ginger"
-	self.weapon_skins.p226_ginger.desc_id = "bm_wskn_p226_ginger_desc"
 	self.weapon_skins.p226_ginger.weapon_id = "p226"
 	self.weapon_skins.p226_ginger.rarity = "common"
 	self.weapon_skins.p226_ginger.bonus = "spread_p1"
@@ -4444,7 +4340,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.p226_ginger.pattern_pos = Vector3(-0.480324, -0.480324, 0)
 	self.weapon_skins.new_mp5_ginger = {}
 	self.weapon_skins.new_mp5_ginger.name_id = "bm_wskn_new_mp5_ginger"
-	self.weapon_skins.new_mp5_ginger.desc_id = "bm_wskn_new_mp5_ginger_desc"
 	self.weapon_skins.new_mp5_ginger.weapon_id = "new_mp5"
 	self.weapon_skins.new_mp5_ginger.rarity = "common"
 	self.weapon_skins.new_mp5_ginger.bonus = "spread_p1"
@@ -4464,7 +4359,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.m249_ginger = {}
 	self.weapon_skins.m249_ginger.name_id = "bm_wskn_m249_ginger"
-	self.weapon_skins.m249_ginger.desc_id = "bm_wskn_m249_ginger_desc"
 	self.weapon_skins.m249_ginger.weapon_id = "m249"
 	self.weapon_skins.m249_ginger.rarity = "common"
 	self.weapon_skins.m249_ginger.bonus = "spread_p1"
@@ -4504,7 +4398,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.x_b92fs_ginger = {}
 	self.weapon_skins.x_b92fs_ginger.name_id = "bm_wskn_x_b92fs_ginger"
-	self.weapon_skins.x_b92fs_ginger.desc_id = "bm_wskn_x_b92fs_ginger_desc"
 	self.weapon_skins.x_b92fs_ginger.weapon_id = "b92fs"
 	self.weapon_skins.x_b92fs_ginger.rarity = "uncommon"
 	self.weapon_skins.x_b92fs_ginger.bonus = "recoil_p1"
@@ -4565,7 +4458,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.ksg_ginger = {}
 	self.weapon_skins.ksg_ginger.name_id = "bm_wskn_ksg_ginger"
-	self.weapon_skins.ksg_ginger.desc_id = "bm_wskn_ksg_ginger_desc"
 	self.weapon_skins.ksg_ginger.weapon_id = "ksg"
 	self.weapon_skins.ksg_ginger.rarity = "uncommon"
 	self.weapon_skins.ksg_ginger.bonus = "spread_n1"
@@ -4623,7 +4515,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.m1928_ginger = {}
 	self.weapon_skins.m1928_ginger.name_id = "bm_wskn_m1928_ginger"
-	self.weapon_skins.m1928_ginger.desc_id = "bm_wskn_m1928_ginger_desc"
 	self.weapon_skins.m1928_ginger.weapon_id = "m1928"
 	self.weapon_skins.m1928_ginger.rarity = "uncommon"
 	self.weapon_skins.m1928_ginger.bonus = "spread_p1"
@@ -4651,7 +4542,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.g22c_ginger = {}
 	self.weapon_skins.g22c_ginger.name_id = "bm_wskn_g22c_ginger"
-	self.weapon_skins.g22c_ginger.desc_id = "bm_wskn_g22c_ginger_desc"
 	self.weapon_skins.g22c_ginger.weapon_id = "g22c"
 	self.weapon_skins.g22c_ginger.rarity = "rare"
 	self.weapon_skins.g22c_ginger.bonus = "spread_p1"
@@ -4770,7 +4660,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.wa2000_ginger = {}
 	self.weapon_skins.wa2000_ginger.name_id = "bm_wskn_wa2000_ginger"
-	self.weapon_skins.wa2000_ginger.desc_id = "bm_wskn_wa2000_ginger_desc"
 	self.weapon_skins.wa2000_ginger.weapon_id = "wa2000"
 	self.weapon_skins.wa2000_ginger.rarity = "rare"
 	self.weapon_skins.wa2000_ginger.bonus = "recoil_p1"
@@ -4831,7 +4720,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.akmsu_ginger = {}
 	self.weapon_skins.akmsu_ginger.name_id = "bm_wskn_akmsu_ginger"
-	self.weapon_skins.akmsu_ginger.desc_id = "bm_wskn_akmsu_ginger_desc"
 	self.weapon_skins.akmsu_ginger.weapon_id = "akmsu"
 	self.weapon_skins.akmsu_ginger.rarity = "epic"
 	self.weapon_skins.akmsu_ginger.bonus = "spread_p1"
@@ -5019,7 +4907,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.ak5_baaah = {}
 	self.weapon_skins.ak5_baaah.name_id = "bm_wskn_ak5_baaah"
-	self.weapon_skins.ak5_baaah.desc_id = "bm_wskn_ak5_baaah_desc"
 	self.weapon_skins.ak5_baaah.weapon_id = "ak5"
 	self.weapon_skins.ak5_baaah.rarity = "common"
 	self.weapon_skins.ak5_baaah.bonus = "spread_p1"
@@ -5076,7 +4963,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.wa2000_baaah = {}
 	self.weapon_skins.wa2000_baaah.name_id = "bm_wskn_wa2000_baaah"
-	self.weapon_skins.wa2000_baaah.desc_id = "bm_wskn_wa2000_baaah_desc"
 	self.weapon_skins.wa2000_baaah.weapon_id = "wa2000"
 	self.weapon_skins.wa2000_baaah.rarity = "common"
 	self.weapon_skins.wa2000_baaah.bonus = "recoil_p1"
@@ -5126,7 +5012,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.r870_baaah = {}
 	self.weapon_skins.r870_baaah.name_id = "bm_wskn_r870_baaah"
-	self.weapon_skins.r870_baaah.desc_id = "bm_wskn_r870_baaah_desc"
 	self.weapon_skins.r870_baaah.weapon_id = "r870"
 	self.weapon_skins.r870_baaah.rarity = "common"
 	self.weapon_skins.r870_baaah.bonus = "concealment_p1"
@@ -5176,7 +5061,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.x_g22c_baaah = {}
 	self.weapon_skins.x_g22c_baaah.name_id = "bm_wskn_x_g22c_baaah"
-	self.weapon_skins.x_g22c_baaah.desc_id = "bm_wskn_x_g22c_baaah_desc"
 	self.weapon_skins.x_g22c_baaah.weapon_id = "g22c"
 	self.weapon_skins.x_g22c_baaah.rarity = "common"
 	self.weapon_skins.x_g22c_baaah.bonus = "recoil_p1"
@@ -5211,7 +5095,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.usp_baaah = {}
 	self.weapon_skins.usp_baaah.name_id = "bm_wskn_usp_baaah"
-	self.weapon_skins.usp_baaah.desc_id = "bm_wskn_usp_baaah_desc"
 	self.weapon_skins.usp_baaah.weapon_id = "usp"
 	self.weapon_skins.usp_baaah.rarity = "uncommon"
 	self.weapon_skins.usp_baaah.bonus = "spread_p1"
@@ -5252,7 +5135,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.polymer_baaah = {}
 	self.weapon_skins.polymer_baaah.name_id = "bm_wskn_polymer_baaah"
-	self.weapon_skins.polymer_baaah.desc_id = "bm_wskn_polymer_baaah_desc"
 	self.weapon_skins.polymer_baaah.weapon_id = "polymer"
 	self.weapon_skins.polymer_baaah.rarity = "uncommon"
 	self.weapon_skins.polymer_baaah.bonus = "spread_p1"
@@ -5293,7 +5175,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.m16_baaah = {}
 	self.weapon_skins.m16_baaah.name_id = "bm_wskn_m16_baaah"
-	self.weapon_skins.m16_baaah.desc_id = "bm_wskn_m16_baaah_desc"
 	self.weapon_skins.m16_baaah.weapon_id = "m16"
 	self.weapon_skins.m16_baaah.rarity = "uncommon"
 	self.weapon_skins.m16_baaah.bonus = "spread_p1"
@@ -5389,7 +5270,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.m249_baaah = {}
 	self.weapon_skins.m249_baaah.name_id = "bm_wskn_m249_baaah"
-	self.weapon_skins.m249_baaah.desc_id = "bm_wskn_m249_baaah_desc"
 	self.weapon_skins.m249_baaah.weapon_id = "m249"
 	self.weapon_skins.m249_baaah.rarity = "rare"
 	self.weapon_skins.m249_baaah.bonus = "spread_p1"
@@ -5524,7 +5404,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.x_1911_baaah = {}
 	self.weapon_skins.x_1911_baaah.name_id = "bm_wskn_x_1911_baaah"
-	self.weapon_skins.x_1911_baaah.desc_id = "bm_wskn_x_1911_baaah_desc"
 	self.weapon_skins.x_1911_baaah.weapon_id = "colt_1911"
 	self.weapon_skins.x_1911_baaah.rarity = "rare"
 	self.weapon_skins.x_1911_baaah.bonus = "recoil_p1"
@@ -5568,7 +5447,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.ksg_baaah = {}
 	self.weapon_skins.ksg_baaah.name_id = "bm_wskn_ksg_baaah"
-	self.weapon_skins.ksg_baaah.desc_id = "bm_wskn_ksg_baaah_desc"
 	self.weapon_skins.ksg_baaah.weapon_id = "ksg"
 	self.weapon_skins.ksg_baaah.rarity = "epic"
 	self.weapon_skins.ksg_baaah.bonus = "concealment_p1"
@@ -5703,7 +5581,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.striker_wolf = {}
 	self.weapon_skins.striker_wolf.name_id = "bm_wskn_striker_wolf"
-	self.weapon_skins.striker_wolf.desc_id = "bm_wskn_striker_wolf_desc"
 	self.weapon_skins.striker_wolf.weapon_id = "striker"
 	self.weapon_skins.striker_wolf.rarity = "common"
 	self.weapon_skins.striker_wolf.bonus = "recoil_p1"
@@ -5727,7 +5604,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.mosin_wolf = {}
 	self.weapon_skins.mosin_wolf.name_id = "bm_wskn_mosin_wolf"
-	self.weapon_skins.mosin_wolf.desc_id = "bm_wskn_mosin_wolf_desc"
 	self.weapon_skins.mosin_wolf.weapon_id = "mosin"
 	self.weapon_skins.mosin_wolf.rarity = "common"
 	self.weapon_skins.mosin_wolf.bonus = "concealment_p1"
@@ -5817,7 +5693,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.colt_1911_wolf = {}
 	self.weapon_skins.colt_1911_wolf.name_id = "bm_wskn_colt_1911_wolf"
-	self.weapon_skins.colt_1911_wolf.desc_id = "bm_wskn_colt_1911_wolf_desc"
 	self.weapon_skins.colt_1911_wolf.weapon_id = "colt_1911"
 	self.weapon_skins.colt_1911_wolf.rarity = "common"
 	self.weapon_skins.colt_1911_wolf.bonus = "spread_p1"
@@ -5853,7 +5728,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.scar_wolf = {}
 	self.weapon_skins.scar_wolf.name_id = "bm_wskn_scar_wolf"
-	self.weapon_skins.scar_wolf.desc_id = "bm_wskn_scar_wolf_desc"
 	self.weapon_skins.scar_wolf.weapon_id = "scar"
 	self.weapon_skins.scar_wolf.rarity = "common"
 	self.weapon_skins.scar_wolf.bonus = "recoil_p1"
@@ -5896,7 +5770,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.saiga_wolf = {}
 	self.weapon_skins.saiga_wolf.name_id = "bm_wskn_saiga_wolf"
-	self.weapon_skins.saiga_wolf.desc_id = "bm_wskn_saiga_wolf_desc"
 	self.weapon_skins.saiga_wolf.weapon_id = "saiga"
 	self.weapon_skins.saiga_wolf.rarity = "common"
 	self.weapon_skins.saiga_wolf.bonus = "recoil_p1"
@@ -5918,7 +5791,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.g22c_wolf = {}
 	self.weapon_skins.g22c_wolf.name_id = "bm_wskn_g22c_wolf"
-	self.weapon_skins.g22c_wolf.desc_id = "bm_wskn_g22c_wolf_desc"
 	self.weapon_skins.g22c_wolf.weapon_id = "g22c"
 	self.weapon_skins.g22c_wolf.rarity = "common"
 	self.weapon_skins.g22c_wolf.bonus = "spread_p1"
@@ -5939,7 +5811,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.mac10_wolf = {}
 	self.weapon_skins.mac10_wolf.name_id = "bm_wskn_mac10_wolf"
-	self.weapon_skins.mac10_wolf.desc_id = "bm_wskn_mac10_wolf_desc"
 	self.weapon_skins.mac10_wolf.weapon_id = "mac10"
 	self.weapon_skins.mac10_wolf.rarity = "uncommon"
 	self.weapon_skins.mac10_wolf.bonus = "spread_p1"
@@ -5978,7 +5849,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.p226_wolf = {}
 	self.weapon_skins.p226_wolf.name_id = "bm_wskn_p226_wolf"
-	self.weapon_skins.p226_wolf.desc_id = "bm_wskn_p226_wolf_desc"
 	self.weapon_skins.p226_wolf.weapon_id = "p226"
 	self.weapon_skins.p226_wolf.rarity = "uncommon"
 	self.weapon_skins.p226_wolf.bonus = "spread_p1"
@@ -6006,7 +5876,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.akm_wolf = {}
 	self.weapon_skins.akm_wolf.name_id = "bm_wskn_akm_wolf"
-	self.weapon_skins.akm_wolf.desc_id = "bm_wskn_akm_wolf_desc"
 	self.weapon_skins.akm_wolf.weapon_id = "akm"
 	self.weapon_skins.akm_wolf.rarity = "uncommon"
 	self.weapon_skins.akm_wolf.bonus = "spread_p1"
@@ -6096,7 +5965,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.baka_wolf = {}
 	self.weapon_skins.baka_wolf.name_id = "bm_wskn_baka_wolf"
-	self.weapon_skins.baka_wolf.desc_id = "bm_wskn_baka_wolf_desc"
 	self.weapon_skins.baka_wolf.weapon_id = "baka"
 	self.weapon_skins.baka_wolf.rarity = "uncommon"
 	self.weapon_skins.baka_wolf.bonus = "spread_p1"
@@ -6136,7 +6004,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.asval_wolf = {}
 	self.weapon_skins.asval_wolf.name_id = "bm_wskn_asval_wolf"
-	self.weapon_skins.asval_wolf.desc_id = "bm_wskn_asval_wolf_desc"
 	self.weapon_skins.asval_wolf.weapon_id = "asval"
 	self.weapon_skins.asval_wolf.rarity = "rare"
 	self.weapon_skins.asval_wolf.bonus = "spread_p1"
@@ -6201,7 +6068,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.aug_wolf = {}
 	self.weapon_skins.aug_wolf.name_id = "bm_wskn_aug_wolf"
-	self.weapon_skins.aug_wolf.desc_id = "bm_wskn_aug_wolf_desc"
 	self.weapon_skins.aug_wolf.weapon_id = "aug"
 	self.weapon_skins.aug_wolf.rarity = "rare"
 	self.weapon_skins.aug_wolf.bonus = "spread_p1"
@@ -6221,8 +6087,8 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		wpn_fps_aug_body_f90 = {
 			[Idstring("mtr_f90"):key()] = {
 				sticker = Idstring("units/payday2_cash/safes/pack/sticker/sticker_vargtimmer_df"),
-				uv_scale = Vector3(4.64875, 20, 0.489626),
-				uv_offset_rot = Vector3(0.0825188, 0.962172, 0)
+				uv_offset_rot = Vector3(0.367789, 1.40708, 3.15133),
+				uv_scale = Vector3(5, 24, 0.489626)
 			}
 		},
 		wpn_fps_aug_fg_a3 = {
@@ -6267,7 +6133,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.x_deagle_wolf = {}
 	self.weapon_skins.x_deagle_wolf.name_id = "bm_wskn_x_deagle_wolf"
-	self.weapon_skins.x_deagle_wolf.desc_id = "bm_wskn_x_deagle_wolf_desc"
 	self.weapon_skins.x_deagle_wolf.weapon_id = "deagle"
 	self.weapon_skins.x_deagle_wolf.rarity = "rare"
 	self.weapon_skins.x_deagle_wolf.bonus = "recoil_p1"
@@ -6335,7 +6200,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.s552_wolf = {}
 	self.weapon_skins.s552_wolf.name_id = "bm_wskn_s552_wolf"
-	self.weapon_skins.s552_wolf.desc_id = "bm_wskn_s552_wolf_desc"
 	self.weapon_skins.s552_wolf.weapon_id = "s552"
 	self.weapon_skins.s552_wolf.rarity = "epic"
 	self.weapon_skins.s552_wolf.bonus = "recoil_p1"
@@ -6393,7 +6257,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.m16_wolf = {}
 	self.weapon_skins.m16_wolf.name_id = "bm_wskn_m16_wolf"
-	self.weapon_skins.m16_wolf.desc_id = "bm_wskn_m16_wolf_desc"
 	self.weapon_skins.m16_wolf.weapon_id = "m16"
 	self.weapon_skins.m16_wolf.rarity = "epic"
 	self.weapon_skins.m16_wolf.bonus = "spread_p1"
@@ -6532,7 +6395,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.glock_17_cola = {}
 	self.weapon_skins.glock_17_cola.name_id = "bm_wskn_glock_17_cola"
-	self.weapon_skins.glock_17_cola.desc_id = "bm_wskn_glock_17_cola_desc"
 	self.weapon_skins.glock_17_cola.weapon_id = "glock_17"
 	self.weapon_skins.glock_17_cola.rarity = "common"
 	self.weapon_skins.glock_17_cola.bonus = "recoil_p1"
@@ -6549,7 +6411,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.scorpion_cola = {}
 	self.weapon_skins.scorpion_cola.name_id = "bm_wskn_scorpion_cola"
-	self.weapon_skins.scorpion_cola.desc_id = "bm_wskn_scorpion_cola_desc"
 	self.weapon_skins.scorpion_cola.weapon_id = "scorpion"
 	self.weapon_skins.scorpion_cola.rarity = "common"
 	self.weapon_skins.scorpion_cola.bonus = "spread_p1"
@@ -6580,7 +6441,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.amcar_cola = {}
 	self.weapon_skins.amcar_cola.name_id = "bm_wskn_amcar_cola"
-	self.weapon_skins.amcar_cola.desc_id = "bm_wskn_amcar_cola_desc"
 	self.weapon_skins.amcar_cola.weapon_id = "amcar"
 	self.weapon_skins.amcar_cola.rarity = "common"
 	self.weapon_skins.amcar_cola.bonus = "spread_p1"
@@ -6612,7 +6472,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.uzi_cola = {}
 	self.weapon_skins.uzi_cola.name_id = "bm_wskn_uzi_cola"
-	self.weapon_skins.uzi_cola.desc_id = "bm_wskn_uzi_cola_desc"
 	self.weapon_skins.uzi_cola.weapon_id = "uzi"
 	self.weapon_skins.uzi_cola.rarity = "common"
 	self.weapon_skins.uzi_cola.bonus = "spread_p1"
@@ -6638,7 +6497,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.fal_cola = {}
 	self.weapon_skins.fal_cola.name_id = "bm_wskn_fal_cola"
-	self.weapon_skins.fal_cola.desc_id = "bm_wskn_fal_cola_desc"
 	self.weapon_skins.fal_cola.weapon_id = "fal"
 	self.weapon_skins.fal_cola.rarity = "common"
 	self.weapon_skins.fal_cola.bonus = "spread_p1"
@@ -6687,7 +6545,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.x_usp_cola = {}
 	self.weapon_skins.x_usp_cola.name_id = "bm_wskn_x_usp_cola"
-	self.weapon_skins.x_usp_cola.desc_id = "bm_wskn_x_usp_cola_desc"
 	self.weapon_skins.x_usp_cola.weapon_id = "usp"
 	self.weapon_skins.x_usp_cola.rarity = "common"
 	self.weapon_skins.x_usp_cola.bonus = "recoil_p1"
@@ -6715,7 +6572,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.m37_cola = {}
 	self.weapon_skins.m37_cola.name_id = "bm_wskn_m37_cola"
-	self.weapon_skins.m37_cola.desc_id = "bm_wskn_m37_cola_desc"
 	self.weapon_skins.m37_cola.weapon_id = "m37"
 	self.weapon_skins.m37_cola.rarity = "uncommon"
 	self.weapon_skins.m37_cola.bonus = "spread_p1"
@@ -6768,7 +6624,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.sparrow_cola = {}
 	self.weapon_skins.sparrow_cola.name_id = "bm_wskn_sparrow_cola"
-	self.weapon_skins.sparrow_cola.desc_id = "bm_wskn_sparrow_cola_desc"
 	self.weapon_skins.sparrow_cola.weapon_id = "sparrow"
 	self.weapon_skins.sparrow_cola.rarity = "uncommon"
 	self.weapon_skins.sparrow_cola.bonus = "spread_p1"
@@ -6820,7 +6675,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.benelli_cola = {}
 	self.weapon_skins.benelli_cola.name_id = "bm_wskn_benelli_cola"
-	self.weapon_skins.benelli_cola.desc_id = "bm_wskn_benelli_cola_desc"
 	self.weapon_skins.benelli_cola.weapon_id = "benelli"
 	self.weapon_skins.benelli_cola.rarity = "uncommon"
 	self.weapon_skins.benelli_cola.bonus = "recoil_p1"
@@ -6923,7 +6777,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.hunter_cola = {}
 	self.weapon_skins.hunter_cola.name_id = "bm_wskn_hunter_cola"
-	self.weapon_skins.hunter_cola.desc_id = "bm_wskn_hunter_cola_desc"
 	self.weapon_skins.hunter_cola.weapon_id = "hunter"
 	self.weapon_skins.hunter_cola.rarity = "uncommon"
 	self.weapon_skins.hunter_cola.bonus = "total_ammo_p1"
@@ -6975,7 +6828,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.hs2000_cola = {}
 	self.weapon_skins.hs2000_cola.name_id = "bm_wskn_hs2000_cola"
-	self.weapon_skins.hs2000_cola.desc_id = "bm_wskn_hs2000_cola_desc"
 	self.weapon_skins.hs2000_cola.weapon_id = "hs2000"
 	self.weapon_skins.hs2000_cola.rarity = "rare"
 	self.weapon_skins.hs2000_cola.bonus = "spread_p1"
@@ -7039,7 +6891,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.olympic_cola = {}
 	self.weapon_skins.olympic_cola.name_id = "bm_wskn_olympic_cola"
-	self.weapon_skins.olympic_cola.desc_id = "bm_wskn_olympic_cola_desc"
 	self.weapon_skins.olympic_cola.weapon_id = "olympic"
 	self.weapon_skins.olympic_cola.rarity = "rare"
 	self.weapon_skins.olympic_cola.bonus = "recoil_p1"
@@ -7136,7 +6987,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.g3_cola = {}
 	self.weapon_skins.g3_cola.name_id = "bm_wskn_g3_cola"
-	self.weapon_skins.g3_cola.desc_id = "bm_wskn_g3_cola_desc"
 	self.weapon_skins.g3_cola.weapon_id = "g3"
 	self.weapon_skins.g3_cola.rarity = "rare"
 	self.weapon_skins.g3_cola.bonus = "spread_p1"
@@ -7237,7 +7087,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.b682_cola = {}
 	self.weapon_skins.b682_cola.name_id = "bm_wskn_b682_cola"
-	self.weapon_skins.b682_cola.desc_id = "bm_wskn_b682_cola_desc"
 	self.weapon_skins.b682_cola.weapon_id = "b682"
 	self.weapon_skins.b682_cola.rarity = "epic"
 	self.weapon_skins.b682_cola.bonus = "recoil_p1"
@@ -7314,7 +7163,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.gre_m79_cola = {}
 	self.weapon_skins.gre_m79_cola.name_id = "bm_wskn_gre_m79_cola"
-	self.weapon_skins.gre_m79_cola.desc_id = "bm_wskn_gre_m79_cola_desc"
 	self.weapon_skins.gre_m79_cola.weapon_id = "gre_m79"
 	self.weapon_skins.gre_m79_cola.rarity = "epic"
 	self.weapon_skins.gre_m79_cola.bonus = "concealment_p1"
@@ -7457,7 +7305,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.gre_m79_burn = {}
 	self.weapon_skins.gre_m79_burn.name_id = "bm_wskn_gre_m79_burn"
-	self.weapon_skins.gre_m79_burn.desc_id = "bm_wskn_gre_m79_burn_desc"
 	self.weapon_skins.gre_m79_burn.weapon_id = "gre_m79"
 	self.weapon_skins.gre_m79_burn.rarity = "common"
 	self.weapon_skins.gre_m79_burn.bonus = "concealment_p1"
@@ -7489,7 +7336,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.b682_burn = {}
 	self.weapon_skins.b682_burn.name_id = "bm_wskn_b682_burn"
-	self.weapon_skins.b682_burn.desc_id = "bm_wskn_b682_burn_desc"
 	self.weapon_skins.b682_burn.weapon_id = "b682"
 	self.weapon_skins.b682_burn.rarity = "common"
 	self.weapon_skins.b682_burn.bonus = "recoil_p1"
@@ -7534,7 +7380,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.g3_burn = {}
 	self.weapon_skins.g3_burn.name_id = "bm_wskn_g3_burn"
-	self.weapon_skins.g3_burn.desc_id = "bm_wskn_g3_burn_desc"
 	self.weapon_skins.g3_burn.weapon_id = "g3"
 	self.weapon_skins.g3_burn.rarity = "common"
 	self.weapon_skins.g3_burn.bonus = "spread_p1"
@@ -7589,7 +7434,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.mp9_burn = {}
 	self.weapon_skins.mp9_burn.name_id = "bm_wskn_mp9_burn"
-	self.weapon_skins.mp9_burn.desc_id = "bm_wskn_mp9_burn_desc"
 	self.weapon_skins.mp9_burn.weapon_id = "mp9"
 	self.weapon_skins.mp9_burn.rarity = "common"
 	self.weapon_skins.mp9_burn.bonus = "recoil_p1"
@@ -7651,7 +7495,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.hs2000_burn = {}
 	self.weapon_skins.hs2000_burn.name_id = "bm_wskn_hs2000_burn"
-	self.weapon_skins.hs2000_burn.desc_id = "bm_wskn_hs2000_burn_desc"
 	self.weapon_skins.hs2000_burn.weapon_id = "hs2000"
 	self.weapon_skins.hs2000_burn.rarity = "common"
 	self.weapon_skins.hs2000_burn.bonus = "spread_p1"
@@ -7683,7 +7526,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.hunter_burn = {}
 	self.weapon_skins.hunter_burn.name_id = "bm_wskn_hunter_burn"
-	self.weapon_skins.hunter_burn.desc_id = "bm_wskn_hunter_burn_desc"
 	self.weapon_skins.hunter_burn.weapon_id = "hunter"
 	self.weapon_skins.hunter_burn.rarity = "common"
 	self.weapon_skins.hunter_burn.bonus = "total_ammo_p1"
@@ -7706,7 +7548,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.benelli_burn = {}
 	self.weapon_skins.benelli_burn.name_id = "bm_wskn_benelli_burn"
-	self.weapon_skins.benelli_burn.desc_id = "bm_wskn_benelli_burn_desc"
 	self.weapon_skins.benelli_burn.weapon_id = "benelli"
 	self.weapon_skins.benelli_burn.rarity = "uncommon"
 	self.weapon_skins.benelli_burn.bonus = "recoil_p1"
@@ -7776,7 +7617,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.sparrow_burn = {}
 	self.weapon_skins.sparrow_burn.name_id = "bm_wskn_sparrow_burn"
-	self.weapon_skins.sparrow_burn.desc_id = "bm_wskn_sparrow_burn_desc"
 	self.weapon_skins.sparrow_burn.weapon_id = "sparrow"
 	self.weapon_skins.sparrow_burn.rarity = "uncommon"
 	self.weapon_skins.sparrow_burn.bonus = "concealment_p1"
@@ -7841,7 +7681,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.m37_burn = {}
 	self.weapon_skins.m37_burn.name_id = "bm_wskn_m37_burn"
-	self.weapon_skins.m37_burn.desc_id = "bm_wskn_m37_burn_desc"
 	self.weapon_skins.m37_burn.weapon_id = "m37"
 	self.weapon_skins.m37_burn.rarity = "uncommon"
 	self.weapon_skins.m37_burn.bonus = "recoil_p1"
@@ -7896,7 +7735,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.spas12_burn = {}
 	self.weapon_skins.spas12_burn.name_id = "bm_wskn_spas12_burn"
-	self.weapon_skins.spas12_burn.desc_id = "bm_wskn_spas12_burn_desc"
 	self.weapon_skins.spas12_burn.weapon_id = "spas12"
 	self.weapon_skins.spas12_burn.rarity = "uncommon"
 	self.weapon_skins.spas12_burn.bonus = "recoil_p1"
@@ -7972,7 +7810,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.fal_burn = {}
 	self.weapon_skins.fal_burn.name_id = "bm_wskn_fal_burn"
-	self.weapon_skins.fal_burn.desc_id = "bm_wskn_fal_burn_desc"
 	self.weapon_skins.fal_burn.weapon_id = "fal"
 	self.weapon_skins.fal_burn.rarity = "rare"
 	self.weapon_skins.fal_burn.bonus = "spread_p1"
@@ -8093,7 +7930,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.glock_18c_burn = {}
 	self.weapon_skins.glock_18c_burn.name_id = "bm_wskn_glock_18c_burn"
-	self.weapon_skins.glock_18c_burn.desc_id = "bm_wskn_glock_18c_burn_desc"
 	self.weapon_skins.glock_18c_burn.weapon_id = "glock_18c"
 	self.weapon_skins.glock_18c_burn.rarity = "rare"
 	self.weapon_skins.glock_18c_burn.bonus = "recoil_p1"
@@ -8245,7 +8081,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.uzi_burn = {}
 	self.weapon_skins.uzi_burn.name_id = "bm_wskn_uzi_burn"
-	self.weapon_skins.uzi_burn.desc_id = "bm_wskn_uzi_burn_desc"
 	self.weapon_skins.uzi_burn.weapon_id = "uzi"
 	self.weapon_skins.uzi_burn.rarity = "rare"
 	self.weapon_skins.uzi_burn.bonus = "spread_p1"
@@ -8347,7 +8182,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.glock_17_burn = {}
 	self.weapon_skins.glock_17_burn.name_id = "bm_wskn_glock_17_burn"
-	self.weapon_skins.glock_17_burn.desc_id = "bm_wskn_glock_17_burn_desc"
 	self.weapon_skins.glock_17_burn.weapon_id = "glock_17"
 	self.weapon_skins.glock_17_burn.rarity = "epic"
 	self.weapon_skins.glock_17_burn.bonus = "spread_p1"
@@ -8360,6 +8194,11 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		"wpn_fps_pis_g17_m_standard",
 		"wpn_fps_pis_g26_g_laser",
 		"wpn_fps_upg_ns_pis_ipsccomp"
+	}
+	self.weapon_skins.glock_17_burn.special_blueprint = {
+		glock_17 = {
+			"wpn_fps_upg_o_rmr"
+		}
 	}
 	self.weapon_skins.glock_17_burn.parts = {
 		wpn_fps_pis_g18c_m_mag_33rnd = {
@@ -8508,7 +8347,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.scorpion_burn = {}
 	self.weapon_skins.scorpion_burn.name_id = "bm_wskn_scorpion_burn"
-	self.weapon_skins.scorpion_burn.desc_id = "bm_wskn_scorpion_burn_desc"
 	self.weapon_skins.scorpion_burn.weapon_id = "scorpion"
 	self.weapon_skins.scorpion_burn.rarity = "epic"
 	self.weapon_skins.scorpion_burn.bonus = "spread_p1"
@@ -8645,7 +8483,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.wa2000_buck = {}
 	self.weapon_skins.wa2000_buck.name_id = "bm_wskn_wa2000_buck"
-	self.weapon_skins.wa2000_buck.desc_id = "bm_wskn_wa2000_buck_desc"
 	self.weapon_skins.wa2000_buck.weapon_id = "wa2000"
 	self.weapon_skins.wa2000_buck.rarity = "common"
 	self.weapon_skins.wa2000_buck.bonus = "recoil_p1"
@@ -8691,7 +8528,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.akmsu_buck = {}
 	self.weapon_skins.akmsu_buck.name_id = "bm_wskn_akmsu_buck"
-	self.weapon_skins.akmsu_buck.desc_id = "bm_wskn_akmsu_buck_desc"
 	self.weapon_skins.akmsu_buck.weapon_id = "akmsu"
 	self.weapon_skins.akmsu_buck.rarity = "common"
 	self.weapon_skins.akmsu_buck.bonus = "spread_p1"
@@ -8739,7 +8575,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.x_1911_buck = {}
 	self.weapon_skins.x_1911_buck.name_id = "bm_wskn_x_1911_buck"
-	self.weapon_skins.x_1911_buck.desc_id = "bm_wskn_x_1911_buck_desc"
 	self.weapon_skins.x_1911_buck.weapon_id = "colt_1911"
 	self.weapon_skins.x_1911_buck.rarity = "common"
 	self.weapon_skins.x_1911_buck.bonus = "spread_p1"
@@ -8780,7 +8615,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.rpk_buck = {}
 	self.weapon_skins.rpk_buck.name_id = "bm_wskn_rpk_buck"
-	self.weapon_skins.rpk_buck.desc_id = "bm_wskn_rpk_buck_desc"
 	self.weapon_skins.rpk_buck.weapon_id = "rpk"
 	self.weapon_skins.rpk_buck.rarity = "common"
 	self.weapon_skins.rpk_buck.bonus = "recoil_p1"
@@ -8875,7 +8709,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.x_b92fs_buck = {}
 	self.weapon_skins.x_b92fs_buck.name_id = "bm_wskn_x_b92fs_buck"
-	self.weapon_skins.x_b92fs_buck.desc_id = "bm_wskn_x_b92fs_buck_desc"
 	self.weapon_skins.x_b92fs_buck.weapon_id = "b92fs"
 	self.weapon_skins.x_b92fs_buck.rarity = "common"
 	self.weapon_skins.x_b92fs_buck.bonus = "recoil_p1"
@@ -8927,7 +8760,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.ksg_buck = {}
 	self.weapon_skins.ksg_buck.name_id = "bm_wskn_ksg_buck"
-	self.weapon_skins.ksg_buck.desc_id = "bm_wskn_ksg_buck_desc"
 	self.weapon_skins.ksg_buck.weapon_id = "ksg"
 	self.weapon_skins.ksg_buck.rarity = "common"
 	self.weapon_skins.ksg_buck.bonus = "spread_n1"
@@ -8995,7 +8827,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.m249_buck = {}
 	self.weapon_skins.m249_buck.name_id = "bm_wskn_m249_buck"
-	self.weapon_skins.m249_buck.desc_id = "bm_wskn_m249_buck_desc"
 	self.weapon_skins.m249_buck.weapon_id = "m249"
 	self.weapon_skins.m249_buck.rarity = "uncommon"
 	self.weapon_skins.m249_buck.bonus = "recoil_p1"
@@ -9103,7 +8934,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.g22c_buck = {}
 	self.weapon_skins.g22c_buck.name_id = "bm_wskn_g22c_buck"
-	self.weapon_skins.g22c_buck.desc_id = "bm_wskn_g22c_buck_desc"
 	self.weapon_skins.g22c_buck.weapon_id = "g22c"
 	self.weapon_skins.g22c_buck.rarity = "uncommon"
 	self.weapon_skins.g22c_buck.bonus = "spread_p1"
@@ -9161,7 +8991,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.saw_buck = {}
 	self.weapon_skins.saw_buck.name_id = "bm_wskn_saw_buck"
-	self.weapon_skins.saw_buck.desc_id = "bm_wskn_saw_buck_desc"
 	self.weapon_skins.saw_buck.weapon_id = "saw"
 	self.weapon_skins.saw_buck.rarity = "uncommon"
 	self.weapon_skins.saw_buck.bonus = "concealment_p1"
@@ -9202,7 +9031,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.winchester1874_buck = {}
 	self.weapon_skins.winchester1874_buck.name_id = "bm_wskn_winchester1874_buck"
-	self.weapon_skins.winchester1874_buck.desc_id = "bm_wskn_winchester1874_buck_desc"
 	self.weapon_skins.winchester1874_buck.weapon_id = "winchester1874"
 	self.weapon_skins.winchester1874_buck.rarity = "uncommon"
 	self.weapon_skins.winchester1874_buck.bonus = "recoil_p1"
@@ -9252,7 +9080,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.m45_buck = {}
 	self.weapon_skins.m45_buck.name_id = "bm_wskn_m45_buck"
-	self.weapon_skins.m45_buck.desc_id = "bm_wskn_m45_buck_desc"
 	self.weapon_skins.m45_buck.weapon_id = "m45"
 	self.weapon_skins.m45_buck.rarity = "rare"
 	self.weapon_skins.m45_buck.bonus = "spread_p1"
@@ -9398,7 +9225,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.saiga_buck = {}
 	self.weapon_skins.saiga_buck.name_id = "bm_wskn_saiga_buck"
-	self.weapon_skins.saiga_buck.desc_id = "bm_wskn_saiga_buck_desc"
 	self.weapon_skins.saiga_buck.weapon_id = "saiga"
 	self.weapon_skins.saiga_buck.rarity = "rare"
 	self.weapon_skins.saiga_buck.bonus = "spread_n1"
@@ -9655,7 +9481,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.p226_buck = {}
 	self.weapon_skins.p226_buck.name_id = "bm_wskn_p226_buck"
-	self.weapon_skins.p226_buck.desc_id = "bm_wskn_p226_buck_desc"
 	self.weapon_skins.p226_buck.weapon_id = "p226"
 	self.weapon_skins.p226_buck.rarity = "rare"
 	self.weapon_skins.p226_buck.bonus = "spread_p1"
@@ -9709,7 +9534,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.new_mp5_buck = {}
 	self.weapon_skins.new_mp5_buck.name_id = "bm_wskn_new_mp5_buck"
-	self.weapon_skins.new_mp5_buck.desc_id = "bm_wskn_new_mp5_buck_desc"
 	self.weapon_skins.new_mp5_buck.weapon_id = "new_mp5"
 	self.weapon_skins.new_mp5_buck.rarity = "epic"
 	self.weapon_skins.new_mp5_buck.bonus = "spread_p1"
@@ -9901,7 +9725,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.m1928_buck = {}
 	self.weapon_skins.m1928_buck.name_id = "bm_wskn_m1928_buck"
-	self.weapon_skins.m1928_buck.desc_id = "bm_wskn_m1928_buck_desc"
 	self.weapon_skins.m1928_buck.weapon_id = "m1928"
 	self.weapon_skins.m1928_buck.rarity = "epic"
 	self.weapon_skins.m1928_buck.bonus = "spread_p1"
@@ -10098,7 +9921,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.amcar_same = {}
 	self.weapon_skins.amcar_same.name_id = "bm_wskn_amcar_same"
-	self.weapon_skins.amcar_same.desc_id = "bm_wskn_amcar_same_desc"
 	self.weapon_skins.amcar_same.weapon_id = "amcar"
 	self.weapon_skins.amcar_same.rarity = "common"
 	self.weapon_skins.amcar_same.bonus = "spread_p1"
@@ -10124,7 +9946,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.usp_same = {}
 	self.weapon_skins.usp_same.name_id = "bm_wskn_usp_same"
-	self.weapon_skins.usp_same.desc_id = "bm_wskn_usp_same_desc"
 	self.weapon_skins.usp_same.weapon_id = "usp"
 	self.weapon_skins.usp_same.rarity = "common"
 	self.weapon_skins.usp_same.bonus = "spread_p1"
@@ -10135,7 +9956,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.usp_same.pattern = Idstring("units/payday2_cash/safes/same/pattern/pattern_same_002_df")
 	self.weapon_skins.gre_m79_same = {}
 	self.weapon_skins.gre_m79_same.name_id = "bm_wskn_gre_m79_same"
-	self.weapon_skins.gre_m79_same.desc_id = "bm_wskn_gre_m79_same_desc"
 	self.weapon_skins.gre_m79_same.weapon_id = "gre_m79"
 	self.weapon_skins.gre_m79_same.rarity = "common"
 	self.weapon_skins.gre_m79_same.bonus = "concealment_p1"
@@ -10164,7 +9984,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.deagle_same = {}
 	self.weapon_skins.deagle_same.name_id = "bm_wskn_deagle_same"
-	self.weapon_skins.deagle_same.desc_id = "bm_wskn_deagle_same_desc"
 	self.weapon_skins.deagle_same.weapon_id = "deagle"
 	self.weapon_skins.deagle_same.rarity = "common"
 	self.weapon_skins.deagle_same.bonus = "recoil_p1"
@@ -10259,7 +10078,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.colt_1911_same = {}
 	self.weapon_skins.colt_1911_same.name_id = "bm_wskn_colt_1911_same"
-	self.weapon_skins.colt_1911_same.desc_id = "bm_wskn_colt_1911_same_desc"
 	self.weapon_skins.colt_1911_same.weapon_id = "colt_1911"
 	self.weapon_skins.colt_1911_same.rarity = "uncommon"
 	self.weapon_skins.colt_1911_same.bonus = "spread_p1"
@@ -10325,7 +10143,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.b92fs_same = {}
 	self.weapon_skins.b92fs_same.name_id = "bm_wskn_b92fs_same"
-	self.weapon_skins.b92fs_same.desc_id = "bm_wskn_b92fs_same_desc"
 	self.weapon_skins.b92fs_same.weapon_id = "b92fs"
 	self.weapon_skins.b92fs_same.rarity = "rare"
 	self.weapon_skins.b92fs_same.bonus = "spread_p1"
@@ -10399,7 +10216,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.judge_same = {}
 	self.weapon_skins.judge_same.name_id = "bm_wskn_judge_same"
-	self.weapon_skins.judge_same.desc_id = "bm_wskn_judge_same_desc"
 	self.weapon_skins.judge_same.weapon_id = "judge"
 	self.weapon_skins.judge_same.rarity = "uncommon"
 	self.weapon_skins.judge_same.bonus = "spread_n1"
@@ -10474,7 +10290,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.p90_same = {}
 	self.weapon_skins.p90_same.name_id = "bm_wskn_p90_same"
-	self.weapon_skins.p90_same.desc_id = "bm_wskn_p90_same_desc"
 	self.weapon_skins.p90_same.weapon_id = "p90"
 	self.weapon_skins.p90_same.rarity = "common"
 	self.weapon_skins.p90_same.bonus = "spread_p1"
@@ -10506,7 +10321,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.akm_same = {}
 	self.weapon_skins.akm_same.name_id = "bm_wskn_akm_same"
-	self.weapon_skins.akm_same.desc_id = "bm_wskn_akm_same_desc"
 	self.weapon_skins.akm_same.weapon_id = "akm"
 	self.weapon_skins.akm_same.rarity = "uncommon"
 	self.weapon_skins.akm_same.bonus = "spread_p1"
@@ -10545,7 +10359,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.ak5_same = {}
 	self.weapon_skins.ak5_same.name_id = "bm_wskn_ak5_same"
-	self.weapon_skins.ak5_same.desc_id = "bm_wskn_ak5_same_desc"
 	self.weapon_skins.ak5_same.weapon_id = "ak5"
 	self.weapon_skins.ak5_same.rarity = "rare"
 	self.weapon_skins.ak5_same.bonus = "spread_p1"
@@ -10571,7 +10384,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.baka_same = {}
 	self.weapon_skins.baka_same.name_id = "bm_wskn_baka_same"
-	self.weapon_skins.baka_same.desc_id = "bm_wskn_baka_same_desc"
 	self.weapon_skins.baka_same.weapon_id = "baka"
 	self.weapon_skins.baka_same.rarity = "uncommon"
 	self.weapon_skins.baka_same.bonus = "spread_p1"
@@ -10614,7 +10426,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.model70_same = {}
 	self.weapon_skins.model70_same.name_id = "bm_wskn_model70_same"
-	self.weapon_skins.model70_same.desc_id = "bm_wskn_model70_same_desc"
 	self.weapon_skins.model70_same.weapon_id = "model70"
 	self.weapon_skins.model70_same.rarity = "epic"
 	self.weapon_skins.model70_same.bonus = "recoil_p1"
@@ -10654,7 +10465,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.new_raging_bull_same = {}
 	self.weapon_skins.new_raging_bull_same.name_id = "bm_wskn_new_raging_bull_same"
-	self.weapon_skins.new_raging_bull_same.desc_id = "bm_wskn_new_raging_bull_same_desc"
 	self.weapon_skins.new_raging_bull_same.weapon_id = "new_raging_bull"
 	self.weapon_skins.new_raging_bull_same.rarity = "epic"
 	self.weapon_skins.new_raging_bull_same.bonus = "recoil_p1"
@@ -10733,7 +10543,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.new_m14_same = {}
 	self.weapon_skins.new_m14_same.name_id = "bm_wskn_new_m14_same"
-	self.weapon_skins.new_m14_same.desc_id = "bm_wskn_new_m14_same_desc"
 	self.weapon_skins.new_m14_same.weapon_id = "new_m14"
 	self.weapon_skins.new_m14_same.rarity = "rare"
 	self.weapon_skins.new_m14_same.bonus = "recoil_p1"
@@ -10808,7 +10617,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.par_same = {}
 	self.weapon_skins.par_same.name_id = "bm_wskn_par_same"
-	self.weapon_skins.par_same.desc_id = "bm_wskn_par_same_desc"
 	self.weapon_skins.par_same.weapon_id = "par"
 	self.weapon_skins.par_same.rarity = "common"
 	self.weapon_skins.par_same.bonus = "recoil_p1"
@@ -10932,7 +10740,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.saiga_grunt = {}
 	self.weapon_skins.saiga_grunt.name_id = "bm_wskn_saiga_grunt"
-	self.weapon_skins.saiga_grunt.desc_id = "bm_wskn_saiga_grunt_desc"
 	self.weapon_skins.saiga_grunt.weapon_id = "saiga"
 	self.weapon_skins.saiga_grunt.rarity = "common"
 	self.weapon_skins.saiga_grunt.bonus = "spread_n1"
@@ -11113,7 +10920,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.m1928_grunt = {}
 	self.weapon_skins.m1928_grunt.name_id = "bm_wskn_m1928_grunt"
-	self.weapon_skins.m1928_grunt.desc_id = "bm_wskn_m1928_grunt_desc"
 	self.weapon_skins.m1928_grunt.weapon_id = "m1928"
 	self.weapon_skins.m1928_grunt.rarity = "common"
 	self.weapon_skins.m1928_grunt.bonus = "spread_p1"
@@ -11175,7 +10981,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.m45_grunt = {}
 	self.weapon_skins.m45_grunt.name_id = "bm_wskn_m45_grunt"
-	self.weapon_skins.m45_grunt.desc_id = "bm_wskn_m45_grunt_desc"
 	self.weapon_skins.m45_grunt.weapon_id = "m45"
 	self.weapon_skins.m45_grunt.rarity = "common"
 	self.weapon_skins.m45_grunt.bonus = "spread_p1"
@@ -11266,7 +11071,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.p226_grunt = {}
 	self.weapon_skins.p226_grunt.name_id = "bm_wskn_p226_grunt"
-	self.weapon_skins.p226_grunt.desc_id = "bm_wskn_p226_grunt_desc"
 	self.weapon_skins.p226_grunt.weapon_id = "p226"
 	self.weapon_skins.p226_grunt.rarity = "common"
 	self.weapon_skins.p226_grunt.bonus = "concealment_p1"
@@ -11327,7 +11131,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.new_mp5_grunt = {}
 	self.weapon_skins.new_mp5_grunt.name_id = "bm_wskn_new_mp5_grunt"
-	self.weapon_skins.new_mp5_grunt.desc_id = "bm_wskn_new_mp5_grunt_desc"
 	self.weapon_skins.new_mp5_grunt.weapon_id = "new_mp5"
 	self.weapon_skins.new_mp5_grunt.rarity = "common"
 	self.weapon_skins.new_mp5_grunt.bonus = "spread_p1"
@@ -11421,7 +11224,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.wa2000_grunt = {}
 	self.weapon_skins.wa2000_grunt.name_id = "bm_wskn_wa2000_grunt"
-	self.weapon_skins.wa2000_grunt.desc_id = "bm_wskn_wa2000_grunt_desc"
 	self.weapon_skins.wa2000_grunt.weapon_id = "wa2000"
 	self.weapon_skins.wa2000_grunt.rarity = "common"
 	self.weapon_skins.wa2000_grunt.bonus = "recoil_p1"
@@ -11492,7 +11294,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.boot_grunt = {}
 	self.weapon_skins.boot_grunt.name_id = "bm_wskn_boot_grunt"
-	self.weapon_skins.boot_grunt.desc_id = "bm_wskn_boot_grunt_desc"
 	self.weapon_skins.boot_grunt.weapon_id = "boot"
 	self.weapon_skins.boot_grunt.rarity = "uncommon"
 	self.weapon_skins.boot_grunt.bonus = "spread_n1"
@@ -11583,7 +11384,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.g22c_grunt = {}
 	self.weapon_skins.g22c_grunt.name_id = "bm_wskn_g22c_grunt"
-	self.weapon_skins.g22c_grunt.desc_id = "bm_wskn_g22c_grunt_desc"
 	self.weapon_skins.g22c_grunt.weapon_id = "g22c"
 	self.weapon_skins.g22c_grunt.rarity = "uncommon"
 	self.weapon_skins.g22c_grunt.bonus = "concealment_p1"
@@ -11682,7 +11482,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.m249_grunt = {}
 	self.weapon_skins.m249_grunt.name_id = "bm_wskn_m249_grunt"
-	self.weapon_skins.m249_grunt.desc_id = "bm_wskn_m249_grunt_desc"
 	self.weapon_skins.m249_grunt.weapon_id = "m249"
 	self.weapon_skins.m249_grunt.rarity = "uncommon"
 	self.weapon_skins.m249_grunt.bonus = "spread_p1"
@@ -11762,7 +11561,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.ksg_grunt = {}
 	self.weapon_skins.ksg_grunt.name_id = "bm_wskn_ksg_grunt"
-	self.weapon_skins.ksg_grunt.desc_id = "bm_wskn_ksg_grunt_desc"
 	self.weapon_skins.ksg_grunt.weapon_id = "ksg"
 	self.weapon_skins.ksg_grunt.rarity = "uncommon"
 	self.weapon_skins.ksg_grunt.bonus = "spread_n1"
@@ -11838,7 +11636,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.winchester1874_grunt = {}
 	self.weapon_skins.winchester1874_grunt.name_id = "bm_wskn_winchester1874_grunt"
-	self.weapon_skins.winchester1874_grunt.desc_id = "bm_wskn_winchester1874_grunt_desc"
 	self.weapon_skins.winchester1874_grunt.weapon_id = "winchester1874"
 	self.weapon_skins.winchester1874_grunt.rarity = "rare"
 	self.weapon_skins.winchester1874_grunt.bonus = "recoil_p1"
@@ -11923,7 +11720,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.rpk_grunt = {}
 	self.weapon_skins.rpk_grunt.name_id = "bm_wskn_rpk_grunt"
-	self.weapon_skins.rpk_grunt.desc_id = "bm_wskn_rpk_grunt_desc"
 	self.weapon_skins.rpk_grunt.weapon_id = "rpk"
 	self.weapon_skins.rpk_grunt.rarity = "rare"
 	self.weapon_skins.rpk_grunt.bonus = "spread_p1"
@@ -12190,7 +11986,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.x_b92fs_grunt = {}
 	self.weapon_skins.x_b92fs_grunt.name_id = "bm_wskn_x_b92fs_grunt"
-	self.weapon_skins.x_b92fs_grunt.desc_id = "bm_wskn_x_b92fs_grunt_desc"
 	self.weapon_skins.x_b92fs_grunt.weapon_id = "b92fs"
 	self.weapon_skins.x_b92fs_grunt.rarity = "rare"
 	self.weapon_skins.x_b92fs_grunt.bonus = "recoil_p1"
@@ -12443,7 +12238,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.akmsu_grunt = {}
 	self.weapon_skins.akmsu_grunt.name_id = "bm_wskn_akmsu_grunt"
-	self.weapon_skins.akmsu_grunt.desc_id = "bm_wskn_akmsu_grunt_desc"
 	self.weapon_skins.akmsu_grunt.weapon_id = "akmsu"
 	self.weapon_skins.akmsu_grunt.rarity = "epic"
 	self.weapon_skins.akmsu_grunt.bonus = "spread_p1"
@@ -12780,7 +12574,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.x_1911_grunt = {}
 	self.weapon_skins.x_1911_grunt.name_id = "bm_wskn_x_1911_grunt"
-	self.weapon_skins.x_1911_grunt.desc_id = "bm_wskn_x_1911_grunt_desc"
 	self.weapon_skins.x_1911_grunt.weapon_id = "colt_1911"
 	self.weapon_skins.x_1911_grunt.rarity = "epic"
 	self.weapon_skins.x_1911_grunt.bonus = "recoil_p1"
@@ -13064,7 +12857,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.china_lones = {}
 	self.weapon_skins.china_lones.name_id = "bm_wskn_china_lones"
-	self.weapon_skins.china_lones.desc_id = "bm_wskn_china_lones_desc"
 	self.weapon_skins.china_lones.weapon_id = "china"
 	self.weapon_skins.china_lones.rarity = "epic"
 	self.weapon_skins.china_lones.bonus = "concealment_p1"
@@ -13125,7 +12917,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.sparrow_lones = {}
 	self.weapon_skins.sparrow_lones.name_id = "bm_wskn_sparrow_lones"
-	self.weapon_skins.sparrow_lones.desc_id = "bm_wskn_sparrow_lones_desc"
 	self.weapon_skins.sparrow_lones.weapon_id = "sparrow"
 	self.weapon_skins.sparrow_lones.rarity = "rare"
 	self.weapon_skins.sparrow_lones.bonus = "spread_p1"
@@ -13236,7 +13027,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.judge_lones = {}
 	self.weapon_skins.judge_lones.name_id = "bm_wskn_judge_lones"
-	self.weapon_skins.judge_lones.desc_id = "bm_wskn_judge_lones_desc"
 	self.weapon_skins.judge_lones.weapon_id = "judge"
 	self.weapon_skins.judge_lones.rarity = "rare"
 	self.weapon_skins.judge_lones.bonus = "concealment_p1"
@@ -13323,7 +13113,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.x_mp5_lones = {}
 	self.weapon_skins.x_mp5_lones.name_id = "bm_wskn_x_mp5_lones"
-	self.weapon_skins.x_mp5_lones.desc_id = "bm_wskn_x_mp5_lones_desc"
 	self.weapon_skins.x_mp5_lones.weapon_id = "new_mp5"
 	self.weapon_skins.x_mp5_lones.rarity = "rare"
 	self.weapon_skins.x_mp5_lones.bonus = "recoil_p1"
@@ -13458,7 +13247,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.akmsu_lones = {}
 	self.weapon_skins.akmsu_lones.name_id = "bm_wskn_akmsu_lones"
-	self.weapon_skins.akmsu_lones.desc_id = "bm_wskn_akmsu_lones_desc"
 	self.weapon_skins.akmsu_lones.weapon_id = "akmsu"
 	self.weapon_skins.akmsu_lones.rarity = "rare"
 	self.weapon_skins.akmsu_lones.bonus = "spread_p1"
@@ -13652,7 +13440,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.par_lones = {}
 	self.weapon_skins.par_lones.name_id = "bm_wskn_par_lones"
-	self.weapon_skins.par_lones.desc_id = "bm_wskn_par_lones_desc"
 	self.weapon_skins.par_lones.weapon_id = "par"
 	self.weapon_skins.par_lones.rarity = "epic"
 	self.weapon_skins.par_lones.bonus = "recoil_p1"
@@ -13723,7 +13510,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.model70_lones = {}
 	self.weapon_skins.model70_lones.name_id = "bm_wskn_model70_lones"
-	self.weapon_skins.model70_lones.desc_id = "bm_wskn_model70_lones_desc"
 	self.weapon_skins.model70_lones.weapon_id = "model70"
 	self.weapon_skins.model70_lones.rarity = "epic"
 	self.weapon_skins.model70_lones.bonus = "recoil_p1"
@@ -13959,7 +13745,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.x_1911_smosh = {}
 	self.weapon_skins.x_1911_smosh.name_id = "bm_wskn_x_1911_smosh"
-	self.weapon_skins.x_1911_smosh.desc_id = "bm_wskn_x_1911_smosh_desc"
 	self.weapon_skins.x_1911_smosh.weapon_id = "colt_1911"
 	self.weapon_skins.x_1911_smosh.rarity = "common"
 	self.weapon_skins.x_1911_smosh.bonus = "recoil_p1"
@@ -14066,7 +13851,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.scar_smosh = {}
 	self.weapon_skins.scar_smosh.name_id = "bm_wskn_scar_smosh"
-	self.weapon_skins.scar_smosh.desc_id = "bm_wskn_scar_smosh_desc"
 	self.weapon_skins.scar_smosh.weapon_id = "scar"
 	self.weapon_skins.scar_smosh.rarity = "common"
 	self.weapon_skins.scar_smosh.bonus = "spread_p1"
@@ -14149,7 +13933,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.colt_1911_smosh = {}
 	self.weapon_skins.colt_1911_smosh.name_id = "bm_wskn_colt_1911_smosh"
-	self.weapon_skins.colt_1911_smosh.desc_id = "bm_wskn_colt_1911_smosh_desc"
 	self.weapon_skins.colt_1911_smosh.weapon_id = "colt_1911"
 	self.weapon_skins.colt_1911_smosh.rarity = "common"
 	self.weapon_skins.colt_1911_smosh.bonus = "spread_p1"
@@ -14216,7 +13999,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.scorpion_smosh = {}
 	self.weapon_skins.scorpion_smosh.name_id = "bm_wskn_scorpion_smosh"
-	self.weapon_skins.scorpion_smosh.desc_id = "bm_wskn_scorpion_smosh_desc"
 	self.weapon_skins.scorpion_smosh.weapon_id = "scorpion"
 	self.weapon_skins.scorpion_smosh.rarity = "common"
 	self.weapon_skins.scorpion_smosh.bonus = "spread_p1"
@@ -14299,7 +14081,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.deagle_smosh = {}
 	self.weapon_skins.deagle_smosh.name_id = "bm_wskn_deagle_smosh"
-	self.weapon_skins.deagle_smosh.desc_id = "bm_wskn_deagle_smosh_desc"
 	self.weapon_skins.deagle_smosh.weapon_id = "deagle"
 	self.weapon_skins.deagle_smosh.rarity = "uncommon"
 	self.weapon_skins.deagle_smosh.bonus = "spread_p1"
@@ -14600,7 +14381,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.r870_smosh = {}
 	self.weapon_skins.r870_smosh.name_id = "bm_wskn_r870_smosh"
-	self.weapon_skins.r870_smosh.desc_id = "bm_wskn_r870_smosh_desc"
 	self.weapon_skins.r870_smosh.weapon_id = "r870"
 	self.weapon_skins.r870_smosh.rarity = "common"
 	self.weapon_skins.r870_smosh.bonus = "spread_n1"
@@ -14637,7 +14417,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.m32_smosh = {}
 	self.weapon_skins.m32_smosh.name_id = "bm_wskn_m32_smosh"
-	self.weapon_skins.m32_smosh.desc_id = "bm_wskn_m32_smosh_desc"
 	self.weapon_skins.m32_smosh.weapon_id = "m32"
 	self.weapon_skins.m32_smosh.rarity = "uncommon"
 	self.weapon_skins.m32_smosh.bonus = "concealment_p1"
@@ -14680,7 +14459,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.hs2000_smosh = {}
 	self.weapon_skins.hs2000_smosh.name_id = "bm_wskn_hs2000_smosh"
-	self.weapon_skins.hs2000_smosh.desc_id = "bm_wskn_hs2000_smosh_desc"
 	self.weapon_skins.hs2000_smosh.weapon_id = "hs2000"
 	self.weapon_skins.hs2000_smosh.rarity = "rare"
 	self.weapon_skins.hs2000_smosh.bonus = "spread_p1"
@@ -14783,7 +14561,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.saw_smosh = {}
 	self.weapon_skins.saw_smosh.name_id = "bm_wskn_saw_smosh"
-	self.weapon_skins.saw_smosh.desc_id = "bm_wskn_saw_smosh_desc"
 	self.weapon_skins.saw_smosh.weapon_id = "saw"
 	self.weapon_skins.saw_smosh.rarity = "uncommon"
 	self.weapon_skins.saw_smosh.bonus = "concealment_p1"
@@ -14843,7 +14620,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.m1928_smosh = {}
 	self.weapon_skins.m1928_smosh.name_id = "bm_wskn_m1928_smosh"
-	self.weapon_skins.m1928_smosh.desc_id = "bm_wskn_m1928_smosh_desc"
 	self.weapon_skins.m1928_smosh.weapon_id = "m1928"
 	self.weapon_skins.m1928_smosh.rarity = "uncommon"
 	self.weapon_skins.m1928_smosh.bonus = "spread_p1"
@@ -14955,7 +14731,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.mateba_smosh = {}
 	self.weapon_skins.mateba_smosh.name_id = "bm_wskn_mateba_smosh"
-	self.weapon_skins.mateba_smosh.desc_id = "bm_wskn_mateba_smosh_desc"
 	self.weapon_skins.mateba_smosh.weapon_id = "mateba"
 	self.weapon_skins.mateba_smosh.rarity = "epic"
 	self.weapon_skins.mateba_smosh.bonus = "spread_p1"
@@ -15253,7 +15028,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.polymer_smosh = {}
 	self.weapon_skins.polymer_smosh.name_id = "bm_wskn_polymer_smosh"
-	self.weapon_skins.polymer_smosh.desc_id = "bm_wskn_polymer_smosh_desc"
 	self.weapon_skins.polymer_smosh.weapon_id = "polymer"
 	self.weapon_skins.polymer_smosh.rarity = "rare"
 	self.weapon_skins.polymer_smosh.bonus = "spread_p1"
@@ -15526,7 +15300,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.new_m4_smosh = {}
 	self.weapon_skins.new_m4_smosh.name_id = "bm_wskn_new_m4_smosh"
-	self.weapon_skins.new_m4_smosh.desc_id = "bm_wskn_new_m4_smosh_desc"
 	self.weapon_skins.new_m4_smosh.weapon_id = "new_m4"
 	self.weapon_skins.new_m4_smosh.rarity = "common"
 	self.weapon_skins.new_m4_smosh.bonus = "spread_p1"
@@ -15542,7 +15315,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.aug_smosh = {}
 	self.weapon_skins.aug_smosh.name_id = "bm_wskn_aug_smosh"
-	self.weapon_skins.aug_smosh.desc_id = "bm_wskn_aug_smosh_desc"
 	self.weapon_skins.aug_smosh.weapon_id = "aug"
 	self.weapon_skins.aug_smosh.rarity = "rare"
 	self.weapon_skins.aug_smosh.bonus = "spread_p1"
@@ -15613,7 +15385,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.m37_smosh = {}
 	self.weapon_skins.m37_smosh.name_id = "bm_wskn_m37_smosh"
-	self.weapon_skins.m37_smosh.desc_id = "bm_wskn_m37_smosh_desc"
 	self.weapon_skins.m37_smosh.weapon_id = "m37"
 	self.weapon_skins.m37_smosh.rarity = "epic"
 	self.weapon_skins.m37_smosh.bonus = "spread_n1"
@@ -15723,7 +15494,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.peacemaker_sfs = {}
 	self.weapon_skins.peacemaker_sfs.name_id = "bm_wskn_peacemaker_sfs"
-	self.weapon_skins.peacemaker_sfs.desc_id = "bm_wskn_peacemaker_sfs_desc"
 	self.weapon_skins.peacemaker_sfs.weapon_id = "peacemaker"
 	self.weapon_skins.peacemaker_sfs.rarity = "common"
 	self.weapon_skins.peacemaker_sfs.bonus = "spread_p1"
@@ -15748,7 +15518,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.x_akmsu_sfs = {}
 	self.weapon_skins.x_akmsu_sfs.name_id = "bm_wskn_x_akmsu_sfs"
-	self.weapon_skins.x_akmsu_sfs.desc_id = "bm_wskn_x_akmsu_sfs_desc"
 	self.weapon_skins.x_akmsu_sfs.weapon_id = "akmsu"
 	self.weapon_skins.x_akmsu_sfs.rarity = "common"
 	self.weapon_skins.x_akmsu_sfs.bonus = "recoil_p1"
@@ -15793,7 +15562,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.china_sfs = {}
 	self.weapon_skins.china_sfs.name_id = "bm_wskn_china_sfs"
-	self.weapon_skins.china_sfs.desc_id = "bm_wskn_china_sfs_desc"
 	self.weapon_skins.china_sfs.weapon_id = "china"
 	self.weapon_skins.china_sfs.rarity = "common"
 	self.weapon_skins.china_sfs.bonus = "concealment_p1"
@@ -15825,7 +15593,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.olympic_sfs = {}
 	self.weapon_skins.olympic_sfs.name_id = "bm_wskn_olympic_sfs"
-	self.weapon_skins.olympic_sfs.desc_id = "bm_wskn_olympic_sfs_desc"
 	self.weapon_skins.olympic_sfs.weapon_id = "olympic"
 	self.weapon_skins.olympic_sfs.rarity = "common"
 	self.weapon_skins.olympic_sfs.bonus = "spread_p1"
@@ -15855,7 +15622,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.desertfox_sfs = {}
 	self.weapon_skins.desertfox_sfs.name_id = "bm_wskn_desertfox_sfs"
-	self.weapon_skins.desertfox_sfs.desc_id = "bm_wskn_desertfox_sfs_desc"
 	self.weapon_skins.desertfox_sfs.weapon_id = "desertfox"
 	self.weapon_skins.desertfox_sfs.rarity = "common"
 	self.weapon_skins.desertfox_sfs.bonus = "recoil_p1"
@@ -15864,7 +15630,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.desertfox_sfs.base_gradient = Idstring("units/payday2_cash/safes/sfs/base_gradient/base_sfs_003_df")
 	self.weapon_skins.msr_sfs = {}
 	self.weapon_skins.msr_sfs.name_id = "bm_wskn_msr_sfs"
-	self.weapon_skins.msr_sfs.desc_id = "bm_wskn_msr_sfs_desc"
 	self.weapon_skins.msr_sfs.weapon_id = "msr"
 	self.weapon_skins.msr_sfs.rarity = "common"
 	self.weapon_skins.msr_sfs.bonus = "recoil_p1"
@@ -15884,7 +15649,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.hk21_sfs = {}
 	self.weapon_skins.hk21_sfs.name_id = "bm_wskn_hk21_sfs"
-	self.weapon_skins.hk21_sfs.desc_id = "bm_wskn_hk21_sfs_desc"
 	self.weapon_skins.hk21_sfs.weapon_id = "hk21"
 	self.weapon_skins.hk21_sfs.rarity = "uncommon"
 	self.weapon_skins.hk21_sfs.bonus = "recoil_p1"
@@ -15912,7 +15676,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.m16_sfs = {}
 	self.weapon_skins.m16_sfs.name_id = "bm_wskn_m16_sfs"
-	self.weapon_skins.m16_sfs.desc_id = "bm_wskn_m16_sfs_desc"
 	self.weapon_skins.m16_sfs.weapon_id = "m16"
 	self.weapon_skins.m16_sfs.rarity = "uncommon"
 	self.weapon_skins.m16_sfs.bonus = "spread_p1"
@@ -15945,7 +15708,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.uzi_sfs = {}
 	self.weapon_skins.uzi_sfs.name_id = "bm_wskn_uzi_sfs"
-	self.weapon_skins.uzi_sfs.desc_id = "bm_wskn_uzi_sfs_desc"
 	self.weapon_skins.uzi_sfs.weapon_id = "uzi"
 	self.weapon_skins.uzi_sfs.rarity = "uncommon"
 	self.weapon_skins.uzi_sfs.bonus = "concealment_p1"
@@ -15976,7 +15738,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.spas12_sfs = {}
 	self.weapon_skins.spas12_sfs.name_id = "bm_wskn_spas12_sfs"
-	self.weapon_skins.spas12_sfs.desc_id = "bm_wskn_spas12_sfs_desc"
 	self.weapon_skins.spas12_sfs.weapon_id = "spas12"
 	self.weapon_skins.spas12_sfs.rarity = "uncommon"
 	self.weapon_skins.spas12_sfs.bonus = "spread_n1"
@@ -16003,7 +15764,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.mateba_sfs = {}
 	self.weapon_skins.mateba_sfs.name_id = "bm_wskn_mateba_sfs"
-	self.weapon_skins.mateba_sfs.desc_id = "bm_wskn_mateba_sfs_desc"
 	self.weapon_skins.mateba_sfs.weapon_id = "mateba"
 	self.weapon_skins.mateba_sfs.rarity = "epic"
 	self.weapon_skins.mateba_sfs.bonus = "spread_p1"
@@ -16064,7 +15824,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.mac10_sfs = {}
 	self.weapon_skins.mac10_sfs.name_id = "bm_wskn_mac10_sfs"
-	self.weapon_skins.mac10_sfs.desc_id = "bm_wskn_mac10_sfs_desc"
 	self.weapon_skins.mac10_sfs.weapon_id = "mac10"
 	self.weapon_skins.mac10_sfs.rarity = "rare"
 	self.weapon_skins.mac10_sfs.bonus = "spread_p1"
@@ -16121,7 +15880,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.colt_1911_sfs = {}
 	self.weapon_skins.colt_1911_sfs.name_id = "bm_wskn_colt_1911_sfs"
-	self.weapon_skins.colt_1911_sfs.desc_id = "bm_wskn_colt_1911_sfs_desc"
 	self.weapon_skins.colt_1911_sfs.weapon_id = "colt_1911"
 	self.weapon_skins.colt_1911_sfs.rarity = "rare"
 	self.weapon_skins.colt_1911_sfs.bonus = "spread_p1"
@@ -16189,7 +15947,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.r870_sfs = {}
 	self.weapon_skins.r870_sfs.name_id = "bm_wskn_r870_sfs"
-	self.weapon_skins.r870_sfs.desc_id = "bm_wskn_r870_sfs_desc"
 	self.weapon_skins.r870_sfs.weapon_id = "r870"
 	self.weapon_skins.r870_sfs.rarity = "epic"
 	self.weapon_skins.r870_sfs.bonus = "spread_n1"
@@ -16240,7 +15997,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.galil_sfs = {}
 	self.weapon_skins.galil_sfs.name_id = "bm_wskn_galil_sfs"
-	self.weapon_skins.galil_sfs.desc_id = "bm_wskn_galil_sfs_desc"
 	self.weapon_skins.galil_sfs.weapon_id = "galil"
 	self.weapon_skins.galil_sfs.rarity = "rare"
 	self.weapon_skins.galil_sfs.bonus = "spread_p1"
@@ -16430,7 +16186,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.mateba_wac = {}
 	self.weapon_skins.mateba_wac.name_id = "bm_wskn_mateba_wac"
-	self.weapon_skins.mateba_wac.desc_id = "bm_wskn_mateba_wac_desc"
 	self.weapon_skins.mateba_wac.weapon_id = "mateba"
 	self.weapon_skins.mateba_wac.rarity = "common"
 	self.weapon_skins.mateba_wac.bonus = "spread_p1"
@@ -16485,7 +16240,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.c96_wac = {}
 	self.weapon_skins.c96_wac.name_id = "bm_wskn_c96_wac"
-	self.weapon_skins.c96_wac.desc_id = "bm_wskn_c96_wac_desc"
 	self.weapon_skins.c96_wac.weapon_id = "c96"
 	self.weapon_skins.c96_wac.rarity = "common"
 	self.weapon_skins.c96_wac.bonus = "spread_p1"
@@ -16534,7 +16288,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.ksg_wac = {}
 	self.weapon_skins.ksg_wac.name_id = "bm_wskn_ksg_wac"
-	self.weapon_skins.ksg_wac.desc_id = "bm_wskn_ksg_wac_desc"
 	self.weapon_skins.ksg_wac.weapon_id = "ksg"
 	self.weapon_skins.ksg_wac.rarity = "common"
 	self.weapon_skins.ksg_wac.bonus = "recoil_p1"
@@ -16664,7 +16417,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.glock_18c_wac = {}
 	self.weapon_skins.glock_18c_wac.name_id = "bm_wskn_glock_18c_wac"
-	self.weapon_skins.glock_18c_wac.desc_id = "bm_wskn_glock_18c_wac_desc"
 	self.weapon_skins.glock_18c_wac.weapon_id = "glock_18c"
 	self.weapon_skins.glock_18c_wac.rarity = "common"
 	self.weapon_skins.glock_18c_wac.bonus = "spread_p1"
@@ -16753,7 +16505,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.aa12_wac = {}
 	self.weapon_skins.aa12_wac.name_id = "bm_wskn_aa12_wac"
-	self.weapon_skins.aa12_wac.desc_id = "bm_wskn_aa12_wac_desc"
 	self.weapon_skins.aa12_wac.weapon_id = "aa12"
 	self.weapon_skins.aa12_wac.rarity = "uncommon"
 	self.weapon_skins.aa12_wac.bonus = "spread_n1"
@@ -16857,7 +16608,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.galil_wac = {}
 	self.weapon_skins.galil_wac.name_id = "bm_wskn_galil_wac"
-	self.weapon_skins.galil_wac.desc_id = "bm_wskn_galil_wac_desc"
 	self.weapon_skins.galil_wac.weapon_id = "galil"
 	self.weapon_skins.galil_wac.rarity = "common"
 	self.weapon_skins.galil_wac.bonus = "spread_p1"
@@ -16966,7 +16716,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.spas12_wac = {}
 	self.weapon_skins.spas12_wac.name_id = "bm_wskn_spas12_wac"
-	self.weapon_skins.spas12_wac.desc_id = "bm_wskn_spas12_wac_desc"
 	self.weapon_skins.spas12_wac.weapon_id = "spas12"
 	self.weapon_skins.spas12_wac.rarity = "common"
 	self.weapon_skins.spas12_wac.bonus = "spread_n1"
@@ -16996,7 +16745,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.mp9_wac = {}
 	self.weapon_skins.mp9_wac.name_id = "bm_wskn_mp9_wac"
-	self.weapon_skins.mp9_wac.desc_id = "bm_wskn_mp9_wac_desc"
 	self.weapon_skins.mp9_wac.weapon_id = "mp9"
 	self.weapon_skins.mp9_wac.rarity = "uncommon"
 	self.weapon_skins.mp9_wac.bonus = "spread_p1"
@@ -17142,7 +16890,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.amcar_wac = {}
 	self.weapon_skins.amcar_wac.name_id = "bm_wskn_amcar_wac"
-	self.weapon_skins.amcar_wac.desc_id = "bm_wskn_amcar_wac_desc"
 	self.weapon_skins.amcar_wac.weapon_id = "amcar"
 	self.weapon_skins.amcar_wac.rarity = "uncommon"
 	self.weapon_skins.amcar_wac.bonus = "spread_p1"
@@ -17274,7 +17021,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.desertfox_wac = {}
 	self.weapon_skins.desertfox_wac.name_id = "bm_wskn_desertfox_wac"
-	self.weapon_skins.desertfox_wac.desc_id = "bm_wskn_desertfox_wac_desc"
 	self.weapon_skins.desertfox_wac.weapon_id = "desertfox"
 	self.weapon_skins.desertfox_wac.rarity = "uncommon"
 	self.weapon_skins.desertfox_wac.bonus = "recoil_p1"
@@ -17357,7 +17103,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.vhs_wac = {}
 	self.weapon_skins.vhs_wac.name_id = "bm_wskn_vhs_wac"
-	self.weapon_skins.vhs_wac.desc_id = "bm_wskn_vhs_wac_desc"
 	self.weapon_skins.vhs_wac.weapon_id = "vhs"
 	self.weapon_skins.vhs_wac.rarity = "rare"
 	self.weapon_skins.vhs_wac.bonus = "spread_p1"
@@ -17509,7 +17254,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.mp7_wac = {}
 	self.weapon_skins.mp7_wac.name_id = "bm_wskn_mp7_wac"
-	self.weapon_skins.mp7_wac.desc_id = "bm_wskn_mp7_wac_desc"
 	self.weapon_skins.mp7_wac.weapon_id = "mp7"
 	self.weapon_skins.mp7_wac.rarity = "rare"
 	self.weapon_skins.mp7_wac.bonus = "spread_p1"
@@ -17596,7 +17340,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.g26_wac = {}
 	self.weapon_skins.g26_wac.name_id = "bm_wskn_g26_wac"
-	self.weapon_skins.g26_wac.desc_id = "bm_wskn_g26_wac_desc"
 	self.weapon_skins.g26_wac.weapon_id = "g26"
 	self.weapon_skins.g26_wac.rarity = "rare"
 	self.weapon_skins.g26_wac.bonus = "spread_p1"
@@ -17765,7 +17508,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.x_mp5_wac = {}
 	self.weapon_skins.x_mp5_wac.name_id = "bm_wskn_x_mp5_wac"
-	self.weapon_skins.x_mp5_wac.desc_id = "bm_wskn_x_mp5_wac_desc"
 	self.weapon_skins.x_mp5_wac.weapon_id = "new_mp5"
 	self.weapon_skins.x_mp5_wac.rarity = "epic"
 	self.weapon_skins.x_mp5_wac.bonus = "recoil_p1"
@@ -17846,7 +17588,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.msr_wac = {}
 	self.weapon_skins.msr_wac.name_id = "bm_wskn_msr_wac"
-	self.weapon_skins.msr_wac.desc_id = "bm_wskn_msr_wac_desc"
 	self.weapon_skins.msr_wac.weapon_id = "msr"
 	self.weapon_skins.msr_wac.rarity = "epic"
 	self.weapon_skins.msr_wac.bonus = "recoil_p1"
@@ -18168,7 +17909,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.judge_cs3 = {}
 	self.weapon_skins.judge_cs3.name_id = "bm_wskn_judge_cs3"
-	self.weapon_skins.judge_cs3.desc_id = "bm_wskn_judge_cs3_desc"
 	self.weapon_skins.judge_cs3.weapon_id = "judge"
 	self.weapon_skins.judge_cs3.rarity = "common"
 	self.weapon_skins.judge_cs3.bonus = "spread_n1"
@@ -18204,7 +17944,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.polymer_cs3 = {}
 	self.weapon_skins.polymer_cs3.name_id = "bm_wskn_polymer_cs3"
-	self.weapon_skins.polymer_cs3.desc_id = "bm_wskn_polymer_cs3_desc"
 	self.weapon_skins.polymer_cs3.weapon_id = "polymer"
 	self.weapon_skins.polymer_cs3.rarity = "common"
 	self.weapon_skins.polymer_cs3.bonus = "spread_p1"
@@ -18297,7 +18036,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.arbiter_cs3 = {}
 	self.weapon_skins.arbiter_cs3.name_id = "bm_wskn_arbiter_cs3"
-	self.weapon_skins.arbiter_cs3.desc_id = "bm_wskn_arbiter_cs3_desc"
 	self.weapon_skins.arbiter_cs3.weapon_id = "arbiter"
 	self.weapon_skins.arbiter_cs3.rarity = "common"
 	self.weapon_skins.arbiter_cs3.bonus = "spread_p1"
@@ -18469,7 +18207,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.aa12_cs3 = {}
 	self.weapon_skins.aa12_cs3.name_id = "bm_wskn_aa12_cs3"
-	self.weapon_skins.aa12_cs3.desc_id = "bm_wskn_aa12_cs3_desc"
 	self.weapon_skins.aa12_cs3.weapon_id = "aa12"
 	self.weapon_skins.aa12_cs3.rarity = "uncommon"
 	self.weapon_skins.aa12_cs3.bonus = "spread_n1"
@@ -18591,13 +18328,12 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		lower_reciever = {
 			pattern = "units/payday2_cash/safes/cs3/pattern/cs3_pattern_003_df",
 			pattern_gradient = "units/payday2_cash/safes/cs3/pattern_gradient/gradient_cs3_003_df",
-			pattern_pos = Vector3(-0.0987357, 0.0634394, 0),
-			pattern_tweak = Vector3(1.30217, 0, 0.499165)
+			pattern_tweak = Vector3(1.30217, 0, 0.499165),
+			pattern_pos = Vector3(-0.0987357, 0.0634394, 0)
 		}
 	}
 	self.weapon_skins.saw_cs3 = {}
 	self.weapon_skins.saw_cs3.name_id = "bm_wskn_saw_cs3"
-	self.weapon_skins.saw_cs3.desc_id = "bm_wskn_saw_cs3_desc"
 	self.weapon_skins.saw_cs3.weapon_id = "saw"
 	self.weapon_skins.saw_cs3.rarity = "uncommon"
 	self.weapon_skins.saw_cs3.bonus = "concealment_p1"
@@ -18673,7 +18409,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.m95_cs3 = {}
 	self.weapon_skins.m95_cs3.name_id = "bm_wskn_m95_cs3"
-	self.weapon_skins.m95_cs3.desc_id = "bm_wskn_m95_cs3_desc"
 	self.weapon_skins.m95_cs3.weapon_id = "m95"
 	self.weapon_skins.m95_cs3.rarity = "common"
 	self.weapon_skins.m95_cs3.bonus = "recoil_p1"
@@ -18736,7 +18471,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.sparrow_cs3 = {}
 	self.weapon_skins.sparrow_cs3.name_id = "bm_wskn_sparrow_cs3"
-	self.weapon_skins.sparrow_cs3.desc_id = "bm_wskn_sparrow_cs3_desc"
 	self.weapon_skins.sparrow_cs3.weapon_id = "sparrow"
 	self.weapon_skins.sparrow_cs3.rarity = "rare"
 	self.weapon_skins.sparrow_cs3.bonus = "concealment_p1"
@@ -18967,7 +18701,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.tti_cs3 = {}
 	self.weapon_skins.tti_cs3.name_id = "bm_wskn_tti_cs3"
-	self.weapon_skins.tti_cs3.desc_id = "bm_wskn_tti_cs3_desc"
 	self.weapon_skins.tti_cs3.weapon_id = "tti"
 	self.weapon_skins.tti_cs3.rarity = "rare"
 	self.weapon_skins.tti_cs3.bonus = "concealment_p1"
@@ -19070,7 +18803,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.new_raging_bull_cs3 = {}
 	self.weapon_skins.new_raging_bull_cs3.name_id = "bm_wskn_new_raging_bull_cs3"
-	self.weapon_skins.new_raging_bull_cs3.desc_id = "bm_wskn_new_raging_bull_cs3_desc"
 	self.weapon_skins.new_raging_bull_cs3.weapon_id = "new_raging_bull"
 	self.weapon_skins.new_raging_bull_cs3.rarity = "epic"
 	self.weapon_skins.new_raging_bull_cs3.bonus = "spread_p1"
@@ -19327,7 +19059,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.new_mp5_cs3 = {}
 	self.weapon_skins.new_mp5_cs3.name_id = "bm_wskn_new_mp5_cs3"
-	self.weapon_skins.new_mp5_cs3.desc_id = "bm_wskn_new_mp5_cs3_desc"
 	self.weapon_skins.new_mp5_cs3.weapon_id = "new_mp5"
 	self.weapon_skins.new_mp5_cs3.rarity = "common"
 	self.weapon_skins.new_mp5_cs3.bonus = "recoil_p1"
@@ -19603,7 +19334,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.frankish_cs3 = {}
 	self.weapon_skins.frankish_cs3.name_id = "bm_wskn_frankish_cs3"
-	self.weapon_skins.frankish_cs3.desc_id = "bm_wskn_frankish_cs3_desc"
 	self.weapon_skins.frankish_cs3.weapon_id = "frankish"
 	self.weapon_skins.frankish_cs3.rarity = "common"
 	self.weapon_skins.frankish_cs3.bonus = "concealment_p1"
@@ -19633,7 +19363,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.huntsman_cs3 = {}
 	self.weapon_skins.huntsman_cs3.name_id = "bm_wskn_huntsman_cs3"
-	self.weapon_skins.huntsman_cs3.desc_id = "bm_wskn_huntsman_cs3_desc"
 	self.weapon_skins.huntsman_cs3.weapon_id = "huntsman"
 	self.weapon_skins.huntsman_cs3.rarity = "epic"
 	self.weapon_skins.huntsman_cs3.bonus = "spread_n1"
@@ -19699,7 +19428,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.flint_cs3 = {}
 	self.weapon_skins.flint_cs3.name_id = "bm_wskn_flint_cs3"
-	self.weapon_skins.flint_cs3.desc_id = "bm_wskn_flint_cs3_desc"
 	self.weapon_skins.flint_cs3.weapon_id = "flint"
 	self.weapon_skins.flint_cs3.rarity = "uncommon"
 	self.weapon_skins.flint_cs3.bonus = "spread_p1"
@@ -19746,7 +19474,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.peacemaker_cs3 = {}
 	self.weapon_skins.peacemaker_cs3.name_id = "bm_wskn_peacemaker_cs3"
-	self.weapon_skins.peacemaker_cs3.desc_id = "bm_wskn_peacemaker_cs3_desc"
 	self.weapon_skins.peacemaker_cs3.weapon_id = "peacemaker"
 	self.weapon_skins.peacemaker_cs3.rarity = "uncommon"
 	self.weapon_skins.peacemaker_cs3.bonus = "spread_p1"
@@ -19792,7 +19519,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.new_m4_cs3 = {}
 	self.weapon_skins.new_m4_cs3.name_id = "bm_wskn_new_m4_cs3"
-	self.weapon_skins.new_m4_cs3.desc_id = "bm_wskn_new_m4_cs3_desc"
 	self.weapon_skins.new_m4_cs3.weapon_id = "new_m4"
 	self.weapon_skins.new_m4_cs3.rarity = "rare"
 	self.weapon_skins.new_m4_cs3.bonus = "recoil_p1"
@@ -20218,7 +19944,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.tec9_mxs = {}
 	self.weapon_skins.tec9_mxs.name_id = "bm_wskn_tec9_mxs"
-	self.weapon_skins.tec9_mxs.desc_id = "bm_wskn_tec9_mxs_desc"
 	self.weapon_skins.tec9_mxs.weapon_id = "tec9"
 	self.weapon_skins.tec9_mxs.rarity = "common"
 	self.weapon_skins.tec9_mxs.bonus = "spread_p1"
@@ -20255,7 +19980,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.siltstone_mxs = {}
 	self.weapon_skins.siltstone_mxs.name_id = "bm_wskn_siltstone_mxs"
-	self.weapon_skins.siltstone_mxs.desc_id = "bm_wskn_siltstone_mxs_desc"
 	self.weapon_skins.siltstone_mxs.weapon_id = "siltstone"
 	self.weapon_skins.siltstone_mxs.rarity = "common"
 	self.weapon_skins.siltstone_mxs.bonus = "recoil_p1"
@@ -20301,7 +20025,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.contraband_mxs = {}
 	self.weapon_skins.contraband_mxs.name_id = "bm_wskn_contraband_mxs"
-	self.weapon_skins.contraband_mxs.desc_id = "bm_wskn_contraband_mxs_desc"
 	self.weapon_skins.contraband_mxs.weapon_id = "contraband"
 	self.weapon_skins.contraband_mxs.rarity = "common"
 	self.weapon_skins.contraband_mxs.bonus = "recoil_p1"
@@ -20331,7 +20054,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.lemming_mxs = {}
 	self.weapon_skins.lemming_mxs.name_id = "bm_wskn_lemming_mxs"
-	self.weapon_skins.lemming_mxs.desc_id = "bm_wskn_lemming_mxs_desc"
 	self.weapon_skins.lemming_mxs.weapon_id = "lemming"
 	self.weapon_skins.lemming_mxs.rarity = "common"
 	self.weapon_skins.lemming_mxs.bonus = "spread_p1"
@@ -20401,7 +20123,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.china_mxs = {}
 	self.weapon_skins.china_mxs.name_id = "bm_wskn_china_mxs"
-	self.weapon_skins.china_mxs.desc_id = "bm_wskn_china_mxs_desc"
 	self.weapon_skins.china_mxs.weapon_id = "china"
 	self.weapon_skins.china_mxs.rarity = "uncommon"
 	self.weapon_skins.china_mxs.bonus = "recoil_p1"
@@ -20422,7 +20143,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.rota_mxs = {}
 	self.weapon_skins.rota_mxs.name_id = "bm_wskn_rota_mxs"
-	self.weapon_skins.rota_mxs.desc_id = "bm_wskn_rota_mxs_desc"
 	self.weapon_skins.rota_mxs.weapon_id = "rota"
 	self.weapon_skins.rota_mxs.rarity = "uncommon"
 	self.weapon_skins.rota_mxs.bonus = "spread_n1"
@@ -20465,7 +20185,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.x_deagle_mxs = {}
 	self.weapon_skins.x_deagle_mxs.name_id = "bm_wskn_x_deagle_mxs"
-	self.weapon_skins.x_deagle_mxs.desc_id = "bm_wskn_x_deagle_mxs_desc"
 	self.weapon_skins.x_deagle_mxs.weapon_id = "deagle"
 	self.weapon_skins.x_deagle_mxs.rarity = "common"
 	self.weapon_skins.x_deagle_mxs.bonus = "recoil_p1"
@@ -20506,7 +20225,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.scar_mxs = {}
 	self.weapon_skins.scar_mxs.name_id = "bm_wskn_scar_mxs"
-	self.weapon_skins.scar_mxs.desc_id = "bm_wskn_scar_mxs_desc"
 	self.weapon_skins.scar_mxs.weapon_id = "scar"
 	self.weapon_skins.scar_mxs.rarity = "common"
 	self.weapon_skins.scar_mxs.bonus = "spread_p1"
@@ -20538,7 +20256,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.chinchilla_mxs = {}
 	self.weapon_skins.chinchilla_mxs.name_id = "bm_wskn_chinchilla_mxs"
-	self.weapon_skins.chinchilla_mxs.desc_id = "bm_wskn_chinchilla_mxs_desc"
 	self.weapon_skins.chinchilla_mxs.weapon_id = "chinchilla"
 	self.weapon_skins.chinchilla_mxs.rarity = "rare"
 	self.weapon_skins.chinchilla_mxs.bonus = "recoil_p1"
@@ -20733,7 +20450,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.jowi_mxs = {}
 	self.weapon_skins.jowi_mxs.name_id = "bm_wskn_jowi_mxs"
-	self.weapon_skins.jowi_mxs.desc_id = "bm_wskn_jowi_mxs_desc"
 	self.weapon_skins.jowi_mxs.weapon_id = "g26"
 	self.weapon_skins.jowi_mxs.rarity = "rare"
 	self.weapon_skins.jowi_mxs.bonus = "recoil_p1"
@@ -20850,7 +20566,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.x_usp_mxs = {}
 	self.weapon_skins.x_usp_mxs.name_id = "bm_wskn_x_usp_mxs"
-	self.weapon_skins.x_usp_mxs.desc_id = "bm_wskn_x_usp_mxs_desc"
 	self.weapon_skins.x_usp_mxs.weapon_id = "usp"
 	self.weapon_skins.x_usp_mxs.rarity = "epic"
 	self.weapon_skins.x_usp_mxs.bonus = "recoil_p1"
@@ -20950,7 +20665,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.par_mxs = {}
 	self.weapon_skins.par_mxs.name_id = "bm_wskn_par_mxs"
-	self.weapon_skins.par_mxs.desc_id = "bm_wskn_par_mxs_desc"
 	self.weapon_skins.par_mxs.weapon_id = "par"
 	self.weapon_skins.par_mxs.rarity = "uncommon"
 	self.weapon_skins.par_mxs.bonus = "spread_p1"
@@ -21003,7 +20717,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.akm_mxs = {}
 	self.weapon_skins.akm_mxs.name_id = "bm_wskn_akm_mxs"
-	self.weapon_skins.akm_mxs.desc_id = "bm_wskn_akm_mxs_desc"
 	self.weapon_skins.akm_mxs.weapon_id = "akm"
 	self.weapon_skins.akm_mxs.rarity = "epic"
 	self.weapon_skins.akm_mxs.bonus = "spread_p1"
@@ -21290,7 +21003,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.striker_mxs = {}
 	self.weapon_skins.striker_mxs.name_id = "bm_wskn_striker_mxs"
-	self.weapon_skins.striker_mxs.desc_id = "bm_wskn_striker_mxs_desc"
 	self.weapon_skins.striker_mxs.weapon_id = "striker"
 	self.weapon_skins.striker_mxs.rarity = "uncommon"
 	self.weapon_skins.striker_mxs.bonus = "spread_n1"
@@ -21317,7 +21029,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.amcar_mxs = {}
 	self.weapon_skins.amcar_mxs.name_id = "bm_wskn_amcar_mxs"
-	self.weapon_skins.amcar_mxs.desc_id = "bm_wskn_amcar_mxs_desc"
 	self.weapon_skins.amcar_mxs.weapon_id = "amcar"
 	self.weapon_skins.amcar_mxs.rarity = "rare"
 	self.weapon_skins.amcar_mxs.bonus = "spread_p1"
@@ -21552,7 +21263,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.polymer_cs4 = {}
 	self.weapon_skins.polymer_cs4.name_id = "bm_wskn_polymer_cs4"
-	self.weapon_skins.polymer_cs4.desc_id = "bm_wskn_polymer_cs4_desc"
 	self.weapon_skins.polymer_cs4.weapon_id = "polymer"
 	self.weapon_skins.polymer_cs4.rarity = "uncommon"
 	self.weapon_skins.polymer_cs4.bonus = "spread_p1"
@@ -21582,7 +21292,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.l85a2_cs4 = {}
 	self.weapon_skins.l85a2_cs4.name_id = "bm_wskn_l85a2_cs4"
-	self.weapon_skins.l85a2_cs4.desc_id = "bm_wskn_l85a2_cs4_desc"
 	self.weapon_skins.l85a2_cs4.weapon_id = "l85a2"
 	self.weapon_skins.l85a2_cs4.rarity = "common"
 	self.weapon_skins.l85a2_cs4.bonus = "spread_p1"
@@ -21695,7 +21404,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.amcar_cs4 = {}
 	self.weapon_skins.amcar_cs4.name_id = "bm_wskn_amcar_cs4"
-	self.weapon_skins.amcar_cs4.desc_id = "bm_wskn_amcar_cs4_desc"
 	self.weapon_skins.amcar_cs4.weapon_id = "amcar"
 	self.weapon_skins.amcar_cs4.rarity = "uncommon"
 	self.weapon_skins.amcar_cs4.bonus = "spread_p1"
@@ -21871,7 +21579,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.usp_cs4 = {}
 	self.weapon_skins.usp_cs4.name_id = "bm_wskn_usp_cs4"
-	self.weapon_skins.usp_cs4.desc_id = "bm_wskn_usp_cs4_desc"
 	self.weapon_skins.usp_cs4.weapon_id = "usp"
 	self.weapon_skins.usp_cs4.rarity = "common"
 	self.weapon_skins.usp_cs4.bonus = "spread_p1"
@@ -22003,7 +21710,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.m16_cs4 = {}
 	self.weapon_skins.m16_cs4.name_id = "bm_wskn_m16_cs4"
-	self.weapon_skins.m16_cs4.desc_id = "bm_wskn_m16_cs4_desc"
 	self.weapon_skins.m16_cs4.weapon_id = "m16"
 	self.weapon_skins.m16_cs4.rarity = "common"
 	self.weapon_skins.m16_cs4.bonus = "spread_p1"
@@ -22187,7 +21893,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.benelli_cs4 = {}
 	self.weapon_skins.benelli_cs4.name_id = "bm_wskn_benelli_cs4"
-	self.weapon_skins.benelli_cs4.desc_id = "bm_wskn_benelli_cs4_desc"
 	self.weapon_skins.benelli_cs4.weapon_id = "benelli"
 	self.weapon_skins.benelli_cs4.rarity = "common"
 	self.weapon_skins.benelli_cs4.bonus = "spread_n1"
@@ -22198,7 +21903,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.benelli_cs4.pattern = Idstring("units/payday2_cash/safes/smosh/pattern/smosh_pattern_021_b_df")
 	self.weapon_skins.wa2000_cs4 = {}
 	self.weapon_skins.wa2000_cs4.name_id = "bm_wskn_wa2000_cs4"
-	self.weapon_skins.wa2000_cs4.desc_id = "bm_wskn_wa2000_cs4_desc"
 	self.weapon_skins.wa2000_cs4.weapon_id = "wa2000"
 	self.weapon_skins.wa2000_cs4.rarity = "common"
 	self.weapon_skins.wa2000_cs4.bonus = "recoil_p1"
@@ -22268,7 +21972,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.serbu_cs4 = {}
 	self.weapon_skins.serbu_cs4.name_id = "bm_wskn_serbu_cs4"
-	self.weapon_skins.serbu_cs4.desc_id = "bm_wskn_serbu_cs4_desc"
 	self.weapon_skins.serbu_cs4.weapon_id = "serbu"
 	self.weapon_skins.serbu_cs4.rarity = "common"
 	self.weapon_skins.serbu_cs4.bonus = "spread_n1"
@@ -22467,7 +22170,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.arbiter_cs4 = {}
 	self.weapon_skins.arbiter_cs4.name_id = "bm_wskn_arbiter_cs4"
-	self.weapon_skins.arbiter_cs4.desc_id = "bm_wskn_arbiter_cs4_desc"
 	self.weapon_skins.arbiter_cs4.weapon_id = "arbiter"
 	self.weapon_skins.arbiter_cs4.rarity = "uncommon"
 	self.weapon_skins.arbiter_cs4.bonus = "spread_p1"
@@ -22665,7 +22367,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.chinchilla_cs4 = {}
 	self.weapon_skins.chinchilla_cs4.name_id = "bm_wskn_chinchilla_cs4"
-	self.weapon_skins.chinchilla_cs4.desc_id = "bm_wskn_chinchilla_cs4_desc"
 	self.weapon_skins.chinchilla_cs4.weapon_id = "chinchilla"
 	self.weapon_skins.chinchilla_cs4.rarity = "rare"
 	self.weapon_skins.chinchilla_cs4.bonus = "recoil_p1"
@@ -22777,7 +22478,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.flint_cs4 = {}
 	self.weapon_skins.flint_cs4.name_id = "bm_wskn_flint_cs4"
-	self.weapon_skins.flint_cs4.desc_id = "bm_wskn_flint_cs4_desc"
 	self.weapon_skins.flint_cs4.weapon_id = "flint"
 	self.weapon_skins.flint_cs4.rarity = "epic"
 	self.weapon_skins.flint_cs4.bonus = "spread_p1"
@@ -23123,7 +22823,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.rpg7_cs4 = {}
 	self.weapon_skins.rpg7_cs4.name_id = "bm_wskn_rpg7_cs4"
-	self.weapon_skins.rpg7_cs4.desc_id = "bm_wskn_rpg7_cs4_desc"
 	self.weapon_skins.rpg7_cs4.weapon_id = "rpg7"
 	self.weapon_skins.rpg7_cs4.rarity = "epic"
 	self.weapon_skins.rpg7_cs4.bonus = "recoil_p1"
@@ -23152,7 +22851,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.striker_cs4 = {}
 	self.weapon_skins.striker_cs4.name_id = "bm_wskn_striker_cs4"
-	self.weapon_skins.striker_cs4.desc_id = "bm_wskn_striker_cs4_desc"
 	self.weapon_skins.striker_cs4.weapon_id = "striker"
 	self.weapon_skins.striker_cs4.rarity = "rare"
 	self.weapon_skins.striker_cs4.bonus = "spread_n1"
@@ -23310,7 +23008,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.new_raging_bull_cs4 = {}
 	self.weapon_skins.new_raging_bull_cs4.name_id = "bm_wskn_new_raging_bull_cs4"
-	self.weapon_skins.new_raging_bull_cs4.desc_id = "bm_wskn_new_raging_bull_cs4_desc"
 	self.weapon_skins.new_raging_bull_cs4.weapon_id = "new_raging_bull"
 	self.weapon_skins.new_raging_bull_cs4.rarity = "rare"
 	self.weapon_skins.new_raging_bull_cs4.bonus = "recoil_p1"
@@ -23493,7 +23190,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.mac10_cs4 = {}
 	self.weapon_skins.mac10_cs4.name_id = "bm_wskn_mac10_cs4"
-	self.weapon_skins.mac10_cs4.desc_id = "bm_wskn_mac10_cs4_desc"
 	self.weapon_skins.mac10_cs4.weapon_id = "mac10"
 	self.weapon_skins.mac10_cs4.rarity = "uncommon"
 	self.weapon_skins.mac10_cs4.bonus = "spread_p1"
@@ -23532,7 +23228,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.m1928_wwt = {}
 	self.weapon_skins.m1928_wwt.name_id = "bm_wskn_m1928_wwt"
-	self.weapon_skins.m1928_wwt.desc_id = "bm_wskn_m1928_wwt_desc"
 	self.weapon_skins.m1928_wwt.weapon_id = "m1928"
 	self.weapon_skins.m1928_wwt.rarity = "epic"
 	self.weapon_skins.m1928_wwt.bonus = "spread_p1"
@@ -23626,7 +23321,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.b682_wwt = {}
 	self.weapon_skins.b682_wwt.name_id = "bm_wskn_b682_wwt"
-	self.weapon_skins.b682_wwt.desc_id = "bm_wskn_b682_wwt_desc"
 	self.weapon_skins.b682_wwt.weapon_id = "b682"
 	self.weapon_skins.b682_wwt.rarity = "common"
 	self.weapon_skins.b682_wwt.bonus = "spread_n1"
@@ -23660,7 +23354,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.flamethrower_mk2_wwt = {}
 	self.weapon_skins.flamethrower_mk2_wwt.name_id = "bm_wskn_flamethrower_mk2_wwt"
-	self.weapon_skins.flamethrower_mk2_wwt.desc_id = "bm_wskn_flamethrower_mk2_wwt_desc"
 	self.weapon_skins.flamethrower_mk2_wwt.weapon_id = "flamethrower_mk2"
 	self.weapon_skins.flamethrower_mk2_wwt.rarity = "uncommon"
 	self.weapon_skins.flamethrower_mk2_wwt.bonus = "total_ammo_p1"
@@ -23696,7 +23389,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.sterling_wwt = {}
 	self.weapon_skins.sterling_wwt.name_id = "bm_wskn_sterling_wwt"
-	self.weapon_skins.sterling_wwt.desc_id = "bm_wskn_sterling_wwt_desc"
 	self.weapon_skins.sterling_wwt.weapon_id = "sterling"
 	self.weapon_skins.sterling_wwt.rarity = "uncommon"
 	self.weapon_skins.sterling_wwt.bonus = "spread_p1"
@@ -23735,7 +23427,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.peacemaker_wwt = {}
 	self.weapon_skins.peacemaker_wwt.name_id = "bm_wskn_peacemaker_wwt"
-	self.weapon_skins.peacemaker_wwt.desc_id = "bm_wskn_peacemaker_wwt_desc"
 	self.weapon_skins.peacemaker_wwt.weapon_id = "peacemaker"
 	self.weapon_skins.peacemaker_wwt.rarity = "common"
 	self.weapon_skins.peacemaker_wwt.bonus = "recoil_p1"
@@ -23763,7 +23454,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.erma_wwt = {}
 	self.weapon_skins.erma_wwt.name_id = "bm_wskn_erma_wwt"
-	self.weapon_skins.erma_wwt.desc_id = "bm_wskn_erma_wwt_desc"
 	self.weapon_skins.erma_wwt.weapon_id = "erma"
 	self.weapon_skins.erma_wwt.rarity = "common"
 	self.weapon_skins.erma_wwt.bonus = "spread_p1"
@@ -23789,7 +23479,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.ching_wwt = {}
 	self.weapon_skins.ching_wwt.name_id = "bm_wskn_ching_wwt"
-	self.weapon_skins.ching_wwt.desc_id = "bm_wskn_ching_wwt_desc"
 	self.weapon_skins.ching_wwt.weapon_id = "ching"
 	self.weapon_skins.ching_wwt.rarity = "rare"
 	self.weapon_skins.ching_wwt.bonus = "spread_p1"
@@ -23875,7 +23564,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.m37_wwt = {}
 	self.weapon_skins.m37_wwt.name_id = "bm_wskn_m37_wwt"
-	self.weapon_skins.m37_wwt.desc_id = "bm_wskn_m37_wwt_desc"
 	self.weapon_skins.m37_wwt.weapon_id = "m37"
 	self.weapon_skins.m37_wwt.rarity = "rare"
 	self.weapon_skins.m37_wwt.bonus = "spread_n1"
@@ -23925,7 +23613,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.breech_wwt = {}
 	self.weapon_skins.breech_wwt.name_id = "bm_wskn_breech_wwt"
-	self.weapon_skins.breech_wwt.desc_id = "bm_wskn_breech_wwt_desc"
 	self.weapon_skins.breech_wwt.weapon_id = "breech"
 	self.weapon_skins.breech_wwt.rarity = "common"
 	self.weapon_skins.breech_wwt.bonus = "spread_p1"
@@ -24162,7 +23849,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.mg42_wwt = {}
 	self.weapon_skins.mg42_wwt.name_id = "bm_wskn_mg42_wwt"
-	self.weapon_skins.mg42_wwt.desc_id = "bm_wskn_mg42_wwt_desc"
 	self.weapon_skins.mg42_wwt.weapon_id = "mg42"
 	self.weapon_skins.mg42_wwt.rarity = "common"
 	self.weapon_skins.mg42_wwt.bonus = "spread_p1"
@@ -24183,7 +23869,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.new_m4_skf = {}
 	self.weapon_skins.new_m4_skf.name_id = "bm_wskn_new_m4_skf"
-	self.weapon_skins.new_m4_skf.desc_id = "bm_wskn_new_m4_skf_desc"
 	self.weapon_skins.new_m4_skf.weapon_id = "new_m4"
 	self.weapon_skins.new_m4_skf.rarity = "common"
 	self.weapon_skins.new_m4_skf.bonus = "spread_p1"
@@ -24224,7 +23909,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.p226_skf = {}
 	self.weapon_skins.p226_skf.name_id = "bm_wskn_p226_skf"
-	self.weapon_skins.p226_skf.desc_id = "bm_wskn_p226_skf_desc"
 	self.weapon_skins.p226_skf.weapon_id = "p226"
 	self.weapon_skins.p226_skf.rarity = "common"
 	self.weapon_skins.p226_skf.bonus = "spread_p1"
@@ -24343,7 +24027,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.amcar_skf = {}
 	self.weapon_skins.amcar_skf.name_id = "bm_wskn_amcar_skf"
-	self.weapon_skins.amcar_skf.desc_id = "bm_wskn_amcar_skf_desc"
 	self.weapon_skins.amcar_skf.weapon_id = "amcar"
 	self.weapon_skins.amcar_skf.rarity = "common"
 	self.weapon_skins.amcar_skf.bonus = "recoil_p1"
@@ -24499,7 +24182,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.ppk_skf = {}
 	self.weapon_skins.ppk_skf.name_id = "bm_wskn_ppk_skf"
-	self.weapon_skins.ppk_skf.desc_id = "bm_wskn_ppk_skf_desc"
 	self.weapon_skins.ppk_skf.weapon_id = "ppk"
 	self.weapon_skins.ppk_skf.rarity = "common"
 	self.weapon_skins.ppk_skf.bonus = "spread_p1"
@@ -24601,7 +24283,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.aug_skf = {}
 	self.weapon_skins.aug_skf.name_id = "bm_wskn_aug_skf"
-	self.weapon_skins.aug_skf.desc_id = "bm_wskn_aug_skf_desc"
 	self.weapon_skins.aug_skf.weapon_id = "aug"
 	self.weapon_skins.aug_skf.rarity = "common"
 	self.weapon_skins.aug_skf.bonus = "recoil_p1"
@@ -24757,9 +24438,9 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 				pattern = "units/payday2_cash/safes/skf/pattern/skf_pattern_005_b_df",
 				sticker = "units/payday2_cash/safes/skf/sticker/skf_sticker_005_df",
 				pattern_tweak = Vector3(1.20878, 3.00148, 1),
-				uv_scale = Vector3(7.11353, 0.0100002, 0.425233),
 				pattern_pos = Vector3(0.0748201, -0.260911, 0),
-				uv_offset_rot = Vector3(-0.27999, 1.08419, 0)
+				uv_scale = Vector3(8.82891, 1.42094, 0.425233),
+				uv_offset_rot = Vector3(-0.308609, 1.00641, 0)
 			},
 			[Idstring("aug"):key()] = {
 				pattern = "units/payday2_cash/safes/skf/pattern/skf_pattern_005_b_df",
@@ -24777,7 +24458,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.lemming_skf = {}
 	self.weapon_skins.lemming_skf.name_id = "bm_wskn_lemming_skf"
-	self.weapon_skins.lemming_skf.desc_id = "bm_wskn_lemming_skf_desc"
 	self.weapon_skins.lemming_skf.weapon_id = "lemming"
 	self.weapon_skins.lemming_skf.rarity = "uncommon"
 	self.weapon_skins.lemming_skf.bonus = "spread_p1"
@@ -24871,7 +24551,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.g26_skf = {}
 	self.weapon_skins.g26_skf.name_id = "bm_wskn_g26_skf"
-	self.weapon_skins.g26_skf.desc_id = "bm_wskn_g26_skf_desc"
 	self.weapon_skins.g26_skf.weapon_id = "g26"
 	self.weapon_skins.g26_skf.rarity = "common"
 	self.weapon_skins.g26_skf.bonus = "spread_p1"
@@ -24941,7 +24620,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.ching_skf = {}
 	self.weapon_skins.ching_skf.name_id = "bm_wskn_ching_skf"
-	self.weapon_skins.ching_skf.desc_id = "bm_wskn_ching_skf_desc"
 	self.weapon_skins.ching_skf.weapon_id = "ching"
 	self.weapon_skins.ching_skf.rarity = "uncommon"
 	self.weapon_skins.ching_skf.bonus = "recoil_p1"
@@ -25031,7 +24709,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.mp7_skf = {}
 	self.weapon_skins.mp7_skf.name_id = "bm_wskn_mp7_skf"
-	self.weapon_skins.mp7_skf.desc_id = "bm_wskn_mp7_skf_desc"
 	self.weapon_skins.mp7_skf.weapon_id = "mp7"
 	self.weapon_skins.mp7_skf.rarity = "rare"
 	self.weapon_skins.mp7_skf.bonus = "recoil_p1"
@@ -25102,7 +24779,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.ray_skf = {}
 	self.weapon_skins.ray_skf.name_id = "bm_wskn_ray_skf"
-	self.weapon_skins.ray_skf.desc_id = "bm_wskn_ray_skf_desc"
 	self.weapon_skins.ray_skf.weapon_id = "ray"
 	self.weapon_skins.ray_skf.rarity = "uncommon"
 	self.weapon_skins.ray_skf.bonus = "spread_p1"
@@ -25135,7 +24811,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.b682_skf = {}
 	self.weapon_skins.b682_skf.name_id = "bm_wskn_b682_skf"
-	self.weapon_skins.b682_skf.desc_id = "bm_wskn_b682_skf_desc"
 	self.weapon_skins.b682_skf.weapon_id = "b682"
 	self.weapon_skins.b682_skf.rarity = "rare"
 	self.weapon_skins.b682_skf.bonus = "spread_n1"
@@ -25206,7 +24881,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.ak5_skf = {}
 	self.weapon_skins.ak5_skf.name_id = "bm_wskn_ak5_skf"
-	self.weapon_skins.ak5_skf.desc_id = "bm_wskn_ak5_skf_desc"
 	self.weapon_skins.ak5_skf.weapon_id = "ak5"
 	self.weapon_skins.ak5_skf.rarity = "uncommon"
 	self.weapon_skins.ak5_skf.bonus = "recoil_p1"
@@ -25400,7 +25074,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.scar_skf = {}
 	self.weapon_skins.scar_skf.name_id = "bm_wskn_scar_skf"
-	self.weapon_skins.scar_skf.desc_id = "bm_wskn_scar_skf_desc"
 	self.weapon_skins.scar_skf.weapon_id = "scar"
 	self.weapon_skins.scar_skf.rarity = "rare"
 	self.weapon_skins.scar_skf.bonus = "spread_p1"
@@ -25476,7 +25149,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.famas_skf = {}
 	self.weapon_skins.famas_skf.name_id = "bm_wskn_famas_skf"
-	self.weapon_skins.famas_skf.desc_id = "bm_wskn_famas_skf_desc"
 	self.weapon_skins.famas_skf.weapon_id = "famas"
 	self.weapon_skins.famas_skf.rarity = "epic"
 	self.weapon_skins.famas_skf.bonus = "spread_p1"
@@ -25620,7 +25292,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.g36_skf = {}
 	self.weapon_skins.g36_skf.name_id = "bm_wskn_g36_skf"
-	self.weapon_skins.g36_skf.desc_id = "bm_wskn_g36_skf_desc"
 	self.weapon_skins.g36_skf.weapon_id = "g36"
 	self.weapon_skins.g36_skf.rarity = "epic"
 	self.weapon_skins.g36_skf.bonus = "spread_p1"
@@ -25847,7 +25518,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.x_1911_css = {}
 	self.weapon_skins.x_1911_css.name_id = "bm_wskn_x_1911_css"
-	self.weapon_skins.x_1911_css.desc_id = "bm_wskn_x_1911_css_desc"
 	self.weapon_skins.x_1911_css.weapon_id = "colt_1911"
 	self.weapon_skins.x_1911_css.rarity = "common"
 	self.weapon_skins.x_1911_css.bonus = "recoil_p1"
@@ -25927,7 +25597,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.contraband_css = {}
 	self.weapon_skins.contraband_css.name_id = "bm_wskn_contraband_css"
-	self.weapon_skins.contraband_css.desc_id = "bm_wskn_contraband_css_desc"
 	self.weapon_skins.contraband_css.weapon_id = "contraband"
 	self.weapon_skins.contraband_css.rarity = "common"
 	self.weapon_skins.contraband_css.bonus = "spread_p1"
@@ -25983,7 +25652,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.par_css = {}
 	self.weapon_skins.par_css.name_id = "bm_wskn_par_css"
-	self.weapon_skins.par_css.desc_id = "bm_wskn_par_css_desc"
 	self.weapon_skins.par_css.weapon_id = "par"
 	self.weapon_skins.par_css.rarity = "common"
 	self.weapon_skins.par_css.bonus = "recoil_p1"
@@ -26081,7 +25749,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.breech_css = {}
 	self.weapon_skins.breech_css.name_id = "bm_wskn_breech_css"
-	self.weapon_skins.breech_css.desc_id = "bm_wskn_breech_css_desc"
 	self.weapon_skins.breech_css.weapon_id = "breech"
 	self.weapon_skins.breech_css.rarity = "common"
 	self.weapon_skins.breech_css.bonus = "spread_p1"
@@ -26097,7 +25764,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.c96_css = {}
 	self.weapon_skins.c96_css.name_id = "bm_wskn_c96_css"
-	self.weapon_skins.c96_css.desc_id = "bm_wskn_c96_css_desc"
 	self.weapon_skins.c96_css.weapon_id = "c96"
 	self.weapon_skins.c96_css.rarity = "uncommon"
 	self.weapon_skins.c96_css.bonus = "spread_p1"
@@ -26139,7 +25805,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.m95_css = {}
 	self.weapon_skins.m95_css.name_id = "bm_wskn_m95_css"
-	self.weapon_skins.m95_css.desc_id = "bm_wskn_m95_css_desc"
 	self.weapon_skins.m95_css.weapon_id = "m95"
 	self.weapon_skins.m95_css.rarity = "rare"
 	self.weapon_skins.m95_css.bonus = "recoil_p1"
@@ -26285,7 +25950,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.m37_css = {}
 	self.weapon_skins.m37_css.name_id = "bm_wskn_m37_css"
-	self.weapon_skins.m37_css.desc_id = "bm_wskn_m37_css_desc"
 	self.weapon_skins.m37_css.weapon_id = "m37"
 	self.weapon_skins.m37_css.rarity = "uncommon"
 	self.weapon_skins.m37_css.bonus = "spread_n1"
@@ -26448,7 +26112,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.sparrow_css = {}
 	self.weapon_skins.sparrow_css.name_id = "bm_wskn_sparrow_css"
-	self.weapon_skins.sparrow_css.desc_id = "bm_wskn_sparrow_css_desc"
 	self.weapon_skins.sparrow_css.weapon_id = "sparrow"
 	self.weapon_skins.sparrow_css.rarity = "uncommon"
 	self.weapon_skins.sparrow_css.bonus = "spread_p1"
@@ -26637,7 +26300,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.g26_css = {}
 	self.weapon_skins.g26_css.name_id = "bm_wskn_g26_css"
-	self.weapon_skins.g26_css.desc_id = "bm_wskn_g26_css_desc"
 	self.weapon_skins.g26_css.weapon_id = "g26"
 	self.weapon_skins.g26_css.rarity = "uncommon"
 	self.weapon_skins.g26_css.bonus = "spread_p1"
@@ -26669,7 +26331,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.flint_css = {}
 	self.weapon_skins.flint_css.name_id = "bm_wskn_flint_css"
-	self.weapon_skins.flint_css.desc_id = "bm_wskn_flint_css_desc"
 	self.weapon_skins.flint_css.weapon_id = "flint"
 	self.weapon_skins.flint_css.rarity = "epic"
 	self.weapon_skins.flint_css.bonus = "spread_p1"
@@ -27165,7 +26826,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.coal_css = {}
 	self.weapon_skins.coal_css.name_id = "bm_wskn_coal_css"
-	self.weapon_skins.coal_css.desc_id = "bm_wskn_coal_css_desc"
 	self.weapon_skins.coal_css.weapon_id = "coal"
 	self.weapon_skins.coal_css.rarity = "rare"
 	self.weapon_skins.coal_css.bonus = "spread_p1"
@@ -27295,7 +26955,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.r93_css = {}
 	self.weapon_skins.r93_css.name_id = "bm_wskn_r93_css"
-	self.weapon_skins.r93_css.desc_id = "bm_wskn_r93_css_desc"
 	self.weapon_skins.r93_css.weapon_id = "r93"
 	self.weapon_skins.r93_css.rarity = "epic"
 	self.weapon_skins.r93_css.bonus = "recoil_p1"
@@ -27360,7 +27019,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.ching_css = {}
 	self.weapon_skins.ching_css.name_id = "bm_wskn_ching_css"
-	self.weapon_skins.ching_css.desc_id = "bm_wskn_ching_css_desc"
 	self.weapon_skins.ching_css.weapon_id = "ching"
 	self.weapon_skins.ching_css.rarity = "common"
 	self.weapon_skins.ching_css.bonus = "recoil_p1"
@@ -27466,7 +27124,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.lemming_css = {}
 	self.weapon_skins.lemming_css.name_id = "bm_wskn_lemming_css"
-	self.weapon_skins.lemming_css.desc_id = "bm_wskn_lemming_css_desc"
 	self.weapon_skins.lemming_css.weapon_id = "lemming"
 	self.weapon_skins.lemming_css.rarity = "rare"
 	self.weapon_skins.lemming_css.bonus = "spread_p1"
@@ -27522,7 +27179,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.ppk_css = {}
 	self.weapon_skins.ppk_css.name_id = "bm_wskn_ppk_css"
-	self.weapon_skins.ppk_css.desc_id = "bm_wskn_ppk_css_desc"
 	self.weapon_skins.ppk_css.weapon_id = "ppk"
 	self.weapon_skins.ppk_css.rarity = "common"
 	self.weapon_skins.ppk_css.bonus = "spread_p1"
@@ -27596,7 +27252,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.gre_m79_dss = {}
 	self.weapon_skins.gre_m79_dss.name_id = "bm_wskn_gre_m79_dss"
-	self.weapon_skins.gre_m79_dss.desc_id = "bm_wskn_gre_m79_dss_desc"
 	self.weapon_skins.gre_m79_dss.weapon_id = "gre_m79"
 	self.weapon_skins.gre_m79_dss.rarity = "common"
 	self.weapon_skins.gre_m79_dss.bonus = "concealment_p1"
@@ -27617,7 +27272,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.erma_dss = {}
 	self.weapon_skins.erma_dss.name_id = "bm_wskn_erma_dss"
-	self.weapon_skins.erma_dss.desc_id = "bm_wskn_erma_dss_desc"
 	self.weapon_skins.erma_dss.weapon_id = "erma"
 	self.weapon_skins.erma_dss.rarity = "uncommon"
 	self.weapon_skins.erma_dss.bonus = "recoil_p1"
@@ -27648,7 +27302,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.boot_dss = {}
 	self.weapon_skins.boot_dss.name_id = "bm_wskn_boot_dss"
-	self.weapon_skins.boot_dss.desc_id = "bm_wskn_boot_dss_desc"
 	self.weapon_skins.boot_dss.weapon_id = "boot"
 	self.weapon_skins.boot_dss.rarity = "common"
 	self.weapon_skins.boot_dss.bonus = "spread_n1"
@@ -27676,7 +27329,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.m1928_dss = {}
 	self.weapon_skins.m1928_dss.name_id = "bm_wskn_m1928_dss"
-	self.weapon_skins.m1928_dss.desc_id = "bm_wskn_m1928_dss_desc"
 	self.weapon_skins.m1928_dss.weapon_id = "m1928"
 	self.weapon_skins.m1928_dss.rarity = "common"
 	self.weapon_skins.m1928_dss.bonus = "recoil_p1"
@@ -27697,7 +27349,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.peacemaker_dss = {}
 	self.weapon_skins.peacemaker_dss.name_id = "bm_wskn_peacemaker_dss"
-	self.weapon_skins.peacemaker_dss.desc_id = "bm_wskn_peacemaker_dss_desc"
 	self.weapon_skins.peacemaker_dss.weapon_id = "peacemaker"
 	self.weapon_skins.peacemaker_dss.rarity = "common"
 	self.weapon_skins.peacemaker_dss.bonus = "spread_p1"
@@ -27710,7 +27361,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.peacemaker_dss.pattern_pos = Vector3(-0.136895, 0.549964, 0)
 	self.weapon_skins.m45_dss = {}
 	self.weapon_skins.m45_dss.name_id = "bm_wskn_m45_dss"
-	self.weapon_skins.m45_dss.desc_id = "bm_wskn_m45_dss_desc"
 	self.weapon_skins.m45_dss.weapon_id = "m45"
 	self.weapon_skins.m45_dss.rarity = "common"
 	self.weapon_skins.m45_dss.bonus = "recoil_p1"
@@ -27739,7 +27389,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.x_shrew_dss = {}
 	self.weapon_skins.x_shrew_dss.name_id = "bm_wskn_x_shrew_dss"
-	self.weapon_skins.x_shrew_dss.desc_id = "bm_wskn_x_shrew_dss_desc"
 	self.weapon_skins.x_shrew_dss.weapon_id = "shrew"
 	self.weapon_skins.x_shrew_dss.rarity = "uncommon"
 	self.weapon_skins.x_shrew_dss.bonus = "recoil_p1"
@@ -27790,7 +27439,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.mg42_dss = {}
 	self.weapon_skins.mg42_dss.name_id = "bm_wskn_mg42_dss"
-	self.weapon_skins.mg42_dss.desc_id = "bm_wskn_mg42_dss_desc"
 	self.weapon_skins.mg42_dss.weapon_id = "mg42"
 	self.weapon_skins.mg42_dss.rarity = "uncommon"
 	self.weapon_skins.mg42_dss.bonus = "recoil_p1"
@@ -27818,7 +27466,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.ching_dss = {}
 	self.weapon_skins.ching_dss.name_id = "bm_wskn_ching_dss"
-	self.weapon_skins.ching_dss.desc_id = "bm_wskn_ching_dss_desc"
 	self.weapon_skins.ching_dss.weapon_id = "ching"
 	self.weapon_skins.ching_dss.rarity = "common"
 	self.weapon_skins.ching_dss.bonus = "spread_p1"
@@ -27840,7 +27487,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.colt_1911_dss = {}
 	self.weapon_skins.colt_1911_dss.name_id = "bm_wskn_colt_1911_dss"
-	self.weapon_skins.colt_1911_dss.desc_id = "bm_wskn_colt_1911_dss_desc"
 	self.weapon_skins.colt_1911_dss.weapon_id = "colt_1911"
 	self.weapon_skins.colt_1911_dss.rarity = "rare"
 	self.weapon_skins.colt_1911_dss.bonus = "spread_p1"
@@ -27907,7 +27553,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.chinchilla_dss = {}
 	self.weapon_skins.chinchilla_dss.name_id = "bm_wskn_chinchilla_dss"
-	self.weapon_skins.chinchilla_dss.desc_id = "bm_wskn_chinchilla_dss_desc"
 	self.weapon_skins.chinchilla_dss.weapon_id = "chinchilla"
 	self.weapon_skins.chinchilla_dss.rarity = "common"
 	self.weapon_skins.chinchilla_dss.bonus = "spread_p1"
@@ -27928,7 +27573,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.c96_dss = {}
 	self.weapon_skins.c96_dss.name_id = "bm_wskn_c96_dss"
-	self.weapon_skins.c96_dss.desc_id = "bm_wskn_c96_dss_desc"
 	self.weapon_skins.c96_dss.weapon_id = "c96"
 	self.weapon_skins.c96_dss.rarity = "rare"
 	self.weapon_skins.c96_dss.bonus = "spread_p1"
@@ -27989,7 +27633,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.winchester1874_dss = {}
 	self.weapon_skins.winchester1874_dss.name_id = "bm_wskn_winchester1874_dss"
-	self.weapon_skins.winchester1874_dss.desc_id = "bm_wskn_winchester1874_dss_desc"
 	self.weapon_skins.winchester1874_dss.weapon_id = "winchester1874"
 	self.weapon_skins.winchester1874_dss.rarity = "rare"
 	self.weapon_skins.winchester1874_dss.bonus = "spread_p1"
@@ -28025,7 +27668,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.huntsman_dss = {}
 	self.weapon_skins.huntsman_dss.name_id = "bm_wskn_huntsman_dss"
-	self.weapon_skins.huntsman_dss.desc_id = "bm_wskn_huntsman_dss_desc"
 	self.weapon_skins.huntsman_dss.weapon_id = "huntsman"
 	self.weapon_skins.huntsman_dss.rarity = "epic"
 	self.weapon_skins.huntsman_dss.bonus = "spread_n1"
@@ -28043,7 +27685,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.b682_dss = {}
 	self.weapon_skins.b682_dss.name_id = "bm_wskn_b682_dss"
-	self.weapon_skins.b682_dss.desc_id = "bm_wskn_b682_dss_desc"
 	self.weapon_skins.b682_dss.weapon_id = "b682"
 	self.weapon_skins.b682_dss.rarity = "epic"
 	self.weapon_skins.b682_dss.bonus = "spread_n1"
@@ -28147,7 +27788,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.polymer_tam = {}
 	self.weapon_skins.polymer_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.polymer_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.polymer_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.polymer_tam.weapon_id = "polymer"
 	self.weapon_skins.polymer_tam.global_value = "tam"
@@ -28176,7 +27816,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.m16_tam = {}
 	self.weapon_skins.m16_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.m16_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.m16_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.m16_tam.weapon_id = "m16"
 	self.weapon_skins.m16_tam.global_value = "tam"
@@ -28210,7 +27849,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.g26_tam = {}
 	self.weapon_skins.g26_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.g26_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.g26_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.g26_tam.weapon_id = "g26"
 	self.weapon_skins.g26_tam.global_value = "tam"
@@ -28225,7 +27863,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.g26_tam.pattern = Idstring("units/pd2_dlc_tam/pattern/tam_pattern_001_df")
 	self.weapon_skins.lemming_tam = {}
 	self.weapon_skins.lemming_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.lemming_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.lemming_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.lemming_tam.weapon_id = "lemming"
 	self.weapon_skins.lemming_tam.global_value = "tam"
@@ -28241,7 +27878,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.lemming_tam.pattern_pos = Vector3(0.206535, 0.616742, 0)
 	self.weapon_skins.usp_tam = {}
 	self.weapon_skins.usp_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.usp_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.usp_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.usp_tam.weapon_id = "usp"
 	self.weapon_skins.usp_tam.global_value = "tam"
@@ -28258,7 +27894,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.usp_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.g22c_tam = {}
 	self.weapon_skins.g22c_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.g22c_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.g22c_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.g22c_tam.weapon_id = "g22c"
 	self.weapon_skins.g22c_tam.global_value = "tam"
@@ -28273,7 +27908,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.g22c_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.lemming_tam = {}
 	self.weapon_skins.lemming_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.lemming_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.lemming_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.lemming_tam.weapon_id = "lemming"
 	self.weapon_skins.lemming_tam.global_value = "tam"
@@ -28289,7 +27923,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.lemming_tam.pattern_pos = Vector3(0.206535, 0.616742, 0)
 	self.weapon_skins.g26_tam = {}
 	self.weapon_skins.g26_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.g26_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.g26_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.g26_tam.weapon_id = "g26"
 	self.weapon_skins.g26_tam.global_value = "tam"
@@ -28304,7 +27937,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.g26_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.glock_17_tam = {}
 	self.weapon_skins.glock_17_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.glock_17_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.glock_17_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.glock_17_tam.weapon_id = "glock_17"
 	self.weapon_skins.glock_17_tam.global_value = "tam"
@@ -28319,7 +27951,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.glock_17_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.colt_1911_tam = {}
 	self.weapon_skins.colt_1911_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.colt_1911_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.colt_1911_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.colt_1911_tam.weapon_id = "colt_1911"
 	self.weapon_skins.colt_1911_tam.global_value = "tam"
@@ -28344,7 +27975,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.b92fs_tam = {}
 	self.weapon_skins.b92fs_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.b92fs_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.b92fs_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.b92fs_tam.weapon_id = "b92fs"
 	self.weapon_skins.b92fs_tam.global_value = "tam"
@@ -28359,7 +27989,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.b92fs_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.new_raging_bull_tam = {}
 	self.weapon_skins.new_raging_bull_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.new_raging_bull_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.new_raging_bull_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.new_raging_bull_tam.weapon_id = "new_raging_bull"
 	self.weapon_skins.new_raging_bull_tam.global_value = "tam"
@@ -28381,7 +28010,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.pl14_tam = {}
 	self.weapon_skins.pl14_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.pl14_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.pl14_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.pl14_tam.weapon_id = "pl14"
 	self.weapon_skins.pl14_tam.global_value = "tam"
@@ -28397,7 +28025,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.pl14_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.breech_tam = {}
 	self.weapon_skins.breech_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.breech_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.breech_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.breech_tam.weapon_id = "breech"
 	self.weapon_skins.breech_tam.global_value = "tam"
@@ -28419,7 +28046,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.chinchilla_tam = {}
 	self.weapon_skins.chinchilla_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.chinchilla_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.chinchilla_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.chinchilla_tam.weapon_id = "chinchilla"
 	self.weapon_skins.chinchilla_tam.global_value = "tam"
@@ -28434,7 +28060,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.chinchilla_tam.pattern_tweak = Vector3(0.634393, 0, 0)
 	self.weapon_skins.shrew_tam = {}
 	self.weapon_skins.shrew_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.shrew_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.shrew_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.shrew_tam.weapon_id = "shrew"
 	self.weapon_skins.shrew_tam.global_value = "tam"
@@ -28449,7 +28074,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.shrew_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.glock_18c_tam = {}
 	self.weapon_skins.glock_18c_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.glock_18c_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.glock_18c_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.glock_18c_tam.weapon_id = "glock_18c"
 	self.weapon_skins.glock_18c_tam.global_value = "tam"
@@ -28470,7 +28094,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.deagle_tam = {}
 	self.weapon_skins.deagle_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.deagle_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.deagle_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.deagle_tam.weapon_id = "deagle"
 	self.weapon_skins.deagle_tam.global_value = "tam"
@@ -28494,7 +28117,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.ppk_tam = {}
 	self.weapon_skins.ppk_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.ppk_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.ppk_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.ppk_tam.weapon_id = "ppk"
 	self.weapon_skins.ppk_tam.global_value = "tam"
@@ -28509,7 +28131,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.ppk_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.p226_tam = {}
 	self.weapon_skins.p226_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.p226_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.p226_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.p226_tam.weapon_id = "p226"
 	self.weapon_skins.p226_tam.global_value = "tam"
@@ -28524,7 +28145,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.p226_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.c96_tam = {}
 	self.weapon_skins.c96_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.c96_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.c96_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.c96_tam.weapon_id = "c96"
 	self.weapon_skins.c96_tam.global_value = "tam"
@@ -28539,7 +28159,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.c96_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.hs2000_tam = {}
 	self.weapon_skins.hs2000_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.hs2000_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.hs2000_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.hs2000_tam.weapon_id = "hs2000"
 	self.weapon_skins.hs2000_tam.global_value = "tam"
@@ -28554,7 +28173,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.hs2000_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.peacemaker_tam = {}
 	self.weapon_skins.peacemaker_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.peacemaker_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.peacemaker_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.peacemaker_tam.weapon_id = "peacemaker"
 	self.weapon_skins.peacemaker_tam.global_value = "tam"
@@ -28570,7 +28188,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.peacemaker_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.mateba_tam = {}
 	self.weapon_skins.mateba_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.mateba_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.mateba_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.mateba_tam.weapon_id = "mateba"
 	self.weapon_skins.mateba_tam.global_value = "tam"
@@ -28585,7 +28202,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.mateba_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.sparrow_tam = {}
 	self.weapon_skins.sparrow_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.sparrow_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.sparrow_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.sparrow_tam.weapon_id = "sparrow"
 	self.weapon_skins.sparrow_tam.global_value = "tam"
@@ -28607,7 +28223,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.flint_tam = {}
 	self.weapon_skins.flint_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.flint_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.flint_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.flint_tam.weapon_id = "flint"
 	self.weapon_skins.flint_tam.global_value = "tam"
@@ -28622,7 +28237,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.flint_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.m1928_tam = {}
 	self.weapon_skins.m1928_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.m1928_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.m1928_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.m1928_tam.weapon_id = "m1928"
 	self.weapon_skins.m1928_tam.global_value = "tam"
@@ -28637,7 +28251,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.m1928_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.mac10_tam = {}
 	self.weapon_skins.mac10_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.mac10_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.mac10_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.mac10_tam.weapon_id = "mac10"
 	self.weapon_skins.mac10_tam.global_value = "tam"
@@ -28653,7 +28266,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.mac10_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.new_mp5_tam = {}
 	self.weapon_skins.new_mp5_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.new_mp5_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.new_mp5_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.new_mp5_tam.weapon_id = "new_mp5"
 	self.weapon_skins.new_mp5_tam.global_value = "tam"
@@ -28668,7 +28280,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.new_mp5_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.mp9_tam = {}
 	self.weapon_skins.mp9_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.mp9_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.mp9_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.mp9_tam.weapon_id = "mp9"
 	self.weapon_skins.mp9_tam.global_value = "tam"
@@ -28683,7 +28294,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.mp9_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.olympic_tam = {}
 	self.weapon_skins.olympic_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.olympic_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.olympic_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.olympic_tam.weapon_id = "olympic"
 	self.weapon_skins.olympic_tam.global_value = "tam"
@@ -28698,7 +28308,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.olympic_tam.pattern_tweak = Vector3(0.634393, 0, 0)
 	self.weapon_skins.erma_tam = {}
 	self.weapon_skins.erma_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.erma_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.erma_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.erma_tam.weapon_id = "erma"
 	self.weapon_skins.erma_tam.global_value = "tam"
@@ -28713,7 +28322,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.erma_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.sr2_tam = {}
 	self.weapon_skins.sr2_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.sr2_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.sr2_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.sr2_tam.weapon_id = "sr2"
 	self.weapon_skins.sr2_tam.global_value = "tam"
@@ -28728,7 +28336,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.sr2_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.akmsu_tam = {}
 	self.weapon_skins.akmsu_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.akmsu_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.akmsu_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.akmsu_tam.weapon_id = "akmsu"
 	self.weapon_skins.akmsu_tam.global_value = "tam"
@@ -28743,7 +28350,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.akmsu_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.p90_tam = {}
 	self.weapon_skins.p90_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.p90_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.p90_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.p90_tam.weapon_id = "p90"
 	self.weapon_skins.p90_tam.global_value = "tam"
@@ -28759,7 +28365,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.p90_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.m45_tam = {}
 	self.weapon_skins.m45_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.m45_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.m45_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.m45_tam.weapon_id = "m45"
 	self.weapon_skins.m45_tam.global_value = "tam"
@@ -28775,7 +28380,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.m45_tam.pattern_pos = Vector3(0.196995, 0.712139, 0)
 	self.weapon_skins.mp7_tam = {}
 	self.weapon_skins.mp7_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.mp7_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.mp7_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.mp7_tam.weapon_id = "mp7"
 	self.weapon_skins.mp7_tam.global_value = "tam"
@@ -28790,7 +28394,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.mp7_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.scorpion_tam = {}
 	self.weapon_skins.scorpion_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.scorpion_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.scorpion_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.scorpion_tam.weapon_id = "scorpion"
 	self.weapon_skins.scorpion_tam.global_value = "tam"
@@ -28805,7 +28408,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.scorpion_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.tec9_tam = {}
 	self.weapon_skins.tec9_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.tec9_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.tec9_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.tec9_tam.weapon_id = "tec9"
 	self.weapon_skins.tec9_tam.global_value = "tam"
@@ -28820,7 +28422,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.tec9_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.uzi_tam = {}
 	self.weapon_skins.uzi_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.uzi_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.uzi_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.uzi_tam.weapon_id = "uzi"
 	self.weapon_skins.uzi_tam.global_value = "tam"
@@ -28835,7 +28436,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.uzi_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.sterling_tam = {}
 	self.weapon_skins.sterling_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.sterling_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.sterling_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.sterling_tam.weapon_id = "sterling"
 	self.weapon_skins.sterling_tam.global_value = "tam"
@@ -28851,7 +28451,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.sterling_tam.pattern_pos = Vector3(-0.0319578, 0.69306, 0)
 	self.weapon_skins.baka_tam = {}
 	self.weapon_skins.baka_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.baka_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.baka_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.baka_tam.weapon_id = "baka"
 	self.weapon_skins.baka_tam.global_value = "tam"
@@ -28866,7 +28465,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.baka_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.schakal_tam = {}
 	self.weapon_skins.schakal_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.schakal_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.schakal_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.schakal_tam.weapon_id = "schakal"
 	self.weapon_skins.schakal_tam.global_value = "tam"
@@ -28893,7 +28491,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.hajk_tam = {}
 	self.weapon_skins.hajk_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.hajk_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.hajk_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.hajk_tam.weapon_id = "hajk"
 	self.weapon_skins.hajk_tam.global_value = "tam"
@@ -28908,7 +28505,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.hajk_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.coal_tam = {}
 	self.weapon_skins.coal_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.coal_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.coal_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.coal_tam.weapon_id = "coal"
 	self.weapon_skins.coal_tam.global_value = "tam"
@@ -28937,7 +28533,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.slap_tam = {}
 	self.weapon_skins.slap_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.slap_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.slap_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.slap_tam.weapon_id = "slap"
 	self.weapon_skins.slap_tam.global_value = "tam"
@@ -28952,7 +28547,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.slap_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.rpg7_tam = {}
 	self.weapon_skins.rpg7_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.rpg7_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.rpg7_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.rpg7_tam.weapon_id = "rpg7"
 	self.weapon_skins.rpg7_tam.global_value = "tam"
@@ -28968,7 +28562,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.rpg7_tam.pattern_pos = Vector3(0, 0.206535, 0)
 	self.weapon_skins.hunter_tam = {}
 	self.weapon_skins.hunter_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.hunter_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.hunter_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.hunter_tam.weapon_id = "hunter"
 	self.weapon_skins.hunter_tam.global_value = "tam"
@@ -28983,7 +28576,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.hunter_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.china_tam = {}
 	self.weapon_skins.china_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.china_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.china_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.china_tam.weapon_id = "china"
 	self.weapon_skins.china_tam.global_value = "tam"
@@ -28998,7 +28590,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.china_tam.pattern_tweak = Vector3(2.35154, 0, 0)
 	self.weapon_skins.arbiter_tam = {}
 	self.weapon_skins.arbiter_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.arbiter_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.arbiter_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.arbiter_tam.weapon_id = "arbiter"
 	self.weapon_skins.arbiter_tam.global_value = "tam"
@@ -29013,7 +28604,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.arbiter_tam.pattern_tweak = Vector3(3.49631, 0, 0)
 	self.weapon_skins.ray_tam = {}
 	self.weapon_skins.ray_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.ray_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.ray_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.ray_tam.weapon_id = "ray"
 	self.weapon_skins.ray_tam.global_value = "tam"
@@ -29029,7 +28619,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.ray_tam.pattern_pos = Vector3(0, 0.068, 0)
 	self.weapon_skins.x_chinchilla_tam = {}
 	self.weapon_skins.x_chinchilla_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_chinchilla_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_chinchilla_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_chinchilla_tam.weapon_id = "x_chinchilla"
 	self.weapon_skins.x_chinchilla_tam.global_value = "tam"
@@ -29044,7 +28633,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_chinchilla_tam.pattern_tweak = Vector3(0.634393, 0, 0)
 	self.weapon_skins.x_basset_tam = {}
 	self.weapon_skins.x_basset_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_basset_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_basset_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_basset_tam.weapon_id = "x_basset"
 	self.weapon_skins.x_basset_tam.global_value = "tam"
@@ -29059,7 +28647,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_basset_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.x_shrew_tam = {}
 	self.weapon_skins.x_shrew_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_shrew_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_shrew_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_shrew_tam.weapon_id = "x_shrew"
 	self.weapon_skins.x_shrew_tam.global_value = "tam"
@@ -29074,7 +28661,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_shrew_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.jowi_tam = {}
 	self.weapon_skins.jowi_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.jowi_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.jowi_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.jowi_tam.weapon_id = "jowi"
 	self.weapon_skins.jowi_tam.global_value = "tam"
@@ -29089,7 +28675,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.jowi_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.x_1911_tam = {}
 	self.weapon_skins.x_1911_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_1911_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_1911_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_1911_tam.weapon_id = "x_1911"
 	self.weapon_skins.x_1911_tam.global_value = "tam"
@@ -29114,7 +28699,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.x_akmsu_tam = {}
 	self.weapon_skins.x_akmsu_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_akmsu_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_akmsu_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_akmsu_tam.weapon_id = "x_akmsu"
 	self.weapon_skins.x_akmsu_tam.global_value = "tam"
@@ -29129,7 +28713,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_akmsu_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.x_b92fs_tam = {}
 	self.weapon_skins.x_b92fs_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_b92fs_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_b92fs_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_b92fs_tam.weapon_id = "x_b92fs"
 	self.weapon_skins.x_b92fs_tam.global_value = "tam"
@@ -29144,7 +28727,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_b92fs_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.x_deagle_tam = {}
 	self.weapon_skins.x_deagle_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_deagle_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_deagle_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_deagle_tam.weapon_id = "x_deagle"
 	self.weapon_skins.x_deagle_tam.global_value = "tam"
@@ -29168,7 +28750,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.x_g17_tam = {}
 	self.weapon_skins.x_g17_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_g17_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_g17_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_g17_tam.weapon_id = "x_g17"
 	self.weapon_skins.x_g17_tam.global_value = "tam"
@@ -29193,7 +28774,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.x_g22c_tam = {}
 	self.weapon_skins.x_g22c_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_g22c_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_g22c_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_g22c_tam.weapon_id = "x_g22c"
 	self.weapon_skins.x_g22c_tam.global_value = "tam"
@@ -29208,7 +28788,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_g22c_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.x_mp5_tam = {}
 	self.weapon_skins.x_mp5_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_mp5_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_mp5_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_mp5_tam.weapon_id = "x_mp5"
 	self.weapon_skins.x_mp5_tam.global_value = "tam"
@@ -29223,7 +28802,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_mp5_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.x_sr2_tam = {}
 	self.weapon_skins.x_sr2_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_sr2_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_sr2_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_sr2_tam.weapon_id = "x_sr2"
 	self.weapon_skins.x_sr2_tam.global_value = "tam"
@@ -29238,7 +28816,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_sr2_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.x_usp_tam = {}
 	self.weapon_skins.x_usp_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_usp_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_usp_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_usp_tam.weapon_id = "x_usp"
 	self.weapon_skins.x_usp_tam.global_value = "tam"
@@ -29253,7 +28830,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_usp_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.x_usp_tam = {}
 	self.weapon_skins.x_usp_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_usp_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_usp_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_usp_tam.weapon_id = "x_usp"
 	self.weapon_skins.x_usp_tam.global_value = "tam"
@@ -29268,7 +28844,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_usp_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.x_uzi_tam = {}
 	self.weapon_skins.x_uzi_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_uzi_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_uzi_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_uzi_tam.weapon_id = "x_uzi"
 	self.weapon_skins.x_uzi_tam.global_value = "tam"
@@ -29283,7 +28858,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_uzi_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.amcar_tam = {}
 	self.weapon_skins.amcar_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.amcar_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.amcar_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.amcar_tam.weapon_id = "amcar"
 	self.weapon_skins.amcar_tam.global_value = "tam"
@@ -29305,7 +28879,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.ak74_tam = {}
 	self.weapon_skins.ak74_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.ak74_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.ak74_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.ak74_tam.weapon_id = "ak74"
 	self.weapon_skins.ak74_tam.global_value = "tam"
@@ -29389,7 +28962,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.new_m4_tam = {}
 	self.weapon_skins.new_m4_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.new_m4_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.new_m4_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.new_m4_tam.weapon_id = "new_m4"
 	self.weapon_skins.new_m4_tam.global_value = "tam"
@@ -29404,7 +28976,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.new_m4_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.aug_tam = {}
 	self.weapon_skins.aug_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.aug_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.aug_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.aug_tam.weapon_id = "aug"
 	self.weapon_skins.aug_tam.global_value = "tam"
@@ -29441,7 +29012,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.akm_tam = {}
 	self.weapon_skins.akm_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.akm_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.akm_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.akm_tam.weapon_id = "akm"
 	self.weapon_skins.akm_tam.global_value = "tam"
@@ -29488,7 +29058,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.g36_tam = {}
 	self.weapon_skins.g36_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.g36_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.g36_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.g36_tam.weapon_id = "g36"
 	self.weapon_skins.g36_tam.global_value = "tam"
@@ -29511,7 +29080,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.ching_tam = {}
 	self.weapon_skins.ching_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.ching_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.ching_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.ching_tam.weapon_id = "ching"
 	self.weapon_skins.ching_tam.global_value = "tam"
@@ -29535,7 +29103,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.new_m14_tam = {}
 	self.weapon_skins.new_m14_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.new_m14_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.new_m14_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.new_m14_tam.weapon_id = "new_m14"
 	self.weapon_skins.new_m14_tam.global_value = "tam"
@@ -29595,7 +29162,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.ak5_tam = {}
 	self.weapon_skins.ak5_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.ak5_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.ak5_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.ak5_tam.weapon_id = "ak5"
 	self.weapon_skins.ak5_tam.global_value = "tam"
@@ -29617,7 +29183,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.m16_tam = {}
 	self.weapon_skins.m16_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.m16_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.m16_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.m16_tam.weapon_id = "m16"
 	self.weapon_skins.m16_tam.global_value = "tam"
@@ -29632,7 +29197,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.m16_tam.pattern_tweak = Vector3(0.920584, 0, 0)
 	self.weapon_skins.s552_tam = {}
 	self.weapon_skins.s552_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.s552_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.s552_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.s552_tam.weapon_id = "s552"
 	self.weapon_skins.s552_tam.global_value = "tam"
@@ -29652,7 +29216,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.scar_tam = {}
 	self.weapon_skins.scar_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.scar_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.scar_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.scar_tam.weapon_id = "scar"
 	self.weapon_skins.scar_tam.global_value = "tam"
@@ -29680,7 +29243,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.fal_tam = {}
 	self.weapon_skins.fal_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.fal_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.fal_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.fal_tam.weapon_id = "fal"
 	self.weapon_skins.fal_tam.global_value = "tam"
@@ -29703,7 +29265,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.famas_tam = {}
 	self.weapon_skins.famas_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.famas_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.famas_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.famas_tam.weapon_id = "famas"
 	self.weapon_skins.famas_tam.global_value = "tam"
@@ -29733,7 +29294,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.galil_tam = {}
 	self.weapon_skins.galil_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.galil_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.galil_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.galil_tam.weapon_id = "galil"
 	self.weapon_skins.galil_tam.global_value = "tam"
@@ -29758,7 +29318,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.g3_tam = {}
 	self.weapon_skins.g3_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.g3_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.g3_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.g3_tam.weapon_id = "g3"
 	self.weapon_skins.g3_tam.global_value = "tam"
@@ -29773,7 +29332,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.g3_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.l85a2_tam = {}
 	self.weapon_skins.l85a2_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.l85a2_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.l85a2_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.l85a2_tam.weapon_id = "l85a2"
 	self.weapon_skins.l85a2_tam.global_value = "tam"
@@ -29788,7 +29346,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.l85a2_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.vhs_tam = {}
 	self.weapon_skins.vhs_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.vhs_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.vhs_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.vhs_tam.weapon_id = "vhs"
 	self.weapon_skins.vhs_tam.global_value = "tam"
@@ -29810,7 +29367,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.asval_tam = {}
 	self.weapon_skins.asval_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.asval_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.asval_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.asval_tam.weapon_id = "asval"
 	self.weapon_skins.asval_tam.global_value = "tam"
@@ -29825,7 +29381,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.asval_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.sub2000_tam = {}
 	self.weapon_skins.sub2000_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.sub2000_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.sub2000_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.sub2000_tam.weapon_id = "sub2000"
 	self.weapon_skins.sub2000_tam.global_value = "tam"
@@ -29850,7 +29405,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.tecci_tam = {}
 	self.weapon_skins.tecci_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.tecci_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.tecci_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.tecci_tam.weapon_id = "tecci"
 	self.weapon_skins.tecci_tam.global_value = "tam"
@@ -29892,7 +29446,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.contraband_tam = {}
 	self.weapon_skins.contraband_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.contraband_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.contraband_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.contraband_tam.weapon_id = "contraband"
 	self.weapon_skins.contraband_tam.global_value = "tam"
@@ -29925,7 +29478,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.corgi_tam = {}
 	self.weapon_skins.corgi_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.corgi_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.corgi_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.corgi_tam.weapon_id = "corgi"
 	self.weapon_skins.corgi_tam.global_value = "tam"
@@ -29941,7 +29493,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.corgi_tam.pattern_pos = Vector3(0.0252805, 0.740759, 0)
 	self.weapon_skins.flint_tam = {}
 	self.weapon_skins.flint_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.flint_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.flint_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.flint_tam.weapon_id = "flint"
 	self.weapon_skins.flint_tam.global_value = "tam"
@@ -29956,7 +29507,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.flint_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.saw_tam = {}
 	self.weapon_skins.saw_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.saw_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.saw_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.saw_tam.weapon_id = "saw"
 	self.weapon_skins.saw_tam.global_value = "tam"
@@ -29980,7 +29530,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.gre_m79_tam = {}
 	self.weapon_skins.gre_m79_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.gre_m79_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.gre_m79_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.gre_m79_tam.weapon_id = "gre_m79"
 	self.weapon_skins.gre_m79_tam.global_value = "tam"
@@ -29996,7 +29545,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.gre_m79_tam.pattern_pos = Vector3(0.244694, 0.120678, 0)
 	self.weapon_skins.m134_tam = {}
 	self.weapon_skins.m134_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.m134_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.m134_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.m134_tam.weapon_id = "m134"
 	self.weapon_skins.m134_tam.global_value = "tam"
@@ -30019,7 +29567,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.m32_tam = {}
 	self.weapon_skins.m32_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.m32_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.m32_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.m32_tam.weapon_id = "m32"
 	self.weapon_skins.m32_tam.global_value = "tam"
@@ -30065,7 +29612,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.flamethrower_mk2_tam = {}
 	self.weapon_skins.flamethrower_mk2_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.flamethrower_mk2_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.flamethrower_mk2_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.flamethrower_mk2_tam.weapon_id = "flamethrower_mk2"
 	self.weapon_skins.flamethrower_mk2_tam.global_value = "tam"
@@ -30093,7 +29639,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.plainsrider_tam = {}
 	self.weapon_skins.plainsrider_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.plainsrider_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.plainsrider_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.plainsrider_tam.weapon_id = "plainsrider"
 	self.weapon_skins.plainsrider_tam.global_value = "tam"
@@ -30109,7 +29654,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.plainsrider_tam.pattern_pos = Vector3(0.0443599, 0.349631, 0)
 	self.weapon_skins.frankish_tam = {}
 	self.weapon_skins.frankish_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.frankish_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.frankish_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.frankish_tam.weapon_id = "frankish"
 	self.weapon_skins.frankish_tam.global_value = "tam"
@@ -30124,7 +29668,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.frankish_tam.pattern_tweak = Vector3(1.49297, 0, 0)
 	self.weapon_skins.long_tam = {}
 	self.weapon_skins.long_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.long_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.long_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.long_tam.weapon_id = "long"
 	self.weapon_skins.long_tam.global_value = "tam"
@@ -30139,7 +29682,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.long_tam.pattern_tweak = Vector3(3.6394, 0, 0)
 	self.weapon_skins.arblast_tam = {}
 	self.weapon_skins.arblast_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.arblast_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.arblast_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.arblast_tam.weapon_id = "arblast"
 	self.weapon_skins.arblast_tam.global_value = "tam"
@@ -30162,7 +29704,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.model70_tam = {}
 	self.weapon_skins.model70_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.model70_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.model70_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.model70_tam.weapon_id = "model70"
 	self.weapon_skins.model70_tam.global_value = "tam"
@@ -30182,7 +29723,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.msr_tam = {}
 	self.weapon_skins.msr_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.msr_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.msr_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.msr_tam.weapon_id = "msr"
 	self.weapon_skins.msr_tam.global_value = "tam"
@@ -30207,7 +29747,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.r93_tam = {}
 	self.weapon_skins.r93_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.r93_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.r93_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.r93_tam.weapon_id = "r93"
 	self.weapon_skins.r93_tam.global_value = "tam"
@@ -30239,7 +29778,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.m95_tam = {}
 	self.weapon_skins.m95_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.m95_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.m95_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.m95_tam.weapon_id = "m95"
 	self.weapon_skins.m95_tam.global_value = "tam"
@@ -30261,7 +29799,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.mosin_tam = {}
 	self.weapon_skins.mosin_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.mosin_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.mosin_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.mosin_tam.weapon_id = "mosin"
 	self.weapon_skins.mosin_tam.global_value = "tam"
@@ -30290,7 +29827,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.winchester1874_tam = {}
 	self.weapon_skins.winchester1874_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.winchester1874_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.winchester1874_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.winchester1874_tam.weapon_id = "winchester1874"
 	self.weapon_skins.winchester1874_tam.global_value = "tam"
@@ -30306,7 +29842,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.winchester1874_tam.pattern_pos = Vector3(-0.451705, 0.301932, 0)
 	self.weapon_skins.wa2000_tam = {}
 	self.weapon_skins.wa2000_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.wa2000_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.wa2000_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.wa2000_tam.weapon_id = "wa2000"
 	self.weapon_skins.wa2000_tam.global_value = "tam"
@@ -30333,7 +29868,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.desertfox_tam = {}
 	self.weapon_skins.desertfox_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.desertfox_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.desertfox_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.desertfox_tam.weapon_id = "desertfox"
 	self.weapon_skins.desertfox_tam.global_value = "tam"
@@ -30348,7 +29882,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.desertfox_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.tti_tam = {}
 	self.weapon_skins.tti_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.tti_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.tti_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.tti_tam.weapon_id = "tti"
 	self.weapon_skins.tti_tam.global_value = "tam"
@@ -30401,7 +29934,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.siltstone_tam = {}
 	self.weapon_skins.siltstone_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.siltstone_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.siltstone_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.siltstone_tam.weapon_id = "siltstone"
 	self.weapon_skins.siltstone_tam.global_value = "tam"
@@ -30430,7 +29962,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.spas12_tam = {}
 	self.weapon_skins.spas12_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.spas12_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.spas12_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.spas12_tam.weapon_id = "spas12"
 	self.weapon_skins.spas12_tam.global_value = "tam"
@@ -30453,7 +29984,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.b682_tam = {}
 	self.weapon_skins.b682_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.b682_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.b682_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.b682_tam.weapon_id = "b682"
 	self.weapon_skins.b682_tam.global_value = "tam"
@@ -30468,7 +29998,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.b682_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.r870_tam = {}
 	self.weapon_skins.r870_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.r870_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.r870_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.r870_tam.weapon_id = "r870"
 	self.weapon_skins.r870_tam.global_value = "tam"
@@ -30489,7 +30018,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.saiga_tam = {}
 	self.weapon_skins.saiga_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.saiga_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.saiga_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.saiga_tam.weapon_id = "saiga"
 	self.weapon_skins.saiga_tam.global_value = "tam"
@@ -30504,7 +30032,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.saiga_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.huntsman_tam = {}
 	self.weapon_skins.huntsman_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.huntsman_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.huntsman_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.huntsman_tam.weapon_id = "huntsman"
 	self.weapon_skins.huntsman_tam.global_value = "tam"
@@ -30520,7 +30047,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.huntsman_tam.pattern_tweak = Vector3(1.25447, 0, 0)
 	self.weapon_skins.benelli_tam = {}
 	self.weapon_skins.benelli_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.benelli_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.benelli_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.benelli_tam.weapon_id = "benelli"
 	self.weapon_skins.benelli_tam.global_value = "tam"
@@ -30536,7 +30062,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.benelli_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.ksg_tam = {}
 	self.weapon_skins.ksg_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.ksg_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.ksg_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.ksg_tam.weapon_id = "ksg"
 	self.weapon_skins.ksg_tam.global_value = "tam"
@@ -30551,7 +30076,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.ksg_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.aa12_tam = {}
 	self.weapon_skins.aa12_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.aa12_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.aa12_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.aa12_tam.weapon_id = "aa12"
 	self.weapon_skins.aa12_tam.global_value = "tam"
@@ -30578,7 +30102,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.boot_tam = {}
 	self.weapon_skins.boot_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.boot_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.boot_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.boot_tam.weapon_id = "boot"
 	self.weapon_skins.boot_tam.global_value = "tam"
@@ -30601,7 +30124,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.par_tam = {}
 	self.weapon_skins.par_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.par_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.par_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.par_tam.weapon_id = "par"
 	self.weapon_skins.par_tam.global_value = "tam"
@@ -30616,7 +30138,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.par_tam.pattern_tweak = Vector3(5.83353, 0, 0)
 	self.weapon_skins.rpk_tam = {}
 	self.weapon_skins.rpk_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.rpk_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.rpk_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.rpk_tam.weapon_id = "rpk"
 	self.weapon_skins.rpk_tam.global_value = "tam"
@@ -30631,7 +30152,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.rpk_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.m249_tam = {}
 	self.weapon_skins.m249_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.m249_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.m249_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.m249_tam.weapon_id = "m249"
 	self.weapon_skins.m249_tam.global_value = "tam"
@@ -30646,7 +30166,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.m249_tam.pattern_tweak = Vector3(1.58836, 0, 0)
 	self.weapon_skins.hk21_tam = {}
 	self.weapon_skins.hk21_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.hk21_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.hk21_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.hk21_tam.weapon_id = "hk21"
 	self.weapon_skins.hk21_tam.global_value = "tam"
@@ -30661,7 +30180,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.hk21_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.mg42_tam = {}
 	self.weapon_skins.mg42_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.mg42_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.mg42_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.mg42_tam.weapon_id = "mg42"
 	self.weapon_skins.mg42_tam.global_value = "tam"
@@ -30677,7 +30195,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.mg42_tam.pattern_pos = Vector3(0, 0.292392, 0)
 	self.weapon_skins.serbu_tam = {}
 	self.weapon_skins.serbu_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.serbu_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.serbu_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.serbu_tam.weapon_id = "serbu"
 	self.weapon_skins.serbu_tam.global_value = "tam"
@@ -30691,7 +30208,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.serbu_tam.pattern = Idstring("units/pd2_dlc_tam/pattern/tam_pattern_001_df")
 	self.weapon_skins.basset_tam = {}
 	self.weapon_skins.basset_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.basset_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.basset_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.basset_tam.weapon_id = "basset"
 	self.weapon_skins.basset_tam.global_value = "tam"
@@ -30705,7 +30221,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.basset_tam.pattern = Idstring("units/pd2_dlc_tam/pattern/tam_pattern_001_df")
 	self.weapon_skins.striker_tam = {}
 	self.weapon_skins.striker_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.striker_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.striker_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.striker_tam.weapon_id = "striker"
 	self.weapon_skins.striker_tam.global_value = "tam"
@@ -30727,7 +30242,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.m37_tam = {}
 	self.weapon_skins.m37_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.m37_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.m37_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.m37_tam.weapon_id = "m37"
 	self.weapon_skins.m37_tam.global_value = "tam"
@@ -30756,7 +30270,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.rota_tam = {}
 	self.weapon_skins.rota_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.rota_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.rota_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.rota_tam.weapon_id = "rota"
 	self.weapon_skins.rota_tam.global_value = "tam"
@@ -30770,7 +30283,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.rota_tam.pattern = Idstring("units/pd2_dlc_tam/pattern/tam_pattern_001_df")
 	self.weapon_skins.judge_tam = {}
 	self.weapon_skins.judge_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.judge_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.judge_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.judge_tam.weapon_id = "judge"
 	self.weapon_skins.judge_tam.global_value = "tam"
@@ -30784,7 +30296,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.judge_tam.pattern = Idstring("units/pd2_dlc_tam/pattern/tam_pattern_001_df")
 	self.weapon_skins.x_2006m_tam = {}
 	self.weapon_skins.x_2006m_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_2006m_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_2006m_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_2006m_tam.weapon_id = "x_2006m"
 	self.weapon_skins.x_2006m_tam.global_value = "tam"
@@ -30799,7 +30310,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_2006m_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.x_baka_tam = {}
 	self.weapon_skins.x_baka_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_baka_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_baka_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_baka_tam.weapon_id = "x_baka"
 	self.weapon_skins.x_baka_tam.global_value = "tam"
@@ -30814,7 +30324,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_baka_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.x_breech_tam = {}
 	self.weapon_skins.x_breech_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_breech_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_breech_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_breech_tam.weapon_id = "x_breech"
 	self.weapon_skins.x_breech_tam.global_value = "tam"
@@ -30829,7 +30338,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_breech_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.x_c96_tam = {}
 	self.weapon_skins.x_c96_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_c96_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_c96_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_c96_tam.weapon_id = "x_c96"
 	self.weapon_skins.x_c96_tam.global_value = "tam"
@@ -30844,7 +30352,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_c96_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.x_coal_tam = {}
 	self.weapon_skins.x_coal_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_coal_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_coal_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_coal_tam.weapon_id = "x_coal"
 	self.weapon_skins.x_coal_tam.global_value = "tam"
@@ -30873,7 +30380,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.x_erma_tam = {}
 	self.weapon_skins.x_erma_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_erma_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_erma_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_erma_tam.weapon_id = "x_erma"
 	self.weapon_skins.x_erma_tam.global_value = "tam"
@@ -30888,7 +30394,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_erma_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.x_g18c_tam = {}
 	self.weapon_skins.x_g18c_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_g18c_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_g18c_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_g18c_tam.weapon_id = "x_g18c"
 	self.weapon_skins.x_g18c_tam.global_value = "tam"
@@ -30903,7 +30408,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_g18c_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.x_hajk_tam = {}
 	self.weapon_skins.x_hajk_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_hajk_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_hajk_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_hajk_tam.weapon_id = "x_hajk"
 	self.weapon_skins.x_hajk_tam.global_value = "tam"
@@ -30918,7 +30422,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_hajk_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.x_hs2000_tam = {}
 	self.weapon_skins.x_hs2000_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_hs2000_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_hs2000_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_hs2000_tam.weapon_id = "x_hs2000"
 	self.weapon_skins.x_hs2000_tam.global_value = "tam"
@@ -30933,7 +30436,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_hs2000_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.x_judge_tam = {}
 	self.weapon_skins.x_judge_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_judge_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_judge_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_judge_tam.weapon_id = "x_judge"
 	self.weapon_skins.x_judge_tam.global_value = "tam"
@@ -30948,7 +30450,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_judge_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.x_m45_tam = {}
 	self.weapon_skins.x_m45_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_m45_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_m45_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_m45_tam.weapon_id = "x_m45"
 	self.weapon_skins.x_m45_tam.global_value = "tam"
@@ -30964,7 +30465,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_m45_tam.pattern_pos = Vector3(0.196995, 0.712139, 0)
 	self.weapon_skins.x_m1928_tam = {}
 	self.weapon_skins.x_m1928_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_m1928_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_m1928_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_m1928_tam.weapon_id = "x_m1928"
 	self.weapon_skins.x_m1928_tam.global_value = "tam"
@@ -30979,7 +30479,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_m1928_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.x_mac10_tam = {}
 	self.weapon_skins.x_mac10_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_mac10_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_mac10_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_mac10_tam.weapon_id = "x_mac10"
 	self.weapon_skins.x_mac10_tam.global_value = "tam"
@@ -30995,7 +30494,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_mac10_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.x_mp7_tam = {}
 	self.weapon_skins.x_mp7_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_mp7_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_mp7_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_mp7_tam.weapon_id = "x_mp7"
 	self.weapon_skins.x_mp7_tam.global_value = "tam"
@@ -31010,7 +30508,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_mp7_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.x_mp9_tam = {}
 	self.weapon_skins.x_mp9_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_mp9_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_mp9_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_mp9_tam.weapon_id = "x_mp9"
 	self.weapon_skins.x_mp9_tam.global_value = "tam"
@@ -31025,7 +30522,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_mp9_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.x_olympic_tam = {}
 	self.weapon_skins.x_olympic_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_olympic_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_olympic_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_olympic_tam.weapon_id = "x_olympic"
 	self.weapon_skins.x_olympic_tam.global_value = "tam"
@@ -31040,7 +30536,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_olympic_tam.pattern_tweak = Vector3(0.634393, 0, 0)
 	self.weapon_skins.x_p90_tam = {}
 	self.weapon_skins.x_p90_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_p90_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_p90_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_p90_tam.weapon_id = "x_p90"
 	self.weapon_skins.x_p90_tam.global_value = "tam"
@@ -31063,7 +30558,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.x_p226_tam = {}
 	self.weapon_skins.x_p226_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_p226_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_p226_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_p226_tam.weapon_id = "x_p226"
 	self.weapon_skins.x_p226_tam.global_value = "tam"
@@ -31078,7 +30572,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_p226_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.x_pl14_tam = {}
 	self.weapon_skins.x_pl14_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_pl14_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_pl14_tam.weapon_id = "x_pl14"
 	self.weapon_skins.x_pl14_tam.global_value = "tam"
 	self.weapon_skins.x_pl14_tam.is_a_unlockable = true
@@ -31094,7 +30587,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_pl14_tam.pattern_pos = Vector3(1.9523, 0.120678, 0)
 	self.weapon_skins.x_polymer_tam = {}
 	self.weapon_skins.x_polymer_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_polymer_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_polymer_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_polymer_tam.weapon_id = "x_polymer"
 	self.weapon_skins.x_polymer_tam.global_value = "tam"
@@ -31118,7 +30610,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.x_ppk_tam = {}
 	self.weapon_skins.x_ppk_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_ppk_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_ppk_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_ppk_tam.weapon_id = "x_ppk"
 	self.weapon_skins.x_ppk_tam.global_value = "tam"
@@ -31133,7 +30624,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_ppk_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.x_rage_tam = {}
 	self.weapon_skins.x_rage_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_rage_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_rage_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_rage_tam.weapon_id = "x_rage"
 	self.weapon_skins.x_rage_tam.global_value = "tam"
@@ -31155,7 +30645,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.x_rota_tam = {}
 	self.weapon_skins.x_rota_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_rota_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_rota_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_rota_tam.weapon_id = "x_rota"
 	self.weapon_skins.x_rota_tam.global_value = "tam"
@@ -31178,7 +30667,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.x_schakal_tam = {}
 	self.weapon_skins.x_schakal_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_schakal_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_schakal_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_schakal_tam.weapon_id = "x_schakal"
 	self.weapon_skins.x_schakal_tam.global_value = "tam"
@@ -31201,7 +30689,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.x_scorpion_tam = {}
 	self.weapon_skins.x_scorpion_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_scorpion_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_scorpion_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_scorpion_tam.weapon_id = "x_scorpion"
 	self.weapon_skins.x_scorpion_tam.global_value = "tam"
@@ -31216,7 +30703,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_scorpion_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.x_sparrow_tam = {}
 	self.weapon_skins.x_sparrow_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_sparrow_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_sparrow_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_sparrow_tam.weapon_id = "x_sparrow"
 	self.weapon_skins.x_sparrow_tam.global_value = "tam"
@@ -31238,7 +30724,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.x_sterling_tam = {}
 	self.weapon_skins.x_sterling_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_sterling_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_sterling_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_sterling_tam.weapon_id = "x_sterling"
 	self.weapon_skins.x_sterling_tam.global_value = "tam"
@@ -31254,7 +30739,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_sterling_tam.pattern_pos = Vector3(-0.0319578, 0.69306, 0)
 	self.weapon_skins.x_tec9_tam = {}
 	self.weapon_skins.x_tec9_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_tec9_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_tec9_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_tec9_tam.weapon_id = "x_tec9"
 	self.weapon_skins.x_tec9_tam.global_value = "tam"
@@ -31269,7 +30753,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_tec9_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.x_uzi_tam = {}
 	self.weapon_skins.x_uzi_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_uzi_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_uzi_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_uzi_tam.weapon_id = "x_uzi"
 	self.weapon_skins.x_uzi_tam.global_value = "tam"
@@ -31284,7 +30767,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_uzi_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.shepheard_tam = {}
 	self.weapon_skins.shepheard_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.shepheard_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.shepheard_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.shepheard_tam.weapon_id = "shepheard"
 	self.weapon_skins.shepheard_tam.global_value = "tam"
@@ -31299,7 +30781,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.shepheard_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.x_shepheard_tam = {}
 	self.weapon_skins.x_shepheard_tam.name_id = "bm_wskn_tam"
-	self.weapon_skins.x_shepheard_tam.desc_id = "bm_wskn_tam_desc"
 	self.weapon_skins.x_shepheard_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_shepheard_tam.weapon_id = "x_shepheard"
 	self.weapon_skins.x_shepheard_tam.global_value = "tam"
@@ -31314,7 +30795,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_shepheard_tam.pattern_tweak = Vector3(1, 0, 0)
 	self.weapon_skins.elastic_tam = {}
 	self.weapon_skins.elastic_tam.name_id = "bm_wskn_elastic_tam"
-	self.weapon_skins.elastic_tam.desc_id = "bm_wskn_elastic_tam_desc"
 	self.weapon_skins.elastic_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.elastic_tam.weapon_id = "elastic"
 	self.weapon_skins.elastic_tam.global_value = "tam"
@@ -31329,7 +30809,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.elastic_tam.pattern_tweak = Vector3(3.97329, 0, 1)
 	self.weapon_skins.komodo_tam = {}
 	self.weapon_skins.komodo_tam.name_id = "bm_wskn_komodo_tam"
-	self.weapon_skins.komodo_tam.desc_id = "bm_wskn_komodo_tam_desc"
 	self.weapon_skins.komodo_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.komodo_tam.weapon_id = "komodo"
 	self.weapon_skins.komodo_tam.global_value = "tam"
@@ -31344,7 +30823,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.komodo_tam.pattern_tweak = Vector3(2.25614, 0, 1)
 	self.weapon_skins.packrat_tam = {}
 	self.weapon_skins.packrat_tam.name_id = "bm_wskn_packrat_tam"
-	self.weapon_skins.packrat_tam.desc_id = "bm_wskn_packrat_tam_desc"
 	self.weapon_skins.packrat_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.packrat_tam.weapon_id = "packrat"
 	self.weapon_skins.packrat_tam.global_value = "tam"
@@ -31358,7 +30836,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.packrat_tam.pattern = Idstring("units/pd2_dlc_tam/pattern/tam_pattern_001_df")
 	self.weapon_skins.legacy_tam = {}
 	self.weapon_skins.legacy_tam.name_id = "bm_wskn_legacy_tam"
-	self.weapon_skins.legacy_tam.desc_id = "bm_wskn_legacy_tam_desc"
 	self.weapon_skins.legacy_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.legacy_tam.weapon_id = "legacy"
 	self.weapon_skins.legacy_tam.global_value = "tam"
@@ -31373,7 +30850,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.legacy_tam.pattern_tweak = Vector3(0.634393, 0, 1)
 	self.weapon_skins.x_legacy_tam = {}
 	self.weapon_skins.x_legacy_tam.name_id = "bm_wskn_x_legacy_tam"
-	self.weapon_skins.x_legacy_tam.desc_id = "bm_wskn_x_legacy_tam_desc"
 	self.weapon_skins.x_legacy_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_legacy_tam.weapon_id = "x_legacy"
 	self.weapon_skins.x_legacy_tam.global_value = "tam"
@@ -31388,7 +30864,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_legacy_tam.pattern_tweak = Vector3(0.634393, 0, 1)
 	self.weapon_skins.coach_tam = {}
 	self.weapon_skins.coach_tam.name_id = "bm_wskn_coach_tam"
-	self.weapon_skins.coach_tam.desc_id = "bm_wskn_coach_tam_desc"
 	self.weapon_skins.coach_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.coach_tam.weapon_id = "coach"
 	self.weapon_skins.coach_tam.global_value = "tam"
@@ -31403,7 +30878,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.coach_tam.pattern_pos = Vector3(1.04603, 0.206535, 0)
 	self.weapon_skins.system_tam = {}
 	self.weapon_skins.system_tam.name_id = "bm_wskn_system_tam"
-	self.weapon_skins.system_tam.desc_id = "bm_wskn_system_tam_desc"
 	self.weapon_skins.system_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.system_tam.weapon_id = "system"
 	self.weapon_skins.system_tam.global_value = "tam"
@@ -31417,7 +30891,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.system_tam.pattern = Idstring("units/pd2_dlc_tam/pattern/tam_pattern_001_df")
 	self.weapon_skins.shuno_tam = {}
 	self.weapon_skins.shuno_tam.name_id = "bm_wskn_shuno_tam"
-	self.weapon_skins.shuno_tam.desc_id = "bm_wskn_shuno_tam_desc"
 	self.weapon_skins.shuno_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.shuno_tam.weapon_id = "shuno"
 	self.weapon_skins.shuno_tam.global_value = "tam"
@@ -31456,7 +30929,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.x_packrat_tam = {}
 	self.weapon_skins.x_packrat_tam.name_id = "bm_wskn_x_packrat_tam"
-	self.weapon_skins.x_packrat_tam.desc_id = "bm_wskn_x_packrat_tam_desc"
 	self.weapon_skins.x_packrat_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_packrat_tam.weapon_id = "x_packrat"
 	self.weapon_skins.x_packrat_tam.global_value = "tam"
@@ -31470,7 +30942,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_packrat_tam.pattern = Idstring("units/pd2_dlc_tam/pattern/tam_pattern_001_df")
 	self.weapon_skins.ecp_tam = {}
 	self.weapon_skins.ecp_tam.name_id = "bm_wskn_ecp_tam"
-	self.weapon_skins.ecp_tam.desc_id = "bm_wskn_ecp_tam_desc"
 	self.weapon_skins.ecp_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.ecp_tam.weapon_id = "ecp"
 	self.weapon_skins.ecp_tam.global_value = "tam"
@@ -31485,7 +30956,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.ecp_tam.pattern_tweak = Vector3(1.25447, 0, 1)
 	self.weapon_skins.czech_tam = {}
 	self.weapon_skins.czech_tam.name_id = "bm_wskn_czech_tam"
-	self.weapon_skins.czech_tam.desc_id = "bm_wskn_czech_tam_desc"
 	self.weapon_skins.czech_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.czech_tam.weapon_id = "czech"
 	self.weapon_skins.czech_tam.global_value = "tam"
@@ -31499,7 +30969,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.czech_tam.pattern = Idstring("units/pd2_dlc_tam/pattern/tam_pattern_001_df")
 	self.weapon_skins.beer_tam = {}
 	self.weapon_skins.beer_tam.name_id = "bm_wskn_beer_tam"
-	self.weapon_skins.beer_tam.desc_id = "bm_wskn_beer_tam_desc"
 	self.weapon_skins.beer_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.beer_tam.weapon_id = "beer"
 	self.weapon_skins.beer_tam.global_value = "tam"
@@ -31513,7 +30982,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.beer_tam.pattern = Idstring("units/pd2_dlc_tam/pattern/tam_pattern_001_df")
 	self.weapon_skins.stech_tam = {}
 	self.weapon_skins.stech_tam.name_id = "bm_wskn_stech_tam"
-	self.weapon_skins.stech_tam.desc_id = "bm_wskn_stech_tam_desc"
 	self.weapon_skins.stech_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.stech_tam.weapon_id = "stech"
 	self.weapon_skins.stech_tam.global_value = "tam"
@@ -31527,7 +30995,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.stech_tam.pattern = Idstring("units/pd2_dlc_tam/pattern/tam_pattern_001_df")
 	self.weapon_skins.x_czech_tam = {}
 	self.weapon_skins.x_czech_tam.name_id = "bm_wskn_x_czech_tam"
-	self.weapon_skins.x_czech_tam.desc_id = "bm_wskn_x_czech_tam_desc"
 	self.weapon_skins.x_czech_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_czech_tam.weapon_id = "x_czech"
 	self.weapon_skins.x_czech_tam.global_value = "tam"
@@ -31541,7 +31008,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_czech_tam.pattern = Idstring("units/pd2_dlc_tam/pattern/tam_pattern_001_df")
 	self.weapon_skins.x_beer_tam = {}
 	self.weapon_skins.x_beer_tam.name_id = "bm_wskn_x_beer_tam"
-	self.weapon_skins.x_beer_tam.desc_id = "bm_wskn_x_beer_tam_desc"
 	self.weapon_skins.x_beer_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_beer_tam.weapon_id = "x_beer"
 	self.weapon_skins.x_beer_tam.global_value = "tam"
@@ -31555,7 +31021,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_beer_tam.pattern = Idstring("units/pd2_dlc_tam/pattern/tam_pattern_001_df")
 	self.weapon_skins.x_stech_tam = {}
 	self.weapon_skins.x_stech_tam.name_id = "bm_wskn_x_stech_tam"
-	self.weapon_skins.x_stech_tam.desc_id = "bm_wskn_x_stech_tam_desc"
 	self.weapon_skins.x_stech_tam.lock_id = "bm_wskn_tam_locked"
 	self.weapon_skins.x_stech_tam.weapon_id = "x_stech"
 	self.weapon_skins.x_stech_tam.global_value = "tam"
@@ -31569,7 +31034,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.x_stech_tam.pattern = Idstring("units/pd2_dlc_tam/pattern/tam_pattern_001_df")
 	self.weapon_skins.mp7_cat = {}
 	self.weapon_skins.mp7_cat.name_id = "bm_wskn_mp7_cat"
-	self.weapon_skins.mp7_cat.desc_id = "bm_wskn_mp7_cat_desc"
 	self.weapon_skins.mp7_cat.weapon_id = "mp7"
 	self.weapon_skins.mp7_cat.rarity = "common"
 	self.weapon_skins.mp7_cat.bonus = "spread_p1"
@@ -31590,7 +31054,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.x_coal_cat = {}
 	self.weapon_skins.x_coal_cat.name_id = "bm_wskn_x_coal_cat"
-	self.weapon_skins.x_coal_cat.desc_id = "bm_wskn_x_coal_cat_desc"
 	self.weapon_skins.x_coal_cat.weapon_id = "coal"
 	self.weapon_skins.x_coal_cat.rarity = "common"
 	self.weapon_skins.x_coal_cat.bonus = "recoil_p1"
@@ -31647,7 +31110,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.m16_cat = {}
 	self.weapon_skins.m16_cat.name_id = "bm_wskn_m16_cat"
-	self.weapon_skins.m16_cat.desc_id = "bm_wskn_m16_cat_desc"
 	self.weapon_skins.m16_cat.weapon_id = "m16"
 	self.weapon_skins.m16_cat.rarity = "common"
 	self.weapon_skins.m16_cat.bonus = "spread_p1"
@@ -31726,7 +31188,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.scar_cat = {}
 	self.weapon_skins.scar_cat.name_id = "bm_wskn_scar_cat"
-	self.weapon_skins.scar_cat.desc_id = "bm_wskn_scar_cat_desc"
 	self.weapon_skins.scar_cat.weapon_id = "scar"
 	self.weapon_skins.scar_cat.rarity = "common"
 	self.weapon_skins.scar_cat.bonus = "spread_p1"
@@ -31776,7 +31237,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.deagle_cat = {}
 	self.weapon_skins.deagle_cat.name_id = "bm_wskn_deagle_cat"
-	self.weapon_skins.deagle_cat.desc_id = "bm_wskn_deagle_cat_desc"
 	self.weapon_skins.deagle_cat.weapon_id = "deagle"
 	self.weapon_skins.deagle_cat.rarity = "uncommon"
 	self.weapon_skins.deagle_cat.bonus = "spread_p1"
@@ -31873,7 +31333,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.p90_cat = {}
 	self.weapon_skins.p90_cat.name_id = "bm_wskn_p90_cat"
-	self.weapon_skins.p90_cat.desc_id = "bm_wskn_p90_cat_desc"
 	self.weapon_skins.p90_cat.weapon_id = "p90"
 	self.weapon_skins.p90_cat.rarity = "rare"
 	self.weapon_skins.p90_cat.bonus = "recoil_p1"
@@ -31957,7 +31416,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.ksg_cat = {}
 	self.weapon_skins.ksg_cat.name_id = "bm_wskn_ksg_cat"
-	self.weapon_skins.ksg_cat.desc_id = "bm_wskn_ksg_cat_desc"
 	self.weapon_skins.ksg_cat.weapon_id = "ksg"
 	self.weapon_skins.ksg_cat.rarity = "common"
 	self.weapon_skins.ksg_cat.bonus = "spread_n1"
@@ -32012,7 +31470,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.serbu_cat = {}
 	self.weapon_skins.serbu_cat.name_id = "bm_wskn_serbu_cat"
-	self.weapon_skins.serbu_cat.desc_id = "bm_wskn_serbu_cat_desc"
 	self.weapon_skins.serbu_cat.weapon_id = "serbu"
 	self.weapon_skins.serbu_cat.rarity = "common"
 	self.weapon_skins.serbu_cat.bonus = "spread_n1"
@@ -32128,7 +31585,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.x_judge_cat = {}
 	self.weapon_skins.x_judge_cat.name_id = "bm_wskn_x_judge_cat"
-	self.weapon_skins.x_judge_cat.desc_id = "bm_wskn_x_judge_cat_desc"
 	self.weapon_skins.x_judge_cat.weapon_id = "judge"
 	self.weapon_skins.x_judge_cat.rarity = "uncommon"
 	self.weapon_skins.x_judge_cat.bonus = "spread_n1"
@@ -32202,7 +31658,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.new_mp5_cat = {}
 	self.weapon_skins.new_mp5_cat.name_id = "bm_wskn_new_mp5_cat"
-	self.weapon_skins.new_mp5_cat.desc_id = "bm_wskn_new_mp5_cat_desc"
 	self.weapon_skins.new_mp5_cat.weapon_id = "new_mp5"
 	self.weapon_skins.new_mp5_cat.rarity = "rare"
 	self.weapon_skins.new_mp5_cat.bonus = "recoil_p1"
@@ -32387,7 +31842,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.x_chinchilla_cat = {}
 	self.weapon_skins.x_chinchilla_cat.name_id = "bm_wskn_x_chinchilla_cat"
-	self.weapon_skins.x_chinchilla_cat.desc_id = "bm_wskn_x_chinchilla_cat_desc"
 	self.weapon_skins.x_chinchilla_cat.weapon_id = "chinchilla"
 	self.weapon_skins.x_chinchilla_cat.rarity = "rare"
 	self.weapon_skins.x_chinchilla_cat.bonus = "spread_p1"
@@ -32434,7 +31888,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.boot_cat = {}
 	self.weapon_skins.boot_cat.name_id = "bm_wskn_boot_cat"
-	self.weapon_skins.boot_cat.desc_id = "bm_wskn_boot_cat_desc"
 	self.weapon_skins.boot_cat.weapon_id = "boot"
 	self.weapon_skins.boot_cat.rarity = "uncommon"
 	self.weapon_skins.boot_cat.bonus = "spread_n1"
@@ -32486,7 +31939,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.erma_cat = {}
 	self.weapon_skins.erma_cat.name_id = "bm_wskn_erma_cat"
-	self.weapon_skins.erma_cat.desc_id = "bm_wskn_erma_cat_desc"
 	self.weapon_skins.erma_cat.weapon_id = "erma"
 	self.weapon_skins.erma_cat.rarity = "epic"
 	self.weapon_skins.erma_cat.bonus = "spread_p1"
@@ -32738,7 +32190,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.x_usp_cat = {}
 	self.weapon_skins.x_usp_cat.name_id = "bm_wskn_x_usp_cat"
-	self.weapon_skins.x_usp_cat.desc_id = "bm_wskn_x_usp_cat_desc"
 	self.weapon_skins.x_usp_cat.weapon_id = "usp"
 	self.weapon_skins.x_usp_cat.rarity = "epic"
 	self.weapon_skins.x_usp_cat.bonus = "spread_p1"
@@ -33220,7 +32671,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.usp_cat = {}
 	self.weapon_skins.usp_cat.name_id = "bm_wskn_usp_cat"
-	self.weapon_skins.usp_cat.desc_id = "bm_wskn_usp_cat_desc"
 	self.weapon_skins.usp_cat.weapon_id = "usp"
 	self.weapon_skins.usp_cat.rarity = "uncommon"
 	self.weapon_skins.usp_cat.bonus = "spread_p1"
@@ -33352,7 +32802,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.sub2000_ait = {}
 	self.weapon_skins.sub2000_ait.name_id = "bm_wskn_sub2000_ait"
-	self.weapon_skins.sub2000_ait.desc_id = "bm_wskn_sub2000_ait_desc"
 	self.weapon_skins.sub2000_ait.weapon_id = "sub2000"
 	self.weapon_skins.sub2000_ait.rarity = "common"
 	self.weapon_skins.sub2000_ait.bonus = "spread_p1"
@@ -33361,7 +32810,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.sub2000_ait.base_gradient = "units/payday2_cash/safes/ait/base_gradient/base_ait_003_df"
 	self.weapon_skins.elastic_ait = {}
 	self.weapon_skins.elastic_ait.name_id = "bm_wskn_elastic_ait"
-	self.weapon_skins.elastic_ait.desc_id = "bm_wskn_elastic_ait_desc"
 	self.weapon_skins.elastic_ait.weapon_id = "elastic"
 	self.weapon_skins.elastic_ait.rarity = "common"
 	self.weapon_skins.elastic_ait.bonus = "spread_p1"
@@ -33382,7 +32830,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.slap_ait = {}
 	self.weapon_skins.slap_ait.name_id = "bm_wskn_slap_ait"
-	self.weapon_skins.slap_ait.desc_id = "bm_wskn_slap_ait_desc"
 	self.weapon_skins.slap_ait.weapon_id = "slap"
 	self.weapon_skins.slap_ait.rarity = "uncommon"
 	self.weapon_skins.slap_ait.bonus = "concealment_p1"
@@ -33401,7 +32848,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.system_ait = {}
 	self.weapon_skins.system_ait.name_id = "bm_wskn_system_ait"
-	self.weapon_skins.system_ait.desc_id = "bm_wskn_system_ait_desc"
 	self.weapon_skins.system_ait.weapon_id = "system"
 	self.weapon_skins.system_ait.rarity = "common"
 	self.weapon_skins.system_ait.bonus = "damage_p1"
@@ -33430,7 +32876,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.rota_ait = {}
 	self.weapon_skins.rota_ait.name_id = "bm_wskn_rota_ait"
-	self.weapon_skins.rota_ait.desc_id = "bm_wskn_rota_ait_desc"
 	self.weapon_skins.rota_ait.weapon_id = "rota"
 	self.weapon_skins.rota_ait.rarity = "rare"
 	self.weapon_skins.rota_ait.bonus = "spread_n1"
@@ -33547,7 +32992,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.komodo_ait = {}
 	self.weapon_skins.komodo_ait.name_id = "bm_wskn_komodo_ait"
-	self.weapon_skins.komodo_ait.desc_id = "bm_wskn_komodo_ait_desc"
 	self.weapon_skins.komodo_ait.weapon_id = "komodo"
 	self.weapon_skins.komodo_ait.rarity = "epic"
 	self.weapon_skins.komodo_ait.bonus = "recoil_p2"
@@ -33612,7 +33056,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.deagle_ait = {}
 	self.weapon_skins.deagle_ait.name_id = "bm_wskn_deagle_ait"
-	self.weapon_skins.deagle_ait.desc_id = "bm_wskn_deagle_ait_desc"
 	self.weapon_skins.deagle_ait.weapon_id = "deagle"
 	self.weapon_skins.deagle_ait.rarity = "rare"
 	self.weapon_skins.deagle_ait.bonus = "recoil_p2"
@@ -33707,7 +33150,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.polymer_ait = {}
 	self.weapon_skins.polymer_ait.name_id = "bm_wskn_polymer_ait"
-	self.weapon_skins.polymer_ait.desc_id = "bm_wskn_polymer_ait_desc"
 	self.weapon_skins.polymer_ait.weapon_id = "polymer"
 	self.weapon_skins.polymer_ait.rarity = "common"
 	self.weapon_skins.polymer_ait.bonus = "spread_p1"
@@ -33723,7 +33165,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.mac10_ait = {}
 	self.weapon_skins.mac10_ait.name_id = "bm_wskn_mac10_ait"
-	self.weapon_skins.mac10_ait.desc_id = "bm_wskn_mac10_ait_desc"
 	self.weapon_skins.mac10_ait.weapon_id = "mac10"
 	self.weapon_skins.mac10_ait.rarity = "common"
 	self.weapon_skins.mac10_ait.bonus = "spread_p1"
@@ -33748,7 +33189,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.uzi_ait = {}
 	self.weapon_skins.uzi_ait.name_id = "bm_wskn_uzi_ait"
-	self.weapon_skins.uzi_ait.desc_id = "bm_wskn_uzi_ait_desc"
 	self.weapon_skins.uzi_ait.weapon_id = "uzi"
 	self.weapon_skins.uzi_ait.rarity = "uncommon"
 	self.weapon_skins.uzi_ait.bonus = "spread_p1"
@@ -34016,7 +33456,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.b92fs_ait = {}
 	self.weapon_skins.b92fs_ait.name_id = "bm_wskn_b92fs_ait"
-	self.weapon_skins.b92fs_ait.desc_id = "bm_wskn_b92fs_ait_desc"
 	self.weapon_skins.b92fs_ait.weapon_id = "b92fs"
 	self.weapon_skins.b92fs_ait.rarity = "uncommon"
 	self.weapon_skins.b92fs_ait.bonus = "recoil_p1"
@@ -34188,7 +33627,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.spas12_ait = {}
 	self.weapon_skins.spas12_ait.name_id = "bm_wskn_spas12_ait"
-	self.weapon_skins.spas12_ait.desc_id = "bm_wskn_spas12_ait_desc"
 	self.weapon_skins.spas12_ait.weapon_id = "spas12"
 	self.weapon_skins.spas12_ait.rarity = "common"
 	self.weapon_skins.spas12_ait.bonus = "spread_n1"
@@ -34274,7 +33712,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.tecci_ait = {}
 	self.weapon_skins.tecci_ait.name_id = "bm_wskn_tecci_ait"
-	self.weapon_skins.tecci_ait.desc_id = "bm_wskn_tecci_ait_desc"
 	self.weapon_skins.tecci_ait.weapon_id = "tecci"
 	self.weapon_skins.tecci_ait.rarity = "uncommon"
 	self.weapon_skins.tecci_ait.bonus = "spread_p1"
@@ -34300,7 +33737,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.lemming_ait = {}
 	self.weapon_skins.lemming_ait.name_id = "bm_wskn_lemming_ait"
-	self.weapon_skins.lemming_ait.desc_id = "bm_wskn_lemming_ait_desc"
 	self.weapon_skins.lemming_ait.weapon_id = "lemming"
 	self.weapon_skins.lemming_ait.rarity = "rare"
 	self.weapon_skins.lemming_ait.bonus = "spread_p1"
@@ -34416,7 +33852,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.m16_ait = {}
 	self.weapon_skins.m16_ait.name_id = "bm_wskn_m16_ait"
-	self.weapon_skins.m16_ait.desc_id = "bm_wskn_m16_ait_desc"
 	self.weapon_skins.m16_ait.weapon_id = "m16"
 	self.weapon_skins.m16_ait.rarity = "epic"
 	self.weapon_skins.m16_ait.bonus = "recoil_p2"
@@ -35105,7 +34540,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.amcar_nin = {}
 	self.weapon_skins.amcar_nin.name_id = "bm_wskn_amcar_nin"
-	self.weapon_skins.amcar_nin.desc_id = "bm_wskn_amcar_nin_desc"
 	self.weapon_skins.amcar_nin.weapon_id = "amcar"
 	self.weapon_skins.amcar_nin.rarity = "epic"
 	self.weapon_skins.amcar_nin.bonus = "spread_p1"
@@ -35217,7 +34651,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.glock_18c_nin = {}
 	self.weapon_skins.glock_18c_nin.name_id = "bm_wskn_glock_18c_nin"
-	self.weapon_skins.glock_18c_nin.desc_id = "bm_wskn_glock_18c_nin_desc"
 	self.weapon_skins.glock_18c_nin.weapon_id = "glock_18c"
 	self.weapon_skins.glock_18c_nin.rarity = "common"
 	self.weapon_skins.glock_18c_nin.bonus = "spread_p1"
@@ -35244,7 +34677,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.shepheard_nin = {}
 	self.weapon_skins.shepheard_nin.name_id = "bm_wskn_shepheard_nin"
-	self.weapon_skins.shepheard_nin.desc_id = "bm_wskn_shepheard_nin_desc"
 	self.weapon_skins.shepheard_nin.weapon_id = "shepheard"
 	self.weapon_skins.shepheard_nin.rarity = "common"
 	self.weapon_skins.shepheard_nin.bonus = "spread_p1"
@@ -35474,7 +34906,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.x_chinchilla_nin = {}
 	self.weapon_skins.x_chinchilla_nin.name_id = "bm_wskn_x_chinchilla_nin"
-	self.weapon_skins.x_chinchilla_nin.desc_id = "bm_wskn_x_chinchilla_nin_desc"
 	self.weapon_skins.x_chinchilla_nin.weapon_id = "chinchilla"
 	self.weapon_skins.x_chinchilla_nin.rarity = "uncommon"
 	self.weapon_skins.x_chinchilla_nin.bonus = "recoil_p1"
@@ -35591,7 +35022,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.deagle_nin = {}
 	self.weapon_skins.deagle_nin.name_id = "bm_wskn_deagle_nin"
-	self.weapon_skins.deagle_nin.desc_id = "bm_wskn_deagle_nin_desc"
 	self.weapon_skins.deagle_nin.weapon_id = "deagle"
 	self.weapon_skins.deagle_nin.rarity = "epic"
 	self.weapon_skins.deagle_nin.bonus = "recoil_p1"
@@ -35691,7 +35121,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.legacy_nin = {}
 	self.weapon_skins.legacy_nin.name_id = "bm_wskn_legacy_nin"
-	self.weapon_skins.legacy_nin.desc_id = "bm_wskn_legacy_nin_desc"
 	self.weapon_skins.legacy_nin.weapon_id = "legacy"
 	self.weapon_skins.legacy_nin.rarity = "common"
 	self.weapon_skins.legacy_nin.bonus = "spread_p1"
@@ -35904,7 +35333,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.corgi_nin = {}
 	self.weapon_skins.corgi_nin.name_id = "bm_wskn_corgi_nin"
-	self.weapon_skins.corgi_nin.desc_id = "bm_wskn_corgi_nin_desc"
 	self.weapon_skins.corgi_nin.weapon_id = "corgi"
 	self.weapon_skins.corgi_nin.rarity = "rare"
 	self.weapon_skins.corgi_nin.bonus = "concealment_p1"
@@ -36252,7 +35680,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.scorpion_nin = {}
 	self.weapon_skins.scorpion_nin.name_id = "bm_wskn_scorpion_nin"
-	self.weapon_skins.scorpion_nin.desc_id = "bm_wskn_scorpion_nin_desc"
 	self.weapon_skins.scorpion_nin.weapon_id = "scorpion"
 	self.weapon_skins.scorpion_nin.rarity = "rare"
 	self.weapon_skins.scorpion_nin.bonus = "spread_p1"
@@ -36306,7 +35733,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.akm_nin = {}
 	self.weapon_skins.akm_nin.name_id = "bm_wskn_akm_nin"
-	self.weapon_skins.akm_nin.desc_id = "bm_wskn_akm_nin_desc"
 	self.weapon_skins.akm_nin.weapon_id = "akm"
 	self.weapon_skins.akm_nin.rarity = "rare"
 	self.weapon_skins.akm_nin.bonus = "recoil_p1"
@@ -36641,7 +36067,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.tec9_nin = {}
 	self.weapon_skins.tec9_nin.name_id = "bm_wskn_tec9_nin"
-	self.weapon_skins.tec9_nin.desc_id = "bm_wskn_tec9_nin_desc"
 	self.weapon_skins.tec9_nin.weapon_id = "tec9"
 	self.weapon_skins.tec9_nin.rarity = "common"
 	self.weapon_skins.tec9_nin.bonus = "concealment_p1"
@@ -36658,7 +36083,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.ray_nin = {}
 	self.weapon_skins.ray_nin.name_id = "bm_wskn_ray_nin"
-	self.weapon_skins.ray_nin.desc_id = "bm_wskn_ray_nin_desc"
 	self.weapon_skins.ray_nin.weapon_id = "ray"
 	self.weapon_skins.ray_nin.rarity = "uncommon"
 	self.weapon_skins.ray_nin.bonus = "spread_p1"
@@ -36706,7 +36130,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.ak74_nin = {}
 	self.weapon_skins.ak74_nin.name_id = "bm_wskn_ak74_nin"
-	self.weapon_skins.ak74_nin.desc_id = "bm_wskn_ak74_nin_desc"
 	self.weapon_skins.ak74_nin.weapon_id = "ak74"
 	self.weapon_skins.ak74_nin.rarity = "uncommon"
 	self.weapon_skins.ak74_nin.bonus = "concealment_p1"
@@ -36887,7 +36310,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.winchester1874_nin = {}
 	self.weapon_skins.winchester1874_nin.name_id = "bm_wskn_winchester1874_nin"
-	self.weapon_skins.winchester1874_nin.desc_id = "bm_wskn_winchester1874_nin_desc"
 	self.weapon_skins.winchester1874_nin.weapon_id = "winchester1874"
 	self.weapon_skins.winchester1874_nin.rarity = "common"
 	self.weapon_skins.winchester1874_nin.bonus = "recoil_p1"
@@ -37057,7 +36479,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.par_nin = {}
 	self.weapon_skins.par_nin.name_id = "bm_wskn_par_nin"
-	self.weapon_skins.par_nin.desc_id = "bm_wskn_par_nin_desc"
 	self.weapon_skins.par_nin.weapon_id = "par"
 	self.weapon_skins.par_nin.rarity = "common"
 	self.weapon_skins.par_nin.bonus = "recoil_p1"
@@ -37136,7 +36557,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	}
 	self.weapon_skins.rota_nin = {}
 	self.weapon_skins.rota_nin.name_id = "bm_wskn_rota_nin"
-	self.weapon_skins.rota_nin.desc_id = "bm_wskn_rota_nin_desc"
 	self.weapon_skins.rota_nin.weapon_id = "rota"
 	self.weapon_skins.rota_nin.rarity = "uncommon"
 	self.weapon_skins.rota_nin.bonus = "recoil_p1"
@@ -38357,7 +37777,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self:_setup_weapon_color_skins(tweak_data)
 end
 
--- Lines 39954-40048
+-- Lines 39867-39999
 function BlackMarketTweakData:populate_weapon_color_skin(weapon_color_data, variation_data, weapon_id)
 	local weapon_color_skin_template = self.weapon_color_templates.color_skin
 
@@ -38390,6 +37810,26 @@ function BlackMarketTweakData:populate_weapon_color_skin(weapon_color_data, vari
 						pattern_tweak = type_data.pattern_tweak,
 						pattern_pos = type_data.pattern_pos
 					}
+				end
+			end
+
+			if weapon_data.parts then
+				weapon_color_data.weapons[wid].parts = {}
+
+				for part_id, materials in pairs(weapon_data.parts) do
+					weapon_color_data.weapons[wid].parts[part_id] = {}
+
+					for material_key, material_data in pairs(materials) do
+						weapon_color_data.weapons[wid].parts[part_id][material_key] = {
+							base_gradient = variation_data[material_data.base_gradient],
+							pattern = variation_data[material_data.pattern],
+							pattern_gradient = variation_data[material_data.pattern_gradient],
+							uv_offset_rot = material_data.uv_offset_rot,
+							uv_scale = material_data.uv_scale,
+							pattern_tweak = material_data.pattern_tweak,
+							pattern_pos = material_data.pattern_pos
+						}
+					end
 				end
 			end
 
@@ -38448,16 +37888,14 @@ function BlackMarketTweakData:populate_weapon_color_skin(weapon_color_data, vari
 	end
 end
 
--- Lines 40051-40077
+-- Lines 40002-40026
 function BlackMarketTweakData:create_new_color_skin(name, data, color_skin_data)
 	data.name_id = "bm_wskn_" .. name
 	data.rarity = "common"
 	data.weapon_ids = {
-		"akm_gold"
+		"akm_gold",
+		"money"
 	}
-
-	table.insert(data.weapon_ids, "money")
-
 	data.use_blacklist = true
 	data.is_a_unlockable = true
 	data.is_a_color_skin = true
@@ -38473,12 +37911,12 @@ function BlackMarketTweakData:create_new_color_skin(name, data, color_skin_data)
 	table.insert(self.weapon_colors, name)
 end
 
--- Lines 40079-40081
+-- Lines 40028-40030
 function BlackMarketTweakData:get_weapon_color_index_string(color_index)
 	return "menu_weapon_color_index_" .. tostring(color_index)
 end
 
--- Lines 40083-43132
+-- Lines 40032-43313
 function BlackMarketTweakData:_setup_weapon_color_skins(tweak_data)
 	self.weapon_color_templates = WeaponColorTemplates.setup_weapon_color_templates(tweak_data)
 	self.weapon_color_pattern_scales = {

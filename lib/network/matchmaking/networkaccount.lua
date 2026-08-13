@@ -120,27 +120,11 @@ end
 
 -- Lines 91-110
 function NetworkAccount:set_lightfx()
-	if SystemInfo:platform() ~= Idstring("WIN32") then
+	if IS_CONSOLE then
 		return
 	end
 
-	local LightFXClass = getmetatable(LightFX)
-
-	if not LightFXClass then
-		return
-	end
-
-	if managers.user:get_setting("use_lightfx") then
-		print("[NetworkAccount:init] Initializing LightFX...")
-
-		self._has_alienware = LightFX:initialize() and LightFX:has_lamps()
-
-		if self._has_alienware then
-			LightFX:set_lamps(0, 255, 0, 255)
-		end
-	else
-		self._has_alienware = nil
-	end
+	self._has_alienware = nil
 end
 
 -- Lines 112-114

@@ -244,49 +244,30 @@ function print_console_result(...)
 	end
 end
 
--- Lines 235-257
+-- Lines 235-246
 function compile_and_reload()
-	-- Lines 236-242
-	local function root_path()
-		local path = Application:base_path() .. (CoreApp.arg_value("-assetslocation") or "../../")
-		local f
-
-		-- Lines 240-240
-		function f(s)
-			local str, i = string.gsub(s, "\\[%w_%.%s]+\\%.%.", "")
-
-			return i > 0 and f(str) or str
-		end
-
-		return f(path)
-	end
-
-	assert(SystemInfo:platform() == Idstring("WIN32"), "You can only compile on win32 platforms!")
+	assert(IS_WIN32, "You can only compile on win32 platforms!")
 	Application:data_compile({
-		preprocessor_definitions = "preprocessor_definitions",
-		target_db_name = "all",
 		verbose = false,
-		platform = string.lower(SystemInfo:platform():s()),
-		source_root = root_path() .. "//assets",
-		target_db_root = Application:base_path() .. "assets"
+		build_profile = Application:build_profile_path()
 	})
 	DB:reload()
 	Application:console_command("reload")
 end
 
--- Lines 266-268
+-- Lines 255-257
 function class_name(class)
 	return core:_lookup(class)
 end
 
--- Lines 270-274
+-- Lines 259-263
 function full_class_name(class)
 	local x, y = class_name(class)
 
 	return y .. "." .. x
 end
 
--- Lines 282-303
+-- Lines 271-292
 function watch(cond_func, exact)
 	debug.sethook(function()
 		if cond_func() then
@@ -313,11 +294,11 @@ function watch(cond_func, exact)
 	end, "l", 1)
 end
 
--- Lines 325-400
+-- Lines 314-389
 function trace_ref(class_name, init_name, destroy_name)
 	local class_mt = type(class_name) == "string" and getmetatable(assert(rawget(_G, class_name))) or class_name
 
-	-- Lines 328-335
+	-- Lines 317-324
 	local function ref()
 		local t = rawget(_G, "_trace_ref_table")
 
@@ -329,7 +310,7 @@ function trace_ref(class_name, init_name, destroy_name)
 		end
 	end
 
-	-- Lines 337-339
+	-- Lines 326-328
 	local function stack()
 		return string.gsub(debug.traceback(), "%\n", "\n[CoreTraceRef]\t")
 	end
@@ -402,7 +383,7 @@ function trace_ref(class_name, init_name, destroy_name)
 	end
 end
 
--- Lines 402-413
+-- Lines 391-402
 function trace_ref_add_destroy_all(class_name, func_name)
 	local class_mt = type(class_name) == "string" and getmetatable(assert(rawget(_G, class_name))) or class_name
 
@@ -419,17 +400,17 @@ function trace_ref_add_destroy_all(class_name, func_name)
 	end
 end
 
--- Lines 415-425
+-- Lines 404-414
 function debug_pause(...)
 	return
 end
 
--- Lines 427-438
+-- Lines 416-427
 function debug_pause_unit(unit, ...)
 	return
 end
 
--- Lines 440-449
+-- Lines 429-438
 function get_n_key(t, n)
 	n = n or 1
 
@@ -442,7 +423,7 @@ function get_n_key(t, n)
 	end
 end
 
--- Lines 451-460
+-- Lines 440-449
 function get_n_value(t, n)
 	n = n or 1
 
@@ -455,7 +436,7 @@ function get_n_value(t, n)
 	end
 end
 
--- Lines 462-466
+-- Lines 451-455
 function change_visualization(viz)
 	for _, vp in ipairs(managers.viewport:viewports()) do
 		vp:set_visualization_mode(viz)

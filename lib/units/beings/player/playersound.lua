@@ -17,14 +17,7 @@ function PlayerSound:init(unit)
 	end
 end
 
--- Lines 21-25
-function PlayerSound:destroy(unit)
-	if unit:base() then
-		unit:base():pre_destroy(unit)
-	end
-end
-
--- Lines 29-38
+-- Lines 22-31
 function PlayerSound:_play(sound_name, source_name)
 	local source
 
@@ -37,7 +30,7 @@ function PlayerSound:_play(sound_name, source_name)
 	return event
 end
 
--- Lines 42-51
+-- Lines 35-44
 function PlayerSound:sound_callback(instance, event_type, unit, sound_source, label, identifier, position)
 	if not alive(unit) then
 		return
@@ -50,7 +43,7 @@ function PlayerSound:sound_callback(instance, event_type, unit, sound_source, la
 	end
 end
 
--- Lines 55-73
+-- Lines 48-66
 function PlayerSound:play(sound_name, source_name, sync)
 	local event_id
 
@@ -71,7 +64,7 @@ function PlayerSound:play(sound_name, source_name, sync)
 	return event
 end
 
--- Lines 77-83
+-- Lines 70-76
 function PlayerSound:stop(source_name)
 	local source
 
@@ -82,7 +75,7 @@ function PlayerSound:stop(source_name)
 	self._unit:sound_source(source):stop()
 end
 
--- Lines 87-94
+-- Lines 80-87
 function PlayerSound:play_footstep(foot, material_name)
 	if self._last_material ~= material_name then
 		self._last_material = material_name
@@ -95,7 +88,7 @@ function PlayerSound:play_footstep(foot, material_name)
 	self:_play(self._unit:movement():running() and "footstep_run" or "footstep_walk")
 end
 
--- Lines 98-105
+-- Lines 91-98
 function PlayerSound:play_land(material_name)
 	if self._last_material ~= material_name then
 		self._last_material = material_name
@@ -108,12 +101,12 @@ function PlayerSound:play_land(material_name)
 	self:_play("footstep_land")
 end
 
--- Lines 109-114
+-- Lines 102-107
 function PlayerSound:play_whizby(params)
 	self:_play("bullet_whizby_medium")
 end
 
--- Lines 118-144
+-- Lines 111-137
 function PlayerSound:say(sound_name, sync, important_say, ignore_prefix, callback)
 	if self._last_speech and self._speaking then
 		self._last_speech:stop()
@@ -145,12 +138,12 @@ function PlayerSound:say(sound_name, sync, important_say, ignore_prefix, callbac
 	return self._last_speech
 end
 
--- Lines 148-150
+-- Lines 141-143
 function PlayerSound:speaking()
 	return self._speaking
 end
 
--- Lines 154-156
+-- Lines 147-149
 function PlayerSound:set_voice(voice)
 	self._unit:sound_source():set_switch("robber", voice)
 end

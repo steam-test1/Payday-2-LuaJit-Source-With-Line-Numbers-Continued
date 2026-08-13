@@ -2,7 +2,7 @@ require("lib/tweak_data/GeneratedMarketLinkTweakData")
 
 EconomyTweakData = EconomyTweakData or class()
 
--- Lines 7-2360
+-- Lines 7-2499
 function EconomyTweakData:init(tweak_data)
 	self.safes = {}
 	self.drills = {}
@@ -1250,6 +1250,7 @@ function EconomyTweakData:init(tweak_data)
 	self.safes.overkill_01.name_id = "bm_menu_safe_overkill_01"
 	self.safes.overkill_01.texture_bundle_folder = "cash/safes/cop"
 	self.safes.overkill_01.dlc = "complete_overkill_pack"
+	self.safes.overkill_01.is_marketable = false
 	self.safes.event_01 = {}
 	self.safes.event_01.free = true
 	self.safes.event_01.def_id = 50001
@@ -1259,6 +1260,7 @@ function EconomyTweakData:init(tweak_data)
 	self.safes.event_01.unit_name = "units/payday2_cash/safes/eco_safe_event_01/eco_safe_event_01"
 	self.safes.event_01.name_id = "bm_menu_safe_event_01"
 	self.safes.event_01.texture_bundle_folder = "cash/safes/cf15"
+	self.safes.event_01.is_marketable = false
 	self.safes.weapon_01 = {}
 	self.safes.weapon_01.free = true
 	self.safes.weapon_01.def_id = 50002
@@ -1268,6 +1270,7 @@ function EconomyTweakData:init(tweak_data)
 	self.safes.weapon_01.unit_name = "units/payday2_cash/safes/eco_safe_weapon_01/eco_safe_weapon_01"
 	self.safes.weapon_01.name_id = "bm_menu_safe_weapon_01"
 	self.safes.weapon_01.texture_bundle_folder = "cash/safes/sputnik"
+	self.safes.weapon_01.is_marketable = false
 	self.safes.event_red = {}
 	self.safes.event_red.def_id = 50003
 	self.safes.event_red.free = true
@@ -1278,6 +1281,7 @@ function EconomyTweakData:init(tweak_data)
 	self.safes.event_red.name_id = "bm_menu_safe_event_red"
 	self.safes.event_red.texture_bundle_folder = "cash/safes/red"
 	self.safes.event_red.achievement = "green_7"
+	self.safes.event_red.is_marketable = false
 	self.safes.event_dinner = {}
 	self.safes.event_dinner.def_id = 50004
 	self.safes.event_dinner.free = true
@@ -1288,6 +1292,7 @@ function EconomyTweakData:init(tweak_data)
 	self.safes.event_dinner.name_id = "bm_menu_safe_event_dinner"
 	self.safes.event_dinner.texture_bundle_folder = "cash/safes/dinner"
 	self.safes.event_dinner.achievement = "farm_6"
+	self.safes.event_dinner.is_marketable = false
 	self.safes.dallas_01 = {}
 	self.safes.dallas_01.free = true
 	self.safes.dallas_01.def_id = 50005
@@ -1297,6 +1302,7 @@ function EconomyTweakData:init(tweak_data)
 	self.safes.dallas_01.name_id = "bm_menu_safe_dallas_01"
 	self.safes.dallas_01.unit_name = "units/payday2_cash/safes/dallas/safe/eco_safe_dallas"
 	self.safes.dallas_01.texture_bundle_folder = "cash/safes/dallas"
+	self.safes.dallas_01.is_marketable = false
 	self.safes.surf_01 = {}
 	self.safes.surf_01.drill = "surf_01"
 	self.safes.surf_01.content = "surf_01"
@@ -1306,6 +1312,7 @@ function EconomyTweakData:init(tweak_data)
 	self.safes.surf_01.name_id = "bm_menu_safe_surf_01"
 	self.safes.surf_01.unit_name = "units/payday2_cash/safes/surf/safe/eco_safe_surf"
 	self.safes.surf_01.texture_bundle_folder = "cash/safes/surf"
+	self.safes.surf_01.is_marketable = false
 	self.safes.event_flake = {}
 	self.safes.event_flake.def_id = 50007
 	self.safes.event_flake.free = true
@@ -1316,6 +1323,7 @@ function EconomyTweakData:init(tweak_data)
 	self.safes.event_flake.unit_name = "units/payday2_cash/safes/flake/safe/eco_safe_event_flake"
 	self.safes.event_flake.texture_bundle_folder = "cash/safes/flake"
 	self.safes.event_flake.achievement = "flake_1"
+	self.safes.event_flake.is_marketable = false
 	self.safes.event_bah = {}
 	self.safes.event_bah.def_id = 50008
 	self.safes.event_bah.free = true
@@ -1326,6 +1334,7 @@ function EconomyTweakData:init(tweak_data)
 	self.safes.event_bah.name_id = "bm_menu_safe_event_bah"
 	self.safes.event_bah.texture_bundle_folder = "cash/safes/bah"
 	self.safes.event_bah.achievement = "bah_1"
+	self.safes.event_bah.is_marketable = false
 	self.safes.pack_01 = {}
 	self.safes.pack_01.free = true
 	self.safes.pack_01.def_id = 50009
@@ -1335,6 +1344,7 @@ function EconomyTweakData:init(tweak_data)
 	self.safes.pack_01.name_id = "bm_menu_safe_pack_01"
 	self.safes.pack_01.unit_name = "units/payday2_cash/safes/pack/safe/eco_safe_pack"
 	self.safes.pack_01.texture_bundle_folder = "cash/safes/pack"
+	self.safes.pack_01.is_marketable = false
 	self.safes.cola_01 = {}
 	self.safes.cola_01.free = true
 	self.safes.cola_01.convert_drill = true
@@ -1344,6 +1354,7 @@ function EconomyTweakData:init(tweak_data)
 	self.safes.cola_01.name_id = "bm_menu_safe_cola_01"
 	self.safes.cola_01.unit_name = "units/payday2_cash/safes/cola/safe/eco_safe_cola"
 	self.safes.cola_01.texture_bundle_folder = "cash/safes/cola"
+	self.safes.cola_01.is_marketable = false
 	self.safes.burn_01 = {}
 	self.safes.burn_01.free = true
 	self.safes.burn_01.convert_drill = true
@@ -1353,6 +1364,7 @@ function EconomyTweakData:init(tweak_data)
 	self.safes.burn_01.name_id = "bm_menu_safe_burn_01"
 	self.safes.burn_01.unit_name = "units/payday2_cash/safes/burn/safe/eco_safe_burn"
 	self.safes.burn_01.texture_bundle_folder = "cash/safes/burn"
+	self.safes.burn_01.is_marketable = false
 	self.safes.buck_01 = {}
 	self.safes.buck_01.free = true
 	self.safes.buck_01.drill = "buck_01"
@@ -1360,6 +1372,7 @@ function EconomyTweakData:init(tweak_data)
 	self.safes.buck_01.name_id = "bm_menu_safe_buck_01"
 	self.safes.buck_01.unit_name = "units/payday2_cash/safes/buck/safe/eco_safe_buck"
 	self.safes.buck_01.texture_bundle_folder = "cash/safes/buck"
+	self.safes.buck_01.is_marketable = false
 	self.safes.same_01 = {}
 	self.safes.same_01.free = true
 	self.safes.same_01.prio = 10
@@ -1369,6 +1382,7 @@ function EconomyTweakData:init(tweak_data)
 	self.safes.same_01.name_id = "bm_menu_safe_same_01"
 	self.safes.same_01.unit_name = "units/payday2_cash/safes/same/safe/eco_safe_same"
 	self.safes.same_01.texture_bundle_folder = "cash/safes/same"
+	self.safes.same_01.is_marketable = false
 	self.safes.grunt_01 = {}
 	self.safes.grunt_01.free = true
 	self.safes.grunt_01.drill = "grunt_01"
@@ -1376,6 +1390,7 @@ function EconomyTweakData:init(tweak_data)
 	self.safes.grunt_01.name_id = "bm_menu_safe_grunt_01"
 	self.safes.grunt_01.unit_name = "units/payday2_cash/safes/grunt/safe/eco_safe_grunt"
 	self.safes.grunt_01.texture_bundle_folder = "cash/safes/grunt"
+	self.safes.grunt_01.is_marketable = false
 	self.safes.lones_01 = {}
 	self.safes.lones_01.free = true
 	self.safes.lones_01.drill = "lones_01"
@@ -1383,6 +1398,7 @@ function EconomyTweakData:init(tweak_data)
 	self.safes.lones_01.name_id = "bm_menu_safe_lones_01"
 	self.safes.lones_01.unit_name = "units/payday2_cash/safes/lones/safe/eco_safe_lones"
 	self.safes.lones_01.texture_bundle_folder = "cash/safes/lones"
+	self.safes.lones_01.is_marketable = false
 	self.safes.smosh_01 = {}
 	self.safes.smosh_01.free = true
 	self.safes.smosh_01.prio = 10
@@ -1392,6 +1408,7 @@ function EconomyTweakData:init(tweak_data)
 	self.safes.smosh_01.name_id = "bm_menu_safe_smosh_01"
 	self.safes.smosh_01.unit_name = "units/payday2_cash/safes/smosh/safe/eco_safe_smosh"
 	self.safes.smosh_01.texture_bundle_folder = "cash/safes/smosh"
+	self.safes.smosh_01.is_marketable = false
 	self.safes.sfs_01 = {}
 	self.safes.sfs_01.free = true
 	self.safes.sfs_01.drill = "sfs_01"
@@ -1399,6 +1416,7 @@ function EconomyTweakData:init(tweak_data)
 	self.safes.sfs_01.name_id = "bm_menu_safe_sfs_01"
 	self.safes.sfs_01.unit_name = "units/payday2_cash/safes/sfs/safe/eco_safe_sfs"
 	self.safes.sfs_01.texture_bundle_folder = "cash/safes/sfs"
+	self.safes.sfs_01.is_marketable = false
 	self.safes.wac_01 = {}
 	self.safes.wac_01.free = true
 	self.safes.wac_01.drill = "wac_01"
@@ -1406,6 +1424,7 @@ function EconomyTweakData:init(tweak_data)
 	self.safes.wac_01.name_id = "bm_menu_safe_wac_01"
 	self.safes.wac_01.unit_name = "units/payday2_cash/safes/wac/safe/eco_safe_wac"
 	self.safes.wac_01.texture_bundle_folder = "cash/safes/wac"
+	self.safes.wac_01.is_marketable = false
 	self.safes.cs3_01 = {}
 	self.safes.cs3_01.free = true
 	self.safes.cs3_01.prio = 10
@@ -1415,6 +1434,7 @@ function EconomyTweakData:init(tweak_data)
 	self.safes.cs3_01.name_id = "bm_menu_safe_cs3_01"
 	self.safes.cs3_01.unit_name = "units/payday2_cash/safes/cs3/safe/eco_safe_cs3"
 	self.safes.cs3_01.texture_bundle_folder = "cash/safes/cs3"
+	self.safes.cs3_01.is_marketable = false
 	self.safes.cvc_01 = {}
 	self.safes.cvc_01.free = true
 	self.safes.cvc_01.prio = 1
@@ -1423,6 +1443,7 @@ function EconomyTweakData:init(tweak_data)
 	self.safes.cvc_01.name_id = "bm_menu_safe_cvc_01"
 	self.safes.cvc_01.unit_name = "units/payday2_cash/safes/cvc/safe/eco_safe_cvc"
 	self.safes.cvc_01.texture_bundle_folder = "cash/safes/cvc"
+	self.safes.cvc_01.is_marketable = false
 	self.safes.mxs_01 = {}
 	self.safes.mxs_01.free = true
 	self.safes.mxs_01.drill = "mxs_01"
@@ -1430,6 +1451,7 @@ function EconomyTweakData:init(tweak_data)
 	self.safes.mxs_01.name_id = "bm_menu_safe_mxs_01"
 	self.safes.mxs_01.unit_name = "units/payday2_cash/safes/mxs/safe/eco_safe_mxs"
 	self.safes.mxs_01.texture_bundle_folder = "cash/safes/mxs"
+	self.safes.mxs_01.is_marketable = false
 	self.safes.cs4_01 = {}
 	self.safes.cs4_01.free = true
 	self.safes.cs4_01.prio = 10
@@ -1439,6 +1461,7 @@ function EconomyTweakData:init(tweak_data)
 	self.safes.cs4_01.name_id = "bm_menu_safe_cs4_01"
 	self.safes.cs4_01.unit_name = "units/payday2_cash/safes/cs4/safe/eco_safe_cs4"
 	self.safes.cs4_01.texture_bundle_folder = "cash/safes/cs4"
+	self.safes.cs4_01.is_marketable = false
 	self.safes.ast_01 = {}
 	self.safes.ast_01.free = true
 	self.safes.ast_01.prio = 1
@@ -1447,6 +1470,7 @@ function EconomyTweakData:init(tweak_data)
 	self.safes.ast_01.name_id = "bm_menu_safe_ast_01"
 	self.safes.ast_01.unit_name = "units/payday2_cash/safes/ast/safe/eco_safe_ast"
 	self.safes.ast_01.texture_bundle_folder = "cash/safes/ast"
+	self.safes.ast_01.is_marketable = false
 	self.safes.wwt_01 = {}
 	self.safes.wwt_01.free = true
 	self.safes.wwt_01.drill = "wwt_01"
@@ -1454,6 +1478,7 @@ function EconomyTweakData:init(tweak_data)
 	self.safes.wwt_01.name_id = "bm_menu_safe_wwt_01"
 	self.safes.wwt_01.unit_name = "units/payday2_cash/safes/wwt/safe/eco_safe_wwt"
 	self.safes.wwt_01.texture_bundle_folder = "cash/safes/wwt"
+	self.safes.wwt_01.is_marketable = false
 	self.safes.skf_01 = {}
 	self.safes.skf_01.free = true
 	self.safes.skf_01.prio = 10
@@ -1463,6 +1488,7 @@ function EconomyTweakData:init(tweak_data)
 	self.safes.skf_01.name_id = "bm_menu_safe_skf_01"
 	self.safes.skf_01.unit_name = "units/payday2_cash/safes/skf/safe/eco_safe_skf"
 	self.safes.skf_01.texture_bundle_folder = "cash/safes/skf"
+	self.safes.skf_01.is_marketable = false
 	self.safes.cas_01 = {}
 	self.safes.cas_01.free = true
 	self.safes.cas_01.prio = 11
@@ -1472,6 +1498,7 @@ function EconomyTweakData:init(tweak_data)
 	self.safes.cas_01.name_id = "bm_menu_safe_cas_01"
 	self.safes.cas_01.unit_name = "units/payday2_cash/safes/cas/safe/eco_safe_cas"
 	self.safes.cas_01.texture_bundle_folder = "cash/safes/cas"
+	self.safes.cas_01.is_marketable = false
 	self.safes.css_01 = {}
 	self.safes.css_01.free = true
 	self.safes.css_01.prio = 10
@@ -1481,6 +1508,7 @@ function EconomyTweakData:init(tweak_data)
 	self.safes.css_01.name_id = "bm_menu_safe_css_01"
 	self.safes.css_01.unit_name = "units/payday2_cash/safes/css/safe/eco_safe_css"
 	self.safes.css_01.texture_bundle_folder = "cash/safes/css"
+	self.safes.css_01.is_marketable = false
 	self.safes.dss_01 = {}
 	self.safes.dss_01.free = true
 	self.safes.dss_01.drill = "dss_01"
@@ -1488,6 +1516,7 @@ function EconomyTweakData:init(tweak_data)
 	self.safes.dss_01.name_id = "bm_menu_safe_dss_01"
 	self.safes.dss_01.unit_name = "units/payday2_cash/safes/dss/safe/eco_safe_dss"
 	self.safes.dss_01.texture_bundle_folder = "cash/safes/dss"
+	self.safes.dss_01.is_marketable = false
 	self.safes.cat_01 = {}
 	self.safes.cat_01.free = true
 	self.safes.cat_01.prio = 10
@@ -1497,6 +1526,7 @@ function EconomyTweakData:init(tweak_data)
 	self.safes.cat_01.name_id = "bm_menu_safe_cat_01"
 	self.safes.cat_01.unit_name = "units/payday2_cash/safes/cat/safe/eco_safe_cat"
 	self.safes.cat_01.texture_bundle_folder = "cash/safes/cat"
+	self.safes.cat_01.is_marketable = false
 	self.safes.ait_01 = {}
 	self.safes.ait_01.free = true
 	self.safes.ait_01.prio = 10
@@ -1506,6 +1536,7 @@ function EconomyTweakData:init(tweak_data)
 	self.safes.ait_01.name_id = "bm_menu_safe_ait_01"
 	self.safes.ait_01.unit_name = "units/payday2_cash/safes/ait/safe/eco_safe_ait"
 	self.safes.ait_01.texture_bundle_folder = "cash/safes/ait"
+	self.safes.ait_01.is_marketable = false
 	self.safes.nin_01 = {}
 	self.safes.nin_01.free = true
 	self.safes.nin_01.prio = 10
@@ -1515,6 +1546,7 @@ function EconomyTweakData:init(tweak_data)
 	self.safes.nin_01.name_id = "bm_menu_safe_nin_01"
 	self.safes.nin_01.unit_name = "units/payday2_cash/safes/nin/safe/eco_safe_nin"
 	self.safes.nin_01.texture_bundle_folder = "cash/safes/nin"
+	self.safes.nin_01.is_marketable = false
 	self.drills.overkill_01 = {}
 	self.drills.overkill_01.safe = "overkill_01"
 	self.drills.overkill_01.def_id = 70000
@@ -1524,6 +1556,7 @@ function EconomyTweakData:init(tweak_data)
 	self.drills.overkill_01.desc_id = "bm_menu_drill_overkill_01_desc"
 	self.drills.overkill_01.texture_bundle_folder = "cash/safes/cop"
 	self.drills.overkill_01.dlc = "complete_overkill_pack"
+	self.drills.overkill_01.is_marketable = false
 	self.drills.event_01 = {}
 	self.drills.event_01.safe = "event_01"
 	self.drills.event_01.def_id = 70001
@@ -1532,6 +1565,7 @@ function EconomyTweakData:init(tweak_data)
 	self.drills.event_01.name_id = "bm_menu_drill_event_01"
 	self.drills.event_01.desc_id = "bm_menu_drill_event_01_desc"
 	self.drills.event_01.texture_bundle_folder = "cash/safes/cf15"
+	self.drills.event_01.is_marketable = false
 	self.drills.weapon_01 = {}
 	self.drills.weapon_01.safe = "weapon_01"
 	self.drills.weapon_01.def_id = 70002
@@ -1540,6 +1574,7 @@ function EconomyTweakData:init(tweak_data)
 	self.drills.weapon_01.name_id = "bm_menu_drill_weapon_01"
 	self.drills.weapon_01.desc_id = "bm_menu_drill_weapon_01_desc"
 	self.drills.weapon_01.texture_bundle_folder = "cash/safes/sputnik"
+	self.drills.weapon_01.is_marketable = false
 	self.drills.event_red = {}
 	self.drills.event_red.safe = "event_red"
 	self.drills.event_red.def_id = 70003
@@ -1549,6 +1584,7 @@ function EconomyTweakData:init(tweak_data)
 	self.drills.event_red.desc_id = "bm_menu_drill_event_red_desc"
 	self.drills.event_red.texture_bundle_folder = "cash/safes/red"
 	self.drills.event_red.achievement = "green_7"
+	self.drills.event_red.is_marketable = false
 	self.drills.event_dinner = {}
 	self.drills.event_dinner.def_id = 70004
 	self.drills.event_dinner.safe = "event_dinner"
@@ -1558,6 +1594,7 @@ function EconomyTweakData:init(tweak_data)
 	self.drills.event_dinner.desc_id = "bm_menu_drill_event_dinner_desc"
 	self.drills.event_dinner.texture_bundle_folder = "cash/safes/dinner"
 	self.drills.event_dinner.achievement = "farm_6"
+	self.drills.event_dinner.is_marketable = false
 	self.drills.dallas_01 = {}
 	self.drills.dallas_01.safe = "dallas_01"
 	self.drills.dallas_01.def_id = 70005
@@ -1566,6 +1603,7 @@ function EconomyTweakData:init(tweak_data)
 	self.drills.dallas_01.desc_id = "bm_menu_drill_dallas_01_desc"
 	self.drills.dallas_01.unit_name = "units/payday2_cash/safes/dallas/drill/eco_drill_dallas"
 	self.drills.dallas_01.texture_bundle_folder = "cash/safes/dallas"
+	self.drills.dallas_01.is_marketable = false
 	self.drills.surf_01 = {}
 	self.drills.surf_01.def_id = 70006
 	self.drills.surf_01.safe = "surf_01"
@@ -1574,6 +1612,7 @@ function EconomyTweakData:init(tweak_data)
 	self.drills.surf_01.name_id = "bm_menu_drill_surf"
 	self.drills.surf_01.desc_id = "bm_menu_drill_surf_desc"
 	self.drills.surf_01.texture_bundle_folder = "cash/safes/surf"
+	self.drills.surf_01.is_marketable = false
 	self.drills.event_flake = {}
 	self.drills.event_flake.def_id = 70007
 	self.drills.event_flake.safe = "event_flake"
@@ -1583,6 +1622,7 @@ function EconomyTweakData:init(tweak_data)
 	self.drills.event_flake.desc_id = "bm_menu_drill_event_flake_desc"
 	self.drills.event_flake.texture_bundle_folder = "cash/safes/flake"
 	self.drills.event_flake.achievement = "flake_1"
+	self.drills.event_flake.is_marketable = false
 	self.drills.event_bah = {}
 	self.drills.event_bah.def_id = 70008
 	self.drills.event_bah.safe = "event_bah"
@@ -1592,6 +1632,7 @@ function EconomyTweakData:init(tweak_data)
 	self.drills.event_bah.desc_id = "bm_menu_drill_event_bah_desc"
 	self.drills.event_bah.texture_bundle_folder = "cash/safes/bah"
 	self.drills.event_bah.achievement = "bah_1"
+	self.drills.event_bah.is_marketable = false
 	self.drills.pack_01 = {}
 	self.drills.pack_01.safe = "pack_01"
 	self.drills.pack_01.def_id = 70009
@@ -1600,6 +1641,7 @@ function EconomyTweakData:init(tweak_data)
 	self.drills.pack_01.desc_id = "bm_menu_drill_pack_01_desc"
 	self.drills.pack_01.unit_name = "units/payday2_cash/safes/pack/drill/eco_drill_pack"
 	self.drills.pack_01.texture_bundle_folder = "cash/safes/pack"
+	self.drills.pack_01.is_marketable = false
 	self.drills.cola_01 = {}
 	self.drills.cola_01.safe = "cola_01"
 	self.drills.cola_01.def_id = 70010
@@ -1608,6 +1650,7 @@ function EconomyTweakData:init(tweak_data)
 	self.drills.cola_01.desc_id = "bm_menu_drill_cola_01_desc"
 	self.drills.cola_01.unit_name = "units/payday2_cash/safes/cola/drill/eco_drill_cola"
 	self.drills.cola_01.texture_bundle_folder = "cash/safes/cola"
+	self.drills.cola_01.is_marketable = false
 	self.drills.burn_01 = {}
 	self.drills.burn_01.safe = "burn_01"
 	self.drills.burn_01.def_id = 70011
@@ -1616,6 +1659,7 @@ function EconomyTweakData:init(tweak_data)
 	self.drills.burn_01.desc_id = "bm_menu_drill_burn_01_desc"
 	self.drills.burn_01.unit_name = "units/payday2_cash/safes/burn/drill/eco_drill_burn"
 	self.drills.burn_01.texture_bundle_folder = "cash/safes/burn"
+	self.drills.burn_01.is_marketable = false
 	self.drills.buck_01 = {}
 	self.drills.buck_01.safe = "buck_01"
 	self.drills.buck_01.unit_name = "units/payday2_cash/safes/buck/drill/eco_drill_buck"
@@ -1819,7 +1863,7 @@ function EconomyTweakData:init(tweak_data)
 	self:_init_rarity_contents(tweak_data)
 end
 
--- Lines 2362-2382
+-- Lines 2528-2548
 function EconomyTweakData:_add_content(data, content, tweaks)
 	for category, items in pairs(content.contains) do
 		for _, entry in pairs(items) do
@@ -1844,7 +1888,7 @@ function EconomyTweakData:_add_content(data, content, tweaks)
 	end
 end
 
--- Lines 2384-2480
+-- Lines 2550-2646
 function EconomyTweakData:_init_ip_content(tweak_data)
 	self.safes.wac_01.ip_content = true
 	self.safes.surf_01.ip_content = true
@@ -1855,7 +1899,7 @@ function EconomyTweakData:_init_ip_content(tweak_data)
 	local weapon_skins_tweak = tweak_data.blackmarket.weapon_skins
 	local add_ip_content
 
-	-- Lines 2397-2414
+	-- Lines 2563-2580
 	function add_ip_content(content)
 		content.ip_content = true
 
@@ -1882,7 +1926,7 @@ function EconomyTweakData:_init_ip_content(tweak_data)
 
 	local weapon_id, weapon_tweak, should_hide_unavailable
 
-	-- Lines 2426-2471
+	-- Lines 2592-2637
 	local function set_marketable_weapon_skins(data)
 		local weapon_skins = data.contains.weapon_skins
 
@@ -1925,7 +1969,18 @@ function EconomyTweakData:_init_ip_content(tweak_data)
 	end
 end
 
--- Lines 2482-2535
+-- Lines 2649-2661
+function EconomyTweakData:has_contents(content_id)
+	local safe_contains = content_id and tweak_data.economy.contents[content_id] and tweak_data.economy.contents[content_id].contains
+
+	if safe_contains.weapon_skins and #safe_contains.weapon_skins > 0 or safe_contains.contents and #safe_contains.contents > 0 then
+		return true
+	end
+
+	return false
+end
+
+-- Lines 2663-2726
 function EconomyTweakData:_init_rarity_contents(tweak_data)
 	local weapon_skin_tweak = tweak_data.blackmarket.weapon_skins
 	local armor_skin_tweak = self.armor_skins
@@ -1988,7 +2043,7 @@ function EconomyTweakData:_init_rarity_contents(tweak_data)
 	end
 end
 
--- Lines 2545-2554
+-- Lines 2736-2745
 function EconomyTweakData:get_entry_from_index(category, index)
 	for entry, data in pairs(self[category] or {}) do
 		if not data.index then
@@ -2001,12 +2056,12 @@ function EconomyTweakData:get_entry_from_index(category, index)
 	end
 end
 
--- Lines 2556-2558
+-- Lines 2747-2749
 function EconomyTweakData:get_index_from_entry(category, entry)
 	return self[category] and self[category][entry] and self[category][entry].index
 end
 
--- Lines 2560-2575
+-- Lines 2751-2766
 function EconomyTweakData:get_bonus_icons(entry)
 	local bonus_data = self.bonuses[entry]
 	local bonuses = {}
@@ -2026,7 +2081,7 @@ end
 
 EconomyTweakData.market_link_search = "https://steamcommunity.com/market/search?appid=218620&q="
 
--- Lines 2578-2598
+-- Lines 2769-2789
 function EconomyTweakData:create_weapon_skin_market_search_url(weapon_id, cosmetic_id)
 	local market_link = self.market_links.weapon_skins[cosmetic_id]
 
@@ -2047,7 +2102,7 @@ function EconomyTweakData:create_weapon_skin_market_search_url(weapon_id, cosmet
 	return nil
 end
 
--- Lines 2601-2617
+-- Lines 2791-2807
 function EconomyTweakData:create_armor_skin_market_search_url(cosmetic_id)
 	local market_link = self.market_links.armor_skins[cosmetic_id]
 
@@ -2066,22 +2121,27 @@ function EconomyTweakData:create_armor_skin_market_search_url(cosmetic_id)
 	return nil
 end
 
--- Lines 2620-2622
+-- Lines 2809-2811
 function EconomyTweakData:create_market_link_url(category, entry)
 	return self[category] and self[category][entry] and self[category][entry].market_link
 end
 
--- Lines 2624-2626
+-- Lines 2813-2815
 function EconomyTweakData:create_buy_tradable_url(def_id, quantity)
 	return "https://store.steampowered.com/buyitem/218620/" .. tostring(def_id) .. "/"
 end
 
--- Lines 2628-2630
+-- Lines 2817-2819
 function EconomyTweakData:create_sell_tradable_url(steam_id, instance_id)
 	return "https://steamcommunity.com/profiles/" .. tostring(steam_id) .. "/inventory/?sellOnLoad=1#218620_2_" .. tostring(instance_id)
 end
 
--- Lines 2632-2662
+-- Lines 2821-2823
+function EconomyTweakData:view_inventory_tradable_url(steam_id, instance_id)
+	return "https://steamcommunity.com/profiles/" .. tostring(steam_id) .. "/inventory/#218620_2_" .. tostring(instance_id)
+end
+
+-- Lines 2825-2855
 function EconomyTweakData:get_bonuses_by_safe(safe)
 	local safe_tweak = self.contents[safe]
 	local ids = deep_clone(safe_tweak.contains.weapon_skins)

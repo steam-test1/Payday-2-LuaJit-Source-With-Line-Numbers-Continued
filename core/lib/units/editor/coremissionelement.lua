@@ -123,12 +123,11 @@ function CoreMissionElement:set_iconsize(size)
 	self._icon_ws:set_linked(64, 64, root, pos, Vector3(size, 0, 0), Vector3(0, size, 0))
 end
 
--- Lines 131-169
+-- Lines 132-173
 function CoreMissionElement:_add_default_saves()
 	self._hed.enabled = true
 	self._hed.debug = nil
 	self._hed.execute_on_startup = false
-	self._hed.execute_on_restart = nil
 	self._hed.base_delay = 0
 	self._hed.base_delay_rand = nil
 	self._hed.trigger_times = 0
@@ -138,6 +137,7 @@ function CoreMissionElement:_add_default_saves()
 		self._hed.orientation_elements = nil
 		self._hed.use_orientation_sequenced = nil
 		self._hed.disable_orientation_on_use = nil
+		self._hed.execute_orientation_on_use = nil
 	end
 
 	if self.USES_INSTIGATOR_RULES then
@@ -158,11 +158,12 @@ function CoreMissionElement:_add_default_saves()
 	table.insert(self._save_values, "orientation_elements")
 	table.insert(self._save_values, "use_orientation_sequenced")
 	table.insert(self._save_values, "disable_orientation_on_use")
+	table.insert(self._save_values, "execute_orientation_on_use")
 	table.insert(self._save_values, "rules_elements")
 	table.insert(self._save_values, "instance_var_names")
 end
 
--- Lines 171-297
+-- Lines 175-301
 function CoreMissionElement:build_default_gui(panel, sizer)
 	self:_build_value_checkbox(panel, sizer, "enabled")
 	self:_build_value_checkbox(panel, sizer, "execute_on_startup")
@@ -289,9 +290,9 @@ function CoreMissionElement:build_default_gui(panel, sizer)
 	self:append_elements_sorted()
 	self:set_on_executed_element()
 
-	-- Lines 288-292
+	-- Lines 292-296
 	local function refresh_list_flow_cbk(ctrlr)
-		-- Lines 289-289
+		-- Lines 293-293
 		local function f()
 			managers.editor:refresh_list_flow()
 		end
@@ -306,7 +307,7 @@ function CoreMissionElement:build_default_gui(panel, sizer)
 	refresh_list_flow_cbk(element_delay_rand)
 end
 
--- Lines 299-324
+-- Lines 304-337
 function CoreMissionElement:_build_point_orientation(panel)
 	local sizer = EWS:StaticBoxSizer(panel, "HORIZONTAL", "Point orientation")
 	local toolbar = EWS:ToolBar(panel, "", "TB_FLAT,TB_NODIVIDER")
@@ -336,14 +337,23 @@ function CoreMissionElement:_build_point_orientation(panel)
 	})
 	sizer:add(disable_orientation_on_use, 0, 4, "EXPAND,LEFT")
 
+	local execute_orientation_on_use = EWS:CheckBox(panel, "Orientation exec on use", "")
+
+	execute_orientation_on_use:set_value(self._hed.execute_orientation_on_use)
+	execute_orientation_on_use:connect("EVT_COMMAND_CHECKBOX_CLICKED", callback(self, self, "set_element_data"), {
+		value = "execute_orientation_on_use",
+		ctrlr = execute_orientation_on_use
+	})
+	sizer:add(execute_orientation_on_use, 0, 4, "EXPAND,LEFT")
+
 	return sizer
 end
 
--- Lines 326-346
+-- Lines 339-359
 function CoreMissionElement:_add_unit_to_orientation_elements()
 	local script = self._unit:mission_element_data().script
 
-	-- Lines 328-340
+	-- Lines 341-353
 	local function f(unit)
 		if not string.find(unit:name():s(), "point_orientation", 1, true) then
 			return
@@ -369,13 +379,13 @@ function CoreMissionElement:_add_unit_to_orientation_elements()
 	end
 end
 
--- Lines 348-358
+-- Lines 361-371
 function CoreMissionElement:_remove_unit_from_orientation_elements()
 	if not self._hed.orientation_elements then
 		return
 	end
 
-	-- Lines 352-352
+	-- Lines 365-365
 	local function f(unit)
 		return table.contains(self._hed.orientation_elements, unit:unit_data().unit_id)
 	end
@@ -391,7 +401,7 @@ function CoreMissionElement:_remove_unit_from_orientation_elements()
 	end
 end
 
--- Lines 360-393
+-- Lines 373-406
 function CoreMissionElement:_build_instance_var_names(panel)
 	local sizer = EWS:StaticBoxSizer(panel, "VERTICAL", "Instance variables")
 	local options = {}
@@ -432,7 +442,7 @@ function CoreMissionElement:_build_instance_var_names(panel)
 	return sizer
 end
 
--- Lines 395-401
+-- Lines 408-414
 function CoreMissionElement:_set_instance_var_name(params)
 	local value = params.ctrlr:get_value()
 
@@ -442,7 +452,7 @@ function CoreMissionElement:_set_instance_var_name(params)
 	self._hed.instance_var_names = next(self._hed.instance_var_names) and self._hed.instance_var_names or nil
 end
 
--- Lines 404-421
+-- Lines 418-424
 function CoreMissionElement:_create_panel()
 	if self._panel then
 		return
@@ -451,12 +461,12 @@ function CoreMissionElement:_create_panel()
 	self._panel, self._panel_sizer = self:_add_panel(self._parent_panel, self._parent_sizer)
 end
 
--- Lines 426-429
+-- Lines 430-432
 function CoreMissionElement:_build_panel()
 	self:_create_panel()
 end
 
--- Lines 433-447
+-- Lines 437-455
 function CoreMissionElement:panel(id, parent, parent_sizer)
 	if id then
 		if self._panels[id] then
@@ -479,12 +489,11 @@ function CoreMissionElement:panel(id, parent, parent_sizer)
 	return self._panel
 end
 
--- Lines 449-467
+-- Lines 458-472
 function CoreMissionElement:_add_panel(parent, parent_sizer)
 	local panel = EWS:ScrolledWindow(parent, "", "VSCROLL,TAB_TRAVERSAL")
 
-	panel:set_scroll_rate(Vector3(0, 20, 0))
-	panel:set_virtual_size_hints(Vector3(0, 0, 0), Vector3(1, -1, -1))
+	panel:set_scroll_rate(Vector3(1, 20, 0))
 
 	local panel_sizer = EWS:BoxSizer("VERTICAL")
 
@@ -499,33 +508,44 @@ function CoreMissionElement:_add_panel(parent, parent_sizer)
 	return panel, panel_sizer
 end
 
--- Lines 474-480
+-- Lines 480-490
 function CoreMissionElement:add_help_text(data)
 	if data.panel and data.sizer then
-		local text = EWS:TextCtrl(data.panel, data.text, 0, "TE_MULTILINE,TE_READONLY,TE_WORDWRAP,TE_CENTRE")
+		local help_text = EWS:TextCtrl(data.panel, data.text, 0, "TE_MULTILINE,TE_READONLY,TE_WORDWRAP,TE_CENTRE")
 
-		data.sizer:add(text, 0, 5, "EXPAND,TOP,BOTTOM")
+		data.sizer:add(help_text, 0, 5, "EXPAND,TOP,BOTTOM")
 
-		return text
+		return help_text
 	end
 end
 
--- Lines 482-485
+-- Lines 493-499
 function CoreMissionElement:_add_help_text(text)
-	local help = {
+	return self:add_help_text({
 		panel = self._panel,
 		sizer = self._panel_sizer,
 		text = text
-	}
-
-	return self:add_help_text(help)
+	})
 end
 
--- Lines 488-494
+-- Lines 502-508
+function CoreMissionElement:_set_help_text(help_text, text)
+	if help_text then
+		help_text:set_value(text or "")
+	else
+		Application:warn("[CoreMissionElement] Tried to set help text without a text control panel", help_text, text)
+	end
+end
+
+-- Lines 512-535
 function CoreMissionElement:_on_toolbar_add_element()
-	-- Lines 489-489
+	-- Lines 513-528
 	local function f(unit)
-		return unit:type() == Idstring("mission_element") and unit ~= self._unit
+		if unit:type() == Idstring("mission_element") and unit ~= self._unit and managers.editor:current_continent() and unit:unit_data().continent and managers.editor:current_continent() == unit:unit_data().continent then
+			return true
+		end
+
+		return false
 	end
 
 	local dialog = SelectUnitByNameModal:new("Add/Remove element", f)
@@ -535,16 +555,12 @@ function CoreMissionElement:_on_toolbar_add_element()
 	end
 end
 
--- Lines 498-504
+-- Lines 539-541
 function CoreMissionElement:_on_toolbar_remove()
-	local unit = self:_current_element_unit()
-
-	if alive(unit) then
-		self:remove_on_execute(unit)
-	end
+	self:remove_on_execute(self:_current_element_unit())
 end
 
--- Lines 508-525
+-- Lines 545-562
 function CoreMissionElement:_on_toolbar_up_element()
 	local current_index = self:_current_element_index()
 
@@ -563,7 +579,7 @@ function CoreMissionElement:_on_toolbar_up_element()
 	self:set_on_executed_element(current_index)
 end
 
--- Lines 529-546
+-- Lines 566-583
 function CoreMissionElement:_on_toolbar_down_element()
 	local current_index = self:_current_element_index()
 
@@ -582,7 +598,7 @@ function CoreMissionElement:_on_toolbar_down_element()
 	self:set_on_executed_element(current_index)
 end
 
--- Lines 551-567
+-- Lines 588-604
 function CoreMissionElement:set_element_data(data)
 	if data.callback then
 		local he = self._unit:mission_element()
@@ -602,7 +618,7 @@ function CoreMissionElement:set_element_data(data)
 	end
 end
 
--- Lines 569-586
+-- Lines 606-623
 function CoreMissionElement:check_apply_value_to_all_elements(data)
 	if EWS:get_key_state("K_CONTROL") then
 		local value = tonumber(self._hed[data.value]) or self._hed[data.value]
@@ -617,7 +633,7 @@ function CoreMissionElement:check_apply_value_to_all_elements(data)
 	end
 end
 
--- Lines 588-604
+-- Lines 625-641
 function CoreMissionElement:check_apply_func_to_all_elements(func_name, data)
 	if EWS:get_key_state("K_CONTROL") then
 		for _, unit in ipairs(managers.editor:layer("Mission"):selected_units()) do
@@ -633,7 +649,7 @@ function CoreMissionElement:check_apply_func_to_all_elements(func_name, data)
 	end
 end
 
--- Lines 606-613
+-- Lines 643-650
 function CoreMissionElement:set_panel_dirty()
 	if not alive(self._panel) then
 		return
@@ -644,44 +660,49 @@ function CoreMissionElement:set_panel_dirty()
 	self._panel = nil
 end
 
--- Lines 616-618
+-- Lines 654-656
 function CoreMissionElement:selected()
 	self:append_elements_sorted()
 end
 
--- Lines 621-622
+-- Lines 660-660
+function CoreMissionElement:on_unselected()
+	return
+end
+
+-- Lines 664-664
 function CoreMissionElement:update_selected()
 	return
 end
 
--- Lines 625-626
+-- Lines 668-668
 function CoreMissionElement:update_unselected()
 	return
 end
 
--- Lines 628-630
+-- Lines 670-672
 function CoreMissionElement:can_edit()
 	return self.update_editing or self.base_update_editing
 end
 
--- Lines 632-634
+-- Lines 674-676
 function CoreMissionElement:begin_editing()
 	return
 end
 
--- Lines 636-638
+-- Lines 678-680
 function CoreMissionElement:end_editing()
 	return
 end
 
--- Lines 641-645
+-- Lines 683-687
 function CoreMissionElement:clone_data(all_units)
 	for _, data in ipairs(self._hed.on_executed) do
 		table.insert(self._on_executed_units, all_units[data.id])
 	end
 end
 
--- Lines 661-666
+-- Lines 703-708
 function CoreMissionElement:layer_finished()
 	for _, data in ipairs(self._hed.on_executed) do
 		local unit = managers.worlddefinition:get_mission_element_unit(data.id)
@@ -690,12 +711,12 @@ function CoreMissionElement:layer_finished()
 	end
 end
 
--- Lines 670-672
+-- Lines 712-714
 function CoreMissionElement:save_data(file, t)
 	self:save_values(file, t)
 end
 
--- Lines 675-682
+-- Lines 717-724
 function CoreMissionElement:save_values(file, t)
 	t = t .. "\t"
 
@@ -708,14 +729,14 @@ function CoreMissionElement:save_values(file, t)
 	file:puts(t .. "</values>")
 end
 
--- Lines 685-688
+-- Lines 727-730
 function CoreMissionElement:save_value(file, t, name)
 	t = t .. "\t"
 
 	file:puts(save_value_string(self._hed, name, t, self._unit))
 end
 
--- Lines 690-716
+-- Lines 732-758
 function CoreMissionElement:new_save_values()
 	local t = {
 		position = self.SAVE_UNIT_POSITION and self._unit:position() or nil,
@@ -743,17 +764,17 @@ function CoreMissionElement:new_save_values()
 	return t
 end
 
--- Lines 718-720
+-- Lines 760-762
 function CoreMissionElement:name()
 	return self._unit:name() .. self._ud.unit_id
 end
 
--- Lines 723-724
+-- Lines 765-766
 function CoreMissionElement:add_to_mission_package()
 	return
 end
 
--- Lines 727-736
+-- Lines 769-778
 function CoreMissionElement:get_color(type)
 	if type then
 		if type == "activate" or type == "enable" then
@@ -766,7 +787,7 @@ function CoreMissionElement:get_color(type)
 	return 0, 1, 0
 end
 
--- Lines 738-746
+-- Lines 780-788
 function CoreMissionElement:get_element_color()
 	local r, g, b = 1, 1, 1
 
@@ -779,7 +800,7 @@ function CoreMissionElement:get_element_color()
 	return r, g, b
 end
 
--- Lines 749-763
+-- Lines 791-805
 function CoreMissionElement:draw_links_selected(t, dt, selected_unit)
 	local unit = self:_current_element_unit()
 
@@ -803,39 +824,39 @@ function CoreMissionElement:draw_links_selected(t, dt, selected_unit)
 	end
 end
 
--- Lines 765-769
+-- Lines 807-811
 function CoreMissionElement:_draw_link(params)
 	params.draw_flow = managers.editor:layer("Mission"):visualize_flow()
 
 	Application:draw_link(params)
 end
 
--- Lines 772-774
+-- Lines 814-816
 function CoreMissionElement:draw_links_unselected()
 	return
 end
 
--- Lines 779-780
+-- Lines 821-822
 function CoreMissionElement:clear()
 	return
 end
 
--- Lines 784-786
+-- Lines 826-828
 function CoreMissionElement:action_types()
 	return self._action_types
 end
 
--- Lines 788-790
+-- Lines 830-832
 function CoreMissionElement:timeline_color()
 	return self._timeline_color
 end
 
--- Lines 793-794
+-- Lines 835-836
 function CoreMissionElement:add_triggers(vc)
 	return
 end
 
--- Lines 797-804
+-- Lines 839-846
 function CoreMissionElement:base_add_triggers(vc)
 	if self.USES_POINT_ORIENTATION then
 		vc:add_trigger(Idstring("lmb"), callback(self, self, "_on_use_point_orientation"))
@@ -846,7 +867,7 @@ function CoreMissionElement:base_add_triggers(vc)
 	end
 end
 
--- Lines 807-820
+-- Lines 849-862
 function CoreMissionElement:_on_use_point_orientation()
 	local ray = managers.editor:unit_by_raycast({
 		mask = 10,
@@ -864,21 +885,21 @@ function CoreMissionElement:_on_use_point_orientation()
 	end
 end
 
--- Lines 822-825
+-- Lines 864-867
 function CoreMissionElement:_add_orientation_unit_id(id)
 	self._hed.orientation_elements = self._hed.orientation_elements or {}
 
 	table.insert(self._hed.orientation_elements, id)
 end
 
--- Lines 827-830
+-- Lines 869-872
 function CoreMissionElement:_remove_orientation_unit_id(id)
 	table.delete(self._hed.orientation_elements, id)
 
 	self._hed.orientation_elements = #self._hed.orientation_elements > 0 and self._hed.orientation_elements or nil
 end
 
--- Lines 833-846
+-- Lines 875-888
 function CoreMissionElement:_on_use_instigator_rule()
 	local ray = managers.editor:unit_by_raycast({
 		mask = 10,
@@ -896,55 +917,55 @@ function CoreMissionElement:_on_use_instigator_rule()
 	end
 end
 
--- Lines 848-851
+-- Lines 890-893
 function CoreMissionElement:_add_instigator_rule_unit_id(id)
 	self._hed.rules_elements = self._hed.rules_elements or {}
 
 	table.insert(self._hed.rules_elements, id)
 end
 
--- Lines 853-856
+-- Lines 895-898
 function CoreMissionElement:_remove_instigator_rule_unit_id(id)
 	table.delete(self._hed.rules_elements, id)
 
 	self._hed.rules_elements = #self._hed.rules_elements > 0 and self._hed.rules_elements or nil
 end
 
--- Lines 858-861
+-- Lines 900-903
 function CoreMissionElement:__update_editing(_, t, dt, current_pos)
 	return
 end
 
--- Lines 864-865
+-- Lines 906-907
 function CoreMissionElement:clear_triggers()
 	return
 end
 
--- Lines 868-870
+-- Lines 910-912
 function CoreMissionElement:widget_affect_object()
 	return nil
 end
 
--- Lines 873-875
+-- Lines 915-917
 function CoreMissionElement:use_widget_position()
 	return nil
 end
 
--- Lines 880-884
+-- Lines 922-926
 function CoreMissionElement:set_enabled()
 	if self._icon_ws then
 		self._icon_ws:show()
 	end
 end
 
--- Lines 889-893
+-- Lines 931-935
 function CoreMissionElement:set_disabled()
 	if self._icon_ws then
 		self._icon_ws:hide()
 	end
 end
 
--- Lines 896-904
+-- Lines 938-946
 function CoreMissionElement:on_set_visible(visible)
 	if self._icon_ws then
 		if visible then
@@ -955,17 +976,17 @@ function CoreMissionElement:on_set_visible(visible)
 	end
 end
 
--- Lines 907-909
+-- Lines 949-951
 function CoreMissionElement:set_update_selected_on(value)
 	self._update_selected_on = value
 end
 
--- Lines 912-914
+-- Lines 954-956
 function CoreMissionElement:update_selected_on()
 	return self._update_selected_on
 end
 
--- Lines 917-923
+-- Lines 959-965
 function CoreMissionElement:destroy_panel()
 	if self._panel then
 		self._panel:extension().alive = false
@@ -976,7 +997,7 @@ function CoreMissionElement:destroy_panel()
 	end
 end
 
--- Lines 926-939
+-- Lines 968-981
 function CoreMissionElement:destroy()
 	if self._timeline then
 		self._timeline:destroy()
@@ -995,7 +1016,7 @@ function CoreMissionElement:destroy()
 	end
 end
 
--- Lines 943-949
+-- Lines 985-991
 function CoreMissionElement:draw_links(t, dt, selected_unit, all_units)
 	self:_base_check_removed_units(all_units)
 	self:draw_link_on_executed(t, dt, selected_unit)
@@ -1003,7 +1024,7 @@ function CoreMissionElement:draw_links(t, dt, selected_unit, all_units)
 	self:_draw_elements(t, dt, self._hed.rules_elements, selected_unit, all_units)
 end
 
--- Lines 951-969
+-- Lines 993-1011
 function CoreMissionElement:_base_check_removed_units(all_units)
 	if self._hed.orientation_elements then
 		for _, id in ipairs(clone(self._hed.orientation_elements)) do
@@ -1026,7 +1047,7 @@ function CoreMissionElement:_base_check_removed_units(all_units)
 	end
 end
 
--- Lines 971-984
+-- Lines 1013-1026
 function CoreMissionElement:_draw_elements(t, dt, elements, selected_unit, all_units)
 	if not elements then
 		return
@@ -1049,12 +1070,12 @@ function CoreMissionElement:_draw_elements(t, dt, elements, selected_unit, all_u
 	end
 end
 
--- Lines 1003-1005
+-- Lines 1045-1047
 function CoreMissionElement:_should_draw_link(selected_unit, unit)
 	return not selected_unit or unit == selected_unit or self._unit == selected_unit
 end
 
--- Lines 1007-1015
+-- Lines 1049-1057
 function CoreMissionElement:get_link_color(unit)
 	local r, g, b = 1, 1, 1
 
@@ -1067,7 +1088,7 @@ function CoreMissionElement:get_link_color(unit)
 	return r, g, b
 end
 
--- Lines 1017-1061
+-- Lines 1059-1103
 function CoreMissionElement:draw_link_on_executed(t, dt, selected_unit)
 	local unit_sel = self._unit == selected_unit
 
@@ -1118,7 +1139,7 @@ function CoreMissionElement:draw_link_on_executed(t, dt, selected_unit)
 	end
 end
 
--- Lines 1063-1075
+-- Lines 1105-1117
 function CoreMissionElement:_get_delay_string(element)
 	local delay = self._hed.base_delay + element.delay
 	local text = string.format("%.2f", delay)
@@ -1133,7 +1154,7 @@ function CoreMissionElement:_get_delay_string(element)
 	return text
 end
 
--- Lines 1079-1089
+-- Lines 1121-1131
 function CoreMissionElement:add_on_executed(unit, prevent_undo)
 	if self:remove_on_execute(unit, true) then
 		return
@@ -1148,7 +1169,7 @@ function CoreMissionElement:add_on_executed(unit, prevent_undo)
 	end
 end
 
--- Lines 1094-1103
+-- Lines 1136-1145
 function CoreMissionElement:remove_on_execute(unit, prevent_undo)
 	local command = CoreEditorCommand.MissionElementRemoveOnExecutedCommand:new(self)
 	local result = command:execute(self, unit)
@@ -1160,7 +1181,7 @@ function CoreMissionElement:remove_on_execute(unit, prevent_undo)
 	return result
 end
 
--- Lines 1105-1113
+-- Lines 1147-1155
 function CoreMissionElement:add_link_element(element_name, unit_id, prevent_undo)
 	local command = CoreEditorCommand.MissionElementAddLinkElementCommand:new(self)
 	local result = command:execute(self, element_name, unit_id)
@@ -1170,12 +1191,12 @@ function CoreMissionElement:add_link_element(element_name, unit_id, prevent_undo
 	end
 end
 
--- Lines 1115-1117
+-- Lines 1157-1159
 function CoreMissionElement:on_added_link_element(element_name, unit_id)
 	return
 end
 
--- Lines 1119-1127
+-- Lines 1161-1169
 function CoreMissionElement:remove_link_element(element_name, unit_id, prevent_undo)
 	local command = CoreEditorCommand.MissionElementRemoveLinkElementCommand:new(self)
 	local result = command:execute(self, element_name, unit_id)
@@ -1185,12 +1206,12 @@ function CoreMissionElement:remove_link_element(element_name, unit_id, prevent_u
 	end
 end
 
--- Lines 1129-1131
+-- Lines 1171-1173
 function CoreMissionElement:on_removed_link_element(element_name, unit_id)
 	return
 end
 
--- Lines 1133-1169
+-- Lines 1175-1211
 function CoreMissionElement:remove_links(unit)
 	if not self.LINK_VALUES then
 		return
@@ -1228,7 +1249,7 @@ function CoreMissionElement:remove_links(unit)
 	end
 end
 
--- Lines 1171-1191
+-- Lines 1213-1233
 function CoreMissionElement:remove_all_links()
 	for i = #self._on_executed_units, 1, -1 do
 		self:remove_on_execute(self._on_executed_units[i])
@@ -1251,7 +1272,7 @@ function CoreMissionElement:remove_all_links()
 	end
 end
 
--- Lines 1196-1207
+-- Lines 1238-1249
 function CoreMissionElement:delete_unit(units)
 	for _, mission_unit in ipairs(units) do
 		mission_unit:mission_element():remove_on_execute(self._unit)
@@ -1266,7 +1287,7 @@ function CoreMissionElement:delete_unit(units)
 	managers.editor:register_undo_command(command)
 end
 
--- Lines 1213-1226
+-- Lines 1255-1268
 function CoreMissionElement:set_on_executed_element(index)
 	if not index or not (index > 0) or not (index <= #self._hed.on_executed) then
 		self:_set_on_execute_ctrlrs_enabled(false)
@@ -1282,7 +1303,7 @@ function CoreMissionElement:set_on_executed_element(index)
 	end
 end
 
--- Lines 1229-1247
+-- Lines 1271-1289
 function CoreMissionElement:set_on_executed_data()
 	local index = self:_current_element_index()
 	local params = self._hed.on_executed[index]
@@ -1303,14 +1324,14 @@ function CoreMissionElement:set_on_executed_data()
 	end
 end
 
--- Lines 1250-1254
+-- Lines 1292-1296
 function CoreMissionElement:_set_first_executed_element()
 	if #self._hed.on_executed > 0 then
 		self:set_on_executed_element(1)
 	end
 end
 
--- Lines 1257-1269
+-- Lines 1299-1311
 function CoreMissionElement:_set_on_execute_ctrlrs_enabled(enabled)
 	if not self._elements_params then
 		return
@@ -1326,12 +1347,12 @@ function CoreMissionElement:_set_on_execute_ctrlrs_enabled(enabled)
 	end
 end
 
--- Lines 1272-1274
+-- Lines 1314-1316
 function CoreMissionElement:on_executed_element_selected()
 	self:set_on_executed_data()
 end
 
--- Lines 1277-1283
+-- Lines 1319-1325
 function CoreMissionElement:_get_on_executed(id)
 	for _, params in ipairs(self._hed.on_executed) do
 		if params.id == id then
@@ -1340,7 +1361,7 @@ function CoreMissionElement:_get_on_executed(id)
 	end
 end
 
--- Lines 1287-1293
+-- Lines 1329-1335
 function CoreMissionElement:_current_element_index()
 	if not self._elements_list then
 		return -1
@@ -1349,7 +1370,7 @@ function CoreMissionElement:_current_element_index()
 	return self._elements_list:selected_index() + 1
 end
 
--- Lines 1297-1302
+-- Lines 1339-1344
 function CoreMissionElement:_current_element_id()
 	local index = self:_current_element_index()
 	local params = self._hed.on_executed[index]
@@ -1357,7 +1378,7 @@ function CoreMissionElement:_current_element_id()
 	return params and params.id
 end
 
--- Lines 1306-1319
+-- Lines 1348-1361
 function CoreMissionElement:_current_element_unit()
 	local id = self:_current_element_id()
 
@@ -1374,7 +1395,7 @@ function CoreMissionElement:_current_element_unit()
 	return unit
 end
 
--- Lines 1323-1334
+-- Lines 1365-1376
 function CoreMissionElement:on_executed_element_delay()
 	local index = self:_current_element_index()
 	local params = self._hed.on_executed[index]
@@ -1388,7 +1409,7 @@ function CoreMissionElement:on_executed_element_delay()
 	end
 end
 
--- Lines 1338-1345
+-- Lines 1380-1387
 function CoreMissionElement:on_executed_element_delay_rand()
 	local index = self:_current_element_index()
 	local params = self._hed.on_executed[index]
@@ -1398,7 +1419,7 @@ function CoreMissionElement:on_executed_element_delay_rand()
 	end
 end
 
--- Lines 1349-1358
+-- Lines 1391-1400
 function CoreMissionElement:on_executed_alternatives_types()
 	local index = self:_current_element_index()
 	local params = self._hed.on_executed[index]
@@ -1410,7 +1431,7 @@ function CoreMissionElement:on_executed_alternatives_types()
 	end
 end
 
--- Lines 1361-1382
+-- Lines 1403-1424
 function CoreMissionElement:append_elements_sorted()
 	if not self._elements_list then
 		return
@@ -1434,12 +1455,12 @@ function CoreMissionElement:append_elements_sorted()
 	self:set_on_executed_element(index)
 end
 
--- Lines 1385-1387
+-- Lines 1427-1429
 function CoreMissionElement:combobox_name(unit)
 	return unit:unit_data().name_id .. " (" .. unit:unit_data().unit_id .. ")"
 end
 
--- Lines 1390-1397
+-- Lines 1432-1439
 function CoreMissionElement:on_execute_unit_by_id(id)
 	for _, unit in ipairs(self._on_executed_units) do
 		if unit:unit_data().unit_id == id then
@@ -1450,7 +1471,7 @@ function CoreMissionElement:on_execute_unit_by_id(id)
 	return nil
 end
 
--- Lines 1400-1406
+-- Lines 1442-1448
 function CoreMissionElement:_combobox_names_names(units)
 	local names = {}
 
@@ -1461,7 +1482,7 @@ function CoreMissionElement:_combobox_names_names(units)
 	return names
 end
 
--- Lines 1409-1416
+-- Lines 1451-1458
 function CoreMissionElement:on_timeline()
 	if not self._timeline then
 		self._timeline = MissionElementTimeline:new(self._unit:unit_data().name_id)
@@ -1472,7 +1493,7 @@ function CoreMissionElement:on_timeline()
 	end
 end
 
--- Lines 1419-1446
+-- Lines 1461-1488
 function CoreMissionElement:_build_value_combobox(panel, sizer, value_name, options, tooltip, custom_name, params)
 	local horizontal_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -1510,7 +1531,7 @@ function CoreMissionElement:_build_value_combobox(panel, sizer, value_name, opti
 	return ctrlr, combobox_params
 end
 
--- Lines 1449-1458
+-- Lines 1491-1500
 function CoreMissionElement:_on_gui_value_combobox_toolbar_select_dialog(params)
 	local dialog = SelectNameModal:new("Select name", params.combobox_params.options)
 
@@ -1527,7 +1548,7 @@ function CoreMissionElement:_on_gui_value_combobox_toolbar_select_dialog(params)
 	end
 end
 
--- Lines 1460-1478
+-- Lines 1502-1520
 function CoreMissionElement:_build_value_string(panel, sizer, value_name, options, tooltip, custom_name)
 	local string_params = {
 		name = string.pretty(custom_name or value_name, true) .. ":",
@@ -1553,7 +1574,7 @@ function CoreMissionElement:_build_value_string(panel, sizer, value_name, option
 	return ctrlr, string_params
 end
 
--- Lines 1479-1499
+-- Lines 1521-1541
 function CoreMissionElement:_build_value_number(panel, sizer, value_name, options, tooltip, custom_name)
 	local number_params = {
 		name = string.pretty(custom_name or value_name, true) .. ":",
@@ -1582,7 +1603,7 @@ function CoreMissionElement:_build_value_number(panel, sizer, value_name, option
 	return ctrlr, number_params
 end
 
--- Lines 1501-1510
+-- Lines 1543-1552
 function CoreMissionElement:_build_value_checkbox(panel, sizer, value_name, tooltip, custom_name)
 	local checkbox = EWS:CheckBox(panel, custom_name or string.pretty(value_name, true), "")
 
@@ -1597,7 +1618,7 @@ function CoreMissionElement:_build_value_checkbox(panel, sizer, value_name, tool
 	return checkbox
 end
 
--- Lines 1512-1553
+-- Lines 1554-1595
 function CoreMissionElement:_build_value_random_number(panel, sizer, value_name, options, tooltip, custom_name)
 	local horizontal_sizer = EWS:BoxSizer("HORIZONTAL")
 
@@ -1658,7 +1679,7 @@ function CoreMissionElement:_build_value_random_number(panel, sizer, value_name,
 	return ctrlr, number_params
 end
 
--- Lines 1555-1569
+-- Lines 1597-1611
 function CoreMissionElement:_set_random_number_element_data(data)
 	print("_set_random_number_element_data", inspect(data))
 
@@ -1672,7 +1693,7 @@ function CoreMissionElement:_set_random_number_element_data(data)
 	self._hed[data.value][data.index] = value
 end
 
--- Lines 1577-1589
+-- Lines 1619-1631
 function CoreMissionElement:_build_add_remove_unit_from_list(panel, sizer, elements, names, exact_names)
 	local toolbar = EWS:ToolBar(panel, "", "TB_FLAT,TB_NODIVIDER")
 
@@ -1690,12 +1711,12 @@ function CoreMissionElement:_build_add_remove_unit_from_list(panel, sizer, eleme
 	sizer:add(toolbar, 0, 1, "EXPAND,LEFT")
 end
 
--- Lines 1591-1636
+-- Lines 1633-1678
 function CoreMissionElement:_add_unit_list_btn(params)
 	local elements = params.elements or {}
 	local script = self._unit:mission_element_data().script
 
-	-- Lines 1595-1615
+	-- Lines 1637-1657
 	local function f_correct_unit(unit)
 		if not params.names and not params.exact_names then
 			return true
@@ -1722,7 +1743,7 @@ function CoreMissionElement:_add_unit_list_btn(params)
 		return false
 	end
 
-	-- Lines 1617-1629
+	-- Lines 1659-1671
 	local function f(unit)
 		if not unit:mission_element_data() or unit:mission_element_data().script ~= script then
 			return
@@ -1750,11 +1771,11 @@ function CoreMissionElement:_add_unit_list_btn(params)
 	end
 end
 
--- Lines 1638-1646
+-- Lines 1680-1688
 function CoreMissionElement:_remove_unit_list_btn(params)
 	local elements = params.elements
 
-	-- Lines 1640-1640
+	-- Lines 1682-1682
 	local function f(unit)
 		return table.contains(elements, unit:unit_data().unit_id)
 	end
@@ -1768,7 +1789,7 @@ function CoreMissionElement:_remove_unit_list_btn(params)
 	end
 end
 
--- Lines 1652-1664
+-- Lines 1694-1706
 function CoreMissionElement:_build_add_remove_static_unit_from_list(panel, sizer, params)
 	local toolbar = EWS:ToolBar(panel, "", "TB_FLAT,TB_NODIVIDER")
 
@@ -1780,7 +1801,7 @@ function CoreMissionElement:_build_add_remove_static_unit_from_list(panel, sizer
 	sizer:add(toolbar, 0, 1, "EXPAND,LEFT")
 end
 
--- Lines 1666-1672
+-- Lines 1708-1714
 function CoreMissionElement:_add_static_unit_list_btn(params)
 	local dialog = (params.single and SingleSelectUnitByNameModal or SelectUnitByNameModal):new("Add Unit", params.add_filter)
 
@@ -1791,7 +1812,7 @@ function CoreMissionElement:_add_static_unit_list_btn(params)
 	end
 end
 
--- Lines 1674-1679
+-- Lines 1716-1721
 function CoreMissionElement:_remove_static_unit_list_btn(params)
 	local dialog = (params.single and SingleSelectUnitByNameModal or SelectUnitByNameModal):new("Remove Unit", params.remove_filter)
 
@@ -1800,7 +1821,7 @@ function CoreMissionElement:_remove_static_unit_list_btn(params)
 	end
 end
 
--- Lines 1682-1734
+-- Lines 1724-1776
 function CoreMissionElement:get_links_to_unit(to_unit, links, all_units)
 	for i, data in ipairs(self._hed.on_executed) do
 		local link = {
@@ -1833,7 +1854,7 @@ function CoreMissionElement:get_links_to_unit(to_unit, links, all_units)
 	end
 end
 
--- Lines 1737-1771
+-- Lines 1779-1813
 function CoreMissionElement:_get_links_from_value(value, params, to_unit, links, all_units)
 	if not value then
 		return
@@ -1867,7 +1888,7 @@ function CoreMissionElement:_get_links_from_value(value, params, to_unit, links,
 	end
 end
 
--- Lines 1774-1796
+-- Lines 1816-1838
 function CoreMissionElement:_add_links_to_element(id, link, to_unit, links1, links2, all_units)
 	if type(to_unit) == "table" then
 		link.id = to_unit.id

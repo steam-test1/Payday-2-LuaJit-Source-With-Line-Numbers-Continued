@@ -5,7 +5,7 @@ SkinEditor.allowed_extensions = {
 	tga = true
 }
 
--- Lines 10-16
+-- Lines 10-17
 function SkinEditor:init()
 	Global.skin_editor = {}
 	Global.skin_editor.skins = {}
@@ -14,17 +14,17 @@ function SkinEditor:init()
 	self._active = false
 end
 
--- Lines 18-20
+-- Lines 19-21
 function SkinEditor:active()
 	return self._active
 end
 
--- Lines 22-24
+-- Lines 23-25
 function SkinEditor:set_active(active)
 	self._active = active
 end
 
--- Lines 26-36
+-- Lines 27-42
 function SkinEditor:init_items()
 	self._global.skins = {}
 	self._current_skin = 1
@@ -38,7 +38,7 @@ function SkinEditor:init_items()
 	end
 end
 
--- Lines 38-51
+-- Lines 44-59
 function SkinEditor:create_new_skin(data)
 	if not data.weapon_id then
 		data.weapon_id = self._current_weapon_id
@@ -54,14 +54,14 @@ function SkinEditor:create_new_skin(data)
 	return local_skin_id
 end
 
--- Lines 53-56
+-- Lines 61-64
 function SkinEditor:_append_skin(weapon_id, skin)
 	self._global.skins[weapon_id] = self._global.skins[weapon_id] or {}
 
 	table.insert(self._global.skins[weapon_id], skin)
 end
 
--- Lines 58-70
+-- Lines 66-78
 function SkinEditor:delete_current()
 	local skin = self:get_current_skin()
 
@@ -78,7 +78,7 @@ function SkinEditor:delete_current()
 	managers.menu:active_menu().logic:get_node("skin_editor")
 end
 
--- Lines 72-118
+-- Lines 80-126
 function SkinEditor:select_skin(local_skin_id)
 	local is_reload = self._current_skin == local_skin_id
 
@@ -112,7 +112,7 @@ function SkinEditor:select_skin(local_skin_id)
 	id = string.sub(id, string.len(new_cosmetics_data.weapon_id .. "_") + 1, -1)
 	new_cosmetics_data.id = id
 
-	-- Lines 101-112
+	-- Lines 109-120
 	local function cb()
 		local weapon = managers.blackmarket:get_crafted_category_slot(self:category_slot())
 
@@ -139,12 +139,12 @@ function SkinEditor:select_skin(local_skin_id)
 	managers.menu:active_menu().logic:get_node("skin_editor")
 end
 
--- Lines 120-122
+-- Lines 128-130
 function SkinEditor:reload_current_skin()
 	self:select_skin(self._current_skin)
 end
 
--- Lines 124-144
+-- Lines 132-152
 function SkinEditor:save_skin(skin, name, data)
 	skin:config().name = name or skin:config().name
 	skin:config().data = data or skin:config().data
@@ -166,13 +166,13 @@ function SkinEditor:save_skin(skin, name, data)
 	self._unsaved = false
 end
 
--- Lines 146-257
+-- Lines 154-265
 function SkinEditor:publish_skin(skin, title, desc, changelog, callb)
 	if skin:is_submitting() then
 		return
 	end
 
-	-- Lines 151-186
+	-- Lines 159-194
 	local function cb(result)
 		if result == "success" then
 			local id = managers.blackmarket:skin_editor():get_current_skin():id()
@@ -253,7 +253,7 @@ function SkinEditor:publish_skin(skin, title, desc, changelog, callb)
 		table.insert(copy_data, pair)
 	end
 
-	-- Lines 216-241
+	-- Lines 224-249
 	local function copy_cb(success, message)
 		if success then
 			if skin:submit(changelog, cb) then
@@ -273,7 +273,7 @@ function SkinEditor:publish_skin(skin, title, desc, changelog, callb)
 
 				self._publish_bar:set_position(0, panel:h() - bar_radius * 2)
 
-				-- Lines 224-234
+				-- Lines 232-242
 				local function update_publish(o)
 					local current = 0
 					local skin_editor = managers.blackmarket:skin_editor()
@@ -299,7 +299,7 @@ function SkinEditor:publish_skin(skin, title, desc, changelog, callb)
 		end
 	end
 
-	-- Lines 243-250
+	-- Lines 251-258
 	local function sub(result)
 		if result == "success" then
 			skin:set_staging_path(staging)
@@ -316,9 +316,9 @@ function SkinEditor:publish_skin(skin, title, desc, changelog, callb)
 	end
 end
 
--- Lines 259-288
+-- Lines 267-296
 function SkinEditor:enter_screenshot_mode()
-	-- Lines 260-275
+	-- Lines 268-283
 	local function cb()
 		local weapon = managers.blackmarket:get_crafted_category_slot(self:category_slot())
 
@@ -357,20 +357,20 @@ function SkinEditor:enter_screenshot_mode()
 	})
 end
 
--- Lines 290-294
+-- Lines 298-302
 function SkinEditor:set_screenshot_color(color)
 	managers.menu_scene._bg_unit:set_visible(false)
 	self._screenshot_ws:show()
 	self._screenshot_ws:panel():child("bg"):set_color(color)
 end
 
--- Lines 296-299
+-- Lines 304-307
 function SkinEditor:hide_screenshot_bg()
 	managers.menu_scene._bg_unit:set_visible(true)
 	self._screenshot_ws:hide()
 end
 
--- Lines 301-312
+-- Lines 309-320
 function SkinEditor:_spawn_screenshot_background()
 	managers.menu_scene._bg_unit:set_visible(false)
 
@@ -390,7 +390,7 @@ function SkinEditor:_spawn_screenshot_background()
 	self:hide_screenshot_bg()
 end
 
--- Lines 314-327
+-- Lines 322-335
 function SkinEditor:leave_screenshot_mode()
 	if alive(self._screenshot_ws) then
 		World:newgui():destroy_workspace(self._screenshot_ws)
@@ -404,24 +404,24 @@ function SkinEditor:leave_screenshot_mode()
 	end
 end
 
--- Lines 329-331
+-- Lines 337-339
 function SkinEditor:save_current_skin(name, data)
 	self:save_skin(self:get_current_skin(), name, data)
 end
 
--- Lines 333-336
+-- Lines 341-344
 function SkinEditor:skins(weapon_id)
 	weapon_id = weapon_id or self._current_weapon_id
 
 	return self._global.skins[weapon_id]
 end
 
--- Lines 338-340
+-- Lines 346-348
 function SkinEditor:skin_count(weapon_id)
 	return #self:skins(weapon_id)
 end
 
--- Lines 342-347
+-- Lines 350-355
 function SkinEditor:get_skin(local_skin_id)
 	if not self._global.skins[self._current_weapon_id] then
 		self._global.skins[self._current_weapon_id] = {}
@@ -430,67 +430,67 @@ function SkinEditor:get_skin(local_skin_id)
 	return self._global.skins[self._current_weapon_id][local_skin_id]
 end
 
--- Lines 349-351
+-- Lines 357-359
 function SkinEditor:get_current_skin()
 	return self:get_skin(self._current_skin)
 end
 
--- Lines 353-356
+-- Lines 361-364
 function SkinEditor:set_category_slot(category, slot)
 	self._category = category
 	self._slot = slot
 end
 
--- Lines 358-360
+-- Lines 366-368
 function SkinEditor:category_slot()
 	return self._category, self._slot
 end
 
--- Lines 362-364
+-- Lines 370-372
 function SkinEditor:set_weapon_unit(unit)
 	self._weapon_unit = unit
 end
 
--- Lines 366-368
+-- Lines 374-376
 function SkinEditor:weapon_unit()
 	return self._weapon_unit
 end
 
--- Lines 370-372
+-- Lines 378-380
 function SkinEditor:set_second_weapon_unit(unit)
 	self._second_weapon_unit = unit
 end
 
--- Lines 374-376
+-- Lines 382-384
 function SkinEditor:second_weapon_unit()
 	return self._second_weapon_unit
 end
 
--- Lines 378-380
+-- Lines 386-388
 function SkinEditor:set_weapon_id(weapon_id)
 	self._current_weapon_id = weapon_id
 end
 
--- Lines 382-384
+-- Lines 390-392
 function SkinEditor:unsaved()
 	return self._unsaved and not self._ignore_unsaved
 end
 
--- Lines 386-388
+-- Lines 394-396
 function SkinEditor:set_ignore_unsaved(ignore)
 	self._ignore_unsaved = ignore
 end
 
--- Lines 390-412
+-- Lines 398-420
 function SkinEditor:get_texture_list(skin, path)
 	path = path or skin:path()
 
 	local texture_list = {}
 	local file_list = SystemFS:list(path, false)
 
-	-- Lines 395-402
+	-- Lines 403-410
 	local function valid_ext(filename)
-		local dot_index = string.find(filename, ".[^.]*$")
+		local dot_index = string.find(filename, "%.[^%.]*$")
 
 		if dot_index == 1 then
 			return false
@@ -508,7 +508,7 @@ function SkinEditor:get_texture_list(skin, path)
 	return texture_list
 end
 
--- Lines 437-443
+-- Lines 445-451
 function SkinEditor:get_texture_list_by_type(skin, tex_type)
 	if not tex_type or not self:has_texture_folders(skin) then
 		Application:error("[SkinEditor:get_texture_list_by_type] called without a type")
@@ -519,7 +519,7 @@ function SkinEditor:get_texture_list_by_type(skin, tex_type)
 	return self:get_texture_list(skin, self:get_texture_path_by_type(skin, tex_type))
 end
 
--- Lines 445-477
+-- Lines 453-486
 function SkinEditor:load_textures(skin, path_or_tex_type)
 	if not path_or_tex_type and self:has_texture_folders(skin) then
 		self:_load_textures_by_types(skin)
@@ -547,23 +547,25 @@ function SkinEditor:load_textures(skin, path_or_tex_type)
 			rel_path = rel_path .. tex_type .. "/"
 		end
 
+		print("[SkinEditor] Creating texture entry: " .. tostring(texture_id) .. " pointing at " .. rel_path .. texture)
 		DB:create_entry(type_texture_id, texture_id, rel_path .. texture)
 		table.insert(new_textures, texture_id)
 	end
 
 	if not table.empty(new_textures) then
+		print("[SkinEditor] New textures to be reloaded #", table.size(new_textures))
 		Application:reload_textures(new_textures)
 	end
 end
 
--- Lines 479-483
+-- Lines 488-492
 function SkinEditor:_load_textures_by_types(skin)
 	for _, tex_type in ipairs(self:get_texture_types()) do
 		self:load_textures(skin, tex_type)
 	end
 end
 
--- Lines 485-492
+-- Lines 494-501
 function SkinEditor:get_texture_path_by_type(skin, tex_type)
 	if not tex_type then
 		Application:error("[SkinEditor:get_texture_path_by_type] called without a type")
@@ -574,7 +576,7 @@ function SkinEditor:get_texture_path_by_type(skin, tex_type)
 	return Application:nice_path(skin:path() .. "/" .. tex_type, false)
 end
 
--- Lines 494-502
+-- Lines 503-511
 function SkinEditor:get_texture_string(skin, texture_name, texture_type)
 	if self:has_texture_folders(skin) and texture_type then
 		return string.lower(WorkshopManager.PATH .. string.match(skin:path(), "/(.*)/$") .. "/" .. texture_type .. "/" .. texture_name)
@@ -583,12 +585,12 @@ function SkinEditor:get_texture_string(skin, texture_name, texture_type)
 	end
 end
 
--- Lines 504-506
+-- Lines 513-515
 function SkinEditor:get_texture_idstring(skin, texture_name, texture_type)
 	return Idstring(self:get_texture_string(skin, texture_name, texture_type))
 end
 
--- Lines 508-519
+-- Lines 517-528
 function SkinEditor:check_texture_db(texture, silent)
 	if not DB:has(Idstring("texture"), Idstring(texture)) then
 		Application:error("Texture is not in DB: " .. texture)
@@ -599,7 +601,7 @@ function SkinEditor:check_texture_db(texture, silent)
 	return true
 end
 
--- Lines 521-527
+-- Lines 530-536
 function SkinEditor:check_texture_disk(texture)
 	if not SystemFS:exists(texture) then
 		Application:error("Texture does not exist on disk: " .. texture)
@@ -610,12 +612,12 @@ function SkinEditor:check_texture_disk(texture)
 	return true
 end
 
--- Lines 529-531
+-- Lines 538-540
 function SkinEditor:check_texture(texture)
 	return self:check_texture_db(texture) and self:check_texture_disk(texture)
 end
 
--- Lines 533-551
+-- Lines 542-560
 function SkinEditor:get_screenshot_name()
 	local skin = self:get_current_skin()
 	local path = self:get_screenshot_path(skin)
@@ -635,9 +637,11 @@ function SkinEditor:get_screenshot_name()
 	return path .. "/" .. name
 end
 
--- Lines 553-576
+-- Lines 562-596
 function SkinEditor:apply_changes(cosmetics_data)
 	local skin = self:get_current_skin()
+
+	print("[SkinEditor] Applying changes")
 
 	if cosmetics_data then
 		self._unsaved = true
@@ -654,22 +658,17 @@ function SkinEditor:apply_changes(cosmetics_data)
 		end
 	end
 
-	self:weapon_unit():base()._cosmetics_data = self:get_current_skin():config().data
+	local skin_config_data = self:get_current_skin():config().data
 
-	self:weapon_unit():base():_apply_cosmetics(function()
-		return
-	end)
+	print("[SkinEditor] Applying changes - To wpn base cosmetic data", inspect(skin_config_data))
+	self:weapon_unit():base():change_workshop_cosmetics(skin_config_data, false)
 
 	if self:second_weapon_unit() then
-		self:second_weapon_unit():base()._cosmetics_data = self:get_current_skin():config().data
-
-		self:second_weapon_unit():base():_apply_cosmetics(function()
-			return
-		end)
+		self:second_weapon_unit():base():change_workshop_cosmetics(skin_config_data, false)
 	end
 end
 
--- Lines 578-593
+-- Lines 598-615
 function SkinEditor:remove_texture_by_name(skin, texture_name)
 	local original = deep_clone(skin:config().data)
 	local to_process = {
@@ -677,6 +676,8 @@ function SkinEditor:remove_texture_by_name(skin, texture_name)
 	}
 
 	while #to_process > 0 do
+		print("[SkinEditor] Removing textures to process", #to_process)
+
 		local data = table.remove(to_process)
 
 		for k, v in pairs(data) do
@@ -691,7 +692,7 @@ function SkinEditor:remove_texture_by_name(skin, texture_name)
 	end
 end
 
--- Lines 596-602
+-- Lines 618-624
 function SkinEditor:get_screenshot_rect()
 	local gui_rect = managers.gui_data:full_16_9_size()
 	local x, y = 0, gui_rect.y
@@ -701,19 +702,19 @@ function SkinEditor:get_screenshot_rect()
 	return x, y, w, h
 end
 
--- Lines 604-607
+-- Lines 626-629
 function SkinEditor:has_screenshots(skin)
 	local path = self:get_screenshot_path(skin)
 
 	return SystemFS:exists(path) and #SystemFS:list(path) > 0
 end
 
--- Lines 609-611
+-- Lines 631-633
 function SkinEditor:get_screenshot_path(skin)
 	return Application:nice_path(skin:path(), true) .. "screenshots"
 end
 
--- Lines 613-623
+-- Lines 635-645
 function SkinEditor:get_screenshot_list()
 	local skin = self:get_current_skin()
 
@@ -729,7 +730,7 @@ function SkinEditor:get_screenshot_list()
 	return screenshots
 end
 
--- Lines 625-642
+-- Lines 647-664
 function SkinEditor:get_all_applied_textures(skin)
 	local textures = {}
 	local to_process = {
@@ -756,7 +757,7 @@ function SkinEditor:get_all_applied_textures(skin)
 	return textures
 end
 
--- Lines 644-660
+-- Lines 666-682
 function SkinEditor:remove_literal_paths(skin)
 	local original = deep_clone(skin:config().data)
 	local to_process = {
@@ -778,7 +779,7 @@ function SkinEditor:remove_literal_paths(skin)
 	return original
 end
 
--- Lines 662-681
+-- Lines 684-703
 function SkinEditor:add_literal_paths(skin)
 	local add_type = self:has_texture_folders(skin)
 	local to_process = {
@@ -809,7 +810,7 @@ function SkinEditor:add_literal_paths(skin)
 	end
 end
 
--- Lines 683-685
+-- Lines 705-717
 function SkinEditor:get_texture_types()
 	return {
 		"base_gradient",
@@ -819,7 +820,7 @@ function SkinEditor:get_texture_types()
 	}
 end
 
--- Lines 687-699
+-- Lines 719-732
 function SkinEditor:setup_texture_folders(skin)
 	local texture_types = self:get_texture_types()
 
@@ -834,7 +835,7 @@ function SkinEditor:setup_texture_folders(skin)
 	end
 end
 
--- Lines 701-714
+-- Lines 734-747
 function SkinEditor:has_texture_folders(skin)
 	local has_folders = true
 	local texture_types = self:get_texture_types()
@@ -852,7 +853,7 @@ function SkinEditor:has_texture_folders(skin)
 	return has_folders
 end
 
--- Lines 716-725
+-- Lines 749-758
 function SkinEditor:clear_current_skin()
 	local skin = self:get_current_skin()
 
@@ -865,7 +866,7 @@ function SkinEditor:clear_current_skin()
 	self:reload_current_skin()
 end
 
--- Lines 727-775
+-- Lines 760-808
 function SkinEditor:get_current_weapon_tags()
 	local tags = {}
 
@@ -914,7 +915,7 @@ function SkinEditor:get_current_weapon_tags()
 	return tags
 end
 
--- Lines 824-832
+-- Lines 857-865
 function SkinEditor:get_excluded_weapons()
 	return {
 		"akm_gold",
@@ -925,7 +926,7 @@ function SkinEditor:get_excluded_weapons()
 	}
 end
 
--- Lines 834-843
+-- Lines 867-876
 function SkinEditor:get_excluded_type_categories()
 	return {
 		"ammo",

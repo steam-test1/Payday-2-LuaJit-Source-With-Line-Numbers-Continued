@@ -2,7 +2,7 @@ LootDropTweakData = LootDropTweakData or class()
 
 require("lib/tweak_data/GeneratedLootDropTweakData")
 
--- Lines 5-2554
+-- Lines 5-2538
 function LootDropTweakData:init(tweak_data)
 	self:_init_card_types()
 
@@ -697,7 +697,7 @@ function LootDropTweakData:init(tweak_data)
 	self.global_values.hlm_game.track = true
 	self.global_values.hlm_game.sort_number = 88
 	self.global_values.hlm_game.unique_lock_icon = "guis/textures/pd2/blackmarket/money_lock"
-	self.global_values.hlm_game.hide_unavailable = SystemInfo:distribution() == Idstring("EPIC") and true or false
+	self.global_values.hlm_game.hide_unavailable = IS_EPIC and true or false
 	self.global_values.hlm_game.category = "collaboration"
 	self.global_values.hlm2 = {}
 	self.global_values.hlm2.name_id = "bm_global_value_hlm2"
@@ -712,7 +712,7 @@ function LootDropTweakData:init(tweak_data)
 	self.global_values.hlm2.track = true
 	self.global_values.hlm2.sort_number = 89
 	self.global_values.hlm2.unique_lock_icon = "guis/textures/pd2/blackmarket/money_lock"
-	self.global_values.hlm2.hide_unavailable = SystemInfo:distribution() == Idstring("EPIC") and true or false
+	self.global_values.hlm2.hide_unavailable = IS_EPIC and true or false
 	self.global_values.hlm2.category = "collaboration"
 	self.global_values.hlm2_deluxe = {}
 	self.global_values.hlm2_deluxe.name_id = "bm_global_value_hlm2_deluxe"
@@ -727,7 +727,7 @@ function LootDropTweakData:init(tweak_data)
 	self.global_values.hlm2_deluxe.track = true
 	self.global_values.hlm2_deluxe.sort_number = 90
 	self.global_values.hlm2_deluxe.unique_lock_icon = "guis/textures/pd2/blackmarket/money_lock"
-	self.global_values.hlm2_deluxe.hide_unavailable = SystemInfo:distribution() == Idstring("EPIC") and true or false
+	self.global_values.hlm2_deluxe.hide_unavailable = IS_EPIC and true or false
 	self.global_values.hlm2_deluxe.category = "collaboration"
 	self.global_values.speedrunners = {}
 	self.global_values.speedrunners.name_id = "bm_global_value_speedrunners"
@@ -1755,23 +1755,6 @@ function LootDropTweakData:init(tweak_data)
 	self.global_values.victor_mods_pack_2 = deep_clone(self.global_values.victor_mods_pack_1)
 	self.global_values.victor_mods_pack_2.unlock_id = "bm_menu_locked_cg22_3"
 	self.global_values.victor_mods_pack_2.sort_number = 516
-
-	if SystemInfo:platform() == Idstring("PS3") then
-		self.global_values.sweettooth = {}
-		self.global_values.sweettooth.name_id = "bm_global_value_sweettooth"
-		self.global_values.sweettooth.desc_id = "menu_l_global_value_sweettooth"
-		self.global_values.sweettooth.unlock_id = "bm_global_value_sweettooth_unlock"
-		self.global_values.sweettooth.color = community_color
-		self.global_values.sweettooth.dlc = true
-		self.global_values.sweettooth.chance = 1
-		self.global_values.sweettooth.value_multiplier = tweak_data:get_value("money_manager", "global_value_multipliers", "sweettooth")
-		self.global_values.sweettooth.durability_multiplier = 1
-		self.global_values.sweettooth.drops = true
-		self.global_values.sweettooth.track = true
-		self.global_values.sweettooth.sort_number = 200
-		self.global_values.sweettooth.category = nil
-	end
-
 	self.global_value_list_index = {
 		"normal",
 		"infamous",
@@ -1894,7 +1877,7 @@ function LootDropTweakData:init(tweak_data)
 	self:_create_global_value_list_map()
 end
 
--- Lines 2559-2602
+-- Lines 2543-2586
 function LootDropTweakData:_init_card_types()
 	self.type_to_card_fallback = "upcard_random"
 	self.type_to_card = {
@@ -1927,7 +1910,7 @@ function LootDropTweakData:_init_card_types()
 	}
 end
 
--- Lines 2604-2609
+-- Lines 2588-2593
 function LootDropTweakData:_create_global_value_list_map()
 	self.global_value_list_map = {}
 

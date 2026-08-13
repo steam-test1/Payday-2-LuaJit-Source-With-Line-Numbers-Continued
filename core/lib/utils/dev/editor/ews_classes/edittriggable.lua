@@ -50,12 +50,11 @@ function EditUnitTriggable:init(editor)
 	panel:set_enabled(false)
 end
 
--- Lines 58-67
+-- Lines 58-66
 function EditUnitTriggable:_build_scrolled_window()
 	self._scrolled_window = EWS:ScrolledWindow(self._panel, "", "VSCROLL")
 
 	self._scrolled_window:set_scroll_rate(Vector3(0, 1, 0))
-	self._scrolled_window:set_virtual_size_hints(Vector3(0, 0, 0), Vector3(1, -1, -1))
 
 	self._scrolled_main_sizer = EWS:StaticBoxSizer(self._scrolled_window, "VERTICAL", "Trigger Sequences")
 
@@ -64,7 +63,7 @@ function EditUnitTriggable:_build_scrolled_window()
 	return self._scrolled_window
 end
 
--- Lines 69-121
+-- Lines 68-120
 function EditUnitTriggable:build_element_gui(data)
 	local panel = EWS:Panel(self._scrolled_window, "", "TAB_TRAVERSAL")
 	local sizer = EWS:BoxSizer("HORIZONTAL")
@@ -136,23 +135,23 @@ function EditUnitTriggable:build_element_gui(data)
 	return panel
 end
 
--- Lines 123-125
+-- Lines 122-124
 function EditUnitTriggable:change_sequence(ctrls)
 	self._ctrls.unit:damage():set_trigger_sequence_name(ctrls.id, ctrls.trigger_name, ctrls.trigger:get_value())
 end
 
--- Lines 127-129
+-- Lines 126-128
 function EditUnitTriggable:change_time(ctrls)
 	self._ctrls.unit:damage():set_trigger_sequence_time(ctrls.id, ctrls.trigger_name, ctrls.time:get_value())
 end
 
--- Lines 131-134
+-- Lines 130-133
 function EditUnitTriggable:remove_element(ctrls)
 	self._ctrls.unit:damage():remove_trigger_data(ctrls.trigger_name, ctrls.id)
 	self:update_element_gui()
 end
 
--- Lines 136-142
+-- Lines 135-141
 function EditUnitTriggable:clear_element_gui()
 	self._scrolled_main_sizer:clear()
 
@@ -163,7 +162,7 @@ function EditUnitTriggable:clear_element_gui()
 	self._element_guis = {}
 end
 
--- Lines 144-151
+-- Lines 143-150
 function EditUnitTriggable:add_unit_btn()
 	if not managers.editor then
 		return
@@ -174,9 +173,9 @@ function EditUnitTriggable:add_unit_btn()
 	managers.editor:set_trigger_add_unit(cb)
 end
 
--- Lines 153-159
+-- Lines 152-158
 function EditUnitTriggable:add_unit_list_btn()
-	-- Lines 154-154
+	-- Lines 153-153
 	local function f(unit)
 		return #managers.sequence:get_triggable_sequence_list(unit:name()) > 0
 	end
@@ -188,7 +187,7 @@ function EditUnitTriggable:add_unit_list_btn()
 	end
 end
 
--- Lines 161-183
+-- Lines 160-182
 function EditUnitTriggable:update_element_gui()
 	self:clear_element_gui()
 
@@ -218,14 +217,14 @@ function EditUnitTriggable:update_element_gui()
 	managers.editor:layout_edit_panel()
 end
 
--- Lines 185-188
+-- Lines 184-187
 function EditUnitTriggable:copy_element(ctrls)
 	local trigger_data = self._ctrls.unit:damage():get_trigger_data(ctrls.trigger_name, ctrls.id)
 
 	self._copied_trigger_data = trigger_data
 end
 
--- Lines 190-199
+-- Lines 189-198
 function EditUnitTriggable:paste_element()
 	if self._copied_trigger_data then
 		if alive(self._copied_trigger_data.notify_unit) and self._copied_trigger_data.notify_unit:damage() then
@@ -237,7 +236,7 @@ function EditUnitTriggable:paste_element()
 	end
 end
 
--- Lines 201-207
+-- Lines 200-206
 function EditUnitTriggable:add_unit(unit)
 	local triggable_sequences = managers.sequence:get_triggable_sequence_list(unit:name())
 
@@ -247,14 +246,14 @@ function EditUnitTriggable:add_unit(unit)
 	end
 end
 
--- Lines 209-213
+-- Lines 208-212
 function EditUnitTriggable:change_triggers()
 	if alive(self._ctrls.unit) then
 		self:update_element_gui()
 	end
 end
 
--- Lines 215-230
+-- Lines 214-229
 function EditUnitTriggable:is_editable(unit)
 	if alive(unit) and unit:damage() then
 		local triggers = managers.sequence:get_trigger_list(unit:name())
@@ -276,7 +275,7 @@ function EditUnitTriggable:is_editable(unit)
 	return false
 end
 
--- Lines 232-235
+-- Lines 231-234
 function EditUnitTriggable:dialog_closed()
 	self._btn_toolbar:set_tool_state("ADD_UNIT", false)
 	self:add_unit_btn()

@@ -34,7 +34,7 @@ function SpecialEquipmentPickup:_pickup(unit)
 end
 
 -- Lines 32-35
-function SpecialEquipmentPickup:destroy(...)
-	managers.occlusion:add_occlusion(self._unit)
-	SpecialEquipmentPickup.super.destroy(self, ...)
+function SpecialEquipmentPickup:destroy(unit)
+	managers.occlusion:add_occlusion(unit)
+	SpecialEquipmentPickup.super.destroy(self, unit)
 end

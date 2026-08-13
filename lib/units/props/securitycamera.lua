@@ -1,4 +1,4 @@
-SecurityCamera = SecurityCamera or class()
+SecurityCamera = SecurityCamera or class(UnitBase)
 SecurityCamera.cameras = SecurityCamera.cameras or {}
 SecurityCamera.active_tape_loop_unit = nil
 SecurityCamera.is_security_camera = true
@@ -22,10 +22,10 @@ local tmp_rot1 = Rotation()
 
 -- Lines 24-32
 function SecurityCamera:init(unit)
-	self._unit = unit
+	SecurityCamera.super.init(self, unit, false)
+
 	self._set_access_camera_enabled = true
 
-	self:set_update_enabled(false)
 	self:_set_driving_state(self.update_position)
 	table.insert(SecurityCamera.cameras, self._unit)
 end
@@ -489,8 +489,6 @@ end
 -- Lines 474-525
 function SecurityCamera:_create_detected_attention_object_data(t, u_key, attention_info, settings)
 	attention_info.handler:add_listener("sec_cam_" .. tostring(self._u_key), callback(self, self, "on_detected_attention_obj_modified"))
-	print("[SecurityCamera] _create_detected_attention_object_data ", t, u_key, attention_info.unit)
-	print(inspect(attention_info))
 
 	local att_unit = attention_info.unit
 	local m_pos = attention_info.handler:get_ground_m_pos()
@@ -1148,10 +1146,8 @@ end
 
 -- Lines 1096-1113
 function SecurityCamera:destroy(unit)
+	SecurityCamera.super.destroy(self, unit)
 	table.delete(SecurityCamera.cameras, self._unit)
-
-	self._destroying = true
-
 	self:set_detection_enabled(false)
 
 	if self._call_police_clbk_id then

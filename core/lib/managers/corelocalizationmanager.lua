@@ -4,7 +4,7 @@ core:import("CoreEvent")
 
 LocalizationManager = LocalizationManager or CoreClass.class()
 
--- Lines 66-93
+-- Lines 66-87
 function LocalizationManager:init()
 	Localizer:set_post_processor(CoreEvent.callback(self, self, "_localizer_post_process"))
 
@@ -13,34 +13,27 @@ function LocalizationManager:init()
 	self:set_default_macro("NL", "\n")
 	self:set_default_macro("EMPTY", "")
 
-	local platform_id = SystemInfo:platform()
-	local distribution_id = SystemInfo:distribution()
-
-	if platform_id == Idstring("X360") then
+	if IS_XB1 then
 		self._platform = "X360"
-	elseif platform_id == Idstring("PS3") then
-		self._platform = "PS3"
-	elseif platform_id == Idstring("XB1") then
-		self._platform = "X360"
-	elseif platform_id == Idstring("PS4") then
+	elseif IS_PS4 then
 		self._platform = "PS3"
 	else
 		self._platform = "WIN32"
 
-		if distribution_id == Idstring("STEAM") then
+		if IS_STEAM then
 			self._distribution = "steam"
-		elseif distribution_id == Idstring("EPIC") then
+		elseif IS_EPIC then
 			self._distribution = "epic"
 		end
 	end
 end
 
--- Lines 101-103
+-- Lines 95-97
 function LocalizationManager:add_default_macro(macro, value)
 	self:set_default_macro(macro, value)
 end
 
--- Lines 117-123
+-- Lines 111-117
 function LocalizationManager:set_default_macro(macro, value)
 	if not self._default_macros then
 		self._default_macros = {}
@@ -49,17 +42,17 @@ function LocalizationManager:set_default_macro(macro, value)
 	self._default_macros[macro] = tostring(value)
 end
 
--- Lines 125-127
+-- Lines 119-121
 function LocalizationManager:get_default_macro(macro)
 	return self._default_macros[macro]
 end
 
--- Lines 141-143
+-- Lines 135-137
 function LocalizationManager:exists(string_id)
 	return Localizer:exists(Idstring(string_id))
 end
 
--- Lines 167-194
+-- Lines 161-188
 function LocalizationManager:text(string_id, macros)
 	local return_string = "ERROR: " .. tostring(string_id)
 	local str_id
@@ -83,12 +76,12 @@ function LocalizationManager:text(string_id, macros)
 	return return_string
 end
 
--- Lines 196-199
+-- Lines 190-193
 function LocalizationManager:format_text(text_string)
 	return self:_localizer_post_process(self:_text_localize(text_string, "@", ";"))
 end
 
--- Lines 211-238
+-- Lines 205-232
 function LocalizationManager:_localizer_post_process(string)
 	local localized_string = string
 	local macros = {}
@@ -112,9 +105,9 @@ function LocalizationManager:_localizer_post_process(string)
 	return self:_text_macroize(localized_string, macros)
 end
 
--- Lines 240-243
+-- Lines 234-237
 function LocalizationManager:_text_localize(text)
-	-- Lines 241-241
+	-- Lines 235-235
 	local function func(id)
 		return self:exists(id) and self:text(id) or false
 	end
@@ -122,9 +115,9 @@ function LocalizationManager:_text_localize(text)
 	return self:_text_format(text, "@", ";", func)
 end
 
--- Lines 245-248
+-- Lines 239-242
 function LocalizationManager:_text_macroize(text, macros)
-	-- Lines 246-246
+	-- Lines 240-240
 	local function func(word)
 		return macros[word] or false
 	end
@@ -132,7 +125,7 @@ function LocalizationManager:_text_macroize(text, macros)
 	return self:_text_format(text, "$", ";", func)
 end
 
--- Lines 250-261
+-- Lines 244-255
 function LocalizationManager:_text_format(text, X, Y, func)
 	local match_string = "%b" .. X .. Y
 
