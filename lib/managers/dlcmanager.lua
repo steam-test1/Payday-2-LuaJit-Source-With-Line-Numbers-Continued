@@ -1328,16 +1328,7 @@ function WINDLCManager:_verify_dlcs()
 	end
 end
 
--- Lines 1616-1642
-function WINDLCManager:_check_dlc_data(dlc_data)
-	if dlc_data.entitlement_id and self:has_entitlement(dlc_data.entitlement_id) then
-		return true
-	end
-
-	return false
-end
-
--- Lines 1645-1664
+-- Lines 1647-1665
 function WINDLCManager:chk_content_updated()
 	local has_content
 	local content_updated = false
@@ -1357,7 +1348,7 @@ function WINDLCManager:chk_content_updated()
 	end
 end
 
--- Lines 1667-1684
+-- Lines 1668-1685
 function WINDLCManager:set_entitlements(entitlements)
 	Global.dlc_manager.entitlements = table.list_to_set(entitlements or {})
 	Global.dlc_manager.received_entitlements = true
@@ -1365,19 +1356,19 @@ function WINDLCManager:set_entitlements(entitlements)
 	self:chk_content_updated()
 end
 
--- Lines 1710-1712
+-- Lines 1711-1713
 function WINDLCManager:has_entitlement(entitlement_id)
 	return Global.dlc_manager.entitlements[entitlement_id]
 end
 
--- Lines 1714-1718
+-- Lines 1715-1719
 function WINDLCManager:save(data)
 	WINDLCManager.super.save(self, data)
 
 	data.dlc_entitlements = Global.dlc_manager.entitlements
 end
 
--- Lines 1720-1729
+-- Lines 1721-1730
 function WINDLCManager:load(data)
 	WINDLCManager.super.load(self, data)
 
@@ -1388,7 +1379,7 @@ function WINDLCManager:load(data)
 	end
 end
 
--- Lines 1731-1737
+-- Lines 1732-1738
 function WINDLCManager:init_finalize()
 	WINDLCManager.super.init_finalize(self)
 
@@ -1400,42 +1391,40 @@ end
 WinSteamDLCManager = WinSteamDLCManager or class(WINDLCManager)
 DLCManager.PLATFORM_CLASS_MAP[Idstring("STEAM"):key()] = WinSteamDLCManager
 
--- Lines 1788-1790
+-- Lines 1789-1791
 function WinSteamDLCManager:init()
 	WinSteamDLCManager.super.init(self)
 end
 
--- Lines 1792-1828
+-- Lines 1793-1829
 function WinSteamDLCManager:_init_promoted_dlc_list()
 	WinSteamDLCManager.super._init_promoted_dlc_list(self)
 end
 
--- Lines 1830-1833
+-- Lines 1831-1834
 function WinSteamDLCManager:has_stat(data)
 	local sa_handler = Steam:sa_handler()
 
 	return sa_handler:get_stat(data.stat_id) >= (data.stat_value or 1)
 end
 
-local IDS_STEAM = Idstring("STEAM")
-local IDS_EPIC = Idstring("EPIC")
-
--- Lines 1838-1910
+-- Lines 1837-1919
 function WinSteamDLCManager:_check_dlc_data(dlc_data)
 	if dlc_data.blocked then
 		return false
 	end
 
 	local had_verification = false
+	local verify_all = dlc_data.verify_all
 
 	if dlc_data.app_id or dlc_data.epic_id then
 		had_verification = true
 
 		local app_id
 
-		if Distribution:type() == IDS_STEAM then
+		if IS_STEAM then
 			app_id = dlc_data.app_id
-		elseif Distribution:type() == IDS_EPIC then
+		elseif IS_EPIC then
 			app_id = dlc_data.epic_id
 		end
 
@@ -1443,29 +1432,29 @@ function WinSteamDLCManager:_check_dlc_data(dlc_data)
 
 		if dlc_data.no_install then
 			if Distribution:is_product_owned(app_id) then
-				if not dlc_data.verify_all then
+				if not verify_all then
 					return true
 				end
-			elseif dlc_data.verify_all then
+			elseif verify_all then
 				return false
 			end
-		elseif Distribution:is_product_installed(dlc_data.app_id) then
-			if not dlc_data.verify_all then
+		elseif Distribution:is_product_installed(app_id) then
+			if not verify_all then
 				return true
 			end
-		elseif dlc_data.verify_all then
+		elseif verify_all then
 			return false
 		end
 	end
 
-	if dlc_data.source_id and Distribution:type() == IDS_STEAM then
+	if dlc_data.source_id and IS_STEAM then
 		had_verification = true
 
 		if Steam:is_user_in_source(Steam:userid(), dlc_data.source_id) then
-			if not dlc_data.verify_all then
+			if not verify_all then
 				return true
 			end
-		elseif dlc_data.verify_all then
+		elseif verify_all then
 			return false
 		end
 	end
@@ -1474,27 +1463,27 @@ function WinSteamDLCManager:_check_dlc_data(dlc_data)
 		had_verification = true
 
 		if self:has_entitlement(dlc_data.entitlement_id) then
-			if not dlc_data.verify_all then
+			if not verify_all then
 				return true
 			end
-		elseif dlc_data.verify_all then
+		elseif verify_all then
 			return false
 		end
 	end
 
-	if dlc_data.verify_all then
+	if verify_all then
 		return had_verification
 	end
 
 	return false
 end
 
--- Lines 1912-1918
+-- Lines 1921-1927
 function WinSteamDLCManager:_verify_dlcs()
 	WinSteamDLCManager.super._verify_dlcs(self)
 end
 
--- Lines 1921-1965
+-- Lines 1930-1974
 function WinSteamDLCManager:check_pdth(clbk)
 	if Distribution:type() ~= Idstring("STEAM") then
 		clbk(false, false)
@@ -1519,7 +1508,7 @@ function WinSteamDLCManager:check_pdth(clbk)
 	Global.dlc_manager.has_pdth = has_pdth
 
 	if has_pdth then
-		-- Lines 1941-1960
+		-- Lines 1950-1969
 		local function result_function(success, page)
 			if success then
 				local json_reply_match = "\"([^,:\"]+)\"%s*:%s*\"([^\"]+)\""
@@ -1554,7 +1543,7 @@ function WinSteamDLCManager:check_pdth(clbk)
 	end
 end
 
--- Lines 1969-1980
+-- Lines 1978-1989
 function WinSteamDLCManager:chk_vr_dlc()
 	local steam_vr = Steam:is_app_installed("250820")
 	local payday2_vr = Steam:is_product_installed("826090")
