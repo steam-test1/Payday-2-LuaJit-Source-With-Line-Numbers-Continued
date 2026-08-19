@@ -1202,7 +1202,6 @@ function NarrativeTweakData:init(tweak_data)
 		6000
 	}
 	self.stages.branchbank_random = {
-		briefing_dialog = nil,
 		level_id = "branchbank",
 		mission = "standalone",
 		type = "d",
@@ -1698,7 +1697,6 @@ function NarrativeTweakData:init(tweak_data)
 		200000
 	}
 	self.stages.arm_cro = {
-		briefing_dialog = nil,
 		dlc = "armored_transport",
 		level_id = "arm_cro",
 		type = "d",
@@ -1774,7 +1772,6 @@ function NarrativeTweakData:init(tweak_data)
 		12000
 	}
 	self.stages.arm_und = {
-		briefing_dialog = nil,
 		dlc = "armored_transport",
 		level_id = "arm_und",
 		type = "d",
@@ -1850,7 +1847,6 @@ function NarrativeTweakData:init(tweak_data)
 		12000
 	}
 	self.stages.arm_hcm = {
-		briefing_dialog = nil,
 		dlc = "armored_transport",
 		level_id = "arm_hcm",
 		type = "d",
@@ -1926,7 +1922,6 @@ function NarrativeTweakData:init(tweak_data)
 		12000
 	}
 	self.stages.arm_par = {
-		briefing_dialog = nil,
 		dlc = "armored_transport",
 		level_id = "arm_par",
 		type = "d",
@@ -2002,7 +1997,6 @@ function NarrativeTweakData:init(tweak_data)
 		12000
 	}
 	self.stages.arm_fac = {
-		briefing_dialog = nil,
 		dlc = "armored_transport",
 		level_id = "arm_fac",
 		type = "d",
@@ -2078,7 +2072,6 @@ function NarrativeTweakData:init(tweak_data)
 		12000
 	}
 	self.stages.arm_for = {
-		briefing_dialog = nil,
 		dlc = "armored_transport",
 		level_id = "arm_for",
 		type = "d",
@@ -7844,7 +7837,7 @@ function NarrativeTweakData:job_chain(job_id)
 	return self.jobs[job_id].chain or {}
 end
 
--- Lines 5179-5230
+-- Lines 5179-5273
 function NarrativeTweakData:create_job_name(job_id, skip_professional)
 	local color_ranges = {}
 	local job_tweak = self:job_data(job_id)
@@ -7904,10 +7897,40 @@ function NarrativeTweakData:create_job_name(job_id, skip_professional)
 		})
 	end
 
+	if job_tweak.contact == "skirmish" then
+		local holdout_text = "  " .. managers.localization:to_upper_text("menu_cn_skirmish")
+		local s_len = utf8.len(text_id)
+
+		text_id = text_id .. holdout_text
+
+		local e_len = utf8.len(text_id)
+
+		table.insert(color_ranges, {
+			start = s_len,
+			stop = e_len,
+			color = tweak_data.screen_colors.skirmish_color
+		})
+	end
+
+	if job_tweak.contact == "escape" then
+		local escape_text = "  " .. managers.localization:to_upper_text("hud_e_framing_frame_stage3_mission9_hl")
+		local s_len = utf8.len(text_id)
+
+		text_id = text_id .. escape_text
+
+		local e_len = utf8.len(text_id)
+
+		table.insert(color_ranges, {
+			start = s_len,
+			stop = e_len,
+			color = tweak_data.screen_colors.pro_color
+		})
+	end
+
 	return text_id, color_ranges
 end
 
--- Lines 5234-5246
+-- Lines 5277-5289
 function NarrativeTweakData:test_contract_packages()
 	for i, job_id in ipairs(self._jobs_index) do
 		local package = self.jobs[job_id] and self.jobs[job_id].package
@@ -7924,7 +7947,7 @@ function NarrativeTweakData:test_contract_packages()
 	end
 end
 
--- Lines 5251-5258
+-- Lines 5294-5301
 function NarrativeTweakData:get_jcs_from_stars(stars, infamy)
 	if type(stars) ~= "number" then
 		return {}
@@ -7935,7 +7958,7 @@ function NarrativeTweakData:get_jcs_from_stars(stars, infamy)
 	return (infamy and self.INFAMY_STARS[stars] or self.STARS[stars] or {}).jcs or {}
 end
 
--- Lines 5263-5278
+-- Lines 5306-5321
 function NarrativeTweakData:is_job_locked(job_id)
 	return false
 end

@@ -5141,7 +5141,6 @@ function SkillTreeTweakData:init()
 				icon_atlas = "icons_atlas",
 				name_id = "menu_deck23_1_1",
 				short_id = "menu_deck23_1_1_short",
-				texture_bundle_folder = nil,
 				upgrades = {
 					"mrwi_health_multiplier_1"
 				},
@@ -5155,7 +5154,6 @@ function SkillTreeTweakData:init()
 				icon_atlas = "icons_atlas",
 				name_id = "menu_deck23_1_2",
 				short_id = "menu_deck23_1_2_short",
-				texture_bundle_folder = nil,
 				upgrades = {
 					"mrwi_armor_multiplier_1"
 				},
@@ -5169,7 +5167,6 @@ function SkillTreeTweakData:init()
 				icon_atlas = "icons_atlas",
 				name_id = "menu_deck23_1_3",
 				short_id = "menu_deck23_1_3_short",
-				texture_bundle_folder = nil,
 				upgrades = {
 					"mrwi_dodge_chance_1"
 				},
@@ -5200,7 +5197,6 @@ function SkillTreeTweakData:init()
 				icon_atlas = "icons_atlas",
 				name_id = "menu_deck23_3_1",
 				short_id = "menu_deck23_3_1_short",
-				texture_bundle_folder = nil,
 				upgrades = {
 					"mrwi_health_multiplier_2"
 				},
@@ -5214,7 +5210,6 @@ function SkillTreeTweakData:init()
 				icon_atlas = "icons_atlas",
 				name_id = "menu_deck23_3_2",
 				short_id = "menu_deck23_3_2_short",
-				texture_bundle_folder = nil,
 				upgrades = {
 					"mrwi_armor_multiplier_2"
 				},
@@ -5228,7 +5223,6 @@ function SkillTreeTweakData:init()
 				icon_atlas = "icons_atlas",
 				name_id = "menu_deck23_3_3",
 				short_id = "menu_deck23_3_3_short",
-				texture_bundle_folder = nil,
 				upgrades = {
 					"mrwi_dodge_chance_2"
 				},
@@ -5259,7 +5253,6 @@ function SkillTreeTweakData:init()
 				icon_atlas = "icons_atlas",
 				name_id = "menu_deck23_5_1",
 				short_id = "menu_deck23_5_1_short",
-				texture_bundle_folder = nil,
 				upgrades = {
 					"mrwi_health_multiplier_3"
 				},
@@ -5273,7 +5266,6 @@ function SkillTreeTweakData:init()
 				icon_atlas = "icons_atlas",
 				name_id = "menu_deck23_5_2",
 				short_id = "menu_deck23_5_2_short",
-				texture_bundle_folder = nil,
 				upgrades = {
 					"mrwi_armor_multiplier_3"
 				},
@@ -5287,7 +5279,6 @@ function SkillTreeTweakData:init()
 				icon_atlas = "icons_atlas",
 				name_id = "menu_deck23_5_3",
 				short_id = "menu_deck23_5_3_short",
-				texture_bundle_folder = nil,
 				upgrades = {
 					"mrwi_dodge_chance_3"
 				},
@@ -5318,7 +5309,6 @@ function SkillTreeTweakData:init()
 				icon_atlas = "icons_atlas",
 				name_id = "menu_deck23_7_1",
 				short_id = "menu_deck23_7_1_short",
-				texture_bundle_folder = nil,
 				upgrades = {
 					"mrwi_health_multiplier_4"
 				},
@@ -5332,7 +5322,6 @@ function SkillTreeTweakData:init()
 				icon_atlas = "icons_atlas",
 				name_id = "menu_deck23_7_2",
 				short_id = "menu_deck23_7_2_short",
-				texture_bundle_folder = nil,
 				upgrades = {
 					"mrwi_armor_multiplier_4"
 				},
@@ -5346,7 +5335,6 @@ function SkillTreeTweakData:init()
 				icon_atlas = "icons_atlas",
 				name_id = "menu_deck23_7_3",
 				short_id = "menu_deck23_7_3_short",
-				texture_bundle_folder = nil,
 				upgrades = {
 					"mrwi_dodge_chance_4"
 				},

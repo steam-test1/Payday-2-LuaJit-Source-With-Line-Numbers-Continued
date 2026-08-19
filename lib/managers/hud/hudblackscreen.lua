@@ -52,7 +52,6 @@ function HUDBlackScreen:init(hud)
 	}))
 	local skip_text = self._blackscreen_panel:text({
 		align = "right",
-		font_size = nil,
 		layer = 1,
 		name = "skip_text",
 		vertical = "bottom",
@@ -67,7 +66,6 @@ function HUDBlackScreen:init(hud)
 	}))
 	local loading_text_object = self._blackscreen_panel:text({
 		align = "right",
-		font_size = nil,
 		layer = 1,
 		name = "loading_text",
 		vertical = "bottom",

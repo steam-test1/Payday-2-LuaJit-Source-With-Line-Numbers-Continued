@@ -7,7 +7,7 @@ function MenuMainState:init(game_state_machine)
 	GameState.init(self, "menu_main", game_state_machine)
 end
 
--- Lines 9-344
+-- Lines 9-310
 function MenuMainState:at_enter(old_state)
 	managers.platform:set_playing(false)
 	managers.platform:set_rich_presence_state("Idle")
@@ -32,7 +32,6 @@ function MenuMainState:at_enter(old_state)
 					sustain = 0.5,
 					color = Color.black
 				})
-				managers.menu:external_enter_online_menus()
 				managers.menu:on_enter_lobby()
 			else
 				self:on_server_left()
@@ -83,19 +82,19 @@ function MenuMainState:at_enter(old_state)
 	end
 
 	if IS_PC and not Global.use_telemetry_gamesight_eula_decided then
-		-- Lines 92-95
+		-- Lines 91-94
 		local function gamesight_accept_func()
 			managers.user:set_setting("use_gamesight", true, true)
 			_G.MenuCallbackHandler:save_settings()
 		end
 
-		-- Lines 97-100
+		-- Lines 96-99
 		local function gamesight_deny_func()
 			managers.user:set_setting("use_gamesight", false, true)
 			_G.MenuCallbackHandler:save_settings()
 		end
 
-		-- Lines 102-106
+		-- Lines 101-105
 		local function telemetry_accept_func()
 			managers.user:set_setting("use_telemetry", true, true)
 			_G.MenuCallbackHandler:save_settings()
@@ -105,7 +104,7 @@ function MenuMainState:at_enter(old_state)
 			})
 		end
 
-		-- Lines 108-112
+		-- Lines 107-111
 		local function telemetry_deny_func()
 			managers.user:set_setting("use_telemetry", false, true)
 			_G.MenuCallbackHandler:save_settings()
@@ -115,7 +114,7 @@ function MenuMainState:at_enter(old_state)
 			})
 		end
 
-		-- Lines 114-117
+		-- Lines 113-116
 		local function eula_accept_func()
 			Global.use_telemetry_gamesight_eula_decided = true
 
@@ -125,7 +124,7 @@ function MenuMainState:at_enter(old_state)
 			})
 		end
 
-		-- Lines 119-121
+		-- Lines 118-120
 		local function eula_deny_func()
 			_G.setup:quit()
 		end
@@ -138,52 +137,14 @@ function MenuMainState:at_enter(old_state)
 
 	local has_invite = false
 
-	if IS_PS4 then
-		local is_boot = not Global.psn_boot_invite_checked and Application:is_booted_from_invitation()
+	if Global.boot_invite then
+		has_invite = true
 
-		if not is_boot then
-			Global.boot_invite = Global.boot_invite or nil
-		else
-			Global.boot_invite = {}
-		end
+		local lobby = Global.boot_invite
 
-		if is_boot or Global.boot_invite and not Global.boot_invite.used then
-			has_invite = true
-			Global.boot_invite.used = false
-			Global.boot_invite.pending = true
+		Global.boot_invite = nil
 
-			managers.menu:open_sign_in_menu(function(success)
-				if success then
-					Global.boot_invite = is_boot and PSN:get_boot_invitation() or Global.boot_invite
-					Global.boot_invite.used = false
-					Global.boot_invite.pending = true
-
-					managers.network.matchmake:join_boot_invite()
-				end
-			end)
-		end
-
-		Global.psn_boot_invite_checked = true
-	elseif IS_PC then
-		if Global.boot_invite then
-			has_invite = true
-
-			local lobby = Global.boot_invite
-
-			Global.boot_invite = nil
-
-			managers.network.matchmake:join_server_with_check(lobby)
-		end
-	elseif IS_XB1 then
-		if XboxLive:has_boot_invite() then
-			has_invite = true
-		end
-
-		if Global.boot_invite and next(Global.boot_invite) then
-			has_invite = true
-
-			managers.network.matchmake:join_boot_invite()
-		end
+		managers.network.matchmake:join_server_with_check(lobby)
 	end
 
 	if Global.open_trial_buy then
@@ -202,7 +163,7 @@ function MenuMainState:at_enter(old_state)
 		elseif (managers.experience:current_level() >= tweak_data.safehouse.level_limit or managers.experience:current_rank() > 0) and not managers.custom_safehouse:has_entered_safehouse() and Global.mission_manager.safehouse_ask_amount < 2 and not Global.skip_menu_dialogs then
 			Global.mission_manager.safehouse_ask_amount = Global.mission_manager.safehouse_ask_amount + 1
 
-			-- Lines 261-269
+			-- Lines 227-235
 			local function yes_func()
 				Global.mission_manager.safehouse_ask_amount = 2
 
@@ -250,7 +211,7 @@ function MenuMainState:at_enter(old_state)
 	managers.statistics:check_stats()
 end
 
--- Lines 352-365
+-- Lines 318-331
 function MenuMainState:at_exit(new_state)
 	if new_state:name() ~= "freeflight" then
 		managers.menu:close_menu("menu_main")
@@ -263,7 +224,7 @@ function MenuMainState:at_exit(new_state)
 	end
 end
 
--- Lines 367-398
+-- Lines 333-364
 function MenuMainState:update(t, dt)
 	if self._chk_signed_in_state_t then
 		self._chk_signed_in_state_t = self._chk_signed_in_state_t - dt
@@ -282,7 +243,7 @@ function MenuMainState:update(t, dt)
 	end
 end
 
--- Lines 400-405
+-- Lines 366-371
 function MenuMainState:on_server_left()
 	if managers.network:session() and (managers.network:session():has_recieved_ok_to_load_level() or managers.network:session():closing()) then
 		return
@@ -291,7 +252,7 @@ function MenuMainState:on_server_left()
 	self:_create_server_left_dialog()
 end
 
--- Lines 407-421
+-- Lines 373-387
 function MenuMainState:_create_server_left_dialog()
 	local dialog_data = {}
 
@@ -311,13 +272,13 @@ function MenuMainState:_create_server_left_dialog()
 	managers.system_menu:show(dialog_data)
 end
 
--- Lines 423-429
+-- Lines 389-395
 function MenuMainState:on_server_left_ok_pressed()
 	print("[MenuMainState:on_server_left_ok_pressed]")
 	managers.menu:on_leave_lobby()
 end
 
--- Lines 431-434
+-- Lines 397-400
 function MenuMainState:_create_disconnected_dialog()
 	managers.system_menu:close("server_left_dialog")
 	managers.menu:show_mp_disconnected_internet_dialog({
@@ -325,12 +286,12 @@ function MenuMainState:_create_disconnected_dialog()
 	})
 end
 
--- Lines 436-437
+-- Lines 402-403
 function MenuMainState:on_disconnected()
 	return
 end
 
--- Lines 439-445
+-- Lines 405-411
 function MenuMainState:on_disconnected_from_service()
 	self._chk_signed_in_state_t = 4
 

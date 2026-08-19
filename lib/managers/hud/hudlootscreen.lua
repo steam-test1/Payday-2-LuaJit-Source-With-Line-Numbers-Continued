@@ -743,7 +743,6 @@ function HUDLootScreen:make_lootdrop(lootdrop_data)
 				peer_data.steam_drop = true
 				peer_data.effects = {
 					flip_card = "lootdrop_safe_drop_flip_card",
-					flip_wait = nil,
 					show_item = "lootdrop_safe_drop_show_item",
 					show_wait = "lootdrop_safe_drop_show_wait"
 				}
@@ -784,7 +783,6 @@ function HUDLootScreen:make_lootdrop(lootdrop_data)
 				peer_data.steam_drop = true
 				peer_data.effects = {
 					flip_card = "lootdrop_drill_drop_flip_card",
-					flip_wait = nil,
 					show_item = "lootdrop_drill_drop_show_item",
 					show_wait = "lootdrop_drill_drop_show_wait"
 				}

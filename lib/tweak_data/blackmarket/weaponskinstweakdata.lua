@@ -1,6 +1,6 @@
 require("lib/tweak_data/blackmarket/WeaponColorTemplates")
 
--- Lines 350-39864
+-- Lines 350-39863
 function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins = {}
 	self.weapon_skins.serbu_woodland = {}
@@ -1011,7 +1011,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		barrel = true,
 		barrel_ext = true,
 		exclusive_set = true,
-		gadget = true,
 		slide = true
 	}
 	self.weapon_skins.deagle_bling.base_gradient = Idstring("units/payday2_cash/safes/cf15/base_gradient/base_cf15_004_df")
@@ -10221,6 +10220,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins.judge_same.bonus = "spread_n1"
 	self.weapon_skins.judge_same.reserve_quality = true
 	self.weapon_skins.judge_same.texture_bundle_folder = "same"
+	self.weapon_skins.judge_same.base_gradient = "units/payday2_cash/safes/shared/base_gradient/base_full_white_df"
 	self.weapon_skins.judge_same.parts = {
 		wpn_fps_pis_judge_body_standard = {
 			[Idstring("mtr_mech"):key()] = {
@@ -10271,7 +10271,6 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		}
 	}
 	self.weapon_skins.judge_same.types = {
-		lower_reciever = {},
 		gadget = {
 			pattern = "units/payday2_cash/safes/same/pattern/pattern_same_006_b_df",
 			pattern_gradient = "units/payday2_cash/safes/same/pattern_gradient/pattern_gradient_same_006_df"
@@ -37777,7 +37776,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self:_setup_weapon_color_skins(tweak_data)
 end
 
--- Lines 39867-39999
+-- Lines 39866-39998
 function BlackMarketTweakData:populate_weapon_color_skin(weapon_color_data, variation_data, weapon_id)
 	local weapon_color_skin_template = self.weapon_color_templates.color_skin
 
@@ -37888,7 +37887,7 @@ function BlackMarketTweakData:populate_weapon_color_skin(weapon_color_data, vari
 	end
 end
 
--- Lines 40002-40026
+-- Lines 40001-40025
 function BlackMarketTweakData:create_new_color_skin(name, data, color_skin_data)
 	data.name_id = "bm_wskn_" .. name
 	data.rarity = "common"
@@ -37911,12 +37910,12 @@ function BlackMarketTweakData:create_new_color_skin(name, data, color_skin_data)
 	table.insert(self.weapon_colors, name)
 end
 
--- Lines 40028-40030
+-- Lines 40027-40029
 function BlackMarketTweakData:get_weapon_color_index_string(color_index)
 	return "menu_weapon_color_index_" .. tostring(color_index)
 end
 
--- Lines 40032-43313
+-- Lines 40031-43312
 function BlackMarketTweakData:_setup_weapon_color_skins(tweak_data)
 	self.weapon_color_templates = WeaponColorTemplates.setup_weapon_color_templates(tweak_data)
 	self.weapon_color_pattern_scales = {

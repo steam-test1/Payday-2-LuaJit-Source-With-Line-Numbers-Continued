@@ -82,7 +82,6 @@ function SkillTreeManager:_setup_skill_switches()
 
 		for i = 1, #tweak_data.skilltree.skill_switches do
 			self._global.skill_switches[i] = {
-				name = nil,
 				specialization = false,
 				unlocked = i == 1,
 				points = Application:digest_value(0, true)
@@ -1826,13 +1825,25 @@ function SkillTreeManager:digest_value(value, digest, default)
 	return Application:digest_value(value, digest)
 end
 
--- Lines 1688-1700
+-- Lines 1689-1713
 function SkillTreeManager:get_specialization_value(...)
 	local value = self._global.specializations
+
+	if not value then
+		Application:error("[SkillTreeManager:get_specialization_value] failed at missing 'self._global.specializations'. Likely called too early!")
+
+		return 0
+	end
 
 	for _, index in ipairs({
 		...
 	}) do
+		if not value[index] then
+			Application:error("[SkillTreeManager:get_specialization_value] failed at index", index, ...)
+
+			return 0
+		end
+
 		value = value[index]
 	end
 
@@ -1843,7 +1854,7 @@ function SkillTreeManager:get_specialization_value(...)
 	return self:digest_value(value, false) or 0
 end
 
--- Lines 1702-1708
+-- Lines 1715-1721
 function SkillTreeManager:current_specialization_tier()
 	local idx = self:digest_value(self._global.specializations.current_specialization, false)
 	local current = idx and self._global.specializations[idx]
@@ -1855,12 +1866,12 @@ function SkillTreeManager:current_specialization_tier()
 	return self:digest_value(current.tiers.current_tier)
 end
 
--- Lines 1710-1712
+-- Lines 1723-1725
 function SkillTreeManager:specialization_points()
 	return self._global.specializations.points and self:digest_value(self._global.specializations.points, false) or 0
 end
 
--- Lines 1714-1720
+-- Lines 1727-1733
 function SkillTreeManager:debug_specialization()
 	for i, d in pairs(self._global.specializations) do
 		if type(d) == "string" then
@@ -1869,7 +1880,7 @@ function SkillTreeManager:debug_specialization()
 	end
 end
 
--- Lines 1722-1734
+-- Lines 1735-1747
 function SkillTreeManager:get_specialization_present()
 	local points_present = self:digest_value(self._global.specializations.points_present, false)
 	local xp_present = self:digest_value(self._global.specializations.xp_present, false)
@@ -1885,7 +1896,7 @@ function SkillTreeManager:get_specialization_present()
 	return false, false
 end
 
--- Lines 1736-1773
+-- Lines 1749-1786
 function SkillTreeManager:give_specialization_points(xp)
 	local total_points = self:digest_value(self._global.specializations.total_points, false)
 	local max_points = self:digest_value(self._global.specializations.max_points, false)
@@ -1916,7 +1927,7 @@ function SkillTreeManager:give_specialization_points(xp)
 	self._global.specializations.xp_present = self:digest_value(xp_present, true)
 end
 
--- Lines 1775-1809
+-- Lines 1788-1822
 function SkillTreeManager:refund_specialization_points(points_to_refund, tree)
 	points_to_refund = math.round(points_to_refund)
 
@@ -1953,7 +1964,7 @@ function SkillTreeManager:refund_specialization_points(points_to_refund, tree)
 	self._global.specializations.points = self:digest_value(points + points_to_refund, true)
 end
 
--- Lines 1811-1881
+-- Lines 1824-1894
 function SkillTreeManager:spend_specialization_points(points_to_spend, tree)
 	points_to_spend = math.round(points_to_spend)
 
@@ -2028,7 +2039,7 @@ function SkillTreeManager:spend_specialization_points(points_to_spend, tree)
 	self._global.specializations.points = self:digest_value(self:digest_value(self._global.specializations.points, false) - points_spent, true)
 end
 
--- Lines 1883-1960
+-- Lines 1896-1973
 function SkillTreeManager:_increase_specialization_tier(tree)
 	local tree_data = self._global.specializations[tree]
 
@@ -2113,7 +2124,7 @@ function SkillTreeManager:_increase_specialization_tier(tree)
 	return true
 end
 
--- Lines 1962-2042
+-- Lines 1975-2055
 function SkillTreeManager:set_current_specialization(tree)
 	local current_specialization = self:digest_value(self._global.specializations.current_specialization, false, 1)
 
@@ -2199,17 +2210,17 @@ function SkillTreeManager:set_current_specialization(tree)
 	return true
 end
 
--- Lines 2045-2047
+-- Lines 2058-2060
 function SkillTreeManager:set_specialization_favorite(tree, state)
 	self._global.specializations[tree].favorite = state
 end
 
--- Lines 2049-2051
+-- Lines 2062-2064
 function SkillTreeManager:get_specialization_favorite(tree)
 	return self._global.specializations[tree].favorite
 end
 
--- Lines 2055-2095
+-- Lines 2068-2108
 function SkillTreeManager:set_specialization_choice(tree, tier, new_choice_index)
 	local tree_data = self._global.specializations[tree]
 
@@ -2252,7 +2263,7 @@ function SkillTreeManager:set_specialization_choice(tree, tier, new_choice_index
 	end
 end
 
--- Lines 2098-2111
+-- Lines 2111-2124
 function SkillTreeManager:debug_print_specialization_data(data, times)
 	data = data or self._global.specializations
 	times = times or 0
@@ -2268,7 +2279,7 @@ function SkillTreeManager:debug_print_specialization_data(data, times)
 	end
 end
 
--- Lines 2114-2185
+-- Lines 2127-2198
 function SkillTreeManager:debug()
 	managers.debug:set_enabled(true)
 	managers.debug:set_systems_enabled(true, {
@@ -2281,7 +2292,7 @@ function SkillTreeManager:debug()
 
 	local j = 1
 
-	-- Lines 2122-2169
+	-- Lines 2135-2182
 	local function add_func(skill_id)
 		local skill = tweak_data.skilltree.skills[skill_id]
 		local skill_data = self._global.skills[skill_id]
@@ -2350,7 +2361,7 @@ function SkillTreeManager:debug()
 	end
 end
 
--- Lines 2189-2196
+-- Lines 2202-2209
 function SkillTreeManager:reset()
 	Global.skilltree_manager = nil
 
@@ -2361,7 +2372,7 @@ function SkillTreeManager:reset()
 	end
 end
 
--- Lines 2200-2207
+-- Lines 2213-2220
 function SkillTreeManager:max_points_for_current_level()
 	local rep_upgrade_points = 0
 
@@ -2372,12 +2383,12 @@ function SkillTreeManager:max_points_for_current_level()
 	return managers.experience:current_level() + rep_upgrade_points
 end
 
--- Lines 2209-2211
+-- Lines 2222-2224
 function SkillTreeManager:is_skill_switch_suspended(switch_data)
 	return self:total_points_spent(switch_data) > self:max_points_for_current_level()
 end
 
--- Lines 2213-2227
+-- Lines 2226-2240
 function SkillTreeManager:unsuspend_skill_switch(switch_data)
 	if self._global.skill_switches[switch_data] == self._global.selected_skill_switch then
 		return

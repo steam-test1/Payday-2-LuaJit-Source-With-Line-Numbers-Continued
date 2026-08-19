@@ -66,12 +66,12 @@ function HostNetworkSession:create_local_peer(load_outfit)
 end
 
 -- Lines 78-109
-function HostNetworkSession:on_join_request_received(peer_name, peer_account_type_str, peer_account_id, is_invite, preferred_character, xuid, peer_level, peer_rank, peer_stinger_index, join_attempt_identifier, sender)
+function HostNetworkSession:on_join_request_received(peer_name, peer_account_id, peer_account_type_str, is_invite, preferred_character, xuid, peer_level, peer_rank, peer_stinger_index, join_attempt_identifier, sender)
 	if not self._state.on_join_request_received then
 		return
 	end
 
-	return self._state:on_join_request_received(self._state_data, peer_name, peer_account_type_str, peer_account_id, is_invite, preferred_character, xuid, peer_level, peer_rank, peer_stinger_index, join_attempt_identifier, sender)
+	return self._state:on_join_request_received(self._state_data, peer_name, peer_account_id, peer_account_type_str, is_invite, preferred_character, xuid, peer_level, peer_rank, peer_stinger_index, join_attempt_identifier, sender)
 end
 
 -- Lines 111-117

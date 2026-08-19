@@ -376,7 +376,6 @@ end
 function MenuCallbackHandler:do_content_lootdrop(node)
 	managers.menu:open_node("crimenet_contract_casino_lootdrop", {
 		increase_infamous = false,
-		preferred_item = nil,
 		secure_cards = 0
 	})
 end
@@ -2404,8 +2403,7 @@ function MenuSkinEditorInitiator:modify_node(node, data)
 				{
 					_meta = "option",
 					localize = false,
-					text_id = "DEFAULT",
-					value = nil
+					text_id = "DEFAULT"
 				}
 			}
 
@@ -2436,8 +2434,7 @@ function MenuSkinEditorInitiator:modify_node(node, data)
 				{
 					_meta = "option",
 					localize = false,
-					text_id = "DEFAULT",
-					value = nil
+					text_id = "DEFAULT"
 				}
 			}
 
@@ -2468,8 +2465,7 @@ function MenuSkinEditorInitiator:modify_node(node, data)
 				{
 					_meta = "option",
 					localize = false,
-					text_id = "DEFAULT",
-					value = nil
+					text_id = "DEFAULT"
 				}
 			}
 
@@ -2639,8 +2635,7 @@ function MenuSkinEditorInitiator:modify_node(node, data)
 				{
 					_meta = "option",
 					localize = false,
-					text_id = "DEFAULT",
-					value = nil
+					text_id = "DEFAULT"
 				}
 			}
 
@@ -2885,8 +2880,7 @@ function MenuSkinEditorInitiator:modify_node(node, data)
 			{
 				_meta = "option",
 				localize = false,
-				text_id = "NONE",
-				value = nil
+				text_id = "NONE"
 			}
 		}
 
@@ -3456,8 +3450,7 @@ function MenuCallbackHandler:weapon_skin_changed(item)
 				item:add_option(CoreMenuItemOption.ItemOption:new({
 					_meta = "option",
 					localize = false,
-					text_id = "DEFAULT",
-					value = nil
+					text_id = "DEFAULT"
 				}))
 				skin_editor:load_textures(skin)
 
@@ -3934,8 +3927,7 @@ function MenuArmorSkinEditorInitiator:modify_node(node, data)
 				{
 					_meta = "option",
 					localize = false,
-					text_id = "DEFAULT",
-					value = nil
+					text_id = "DEFAULT"
 				}
 			}
 
@@ -3966,8 +3958,7 @@ function MenuArmorSkinEditorInitiator:modify_node(node, data)
 				{
 					_meta = "option",
 					localize = false,
-					text_id = "DEFAULT",
-					value = nil
+					text_id = "DEFAULT"
 				}
 			}
 
@@ -3998,8 +3989,7 @@ function MenuArmorSkinEditorInitiator:modify_node(node, data)
 				{
 					_meta = "option",
 					localize = false,
-					text_id = "DEFAULT",
-					value = nil
+					text_id = "DEFAULT"
 				}
 			}
 
@@ -4157,8 +4147,7 @@ function MenuArmorSkinEditorInitiator:modify_node(node, data)
 				{
 					_meta = "option",
 					localize = false,
-					text_id = "DEFAULT",
-					value = nil
+					text_id = "DEFAULT"
 				}
 			}
 
@@ -4456,8 +4445,7 @@ function MenuArmorSkinEditorInitiator:modify_node(node, data)
 			{
 				_meta = "option",
 				localize = false,
-				text_id = "NONE",
-				value = nil
+				text_id = "NONE"
 			}
 		}
 
@@ -4777,8 +4765,7 @@ function MenuCallbackHandler:armor_skin_changed(item)
 				item:add_option(CoreMenuItemOption.ItemOption:new({
 					_meta = "option",
 					localize = false,
-					text_id = "DEFAULT",
-					value = nil
+					text_id = "DEFAULT"
 				}))
 				editor:load_textures(skin)
 

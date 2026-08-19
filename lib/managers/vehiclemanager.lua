@@ -172,7 +172,6 @@ function VehicleManager:update_vehicles_data_to_peer(peer)
 				loot_index = loot_index + 1
 
 				local loot2 = {
-					carry_id = nil,
 					multiplier = 0
 				}
 
@@ -183,7 +182,6 @@ function VehicleManager:update_vehicles_data_to_peer(peer)
 				loot_index = loot_index + 1
 
 				local loot3 = {
-					carry_id = nil,
 					multiplier = 0
 				}
 

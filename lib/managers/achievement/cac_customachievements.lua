@@ -157,21 +157,22 @@ local function init_cac_20()
 	managers.savefile:add_load_sequence_done_callback_handler(attempt_award)
 end
 
--- Lines 142-178
+-- Lines 142-182
 local function init_cac_28()
 	local lobby_listener_key = {}
 	local sync_listener_key = {}
 
-	-- Lines 146-151
+	-- Lines 146-155
 	local function attempt_infection(peer)
-		local is_infected = managers.achievment.achievments.cac_28.awarded
+		local cac_achievments = managers.achievment.achievments
+		local is_infected = cac_achievments and cac_achievments.cac_28 and cac_achievments.cac_28.awarded
 
 		if is_infected then
 			peer:send_after_load("get_virus_achievement")
 		end
 	end
 
-	-- Lines 153-158
+	-- Lines 157-162
 	local function on_peer_entered_lobby(peer)
 		local local_peer = managers.network:session():local_peer()
 
@@ -180,7 +181,7 @@ local function init_cac_28()
 		end
 	end
 
-	-- Lines 160-166
+	-- Lines 164-170
 	local function on_peer_added(peer)
 		local local_peer = managers.network:session():local_peer()
 		local in_lobby = game_state_machine:verify_game_state(GameStateFilters.lobby) and local_peer:in_lobby()
@@ -190,7 +191,7 @@ local function init_cac_28()
 		end
 	end
 
-	-- Lines 168-173
+	-- Lines 172-177
 	local function on_peer_sync_complete(peer)
 		local local_peer = managers.network:session():local_peer()
 
@@ -204,7 +205,7 @@ local function init_cac_28()
 	managers.network:add_event_listener(sync_listener_key, "session_peer_sync_complete", on_peer_sync_complete)
 end
 
--- Lines 182-190
+-- Lines 186-194
 function AchievmentManager:init_cac_custom_achievements()
 	init_cac_2()
 	init_cac_3()

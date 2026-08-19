@@ -272,12 +272,7 @@ function PlayerInventoryGui:init(ws, fullscreen_ws, node)
 	}
 	local var_1_0 = {
 		bg_blend_mode = "normal",
-		bg_color = nil,
-		clbks = nil,
-		dual_image = nil,
 		name = "melee",
-		select_anim = nil,
-		unselect_anim = nil,
 		w = box_width,
 		h = box_height,
 		unselected_text = managers.localization:to_upper_text("bm_menu_melee_weapons"),
@@ -4192,7 +4187,6 @@ function PlayerInventoryGui:create_box(params)
 	end
 
 	local box = {
-		parent = nil,
 		selected = false,
 		name = name,
 		layer = layer,
@@ -4408,9 +4402,6 @@ function PlayerInventoryGui:_update_loadout_boxes()
 			local var_1_1 = self.update_box
 			local var_1_2 = box
 			local var_1_3 = {
-				bg_image = nil,
-				dual_image = nil,
-				use_background = nil,
 				text = player_loadout_data[entry].info_text,
 				image = player_loadout_data[entry].item_texture
 			}
@@ -4804,7 +4795,6 @@ function PlayerInventoryGui:previous_melee()
 		local var_1_1 = self.update_box
 		local var_1_2 = box
 		local var_1_3 = {
-			dual_image = nil,
 			text = player_loadout_data.melee_weapon.info_text,
 			image = player_loadout_data.melee_weapon.item_texture
 		}
@@ -4831,7 +4821,6 @@ function PlayerInventoryGui:next_melee()
 		local var_1_1 = self.update_box
 		local var_1_2 = box
 		local var_1_3 = {
-			dual_image = nil,
 			text = player_loadout_data.melee_weapon.info_text,
 			image = player_loadout_data.melee_weapon.item_texture
 		}

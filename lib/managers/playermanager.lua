@@ -680,7 +680,6 @@ end
 -- Lines 655-709
 function PlayerManager:_setup()
 	self._equipment = {
-		selected_index = nil,
 		selections = {},
 		specials = {}
 	}
@@ -6048,7 +6047,6 @@ function PlayerManager:soft_reset()
 	self:reset_used_body_bag()
 
 	self._equipment = {
-		selected_index = nil,
 		selections = {},
 		specials = {}
 	}
