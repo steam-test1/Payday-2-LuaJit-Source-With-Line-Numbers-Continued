@@ -3787,7 +3787,7 @@ function MenuCallbackHandler:get_weapon_color_disabled_icon(item_option)
 	return "guis/textures/pd2/skilltree/padlock"
 end
 
--- Lines 3767-3805
+-- Lines 3767-3810
 function MenuCallbackHandler:sort_weapon_colors(x_option, y_option)
 	if x_option.enabled ~= y_option.enabled then
 		return x_option.enabled
@@ -3816,9 +3816,11 @@ function MenuCallbackHandler:sort_weapon_colors(x_option, y_option)
 
 	local x_gv = x_td.global_value or managers.dlc:dlc_to_global_value(x_td.dlc)
 	local y_gv = y_td.global_value or managers.dlc:dlc_to_global_value(y_td.dlc)
+	local x_gv_sn = x_gv and tweak_data.lootdrop.global_values[x_gv] and tweak_data.lootdrop.global_values[x_gv].sort_number or 0
+	local y_gv_sn = y_gv and tweak_data.lootdrop.global_values[y_gv] and tweak_data.lootdrop.global_values[y_gv].sort_number or 0
 
-	x_sn = (x_gv and tweak_data.lootdrop.global_values[x_gv].sort_number or 0) + (x_td.sort_number or 0)
-	y_sn = (y_gv and tweak_data.lootdrop.global_values[y_gv].sort_number or 0) + (y_td.sort_number or 0)
+	x_sn = x_gv_sn + (x_td.sort_number or 0)
+	y_sn = y_gv_sn + (y_td.sort_number or 0)
 
 	if x_sn ~= y_sn then
 		return x_sn < y_sn
@@ -3827,7 +3829,7 @@ function MenuCallbackHandler:sort_weapon_colors(x_option, y_option)
 	return y_id < x_id
 end
 
--- Lines 3809-3817
+-- Lines 3814-3822
 function MenuCallbackHandler:open_dlc_store_page(dlc, context)
 	local dlc_data = Global.dlc_manager.all_dlc_data[dlc]
 
@@ -3841,7 +3843,7 @@ end
 
 MenuArmorSkinEditorInitiator = MenuArmorSkinEditorInitiator or class(MenuInitiatorBase)
 
--- Lines 3825-4171
+-- Lines 3830-4176
 function MenuArmorSkinEditorInitiator:modify_node(node, data)
 	data = data or {}
 
@@ -3872,7 +3874,7 @@ function MenuArmorSkinEditorInitiator:modify_node(node, data)
 
 		local skin_exists = editor:get_current_skin() and true
 
-		-- Lines 3852-3858
+		-- Lines 3857-3863
 		local function disable_func(item)
 			if not skin_exists and item:name() ~= "new_skin" and item:name() ~= "edit_skin" then
 				item:set_enabled(false)
@@ -4481,7 +4483,7 @@ function MenuArmorSkinEditorInitiator:modify_node(node, data)
 	return node
 end
 
--- Lines 4175-4180
+-- Lines 4180-4185
 function MenuCallbackHandler:clear_armor_skin()
 	local editor = managers.blackmarket:armor_skin_editor()
 
@@ -4490,7 +4492,7 @@ function MenuCallbackHandler:clear_armor_skin()
 	end
 end
 
--- Lines 4182-4188
+-- Lines 4187-4193
 function MenuCallbackHandler:new_armor_skin()
 	local editor = managers.blackmarket:armor_skin_editor()
 
@@ -4501,7 +4503,7 @@ function MenuCallbackHandler:new_armor_skin()
 	end
 end
 
--- Lines 4190-4195
+-- Lines 4195-4200
 function MenuCallbackHandler:select_armor_skin(item)
 	local editor = managers.blackmarket:armor_skin_editor()
 
@@ -4510,7 +4512,7 @@ function MenuCallbackHandler:select_armor_skin(item)
 	end
 end
 
--- Lines 4197-4220
+-- Lines 4202-4225
 function MenuCallbackHandler:delete_armor_skin()
 	local editor = managers.blackmarket:armor_skin_editor()
 
@@ -4539,7 +4541,7 @@ function MenuCallbackHandler:delete_armor_skin()
 	end
 end
 
--- Lines 4222-4227
+-- Lines 4227-4232
 function MenuCallbackHandler:_dialog_delete_armor_skin_yes()
 	local editor = managers.blackmarket:armor_skin_editor()
 
@@ -4548,12 +4550,12 @@ function MenuCallbackHandler:_dialog_delete_armor_skin_yes()
 	end
 end
 
--- Lines 4229-4231
+-- Lines 4234-4236
 function MenuCallbackHandler:_dialog_delete_armor_skin_no()
 	return
 end
 
--- Lines 4233-4242
+-- Lines 4238-4247
 function MenuCallbackHandler:browse_armor_skin()
 	local editor = managers.blackmarket:armor_skin_editor()
 
@@ -4568,7 +4570,7 @@ function MenuCallbackHandler:browse_armor_skin()
 	end
 end
 
--- Lines 4244-4263
+-- Lines 4249-4268
 function MenuCallbackHandler:save_armor_skin()
 	local editor = managers.blackmarket:armor_skin_editor()
 
@@ -4589,17 +4591,17 @@ function MenuCallbackHandler:save_armor_skin()
 	end
 end
 
--- Lines 4265-4267
+-- Lines 4270-4272
 function MenuCallbackHandler:need_convert_armor_skin(item)
 	return false
 end
 
--- Lines 4269-4271
+-- Lines 4274-4276
 function MenuCallbackHandler:convert_armor_skin()
 	return
 end
 
--- Lines 4273-4321
+-- Lines 4278-4326
 function MenuCallbackHandler:on_exit_armor_skin_editor(item)
 	local editor = managers.blackmarket:armor_skin_editor()
 
@@ -4621,13 +4623,13 @@ function MenuCallbackHandler:on_exit_armor_skin_editor(item)
 		return false
 	end
 
-	-- Lines 4290-4293
+	-- Lines 4295-4298
 	local function on_yes()
 		editor:save_current_skin()
 		managers.menu:back(true)
 	end
 
-	-- Lines 4295-4298
+	-- Lines 4300-4303
 	local function on_no()
 		editor:set_ignore_unsaved(true)
 		managers.menu:back(true)
@@ -4663,7 +4665,7 @@ function MenuCallbackHandler:on_exit_armor_skin_editor(item)
 	return true
 end
 
--- Lines 4323-4454
+-- Lines 4328-4459
 function MenuCallbackHandler:armor_skin_changed(item)
 	local key = item:parameters().key or item:name()
 	local value = item:value()
@@ -4809,7 +4811,7 @@ function MenuCallbackHandler:armor_skin_changed(item)
 	editor:apply_changes(skin:config().data)
 end
 
--- Lines 4456-4468
+-- Lines 4461-4473
 function MenuCallbackHandler:editor_get_armor_level()
 	local armor_id
 
@@ -4825,7 +4827,7 @@ function MenuCallbackHandler:editor_get_armor_level()
 	return armor_level
 end
 
--- Lines 4470-4498
+-- Lines 4475-4503
 function MenuCallbackHandler:publish_armor_skin(item)
 	local title = managers.menu:active_menu().logic:selected_node():item("title_input"):input_text()
 	local desc = managers.menu:active_menu().logic:selected_node():item("desc_input"):input_text()
@@ -4864,19 +4866,19 @@ function MenuCallbackHandler:publish_armor_skin(item)
 	editor:publish_skin(skin, title, desc, changelog)
 end
 
--- Lines 4500-4502
+-- Lines 4505-4507
 function MenuCallbackHandler:should_add_changelog_armor_skin(item)
 	return managers.blackmarket:armor_skin_editor():get_current_skin():item_exists()
 end
 
--- Lines 4504-4507
+-- Lines 4509-4512
 function MenuCallbackHandler:armor_screenshot_chosen(item)
 	local skin = managers.blackmarket:armor_skin_editor():get_current_skin()
 
 	skin:config().screenshot = item:value()
 end
 
--- Lines 4512-4546
+-- Lines 4517-4551
 function MenuCallbackHandler:take_armor_screenshot_skin(item)
 	local editor = managers.blackmarket:armor_skin_editor()
 
@@ -4884,7 +4886,7 @@ function MenuCallbackHandler:take_armor_screenshot_skin(item)
 		return
 	end
 
-	-- Lines 4519-4523
+	-- Lines 4524-4528
 	local function screenshot_done(success)
 		managers.mouse_pointer:enable()
 		managers.menu:active_menu().renderer:show()
@@ -4899,7 +4901,7 @@ function MenuCallbackHandler:take_armor_screenshot_skin(item)
 
 	item:set_enabled(false)
 
-	-- Lines 4532-4542
+	-- Lines 4537-4547
 	local function co_screenshot(o)
 		for i = 0, 5 do
 			coroutine.yield()
@@ -4911,7 +4913,7 @@ function MenuCallbackHandler:take_armor_screenshot_skin(item)
 	managers.menu:active_menu().renderer.ws:panel():animate(co_screenshot)
 end
 
--- Lines 4548-4556
+-- Lines 4553-4561
 function MenuCallbackHandler:leave_armor_screenshot_menu(item)
 	local editor = managers.blackmarket:armor_skin_editor()
 
@@ -4921,7 +4923,7 @@ function MenuCallbackHandler:leave_armor_screenshot_menu(item)
 	end
 end
 
--- Lines 4558-4579
+-- Lines 4563-4584
 function MenuCallbackHandler:armor_screenshot_color_changed(item)
 	local skin_editor = managers.blackmarket:armor_skin_editor()
 
@@ -4946,7 +4948,7 @@ function MenuCallbackHandler:armor_screenshot_color_changed(item)
 	end
 end
 
--- Lines 4581-4589
+-- Lines 4586-4594
 function MenuCallbackHandler:armor_screenshots_hide_weapons(item)
 	for _, data in pairs(managers.menu_scene._weapon_units) do
 		for _, u_data in pairs(data) do
@@ -4957,7 +4959,7 @@ function MenuCallbackHandler:armor_screenshots_hide_weapons(item)
 	end
 end
 
--- Lines 4591-4599
+-- Lines 4596-4604
 function MenuCallbackHandler:armor_screenshots_show_weapons(item)
 	for _, data in pairs(managers.menu_scene._weapon_units) do
 		for _, u_data in pairs(data) do
@@ -4968,7 +4970,7 @@ function MenuCallbackHandler:armor_screenshots_show_weapons(item)
 	end
 end
 
--- Lines 4602-4607
+-- Lines 4607-4612
 function MenuCallbackHandler:_armor_screenshots_set_weapon_visibility(unit, state)
 	unit:set_enabled(state)
 
@@ -4977,7 +4979,7 @@ function MenuCallbackHandler:_armor_screenshots_set_weapon_visibility(unit, stat
 	end
 end
 
--- Lines 4609-4615
+-- Lines 4614-4620
 function MenuCallbackHandler:select_armor_skin_level(item)
 	managers.menu_scene:set_character_armor(item:name())
 
@@ -4988,7 +4990,7 @@ function MenuCallbackHandler:select_armor_skin_level(item)
 	end
 end
 
--- Lines 4617-4619
+-- Lines 4622-4624
 function MenuCallbackHandler:select_armor_skin_pose(item)
 	managers.menu_scene:_set_character_unit_pose(item:name(), managers.menu_scene._character_unit)
 end

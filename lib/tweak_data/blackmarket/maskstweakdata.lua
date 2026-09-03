@@ -3,7 +3,7 @@ local allow_halloween_lootdrop = is_nextgen_console
 
 allow_halloween_lootdrop = true
 
--- Lines 10-10607
+-- Lines 10-10720
 function BlackMarketTweakData:_init_masks(tweak_data)
 	self.masks = {}
 	self.masks.character_locked = {}

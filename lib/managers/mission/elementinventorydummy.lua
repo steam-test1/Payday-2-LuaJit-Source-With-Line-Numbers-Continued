@@ -33,7 +33,7 @@ function ElementInventoryDummy:on_executed(instigator)
 	ElementInventoryDummy.super.on_executed(self, instigator)
 end
 
--- Lines 34-54
+-- Lines 34-61
 function ElementInventoryDummy:_spawn_weapon(category, slot, position, rotation)
 	if not Network:is_server() then
 		return
@@ -45,19 +45,19 @@ function ElementInventoryDummy:_spawn_weapon(category, slot, position, rotation)
 		return
 	end
 
-	local slot_data = category[slot]
+	local crafted = category[slot]
 
-	if not slot_data then
+	if not crafted then
 		return
 	end
 
-	self._factory_id = slot_data.factory_id
+	self._factory_id = crafted.factory_id
 
-	self:assemble_weapon(slot_data.factory_id, slot_data.blueprint, position, rotation)
-	managers.sync:add_synced_weapon_blueprint(self._id, slot_data.factory_id, slot_data.blueprint)
+	self:assemble_weapon(crafted.factory_id, crafted.blueprint, position, rotation)
+	managers.sync:add_synced_weapon_blueprint(self._id, crafted.factory_id, crafted.blueprint)
 end
 
--- Lines 56-72
+-- Lines 63-79
 function ElementInventoryDummy:assemble_weapon(factory_id, blueprint, position, rotation)
 	position = position or self._values.position
 	rotation = rotation or self._values.rotation
@@ -72,7 +72,7 @@ function ElementInventoryDummy:assemble_weapon(factory_id, blueprint, position, 
 	self._weapon_unit:set_moving(true)
 end
 
--- Lines 74-78
+-- Lines 81-85
 function ElementInventoryDummy:_assemble_completed(parts, blueprint)
 	self._parts = parts
 	self._blueprint = blueprint
@@ -80,7 +80,7 @@ function ElementInventoryDummy:_assemble_completed(parts, blueprint)
 	self._weapon_unit:set_moving(true)
 end
 
--- Lines 82-102
+-- Lines 89-117
 function ElementInventoryDummy:_spawn_mask(category, slot, position, rotation)
 	if not Network:is_server() then
 		return
@@ -92,19 +92,19 @@ function ElementInventoryDummy:_spawn_mask(category, slot, position, rotation)
 		return
 	end
 
-	local slot_data = category[slot]
+	local crafted = category[slot]
 
-	if not slot_data then
+	if not crafted then
 		return
 	end
 
-	self._mask_id = slot_data.mask_id
+	self._mask_id = crafted.mask_id
 
-	self:assemble_mask(slot_data.mask_id, slot_data.blueprint, position, rotation)
-	managers.sync:add_synced_mask_blueprint(self._id, slot_data.mask_id, slot_data.blueprint)
+	self:assemble_mask(crafted.mask_id, crafted.blueprint, position, rotation)
+	managers.sync:add_synced_mask_blueprint(self._id, crafted.mask_id, crafted.blueprint)
 end
 
--- Lines 104-125
+-- Lines 119-140
 function ElementInventoryDummy:assemble_mask(mask_id, blueprint, position, rotation)
 	position = position or self._values.position
 	rotation = rotation or self._values.rotation
@@ -125,14 +125,14 @@ function ElementInventoryDummy:assemble_mask(mask_id, blueprint, position, rotat
 	self._mask_unit:set_moving(true)
 end
 
--- Lines 129-133
+-- Lines 144-148
 function ElementInventoryDummy:pre_destroy()
 	ElementInventoryDummy.super.pre_destroy(self)
 	self:_destroy_weapon()
 	self:_destroy_mask()
 end
 
--- Lines 135-145
+-- Lines 150-160
 function ElementInventoryDummy:_destroy_weapon()
 	if alive(self._weapon_unit) then
 		managers.weapon_factory:disassemble(self._parts)
@@ -145,7 +145,7 @@ function ElementInventoryDummy:_destroy_weapon()
 	end
 end
 
--- Lines 147-157
+-- Lines 162-172
 function ElementInventoryDummy:_destroy_mask()
 	if alive(self._mask_unit) then
 		for _, linked_unit in ipairs(self._mask_unit:children()) do

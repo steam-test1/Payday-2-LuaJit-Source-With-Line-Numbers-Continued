@@ -1022,7 +1022,7 @@ function GenericDLCManager:has_mrwi_deck()
 	return managers.event_jobs:has_completed_and_claimed_rewards("cg22_community_4")
 end
 
--- Lines 1109-1114
+-- Lines 1109-1115
 function GenericDLCManager:has_mrwi_deck_equipped_mimicing(choice)
 	local has_deck_unlocked = self:has_mrwi_deck()
 	local has_deck_equipped = managers.skilltree:get_specialization_value("current_specialization") == 23
@@ -1031,29 +1031,29 @@ function GenericDLCManager:has_mrwi_deck_equipped_mimicing(choice)
 	return has_deck_unlocked and has_deck_equipped and has_choice
 end
 
--- Lines 1117-1119
+-- Lines 1118-1120
 function GenericDLCManager:has_chico_or_mrwi_deck()
 	return self:has_chico() or self:has_mrwi_deck_equipped_mimicing(17)
 end
 
--- Lines 1123-1125
+-- Lines 1124-1126
 function GenericDLCManager:has_ecp_or_mrwi_deck()
 	return self:has_ecp() or self:has_mrwi_deck_equipped_mimicing(20)
 end
 
--- Lines 1132-1134
+-- Lines 1133-1135
 function GenericDLCManager:has_goty_all_dlc_bundle_2014()
 	return self:has_goty_weapon_bundle_2014() and self:has_goty_heist_bundle_2014() and self:is_dlcs_unlocked({
 		"character_pack_clover"
 	})
 end
 
--- Lines 1165-1168
+-- Lines 1166-1169
 function GenericDLCManager:has_soundtrack_or_cce()
 	return self:is_dlc_unlocked("soundtrack") or self:is_dlc_unlocked("cce")
 end
 
--- Lines 1172-1196
+-- Lines 1173-1197
 function GenericDLCManager:has_freed_old_hoxton(data)
 	if IS_PC then
 		if self:is_dlc_unlocked("pd2_clan") then
@@ -1077,12 +1077,12 @@ function GenericDLCManager:has_freed_old_hoxton(data)
 	return false
 end
 
--- Lines 1200-1202
+-- Lines 1201-1203
 function GenericDLCManager:has_armored_transport_and_intel(data)
 	return self:is_dlc_unlocked("armored_transport") and self:has_achievement(data)
 end
 
--- Lines 1206-1220
+-- Lines 1207-1221
 function GenericDLCManager:has_hlm_game()
 	local verified = false
 
@@ -1102,7 +1102,7 @@ function GenericDLCManager:has_hlm_game()
 	return verified
 end
 
--- Lines 1225-1244
+-- Lines 1226-1245
 function GenericDLCManager:has_hlm2()
 	local verified = false
 
@@ -1124,7 +1124,7 @@ function GenericDLCManager:has_hlm2()
 	return verified
 end
 
--- Lines 1248-1267
+-- Lines 1249-1268
 function GenericDLCManager:has_hlm2_deluxe()
 	local verified = false
 
@@ -1146,12 +1146,12 @@ function GenericDLCManager:has_hlm2_deluxe()
 	return verified
 end
 
--- Lines 1272-1274
+-- Lines 1273-1275
 function GenericDLCManager:has_sawp_dlc_or_achievement(data)
 	return self:is_dlc_unlocked("sawp") or self:has_achievement(data)
 end
 
--- Lines 1280-1288
+-- Lines 1281-1289
 function GenericDLCManager:has_srtr_or_srtr2()
 	local verified = Global.dlc_manager.all_dlc_data.srtr and Global.dlc_manager.all_dlc_data.srtr.verified
 
@@ -1160,38 +1160,38 @@ function GenericDLCManager:has_srtr_or_srtr2()
 	return verified
 end
 
--- Lines 1317-1319
+-- Lines 1318-1320
 function GenericDLCManager:has_parent_dlc(data)
 	return data and data.parent_dlc and self:is_dlc_unlocked(data.parent_dlc)
 end
 
--- Lines 1323-1326
+-- Lines 1324-1327
 function GenericDLCManager:has_achievement(data)
 	local achievement = managers.achievment and data and data.achievement_id and managers.achievment:get_info(data.achievement_id)
 
 	return achievement and achievement.awarded or false
 end
 
--- Lines 1339-1342
+-- Lines 1340-1343
 function GenericDLCManager:has_achievement_milestone(data)
 	local milestone = data and data.milestone_id and managers.achievment:get_milestone(data.milestone_id)
 
 	return milestone.awarded
 end
 
--- Lines 1353-1355
+-- Lines 1354-1356
 function GenericDLCManager:has_stat(data)
 	return true
 end
 
--- Lines 1358-1360
+-- Lines 1359-1361
 function GenericDLCManager:has_dlc_or_soundtrack_or_cce(dlc)
 	return managers.dlc:is_dlc_unlocked(dlc) or managers.dlc:has_soundtrack_or_cce()
 end
 
 WINDLCManager = WINDLCManager or class(GenericDLCManager)
 
--- Lines 1367-1412
+-- Lines 1368-1413
 function WINDLCManager:init()
 	WINDLCManager.super.init(self)
 
@@ -1219,7 +1219,7 @@ function WINDLCManager:init()
 	end
 end
 
--- Lines 1414-1422
+-- Lines 1415-1423
 function WINDLCManager:_chk_blocked()
 	if self.blocked_dlcs then
 		for blocked_dlc_name, _ in pairs(self.blocked_dlcs) do
@@ -1230,7 +1230,7 @@ function WINDLCManager:_chk_blocked()
 	end
 end
 
--- Lines 1424-1600
+-- Lines 1425-1601
 function WINDLCManager:_init_promoted_dlc_list()
 	self._promoted_dlc_list = {
 		"deep",
@@ -1312,12 +1312,12 @@ function WINDLCManager:_init_promoted_dlc_list()
 	}
 end
 
--- Lines 1602-1604
+-- Lines 1603-1605
 function WINDLCManager:get_promoted_dlc_list()
 	return self._promoted_dlc_list
 end
 
--- Lines 1606-1614
+-- Lines 1607-1615
 function WINDLCManager:_verify_dlcs()
 	for dlc_name, dlc_data in pairs(Global.dlc_manager.all_dlc_data) do
 		if not dlc_data.verified and self:_check_dlc_data(dlc_data) then
@@ -1326,7 +1326,7 @@ function WINDLCManager:_verify_dlcs()
 	end
 end
 
--- Lines 1647-1665
+-- Lines 1648-1666
 function WINDLCManager:chk_content_updated()
 	local has_content
 	local content_updated = false
@@ -1346,7 +1346,7 @@ function WINDLCManager:chk_content_updated()
 	end
 end
 
--- Lines 1668-1685
+-- Lines 1669-1686
 function WINDLCManager:set_entitlements(entitlements)
 	Global.dlc_manager.entitlements = table.list_to_set(entitlements or {})
 	Global.dlc_manager.received_entitlements = true
@@ -1354,19 +1354,19 @@ function WINDLCManager:set_entitlements(entitlements)
 	self:chk_content_updated()
 end
 
--- Lines 1711-1713
+-- Lines 1712-1714
 function WINDLCManager:has_entitlement(entitlement_id)
 	return Global.dlc_manager.entitlements[entitlement_id]
 end
 
--- Lines 1715-1719
+-- Lines 1716-1720
 function WINDLCManager:save(data)
 	WINDLCManager.super.save(self, data)
 
 	data.dlc_entitlements = Global.dlc_manager.entitlements
 end
 
--- Lines 1721-1730
+-- Lines 1722-1731
 function WINDLCManager:load(data)
 	WINDLCManager.super.load(self, data)
 
@@ -1377,7 +1377,7 @@ function WINDLCManager:load(data)
 	end
 end
 
--- Lines 1732-1738
+-- Lines 1733-1739
 function WINDLCManager:init_finalize()
 	WINDLCManager.super.init_finalize(self)
 
@@ -1389,24 +1389,24 @@ end
 WinSteamDLCManager = WinSteamDLCManager or class(WINDLCManager)
 DLCManager.PLATFORM_CLASS_MAP[Idstring("STEAM"):key()] = WinSteamDLCManager
 
--- Lines 1789-1791
+-- Lines 1790-1792
 function WinSteamDLCManager:init()
 	WinSteamDLCManager.super.init(self)
 end
 
--- Lines 1793-1829
+-- Lines 1794-1830
 function WinSteamDLCManager:_init_promoted_dlc_list()
 	WinSteamDLCManager.super._init_promoted_dlc_list(self)
 end
 
--- Lines 1831-1834
+-- Lines 1832-1835
 function WinSteamDLCManager:has_stat(data)
 	local sa_handler = Steam:sa_handler()
 
 	return sa_handler:get_stat(data.stat_id) >= (data.stat_value or 1)
 end
 
--- Lines 1837-1919
+-- Lines 1838-1920
 function WinSteamDLCManager:_check_dlc_data(dlc_data)
 	if dlc_data.blocked then
 		return false
@@ -1476,12 +1476,12 @@ function WinSteamDLCManager:_check_dlc_data(dlc_data)
 	return false
 end
 
--- Lines 1921-1927
+-- Lines 1922-1928
 function WinSteamDLCManager:_verify_dlcs()
 	WinSteamDLCManager.super._verify_dlcs(self)
 end
 
--- Lines 1930-1974
+-- Lines 1931-1975
 function WinSteamDLCManager:check_pdth(clbk)
 	if Distribution:type() ~= Idstring("STEAM") then
 		clbk(false, false)
@@ -1506,7 +1506,7 @@ function WinSteamDLCManager:check_pdth(clbk)
 	Global.dlc_manager.has_pdth = has_pdth
 
 	if has_pdth then
-		-- Lines 1950-1969
+		-- Lines 1951-1970
 		local function result_function(success, page)
 			if success then
 				local json_reply_match = "\"([^,:\"]+)\"%s*:%s*\"([^\"]+)\""
@@ -1541,7 +1541,7 @@ function WinSteamDLCManager:check_pdth(clbk)
 	end
 end
 
--- Lines 1978-1989
+-- Lines 1979-1990
 function WinSteamDLCManager:chk_vr_dlc()
 	local steam_vr = Steam:is_app_installed("250820")
 	local payday2_vr = Steam:is_product_installed("826090")
