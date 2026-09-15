@@ -303,9 +303,10 @@ HuskPlayerMovement.clean_states = {
 	player_turret = true
 }
 
--- Lines 165-265
+-- Lines 165-266
 function HuskPlayerMovement:init(unit)
 	self._unit = unit
+	self._is_server = Network:is_server()
 	self._machine = unit:anim_state_machine()
 	self._crouch_detection_offset_z = mvec3_z(tweak_data.player.stances.default.crouched.head.translation)
 	self._m_pos = unit:position()
@@ -385,7 +386,7 @@ function HuskPlayerMovement:init(unit)
 	}
 end
 
--- Lines 269-292
+-- Lines 270-301
 function HuskPlayerMovement:post_init()
 	self._ext_anim = self._unit:anim_data()
 	self._ext_base = self._unit:base()
@@ -408,15 +409,25 @@ function HuskPlayerMovement:post_init()
 
 	self._attention_handler:setup_attention_positions(self._m_detect_pos, self._m_newest_pos)
 
+	local groupai_state = managers.groupai:state()
+
+	self._can_reserve_positions = self._is_server and groupai_state:enemy_weapons_hot() and true or nil
 	self._enemy_weapons_hot_listen_id = "PlayerMovement" .. tostring(self._unit:key())
 
-	managers.groupai:state():add_listener(self._enemy_weapons_hot_listen_id, {
+	groupai_state:add_listener(self._enemy_weapons_hot_listen_id, {
 		"enemy_weapons_hot"
-	}, callback(self, PlayerMovement, "clbk_enemy_weapons_hot"))
+	}, callback(self, self, "clbk_enemy_weapons_hot"))
 	self._unit:network():send("set_arm_setting", ArmSetting.SET_ARM_ANIMATOR_PRESENT, self._arm_animation_enabled and 1 or 0)
 end
 
--- Lines 296-311
+-- Lines 303-307
+function HuskPlayerMovement:clbk_enemy_weapons_hot()
+	PlayerMovement.clbk_enemy_weapons_hot(self)
+
+	self._can_reserve_positions = self._is_server or nil
+end
+
+-- Lines 311-326
 function HuskPlayerMovement:set_character_anim_variables()
 	local char_name = managers.criminals:character_name_by_unit(self._unit)
 
@@ -435,7 +446,7 @@ function HuskPlayerMovement:set_character_anim_variables()
 	self._unit:contour():add("teammate", nil, nil, color_id and tweak_data.peer_vector_colors[color_id])
 end
 
--- Lines 315-327
+-- Lines 330-342
 function HuskPlayerMovement:check_visual_equipment()
 	local peer_id = managers.network:session():peer_by_unit(self._unit):id()
 	local deploy_data = managers.player:get_synced_deployable_equipment(peer_id)
@@ -451,7 +462,7 @@ function HuskPlayerMovement:check_visual_equipment()
 	end
 end
 
--- Lines 329-336
+-- Lines 344-351
 function HuskPlayerMovement:set_visual_deployable_equipment(deployable, amount)
 	local char_name = managers.criminals:character_name_by_unit(self._unit)
 
@@ -464,12 +475,12 @@ function HuskPlayerMovement:set_visual_deployable_equipment(deployable, amount)
 	})
 end
 
--- Lines 338-340
+-- Lines 353-355
 function HuskPlayerMovement:carry_id()
 	return self._carry_id
 end
 
--- Lines 342-365
+-- Lines 357-380
 function HuskPlayerMovement:set_visual_carry(carry_id)
 	self._carry_id = carry_id
 
@@ -496,7 +507,7 @@ function HuskPlayerMovement:set_visual_carry(carry_id)
 	end
 end
 
--- Lines 367-377
+-- Lines 382-392
 function HuskPlayerMovement:_destroy_current_carry_unit()
 	if alive(self._current_carry_unit) then
 		self._current_carry_unit:set_slot(0)
@@ -509,7 +520,7 @@ function HuskPlayerMovement:_destroy_current_carry_unit()
 	end
 end
 
--- Lines 379-413
+-- Lines 394-428
 function HuskPlayerMovement:_create_carry_unit(unit_name)
 	self:_destroy_current_carry_unit()
 
@@ -545,38 +556,38 @@ function HuskPlayerMovement:_create_carry_unit(unit_name)
 	return true
 end
 
--- Lines 417-419
+-- Lines 432-434
 function HuskPlayerMovement:set_movement_updator(func)
 	self._updator_movement = func
 end
 
--- Lines 421-423
+-- Lines 436-438
 function HuskPlayerMovement:clear_movement_updator()
 	self._updator_movement = nil
 end
 
--- Lines 425-427
+-- Lines 440-442
 function HuskPlayerMovement:set_attention_updator(func)
 	self._updator_attention = func
 end
 
--- Lines 429-431
+-- Lines 444-446
 function HuskPlayerMovement:clear_attention_updator()
 	self._updator_attention = nil
 end
 
--- Lines 435-437
+-- Lines 450-452
 function HuskPlayerMovement:_has_finished_loading()
 	return not self._load_data
 end
 
--- Lines 441-446
+-- Lines 456-461
 function HuskPlayerMovement:_use_weapon_fire_dir()
 	do return self._arm_animator:enabled() and not self._arm_animator:is_blocked() end
 	return false
 end
 
--- Lines 450-556
+-- Lines 465-571
 function HuskPlayerMovement:update(unit, t, dt)
 	if not self:_has_finished_loading() then
 		return
@@ -681,7 +692,7 @@ function HuskPlayerMovement:update(unit, t, dt)
 	self._arm_animator:update(t, dt)
 end
 
--- Lines 566-575
+-- Lines 581-590
 function HuskPlayerMovement:sync_look_dir(fwd, yaw, pitch)
 	mvec3_norm(fwd)
 
@@ -692,7 +703,7 @@ function HuskPlayerMovement:sync_look_dir(fwd, yaw, pitch)
 	end
 end
 
--- Lines 579-612
+-- Lines 594-627
 function HuskPlayerMovement:sync_arm_frame_pose(frame_index, pose)
 	if self._arm_animation_enabled then
 		if not self._arm_animator:enabled() then
@@ -725,7 +736,7 @@ function HuskPlayerMovement:sync_arm_frame_pose(frame_index, pose)
 	end
 end
 
--- Lines 614-630
+-- Lines 629-645
 function HuskPlayerMovement:set_arm_setting(setting_id, setting_param)
 	if self._arm_animation_enabled and setting_id == ArmSetting.SET_ARM_ANIMATOR_ENABLED then
 		if setting_param > 0 then
@@ -743,19 +754,19 @@ function HuskPlayerMovement:set_arm_setting(setting_id, setting_param)
 	end
 end
 
--- Lines 632-635
+-- Lines 647-650
 function HuskPlayerMovement:set_primary_hand(hand)
 	self._desired_primary_hand = hand
 
 	self:refresh_primary_hand()
 end
 
--- Lines 637-639
+-- Lines 652-654
 function HuskPlayerMovement:primary_hand()
 	return self._primary_hand
 end
 
--- Lines 641-678
+-- Lines 656-693
 function HuskPlayerMovement:refresh_primary_hand(force)
 	local enabled = self:arm_animation_enabled()
 
@@ -799,17 +810,17 @@ function HuskPlayerMovement:refresh_primary_hand(force)
 	self._unit:inventory():refresh_primary_hand()
 end
 
--- Lines 680-682
+-- Lines 695-697
 function HuskPlayerMovement:arm_animation_enabled()
 	return self._arm_animation_enabled and self._arm_animator:enabled()
 end
 
--- Lines 684-686
+-- Lines 699-701
 function HuskPlayerMovement:arm_animation_blocked()
 	return self._arm_animation_enabled and self._arm_animator:enabled() and self._arm_animator:is_blocked()
 end
 
--- Lines 688-700
+-- Lines 703-715
 function HuskPlayerMovement:unblock_melee()
 	if not self:arm_animation_enabled() then
 		return
@@ -824,7 +835,7 @@ function HuskPlayerMovement:unblock_melee()
 	end
 end
 
--- Lines 702-724
+-- Lines 717-739
 function HuskPlayerMovement:block_melee()
 	if not self:arm_animation_enabled() then
 		return
@@ -847,17 +858,17 @@ function HuskPlayerMovement:block_melee()
 	end
 end
 
--- Lines 726-728
+-- Lines 741-743
 function HuskPlayerMovement:anim_clbk_reload_exit()
 	self:unblock_melee()
 end
 
--- Lines 730-732
+-- Lines 745-747
 function HuskPlayerMovement:on_weapon_add()
 	self:refresh_primary_hand()
 end
 
--- Lines 734-745
+-- Lines 749-760
 function HuskPlayerMovement:clbk_arm_animator(enabled)
 	if not self:arm_animation_enabled() then
 		return
@@ -870,7 +881,7 @@ function HuskPlayerMovement:clbk_arm_animator(enabled)
 	end
 end
 
--- Lines 751-755
+-- Lines 766-770
 function HuskPlayerMovement:set_look_dir_instant(fwd)
 	mvec3_set(self._look_dir, fwd)
 	self._look_modifier:set_target_y(self._look_dir)
@@ -878,77 +889,77 @@ function HuskPlayerMovement:set_look_dir_instant(fwd)
 	self._sync_look_dir = nil
 end
 
--- Lines 759-761
+-- Lines 774-776
 function HuskPlayerMovement:m_pos()
 	return self._m_pos
 end
 
--- Lines 765-767
+-- Lines 780-782
 function HuskPlayerMovement:m_stand_pos()
 	return self._m_stand_pos
 end
 
--- Lines 771-773
+-- Lines 786-788
 function HuskPlayerMovement:m_com()
 	return self._m_com
 end
 
--- Lines 777-779
+-- Lines 792-794
 function HuskPlayerMovement:m_head_rot()
 	return self._m_head_rot
 end
 
--- Lines 783-785
+-- Lines 798-800
 function HuskPlayerMovement:m_head_fwd()
 	return self._m_head_fwd
 end
 
--- Lines 789-791
+-- Lines 804-806
 function HuskPlayerMovement:m_head_pos()
 	return self._m_head_pos
 end
 
--- Lines 795-797
+-- Lines 810-812
 function HuskPlayerMovement:m_detect_pos()
 	return self._m_detect_pos
 end
 
--- Lines 801-803
+-- Lines 816-818
 function HuskPlayerMovement:m_newest_pos()
 	return self._m_newest_pos
 end
 
--- Lines 807-809
+-- Lines 822-824
 function HuskPlayerMovement:m_rot()
 	return self._m_rot
 end
 
--- Lines 813-815
+-- Lines 828-830
 function HuskPlayerMovement:m_fwd()
 	return self._m_fwd
 end
 
--- Lines 819-821
+-- Lines 834-836
 function HuskPlayerMovement:m_right()
 	return self._m_right
 end
 
--- Lines 825-827
+-- Lines 840-842
 function HuskPlayerMovement:get_object(object_name)
 	return self._unit:get_object(object_name)
 end
 
--- Lines 831-833
+-- Lines 846-848
 function HuskPlayerMovement:detect_look_dir()
 	return self._sync_look_dir or self._look_dir
 end
 
--- Lines 837-839
+-- Lines 852-854
 function HuskPlayerMovement:look_dir()
 	return self._look_dir
 end
 
--- Lines 843-892
+-- Lines 858-913
 function HuskPlayerMovement:_calculate_m_pose()
 	mrotation.set_look_at(self._m_head_rot, self._look_dir, math.UP)
 	mrotation.z(self._m_head_rot, self._m_head_fwd)
@@ -978,58 +989,64 @@ function HuskPlayerMovement:_calculate_m_pose()
 
 	mvec3_set_z(det_pos, mvec3_z(det_pos) + offset_z)
 
-	if upd_nav_data then
-		if self._nav_tracker then
-			self._nav_tracker:move(self._m_newest_pos)
+	if not upd_nav_data then
+		return
+	end
 
-			local nav_seg_id = self._nav_tracker:nav_segment()
+	if self._nav_tracker then
+		self._nav_tracker:move(self._m_newest_pos)
 
-			if self._standing_nav_seg_id ~= nav_seg_id then
-				self._standing_nav_seg_id = nav_seg_id
+		local nav_seg_id = self._nav_tracker:nav_segment()
 
-				local metadata = managers.navigation:get_nav_seg_metadata(nav_seg_id)
+		if self._standing_nav_seg_id ~= nav_seg_id then
+			self._standing_nav_seg_id = nav_seg_id
 
-				self._unit:base():set_suspicion_multiplier("area", metadata.suspicion_mul)
-				self._unit:base():set_detection_multiplier("area", metadata.detection_mul and 1 / metadata.detection_mul or nil)
+			local metadata = managers.navigation:get_nav_seg_metadata(nav_seg_id)
+
+			self._unit:base():set_suspicion_multiplier("area", metadata.suspicion_mul)
+			self._unit:base():set_detection_multiplier("area", metadata.detection_mul and 1 / metadata.detection_mul or nil)
+
+			if self._is_server then
 				managers.groupai:state():on_criminal_nav_seg_change(self._unit, nav_seg_id)
 			end
 		end
+	end
 
-		if Network:is_server() then
-			if not self._pos_reservation then
-				self._pos_reservation = {
-					radius = 100,
-					position = self._m_newest_pos,
-					filter = self._pos_rsrv_id
-				}
-				self._pos_reservation_slow = {
-					radius = 100,
-					position = mvector3.copy(self._m_newest_pos),
-					filter = self._pos_rsrv_id
-				}
+	if self._can_reserve_positions and self._pos_rsrv_id then
+		if not self._pos_reservation then
+			self._pos_reservation = {
+				radius = 100,
+				position = mvector3.copy(self._m_newest_pos),
+				filter = self._pos_rsrv_id
+			}
+			self._pos_reservation_slow = {
+				radius = 100,
+				position = mvector3.copy(self._m_newest_pos),
+				filter = self._pos_rsrv_id
+			}
 
-				managers.navigation:add_pos_reservation(self._pos_reservation)
-				managers.navigation:add_pos_reservation(self._pos_reservation_slow)
-			else
-				managers.navigation:move_pos_rsrv(self._pos_reservation)
-				self:_upd_slow_pos_reservation()
-			end
+			managers.navigation:add_pos_reservation(self._pos_reservation)
+			managers.navigation:add_pos_reservation(self._pos_reservation_slow)
+		else
+			mvec3_set(self._pos_reservation.position, self._m_newest_pos)
+			managers.navigation:move_pos_rsrv(self._pos_reservation)
+			self:_upd_slow_pos_reservation()
 		end
 	end
 end
 
--- Lines 896-899
+-- Lines 917-920
 function HuskPlayerMovement:set_position(pos)
 	mvector3.set(self._m_pos, pos)
 	self._unit:set_position(pos)
 end
 
--- Lines 903-905
+-- Lines 924-926
 function HuskPlayerMovement:get_location_id()
 	return self._standing_nav_seg_id and managers.navigation:get_nav_seg_metadata(self._standing_nav_seg_id).location_id or nil
 end
 
--- Lines 909-914
+-- Lines 930-935
 function HuskPlayerMovement:set_rotation(rot)
 	mrotation.set_yaw_pitch_roll(self._m_rot, rot:yaw(), 0, 0)
 	mrotation.y(self._m_rot, self._m_fwd)
@@ -1037,34 +1054,34 @@ function HuskPlayerMovement:set_rotation(rot)
 	self._unit:set_rotation(rot)
 end
 
--- Lines 918-922
+-- Lines 939-943
 function HuskPlayerMovement:set_m_rotation(rot)
 	mrotation.set_yaw_pitch_roll(self._m_rot, rot:yaw(), 0, 0)
 	mrotation.y(self._m_rot, self._m_fwd)
 	mrotation.x(self._m_rot, self._m_right)
 end
 
--- Lines 926-928
+-- Lines 947-949
 function HuskPlayerMovement:nav_tracker()
 	return self._nav_tracker
 end
 
--- Lines 932-934
+-- Lines 953-955
 function HuskPlayerMovement:_unfreeze_anims()
 	CopMovement._unfreeze_anims(self)
 end
 
--- Lines 936-938
+-- Lines 957-959
 function HuskPlayerMovement:on_anim_freeze(state)
 	self._frozen = state
 end
 
--- Lines 942-944
+-- Lines 963-965
 function HuskPlayerMovement:play_redirect(redirect_name, at_time)
 	return self:play_redirect_idstr(Idstring(redirect_name), at_time)
 end
 
--- Lines 948-958
+-- Lines 969-979
 function HuskPlayerMovement:play_redirect_delayed(redirect_name, at_time, delay)
 	if delay <= 0 then
 		self:play_redirect(redirect_name, at_time)
@@ -1086,7 +1103,7 @@ HuskPlayerMovement._can_replay_lookup = {
 	[Idstring("crouch"):key()] = true
 }
 
--- Lines 967-1011
+-- Lines 988-1032
 function HuskPlayerMovement:play_redirect_idstr(redirect_name, at_time)
 	local was_frozen = self._frozen
 
@@ -1131,7 +1148,7 @@ function HuskPlayerMovement:play_redirect_idstr(redirect_name, at_time)
 	Application:stack_dump()
 end
 
--- Lines 1015-1037
+-- Lines 1036-1058
 function HuskPlayerMovement:play_state(state_name, at_time)
 	local was_frozen = self._frozen
 
@@ -1155,7 +1172,7 @@ function HuskPlayerMovement:play_state(state_name, at_time)
 	Application:stack_dump()
 end
 
--- Lines 1041-1063
+-- Lines 1062-1084
 function HuskPlayerMovement:play_state_idstr(state_name, at_time)
 	local was_frozen = self._frozen
 
@@ -1179,7 +1196,7 @@ function HuskPlayerMovement:play_state_idstr(state_name, at_time)
 	Application:stack_dump()
 end
 
--- Lines 1067-1112
+-- Lines 1088-1133
 function HuskPlayerMovement:sync_melee_start(hand)
 	if hand and hand > 0 then
 		self._melee_hand = hand % 2
@@ -1222,7 +1239,7 @@ function HuskPlayerMovement:sync_melee_start(hand)
 	end
 end
 
--- Lines 1114-1124
+-- Lines 1135-1145
 function HuskPlayerMovement:sync_melee_stop()
 	self._melee_equipped = false
 
@@ -1237,7 +1254,7 @@ function HuskPlayerMovement:sync_melee_stop()
 	end
 end
 
--- Lines 1126-1133
+-- Lines 1147-1154
 function HuskPlayerMovement:sync_melee_discharge()
 	local redir_res = self:play_redirect("melee_attack")
 
@@ -1246,7 +1263,7 @@ function HuskPlayerMovement:sync_melee_discharge()
 	end
 end
 
--- Lines 1135-1144
+-- Lines 1156-1165
 function HuskPlayerMovement:anim_cbk_set_melee_start_state_vars(unit, name, segment_name)
 	local state = self._unit:anim_state_machine():segment_state(segment_name or Idstring("upper_body"))
 	local peer_id = managers.network:session():peer_by_unit(self._unit):id()
@@ -1257,27 +1274,27 @@ function HuskPlayerMovement:anim_cbk_set_melee_start_state_vars(unit, name, segm
 	self._unit:anim_state_machine():set_parameter(state, anim_global_param, 1)
 end
 
--- Lines 1146-1148
+-- Lines 1167-1169
 function HuskPlayerMovement:anim_cbk_set_melee_start_ext_state_vars(unit)
 	self:anim_cbk_set_melee_start_state_vars(unit, nil, Idstring("upper_body_ext"))
 end
 
--- Lines 1150-1152
+-- Lines 1171-1173
 function HuskPlayerMovement:anim_cbk_set_melee_charge_ext_state_vars(unit)
 	self:anim_cbk_set_melee_start_state_vars(unit, nil, Idstring("upper_body_ext"))
 end
 
--- Lines 1154-1156
+-- Lines 1175-1177
 function HuskPlayerMovement:anim_cbk_set_melee_charge_state_vars(unit)
 	self:anim_cbk_set_melee_start_state_vars(unit)
 end
 
--- Lines 1158-1160
+-- Lines 1179-1181
 function HuskPlayerMovement:anim_cbk_set_melee_discharge_state_vars(unit)
 	self:anim_cbk_set_melee_start_state_vars(unit)
 end
 
--- Lines 1162-1173
+-- Lines 1183-1194
 function HuskPlayerMovement:anim_cbk_set_melee_item_state_vars(unit)
 	local state = self._unit:anim_state_machine():segment_state(Idstring("upper_body"))
 	local anim_attack_vars = {
@@ -1295,7 +1312,7 @@ function HuskPlayerMovement:anim_cbk_set_melee_item_state_vars(unit)
 	self._unit:anim_state_machine():set_parameter(state, anim_global_param, 1)
 end
 
--- Lines 1175-1247
+-- Lines 1196-1268
 function HuskPlayerMovement:anim_cbk_spawn_melee_item(unit, graphic_object)
 	if alive(self._melee_item_unit) or not managers.network:session() or not managers.network:session():peer_by_unit(self._unit) then
 		return
@@ -1372,7 +1389,7 @@ function HuskPlayerMovement:anim_cbk_spawn_melee_item(unit, graphic_object)
 	end
 end
 
--- Lines 1249-1276
+-- Lines 1270-1297
 function HuskPlayerMovement:anim_cbk_unspawn_melee_item(unit)
 	if alive(self._melee_item_unit) then
 		self._melee_item_unit:unlink()
@@ -1399,7 +1416,7 @@ function HuskPlayerMovement:anim_cbk_unspawn_melee_item(unit)
 	end
 end
 
--- Lines 1280-1303
+-- Lines 1301-1324
 function HuskPlayerMovement:set_need_revive(need_revive, down_time)
 	if self._need_revive == need_revive then
 		return
@@ -1420,7 +1437,7 @@ function HuskPlayerMovement:set_need_revive(need_revive, down_time)
 	end
 end
 
--- Lines 1307-1377
+-- Lines 1328-1398
 function HuskPlayerMovement:_register_revive_SO()
 	local followup_objective = {
 		scan = true,
@@ -1486,7 +1503,7 @@ function HuskPlayerMovement:_register_revive_SO()
 	end
 end
 
--- Lines 1381-1402
+-- Lines 1402-1423
 function HuskPlayerMovement:_unregister_revive_SO()
 	if self._deathguard_SO_id then
 		PlayerBleedOut._unregister_deathguard_SO(self._deathguard_SO_id)
@@ -1515,7 +1532,7 @@ function HuskPlayerMovement:_unregister_revive_SO()
 	end
 end
 
--- Lines 1406-1442
+-- Lines 1427-1463
 function HuskPlayerMovement:set_need_assistance(need_assistance)
 	if self._need_assistance == need_assistance then
 		return
@@ -1556,7 +1573,7 @@ function HuskPlayerMovement:set_need_assistance(need_assistance)
 	end
 end
 
--- Lines 1446-1452
+-- Lines 1467-1473
 function HuskPlayerMovement:on_revive_SO_administered(receiver_unit)
 	if self._revive_SO_id then
 		self._revive_rescuer = receiver_unit
@@ -1564,7 +1581,7 @@ function HuskPlayerMovement:on_revive_SO_administered(receiver_unit)
 	end
 end
 
--- Lines 1456-1463
+-- Lines 1477-1484
 function HuskPlayerMovement:on_revive_SO_failed(rescuer)
 	if self._revive_rescuer then
 		self._revive_rescuer = nil
@@ -1573,24 +1590,24 @@ function HuskPlayerMovement:on_revive_SO_failed(rescuer)
 	end
 end
 
--- Lines 1467-1471
+-- Lines 1488-1492
 function HuskPlayerMovement:on_revive_SO_completed(rescuer)
 	self._revive_rescuer = nil
 
 	self:_unregister_revive_SO()
 end
 
--- Lines 1475-1477
+-- Lines 1496-1498
 function HuskPlayerMovement:need_revive()
 	return self._need_revive
 end
 
--- Lines 1480-1482
+-- Lines 1501-1503
 function HuskPlayerMovement:downed()
 	return self._need_revive or self._need_assistance
 end
 
--- Lines 1486-1519
+-- Lines 1507-1540
 function HuskPlayerMovement:_upd_attention_mask_off(dt)
 	if not self._atention_on then
 		self._atention_on = true
@@ -1622,7 +1639,7 @@ function HuskPlayerMovement:_upd_attention_mask_off(dt)
 	end
 end
 
--- Lines 1523-1540
+-- Lines 1544-1561
 function HuskPlayerMovement:_upd_attention_standard(t, dt)
 	if not self._atention_on then
 		if self._ext_anim.bleedout then
@@ -1641,7 +1658,7 @@ function HuskPlayerMovement:_upd_attention_standard(t, dt)
 	self:_sync_look_direction(t, dt)
 end
 
--- Lines 1542-1618
+-- Lines 1563-1639
 function HuskPlayerMovement:_sync_look_direction(t, dt)
 	self._smooth_look = self._smooth_look or {
 		current = Vector3(),
@@ -1709,7 +1726,7 @@ function HuskPlayerMovement:_sync_look_direction(t, dt)
 	end
 end
 
--- Lines 1622-1683
+-- Lines 1643-1704
 function HuskPlayerMovement:_upd_attention_bleedout(t, dt)
 	if self._sync_look_dir then
 		local fwd = self._m_rot:y()
@@ -1775,22 +1792,22 @@ function HuskPlayerMovement:_upd_attention_bleedout(t, dt)
 	end
 end
 
--- Lines 1685-1687
+-- Lines 1706-1708
 function HuskPlayerMovement:_upd_attention_incapcitated(t, dt)
 	return
 end
 
--- Lines 1689-1691
+-- Lines 1710-1712
 function HuskPlayerMovement:_upd_attention_fatal(t, dt)
 	return
 end
 
--- Lines 1693-1695
+-- Lines 1714-1716
 function HuskPlayerMovement:_upd_attention_dead(t, dt)
 	return
 end
 
--- Lines 1697-1790
+-- Lines 1718-1811
 function HuskPlayerMovement:_upd_attention_zipline(t, dt)
 	if self._sync_look_dir then
 		if self._atention_on then
@@ -1894,7 +1911,7 @@ function HuskPlayerMovement:_upd_attention_zipline(t, dt)
 	end
 end
 
--- Lines 1792-1800
+-- Lines 1813-1821
 function HuskPlayerMovement:_upd_attention_freefall(t, dt)
 	if not self._atention_on then
 		self._atention_on = true
@@ -1907,7 +1924,7 @@ function HuskPlayerMovement:_upd_attention_freefall(t, dt)
 	end
 end
 
--- Lines 1802-1810
+-- Lines 1823-1831
 function HuskPlayerMovement:_upd_attention_parachute(t, dt)
 	if not self._atention_on then
 		self._atention_on = true
@@ -1920,7 +1937,7 @@ function HuskPlayerMovement:_upd_attention_parachute(t, dt)
 	end
 end
 
--- Lines 1815-1904
+-- Lines 1836-1925
 function HuskPlayerMovement:_upd_attention_driving(t, dt)
 	if self._driver and self._vehicle then
 		local steer = self._vehicle:get_steer()
@@ -2008,12 +2025,12 @@ function HuskPlayerMovement:_upd_attention_driving(t, dt)
 	end
 end
 
--- Lines 1906-1908
+-- Lines 1927-1929
 function HuskPlayerMovement:_upd_attention_nothing(t, dt)
 	return
 end
 
--- Lines 1911-1938
+-- Lines 1932-1959
 function HuskPlayerMovement:_upd_attention_player_turret(t, dt)
 	local peer_id = managers.network:session():peer_by_unit(self._unit):id()
 	local player_turret = managers.player:get_player_turret_for_peer(peer_id)
@@ -2045,7 +2062,7 @@ function HuskPlayerMovement:_upd_attention_player_turret(t, dt)
 	end
 end
 
--- Lines 1940-1994
+-- Lines 1961-2015
 function HuskPlayerMovement:_upd_move_player_turret(t, dt)
 	local peer_id = managers.network:session():peer_by_unit(self._unit):id()
 	local player_turret = managers.player:get_player_turret_for_peer(peer_id)
@@ -2093,7 +2110,7 @@ function HuskPlayerMovement:_upd_move_player_turret(t, dt)
 	self:_update_animation_standard(t, dt)
 end
 
--- Lines 1997-2022
+-- Lines 2018-2043
 function HuskPlayerMovement:update_sync_look_dir(t, dt)
 	local tar_look_dir = tmp_vec1
 
@@ -2121,7 +2138,7 @@ function HuskPlayerMovement:update_sync_look_dir(t, dt)
 	end
 end
 
--- Lines 2026-2107
+-- Lines 2047-2128
 function HuskPlayerMovement:_upd_sequenced_events(t, dt)
 	local sequenced_events = self._sequenced_events
 	local next_event = sequenced_events[1]
@@ -2200,12 +2217,12 @@ function HuskPlayerMovement:_upd_sequenced_events(t, dt)
 	end
 end
 
--- Lines 2111-2113
+-- Lines 2132-2134
 function HuskPlayerMovement:_add_sequenced_event(event_desc)
 	table.insert(self._sequenced_events, event_desc)
 end
 
--- Lines 2117-2155
+-- Lines 2138-2176
 function HuskPlayerMovement:_upd_stance(t)
 	if self._aim_up_expire_t and t > self._aim_up_expire_t then
 		self._aim_up_expire_t = nil
@@ -2259,7 +2276,7 @@ function HuskPlayerMovement:_upd_stance(t)
 	end
 end
 
--- Lines 2159-2170
+-- Lines 2180-2191
 function HuskPlayerMovement:_upd_slow_pos_reservation(t, dt)
 	local slow_dist = 100
 
@@ -2274,7 +2291,7 @@ function HuskPlayerMovement:_upd_slow_pos_reservation(t, dt)
 	end
 end
 
--- Lines 2174-2180
+-- Lines 2195-2201
 function HuskPlayerMovement:action_is(node_action, desired)
 	if type(node_action) ~= "table" then
 		return node_action == desired
@@ -2283,7 +2300,7 @@ function HuskPlayerMovement:action_is(node_action, desired)
 	end
 end
 
--- Lines 2182-2192
+-- Lines 2203-2213
 function HuskPlayerMovement:add_action(node, new_action)
 	if not node.action then
 		node.action = {}
@@ -2301,7 +2318,7 @@ function HuskPlayerMovement:add_action(node, new_action)
 	end
 end
 
--- Lines 2194-2201
+-- Lines 2215-2222
 function HuskPlayerMovement:_override_last_node_type(new_type)
 	if self._movement_path then
 		local node = self._movement_path[#self._movement_path]
@@ -2312,7 +2329,7 @@ function HuskPlayerMovement:_override_last_node_type(new_type)
 	end
 end
 
--- Lines 2203-2214
+-- Lines 2224-2235
 function HuskPlayerMovement:_override_last_node_action(new_action, add)
 	if self._movement_path then
 		local node = self._movement_path[#self._movement_path]
@@ -2329,7 +2346,7 @@ function HuskPlayerMovement:_override_last_node_action(new_action, add)
 	end
 end
 
--- Lines 2218-2222
+-- Lines 2239-2243
 function HuskPlayerMovement:_upd_displacement_pre_move(t, dt)
 	self._m_start_pos = self._m_start_pos or Vector3()
 	self._m_displacement = self._m_displacement or Vector3()
@@ -2337,7 +2354,7 @@ function HuskPlayerMovement:_upd_displacement_pre_move(t, dt)
 	mvector3.set(self._m_start_pos, self._m_pos)
 end
 
--- Lines 2224-2228
+-- Lines 2245-2249
 function HuskPlayerMovement:_upd_displacement_post_move(t, dt)
 	mvector3.subtract(self._m_start_pos, self._m_pos)
 
@@ -2346,7 +2363,7 @@ function HuskPlayerMovement:_upd_displacement_post_move(t, dt)
 	mvector3.step(self._m_displacement, self._m_displacement, self._m_start_pos, dt * _t)
 end
 
--- Lines 2230-2260
+-- Lines 2251-2281
 function HuskPlayerMovement:_upd_move_standard(t, dt)
 	self:_upd_displacement_pre_move(t, dt)
 	self:_update_air_time(t, dt)
@@ -2365,7 +2382,7 @@ function HuskPlayerMovement:_upd_move_standard(t, dt)
 	self:_update_animation_standard(t, dt)
 end
 
--- Lines 2264-2282
+-- Lines 2285-2303
 function HuskPlayerMovement:_upd_move_no_animations(t, dt)
 	self:_upd_displacement_pre_move(t, dt)
 	self:_update_air_time(t, dt)
@@ -2375,13 +2392,13 @@ function HuskPlayerMovement:_upd_move_no_animations(t, dt)
 	self:_upd_displacement_post_move(t, dt)
 end
 
--- Lines 2284-2287
+-- Lines 2305-2308
 function HuskPlayerMovement:_upd_move_driving(t, dt)
 	self:set_position(self.seat_third:position())
 	self:set_rotation(self.seat_third:rotation())
 end
 
--- Lines 2352-2372
+-- Lines 2373-2393
 function HuskPlayerMovement:_update_air_time(t, dt)
 	if self._in_air then
 		self._air_time = (self._air_time or 0) + dt
@@ -2399,14 +2416,14 @@ function HuskPlayerMovement:_update_air_time(t, dt)
 	end
 end
 
--- Lines 2376-2383
+-- Lines 2397-2404
 function HuskPlayerMovement:_update_zipline_time(t, dt)
 	if self._zipline and self._zipline.attached then
 		self._zipline.t = (self._zipline.t or 0) + dt
 	end
 end
 
--- Lines 2385-2418
+-- Lines 2406-2439
 function HuskPlayerMovement:_update_zipline_sled(t, dt)
 	if self._zipline and self._zipline.attached then
 		local zipline = self._zipline and self._zipline.zipline_unit and self._zipline.zipline_unit:zipline()
@@ -2431,7 +2448,7 @@ HuskPlayerMovement._catchup_actions = {
 	}
 }
 
--- Lines 2431-2474
+-- Lines 2452-2495
 function HuskPlayerMovement:_perform_path_catchup()
 	for id, catchup in pairs(self._catchup_actions) do
 		catchup.index = 0
@@ -2468,42 +2485,42 @@ function HuskPlayerMovement:_perform_path_catchup()
 	end
 end
 
--- Lines 2476-2478
+-- Lines 2497-2499
 function HuskPlayerMovement:_perform_catchup_bleedout_enter()
 	self:_perform_movement_action_enter_bleedout()
 end
 
--- Lines 2480-2482
+-- Lines 2501-2503
 function HuskPlayerMovement:_perform_catchup_bleedout_exit()
 	self:_perform_movement_action_exit_bleedout()
 end
 
--- Lines 2484-2486
+-- Lines 2505-2507
 function HuskPlayerMovement:_perform_catchup_zipline_start()
 	self:_perform_movement_action_zipline_start()
 end
 
--- Lines 2488-2490
+-- Lines 2509-2511
 function HuskPlayerMovement:_perform_catchup_zipline_end()
 	self:_perform_movement_action_zipline_end()
 end
 
--- Lines 2492-2494
+-- Lines 2513-2515
 function HuskPlayerMovement:_perform_catchup_teleport_start()
 	self:_perform_movement_action_teleport_start()
 end
 
--- Lines 2496-2498
+-- Lines 2517-2519
 function HuskPlayerMovement:_perform_catchup_teleport_end()
 	self:_perform_movement_action_teleport_end()
 end
 
--- Lines 2502-2504
+-- Lines 2523-2525
 function HuskPlayerMovement:force_start_moving()
 	self._moving = true
 end
 
--- Lines 2506-2607
+-- Lines 2527-2628
 function HuskPlayerMovement:_update_position(t, dt)
 	local path_length = self._movement_path and #self._movement_path
 
@@ -2590,7 +2607,7 @@ function HuskPlayerMovement:_update_position(t, dt)
 	end
 end
 
--- Lines 2611-2638
+-- Lines 2632-2659
 function HuskPlayerMovement:_perform_movement_action(idx)
 	local current_node = self._movement_path[idx]
 
@@ -2622,7 +2639,7 @@ function HuskPlayerMovement:_perform_movement_action(idx)
 	end
 end
 
--- Lines 2640-2646
+-- Lines 2661-2667
 function HuskPlayerMovement:_perform_movement_action_jump(idx, node)
 	self:play_redirect("jump_fwd")
 
@@ -2633,7 +2650,7 @@ function HuskPlayerMovement:_perform_movement_action_jump(idx, node)
 	return true
 end
 
--- Lines 2648-2663
+-- Lines 2669-2684
 function HuskPlayerMovement:_perform_movement_action_land(idx, node)
 	self._unit:sound_source():post_event("footstep_npc_hardsole_land")
 
@@ -2649,7 +2666,7 @@ function HuskPlayerMovement:_perform_movement_action_land(idx, node)
 	return true
 end
 
--- Lines 2665-2669
+-- Lines 2686-2690
 function HuskPlayerMovement:_perform_movement_action_fall(idx, node)
 	self:play_redirect("jump")
 
@@ -2658,7 +2675,7 @@ function HuskPlayerMovement:_perform_movement_action_fall(idx, node)
 	return true
 end
 
--- Lines 2671-2676
+-- Lines 2692-2697
 function HuskPlayerMovement:_perform_movement_action_zipline_start(idx, node)
 	if self._zipline then
 		self._zipline.enabled = true
@@ -2666,7 +2683,7 @@ function HuskPlayerMovement:_perform_movement_action_zipline_start(idx, node)
 	end
 end
 
--- Lines 2678-2683
+-- Lines 2699-2704
 function HuskPlayerMovement:_perform_movement_action_zipline_end(idx, node)
 	if self._zipline then
 		self._zipline.enabled = false
@@ -2674,7 +2691,7 @@ function HuskPlayerMovement:_perform_movement_action_zipline_end(idx, node)
 	end
 end
 
--- Lines 2685-2691
+-- Lines 2706-2712
 function HuskPlayerMovement:_perform_movement_action_teleport_start(idx, node)
 	local next_idx = idx and idx + 1 or #self._movement_path
 	local next_node = self._movement_path[next_idx]
@@ -2684,12 +2701,12 @@ function HuskPlayerMovement:_perform_movement_action_teleport_start(idx, node)
 	end
 end
 
--- Lines 2693-2694
+-- Lines 2714-2715
 function HuskPlayerMovement:_perform_movement_action_teleport_end(idx, node)
 	return
 end
 
--- Lines 2696-2704
+-- Lines 2717-2725
 function HuskPlayerMovement:_perform_movement_action_enter_bleedout(idx, node)
 	self._bleedout = true
 
@@ -2703,7 +2720,7 @@ function HuskPlayerMovement:_perform_movement_action_enter_bleedout(idx, node)
 	self:set_attention_updator(self._upd_attention_bleedout)
 end
 
--- Lines 2706-2710
+-- Lines 2727-2731
 function HuskPlayerMovement:_perform_movement_action_exit_bleedout(idx, node)
 	self._bleedout = false
 
@@ -2711,7 +2728,7 @@ function HuskPlayerMovement:_perform_movement_action_exit_bleedout(idx, node)
 	self:clear_attention_updator()
 end
 
--- Lines 2712-2720
+-- Lines 2733-2741
 function HuskPlayerMovement:_perform_movement_action_enter_arrested(idx, node)
 	self._bleedout = true
 
@@ -2725,7 +2742,7 @@ function HuskPlayerMovement:_perform_movement_action_enter_arrested(idx, node)
 	self:set_attention_updator(self._upd_attention_incapcitated)
 end
 
--- Lines 2722-2726
+-- Lines 2743-2747
 function HuskPlayerMovement:_perform_movement_action_exit_arrested(idx, node)
 	self._bleedout = false
 
@@ -2733,7 +2750,7 @@ function HuskPlayerMovement:_perform_movement_action_exit_arrested(idx, node)
 	self:clear_attention_updator()
 end
 
--- Lines 2730-2843
+-- Lines 2751-2864
 function HuskPlayerMovement:_update_rotation_standard(t, dt)
 	if self._ext_anim.bleedout_enter or self._ext_anim.bleedout_exit or self._ext_anim.fatal_enter or self._ext_anim.fatal_exit then
 		return
@@ -2836,7 +2853,7 @@ function HuskPlayerMovement:_update_rotation_standard(t, dt)
 	end
 end
 
--- Lines 2845-2899
+-- Lines 2866-2920
 function HuskPlayerMovement:_update_animation_standard(t, dt)
 	if self._turning or self._bleedout then
 		return
@@ -2879,7 +2896,7 @@ function HuskPlayerMovement:_update_animation_standard(t, dt)
 	end
 end
 
--- Lines 2901-2969
+-- Lines 2922-2990
 function HuskPlayerMovement:_get_animation_move_speed(dt)
 	local vel_len, anim_velocity, anim_side
 	local displacement = self._m_displacement
@@ -2911,39 +2928,39 @@ function HuskPlayerMovement:_get_animation_move_speed(dt)
 	return vel_len, anim_velocity, anim_side
 end
 
--- Lines 2973-2976
+-- Lines 2994-2997
 function HuskPlayerMovement:_is_slowdown_to_next_action()
 	local event_desc = self._sequenced_events[2]
 
 	return event_desc and event_desc.is_no_move_slowdown
 end
 
--- Lines 2978-2980
+-- Lines 2999-3001
 function HuskPlayerMovement:_is_anim_move_redirect_forbidden(path_len_remaining)
 	return not self._move_data or self._ext_anim.landing or self._ext_anim.jumping and path_len_remaining < 50
 end
 
--- Lines 2982-2984
+-- Lines 3003-3005
 function HuskPlayerMovement:_is_anim_idle_redirect_forbidden()
 	return self._ext_anim.idle or self._ext_anim.landing
 end
 
--- Lines 2986-2988
+-- Lines 3007-3009
 function HuskPlayerMovement:_is_anim_move_speed_forbidden()
 	return self._ext_anim.jumping or self._ext_anim.landing
 end
 
--- Lines 2990-2992
+-- Lines 3011-3013
 function HuskPlayerMovement:_is_anim_stop_allowed()
 	return self._ext_anim.jumping or self._ext_anim.landing and self._ext_anim.move
 end
 
--- Lines 2994-2996
+-- Lines 3015-3017
 function HuskPlayerMovement:_is_start_move_velocity_max()
 	return self._ext_anim.jumping
 end
 
--- Lines 2998-3036
+-- Lines 3019-3057
 function HuskPlayerMovement:_upd_move_zipline(t, dt)
 	if self._load_data then
 		return
@@ -2985,12 +3002,12 @@ function HuskPlayerMovement:_upd_move_zipline(t, dt)
 	self:set_rotation(new_rot)
 end
 
--- Lines 3038-3041
+-- Lines 3059-3062
 function HuskPlayerMovement:anim_clbk_exit_vehicle(unit)
 	self:on_exit_vehicle()
 end
 
--- Lines 3044-3074
+-- Lines 3065-3095
 function HuskPlayerMovement:_adjust_move_anim(side, speed)
 	local anim_data = self._ext_anim
 
@@ -3023,13 +3040,13 @@ function HuskPlayerMovement:_adjust_move_anim(side, speed)
 	return redir_res
 end
 
--- Lines 3078-3081
+-- Lines 3099-3102
 function HuskPlayerMovement:clear_movement_path()
 	self._movement_path = {}
 	self._movement_history = {}
 end
 
--- Lines 3083-3176
+-- Lines 3104-3197
 function HuskPlayerMovement:sync_action_walk_nav_point(pos, speed, action, params)
 	speed = speed or 1
 	params = params or {}
@@ -3112,7 +3129,7 @@ function HuskPlayerMovement:sync_action_walk_nav_point(pos, speed, action, param
 	end
 end
 
--- Lines 3178-3237
+-- Lines 3199-3258
 function HuskPlayerMovement:_determine_node_action(idx, node)
 	local last_node = self._movement_history[idx - 1]
 
@@ -3172,17 +3189,17 @@ function HuskPlayerMovement:_determine_node_action(idx, node)
 	self:add_action(node, action)
 end
 
--- Lines 3241-3243
+-- Lines 3262-3264
 function HuskPlayerMovement:sync_action_change_pose(pose_code, pos)
 	self._desired_pose_code = pose_code
 end
 
--- Lines 3247-3249
+-- Lines 3268-3270
 function HuskPlayerMovement:current_state()
 	return self
 end
 
--- Lines 3253-3287
+-- Lines 3274-3308
 function HuskPlayerMovement:_start_movement(path)
 	local data = {}
 
@@ -3229,12 +3246,12 @@ function HuskPlayerMovement:_start_movement(path)
 	data.seg_len = mvec3_norm(data.seg_dir)
 end
 
--- Lines 3292-3294
+-- Lines 3313-3315
 function HuskPlayerMovement:_upd_attention_bipod(t, dt)
 	self:_sync_look_direction(t, dt)
 end
 
--- Lines 3296-3411
+-- Lines 3317-3432
 function HuskPlayerMovement:_upd_move_bipod(t, dt)
 	if self._state == "standard" then
 		self._attention_updator = callback(self, self, "_upd_attention_standard")
@@ -3343,7 +3360,7 @@ function HuskPlayerMovement:_upd_move_bipod(t, dt)
 	})
 end
 
--- Lines 3415-3489
+-- Lines 3436-3510
 function HuskPlayerMovement:_start_standard(event_desc)
 	self:set_need_revive(false)
 	self:set_need_assistance(false)
@@ -3431,7 +3448,7 @@ function HuskPlayerMovement:_start_standard(event_desc)
 	return true
 end
 
--- Lines 3493-3516
+-- Lines 3514-3537
 function HuskPlayerMovement:_start_bleedout(event_desc)
 	local redir_res = self:play_redirect("bleedout")
 
@@ -3459,7 +3476,7 @@ function HuskPlayerMovement:_start_bleedout(event_desc)
 	return true
 end
 
--- Lines 3520-3547
+-- Lines 3541-3568
 function HuskPlayerMovement:_start_tased(event_desc)
 	local redir_res = self:play_redirect("tased")
 
@@ -3493,7 +3510,7 @@ function HuskPlayerMovement:_start_tased(event_desc)
 	return true
 end
 
--- Lines 3551-3576
+-- Lines 3572-3597
 function HuskPlayerMovement:_start_fatal(event_desc)
 	local redir_res = self:play_redirect("fatal")
 
@@ -3524,7 +3541,7 @@ function HuskPlayerMovement:_start_fatal(event_desc)
 	return true
 end
 
--- Lines 3580-3600
+-- Lines 3601-3621
 function HuskPlayerMovement:_start_incapacitated(event_desc)
 	local redir_res = self:play_redirect("incapacitated")
 
@@ -3551,7 +3568,7 @@ function HuskPlayerMovement:_start_incapacitated(event_desc)
 	return true
 end
 
--- Lines 3604-3626
+-- Lines 3625-3647
 function HuskPlayerMovement:_start_dead(event_desc)
 	local redir_res = self:play_redirect("death")
 
@@ -3581,7 +3598,7 @@ function HuskPlayerMovement:_start_dead(event_desc)
 	return true
 end
 
--- Lines 3630-3660
+-- Lines 3651-3681
 function HuskPlayerMovement:_start_arrested(event_desc)
 	if not self._ext_anim.hands_tied then
 		local redir_res = self:play_redirect("tied")
@@ -3614,7 +3631,7 @@ function HuskPlayerMovement:_start_arrested(event_desc)
 	return true
 end
 
--- Lines 3664-3678
+-- Lines 3685-3699
 function HuskPlayerMovement:_adjust_walk_anim_speed(dt, target_speed)
 	local state = self._machine:segment_state(self._ids_base)
 	local cur_speed = self._machine:get_speed(state)
@@ -3633,7 +3650,7 @@ function HuskPlayerMovement:_adjust_walk_anim_speed(dt, target_speed)
 	end
 end
 
--- Lines 3682-3698
+-- Lines 3703-3719
 function HuskPlayerMovement:sync_shot_blank(impact, sub_id)
 	if self.clean_states[self._state] then
 		return
@@ -3649,7 +3666,7 @@ function HuskPlayerMovement:sync_shot_blank(impact, sub_id)
 
 		self._aim_up_expire_t = TimerManager:game():time() + 2
 	else
-		-- Lines 3695-3695
+		-- Lines 3716-3716
 		function f(impact)
 			self:_shoot_blank(impact, sub_id)
 		end
@@ -3658,7 +3675,7 @@ function HuskPlayerMovement:sync_shot_blank(impact, sub_id)
 	self:_change_stance(3, f)
 end
 
--- Lines 3700-3739
+-- Lines 3721-3760
 function HuskPlayerMovement:sync_start_auto_fire_sound(sub_id)
 	if self.clean_states[self._state] then
 		return
@@ -3686,7 +3703,7 @@ function HuskPlayerMovement:sync_start_auto_fire_sound(sub_id)
 		if delay then
 			self._auto_firing = 1
 
-			-- Lines 3724-3728
+			-- Lines 3745-3749
 			local function f(t)
 				local equipped_weapon = self._unit:inventory():equipped_unit()
 
@@ -3709,7 +3726,7 @@ function HuskPlayerMovement:sync_start_auto_fire_sound(sub_id)
 	end
 end
 
--- Lines 3741-3762
+-- Lines 3762-3783
 function HuskPlayerMovement:sync_raise_weapon()
 	if self.clean_states[self._state] then
 		return
@@ -3721,7 +3738,7 @@ function HuskPlayerMovement:sync_raise_weapon()
 		if delay then
 			self._auto_firing = 1
 
-			-- Lines 3751-3753
+			-- Lines 3772-3774
 			local function f(t)
 				self._auto_firing = 2
 			end
@@ -3737,7 +3754,7 @@ function HuskPlayerMovement:sync_raise_weapon()
 	end
 end
 
--- Lines 3764-3800
+-- Lines 3785-3821
 function HuskPlayerMovement:sync_stop_auto_fire_sound(sub_id)
 	sub_id = self._arm_animator:enabled() and sub_id + 1 or 0
 	self._firing = self._firing or 0
@@ -3782,14 +3799,14 @@ function HuskPlayerMovement:sync_stop_auto_fire_sound(sub_id)
 	end
 end
 
--- Lines 3805-3809
+-- Lines 3826-3830
 function HuskPlayerMovement:set_cbt_permanent(on)
 	self._is_weapon_gadget_on = on
 
 	self:_chk_change_stance()
 end
 
--- Lines 3813-3826
+-- Lines 3834-3847
 function HuskPlayerMovement:_shoot_blank(impact, sub_id)
 	local equipped_weapon = self._unit:inventory():equipped_unit()
 
@@ -3808,14 +3825,14 @@ function HuskPlayerMovement:_shoot_blank(impact, sub_id)
 	end
 end
 
--- Lines 3830-3833
+-- Lines 3851-3854
 function HuskPlayerMovement:_equipped_weapon_base()
 	local equipped_weapon = self._unit:inventory():equipped_unit()
 
 	return alive(equipped_weapon) and equipped_weapon:base()
 end
 
--- Lines 3835-3840
+-- Lines 3856-3861
 function HuskPlayerMovement:_equipped_weapon_crew_tweak_data()
 	local equipped_weapon = self:_equipped_weapon_base()
 
@@ -3824,7 +3841,7 @@ function HuskPlayerMovement:_equipped_weapon_crew_tweak_data()
 	end
 end
 
--- Lines 3842-3851
+-- Lines 3863-3872
 function HuskPlayerMovement:_equipped_weapon_tweak_data()
 	local equipped_weapon = self:_equipped_weapon_base()
 
@@ -3853,7 +3870,7 @@ HuskPlayerMovement.reload_times = {
 HuskPlayerMovement.str_is_shotgun_pump = "is_shotgun_pump"
 HuskPlayerMovement.str_looped = "looped"
 
--- Lines 3870-3899
+-- Lines 3891-3920
 function HuskPlayerMovement:get_reload_animation_time(hold_type)
 	if not hold_type then
 		return self.reload_times.default
@@ -3876,7 +3893,7 @@ function HuskPlayerMovement:get_reload_animation_time(hold_type)
 	end
 end
 
--- Lines 3901-3906
+-- Lines 3922-3927
 function HuskPlayerMovement:is_looped_reload(crew_tweak)
 	if crew_tweak then
 		return crew_tweak.usage == HuskPlayerMovement.str_is_shotgun_pump or crew_tweak.reload == HuskPlayerMovement.str_looped
@@ -3885,7 +3902,7 @@ function HuskPlayerMovement:is_looped_reload(crew_tweak)
 	return false
 end
 
--- Lines 3908-3960
+-- Lines 3929-3981
 function HuskPlayerMovement:sync_reload_weapon(empty_reload, reload_speed_multiplier)
 	local anim_multiplier = 1
 	local anim_redirect = "reload"
@@ -3934,7 +3951,7 @@ function HuskPlayerMovement:sync_reload_weapon(empty_reload, reload_speed_multip
 	end
 end
 
--- Lines 3963-3978
+-- Lines 3984-3999
 function HuskPlayerMovement:anim_clbk_start_reload_looped()
 	local redir_res = self:play_redirect("reload_looped")
 
@@ -3951,7 +3968,7 @@ function HuskPlayerMovement:anim_clbk_start_reload_looped()
 	end
 end
 
--- Lines 3980-4011
+-- Lines 4001-4032
 function HuskPlayerMovement:sync_reload_weapon_interupt()
 	self._arm_animator:set_state_blocked("reload", false)
 
@@ -4005,7 +4022,7 @@ HuskPlayerMovement.magazine_collisions = {
 	}
 }
 
--- Lines 4027-4044
+-- Lines 4048-4065
 function HuskPlayerMovement:_material_config_name(part_id, part_data, unit_name, use_cc_material_config)
 	part_data = part_data or tweak_data.weapon.factory.parts[part_id]
 
@@ -4025,7 +4042,7 @@ function HuskPlayerMovement:_material_config_name(part_id, part_data, unit_name,
 	return Idstring(unit_name .. cc_string .. thq_string)
 end
 
--- Lines 4046-4048
+-- Lines 4067-4069
 function HuskPlayerMovement:allow_dropped_magazines()
 	return managers.weapon_factory:use_thq_weapon_parts()
 end
@@ -4050,7 +4067,7 @@ local material_variables = {
 	uv_scale = "uv_scale"
 }
 
--- Lines 4070-4134
+-- Lines 4091-4155
 function HuskPlayerMovement:_spawn_magazine_unit(part_id, unit_name, pos, rot)
 	local equipped_weapon = self._unit:inventory():equipped_unit()
 	local is_thq = self:allow_dropped_magazines()
@@ -4114,7 +4131,7 @@ function HuskPlayerMovement:_spawn_magazine_unit(part_id, unit_name, pos, rot)
 	return magazine_unit
 end
 
--- Lines 4136-4149
+-- Lines 4157-4170
 function HuskPlayerMovement:_set_unit_bullet_objects_visible(unit, bullet_objects, visible)
 	if bullet_objects then
 		local offset = bullet_objects.offset or 0
@@ -4130,7 +4147,7 @@ function HuskPlayerMovement:_set_unit_bullet_objects_visible(unit, bullet_object
 	end
 end
 
--- Lines 4151-4202
+-- Lines 4172-4223
 function HuskPlayerMovement:anim_clbk_show_magazine_in_hand(unit, name)
 	if not self:allow_dropped_magazines() then
 		return
@@ -4175,7 +4192,7 @@ function HuskPlayerMovement:anim_clbk_show_magazine_in_hand(unit, name)
 	end
 end
 
--- Lines 4204-4305
+-- Lines 4225-4326
 function HuskPlayerMovement:anim_clbk_spawn_dropped_magazine()
 	if not self:allow_dropped_magazines() then
 		return
@@ -4267,7 +4284,7 @@ function HuskPlayerMovement:anim_clbk_spawn_dropped_magazine()
 	end
 end
 
--- Lines 4307-4339
+-- Lines 4328-4360
 function HuskPlayerMovement:anim_clbk_show_new_magazine_in_hand(unit, name)
 	if not self:allow_dropped_magazines() then
 		return
@@ -4296,7 +4313,7 @@ function HuskPlayerMovement:anim_clbk_show_new_magazine_in_hand(unit, name)
 	end
 end
 
--- Lines 4341-4373
+-- Lines 4362-4394
 function HuskPlayerMovement:anim_clbk_hide_magazine_in_hand()
 	self._arm_animator:set_state_blocked("reload", false)
 
@@ -4325,7 +4342,7 @@ function HuskPlayerMovement:anim_clbk_hide_magazine_in_hand()
 	self:destroy_magazine_in_hand()
 end
 
--- Lines 4375-4382
+-- Lines 4396-4403
 function HuskPlayerMovement:destroy_magazine_in_hand()
 	if self._magazine_data then
 		if alive(self._magazine_data.unit) then
@@ -4336,7 +4353,7 @@ function HuskPlayerMovement:destroy_magazine_in_hand()
 	end
 end
 
--- Lines 4384-4393
+-- Lines 4405-4414
 function HuskPlayerMovement:_play_weapon_reload_animation_sfx(unit, event)
 	if self:allow_dropped_magazines() then
 		local equipped_weapon = self._unit:inventory():equipped_unit()
@@ -4357,7 +4374,7 @@ HuskPlayerMovement.switch_weapon_times = {
 	}
 }
 
--- Lines 4404-4413
+-- Lines 4425-4434
 function HuskPlayerMovement:_can_play_weapon_switch_anim()
 	local blocked_by_vehicle = self._vehicle and not self._vehicle_allows_shooting
 
@@ -4368,7 +4385,7 @@ function HuskPlayerMovement:_can_play_weapon_switch_anim()
 	return true
 end
 
--- Lines 4415-4445
+-- Lines 4436-4466
 function HuskPlayerMovement:sync_switch_weapon(unequip_multiplier, equip_multiplier)
 	print("self:_can_play_weapon_switch_anim ", self:_can_play_weapon_switch_anim())
 
@@ -4399,12 +4416,12 @@ function HuskPlayerMovement:sync_switch_weapon(unequip_multiplier, equip_multipl
 	self:destroy_magazine_in_hand()
 end
 
--- Lines 4447-4448
+-- Lines 4468-4469
 function HuskPlayerMovement:anim_clbk_switch_weapon()
 	return
 end
 
--- Lines 4450-4479
+-- Lines 4471-4500
 function HuskPlayerMovement:sync_equip_weapon()
 	print("self:_can_play_weapon_switch_anim ", self:_can_play_weapon_switch_anim())
 
@@ -4435,12 +4452,12 @@ function HuskPlayerMovement:sync_equip_weapon()
 	end
 end
 
--- Lines 4483-4485
+-- Lines 4504-4506
 function HuskPlayerMovement:sync_pose(pose_code)
 	self:_change_pose(pose_code)
 end
 
--- Lines 4489-4519
+-- Lines 4510-4540
 function HuskPlayerMovement:_change_stance(stance_code, delayed_shot)
 	if self._stance.code and self._stance.code == stance_code then
 		return
@@ -4482,12 +4499,12 @@ function HuskPlayerMovement:_change_stance(stance_code, delayed_shot)
 	stance.transition = transition
 end
 
--- Lines 4523-4525
+-- Lines 4544-4546
 function HuskPlayerMovement:_get_pose_redirect(pose_code)
 	return pose_code == 1 and "stand" or pose_code == 3 and "prone" or "crouch"
 end
 
--- Lines 4527-4557
+-- Lines 4548-4578
 function HuskPlayerMovement:_change_pose(pose_code)
 	local redirect = self:_get_pose_redirect(pose_code)
 
@@ -4524,7 +4541,7 @@ function HuskPlayerMovement:_change_pose(pose_code)
 	self:play_redirect(redirect, enter_t)
 end
 
--- Lines 4561-4591
+-- Lines 4582-4612
 function HuskPlayerMovement:sync_movement_state(state, down_time)
 	self._state_redirects = self._state_redirects or {
 		jerry1 = "freefall",
@@ -4554,7 +4571,7 @@ function HuskPlayerMovement:sync_movement_state(state, down_time)
 	end
 end
 
--- Lines 4593-4657
+-- Lines 4614-4678
 function HuskPlayerMovement:_sync_movement_state_standard(event_descriptor)
 	if self:need_revive() then
 		self:sync_action_walk_nav_point(nil, nil, "exit_bleedout", sync_action_force_and_execute)
@@ -4621,32 +4638,32 @@ function HuskPlayerMovement:_sync_movement_state_standard(event_descriptor)
 	end
 end
 
--- Lines 4659-4662
+-- Lines 4680-4683
 function HuskPlayerMovement:_sync_movement_state_carry(event_descriptor)
 	self:_sync_movement_state_standard(event_descriptor)
 end
 
--- Lines 4664-4667
+-- Lines 4685-4688
 function HuskPlayerMovement:_sync_movement_state_mask_off(event_descriptor)
 	self:_sync_movement_state_standard(event_descriptor)
 end
 
--- Lines 4669-4672
+-- Lines 4690-4693
 function HuskPlayerMovement:_sync_movement_state_civilian(event_descriptor)
 	self:_sync_movement_state_standard(event_descriptor)
 end
 
--- Lines 4674-4677
+-- Lines 4695-4698
 function HuskPlayerMovement:_sync_movement_state_clean(event_descriptor)
 	self:_sync_movement_state_standard(event_descriptor)
 end
 
--- Lines 4679-4682
+-- Lines 4700-4703
 function HuskPlayerMovement:_sync_movement_state_bipod(event_descriptor)
 	self:_sync_movement_state_standard(event_descriptor)
 end
 
--- Lines 4684-4712
+-- Lines 4705-4733
 function HuskPlayerMovement:_sync_movement_state_tased(event_descriptor)
 	self:play_redirect("tased")
 	self._arm_animator:set_state_blocked("tased", true)
@@ -4672,7 +4689,7 @@ function HuskPlayerMovement:_sync_movement_state_tased(event_descriptor)
 	self:set_movement_updator(self._upd_move_no_animations)
 end
 
--- Lines 4714-4738
+-- Lines 4735-4759
 function HuskPlayerMovement:_sync_movement_state_bleed_out(event_descriptor)
 	self._arm_animator:set_state_blocked("bleed_out", true)
 	self._unit:set_slot(3)
@@ -4694,12 +4711,12 @@ function HuskPlayerMovement:_sync_movement_state_bleed_out(event_descriptor)
 	self:set_attention_updator(self._upd_attention_bleedout)
 end
 
--- Lines 4740-4743
+-- Lines 4761-4764
 function HuskPlayerMovement:_sync_movement_state_incapacitated(event_descriptor)
 	self:_sync_movement_state_fatal(event_descriptor)
 end
 
--- Lines 4745-4769
+-- Lines 4766-4790
 function HuskPlayerMovement:_sync_movement_state_fatal(event_descriptor)
 	self._arm_animator:set_state_blocked("fatal", true)
 	self:play_redirect("fatal")
@@ -4722,7 +4739,7 @@ function HuskPlayerMovement:_sync_movement_state_fatal(event_descriptor)
 	self:set_movement_updator(self._upd_move_no_animations)
 end
 
--- Lines 4771-4795
+-- Lines 4792-4816
 function HuskPlayerMovement:_sync_movement_state_dead(event_descriptor)
 	self._arm_animator:set_state_blocked("dead", true)
 
@@ -4749,7 +4766,7 @@ function HuskPlayerMovement:_sync_movement_state_dead(event_descriptor)
 	self:set_movement_updator(self._upd_move_no_animations)
 end
 
--- Lines 4797-4819
+-- Lines 4818-4840
 function HuskPlayerMovement:_sync_movement_state_arrested(event_descriptor)
 	self._arm_animator:set_state_blocked("arrested", true)
 	self:refresh_primary_hand()
@@ -4771,7 +4788,7 @@ function HuskPlayerMovement:_sync_movement_state_arrested(event_descriptor)
 	self:sync_action_walk_nav_point(nil, nil, "enter_arrested", sync_action_force_and_execute)
 end
 
--- Lines 4821-4868
+-- Lines 4842-4889
 function HuskPlayerMovement:_sync_movement_state_driving(event_descriptor)
 	local peer_id = managers.network:session():peer_by_unit(self._unit):id()
 	local vehicle_data = managers.player:get_vehicle_for_peer(peer_id)
@@ -4817,7 +4834,7 @@ function HuskPlayerMovement:_sync_movement_state_driving(event_descriptor)
 	self:set_attention_updator(self._upd_attention_driving)
 end
 
--- Lines 4870-4896
+-- Lines 4891-4917
 function HuskPlayerMovement:_sync_movement_state_freefall(event_descriptor)
 	if not self._ext_anim.freefall then
 		self:play_redirect("freefall_fwd")
@@ -4845,7 +4862,7 @@ function HuskPlayerMovement:_sync_movement_state_freefall(event_descriptor)
 	self:set_movement_updator(self._upd_move_no_animations)
 end
 
--- Lines 4898-4925
+-- Lines 4919-4946
 function HuskPlayerMovement:_sync_movement_state_parachute(event_descriptor)
 	self._unit:inventory():hide_equipped_unit()
 	self:play_redirect("freefall_to_parachute")
@@ -4873,7 +4890,7 @@ function HuskPlayerMovement:_sync_movement_state_parachute(event_descriptor)
 	self:set_movement_updator(self._upd_move_no_animations)
 end
 
--- Lines 5003-5118
+-- Lines 5024-5139
 function HuskPlayerMovement:_sync_movement_state_player_turret(event_descriptor)
 	local peer_id = managers.network:session():peer_by_unit(self._unit):id()
 	local player_turret = managers.player:get_player_turret_for_peer(peer_id)
@@ -4991,7 +5008,7 @@ function HuskPlayerMovement:_sync_movement_state_player_turret(event_descriptor)
 	self:set_movement_updator(self._upd_move_player_turret)
 end
 
--- Lines 5123-5125
+-- Lines 5144-5146
 function HuskPlayerMovement:on_cuffed()
 	self._unit:network():send_to_unit({
 		"sync_player_movement_state",
@@ -5002,7 +5019,7 @@ function HuskPlayerMovement:on_cuffed()
 	})
 end
 
--- Lines 5129-5131
+-- Lines 5150-5152
 function HuskPlayerMovement:on_uncovered(enemy_unit)
 	self._unit:network():send_to_unit({
 		"suspect_uncovered",
@@ -5010,22 +5027,22 @@ function HuskPlayerMovement:on_uncovered(enemy_unit)
 	})
 end
 
--- Lines 5135-5137
+-- Lines 5156-5158
 function HuskPlayerMovement:anim_clbk_footstep(unit)
 	CopMovement.anim_clbk_footstep(self, unit, self._m_pos)
 end
 
--- Lines 5141-5143
+-- Lines 5162-5164
 function HuskPlayerMovement:get_footstep_event()
 	return CopMovement.get_footstep_event(self)
 end
 
--- Lines 5147-5148
+-- Lines 5168-5169
 function HuskPlayerMovement:ground_ray()
 	return
 end
 
--- Lines 5152-5242
+-- Lines 5173-5263
 function HuskPlayerMovement:clbk_inventory_event(unit, event)
 	local weapon = self._unit:inventory():equipped_unit()
 
@@ -5123,7 +5140,7 @@ function HuskPlayerMovement:clbk_inventory_event(unit, event)
 	end
 end
 
--- Lines 5244-5250
+-- Lines 5265-5271
 function HuskPlayerMovement:get_hold_type_weight(hold)
 	if tweak_data.animation.hold_types[hold] then
 		return tweak_data.animation.hold_types[hold].weight
@@ -5132,22 +5149,22 @@ function HuskPlayerMovement:get_hold_type_weight(hold)
 	end
 end
 
--- Lines 5254-5256
+-- Lines 5275-5277
 function HuskPlayerMovement:current_state_name()
 	return self._state
 end
 
--- Lines 5260-5262
+-- Lines 5281-5283
 function HuskPlayerMovement:tased()
 	return self._state == "tased"
 end
 
--- Lines 5266-5267
+-- Lines 5287-5288
 function HuskPlayerMovement:on_death_exit()
 	return
 end
 
--- Lines 5271-5283
+-- Lines 5292-5304
 function HuskPlayerMovement:load(data)
 	self.update = HuskPlayerMovement._post_load
 	self._load_data = data
@@ -5163,7 +5180,7 @@ function HuskPlayerMovement:load(data)
 	self._team = managers.groupai:state():team_data(data.movement.team_id)
 end
 
--- Lines 5287-5328
+-- Lines 5308-5349
 function HuskPlayerMovement:_post_load(unit, t, dt)
 	if not managers.network:session() then
 		return
@@ -5212,7 +5229,7 @@ function HuskPlayerMovement:_post_load(unit, t, dt)
 	end
 end
 
--- Lines 5332-5351
+-- Lines 5353-5372
 function HuskPlayerMovement:save(data)
 	local peer_id = managers.network:session():peer_by_unit(self._unit):id()
 	local character = managers.criminals:character_by_unit(self._unit)
@@ -5231,7 +5248,7 @@ function HuskPlayerMovement:save(data)
 	data.down_time = self._last_down_time
 end
 
--- Lines 5355-5379
+-- Lines 5376-5405
 function HuskPlayerMovement:pre_destroy(unit)
 	if self._pos_reservation then
 		managers.navigation:unreserve_pos(self._pos_reservation)
@@ -5240,6 +5257,8 @@ function HuskPlayerMovement:pre_destroy(unit)
 		self._pos_reservation = nil
 		self._pos_reservation_slow = nil
 	end
+
+	self._can_reserve_positions = nil
 
 	self:set_need_revive(false)
 	self:set_need_assistance(false)
@@ -5256,36 +5275,42 @@ function HuskPlayerMovement:pre_destroy(unit)
 		self._enemy_weapons_hot_listen_id = nil
 	end
 
+	if self._pos_rsrv_id then
+		managers.navigation:release_pos_reservation_id(self._pos_rsrv_id)
+
+		self._pos_rsrv_id = nil
+	end
+
 	self:anim_cbk_unspawn_melee_item()
 	self:_destroy_current_carry_unit()
 end
 
--- Lines 5383-5385
+-- Lines 5409-5411
 function HuskPlayerMovement:set_attention_setting_enabled(setting_name, state)
 	return PlayerMovement.set_attention_setting_enabled(self, setting_name, state, false)
 end
 
--- Lines 5389-5391
+-- Lines 5415-5417
 function HuskPlayerMovement:clbk_attention_notice_sneak(observer_unit, status)
 	return PlayerMovement.clbk_attention_notice_sneak(self, observer_unit, status)
 end
 
--- Lines 5395-5397
+-- Lines 5421-5423
 function HuskPlayerMovement:_create_attention_setting_from_descriptor(setting_desc, setting_name)
 	return PlayerMovement._create_attention_setting_from_descriptor(self, setting_desc, setting_name)
 end
 
--- Lines 5401-5403
+-- Lines 5427-5429
 function HuskPlayerMovement:attention_handler()
 	return self._attention_handler
 end
 
--- Lines 5407-5408
+-- Lines 5433-5434
 function HuskPlayerMovement:_feed_suspicion_to_hud()
 	return
 end
 
--- Lines 5412-5420
+-- Lines 5438-5446
 function HuskPlayerMovement:_apply_attention_setting_modifications(setting)
 	setting.detection = self._unit:base():detection_settings()
 
@@ -5299,7 +5324,7 @@ function HuskPlayerMovement:_apply_attention_setting_modifications(setting)
 	end
 end
 
--- Lines 5424-5466
+-- Lines 5450-5492
 function HuskPlayerMovement:sync_call_civilian(civilian_unit)
 	if not self._sympathy_civ and civilian_unit:brain():is_available_for_assignment({
 		type = "revive"
@@ -5347,7 +5372,7 @@ function HuskPlayerMovement:sync_call_civilian(civilian_unit)
 	end
 end
 
--- Lines 5470-5483
+-- Lines 5496-5509
 function HuskPlayerMovement:on_civ_revive_started(sympathy_civ)
 	if self._unit:interaction():active() then
 		self._unit:interaction():interact_start(sympathy_civ)
@@ -5366,14 +5391,14 @@ function HuskPlayerMovement:on_civ_revive_started(sympathy_civ)
 	end
 end
 
--- Lines 5487-5491
+-- Lines 5513-5517
 function HuskPlayerMovement:on_civ_revive_failed(sympathy_civ)
 	if self._sympathy_civ then
 		self._sympathy_civ = nil
 	end
 end
 
--- Lines 5495-5511
+-- Lines 5521-5537
 function HuskPlayerMovement:on_civ_revive_completed(sympathy_civ)
 	if sympathy_civ ~= self._sympathy_civ then
 		debug_pause_unit(sympathy_civ, "[HuskPlayerMovement:on_civ_revive_completed] idiot thinks he is reviving", sympathy_civ)
@@ -5398,14 +5423,14 @@ function HuskPlayerMovement:on_civ_revive_completed(sympathy_civ)
 	end
 end
 
--- Lines 5515-5518
+-- Lines 5541-5544
 function HuskPlayerMovement:sync_stance(stance_code)
 	self._stance.owner_stance_code = stance_code
 
 	self:_chk_change_stance()
 end
 
--- Lines 5522-5538
+-- Lines 5548-5564
 function HuskPlayerMovement:_chk_change_stance()
 	local wanted_stance_code
 
@@ -5420,17 +5445,17 @@ function HuskPlayerMovement:_chk_change_stance()
 	end
 end
 
--- Lines 5542-5544
+-- Lines 5568-5570
 function HuskPlayerMovement:sync_action_change_run(is_running)
 	self._running = is_running
 end
 
--- Lines 5548-5550
+-- Lines 5574-5576
 function HuskPlayerMovement:sync_action_change_speed(speed)
 	self._synced_max_speed = speed
 end
 
--- Lines 5554-5562
+-- Lines 5580-5588
 function HuskPlayerMovement:gravity()
 	if self._state == "parachute" then
 		return tweak_data.player.parachute.gravity
@@ -5441,7 +5466,7 @@ function HuskPlayerMovement:gravity()
 	end
 end
 
--- Lines 5564-5572
+-- Lines 5590-5598
 function HuskPlayerMovement:terminal_velocity()
 	if self._state == "parachute" then
 		return tweak_data.player.parachute.terminal_velocity
@@ -5452,7 +5477,7 @@ function HuskPlayerMovement:terminal_velocity()
 	end
 end
 
--- Lines 5576-5633
+-- Lines 5602-5659
 function HuskPlayerMovement:_get_max_move_speed(run)
 	local my_tweak = tweak_data.player.movement_state.standard
 	local move_speed
@@ -5512,7 +5537,7 @@ function HuskPlayerMovement:_get_max_move_speed(run)
 	return move_speed
 end
 
--- Lines 5637-5658
+-- Lines 5663-5684
 function HuskPlayerMovement:_chk_ground_ray(check_pos, return_ray)
 	local mover_radius = 60
 	local up_pos = tmp_vec1
@@ -5534,7 +5559,7 @@ function HuskPlayerMovement:_chk_ground_ray(check_pos, return_ray)
 	end
 end
 
--- Lines 5661-5668
+-- Lines 5687-5694
 function HuskPlayerMovement:_chk_floor_moving_pos(pos)
 	local ground_ray = self:_chk_ground_ray(pos, true)
 
@@ -5543,7 +5568,7 @@ function HuskPlayerMovement:_chk_floor_moving_pos(pos)
 	end
 end
 
--- Lines 5673-5687
+-- Lines 5699-5713
 function HuskPlayerMovement:sync_attention_setting(setting_name, state)
 	if state then
 		local setting_desc = tweak_data.attention.settings[setting_name]
@@ -5560,7 +5585,7 @@ function HuskPlayerMovement:sync_attention_setting(setting_name, state)
 	end
 end
 
--- Lines 5691-5699
+-- Lines 5717-5725
 function HuskPlayerMovement:is_SPOOC_attack_allowed()
 	if self._unit:character_damage():get_mission_blocker("invulnerable") then
 		return false
@@ -5573,7 +5598,7 @@ function HuskPlayerMovement:is_SPOOC_attack_allowed()
 	return true
 end
 
--- Lines 5701-5706
+-- Lines 5727-5732
 function HuskPlayerMovement:is_taser_attack_allowed()
 	if self._unit:character_damage():get_mission_blocker("invulnerable") or self._vehicle then
 		return false
@@ -5582,7 +5607,7 @@ function HuskPlayerMovement:is_taser_attack_allowed()
 	return true
 end
 
--- Lines 5711-5724
+-- Lines 5737-5750
 function HuskPlayerMovement:on_enter_zipline(zipline_unit)
 	local zipline = zipline_unit:zipline()
 
@@ -5595,7 +5620,7 @@ function HuskPlayerMovement:on_enter_zipline(zipline_unit)
 	end
 end
 
--- Lines 5726-5743
+-- Lines 5752-5769
 function HuskPlayerMovement:on_exit_zipline()
 	if self._atention_on then
 		self._machine:forbid_modifier(self._look_modifier_name)
@@ -5616,14 +5641,14 @@ function HuskPlayerMovement:on_exit_zipline()
 	self._zipline.enabled = false
 end
 
--- Lines 5745-5749
+-- Lines 5771-5775
 function HuskPlayerMovement:zipline_unit()
 	if self._zipline and self._zipline.enabled and self._zipline.zipline_unit then
 		return self._zipline.zipline_unit
 	end
 end
 
--- Lines 5754-5776
+-- Lines 5780-5802
 function HuskPlayerMovement:on_exit_vehicle()
 	self._arm_animator:set_state_blocked("driving", false)
 
@@ -5646,7 +5671,7 @@ function HuskPlayerMovement:on_exit_vehicle()
 	self:clear_movement_path()
 end
 
--- Lines 5778-5783
+-- Lines 5804-5809
 function HuskPlayerMovement:sync_vehicle_change_stance(stance)
 	local anim = self._machine:segment_state(self._ids_base)
 
@@ -5656,19 +5681,19 @@ function HuskPlayerMovement:sync_vehicle_change_stance(stance)
 	self._vehicle_shooting_stance = stance
 end
 
--- Lines 5788-5791
+-- Lines 5814-5817
 function HuskPlayerMovement:sync_action_jump(pos, jump_vec)
 	self:_override_last_node_action("land", true)
 	self:sync_action_walk_nav_point(pos, nil, "jump", sync_action_force)
 end
 
--- Lines 5796-5799
+-- Lines 5822-5825
 function HuskPlayerMovement:sync_action_teleport(pos)
 	self:sync_action_walk_nav_point(nil, nil, "teleport_start", sync_action_force)
 	self:sync_action_walk_nav_point(pos, nil, "teleport_end", sync_action_force_and_execute)
 end
 
--- Lines 5803-5827
+-- Lines 5829-5853
 function HuskPlayerMovement:_cleanup_previous_state(previous_state)
 	if self._tase_effect then
 		World:effect_manager():fade_kill(self._tase_effect)
@@ -5694,21 +5719,21 @@ function HuskPlayerMovement:_cleanup_previous_state(previous_state)
 	end
 end
 
--- Lines 5831-5839
+-- Lines 5857-5865
 function HuskPlayerMovement:anim_clbk_hide_akimbo_weapon()
 	if alive(self._unit:inventory():equipped_unit()) and self._unit:inventory():equipped_unit():base().AKIMBO then
 		self._unit:inventory():equipped_unit():base():on_melee_item_shown()
 	end
 end
 
--- Lines 5841-5849
+-- Lines 5867-5875
 function HuskPlayerMovement:anim_clbk_show_akimbo_weapon()
 	if alive(self._unit:inventory():equipped_unit()) and self._unit:inventory():equipped_unit():base().AKIMBO then
 		self._unit:inventory():equipped_unit():base():on_melee_item_hidden()
 	end
 end
 
--- Lines 5851-5865
+-- Lines 5877-5891
 function HuskPlayerMovement:sync_interaction_anim_start(tweak)
 	self:destroy_magazine_in_hand()
 
@@ -5723,7 +5748,7 @@ function HuskPlayerMovement:sync_interaction_anim_start(tweak)
 	end
 end
 
--- Lines 5867-5882
+-- Lines 5893-5908
 function HuskPlayerMovement:sync_interaction_anim_end()
 	self:destroy_magazine_in_hand()
 
@@ -5752,7 +5777,7 @@ HuskPlayerMovement._gadgets = {
 	}
 }
 
--- Lines 5902-5909
+-- Lines 5928-5935
 function HuskPlayerMovement:spawn_wanted_items()
 	if self._wanted_items then
 		for _, spawn_info in ipairs(self._wanted_items) do
@@ -5765,7 +5790,7 @@ end
 
 local ids_unit = IDS_UNIT
 
--- Lines 5913-5939
+-- Lines 5939-5965
 function HuskPlayerMovement:_equip_item(item_type, align_place, droppable)
 	local align_name = self._gadgets.aligns[align_place]
 
@@ -5802,7 +5827,7 @@ function HuskPlayerMovement:_equip_item(item_type, align_place, droppable)
 	table.insert(self._equipped_items[align_place], item_unit)
 end
 
--- Lines 5941-5954
+-- Lines 5967-5980
 function HuskPlayerMovement:_destroy_items()
 	if not self._equipped_items then
 		return
@@ -5819,7 +5844,7 @@ function HuskPlayerMovement:_destroy_items()
 	self._equipped_items = nil
 end
 
--- Lines 5957-5968
+-- Lines 5983-5994
 function HuskPlayerMovement:anim_clbk_wanted_item(unit, item_type, align_place, droppable)
 	self._wanted_items = self._wanted_items or {}
 
@@ -5835,19 +5860,19 @@ function HuskPlayerMovement:anim_clbk_wanted_item(unit, item_type, align_place, 
 	self:spawn_wanted_items()
 end
 
--- Lines 5970-5973
+-- Lines 5996-5999
 function HuskPlayerMovement:anim_clbk_flush_wanted_items()
 	self._wanted_items = nil
 
 	self:_destroy_items()
 end
 
--- Lines 5978-5980
+-- Lines 6004-6006
 function HuskPlayerMovement:is_vr()
 	return self._is_vr
 end
 
--- Lines 5982-5984
+-- Lines 6008-6010
 function HuskPlayerMovement:set_is_vr()
 	self._is_vr = true
 end

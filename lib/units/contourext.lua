@@ -207,7 +207,7 @@ function ContourExt:set_is_child(state)
 	self._is_child_contour = state
 end
 
--- Lines 251-289
+-- Lines 251-277
 function ContourExt:apply_to_linked(func_name, ...)
 	local spawn_ext = self._unit:spawn_manager()
 
@@ -215,35 +215,24 @@ function ContourExt:apply_to_linked(func_name, ...)
 		return
 	end
 
-	local linked_units = spawn_ext:linked_units()
+	local contour_ext, contour_func
 
-	if not linked_units then
-		return
-	end
+	for unit_id, unit_entry in pairs(spawn_ext:spawned_units()) do
+		contour_ext = alive(unit_entry.unit) and unit_entry.unit:contour()
 
-	local entries = spawn_ext:spawned_units()
-	local entry, contour_ext, contour_func
+		if contour_ext then
+			contour_func = contour_ext[func_name]
 
-	for unit_id, _ in pairs(linked_units) do
-		entry = entries[unit_id]
-
-		if entry then
-			contour_ext = alive(entry.unit) and entry.unit:contour()
-
-			if contour_ext then
-				contour_func = contour_ext[func_name]
-
-				if contour_func then
-					contour_func(contour_ext, ...)
-				else
-					Application:error("[ContourExt:apply_to_linked] No function with name '" .. tostring(func_name) .. "' found in contour extension. ", self._unit, entry.unit)
-				end
+			if contour_func then
+				contour_func(contour_ext, ...)
+			else
+				Application:error("[ContourExt:apply_to_linked] No function with name '" .. tostring(func_name) .. "' found in contour extension. ", self._unit, entry.unit)
 			end
 		end
 	end
 end
 
--- Lines 291-436
+-- Lines 279-424
 function ContourExt:add(type, sync, multiplier, override_color, is_element)
 	self._contour_list = self._contour_list or {}
 
@@ -367,7 +356,7 @@ function ContourExt:add(type, sync, multiplier, override_color, is_element)
 	return setup
 end
 
--- Lines 438-453
+-- Lines 426-441
 function ContourExt:change_color(type, color)
 	if not self._contour_list then
 		return
@@ -386,7 +375,7 @@ function ContourExt:change_color(type, color)
 	self:apply_to_linked("change_color", type, color)
 end
 
--- Lines 455-467
+-- Lines 443-455
 function ContourExt:change_color_by_id(id, ...)
 	if not self._contour_list then
 		return
@@ -401,7 +390,7 @@ function ContourExt:change_color_by_id(id, ...)
 	end
 end
 
--- Lines 469-487
+-- Lines 457-475
 function ContourExt:flash(type, frequency)
 	if not self._contour_list then
 		return
@@ -422,7 +411,7 @@ function ContourExt:flash(type, frequency)
 	self:apply_to_linked("flash", type, frequency)
 end
 
--- Lines 489-501
+-- Lines 477-489
 function ContourExt:flash_by_id(id, ...)
 	if not self._contour_list then
 		return
@@ -437,7 +426,7 @@ function ContourExt:flash_by_id(id, ...)
 	end
 end
 
--- Lines 503-513
+-- Lines 491-501
 function ContourExt:is_flashing()
 	if self._contour_list then
 		for i, setup in ipairs(self._contour_list) do
@@ -450,7 +439,7 @@ function ContourExt:is_flashing()
 	return false
 end
 
--- Lines 515-531
+-- Lines 503-519
 function ContourExt:remove(type, sync, is_element)
 	if not self._contour_list then
 		return
@@ -467,7 +456,7 @@ function ContourExt:remove(type, sync, is_element)
 	self:apply_to_linked("remove", type, false, false)
 end
 
--- Lines 533-547
+-- Lines 521-535
 function ContourExt:remove_by_id(id, ...)
 	if not self._contour_list then
 		return
@@ -482,7 +471,7 @@ function ContourExt:remove_by_id(id, ...)
 	end
 end
 
--- Lines 549-559
+-- Lines 537-547
 function ContourExt:has_id(id)
 	if self._contour_list then
 		for i, setup in ipairs(self._contour_list) do
@@ -495,7 +484,7 @@ function ContourExt:has_id(id)
 	return false
 end
 
--- Lines 576-585
+-- Lines 564-573
 function ContourExt:clear_all()
 	if self._contour_list then
 		while self._contour_list and next(self._contour_list) do
@@ -507,7 +496,7 @@ function ContourExt:clear_all()
 	self._materials = nil
 end
 
--- Lines 587-710
+-- Lines 575-698
 function ContourExt:_remove(index, sync, is_element)
 	local setup = self._contour_list and self._contour_list[index]
 
@@ -615,7 +604,7 @@ function ContourExt:_remove(index, sync, is_element)
 	end
 end
 
--- Lines 712-795
+-- Lines 700-783
 function ContourExt:update(unit, t, dt)
 	local index = 1
 	local setup, cam_pos, is_current
@@ -695,7 +684,7 @@ function ContourExt:update(unit, t, dt)
 	end
 end
 
--- Lines 797-828
+-- Lines 785-816
 function ContourExt:_upd_opacity(opacity, is_retry, no_child_upd)
 	if opacity == self._last_opacity then
 		return
@@ -723,7 +712,7 @@ function ContourExt:_upd_opacity(opacity, is_retry, no_child_upd)
 	end
 end
 
--- Lines 830-862
+-- Lines 818-850
 function ContourExt:_upd_color(is_retry, no_child_upd)
 	local setup = self._contour_list and self._contour_list[1]
 
@@ -758,7 +747,7 @@ function ContourExt:_upd_color(is_retry, no_child_upd)
 	end
 end
 
--- Lines 864-895
+-- Lines 852-883
 function ContourExt:_apply_top_preset()
 	local setup = self._contour_list[1]
 
@@ -791,7 +780,7 @@ function ContourExt:_apply_top_preset()
 	end
 end
 
--- Lines 897-919
+-- Lines 885-907
 function ContourExt:material_applied(material_was_swapped)
 	if not self._contour_list then
 		return
@@ -817,7 +806,7 @@ function ContourExt:material_applied(material_was_swapped)
 	end
 end
 
--- Lines 921-938
+-- Lines 909-926
 function ContourExt:_chk_update_state()
 	local needs_update = false
 
@@ -838,7 +827,7 @@ function ContourExt:_chk_update_state()
 	end
 end
 
--- Lines 940-967
+-- Lines 928-955
 function ContourExt:_chk_damage_bonuses()
 	local char_dmg_ext = self._unit:character_damage()
 
@@ -866,7 +855,7 @@ function ContourExt:_chk_damage_bonuses()
 	char_dmg_ext:on_marked_state(dmg_bonus, dmg_bonus_dist_idx)
 end
 
--- Lines 970-997
+-- Lines 958-985
 function ContourExt:_chk_mission_marked_events(added_setup)
 	local element = self._unit:unit_data() and self._unit:unit_data().mission_element
 
@@ -896,7 +885,7 @@ function ContourExt:_chk_mission_marked_events(added_setup)
 	end
 end
 
--- Lines 1000-1012
+-- Lines 988-1000
 function ContourExt:update_materials()
 	if self._contour_list then
 		self._materials = nil
@@ -911,7 +900,7 @@ function ContourExt:update_materials()
 	end
 end
 
--- Lines 1014-1034
+-- Lines 1002-1022
 function ContourExt:save(data)
 	local my_save_data = {}
 
@@ -937,7 +926,7 @@ function ContourExt:save(data)
 	end
 end
 
--- Lines 1036-1050
+-- Lines 1024-1038
 function ContourExt:load(load_data)
 	local my_load_data = load_data.ContourExt
 
@@ -954,7 +943,7 @@ function ContourExt:load(load_data)
 	end
 end
 
--- Lines 1052-1058
+-- Lines 1040-1046
 function ContourExt:destroy(unit)
 	if self._removed_occlusion then
 		self._removed_occlusion = nil

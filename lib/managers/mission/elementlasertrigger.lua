@@ -508,7 +508,7 @@ function ElementLaserTrigger:operation_remove()
 	self:_set_dummies_visible(false)
 end
 
--- Lines 506-515
+-- Lines 506-517
 function ElementLaserTrigger:_set_dummies_visible(visible)
 	if not self._dummy_units then
 		return
@@ -517,11 +517,13 @@ function ElementLaserTrigger:_set_dummies_visible(visible)
 	self._dummies_visible = visible
 
 	for _, unit in ipairs(self._dummy_units) do
-		unit:set_enabled(self._dummies_visible)
+		if alive(unit) then
+			unit:set_enabled(self._dummies_visible)
+		end
 	end
 end
 
--- Lines 518-524
+-- Lines 520-526
 function ElementLaserTrigger:save(data)
 	data.enabled = self._values.enabled
 	data.cycle_order = self._cycle_order
@@ -530,7 +532,7 @@ function ElementLaserTrigger:save(data)
 	data.dummies_visible = self._dummies_visible
 end
 
--- Lines 526-532
+-- Lines 528-534
 function ElementLaserTrigger:load(data)
 	self:set_enabled(data.enabled)
 

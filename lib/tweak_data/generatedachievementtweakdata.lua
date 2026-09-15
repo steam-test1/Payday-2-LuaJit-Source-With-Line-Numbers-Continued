@@ -1,4 +1,4 @@
--- Lines 2-9212
+-- Lines 2-9338
 function init_auto_generated_achievement_data(tags)
 	return {
 		ameno_1 = {
@@ -1113,7 +1113,9 @@ function init_auto_generated_achievement_data(tags)
 		berry_2 = {
 			additional_id = true,
 			icon_id = "C_Locke_H_Beneath_Clean",
+			need_unlock_icons = true,
 			sort_name = "C_Locke_H_Beneath_Clean",
+			unlock_id = true,
 			tags = {
 				tags.progress.heisting,
 				tags.difficulty.normal,
@@ -1147,8 +1149,10 @@ function init_auto_generated_achievement_data(tags)
 		berry_5 = {
 			additional_id = true,
 			icon_id = "Other_H_Any_NoScope",
+			need_unlock_icons = true,
 			progress = true,
 			sort_name = "Other_H_Any_NoScope",
+			unlock_id = true,
 			tags = {
 				tags.progress.generic,
 				tags.difficulty.normal,
@@ -2773,7 +2777,9 @@ function init_auto_generated_achievement_data(tags)
 		fish_5 = {
 			additional_id = true,
 			icon_id = "C_Continental_H_YachtHeist_Pacifish",
+			need_unlock_icons = true,
 			sort_name = "C_Continental_H_YachtHeist_Pacifish",
+			unlock_id = true,
 			tags = {
 				tags.progress.heisting,
 				tags.difficulty.normal,
@@ -2785,7 +2791,9 @@ function init_auto_generated_achievement_data(tags)
 		fish_6 = {
 			additional_id = true,
 			icon_id = "C_Continental_H_YachtHeist_Blood",
+			need_unlock_icons = true,
 			sort_name = "C_Continental_H_YachtHeist_Blood",
+			unlock_id = true,
 			tags = {
 				tags.progress.heisting,
 				tags.difficulty.normal,
@@ -4747,7 +4755,9 @@ function init_auto_generated_achievement_data(tags)
 		jerry_3 = {
 			additional_id = true,
 			icon_id = "C_Locke_H_BirthOfSky_NoBlood",
+			need_unlock_icons = true,
 			sort_name = "C_Locke_H_BirthOfSky_NoBlood",
+			unlock_id = true,
 			tags = {
 				tags.progress.heisting,
 				tags.difficulty.overkill,
@@ -4760,7 +4770,9 @@ function init_auto_generated_achievement_data(tags)
 		jerry_4 = {
 			additional_id = true,
 			icon_id = "C_Locke_H_BirthOfSky_OneTwoThree",
+			need_unlock_icons = true,
 			sort_name = "C_Locke_H_BirthOfSky_OneTwoThree",
+			unlock_id = true,
 			tags = {
 				tags.progress.heisting,
 				tags.difficulty.overkill,
@@ -6547,8 +6559,10 @@ function init_auto_generated_achievement_data(tags)
 		pim_1 = {
 			additional_id = true,
 			icon_id = "Other_H_Any_NothingPersonal",
+			need_unlock_icons = true,
 			progress = true,
 			sort_name = "Other_H_Any_NothingPersonal",
+			unlock_id = true,
 			tags = {
 				tags.progress.generic,
 				tags.difficulty.overkill,
@@ -6561,8 +6575,10 @@ function init_auto_generated_achievement_data(tags)
 		pim_2 = {
 			additional_id = true,
 			icon_id = "C_Jimmy_H_MurkyStation_CrouchedandHidden",
+			need_unlock_icons = true,
 			progress = true,
 			sort_name = "C_Jimmy_H_MurkyStation_CrouchedandHidden",
+			unlock_id = true,
 			tags = {
 				tags.progress.heisting,
 				tags.difficulty.normal,
@@ -6576,8 +6592,10 @@ function init_auto_generated_achievement_data(tags)
 		pim_3 = {
 			additional_id = true,
 			icon_id = "C_Jimmy_H_Boiling_UMPForMe",
+			need_unlock_icons = true,
 			progress = true,
 			sort_name = "C_Jimmy_H_Boiling_UMPForMe",
+			unlock_id = true,
 			tags = {
 				tags.progress.heisting,
 				tags.difficulty.overkill,
@@ -6591,7 +6609,9 @@ function init_auto_generated_achievement_data(tags)
 		pim_4 = {
 			additional_id = true,
 			icon_id = "C_Hector_H_Firestarter_ForDaisy",
+			need_unlock_icons = true,
 			sort_name = "C_Hector_H_Firestarter_ForDaisy",
+			unlock_id = true,
 			tags = {
 				tags.progress.heisting,
 				tags.difficulty.overkill,
@@ -6880,7 +6900,9 @@ function init_auto_generated_achievement_data(tags)
 		spa_5 = {
 			additional_id = true,
 			icon_id = "C_Continental_H_Brooklyn_ARendezvous",
+			need_unlock_icons = true,
 			sort_name = "C_Continental_H_Brooklyn_ARendezvous",
+			unlock_id = true,
 			tags = {
 				tags.progress.heisting,
 				tags.difficulty.overkill,
@@ -6893,7 +6915,9 @@ function init_auto_generated_achievement_data(tags)
 		spa_6 = {
 			additional_id = true,
 			icon_id = "C_Continental_H_Brooklyn_PassTheAmmo",
+			need_unlock_icons = true,
 			sort_name = "C_Continental_H_Brooklyn_PassTheAmmo",
+			unlock_id = true,
 			tags = {
 				tags.progress.heisting,
 				tags.difficulty.overkill,
@@ -8871,7 +8895,7 @@ function init_auto_generated_achievement_data(tags)
 			tags = {
 				tags.progress.heisting,
 				tags.difficulty.normal,
-				tags.unlock.exclusive_set,
+				tags.unlock.exclusive_weapon_set,
 				tags.tactics.loud,
 				tags.tactics.killer,
 				tags.inventory.weapon,
@@ -9589,7 +9613,7 @@ function init_auto_generated_achievement_data(tags)
 			tags = {
 				tags.progress.heisting,
 				tags.difficulty.normal,
-				tags.unlock.exclusive_set,
+				tags.unlock.exclusive_weapon_set,
 				tags.tactics.loud,
 				tags.tactics.killer,
 				tags.inventory.weapon,
@@ -9606,7 +9630,7 @@ function init_auto_generated_achievement_data(tags)
 			tags = {
 				tags.progress.heisting,
 				tags.difficulty.normal,
-				tags.unlock.exclusive_set,
+				tags.unlock.exclusive_weapon_set,
 				tags.tactics.loud,
 				tags.tactics.killer,
 				tags.inventory.weapon,
@@ -9622,7 +9646,7 @@ function init_auto_generated_achievement_data(tags)
 			tags = {
 				tags.progress.heisting,
 				tags.difficulty.overkill,
-				tags.unlock.weapon,
+				tags.unlock.weapon_mod,
 				tags.tactics.loud,
 				tags.tactics.killer,
 				tags.inventory.weapon,
@@ -10651,6 +10675,186 @@ function init_auto_generated_achievement_data(tags)
 				tags.tactics.loud,
 				tags.teamwork.players_1_to_4,
 				tags.contracts.vlad
+			}
+		},
+		auc_1 = {
+			additional_id = true,
+			icon_id = "C_Bain_H_UnderTheHammer_AllDiffs_D0",
+			ladder = "H_UnderTheHammer",
+			sort_name = "C_Bain_H_UnderTheHammer_AllDiffs_D0",
+			tags = {
+				tags.progress.completion,
+				tags.difficulty.normal,
+				tags.tactics.loud,
+				tags.tactics.stealth,
+				tags.contracts.bain
+			}
+		},
+		auc_10 = {
+			additional_id = true,
+			icon_id = "C_Bain_H_UnderTheHammer_FlashAuction",
+			ladder = "H_UnderTheHammer",
+			sort_name = "C_Bain_H_UnderTheHammer_FlashAuction",
+			tags = {
+				tags.progress.heisting,
+				tags.difficulty.overkill,
+				tags.tactics.stealth,
+				tags.tactics.timed,
+				tags.contracts.bain
+			}
+		},
+		auc_11 = {
+			additional_id = true,
+			icon_id = "C_Bain_H_UnderTheHammer_CuratedCrew",
+			ladder = "H_UnderTheHammer",
+			sort_name = "C_Bain_H_UnderTheHammer_CuratedCrew",
+			tags = {
+				tags.progress.heisting,
+				tags.difficulty.overkill,
+				tags.tactics.stealth,
+				tags.contracts.bain
+			}
+		},
+		auc_12 = {
+			additional_id = true,
+			icon_id = "C_Bain_H_UnderTheHammer_Doppelganger",
+			ladder = "H_UnderTheHammer",
+			sort_name = "C_Bain_H_UnderTheHammer_Doppelganger",
+			tags = {
+				tags.progress.heisting,
+				tags.tactics.loud,
+				tags.inventory.mask,
+				tags.inventory.weapon,
+				tags.contracts.bain
+			}
+		},
+		auc_13 = {
+			additional_id = true,
+			icon_id = "C_Bain_H_UnderTheHammer_Junior",
+			ladder = "H_UnderTheHammer",
+			need_unlock_icons = true,
+			sort_name = "C_Bain_H_UnderTheHammer_Junior",
+			unlock_id = true,
+			tags = {
+				tags.progress.heisting,
+				tags.difficulty.overkill,
+				tags.unlock.weapon,
+				tags.tactics.loud,
+				tags.contracts.bain
+			}
+		},
+		auc_14 = {
+			additional_id = true,
+			icon_id = "C_Bain_H_UnderTheHammer_SunTan",
+			ladder = "H_UnderTheHammer",
+			sort_name = "C_Bain_H_UnderTheHammer_SunTan",
+			tags = {
+				tags.progress.heisting,
+				tags.difficulty.overkill,
+				tags.tactics.loud,
+				tags.contracts.bain
+			}
+		},
+		auc_2 = {
+			additional_id = true,
+			icon_id = "C_Bain_H_UnderTheHammer_AllDiffs_D1",
+			ladder = "H_UnderTheHammer",
+			sort_name = "C_Bain_H_UnderTheHammer_AllDiffs_D1",
+			tags = {
+				tags.progress.completion,
+				tags.difficulty.hard,
+				tags.tactics.loud,
+				tags.tactics.stealth,
+				tags.contracts.bain
+			}
+		},
+		auc_3 = {
+			additional_id = true,
+			icon_id = "C_Bain_H_UnderTheHammer_AllDiffs_D2",
+			ladder = "H_UnderTheHammer",
+			sort_name = "C_Bain_H_UnderTheHammer_AllDiffs_D2",
+			tags = {
+				tags.progress.completion,
+				tags.difficulty.very_hard,
+				tags.tactics.loud,
+				tags.tactics.stealth,
+				tags.contracts.bain
+			}
+		},
+		auc_4 = {
+			additional_id = true,
+			icon_id = "C_Bain_H_UnderTheHammer_AllDiffs_D3",
+			ladder = "H_UnderTheHammer",
+			sort_name = "C_Bain_H_UnderTheHammer_AllDiffs_D3",
+			tags = {
+				tags.progress.completion,
+				tags.difficulty.overkill,
+				tags.tactics.loud,
+				tags.tactics.stealth,
+				tags.contracts.bain
+			}
+		},
+		auc_5 = {
+			additional_id = true,
+			icon_id = "C_Bain_H_UnderTheHammer_AllDiffs_D4",
+			ladder = "H_UnderTheHammer",
+			sort_name = "C_Bain_H_UnderTheHammer_AllDiffs_D4",
+			tags = {
+				tags.progress.completion,
+				tags.difficulty.mayhem,
+				tags.tactics.loud,
+				tags.tactics.stealth,
+				tags.contracts.bain
+			}
+		},
+		auc_6 = {
+			additional_id = true,
+			icon_id = "C_Bain_H_UnderTheHammer_AllDiffs_D5",
+			ladder = "H_UnderTheHammer",
+			sort_name = "C_Bain_H_UnderTheHammer_AllDiffs_D5",
+			tags = {
+				tags.progress.completion,
+				tags.difficulty.death_wish,
+				tags.tactics.loud,
+				tags.tactics.stealth,
+				tags.contracts.bain
+			}
+		},
+		auc_7 = {
+			additional_id = true,
+			icon_id = "C_Bain_H_UnderTheHammer_AllDiffs_D6",
+			ladder = "H_UnderTheHammer",
+			sort_name = "C_Bain_H_UnderTheHammer_AllDiffs_D6",
+			tags = {
+				tags.progress.completion,
+				tags.difficulty.death_sentence,
+				tags.tactics.loud,
+				tags.tactics.stealth,
+				tags.contracts.bain
+			}
+		},
+		auc_8 = {
+			additional_id = true,
+			icon_id = "C_Bain_H_UnderTheHammer_AllDiffs_OD_D6",
+			ladder = "H_UnderTheHammer",
+			sort_name = "C_Bain_H_UnderTheHammer_AllDiffs_OD_D6",
+			tags = {
+				tags.progress.completion,
+				tags.difficulty.death_sentence,
+				tags.tactics.loud,
+				tags.tactics.stealth,
+				tags.contracts.bain
+			}
+		},
+		auc_9 = {
+			additional_id = true,
+			icon_id = "C_Bain_H_UnderTheHammer_DealOfTheDay",
+			ladder = "H_UnderTheHammer",
+			sort_name = "C_Bain_H_UnderTheHammer_DealOfTheDay",
+			tags = {
+				tags.progress.heisting,
+				tags.difficulty.overkill,
+				tags.contracts.bain
 			}
 		},
 		tag_1 = {

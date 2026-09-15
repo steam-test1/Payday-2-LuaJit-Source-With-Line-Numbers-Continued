@@ -644,51 +644,56 @@ function ElementSpecialObjective:_get_misc_SO_params()
 end
 
 -- Lines 556-558
+function ElementSpecialObjective:needs_pos_rsrv()
+	return self._values.needs_pos_rsrv or false
+end
+
+-- Lines 562-564
 function ElementSpecialObjective:nav_link_end_pos()
 	return self._values.search_position
 end
 
--- Lines 562-564
+-- Lines 568-570
 function ElementSpecialObjective:nav_link_access()
 	return tonumber(self._values.SO_access)
 end
 
--- Lines 568-570
+-- Lines 574-576
 function ElementSpecialObjective:chance()
 	return self:_get_default_value_if_nil("base_chance")
 end
 
--- Lines 574-576
+-- Lines 580-582
 function ElementSpecialObjective:nav_link_delay()
 	return self:_get_default_value_if_nil("interval")
 end
 
--- Lines 580-582
+-- Lines 586-588
 function ElementSpecialObjective:nav_link()
 	return self._nav_link
 end
 
--- Lines 586-588
+-- Lines 592-594
 function ElementSpecialObjective:id()
 	return self._id
 end
 
--- Lines 592-594
+-- Lines 598-600
 function ElementSpecialObjective:_is_nav_link()
 	return self._values.is_navigation_link or self._values.navigation_link and self._values.navigation_link ~= -1
 end
 
--- Lines 598-600
+-- Lines 604-606
 function ElementSpecialObjective:set_nav_link(nav_link)
 	self._nav_link = nav_link
 end
 
--- Lines 604-606
+-- Lines 610-612
 function ElementSpecialObjective:nav_link_wants_align_pos()
 	return self._values.align_position
 end
 
--- Lines 610-643
+-- Lines 616-649
 function ElementSpecialObjective:_select_units_from_spawners()
 	local candidates = {}
 	local objectives = {}
@@ -732,12 +737,12 @@ function ElementSpecialObjective:_select_units_from_spawners()
 	return chosen_units, chosen_objectives
 end
 
--- Lines 647-649
+-- Lines 653-655
 function ElementSpecialObjective:get_objective_trigger()
 	return self._values.trigger_on
 end
 
--- Lines 653-687
+-- Lines 659-693
 function ElementSpecialObjective:_administer_objective(unit, objective)
 	if objective.type == "phalanx" then
 		GroupAIStateBase:register_phalanx_unit(unit)
@@ -775,7 +780,7 @@ function ElementSpecialObjective:_administer_objective(unit, objective)
 	end
 end
 
--- Lines 692-747
+-- Lines 698-762
 function ElementSpecialObjective:choose_followup_SO(unit, skip_element_ids)
 	if not self._values.followup_elements then
 		return
@@ -797,6 +802,7 @@ function ElementSpecialObjective:choose_followup_SO(unit, skip_element_ids)
 
 	local total_weight = 0
 	local pool = {}
+	local backup_pool = {}
 
 	for _, followup_element_id in ipairs(self._values.followup_elements) do
 		local weight
@@ -805,34 +811,44 @@ function ElementSpecialObjective:choose_followup_SO(unit, skip_element_ids)
 		if followup_element:enabled() then
 			followup_element, weight = followup_element:get_as_followup(unit, skip_element_ids)
 
-			if followup_element and followup_element:enabled() and weight > 0 then
-				table.insert(pool, {
-					element = followup_element,
-					weight = weight
-				})
+			if followup_element and followup_element:enabled() then
+				if weight > 0 then
+					table.insert(pool, {
+						element = followup_element,
+						weight = weight
+					})
 
-				total_weight = total_weight + weight
+					total_weight = total_weight + weight
+				else
+					table.insert(backup_pool, followup_element)
+				end
 			end
 		end
 	end
 
-	if not next(pool) or total_weight <= 0 then
-		return
+	if #pool > 0 and total_weight > 0 then
+		local lucky_w = math.random() * total_weight
+		local accumulated_w = 0
+
+		for i, followup_data in ipairs(pool) do
+			accumulated_w = accumulated_w + followup_data.weight
+
+			if lucky_w <= accumulated_w then
+				return pool[i].element
+			end
+		end
 	end
 
-	local lucky_w = math.random() * total_weight
-	local accumulated_w = 0
+	local nr_backups = #backup_pool
 
-	for i, followup_data in ipairs(pool) do
-		accumulated_w = accumulated_w + followup_data.weight
+	if nr_backups > 0 then
+		local random_backup = nr_backups == 1 and 1 or math.random(nr_backups)
 
-		if lucky_w <= accumulated_w then
-			return pool[i].element
-		end
+		return backup_pool[random_backup]
 	end
 end
 
--- Lines 751-758
+-- Lines 766-773
 function ElementSpecialObjective:get_as_followup(unit, skip_element_ids)
 	if (not unit or managers.navigation:check_access(self._values.SO_access, unit:brain():SO_access(), 0) and self:clbk_verify_administration(unit)) and not skip_element_ids[self._id] then
 		return self, self:_get_default_value_if_nil("base_chance")
@@ -841,7 +857,7 @@ function ElementSpecialObjective:get_as_followup(unit, skip_element_ids)
 	self:event("admin_fail", unit)
 end
 
--- Lines 762-768
+-- Lines 777-783
 function ElementSpecialObjective:_has_action_duration()
 	if not self._values.action_duration_max and not self._values.action_duration_min then
 		return false
@@ -850,7 +866,7 @@ function ElementSpecialObjective:_has_action_duration()
 	return true
 end
 
--- Lines 770-780
+-- Lines 785-795
 function ElementSpecialObjective:_get_action_duration()
 	if not self._values.action_duration_max and not self._values.action_duration_min then
 		return
@@ -864,7 +880,7 @@ function ElementSpecialObjective:_get_action_duration()
 	end
 end
 
--- Lines 784-786
+-- Lines 799-801
 function ElementSpecialObjective:_get_default_value_if_nil(name_in)
 	return self._values[name_in] or self._DEFAULT_VALUES[name_in]
 end
@@ -917,7 +933,7 @@ ElementSpecialObjective._stealth_idles_no_loop = {
 	"e_so_ntl_watch_look_calm"
 }
 
--- Lines 842-861
+-- Lines 857-876
 function ElementSpecialObjective:_check_new_stealth_idle()
 	if self._values.so_action then
 		if not self:_has_action_duration() then

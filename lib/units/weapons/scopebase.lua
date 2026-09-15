@@ -36,7 +36,7 @@ function NewRaycastWeaponBase:set_scope_enabled(enabled)
 	end
 end
 
--- Lines 61-116
+-- Lines 61-119
 function NewRaycastWeaponBase:configure_scope()
 	if self:is_npc() then
 		return
@@ -48,7 +48,7 @@ function NewRaycastWeaponBase:configure_scope()
 		if parts_tweak[part_id] and parts_tweak[part_id].camera then
 			local camera = parts_tweak[part_id] and parts_tweak[part_id].camera
 
-			if camera then
+			if camera and camera.a_camera and camera.a_screen then
 				local config = {}
 
 				config.a_camera = part.unit:get_object(Idstring(camera.a_camera))

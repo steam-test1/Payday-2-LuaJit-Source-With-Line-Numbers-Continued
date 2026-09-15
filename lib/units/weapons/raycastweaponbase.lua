@@ -1553,6 +1553,11 @@ function RaycastWeaponBase:_get_tweak_data_weapon_animation(anim)
 	return animations and animations[anim]
 end
 
+-- Lines 1722-1724
+function RaycastWeaponBase:_get_anim_legth_modifier(anim)
+	return length
+end
+
 -- Lines 1728-1730
 function RaycastWeaponBase:_get_anim_start_offset(anim)
 	return false

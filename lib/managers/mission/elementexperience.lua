@@ -13,7 +13,7 @@ function ElementExperience:on_script_activated()
 	ElementExperience.super.on_script_activated(self)
 end
 
--- Lines 14-22
+-- Lines 14-38
 function ElementExperience:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -23,18 +23,18 @@ function ElementExperience:on_executed(instigator)
 	ElementExperience.super.on_executed(self, instigator)
 end
 
--- Lines 24-26
+-- Lines 40-42
 function ElementExperience:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines 28-31
+-- Lines 44-47
 function ElementExperience:save(data)
 	data.save_me = true
 	data.enabled = self._values.enabled
 end
 
--- Lines 33-35
+-- Lines 49-51
 function ElementExperience:load(data)
 	self:set_enabled(data.enabled)
 end

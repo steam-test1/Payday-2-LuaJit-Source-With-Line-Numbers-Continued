@@ -644,7 +644,7 @@ function MusicManager:jukebox_ghost_track(name)
 	end
 end
 
--- Lines 612-900
+-- Lines 612-903
 function MusicManager:jukebox_default_tracks()
 	local default_options = {
 		credits = "criminals_ambition",
@@ -658,6 +658,7 @@ function MusicManager:jukebox_default_tracks()
 		heist_arm_hcm = "all",
 		heist_arm_par = "all",
 		heist_arm_und = "all",
+		heist_auc = "track_81",
 		heist_bex = "track_68",
 		heist_big = "all",
 		heist_born1 = "all",
@@ -818,7 +819,7 @@ function MusicManager:jukebox_default_tracks()
 	return default_options
 end
 
--- Lines 902-962
+-- Lines 905-965
 function MusicManager:get_lock_data()
 	if not managers.dlc or not managers.experience then
 		return {}
@@ -859,11 +860,11 @@ function MusicManager:get_lock_data()
 	return self._lock_data
 end
 
--- Lines 964-979
+-- Lines 967-982
 function MusicManager:get_tracks_locked()
 	local tracks_locked = {}
 
-	-- Lines 967-970
+	-- Lines 970-973
 	local function add_locked(track_list)
 		local _, locked = self:_jukebox_get_tracks(track_list)
 
@@ -877,7 +878,7 @@ function MusicManager:get_tracks_locked()
 	return tracks_locked
 end
 
--- Lines 981-1002
+-- Lines 984-1005
 function MusicManager:_jukebox_get_tracks(track_list)
 	local lock_data = self:get_lock_data()
 	local tracks = {}
@@ -900,7 +901,7 @@ function MusicManager:_jukebox_get_tracks(track_list)
 	return tracks, tracks_locked
 end
 
--- Lines 1004-1016
+-- Lines 1007-1019
 function MusicManager:jukebox_music_tracks()
 	local lock_data = self:get_lock_data()
 
@@ -914,17 +915,17 @@ function MusicManager:jukebox_music_tracks()
 	return self:_jukebox_get_tracks(tweak_data.music.track_list)
 end
 
--- Lines 1018-1020
+-- Lines 1021-1023
 function MusicManager:jukebox_menu_tracks()
 	return self:_jukebox_get_tracks(tweak_data.music.track_menu_list)
 end
 
--- Lines 1023-1025
+-- Lines 1026-1028
 function MusicManager:jukebox_ghost_tracks()
 	return self:_jukebox_get_tracks(tweak_data.music.track_ghost_list)
 end
 
--- Lines 1028-1030
+-- Lines 1031-1033
 function MusicManager:music_tracks()
 	return tweak_data.music.soundbank_list
 end
