@@ -192,14 +192,20 @@ function FirstAidKitBase:sync_net_event(event_id)
 	end
 end
 
--- Lines 189-192
+-- Lines 189-198
 function FirstAidKitBase:_set_dynamic()
-	self._is_dynamic = true
+	local dyn_body = self._unit:body("dynamic")
 
-	self._unit:body("dynamic"):set_enabled(true)
+	if dyn_body then
+		self._is_dynamic = true
+
+		dyn_body:set_enabled(true)
+	else
+		Application:warn("[FirstAidKitBase:_set_dynamic] Failed to set dynamic, no body called 'dynamic'", self._unit)
+	end
 end
 
--- Lines 196-208
+-- Lines 202-214
 function FirstAidKitBase:take(unit)
 	if self._empty then
 		return
@@ -215,7 +221,7 @@ function FirstAidKitBase:take(unit)
 	self:_set_empty()
 end
 
--- Lines 210-229
+-- Lines 216-235
 function FirstAidKitBase:_set_empty()
 	self._empty = true
 
@@ -236,7 +242,7 @@ function FirstAidKitBase:_set_empty()
 	end
 end
 
--- Lines 233-237
+-- Lines 239-243
 function FirstAidKitBase:save(data)
 	local state = {}
 
@@ -244,7 +250,7 @@ function FirstAidKitBase:save(data)
 	data.FirstAidKitBase = state
 end
 
--- Lines 239-246
+-- Lines 245-252
 function FirstAidKitBase:load(data)
 	local state = data.FirstAidKitBase
 
@@ -255,7 +261,7 @@ function FirstAidKitBase:load(data)
 	self._was_dropin = true
 end
 
--- Lines 250-261
+-- Lines 256-267
 function FirstAidKitBase:pre_destroy(unit)
 	FirstAidKitBase.super.pre_destroy(self, unit)
 

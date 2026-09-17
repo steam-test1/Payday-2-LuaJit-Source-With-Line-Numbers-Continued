@@ -1,3 +1,4 @@
+local IDS_CARRY_DATA = Idstring("carry_data")
 local IDS_BAG_STILL = Idstring("bag_still")
 local IDS_BAG_MOVING = Idstring("bag_moving")
 
@@ -18,7 +19,7 @@ CarryData._bodies_to_find_AI = {
 }
 CarryData.carry_links = {}
 
--- Lines 44-65
+-- Lines 45-66
 function CarryData._register_remove_on_weapons_hot(unit, carry_id)
 	if not Network:is_server() or tweak_data.levels:get_prevent_carry_disposal(carry_id) then
 		return
@@ -42,7 +43,7 @@ function CarryData._register_remove_on_weapons_hot(unit, carry_id)
 	end
 end
 
--- Lines 67-92
+-- Lines 68-93
 function CarryData._unregister_remove_on_weapons_hot(unit)
 	if not Network:is_server() or not CarryData._to_dispose or not CarryData._to_dispose[unit:key()] then
 		return
@@ -69,7 +70,7 @@ function CarryData._unregister_remove_on_weapons_hot(unit)
 	end
 end
 
--- Lines 94-105
+-- Lines 95-106
 function CarryData._clbk_weapons_hot()
 	managers.groupai:state():remove_listener(CarryData._weapons_hot_listener_id)
 
@@ -82,7 +83,7 @@ function CarryData._clbk_weapons_hot()
 	end
 end
 
--- Lines 107-126
+-- Lines 108-127
 function CarryData._clbk_do_disposal()
 	local to_keep = {}
 
@@ -104,7 +105,7 @@ function CarryData._clbk_do_disposal()
 	CarryData._disposal_clbk_id = nil
 end
 
--- Lines 130-244
+-- Lines 131-247
 function CarryData:init(unit)
 	self._unit = unit
 	self._dye_initiated = nil
@@ -120,7 +121,7 @@ function CarryData:init(unit)
 	if not Network:is_server() then
 		self._link_body = unit:body("hinge_body_1") or unit:body(0)
 
-		unit:set_extension_update_enabled(Idstring("carry_data"), false)
+		unit:set_extension_update_enabled(IDS_CARRY_DATA, false)
 
 		return
 	end
@@ -176,16 +177,16 @@ function CarryData:init(unit)
 		enable_update = false
 	end
 
-	unit:set_extension_update_enabled(Idstring("carry_data"), enable_update)
+	unit:set_extension_update_enabled(IDS_CARRY_DATA, enable_update)
 	self:_set_expire_enabled(true)
 end
 
--- Lines 246-248
+-- Lines 249-251
 function CarryData:set_mission_element(mission_element)
 	self._mission_element = mission_element
 end
 
--- Lines 250-256
+-- Lines 253-259
 function CarryData:trigger_load(instigator)
 	if not self._mission_element then
 		return
@@ -194,12 +195,12 @@ function CarryData:trigger_load(instigator)
 	self._mission_element:trigger("load", instigator)
 end
 
--- Lines 258-260
+-- Lines 261-263
 function CarryData:enable_update()
-	self._unit:set_extension_update_enabled(Idstring("carry_data"), true)
+	self._unit:set_extension_update_enabled(IDS_CARRY_DATA, true)
 end
 
--- Lines 277-302
+-- Lines 280-305
 function CarryData:update(unit, t, dt)
 	local needs_updating = false
 
@@ -212,11 +213,11 @@ function CarryData:update(unit, t, dt)
 	end
 
 	if not needs_updating then
-		unit:set_extension_update_enabled(Idstring("carry_data"), false)
+		unit:set_extension_update_enabled(IDS_CARRY_DATA, false)
 	end
 end
 
--- Lines 306-313
+-- Lines 309-316
 function CarryData:_set_expire_enabled(enabled)
 	self._expire_t = enabled and self._expire_time or nil
 	self._expire_paused = false
@@ -226,7 +227,7 @@ function CarryData:_set_expire_enabled(enabled)
 	end
 end
 
--- Lines 315-327
+-- Lines 318-330
 function CarryData:_update_expire_t(unit, t, dt)
 	if self._expire_t and not self._expire_paused then
 		self._expire_t = self._expire_t - dt
@@ -243,12 +244,12 @@ function CarryData:_update_expire_t(unit, t, dt)
 	return self._expire_t and true or false
 end
 
--- Lines 329-331
+-- Lines 332-334
 function CarryData:set_expire_paused(paused)
 	self._expire_paused = paused
 end
 
--- Lines 348-392
+-- Lines 351-395
 function CarryData:_update_throw_link(unit, t, dt)
 	if self._linked_to or not self._spawn_time or t > self._spawn_time + 1 or not self._link_obj or not self._link_obj:visibility() then
 		return false
@@ -283,7 +284,7 @@ function CarryData:_update_throw_link(unit, t, dt)
 	return true
 end
 
--- Lines 395-426
+-- Lines 398-429
 function CarryData:_update_teleport(unit, t, dt)
 	if self._teleport_perform_push then
 		self._teleport_perform_push = nil
@@ -319,7 +320,7 @@ function CarryData:_update_teleport(unit, t, dt)
 	return self:is_teleporting()
 end
 
--- Lines 430-445
+-- Lines 433-448
 function CarryData:_check_dye_explode()
 	if CarryData.disable_dye_packs then
 		return
@@ -338,7 +339,7 @@ function CarryData:_check_dye_explode()
 	self._dye_risk.next_t = TimerManager:game():time() + 2 + math.random(3)
 end
 
--- Lines 447-464
+-- Lines 450-467
 function CarryData:_dye_exploded(was_synced)
 	if CarryData.disable_dye_packs then
 		return
@@ -360,7 +361,7 @@ function CarryData:_dye_exploded(was_synced)
 	managers.enemy:add_delayed_clbk(self._remove_dye_smoke_clbk_id, callback(self, self, "_clbk_remove_dye_smoke"), TimerManager:game():time() + 5)
 end
 
--- Lines 466-472
+-- Lines 469-475
 function CarryData:_remove_dye_smoke()
 	if self._dye_pack_smoke then
 		World:effect_manager():fade_kill(self._dye_pack_smoke)
@@ -369,14 +370,14 @@ function CarryData:_remove_dye_smoke()
 	end
 end
 
--- Lines 474-478
+-- Lines 477-481
 function CarryData:_clbk_remove_dye_smoke()
 	self._remove_dye_smoke_clbk_id = nil
 
 	self:_remove_dye_smoke()
 end
 
--- Lines 480-499
+-- Lines 483-502
 function CarryData:check_explodes_on_impact(vel_vector, air_time)
 	if not self:can_explode() or air_time < 0.5 then
 		return
@@ -398,22 +399,22 @@ function CarryData:check_explodes_on_impact(vel_vector, air_time)
 	end
 end
 
--- Lines 501-503
+-- Lines 504-506
 function CarryData:explode_sequence_started()
 	return self._explode_t and true or false
 end
 
--- Lines 505-507
+-- Lines 508-510
 function CarryData:tag_for_explosion()
 	self._tagged_for_explosion = true
 end
 
--- Lines 509-511
+-- Lines 512-514
 function CarryData:is_tagged_for_explosion()
 	return self._tagged_for_explosion
 end
 
--- Lines 513-519
+-- Lines 516-522
 function CarryData:can_explode()
 	if not Network:is_server() or not self._can_explode or self._explode_t or self._linked_to or self._disarmed or self._zipline_unit then
 		return false
@@ -422,7 +423,7 @@ function CarryData:can_explode()
 	return true
 end
 
--- Lines 521-527
+-- Lines 524-530
 function CarryData:can_secure()
 	if self._disarmed then
 		return false
@@ -431,7 +432,7 @@ function CarryData:can_secure()
 	return true
 end
 
--- Lines 530-536
+-- Lines 533-539
 function CarryData:can_poof()
 	if not Network:is_server() or not self._can_poof or self._linked_to or self._zipline_unit or self._explode_t then
 		return false
@@ -440,7 +441,7 @@ function CarryData:can_poof()
 	return true
 end
 
--- Lines 539-561
+-- Lines 542-564
 function CarryData:start_explosion(instant)
 	if not self:can_explode() then
 		return
@@ -465,21 +466,21 @@ function CarryData:start_explosion(instant)
 	end
 end
 
--- Lines 563-567
+-- Lines 566-570
 function CarryData:_clbk_delayed_explosion()
 	self._delayed_explode_clbk_id = nil
 
 	self:_explode()
 end
 
--- Lines 569-573
+-- Lines 572-576
 function CarryData:_start_explosion()
 	if self._unit:interaction() then
 		self._unit:interaction():set_active(false)
 	end
 end
 
--- Lines 575-584
+-- Lines 578-587
 function CarryData:disarm()
 	if self._delayed_explode_clbk_id then
 		managers.enemy:remove_delayed_clbk(self._delayed_explode_clbk_id)
@@ -509,7 +510,7 @@ local mvec3_dis = mvector3.distance
 local math_lerp = math.lerp
 local math_rand = math.rand
 
--- Lines 597-667
+-- Lines 600-670
 function CarryData:_explode()
 	managers.mission:call_global_event("loot_exploded")
 
@@ -576,7 +577,7 @@ function CarryData:_explode()
 	end
 end
 
--- Lines 670-680
+-- Lines 673-683
 function CarryData:_local_player_explosion_damage()
 	local pos = self._unit:position()
 
@@ -593,7 +594,7 @@ CarryData.EXPIRE_CUSTOM_PARAMS = {
 	sound_event = "hlp_poof_small"
 }
 
--- Lines 685-700
+-- Lines 688-703
 function CarryData:_expire(was_synced)
 	self:_unregister_steal_SO()
 	managers.mission:call_global_event("loot_exploded")
@@ -621,7 +622,7 @@ CarryData.POOF_CUSTOM_PARAMS = {
 	sound_event = "hlp_poof_small"
 }
 
--- Lines 706-725
+-- Lines 709-728
 function CarryData:poof(was_synced)
 	if not was_synced and not self:can_poof() then
 		return
@@ -643,7 +644,7 @@ function CarryData:poof(was_synced)
 	self:_handle_hiding_and_destruction(true)
 end
 
--- Lines 728-747
+-- Lines 731-750
 function CarryData:sync_net_event(event_id)
 	if event_id == CarryData.EVENT_IDS.explode then
 		local range = self.EXPLOSION_SETTINGS.range
@@ -664,7 +665,7 @@ function CarryData:sync_net_event(event_id)
 	end
 end
 
--- Lines 749-797
+-- Lines 752-800
 function CarryData:clbk_out_of_world()
 	if self._bodies_to_revert then
 		for i_body, body in ipairs(self._bodies_to_revert) do
@@ -716,12 +717,12 @@ function CarryData:clbk_out_of_world()
 	managers.enemy:add_delayed_clbk(self._register_out_of_world_clbk_id, callback(self, self, "clbk_out_of_world"), TimerManager:game():time() + 2)
 end
 
--- Lines 799-801
+-- Lines 802-804
 function CarryData:carry_id()
 	return self._carry_id
 end
 
--- Lines 803-812
+-- Lines 806-815
 function CarryData:carry_tweak()
 	if not self._carry_id then
 		return
@@ -733,7 +734,7 @@ function CarryData:carry_tweak()
 	return carry_tweak
 end
 
--- Lines 814-824
+-- Lines 817-827
 function CarryData:carry_type_tweak()
 	if not self._carry_id then
 		return
@@ -746,7 +747,7 @@ function CarryData:carry_type_tweak()
 	return carry_type_tweak
 end
 
--- Lines 826-886
+-- Lines 829-889
 function CarryData:set_carry_id(carry_id)
 	local carry_tweaks = tweak_data.carry
 
@@ -798,34 +799,34 @@ function CarryData:set_carry_id(carry_id)
 	end
 end
 
--- Lines 888-891
+-- Lines 891-894
 function CarryData:clbk_register_steal_SO()
 	self._register_steal_SO_clbk_id = nil
 
 	self:_chk_register_steal_SO()
 end
 
--- Lines 893-895
+-- Lines 896-898
 function CarryData:set_dye_initiated(initiated)
 	self._dye_initiated = initiated
 end
 
--- Lines 897-899
+-- Lines 900-902
 function CarryData:dye_initiated()
 	return self._dye_initiated
 end
 
--- Lines 901-903
+-- Lines 904-906
 function CarryData:has_dye_pack()
 	return self._has_dye_pack
 end
 
--- Lines 905-907
+-- Lines 908-910
 function CarryData:dye_value_multiplier()
 	return self._dye_value_multiplier
 end
 
--- Lines 909-922
+-- Lines 912-925
 function CarryData:set_dye_pack_data(dye_initiated, has_dye_pack, dye_value_multiplier)
 	self._dye_initiated = dye_initiated
 	self._has_dye_pack = has_dye_pack
@@ -841,42 +842,42 @@ function CarryData:set_dye_pack_data(dye_initiated, has_dye_pack, dye_value_mult
 	end
 end
 
--- Lines 924-926
+-- Lines 927-929
 function CarryData:dye_pack_data()
 	return self._dye_initiated, self._has_dye_pack, self._dye_value_multiplier
 end
 
--- Lines 928-930
+-- Lines 931-933
 function CarryData:_disable_dye_pack()
 	self._dye_risk = nil
 end
 
--- Lines 932-934
+-- Lines 935-937
 function CarryData:value()
 	return self._value
 end
 
--- Lines 936-938
+-- Lines 939-941
 function CarryData:set_value(value)
 	self._value = value
 end
 
--- Lines 940-942
+-- Lines 943-945
 function CarryData:multiplier()
 	return self._multiplier
 end
 
--- Lines 944-946
+-- Lines 947-949
 function CarryData:set_multiplier(multiplier)
 	self._multiplier = multiplier
 end
 
--- Lines 949-951
+-- Lines 952-954
 function CarryData:sequence_clbk_secured()
 	self:_disable_dye_pack()
 end
 
--- Lines 953-975
+-- Lines 956-978
 function CarryData:_unregister_steal_SO()
 	if not self._steal_SO_data then
 		return
@@ -902,7 +903,7 @@ function CarryData:_unregister_steal_SO()
 	self._steal_SO_data = nil
 end
 
--- Lines 977-1100
+-- Lines 980-1103
 function CarryData:_chk_register_steal_SO()
 	if not Network:is_server() or not self._link_body or not self._AI_carry then
 		return
@@ -1022,7 +1023,7 @@ function CarryData:_chk_register_steal_SO()
 	managers.groupai:state():register_loot(self._unit, pickup_area)
 end
 
--- Lines 1102-1144
+-- Lines 1105-1147
 function CarryData:clbk_pickup_SO_verification(candidate_unit)
 	if not self._steal_SO_data or not self._steal_SO_data.SO_id then
 		debug_pause_unit(self._unit, "[CarryData:clbk_pickup_SO_verification] SO is not registered", self._unit, candidate_unit, inspect(self._steal_SO_data))
@@ -1065,7 +1066,7 @@ function CarryData:clbk_pickup_SO_verification(candidate_unit)
 	return true
 end
 
--- Lines 1146-1156
+-- Lines 1149-1159
 function CarryData:on_pickup_SO_administered(thief)
 	if self._steal_SO_data.thief then
 		debug_pause("[CarryData:on_pickup_SO_administered] Already had a thief!!!!", thief, self._steal_SO_data.thief)
@@ -1077,7 +1078,7 @@ function CarryData:on_pickup_SO_administered(thief)
 	managers.groupai:state():unregister_loot(self._unit:key())
 end
 
--- Lines 1165-1175
+-- Lines 1168-1178
 function CarryData:on_pickup_SO_completed(thief)
 	if thief ~= self._steal_SO_data.thief then
 		debug_pause_unit(thief, "[CarryData:on_pickup_SO_completed] idiot thinks he is stealing", thief)
@@ -1090,7 +1091,7 @@ function CarryData:on_pickup_SO_completed(thief)
 	self:link_to(thief)
 end
 
--- Lines 1178-1191
+-- Lines 1181-1194
 function CarryData:on_pickup_SO_failed(thief)
 	if not self._steal_SO_data.thief then
 		return
@@ -1107,7 +1108,7 @@ function CarryData:on_pickup_SO_failed(thief)
 	self:_chk_register_steal_SO()
 end
 
--- Lines 1193-1209
+-- Lines 1196-1212
 function CarryData:on_secure_SO_completed(thief)
 	if thief ~= self._steal_SO_data.thief then
 		debug_pause_unit(thief, "[CarryData:on_secure_SO_completed] idiot thinks he is stealing", thief)
@@ -1124,7 +1125,7 @@ function CarryData:on_secure_SO_completed(thief)
 	managers.network:session():send_to_peers("sync_carry_set_position_and_throw", self._unit, secure_pos:with_z(self._unit:position().z), Vector3(0, 0, 0), 0)
 end
 
--- Lines 1211-1226
+-- Lines 1214-1229
 function CarryData:on_secure_SO_failed(thief)
 	if not self._steal_SO_data.thief then
 		return
@@ -1141,7 +1142,7 @@ function CarryData:on_secure_SO_failed(thief)
 	self:unlink()
 end
 
--- Lines 1228-1264
+-- Lines 1231-1267
 function CarryData:_remove_collisions()
 	self._disabled_collisions = self._disabled_collisions or {}
 	self._disabled_rays = self._disabled_rays or {
@@ -1178,7 +1179,7 @@ function CarryData:_remove_collisions()
 	end
 end
 
--- Lines 1266-1296
+-- Lines 1269-1299
 function CarryData:_restore_collisions()
 	local disabled_collisions = self._disabled_collisions
 
@@ -1211,7 +1212,7 @@ function CarryData:_restore_collisions()
 	end
 end
 
--- Lines 1298-1392
+-- Lines 1301-1395
 function CarryData:link_to(parent_unit)
 	if not self._link_body then
 		Application:error("[CarryData:link_to] No available link body carry unit. ", self._unit)
@@ -1305,7 +1306,7 @@ function CarryData:link_to(parent_unit)
 	end
 end
 
--- Lines 1394-1439
+-- Lines 1397-1442
 function CarryData:unlink()
 	if not self._link_body or not self._linked_to then
 		return
@@ -1346,7 +1347,7 @@ function CarryData:unlink()
 	end
 end
 
--- Lines 1441-1458
+-- Lines 1444-1461
 function CarryData:_add_body_activation_clbk()
 	if not self._link_body or self._linked_to or self._zipline_unit then
 		return
@@ -1368,7 +1369,7 @@ function CarryData:_add_body_activation_clbk()
 	self._link_body:set_deactivate_tag(IDS_BAG_STILL)
 end
 
--- Lines 1460-1481
+-- Lines 1463-1484
 function CarryData:_remove_body_activation_clbk()
 	if not self._has_body_activation_clbk or not self._link_body then
 		return
@@ -1392,7 +1393,7 @@ function CarryData:_remove_body_activation_clbk()
 	end
 end
 
--- Lines 1483-1512
+-- Lines 1486-1515
 function CarryData:clbk_body_active_state(tag, unit, body, activated)
 	if not self._has_body_activation_clbk or not self._has_body_activation_clbk[body:key()] then
 		return
@@ -1425,7 +1426,7 @@ function CarryData:clbk_body_active_state(tag, unit, body, activated)
 	end
 end
 
--- Lines 1524-1572
+-- Lines 1527-1575
 function CarryData:set_zipline_unit(zipline_unit)
 	local had_zipline = self._zipline_unit and true or false
 
@@ -1477,19 +1478,19 @@ function CarryData:set_zipline_unit(zipline_unit)
 	end
 end
 
--- Lines 1574-1576
+-- Lines 1577-1579
 function CarryData:is_attached_to_zipline_unit()
 	return self._zipline_unit and true
 end
 
--- Lines 1578-1582
+-- Lines 1581-1585
 function CarryData:_on_load_attach_to_zipline(zipline_unit)
 	if alive(zipline_unit) then
 		zipline_unit:zipline():attach_bag(self._unit)
 	end
 end
 
--- Lines 1584-1600
+-- Lines 1587-1603
 function CarryData:save(data)
 	local state = {}
 
@@ -1502,7 +1503,7 @@ function CarryData:save(data)
 	data.CarryData = state
 end
 
--- Lines 1602-1613
+-- Lines 1605-1616
 function CarryData:load(data)
 	local state = data.CarryData
 
@@ -1517,7 +1518,7 @@ function CarryData:load(data)
 	end
 end
 
--- Lines 1615-1628
+-- Lines 1618-1631
 function CarryData:_handle_hiding_and_destruction(destroy)
 	if self._unit:interaction() then
 		self._unit:interaction():set_active(false)
@@ -1531,7 +1532,7 @@ function CarryData:_handle_hiding_and_destruction(destroy)
 	end
 end
 
--- Lines 1630-1688
+-- Lines 1633-1691
 function CarryData:pre_destroy()
 	if self._dye_pack_smoke then
 		World:effect_manager():fade_kill(self._dye_pack_smoke)
@@ -1588,7 +1589,7 @@ function CarryData:pre_destroy()
 	CarryData._unregister_remove_on_weapons_hot(self._unit)
 end
 
--- Lines 1690-1724
+-- Lines 1693-1727
 function CarryData:set_latest_peer_id(peer_id)
 	self._latest_peer_id = peer_id
 
@@ -1617,22 +1618,22 @@ function CarryData:set_latest_peer_id(peer_id)
 	end
 end
 
--- Lines 1726-1728
+-- Lines 1729-1731
 function CarryData:latest_peer_id()
 	return self._latest_peer_id
 end
 
--- Lines 1730-1732
+-- Lines 1733-1735
 function CarryData:is_linked_to_unit()
 	return self._linked_to or false
 end
 
--- Lines 1736-1738
+-- Lines 1739-1741
 function CarryData:is_teleporting()
 	return (self._teleport_pos or self._teleport_reset_dynamic_bodies or self._teleport_perform_push) and true or false
 end
 
--- Lines 1740-1753
+-- Lines 1743-1756
 function CarryData:teleport_to(pos)
 	self._teleport_pos = pos
 	self._teleport_dynamic_bodies = {}
@@ -1647,7 +1648,7 @@ function CarryData:teleport_to(pos)
 	end
 end
 
--- Lines 1755-1757
+-- Lines 1758-1760
 function CarryData:teleport_push(force, direction)
 	self._teleport_push = {
 		force,
@@ -1655,7 +1656,7 @@ function CarryData:teleport_push(force, direction)
 	}
 end
 
--- Lines 1759-1781
+-- Lines 1762-1784
 function CarryData:set_position_and_throw(position, direction, force)
 	if self._linked_to or self._zipline_unit then
 		return

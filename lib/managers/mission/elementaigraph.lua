@@ -2,38 +2,33 @@ core:import("CoreMissionScriptElement")
 
 ElementAIGraph = ElementAIGraph or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines 5-8
+-- Lines 5-7
 function ElementAIGraph:init(...)
 	ElementAIGraph.super.init(self, ...)
 end
 
--- Lines 10-12
+-- Lines 9-10
 function ElementAIGraph:on_script_activated()
 	return
 end
 
--- Lines 14-16
+-- Lines 12-14
 function ElementAIGraph:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines 18-37
+-- Lines 16-30
 function ElementAIGraph:on_executed(instigator)
 	if not self._values.enabled then
 		return
 	end
 
-	local handler_func
-	local is_meta_operation = table.contains(NavigationManager.nav_meta_operations, self._values.operation)
-
-	if is_meta_operation then
-		handler_func = NavigationManager.perform_nav_segment_meta_operation
-	else
-		handler_func = NavigationManager.set_nav_segment_state
-	end
+	local nav_manager = managers.navigation
+	local operation = self._values.operation
+	local filter_group = self._values.filter_group
 
 	for _, id in ipairs(self._values.graph_ids) do
-		handler_func(managers.navigation, id, self._values.operation, self._values.filter_group)
+		nav_manager:perform_graph_operation(id, operation, filter_group)
 	end
 
 	ElementAIGraph.super.on_executed(self, instigator)

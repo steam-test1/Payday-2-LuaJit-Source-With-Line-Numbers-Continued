@@ -360,8 +360,14 @@ function AIAttentionObject:on_enemy_weapons_hot()
 	end
 end
 
--- Lines 425-484
+-- Lines 425-489
 function AIAttentionObject:link(parent_unit, obj_name, local_pos)
+	if not self._is_extension then
+		Application:error("[AIAttentionObject] link() - can only be called when the class is initialized as an extension", self._unit)
+
+		return
+	end
+
 	self._unit:unlink()
 
 	if parent_unit then
@@ -386,7 +392,7 @@ function AIAttentionObject:link(parent_unit, obj_name, local_pos)
 				debug_pause_unit(self._parent_unit, "[AIAttentionObject:set_parent_unit] attention object parent is not network synched", self._parent_unit)
 			end
 
-			managers.network:session():send_to_peers_synched("link_attention_no_rot", self._parent_unit, self._unit, obj_name, local_pos)
+			managers.network:send_to_peers_synched("link_attention_no_rot", self._parent_unit, self._unit, obj_name, local_pos)
 		end
 
 		if self._registered then
@@ -405,7 +411,7 @@ function AIAttentionObject:link(parent_unit, obj_name, local_pos)
 		self._parent_unit_key = nil
 
 		if Network:is_server() then
-			managers.network:session():send_to_peers_synched("unlink_attention", self._unit)
+			managers.network:send_to_peers_synched("unlink_attention", self._unit)
 		end
 
 		if had_parent and self._registered then
@@ -418,7 +424,7 @@ function AIAttentionObject:link(parent_unit, obj_name, local_pos)
 	end
 end
 
--- Lines 488-505
+-- Lines 493-510
 function AIAttentionObject:set_team(team)
 	local call_listeners = self._team ~= team or team and team.id ~= self._team.id
 
@@ -439,7 +445,7 @@ function AIAttentionObject:set_team(team)
 	self:_call_listeners()
 end
 
--- Lines 509-516
+-- Lines 514-521
 function AIAttentionObject:save(data)
 	if alive(self._parent_unit) then
 		data.parent_u_id = self._parent_unit:unit_data().unit_id
@@ -448,7 +454,7 @@ function AIAttentionObject:save(data)
 	end
 end
 
--- Lines 520-540
+-- Lines 525-545
 function AIAttentionObject:load(data)
 	if not data or not data.parent_u_id then
 		return
@@ -471,7 +477,7 @@ function AIAttentionObject:load(data)
 	end
 end
 
--- Lines 544-550
+-- Lines 549-555
 function AIAttentionObject:clbk_load_parent_unit(parent_unit)
 	if parent_unit then
 		self:link(parent_unit, self._load_data.parent_obj_name, self._load_data.local_pos)
@@ -480,7 +486,7 @@ function AIAttentionObject:clbk_load_parent_unit(parent_unit)
 	self._load_data = nil
 end
 
--- Lines 554-556
+-- Lines 559-561
 function AIAttentionObject:destroy()
 	self:set_attention(nil)
 end

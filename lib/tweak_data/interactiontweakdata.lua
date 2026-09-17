@@ -1,7 +1,7 @@
 InteractionTweakData = InteractionTweakData or class()
 InteractionTweakData = InteractionTweakData or class()
 
--- Lines 5-9597
+-- Lines 5-9607
 function InteractionTweakData:init(tweak_data)
 	self.DEFAULT_INTERACTION_DOT = 0.9
 	self.CULLING_DISTANCE = 2000
@@ -7411,8 +7411,17 @@ function InteractionTweakData:init(tweak_data)
 	}
 	self.auc_car_keys = {
 		contour = "interactable",
-		interact_distance = 75,
+		interact_distance = 95,
 		text_id = "hud_int_take_keys"
+	}
+	self.auc_get_rfid = {
+		action_text_id = "hud_action_taking_unloaded_card",
+		blocked_hint = "carry_block",
+		interact_distance = 170,
+		special_equipment_block = "auc_rfid_tag",
+		start_active = true,
+		text_id = "hud_hold_take_unloaded_card",
+		timer = 0
 	}
 	self.auc_rfid_shutter_open = deep_clone(self.auc_rfid_shutter_close)
 	self.auc_rfid_shutter_open.text_id = "hud_int_hold_open_shutters"

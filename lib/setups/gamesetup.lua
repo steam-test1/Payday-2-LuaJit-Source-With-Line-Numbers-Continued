@@ -539,7 +539,7 @@ function GameSetup:unload_packages()
 	Setup.unload_packages(self)
 end
 
--- Lines 661-696
+-- Lines 661-699
 function GameSetup:init_managers(managers)
 	Setup.init_managers(self, managers)
 
@@ -569,7 +569,7 @@ function GameSetup:init_managers(managers)
 	managers.wait = WaitManager:new()
 end
 
--- Lines 698-746
+-- Lines 701-754
 function GameSetup:init_game()
 	local gsm = Setup.init_game(self)
 
@@ -598,7 +598,7 @@ function GameSetup:init_game()
 			}
 
 			assert(WorldHolder:new(t):create_world("world", "all", Vector3()), "Cant load the level!")
-			World:occlusion_manager():set_max_occluder_tests(50)
+			World:occlusion_manager():set_max_occluder_tests(25)
 
 			local mission_params = {
 				stage_name = "stage1",
@@ -617,7 +617,7 @@ function GameSetup:init_game()
 	return gsm
 end
 
--- Lines 748-798
+-- Lines 756-806
 function GameSetup:init_finalize()
 	if script_data.level_script and script_data.level_script.post_init then
 		script_data.level_script:post_init()
@@ -661,7 +661,7 @@ function GameSetup:init_finalize()
 	managers.custom_safehouse:init_finalize()
 end
 
--- Lines 800-846
+-- Lines 808-857
 function GameSetup:update(t, dt)
 	Setup.update(self, t, dt)
 	managers.interaction:update(t, dt)
@@ -689,7 +689,7 @@ function GameSetup:update(t, dt)
 	end
 end
 
--- Lines 848-860
+-- Lines 859-871
 function GameSetup:paused_update(t, dt)
 	Setup.paused_update(self, t, dt)
 	managers.groupai:paused_update(t, dt)
@@ -699,7 +699,7 @@ function GameSetup:paused_update(t, dt)
 	end
 end
 
--- Lines 862-878
+-- Lines 873-889
 function GameSetup:destroy()
 	Setup.destroy(self)
 
@@ -713,13 +713,13 @@ function GameSetup:destroy()
 	managers.network.account:set_playing(false)
 end
 
--- Lines 880-885
+-- Lines 891-896
 function GameSetup:end_update(t, dt)
 	Setup.end_update(self, t, dt)
 	managers.game_play_central:end_update(t, dt)
 end
 
--- Lines 887-920
+-- Lines 898-931
 function GameSetup:save(data)
 	Setup.save(self, data)
 	managers.game_play_central:save(data)
@@ -746,7 +746,7 @@ function GameSetup:save(data)
 	managers.worlddefinition:sync_save(data)
 end
 
--- Lines 922-956
+-- Lines 933-967
 function GameSetup:load(data)
 	Setup.load(self, data)
 	managers.game_play_central:load(data)

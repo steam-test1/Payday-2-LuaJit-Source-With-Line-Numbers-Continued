@@ -7,7 +7,7 @@ function ElementAIAttention:init(...)
 	ElementAIAttention.super.init(self, ...)
 end
 
--- Lines 11-39
+-- Lines 17-45
 function ElementAIAttention:on_executed(instigator)
 	if not self._values.enabled or Network:is_client() then
 		return
@@ -37,12 +37,12 @@ function ElementAIAttention:on_executed(instigator)
 	ElementSpecialObjective.super.on_executed(self, instigator)
 end
 
--- Lines 43-45
+-- Lines 49-51
 function ElementAIAttention:operation_remove()
 	return
 end
 
--- Lines 49-73
+-- Lines 55-79
 function ElementAIAttention:_select_units_from_spawners()
 	local candidates = {}
 
@@ -72,12 +72,12 @@ function ElementAIAttention:_select_units_from_spawners()
 	return chosen_units
 end
 
--- Lines 77-79
+-- Lines 83-85
 function ElementAIAttention:_get_attention_handler_from_unit(unit)
 	return alive(unit) and (unit:movement() and unit:movement():attention_handler() or unit:brain() and unit:brain():attention_handler())
 end
 
--- Lines 83-95
+-- Lines 89-101
 function ElementAIAttention:_create_attention_settings()
 	local preset = self._values.preset
 
@@ -96,7 +96,7 @@ function ElementAIAttention:_create_attention_settings()
 	end
 end
 
--- Lines 99-121
+-- Lines 105-127
 function ElementAIAttention:_create_override_attention_settings(unit)
 	local preset = self._values.override
 
@@ -129,7 +129,7 @@ function ElementAIAttention:_create_override_attention_settings(unit)
 	end
 end
 
--- Lines 124-157
+-- Lines 130-163
 function ElementAIAttention:_apply_attention_on_unit(unit, handler)
 	local handler = handler or self:_get_attention_handler_from_unit(unit)
 
@@ -168,7 +168,7 @@ function ElementAIAttention:_apply_attention_on_unit(unit, handler)
 	end
 end
 
--- Lines 161-174
+-- Lines 167-180
 function ElementAIAttention:_chk_link_att_object(unit, handler)
 	if not self._values.parent_u_id then
 		return
@@ -185,7 +185,7 @@ function ElementAIAttention:_chk_link_att_object(unit, handler)
 	handler:link(parent_unit, self._values.parent_obj_name, self._values.local_pos)
 end
 
--- Lines 178-186
+-- Lines 184-192
 function ElementAIAttention:_fetch_unit_by_unit_id(unit_id)
 	local unit
 
@@ -198,7 +198,7 @@ function ElementAIAttention:_fetch_unit_by_unit_id(unit_id)
 	return unit
 end
 
--- Lines 190-191
+-- Lines 198-202
 function ElementAIAttention._load_unit(unit)
 	return
 end

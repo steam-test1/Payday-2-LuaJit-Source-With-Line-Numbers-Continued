@@ -944,7 +944,7 @@ function ContourExt:load(load_data)
 end
 
 -- Lines 1040-1046
-function ContourExt:destroy(unit)
+function ContourExt:pre_destroy(unit)
 	if self._removed_occlusion then
 		self._removed_occlusion = nil
 
