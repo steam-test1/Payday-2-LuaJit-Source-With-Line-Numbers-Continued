@@ -27,12 +27,15 @@ function PlayerAction.FullyLoaded.Function(player_manager, pickup_chance, increa
 	local gained_throwable = false
 	local chance = pickup_chance
 
-	-- Lines 55-57
-	local function on_ammo_pickup_message(unit)
-		gained_throwable, chance = on_ammo_pickup(unit, chance, increase)
+	do
+		-- Lines 55-57
+		local function on_ammo_pickup_message(unit)
+			gained_throwable, chance = on_ammo_pickup(unit, chance, increase)
+		end
+
+		player_manager:register_message(Message.OnAmmoPickup, co, on_ammo_pickup_message)
 	end
 
-	player_manager:register_message(Message.OnAmmoPickup, co, on_ammo_pickup_message)
 	player_manager:register_message(Message.OnAmmoPickup, co, on_ammo_pickup)
 
 	while not gained_throwable do
