@@ -342,7 +342,8 @@ function MenuInput:create_controller()
 		return
 	end
 
-	local controller = managers.controller:create_controller("menu_input", nil, false)
+	local controller_id = "menu_input_" .. (self._menu_name or "")
+	local controller = managers.controller:create_controller(controller_id, nil, false)
 
 	controller:add_trigger("cancel", callback(self, self, "back"))
 	controller:set_enabled(true)
@@ -350,7 +351,7 @@ function MenuInput:create_controller()
 	self._controller = controller
 end
 
--- Lines 390-399
+-- Lines 390-400
 function MenuInput:destroy_controller()
 	if self._controller then
 		self._controller:destroy()
@@ -359,12 +360,12 @@ function MenuInput:destroy_controller()
 	end
 end
 
--- Lines 401-402
+-- Lines 402-403
 function MenuInput:logic_changed()
 	return
 end
 
--- Lines 404-433
+-- Lines 405-434
 function MenuInput:next_item()
 	if not self._accept_input then
 		return
@@ -399,7 +400,7 @@ function MenuInput:next_item()
 	end
 end
 
--- Lines 435-460
+-- Lines 436-461
 function MenuInput:prev_item()
 	local current_item = self._logic:selected_item()
 
@@ -430,7 +431,7 @@ function MenuInput:prev_item()
 	end
 end
 
--- Lines 464-474
+-- Lines 465-475
 function MenuInput:back(queue, skip_nodes)
 	if self:_input_hijacked() == true then
 		return
@@ -443,7 +444,7 @@ function MenuInput:back(queue, skip_nodes)
 	self._logic:navigate_back(queue == true or false, type(skip_nodes) == "number" and skip_nodes or false)
 end
 
--- Lines 476-490
+-- Lines 477-491
 function MenuInput:select_node()
 	local item = self._logic:selected_item()
 
@@ -460,7 +461,7 @@ function MenuInput:select_node()
 	end
 end
 
--- Lines 492-504
+-- Lines 493-505
 function MenuInput:any_keyboard_used()
 	if self._keyboard_used or not self._controller or managers.controller:get_default_wrapper_type() ~= "pc" and managers.controller:get_default_wrapper_type() ~= "steam" then
 		return

@@ -1238,23 +1238,35 @@ function NetworkMatchMakingSTEAM:set_attributes(settings)
 	self.lobby_handler:set_lobby_type(tweak_data.permissions[settings.numbers[3]])
 end
 
--- Lines 1415-1427
+-- Lines 1415-1440
 function NetworkMatchMakingSTEAM:_lobby_to_numbers(lobby)
+	local level = tonumber(lobby:key_value("level")) or 0
+	local job_id = tonumber(lobby:key_value("job_id")) or 1
+	local difficulty = tonumber(lobby:key_value("difficulty")) or 1
+	local permission = tonumber(lobby:key_value("permission")) or 1
+	local state = tonumber(lobby:key_value("state")) or 1
+	local num_players = tonumber(lobby:key_value("num_players")) or 1
+	local drop_in = tonumber(lobby:key_value("drop_in")) or 1
+	local min_level = tonumber(lobby:key_value("min_level")) or 0
+	local kick_option = tonumber(lobby:key_value("kick_option")) or 1
+	local job_class = tonumber(lobby:key_value("job_class")) or 10
+	local job_plan = tonumber(lobby:key_value("job_plan")) or -1
+
 	return {
-		tonumber(lobby:key_value("level")) + 1000 * tonumber(lobby:key_value("job_id")),
-		tonumber(lobby:key_value("difficulty")),
-		tonumber(lobby:key_value("permission")),
-		tonumber(lobby:key_value("state")),
-		tonumber(lobby:key_value("num_players")),
-		tonumber(lobby:key_value("drop_in")),
-		tonumber(lobby:key_value("min_level")),
-		tonumber(lobby:key_value("kick_option")),
-		tonumber(lobby:key_value("job_class")),
-		tonumber(lobby:key_value("job_plan"))
+		level + 1000 * job_id,
+		difficulty,
+		permission,
+		state,
+		num_players,
+		drop_in,
+		min_level,
+		kick_option,
+		job_class,
+		job_plan
 	}
 end
 
--- Lines 1429-1439
+-- Lines 1442-1452
 function NetworkMatchMakingSTEAM:from_host_lobby_re_opened(status)
 	print("[NetworkMatchMakingSTEAM::from_host_lobby_re_opened]", self._try_re_enter_lobby, status)
 
@@ -1269,7 +1281,7 @@ function NetworkMatchMakingSTEAM:from_host_lobby_re_opened(status)
 	end
 end
 
--- Lines 1441-1446
+-- Lines 1454-1459
 function NetworkMatchMakingSTEAM:get_lobby_type()
 	if not self.lobby_handler then
 		return "unknown"
@@ -1278,17 +1290,17 @@ function NetworkMatchMakingSTEAM:get_lobby_type()
 	return self.lobby_handler:lobby_type()
 end
 
--- Lines 1449-1451
+-- Lines 1462-1464
 function NetworkMatchMakingSTEAM:set_login_time(login_time)
 	self._login_time = login_time
 end
 
--- Lines 1453-1455
+-- Lines 1466-1468
 function NetworkMatchMakingSTEAM:login_time()
 	return self._login_time or self:server_time()
 end
 
--- Lines 1458-1461
+-- Lines 1471-1474
 function NetworkMatchMakingSTEAM:server_time()
 	return Steam:server_time()
 end

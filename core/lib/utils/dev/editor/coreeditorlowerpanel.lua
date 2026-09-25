@@ -1,6 +1,9 @@
 core:import("CoreEngineAccess")
 
--- Lines 3-13
+local n = "\n"
+local t = "\t"
+
+-- Lines 6-16
 function CoreEditor:build_lower_panel(parent)
 	self._lower_panel = EWS:Panel(Global.frame_panel, "", "TAB_TRAVERSAL")
 
@@ -14,7 +17,7 @@ function CoreEditor:build_lower_panel(parent)
 	return self._lower_panel
 end
 
--- Lines 16-48
+-- Lines 19-26
 function CoreEditor:add_edit_buttons(edit_btn_sizer)
 	cat_print("editor", " CoreEditor:add_edit_buttons( edit_btn_sizer )")
 
@@ -25,7 +28,7 @@ function CoreEditor:add_edit_buttons(edit_btn_sizer)
 	end
 end
 
--- Lines 50-92
+-- Lines 28-73
 function CoreEditor:build_info_frame(parent)
 	self._info_frame = EWS:Panel(parent, "Info Frame", "TAB_TRAVERSAL")
 	self._info_sizer = EWS:BoxSizer("HORIZONTAL")
@@ -48,11 +51,17 @@ function CoreEditor:build_info_frame(parent)
 	self._unit_info:set_font_face("Courier New")
 	self._unit_info:set_tool_tip("Generic unit information")
 
+	self._unit_world_info = EWS:TextCtrl(self._unit_info_notebook, "World unit info", "", "TE_MULTILINE,TE_RICH2,TE_DONTWRAP,TE_READONLY")
+
+	self._unit_world_info:set_font_face("Courier New")
+	self._unit_world_info:set_tool_tip("World unit information")
+
 	self._gfx_unit_info = EWS:TextCtrl(self._unit_info_notebook, "Gfx unit info", "", "TE_MULTILINE,TE_RICH2,TE_DONTWRAP,TE_READONLY")
 
 	self._gfx_unit_info:set_font_face("Courier New")
 	self._gfx_unit_info:set_tool_tip("Gfx unit information")
-	self._unit_info_notebook:add_page(self._unit_info, "Generic", true)
+	self._unit_info_notebook:add_page(self._unit_info, "Generic", false)
+	self._unit_info_notebook:add_page(self._unit_world_info, "World", true)
 	self._unit_info_notebook:add_page(self._gfx_unit_info, "Gfx", false)
 
 	local unit_info_panel = EWS:Panel(self._info_frame, "", "")
@@ -70,7 +79,7 @@ function CoreEditor:build_info_frame(parent)
 	return self._info_frame
 end
 
--- Lines 94-129
+-- Lines 75-110
 function CoreEditor:add_open_unit_file_buttons()
 	self._open_unit_file_buttons = {}
 
@@ -115,12 +124,12 @@ function CoreEditor:add_open_unit_file_buttons()
 	end
 end
 
--- Lines 131-132
+-- Lines 112-113
 function CoreEditor:_change_unit_info(notebook)
 	return
 end
 
--- Lines 134-176
+-- Lines 115-157
 function CoreEditor:on_open_unit_file(data)
 	if alive(self:selected_unit()) then
 		local unit = self:selected_unit()
@@ -174,7 +183,7 @@ function CoreEditor:on_open_unit_file(data)
 	end
 end
 
--- Lines 178-197
+-- Lines 159-178
 function CoreEditor:sequence_file(unit)
 	if alive(unit) then
 		local object_file = CoreEngineAccess._editor_unit_data(unit:name():id()):model()
@@ -198,7 +207,7 @@ function CoreEditor:sequence_file(unit)
 	return false
 end
 
--- Lines 199-223
+-- Lines 180-204
 function CoreEditor:build_edit_frame(parent)
 	self._edit_panel = EWS:Panel(parent, "Edit Panel", "TAB_TRAVERSAL")
 
@@ -210,7 +219,7 @@ function CoreEditor:build_edit_frame(parent)
 	return self._edit_panel, main_sizer
 end
 
--- Lines 229-235
+-- Lines 210-216
 function CoreEditor:show_edit(data)
 	self[data.panel]:set_visible(self._left_toolbar:tool_state(data.btn))
 	self._info_frame:set_visible(not self:check_edit_buttons())
@@ -219,7 +228,7 @@ function CoreEditor:show_edit(data)
 	self._lower_panel:layout()
 end
 
--- Lines 237-243
+-- Lines 218-224
 function CoreEditor:check_edit_buttons()
 	local value = false
 
@@ -230,23 +239,20 @@ function CoreEditor:check_edit_buttons()
 	return value
 end
 
--- Lines 246-249
+-- Lines 227-230
 function CoreEditor:layout_edit_panel()
 	self._edit_panel:layout()
 	self._lower_panel:layout()
 end
 
--- Lines 252-321
+-- Lines 233-302
 function CoreEditor:unit_output(unit)
 	if alive(unit) then
-		local n = "\n"
-		local t = "\t"
 		local text = "ID / Name:" .. t .. tostring(unit:unit_data().unit_id) .. " / " .. unit:name():s() .. n
 
 		text = text .. "NameID:" .. t .. unit:unit_data().name_id .. n
 		text = text .. "Type / Slot:" .. t .. unit:type():s() .. " / " .. unit:slot() .. n
 		text = text .. "Mass:" .. t .. t .. unit:mass() .. n
-		text = text .. "Author:" .. t .. t .. unit:author():s() .. n
 		text = text .. "Damage types:" .. t .. t .. managers.sequence:editor_info(unit:name()) .. n
 		text = text .. "Geometry memory:" .. t .. unit:geometry_memory_use() .. n
 		text = text .. "Unit filename:" .. t .. unit:unit_filename() .. n
@@ -259,12 +265,13 @@ function CoreEditor:unit_output(unit)
 			text = text .. t .. name .. n
 		end
 
+		text = text .. "Author:" .. t .. t .. unit:author():s() .. n
 		text = text .. "Last export from:" .. t .. unit:last_export_source() .. n
 
 		local models_text = ""
 
 		models_text = models_text .. "Models:" .. t .. unit:nr_models() .. n
-		models_text = models_text .. "Name" .. t .. t .. t .. t .. t .. "Instanced" .. t .. "Vertecies" .. t .. "Triangles" .. t .. "Atoms" .. t .. "Lod Distance" .. n
+		models_text = models_text .. "Name" .. t .. t .. t .. t .. t .. "Instanced" .. t .. "Vertecies" .. t .. "Triangles" .. t .. "Atoms" .. n
 
 		for i = 0, unit:nr_models() - 1 do
 			if unit:is_visible(i) then
@@ -276,7 +283,7 @@ function CoreEditor:unit_output(unit)
 					tab = tab .. t
 				end
 
-				models_text = models_text .. unit:model_name(i):s() .. tab .. tostring(unit:is_model_instance(i)) .. t .. t .. unit:vertex_count(i) .. t .. t .. unit:triangle_count(i) .. t .. t .. unit:atom_count(i) .. t .. unit:lod_dist(i) .. n
+				models_text = models_text .. unit:model_name(i):s() .. tab .. tostring(unit:is_model_instance(i)) .. t .. t .. unit:vertex_count(i) .. t .. t .. unit:triangle_count(i) .. t .. t .. unit:atom_count(i) .. n
 			end
 		end
 
@@ -286,8 +293,9 @@ function CoreEditor:unit_output(unit)
 			models_text = models_text .. t .. name .. n
 		end
 
-		self._unit_info:set_value(utf8.from_latin1(text))
+		self._unit_info:set_value(text)
 		self._gfx_unit_info:set_value(models_text)
+		self._unit_world_info:set_value(self:_get_worlds_text(unit))
 
 		for _, btn in ipairs(self._open_unit_file_buttons) do
 			self._unit_info_toolbar:set_tool_enabled(btn, true)
@@ -295,6 +303,7 @@ function CoreEditor:unit_output(unit)
 	else
 		self._unit_info:set_value("")
 		self._gfx_unit_info:set_value("")
+		self._unit_world_info:set_value("")
 
 		for _, btn in ipairs(self._open_unit_file_buttons) do
 			self._unit_info_toolbar:set_tool_enabled(btn, false)
@@ -302,7 +311,38 @@ function CoreEditor:unit_output(unit)
 	end
 end
 
--- Lines 324-332
+-- Lines 304-344
+function CoreEditor:_get_worlds_text(unit)
+	local txt = ""
+
+	txt = txt .. "ID:" .. t .. t .. tostring(unit:unit_data().unit_id) .. n
+	txt = txt .. "NameID:" .. t .. unit:unit_data().name_id .. n
+	txt = txt .. "File path:" .. t .. unit:name():s() .. n
+
+	if unit:unit_data().editor_groups then
+		txt = txt .. "Groups:" .. n
+
+		for _, group in ipairs(unit:unit_data().editor_groups) do
+			txt = txt .. t .. group:name() .. n
+		end
+	end
+
+	if managers.portal:unit_in_any_unit_group(unit) then
+		txt = txt .. "Portals:" .. n
+	else
+		txt = txt .. "⚠ Portals:" .. t .. "Not included in portals!" .. n
+	end
+
+	local portal_layers = managers.portal:unit_included_in_unit_groups(unit)
+
+	for _, name in ipairs(portal_layers) do
+		txt = txt .. t .. name .. n
+	end
+
+	return txt
+end
+
+-- Lines 347-355
 function CoreEditor:_unit_materials(unit)
 	local names = {}
 

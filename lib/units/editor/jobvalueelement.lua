@@ -2,20 +2,22 @@ JobValueUnitElement = JobValueUnitElement or class(MissionElement)
 JobValueUnitElement.SAVE_UNIT_POSITION = false
 JobValueUnitElement.SAVE_UNIT_ROTATION = false
 
--- Lines 5-15
+-- Lines 5-17
 function JobValueUnitElement:init(unit)
 	JobValueUnitElement.super.init(self, unit)
 
 	self._hed.key = "none"
 	self._hed.value = 0
 	self._hed.save = nil
+	self._hed.sync = nil
 
 	table.insert(self._save_values, "key")
 	table.insert(self._save_values, "value")
 	table.insert(self._save_values, "save")
+	table.insert(self._save_values, "sync")
 end
 
--- Lines 20-52
+-- Lines 22-55
 function JobValueUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -62,13 +64,14 @@ function JobValueUnitElement:_build_panel(panel, panel_sizer)
 		ctrlr = value
 	})
 	self:_build_value_checkbox(panel, panel_sizer, "save")
+	self:_build_value_checkbox(panel, panel_sizer, "sync")
 end
 
 JobValueFilterUnitElement = JobValueFilterUnitElement or class(MissionElement)
 JobValueFilterUnitElement.SAVE_UNIT_POSITION = false
 JobValueFilterUnitElement.SAVE_UNIT_ROTATION = false
 
--- Lines 60-72
+-- Lines 63-75
 function JobValueFilterUnitElement:init(unit)
 	JobValueFilterUnitElement.super.init(self, unit)
 
@@ -83,7 +86,7 @@ function JobValueFilterUnitElement:init(unit)
 	table.insert(self._save_values, "check_type")
 end
 
--- Lines 74-85
+-- Lines 77-88
 function JobValueFilterUnitElement:_build_panel(panel, panel_sizer)
 	JobValueUnitElement._build_panel(self, panel, panel_sizer)
 
@@ -117,7 +120,7 @@ ApplyJobValueUnitElement.LINK_ELEMENTS = {
 	"elements"
 }
 
--- Lines 94-104
+-- Lines 97-107
 function ApplyJobValueUnitElement:init(unit)
 	ApplyJobValueUnitElement.super.init(self, unit)
 
@@ -130,12 +133,12 @@ function ApplyJobValueUnitElement:init(unit)
 	table.insert(self._save_values, "elements")
 end
 
--- Lines 106-107
+-- Lines 109-110
 function ApplyJobValueUnitElement:update_editing()
 	return
 end
 
--- Lines 109-118
+-- Lines 112-121
 function ApplyJobValueUnitElement:draw_links(t, dt, selected_unit, all_units)
 	ApplyJobValueUnitElement.super.draw_links(self, t, dt, selected_unit)
 
@@ -155,7 +158,7 @@ function ApplyJobValueUnitElement:draw_links(t, dt, selected_unit, all_units)
 	end
 end
 
--- Lines 120-133
+-- Lines 123-136
 function ApplyJobValueUnitElement:add_element()
 	local ray = managers.editor:unit_by_raycast({
 		mask = 10,
@@ -173,12 +176,12 @@ function ApplyJobValueUnitElement:add_element()
 	end
 end
 
--- Lines 136-138
+-- Lines 139-141
 function ApplyJobValueUnitElement:add_triggers(vc)
 	vc:add_trigger(Idstring("lmb"), callback(self, self, "add_element"))
 end
 
--- Lines 141-166
+-- Lines 144-169
 function ApplyJobValueUnitElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 

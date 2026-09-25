@@ -403,7 +403,20 @@ function PortalManager:unit_in_any_unit_group(unit)
 	return false
 end
 
--- Lines 398-409
+-- Lines 397-405
+function PortalManager:unit_included_in_unit_groups(unit)
+	local tbl = {}
+
+	for name, group in pairs(self._unit_groups) do
+		if group:unit_in_group(unit) then
+			table.insert(tbl, name)
+		end
+	end
+
+	return tbl
+end
+
+-- Lines 408-419
 function PortalManager:save(t)
 	local t = t or ""
 	local s = ""
@@ -421,7 +434,7 @@ function PortalManager:save(t)
 	return s
 end
 
--- Lines 412-424
+-- Lines 422-434
 function PortalManager:save_level_data()
 	local t = {}
 
@@ -442,7 +455,7 @@ end
 
 PortalShape = PortalShape or class()
 
--- Lines 430-440
+-- Lines 440-450
 function PortalShape:init(polygon_tbl, min, max)
 	self._polygon = ScriptPolygon2D(polygon_tbl)
 	self._units = {}
@@ -453,7 +466,7 @@ function PortalShape:init(polygon_tbl, min, max)
 	self._max = max
 end
 
--- Lines 442-453
+-- Lines 452-463
 function PortalShape:add_unit(unit)
 	if self:inside(unit:position()) then
 		self._units[unit:key()] = unit
@@ -468,12 +481,12 @@ function PortalShape:add_unit(unit)
 	end
 end
 
--- Lines 455-457
+-- Lines 465-467
 function PortalShape:remove_unit(unit)
 	self._units[unit:key()] = nil
 end
 
--- Lines 459-464
+-- Lines 469-474
 function PortalShape:add_effect(effect)
 	if self:inside(effect.position) then
 		table.insert(self._effects, effect)
@@ -482,12 +495,12 @@ function PortalShape:add_effect(effect)
 	end
 end
 
--- Lines 466-468
+-- Lines 476-478
 function PortalShape:clear_effects()
 	self._effects = {}
 end
 
--- Lines 471-477
+-- Lines 481-487
 function PortalShape:show_all()
 	for _, unit in pairs(self._units) do
 		if alive(unit) then
@@ -496,7 +509,7 @@ function PortalShape:show_all()
 	end
 end
 
--- Lines 480-491
+-- Lines 490-501
 function PortalShape:inside(pos)
 	local is_inside = self._polygon:inside(pos)
 
@@ -513,12 +526,12 @@ function PortalShape:inside(pos)
 	return is_inside
 end
 
--- Lines 493-495
+-- Lines 503-505
 function PortalShape:is_inside()
 	return self._is_inside
 end
 
--- Lines 498-518
+-- Lines 508-528
 function PortalShape:update(time, rel_time)
 	local is_inside = false
 
@@ -545,7 +558,7 @@ function PortalShape:update(time, rel_time)
 	end
 end
 
--- Lines 520-526
+-- Lines 530-536
 function PortalShape:_change_visibility(unit)
 	if alive(unit) then
 		local inverse = unit:unit_data().portal_visible_inverse
@@ -557,7 +570,7 @@ end
 
 PortalUnitGroup = PortalUnitGroup or class()
 
--- Lines 534-543
+-- Lines 544-553
 function PortalUnitGroup:init(name)
 	self._name = name
 	self._shapes = {}
@@ -569,32 +582,32 @@ function PortalUnitGroup:init(name)
 	self._is_inside = false
 end
 
--- Lines 545-547
+-- Lines 555-557
 function PortalUnitGroup:rename(new_name)
 	self._name = new_name
 end
 
--- Lines 549-551
+-- Lines 559-561
 function PortalUnitGroup:name()
 	return self._name
 end
 
--- Lines 553-555
+-- Lines 563-565
 function PortalUnitGroup:shapes()
 	return self._shapes
 end
 
--- Lines 557-559
+-- Lines 567-569
 function PortalUnitGroup:ids()
 	return self._ids
 end
 
--- Lines 561-563
+-- Lines 571-573
 function PortalUnitGroup:set_ids(ids)
 	self._ids = ids or self._ids
 end
 
--- Lines 565-569
+-- Lines 575-579
 function PortalUnitGroup:add_shape(params)
 	local shape = PortalUnitGroupShape:new(params)
 
@@ -603,13 +616,13 @@ function PortalUnitGroup:add_shape(params)
 	return shape
 end
 
--- Lines 571-574
+-- Lines 581-584
 function PortalUnitGroup:remove_shape(shape)
 	shape:destroy()
 	table.delete(self._shapes, shape)
 end
 
--- Lines 576-584
+-- Lines 586-594
 function PortalUnitGroup:add_unit(unit)
 	if self._ids[unit:unit_data().unit_id] then
 		unit:unit_data()._visibility_counter = unit:unit_data()._visibility_counter or 0
@@ -623,7 +636,7 @@ function PortalUnitGroup:add_unit(unit)
 	return false
 end
 
--- Lines 586-592
+-- Lines 596-602
 function PortalUnitGroup:add_unit_id(unit)
 	if self._ids[unit:unit_data().unit_id] then
 		self:remove_unit_id(unit)
@@ -634,19 +647,19 @@ function PortalUnitGroup:add_unit_id(unit)
 	self._ids[unit:unit_data().unit_id] = true
 end
 
--- Lines 594-596
+-- Lines 604-606
 function PortalUnitGroup:remove_unit_id(unit)
 	self._ids[unit:unit_data().unit_id] = nil
 end
 
--- Lines 598-601
+-- Lines 608-611
 function PortalUnitGroup:lock_units()
 	for _, unit in ipairs(self._units) do
 		-- Nothing
 	end
 end
 
--- Lines 604-611
+-- Lines 614-621
 function PortalUnitGroup:inside(pos)
 	for _, shape in ipairs(self._shapes) do
 		if shape:is_inside(pos) then
@@ -657,7 +670,7 @@ function PortalUnitGroup:inside(pos)
 	return false
 end
 
--- Lines 613-627
+-- Lines 623-637
 function PortalUnitGroup:update(t, dt)
 	local is_inside = false
 
@@ -678,14 +691,14 @@ function PortalUnitGroup:update(t, dt)
 	end
 end
 
--- Lines 630-634
+-- Lines 640-644
 function PortalUnitGroup:_change_units_visibility(diff)
 	for _, unit in pairs(self._units) do
 		self:_change_visibility(unit, diff)
 	end
 end
 
--- Lines 636-642
+-- Lines 646-652
 function PortalUnitGroup:_change_units_visibility_in_editor(diff)
 	for _, unit in ipairs(managers.editor:layer("Statics"):created_units()) do
 		if self._ids[unit:unit_data().unit_id] then
@@ -694,7 +707,7 @@ function PortalUnitGroup:_change_units_visibility_in_editor(diff)
 	end
 end
 
--- Lines 644-668
+-- Lines 654-678
 function PortalUnitGroup:_change_visibility(unit, diff)
 	if alive(unit) then
 		if not unit:unit_data()._visibility_counter then
@@ -712,12 +725,12 @@ function PortalUnitGroup:_change_visibility(unit, diff)
 	end
 end
 
--- Lines 670-672
+-- Lines 680-682
 function PortalUnitGroup:unit_in_group(unit)
 	return self._ids[unit:unit_data().unit_id] and true or false
 end
 
--- Lines 674-696
+-- Lines 684-706
 function PortalUnitGroup:draw(t, dt, mul, skip_shapes, skip_units)
 	local r = self._r * mul
 	local g = self._g * mul
@@ -745,14 +758,14 @@ end
 
 PortalUnitGroupShape = PortalUnitGroupShape or class(CoreShapeManager.ShapeBox)
 
--- Lines 702-705
+-- Lines 712-715
 function PortalUnitGroupShape:init(params)
 	params.type = "box"
 
 	PortalUnitGroupShape.super.init(self, params)
 end
 
--- Lines 707-712
+-- Lines 717-722
 function PortalUnitGroupShape:draw(t, dt, r, g, b)
 	PortalUnitGroupShape.super.draw(self, t, dt, r, g, b)
 

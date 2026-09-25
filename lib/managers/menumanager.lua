@@ -429,7 +429,7 @@ function MenuManager:is_steam_controller()
 	return self:active_menu() and self:active_menu().input and self:active_menu().input._controller and self:active_menu().input._controller.TYPE == "steam" or managers.controller:get_default_wrapper_type() == "steam"
 end
 
--- Lines 495-540
+-- Lines 495-541
 function MenuManager:toggle_menu_state()
 	if self._is_start_menu then
 		return
@@ -467,14 +467,14 @@ function MenuManager:toggle_menu_state()
 	end
 end
 
--- Lines 542-546
+-- Lines 543-547
 function MenuManager:push_to_talk(enabled)
 	if managers.network and managers.network.voice_chat then
 		managers.network.voice_chat:set_recording(enabled)
 	end
 end
 
--- Lines 548-569
+-- Lines 549-570
 function MenuManager:toggle_chatinput()
 	if Global.game_settings.single_player or Application:editor() then
 		return
@@ -499,7 +499,7 @@ function MenuManager:toggle_chatinput()
 	end
 end
 
--- Lines 571-576
+-- Lines 572-577
 function MenuManager:set_slot_voice(peer, peer_id, active)
 	local kit_menu = managers.menu:get_menu("kit_menu")
 
@@ -508,7 +508,7 @@ function MenuManager:set_slot_voice(peer, peer_id, active)
 	end
 end
 
--- Lines 597-614
+-- Lines 593-614
 function MenuManager:create_controller()
 	if not self._controller then
 		self._controller = managers.controller:get_controller_by_name("MenuManager")
