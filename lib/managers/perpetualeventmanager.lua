@@ -465,7 +465,7 @@ function PerpetualEventManager.get_tweak_func()
 	return Global.perpetual_manager and Global.perpetual_manager.tweak_data_func_name and PerpetualEventManager[Global.perpetual_manager.tweak_data_func_name] or false
 end
 
--- Lines 378-401
+-- Lines 378-432
 function PerpetualEventManager.tweak_christmas_heists(tweak_data)
 	tweak_data.levels.roberts.is_christmas_heist = true
 	tweak_data.levels.hox_1.world_name = "narratives/dentist/hox/stage_1_xmn"
@@ -492,7 +492,7 @@ function PerpetualEventManager.tweak_christmas_heists(tweak_data)
 	tweak_data.levels.fex.is_christmas_heist = true
 end
 
--- Lines 403-406
+-- Lines 434-437
 function PerpetualEventManager.tweak_xmas(tweak_data)
 	PerpetualEventManager.tweak_christmas_heists(tweak_data)
 

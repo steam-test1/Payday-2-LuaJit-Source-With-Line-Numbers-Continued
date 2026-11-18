@@ -2140,7 +2140,6 @@ function CustomSafehouseTweakData:_init_uno()
 		"cow_10",
 		"cow_4",
 		"dah_9",
-		"dark_3",
 		"diamonds_are_forever",
 		"doctor_fantastic",
 		"fish_5",
@@ -2187,7 +2186,8 @@ function CustomSafehouseTweakData:_init_uno()
 			"jerry_4"
 		},
 		mad = {
-			"cac_13"
+			"cac_13",
+			"dark_3"
 		},
 		spa = {
 			"fish_5",

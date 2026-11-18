@@ -2,7 +2,7 @@ TeamAIInventory = TeamAIInventory or class(CopInventory)
 TeamAIInventory.add_unit_by_factory_name = HuskPlayerInventory.add_unit_by_factory_name
 TeamAIInventory.add_unit_by_factory_blueprint = HuskPlayerInventory.add_unit_by_factory_blueprint
 
--- Lines 8-15
+-- Lines 10-17
 function TeamAIInventory:preload_mask()
 	local character_name = managers.criminals:character_name_by_unit(self._unit)
 	local mask_unit_name = managers.criminals:character_data_by_name(character_name).mask_obj
@@ -13,19 +13,27 @@ function TeamAIInventory:preload_mask()
 	managers.dyn_resource:load(IDS_UNIT, Idstring(mask_unit_name), managers.dyn_resource.DYN_RESOURCES_PACKAGE, callback(self, self, "clbk_mask_unit_loaded"))
 end
 
--- Lines 19-23
+-- Lines 21-25
 function TeamAIInventory:clbk_mask_unit_loaded(status, asset_type, asset_name)
 	self._mask_unit_loaded = status
 
 	self:_reset_mask_visibility()
 end
 
--- Lines 27-29
+-- Lines 29-31
 function TeamAIInventory:is_mask_unit_loaded()
 	return self._mask_unit_loaded
 end
 
--- Lines 33-66
+-- Lines 37-42
+function TeamAIInventory:_chk_setup_data(setup_data)
+	setup_data.alert_AI = true
+	setup_data.alert_filter = self._unit:brain():SO_access()
+	setup_data.hit_slotmask = managers.slot:get_mask("bullet_impact_targets")
+	setup_data.user_sound_variant = setup_data.user_sound_variant or self._unit:base():char_tweak().weapon_voice
+end
+
+-- Lines 45-77
 function TeamAIInventory:add_unit_by_name(new_unit_name, equip)
 	if not new_unit_name then
 		return
@@ -49,21 +57,21 @@ function TeamAIInventory:add_unit_by_name(new_unit_name, equip)
 		user_unit = self._unit,
 		ignore_units = ignore_units,
 		hit_slotmask = managers.slot:get_mask("bullet_impact_targets"),
-		user_sound_variant = tweak_data.character[self._unit:base()._tweak_table].weapon_voice,
+		user_sound_variant = self._unit:base():char_tweak().weapon_voice,
 		alert_filter = self._unit:brain():SO_access()
 	}
 
+	self:_chk_setup_data(setup_data)
 	new_unit:base():setup(setup_data)
 	self:add_unit(new_unit, equip)
-	new_unit:set_enabled(false)
 end
 
--- Lines 71-73
+-- Lines 82-84
 function TeamAIInventory:has_ap_ammo()
 	return self._has_ap_rounds
 end
 
--- Lines 76-87
+-- Lines 87-98
 function TeamAIInventory:update_ap_ammo()
 	local state = managers.player:has_category_upgrade("team", "crew_ai_ap_ammo")
 
@@ -78,24 +86,25 @@ function TeamAIInventory:update_ap_ammo()
 	end
 end
 
--- Lines 89-104
+-- Lines 100-117
 function TeamAIInventory:add_unit(new_unit, equip)
 	TeamAIInventory.super.add_unit(self, new_unit, equip)
 
-	if new_unit:base().set_user_is_team_ai then
-		print("Set as team ai")
-		new_unit:base():set_user_is_team_ai(true)
+	local base_ext = new_unit:base()
+
+	if base_ext.set_user_is_team_ai then
+		base_ext:set_user_is_team_ai(true)
 	end
 
-	if new_unit:base().set_team_ai_ap_rounds then
-		new_unit:base():set_team_ai_ap_rounds(managers.player:has_category_upgrade("team", "crew_ai_ap_ammo"))
+	if base_ext.set_team_ai_ap_rounds then
+		base_ext:set_team_ai_ap_rounds(managers.player:has_category_upgrade("team", "crew_ai_ap_ammo"))
 	end
 
 	new_unit:set_enabled(false)
 	new_unit:base():set_visibility_state(false)
 end
 
--- Lines 108-120
+-- Lines 121-133
 function TeamAIInventory:_ensure_weapon_visibility(override_weapon, override)
 	local show_gun = override or not self._unit:movement():cool()
 	local weapon = override_weapon or self:equipped_unit()
@@ -112,7 +121,7 @@ function TeamAIInventory:_ensure_weapon_visibility(override_weapon, override)
 	end
 end
 
--- Lines 124-129
+-- Lines 137-142
 function TeamAIInventory:equip_selection(selection_index, instant)
 	local res = TeamAIInventory.super.equip_selection(self, selection_index, instant)
 
@@ -121,7 +130,7 @@ function TeamAIInventory:equip_selection(selection_index, instant)
 	return res
 end
 
--- Lines 133-143
+-- Lines 146-156
 function TeamAIInventory:synch_equipped_weapon(weap_index, blueprint_string, cosmetics_string)
 	local weapon_name = self._get_weapon_name_from_sync_index(weap_index)
 
@@ -134,7 +143,7 @@ function TeamAIInventory:synch_equipped_weapon(weap_index, blueprint_string, cos
 	self:add_unit_by_name(weapon_name, true, true)
 end
 
--- Lines 147-152
+-- Lines 160-165
 function TeamAIInventory:_unload_mask()
 	if self._mask_unit_name then
 		managers.dyn_resource:unload(IDS_UNIT, Idstring(self._mask_unit_name), DynamicResourceManager.DYN_RESOURCES_PACKAGE, false)
@@ -143,18 +152,18 @@ function TeamAIInventory:_unload_mask()
 	end
 end
 
--- Lines 156-158
+-- Lines 169-171
 function TeamAIInventory:_reset_mask_visibility()
 	self:set_mask_visibility(self._mask_visibility and true or false)
 end
 
--- Lines 162-166
+-- Lines 175-179
 function TeamAIInventory:pre_destroy(unit)
 	TeamAIInventory.super.pre_destroy(self, unit)
 	self:_unload_mask()
 end
 
--- Lines 170-175
+-- Lines 183-188
 function TeamAIInventory:set_visibility_state(state)
 	if state and self._unit:movement():cool() then
 		return

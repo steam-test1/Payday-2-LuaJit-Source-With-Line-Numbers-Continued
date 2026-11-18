@@ -5,7 +5,27 @@ core:import("CoreClass")
 
 MissionScriptElement = MissionScriptElement or class()
 
--- Lines 36-41
+local DEBUG_PRINT_COLOR_ELEMENT = Color(1, 0.75, 0.75, 0.75)
+
+-- Lines 13-20
+function MissionScriptElement:save(data)
+	data.enabled = self._values.enabled
+
+	if self._orientation_index_history then
+		data.orientation_index_history = self._orientation_index_history
+	end
+end
+
+-- Lines 24-31
+function MissionScriptElement:load(data)
+	self:set_enabled(data.enabled)
+
+	if data.orientation_index_history then
+		self._orientation_index_history = data.orientation_index_history
+	end
+end
+
+-- Lines 34-39
 function MissionScriptElement:init(mission_script, data)
 	self._mission_script = mission_script
 	self._id = data.id
@@ -13,12 +33,12 @@ function MissionScriptElement:init(mission_script, data)
 	self._values = data.values
 end
 
--- Lines 73-75
+-- Lines 71-73
 function MissionScriptElement:on_created()
 	return
 end
 
--- Lines 81-95
+-- Lines 79-91
 function MissionScriptElement:on_script_activated()
 	if self._values.rules_elements then
 		self._rules_elements = {}
@@ -29,34 +49,36 @@ function MissionScriptElement:on_script_activated()
 			table.insert(self._rules_elements, element)
 		end
 	end
+
+	self._mission_script:add_save_state_cb(self._id)
 end
 
--- Lines 99-101
+-- Lines 95-97
 function MissionScriptElement:get_mission_element(id)
 	return self._mission_script:element(id)
 end
 
--- Lines 105-107
+-- Lines 101-103
 function MissionScriptElement:editor_name()
 	return self._editor_name
 end
 
--- Lines 111-113
+-- Lines 107-109
 function MissionScriptElement:id()
 	return self._id
 end
 
--- Lines 117-120
+-- Lines 113-116
 function MissionScriptElement:_unique_string_id()
 	return "" .. self._id
 end
 
--- Lines 124-126
+-- Lines 120-122
 function MissionScriptElement:values()
 	return self._values
 end
 
--- Lines 132-146
+-- Lines 128-142
 function MissionScriptElement:value(name)
 	if self._values.instance_name and self._values.instance_var_names and self._values.instance_var_names[name] then
 		local value = managers.world_instance:get_instance_param(self._values.instance_name, self._values.instance_var_names[name])
@@ -69,30 +91,21 @@ function MissionScriptElement:value(name)
 	return self._values[name]
 end
 
--- Lines 168-174
+-- Lines 146-159
 function MissionScriptElement:get_random_table_value(value)
 	if tonumber(value) then
 		return value
+	else
+		return value[1] + math.random(value[#value] + 1) - 1
 	end
-
-	return value[1] + math.random(value[2] + 1) - 1
 end
 
--- Lines 178-184
-function MissionScriptElement:get_random_table_value_float(value)
-	if tonumber(value) then
-		return value
-	end
-
-	return value[1] + math.rand(value[2])
-end
-
--- Lines 189-191
+-- Lines 163-165
 function MissionScriptElement:enabled()
 	return self._values.enabled
 end
 
--- Lines 195-201
+-- Lines 169-175
 function MissionScriptElement:_check_instigator(instigator)
 	if CoreClass.type_name(instigator) == "Unit" then
 		return instigator
@@ -101,7 +114,7 @@ function MissionScriptElement:_check_instigator(instigator)
 	return managers.player:player_unit()
 end
 
--- Lines 205-252
+-- Lines 179-226
 function MissionScriptElement:on_executed(instigator, alternative, skip_execute_on_executed, sync_id_from)
 	if not self._values.enabled then
 		return
@@ -130,7 +143,7 @@ function MissionScriptElement:on_executed(instigator, alternative, skip_execute_
 	end
 end
 
--- Lines 256-270
+-- Lines 230-244
 function MissionScriptElement:_trigger_execute_on_executed(instigator, alternative)
 	local clbk_data = {
 		instigator = instigator,
@@ -147,7 +160,7 @@ function MissionScriptElement:_trigger_execute_on_executed(instigator, alternati
 	end
 end
 
--- Lines 274-280
+-- Lines 248-254
 function MissionScriptElement:_calc_base_delay()
 	if not self._values.base_delay_rand then
 		return self._values.base_delay
@@ -156,7 +169,7 @@ function MissionScriptElement:_calc_base_delay()
 	return self._values.base_delay + math.rand(self._values.base_delay_rand)
 end
 
--- Lines 285-313
+-- Lines 259-287
 function MissionScriptElement:_debug_executed_string(instigator, alternative)
 	local str = "[Element] '" .. self._editor_name .. "' [ID:" .. self:_unique_string_id() .. "] executed"
 
@@ -173,12 +186,12 @@ function MissionScriptElement:_debug_executed_string(instigator, alternative)
 	return str
 end
 
--- Lines 316-318
+-- Lines 290-292
 function MissionScriptElement:_execute_on_executed(params)
 	self:execute_on_executed(params)
 end
 
--- Lines 321-327
+-- Lines 295-301
 function MissionScriptElement:_calc_element_delay(params)
 	if not params.delay_rand then
 		return params.delay
@@ -187,7 +200,7 @@ function MissionScriptElement:_calc_element_delay(params)
 	return params.delay + math.rand(params.delay_rand)
 end
 
--- Lines 330-378
+-- Lines 304-352
 function MissionScriptElement:execute_on_executed(execute_params)
 	for _, params in ipairs(self._values.on_executed) do
 		if not execute_params.alternative or not params.alternative or execute_params.alternative == params.alternative then
@@ -222,12 +235,12 @@ function MissionScriptElement:execute_on_executed(execute_params)
 	end
 end
 
--- Lines 382-384
+-- Lines 356-358
 function MissionScriptElement:_clbk_on_execute_element(data)
 	self:on_executed(unpack(data))
 end
 
--- Lines 388-404
+-- Lines 362-378
 function MissionScriptElement:_has_on_executed_alternative(alternative)
 	for _, params in ipairs(self._values.on_executed) do
 		if alternative then
@@ -242,34 +255,34 @@ function MissionScriptElement:_has_on_executed_alternative(alternative)
 	return false
 end
 
--- Lines 408-410
+-- Lines 382-384
 function MissionScriptElement:enabled()
 	return self._values.enabled
 end
 
--- Lines 414-418
+-- Lines 388-392
 function MissionScriptElement:set_enabled(enabled)
 	self._values.enabled = enabled
 
 	self:on_set_enabled(enabled)
 end
 
--- Lines 422-424
+-- Lines 396-398
 function MissionScriptElement:on_set_enabled(enabled)
 	return
 end
 
--- Lines 428-430
+-- Lines 402-404
 function MissionScriptElement:on_toggle()
 	return
 end
 
--- Lines 434-436
+-- Lines 408-410
 function MissionScriptElement:set_trigger_times(trigger_times)
 	self._values.trigger_times = trigger_times
 end
 
--- Lines 440-448
+-- Lines 414-422
 function MissionScriptElement:_reduce_trigger_times()
 	if self._values.trigger_times > 0 then
 		self._values.trigger_times = self._values.trigger_times - 1
@@ -280,28 +293,28 @@ function MissionScriptElement:_reduce_trigger_times()
 	end
 end
 
--- Lines 452-456
+-- Lines 426-430
 function MissionScriptElement:operation_add()
 	if Application:editor() then
 		managers.editor:output_error("Element " .. self:editor_name() .. " doesn't have an 'add' operator implemented.")
 	end
 end
 
--- Lines 460-464
+-- Lines 434-438
 function MissionScriptElement:operation_remove()
 	if Application:editor() then
 		managers.editor:output_error("Element " .. self:editor_name() .. " doesn't have a 'remove' operator implemented.")
 	end
 end
 
--- Lines 469-473
+-- Lines 443-447
 function MissionScriptElement:apply_job_value()
 	if Application:editor() then
 		managers.editor:output_error("Element " .. self:editor_name() .. " doesn't have a 'apply_job_value' function implemented.")
 	end
 end
 
--- Lines 478-507
+-- Lines 452-481
 function MissionScriptElement:get_orientation(use_last_orientation_index)
 	local index = use_last_orientation_index and self._last_orientation_index
 
@@ -327,7 +340,7 @@ function MissionScriptElement:get_orientation(use_last_orientation_index)
 	return self:_get_orientation_by_index(index)
 end
 
--- Lines 512-520
+-- Lines 486-494
 function MissionScriptElement:set_synced_orientation_element_index(orientation_element_index)
 	if orientation_element_index and orientation_element_index > 0 then
 		self._synced_orientation_element_index = orientation_element_index
@@ -336,7 +349,7 @@ function MissionScriptElement:set_synced_orientation_element_index(orientation_e
 	end
 end
 
--- Lines 523-544
+-- Lines 497-518
 function MissionScriptElement:_get_orientation_by_index(index)
 	if not index or index == 0 then
 		return self._values.position, self._values.rotation
@@ -356,7 +369,7 @@ function MissionScriptElement:_get_orientation_by_index(index)
 	return element:_get_orientation_by_index(0)
 end
 
--- Lines 547-595
+-- Lines 521-569
 function MissionScriptElement:_get_orientation_index()
 	if self._values.orientation_elements and #self._values.orientation_elements > 0 then
 		if not self._unused_orientation_indices then
@@ -401,27 +414,27 @@ function MissionScriptElement:_get_orientation_index()
 	end
 end
 
--- Lines 599-602
+-- Lines 573-576
 function MissionScriptElement:is_debug()
 	return self._values.debug or self._mission_script:is_debug()
 end
 
--- Lines 606-608
+-- Lines 580-582
 function MissionScriptElement:debug_draw()
 	return
 end
 
--- Lines 612-614
+-- Lines 586-588
 function MissionScriptElement:stop_simulation(...)
 	return
 end
 
--- Lines 618-620
+-- Lines 592-594
 function MissionScriptElement:pre_destroy()
 	return
 end
 
--- Lines 624-626
+-- Lines 598-600
 function MissionScriptElement:destroy()
 	return
 end

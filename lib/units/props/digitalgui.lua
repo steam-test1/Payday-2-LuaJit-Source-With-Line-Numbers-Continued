@@ -302,8 +302,12 @@ function DigitalGui:_round(num, idp)
 	return math.floor(num * mult + 0.5) / mult
 end
 
--- Lines 283-326
+-- Lines 283-331
 function DigitalGui:_update_timer_text()
+	if not alive(self._title_text) then
+		return
+	end
+
 	if self:timer_precision() <= 0 and math.floor(self._timer) == self._floored_last_timer then
 		return
 	end
@@ -353,7 +357,7 @@ function DigitalGui:_update_timer_text()
 	self._title_text:set_text(text)
 end
 
--- Lines 328-335
+-- Lines 333-340
 function DigitalGui:set_visible(visible)
 	self._visible = visible
 
@@ -364,13 +368,13 @@ function DigitalGui:set_visible(visible)
 	end
 end
 
--- Lines 337-340
+-- Lines 342-345
 function DigitalGui:lock_gui()
 	self._ws:set_cull_distance(self._cull_distance)
 	self._ws:set_frozen(true)
 end
 
--- Lines 342-360
+-- Lines 347-365
 function DigitalGui:sync_gui_net_event(event_id, value)
 	if event_id == DigitalGui.GUI_EVENT_IDS.syncronize then
 		self:timer_set(value)
@@ -389,7 +393,7 @@ function DigitalGui:sync_gui_net_event(event_id, value)
 	end
 end
 
--- Lines 362-368
+-- Lines 367-373
 function DigitalGui:destroy()
 	if alive(self._new_gui) and alive(self._ws) then
 		self._new_gui:destroy_workspace(self._ws)
@@ -399,7 +403,7 @@ function DigitalGui:destroy()
 	end
 end
 
--- Lines 370-382
+-- Lines 375-387
 function DigitalGui:save(data)
 	local state = {}
 
@@ -414,7 +418,7 @@ function DigitalGui:save(data)
 	data.DigitalGui = state
 end
 
--- Lines 384-411
+-- Lines 389-416
 function DigitalGui:load(data)
 	local state = data.DigitalGui
 

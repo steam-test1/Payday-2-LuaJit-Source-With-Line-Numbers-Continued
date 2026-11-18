@@ -29,7 +29,7 @@ function MoneyTweakData._create_value_table(min, max, table_size, round, curve)
 	return t
 end
 
--- Lines 29-1011
+-- Lines 29-1017
 function MoneyTweakData:init(tweak_data)
 	local difficulty = Global.game_settings and Global.game_settings.difficulty or "normal"
 	local difficulty_index = tweak_data:difficulty_to_index(difficulty)
@@ -105,6 +105,11 @@ function MoneyTweakData:init(tweak_data)
 	self.bag_values.rubies = 1500
 	self.bag_values.red_diamond = 10000
 	self.bag_values.old_wine = 2000
+	self.bag_values.garden_gnome = 9.99
+	self.bag_values.ranc_weapon = 3000
+	self.bag_values.turret_part = 6000
+	self.bag_values.corp_papers = 2500
+	self.bag_values.corp_prototype = 3000
 	self.bag_value_multiplier = self._create_value_table(self.cut_lootbag_bonus / 5 / self.offshore_rate / self.bag_values.default, self.cut_lootbag_bonus / self.offshore_rate / self.bag_values.default, 7, true, 0.85)
 	self.stage_completion = self._create_value_table(self.cut_stage_complete / 7 / self.offshore_rate, self.cut_stage_complete / self.offshore_rate, 7, true, 1)
 	self.job_completion = self._create_value_table(self.cut_job_complete / 7 / self.offshore_rate, self.cut_job_complete / self.offshore_rate, 7, true, 1)
@@ -376,7 +381,7 @@ function MoneyTweakData:init(tweak_data)
 	self.masks.pattern_value = self._create_value_table(smallest_mask_part_cost * 0.4, biggest_mask_part_cost, 10, true, 1.1)
 	self.masks.color_value = self._create_value_table(smallest_mask_part_cost * 0.3, biggest_mask_part_cost, 10, true, 1)
 
-	-- Lines 551-551
+	-- Lines 571-571
 	local function millions(value)
 		return value * 1000000
 	end
@@ -923,9 +928,4 @@ function MoneyTweakData:init(tweak_data)
 	self.moneythrower = {}
 	self.moneythrower.max_kills_per_session = 100
 	self.moneythrower.kill_to_offshore_multiplier = 1000
-	self.bag_values.garden_gnome = 9.99
-	self.bag_values.ranc_weapon = 3000
-	self.bag_values.turret_part = 6000
-	self.bag_values.corp_papers = 2500
-	self.bag_values.corp_prototype = 3000
 end

@@ -462,7 +462,7 @@ function ElementLaserTrigger:_clean_destroyed_units()
 	end
 end
 
--- Lines 462-496
+-- Lines 462-494
 function ElementLaserTrigger:_client_check_state(unit)
 	local rule_ok = self:_check_instigator_rules(unit)
 	local inside
@@ -498,17 +498,17 @@ function ElementLaserTrigger:_client_check_state(unit)
 	end
 end
 
--- Lines 498-500
+-- Lines 496-498
 function ElementLaserTrigger:operation_add()
 	self:_set_dummies_visible(true)
 end
 
--- Lines 502-504
+-- Lines 500-502
 function ElementLaserTrigger:operation_remove()
 	self:_set_dummies_visible(false)
 end
 
--- Lines 506-517
+-- Lines 504-515
 function ElementLaserTrigger:_set_dummies_visible(visible)
 	if not self._dummy_units then
 		return
@@ -523,7 +523,7 @@ function ElementLaserTrigger:_set_dummies_visible(visible)
 	end
 end
 
--- Lines 520-526
+-- Lines 518-524
 function ElementLaserTrigger:save(data)
 	data.enabled = self._values.enabled
 	data.cycle_order = self._cycle_order
@@ -532,7 +532,7 @@ function ElementLaserTrigger:save(data)
 	data.dummies_visible = self._dummies_visible
 end
 
--- Lines 528-534
+-- Lines 526-532
 function ElementLaserTrigger:load(data)
 	self:set_enabled(data.enabled)
 

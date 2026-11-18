@@ -7,7 +7,7 @@ CopActionTurn.turn_dt_mul = 0.75
 ShieldActionTurn = ShieldActionTurn or class(CopActionTurn)
 ShieldActionTurn.turn_dt_mul = 0.5
 
--- Lines 12-81
+-- Lines 12-86
 function CopActionTurn:init(action_desc, common_data)
 	self._common_data = common_data
 	self._action_desc = action_desc
@@ -80,14 +80,14 @@ function CopActionTurn:init(action_desc, common_data)
 	return true
 end
 
--- Lines 85-95
+-- Lines 90-104
 function CopActionTurn:on_exit()
 	if not self._expired and self._ext_anim.turn then
 		self._ext_movement:play_redirect("idle")
 	end
 end
 
--- Lines 99-143
+-- Lines 108-152
 function CopActionTurn:update(t)
 	do
 		local vis_state = self._ext_base:lod_stage() or 4
@@ -137,7 +137,7 @@ function CopActionTurn:update(t)
 	end
 end
 
--- Lines 147-171
+-- Lines 156-180
 function CopActionTurn:_play_turn_anim(new_fwd)
 	local redir_res = self._ext_movement:play_redirect("turn_" .. (self._turn_left and "l" or "r"))
 
@@ -164,17 +164,17 @@ function CopActionTurn:_play_turn_anim(new_fwd)
 	end
 end
 
--- Lines 175-177
+-- Lines 184-186
 function CopActionTurn:type()
 	return "turn"
 end
 
--- Lines 181-183
+-- Lines 190-192
 function CopActionTurn:expired()
 	return self._expired
 end
 
--- Lines 187-189
+-- Lines 196-198
 function CopActionTurn:need_upd()
 	return true
 end

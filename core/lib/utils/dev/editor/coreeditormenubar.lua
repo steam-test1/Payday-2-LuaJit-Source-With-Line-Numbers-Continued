@@ -511,7 +511,18 @@ function CoreEditor:confirm_on_new()
 	end
 end
 
--- Lines 500-513
+-- Lines 498-506
+function CoreEditor:confirm_on_exit_to_desktop()
+	local confirm = EWS:message_box(Global.frame_panel, "Do you really want to exit?", "Bringer of World", "YES_NO,ICON_QUESTION", Vector3(-1, -1, 0))
+
+	if confirm == "YES" then
+		return true
+	end
+
+	return false
+end
+
+-- Lines 511-524
 function CoreEditor:on_new()
 	if self:confirm_on_new() then
 		return
@@ -529,7 +540,7 @@ function CoreEditor:on_new()
 	end
 end
 
--- Lines 516-533
+-- Lines 527-544
 function CoreEditor:on_open()
 	if self:confirm_on_new() then
 		return
@@ -550,7 +561,7 @@ function CoreEditor:on_open()
 	end
 end
 
--- Lines 536-549
+-- Lines 547-560
 function CoreEditor:on_save()
 	if Global.running_simulation then
 		self:output_warning("Won't save during simulation.")
@@ -573,7 +584,7 @@ function CoreEditor:on_save()
 	end
 end
 
--- Lines 551-571
+-- Lines 562-582
 function CoreEditor:create_temp_saves(type)
 	local a = string.gsub(managers.editor._lastdir, managers.database:base_path(), "")
 	local dirs = {}
@@ -601,7 +612,7 @@ function CoreEditor:create_temp_saves(type)
 	return d
 end
 
--- Lines 573-586
+-- Lines 584-597
 function CoreEditor:on_saveas()
 	if Global.running_simulation then
 		self:output_warning("Won't save during simulation.")
@@ -619,7 +630,7 @@ function CoreEditor:on_saveas()
 	end
 end
 
--- Lines 588-599
+-- Lines 599-610
 function CoreEditor:on_saveascopy()
 	if Global.running_simulation then
 		self:output_warning("Won't save during simulation.")
@@ -636,7 +647,7 @@ function CoreEditor:on_saveascopy()
 	end
 end
 
--- Lines 601-606
+-- Lines 612-617
 function CoreEditor:on_load_recent_file(index)
 	if self:confirm_on_new() then
 		return
@@ -645,7 +656,7 @@ function CoreEditor:on_load_recent_file(index)
 	self:load_level(self._recent_files[index].dir, self._recent_files[index].path)
 end
 
--- Lines 608-617
+-- Lines 619-635
 function CoreEditor:on_close(custom_data, event_object)
 	if self:confirm_on_new() then
 		return
@@ -656,12 +667,12 @@ function CoreEditor:on_close(custom_data, event_object)
 	CoreEngineAccess._quit()
 end
 
--- Lines 619-620
+-- Lines 637-638
 function CoreEditor:_project_add_menubar()
 	return
 end
 
--- Lines 625-630
+-- Lines 643-648
 function CoreEditor:on_enable_all_layers()
 	for name, layer in pairs(self:layers()) do
 		layer:set_enabled(true)
@@ -669,7 +680,7 @@ function CoreEditor:on_enable_all_layers()
 	end
 end
 
--- Lines 633-640
+-- Lines 651-658
 function CoreEditor:on_disable_layers()
 	for name, layer in pairs(self:layers()) do
 		if layer ~= self._current_layer then
@@ -682,7 +693,7 @@ function CoreEditor:on_disable_layers()
 	end
 end
 
--- Lines 643-648
+-- Lines 661-666
 function CoreEditor:on_disable_layer(data)
 	local accepted = self:layer(data.name):set_enabled(not self._disable_layer_menu:is_checked(data.id))
 
@@ -691,34 +702,34 @@ function CoreEditor:on_disable_layer(data)
 	end
 end
 
--- Lines 650-652
+-- Lines 668-670
 function CoreEditor:on_hide_layer(data)
 	self:layer(data.name):hide_all()
 end
 
--- Lines 654-656
+-- Lines 672-674
 function CoreEditor:on_unhide_layer(data)
 	self:layer(data.name):unhide_all()
 end
 
--- Lines 658-660
+-- Lines 676-678
 function CoreEditor:on_change_layer(index)
 	self._notebook:set_page(index)
 end
 
--- Lines 664-668
+-- Lines 682-686
 function CoreEditor:on_break_unit_links()
 	if self._current_layer == self:layer("Mission") then
 		self:layer("Mission"):break_links()
 	end
 end
 
--- Lines 672-674
+-- Lines 690-692
 function CoreEditor:on_select_group_by_name()
 	self:show_dialog("select_group_by_name", "SelectGroupByName")
 end
 
--- Lines 676-685
+-- Lines 694-703
 function CoreEditor:group()
 	if alive(self._current_layer:selected_unit()) then
 		local name = self._groups:group_name()
@@ -732,7 +743,7 @@ function CoreEditor:group()
 	end
 end
 
--- Lines 687-695
+-- Lines 705-713
 function CoreEditor:ungroup()
 	if alive(self._current_layer:selected_unit()) then
 		local groups = self._current_layer:selected_unit():unit_data().editor_groups
@@ -745,7 +756,7 @@ function CoreEditor:ungroup()
 	end
 end
 
--- Lines 697-705
+-- Lines 715-723
 function CoreEditor:save_group()
 	if alive(self._current_layer:selected_unit()) then
 		local groups = self._current_layer:selected_unit():unit_data().editor_groups
@@ -758,12 +769,12 @@ function CoreEditor:save_group()
 	end
 end
 
--- Lines 707-709
+-- Lines 725-727
 function CoreEditor:load_group()
 	self._groups:load_group()
 end
 
--- Lines 711-717
+-- Lines 729-735
 function CoreEditor:show_group_presets()
 	if not SystemFS:exists(self._group_presets_path) then
 		SystemFS:make_dir(self._group_presets_path)
@@ -774,7 +785,7 @@ function CoreEditor:show_group_presets()
 	GroupPresetsDialog:new(files, self._group_presets_path)
 end
 
--- Lines 719-727
+-- Lines 737-745
 function CoreEditor:dump_group()
 	if alive(self._current_layer:selected_unit()) then
 		local groups = self._current_layer:selected_unit():unit_data().editor_groups
@@ -787,32 +798,32 @@ function CoreEditor:dump_group()
 	end
 end
 
--- Lines 731-733
+-- Lines 749-751
 function CoreEditor:on_difficulty(difficulty)
 	self._mission_difficulty = difficulty
 end
 
--- Lines 735-737
+-- Lines 753-755
 function CoreEditor:on_players(player)
 	self._mission_player = player
 end
 
--- Lines 739-741
+-- Lines 757-759
 function CoreEditor:mission_player()
 	return self._mission_player
 end
 
--- Lines 743-745
+-- Lines 761-763
 function CoreEditor:on_platform(platform)
 	self._mission_platform = platform
 end
 
--- Lines 747-749
+-- Lines 765-767
 function CoreEditor:mission_platform()
 	return self._mission_platform
 end
 
--- Lines 753-760
+-- Lines 771-778
 function CoreEditor:toggle_info(data)
 	if data[2] == "INFO OUTPUT" then
 		self._outputctrl:set_visible(data[1]:is_checked(data[2]))
@@ -823,12 +834,12 @@ function CoreEditor:toggle_info(data)
 	self._info_frame:layout()
 end
 
--- Lines 762-764
+-- Lines 780-782
 function CoreEditor:show_news()
 	self._world_editor_news:set_visible(true)
 end
 
--- Lines 766-776
+-- Lines 784-794
 function CoreEditor:change_visualization(viz)
 	if viz ~= "deferred_lighting" then
 		self:disable_all_post_effects(true)
@@ -841,7 +852,7 @@ function CoreEditor:change_visualization(viz)
 	end
 end
 
--- Lines 778-797
+-- Lines 796-815
 function CoreEditor:on_post_processor_effect(pe)
 	if pe.id == "POSTFX_none" then
 		self:disable_all_post_effects()
@@ -866,7 +877,7 @@ function CoreEditor:on_post_processor_effect(pe)
 	end
 end
 
--- Lines 799-805
+-- Lines 817-823
 function CoreEditor:toggle_lock_1280_720(data)
 	if data[1]:is_checked(data[2]) then
 		self:_set_appwin_fixed_resolution(Vector3(1280, 720, 0))
@@ -875,52 +886,52 @@ function CoreEditor:toggle_lock_1280_720(data)
 	end
 end
 
--- Lines 807-810
+-- Lines 825-828
 function CoreEditor:toggle_orthographic(data)
 	self._orthographic = data[1]:is_checked(data[2])
 
 	self._camera_controller:toggle_orthographic(self._orthographic)
 end
 
--- Lines 812-814
+-- Lines 830-832
 function CoreEditor:toggle_light(data)
 	self._light:set_enable(data[1]:is_checked(data[2]))
 end
 
--- Lines 815-817
+-- Lines 833-835
 function CoreEditor:toggle_show_center(data)
 	self._show_center = data[1]:is_checked(data[2])
 end
 
--- Lines 819-822
+-- Lines 837-840
 function CoreEditor:toggle_show_camera_info(data)
 	self._show_camera_position = data[1]:is_checked(data[2])
 
 	self:set_show_camera_info(self._show_camera_position)
 end
 
--- Lines 824-826
+-- Lines 842-844
 function CoreEditor:toggle_draw_marker_ball(data)
 	self._layer_draw_marker = data[1]:is_checked(data[2])
 end
 
--- Lines 828-831
+-- Lines 846-849
 function CoreEditor:toggle_interaction_radii(data)
 	self._show_interaction_radii = data[1]:is_checked(data[2])
 	managers.interaction._debug_all = self._show_interaction_radii
 end
 
--- Lines 836-838
+-- Lines 854-856
 function CoreEditor:on_configuration()
 	self._configuration:show_modal()
 end
 
--- Lines 841-843
+-- Lines 859-861
 function CoreEditor:on_controller_bindings()
 	self:show_dialog("edit_controller_bindings", "EditControllerBindings")
 end
 
--- Lines 846-851
+-- Lines 864-869
 function CoreEditor:on_expert_mode(data)
 	local expert = data[1]:is_checked(data[2])
 
@@ -929,7 +940,7 @@ function CoreEditor:on_expert_mode(data)
 	Global.frame_panel:layout()
 end
 
--- Lines 853-863
+-- Lines 871-881
 function CoreEditor:on_gather_duplicates()
 	local confirm = EWS:message_box(Global.frame_panel, "Gather duplicates and save level?", "Optimization", "YES_NO,CANCEL,ICON_QUESTION", Vector3(-1, -1, 0))
 
@@ -944,7 +955,7 @@ function CoreEditor:on_gather_duplicates()
 	end
 end
 
--- Lines 868-890
+-- Lines 886-908
 function CoreEditor:on_reload_unit(quick)
 	local names = {}
 
@@ -971,31 +982,31 @@ function CoreEditor:on_reload_unit(quick)
 	end
 end
 
--- Lines 894-897
+-- Lines 912-915
 function CoreEditor:on_profiler_main(custom_data, event_object)
 	self._profiler_menu:set_checked("PROFILER_MAIN", not event_object:is_checked())
 	Application:console_command("stats main")
 end
 
--- Lines 899-902
+-- Lines 917-920
 function CoreEditor:on_profiler_mem(custom_data, event_object)
 	self._profiler_menu:set_checked("PROFILER_MEM", not event_object:is_checked())
 	Application:console_command("stats mem")
 end
 
--- Lines 904-907
+-- Lines 922-925
 function CoreEditor:on_profiler_d3d(custom_data, event_object)
 	self._profiler_menu:set_checked("PROFILER_D3D", not event_object:is_checked())
 	Application:console_command("stats d3d")
 end
 
--- Lines 909-912
+-- Lines 927-930
 function CoreEditor:on_profiler_unit_profiler(custom_data, event_object)
 	self._profiler_menu:set_checked("PROFILER_UNIT_PROFILER", not event_object:is_checked())
 	Application:console_command("stats unit_profiler")
 end
 
--- Lines 916-926
+-- Lines 934-944
 function CoreEditor:on_add_workview()
 	local name = EWS:get_text_from_user(Global.frame_panel, "Enter name for new work view:", "Add work view", "", Vector3(-1, -1, 0), true)
 
@@ -1010,12 +1021,12 @@ function CoreEditor:on_add_workview()
 	end
 end
 
--- Lines 928-930
+-- Lines 946-948
 function CoreEditor:on_show_workview()
 	self:show_dialog("workview_by_name", "SelectWorkView")
 end
 
--- Lines 933-967
+-- Lines 951-985
 function CoreEditor:on_check_duality()
 	local units = {}
 	local collisions = {}
@@ -1082,7 +1093,7 @@ function CoreEditor:on_check_duality()
 	self._unit_duality = UnitDuality:new(collisions, pos)
 end
 
--- Lines 969-978
+-- Lines 987-996
 function CoreEditor:on_make_screenshot()
 	local name = Application:date("%Y-%m-%d_%H.%M.%S") .. ".tga"
 
@@ -1090,19 +1101,19 @@ function CoreEditor:on_make_screenshot()
 	self:output("Screenshot created: " .. name .. ".")
 end
 
--- Lines 980-982
+-- Lines 998-1000
 function CoreEditor:toggle_draw_occluders(data)
 	self._draw_occluders = data[1]:is_checked(data[2])
 end
 
--- Lines 984-986
+-- Lines 1002-1004
 function CoreEditor:on_show_unit_breakdown()
 	self:show_dialog("unit_breakdown", "UnitBreakdownView")
 end
 
 local leveltools_ids = Idstring("leveltools")
 
--- Lines 992-1017
+-- Lines 1010-1035
 function CoreEditor:on_hide_helper_units(data)
 	local cache = {}
 
@@ -1135,28 +1146,28 @@ function CoreEditor:on_hide_helper_units(data)
 	cache = nil
 end
 
--- Lines 1019-1021
+-- Lines 1037-1039
 function CoreEditor:toggle_render_effects(data)
 	World:effect_manager():set_rendering_enabled(data[1]:is_checked(data[2]))
 end
 
--- Lines 1025-1028
+-- Lines 1043-1046
 function CoreEditor:toggle_show_markers(data)
 	self._marker_panel:set_visible(data[1]:is_checked(data[2]))
 	self._ews_editor_frame:layout()
 end
 
--- Lines 1032-1036
+-- Lines 1050-1054
 function CoreEditor:on_using_the_editor()
 	return
 end
 
--- Lines 1038-1040
+-- Lines 1056-1058
 function CoreEditor:on_video_tutorials()
 	os.execute("explorer " .. "\\\\dallas\\Shared\\Starbreeze_Video_Tutorials" .. "\"")
 end
 
--- Lines 1042-1044
+-- Lines 1060-1062
 function CoreEditor:on_about()
 	EWS:MessageDialog(Global.frame_panel, self._editor_name .. "\n\n\"And the Earth Was Without Form and Void..\"\n\nCopyright 2007-~ GRiN, Inc.\n\nhttp://ganon/ or http://www.grin.se", "About...", "OK,ICON_INFORMATION"):show_modal()
 end

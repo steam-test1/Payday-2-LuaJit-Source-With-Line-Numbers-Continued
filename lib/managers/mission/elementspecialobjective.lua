@@ -385,18 +385,22 @@ function ElementSpecialObjective:on_executed(instigator)
 	ElementSpecialObjective.super.on_executed(self, instigator)
 end
 
--- Lines 319-327
+-- Lines 319-331
 function ElementSpecialObjective:on_set_enabled()
 	if self:value("interrupt_objective") then
 		if self:enabled() then
-			self:add_element_objective(nil)
+			if self.add_element_objective then
+				self:add_element_objective(nil)
+			else
+				Application:error("[ElementSpecialObjective:on_set_enabled] add_element_objective is not implemented on this")
+			end
 		else
 			self:operation_remove()
 		end
 	end
 end
 
--- Lines 329-347
+-- Lines 333-351
 function ElementSpecialObjective:operation_remove()
 	if self._nav_link then
 		managers.navigation:unregister_anim_nav_link(self)
@@ -419,7 +423,7 @@ function ElementSpecialObjective:operation_remove()
 	end
 end
 
--- Lines 352-491
+-- Lines 356-495
 function ElementSpecialObjective:get_objective(instigator)
 	local is_AI_SO = self._is_AI_SO or string.begins(self._values.so_action, "AI")
 	local pose, stance, attitude, path_style, pos, rot, interrupt_dis, interrupt_health, haste, trigger_on, interaction_voice = self:_get_misc_SO_params()
@@ -578,7 +582,7 @@ function ElementSpecialObjective:get_objective(instigator)
 	return objective
 end
 
--- Lines 495-521
+-- Lines 499-525
 function ElementSpecialObjective:_get_hunt_location(instigator)
 	if not alive(instigator) then
 		return
@@ -612,7 +616,7 @@ function ElementSpecialObjective:_get_hunt_location(instigator)
 	return objective_nav_seg, criminal_tracker:field_position()
 end
 
--- Lines 525-552
+-- Lines 529-556
 function ElementSpecialObjective:_get_misc_SO_params()
 	local pose, stance, attitude, path_style, pos, rot, interrupt_dis, interrupt_health, haste, trigger_on, interaction_voice
 	local values = self._values
@@ -643,57 +647,57 @@ function ElementSpecialObjective:_get_misc_SO_params()
 	return pose, stance, attitude, path_style, pos, rot, interrupt_dis, interrupt_health, haste, trigger_on, interaction_voice
 end
 
--- Lines 556-558
+-- Lines 560-562
 function ElementSpecialObjective:needs_pos_rsrv()
 	return self._values.needs_pos_rsrv or false
 end
 
--- Lines 562-564
+-- Lines 566-568
 function ElementSpecialObjective:nav_link_end_pos()
 	return self._values.search_position
 end
 
--- Lines 568-570
+-- Lines 572-574
 function ElementSpecialObjective:nav_link_access()
 	return tonumber(self._values.SO_access)
 end
 
--- Lines 574-576
+-- Lines 578-580
 function ElementSpecialObjective:chance()
 	return self:_get_default_value_if_nil("base_chance")
 end
 
--- Lines 580-582
+-- Lines 584-586
 function ElementSpecialObjective:nav_link_delay()
 	return self:_get_default_value_if_nil("interval")
 end
 
--- Lines 586-588
+-- Lines 590-592
 function ElementSpecialObjective:nav_link()
 	return self._nav_link
 end
 
--- Lines 592-594
+-- Lines 596-598
 function ElementSpecialObjective:id()
 	return self._id
 end
 
--- Lines 598-600
+-- Lines 602-604
 function ElementSpecialObjective:_is_nav_link()
 	return self._values.is_navigation_link or self._values.navigation_link and self._values.navigation_link ~= -1
 end
 
--- Lines 604-606
+-- Lines 608-610
 function ElementSpecialObjective:set_nav_link(nav_link)
 	self._nav_link = nav_link
 end
 
--- Lines 610-612
+-- Lines 614-616
 function ElementSpecialObjective:nav_link_wants_align_pos()
 	return self._values.align_position
 end
 
--- Lines 616-649
+-- Lines 620-653
 function ElementSpecialObjective:_select_units_from_spawners()
 	local candidates = {}
 	local objectives = {}
@@ -737,12 +741,12 @@ function ElementSpecialObjective:_select_units_from_spawners()
 	return chosen_units, chosen_objectives
 end
 
--- Lines 653-655
+-- Lines 657-659
 function ElementSpecialObjective:get_objective_trigger()
 	return self._values.trigger_on
 end
 
--- Lines 659-693
+-- Lines 663-697
 function ElementSpecialObjective:_administer_objective(unit, objective)
 	if objective.type == "phalanx" then
 		GroupAIStateBase:register_phalanx_unit(unit)
@@ -780,7 +784,7 @@ function ElementSpecialObjective:_administer_objective(unit, objective)
 	end
 end
 
--- Lines 698-762
+-- Lines 702-766
 function ElementSpecialObjective:choose_followup_SO(unit, skip_element_ids)
 	if not self._values.followup_elements then
 		return
@@ -848,7 +852,7 @@ function ElementSpecialObjective:choose_followup_SO(unit, skip_element_ids)
 	end
 end
 
--- Lines 766-773
+-- Lines 770-777
 function ElementSpecialObjective:get_as_followup(unit, skip_element_ids)
 	if (not unit or managers.navigation:check_access(self._values.SO_access, unit:brain():SO_access(), 0) and self:clbk_verify_administration(unit)) and not skip_element_ids[self._id] then
 		return self, self:_get_default_value_if_nil("base_chance")
@@ -857,7 +861,7 @@ function ElementSpecialObjective:get_as_followup(unit, skip_element_ids)
 	self:event("admin_fail", unit)
 end
 
--- Lines 777-783
+-- Lines 781-787
 function ElementSpecialObjective:_has_action_duration()
 	if not self._values.action_duration_max and not self._values.action_duration_min then
 		return false
@@ -866,7 +870,7 @@ function ElementSpecialObjective:_has_action_duration()
 	return true
 end
 
--- Lines 785-795
+-- Lines 789-799
 function ElementSpecialObjective:_get_action_duration()
 	if not self._values.action_duration_max and not self._values.action_duration_min then
 		return
@@ -880,7 +884,7 @@ function ElementSpecialObjective:_get_action_duration()
 	end
 end
 
--- Lines 799-801
+-- Lines 803-805
 function ElementSpecialObjective:_get_default_value_if_nil(name_in)
 	return self._values[name_in] or self._DEFAULT_VALUES[name_in]
 end
@@ -909,31 +913,11 @@ ElementSpecialObjective._stealth_idles = {
 	"e_so_ntl_stretch_shoulders",
 	"e_so_ntl_watch_look_calm"
 }
-ElementSpecialObjective._stealth_idles_no_loop = {
-	"e_so_ntl_idle_kickpebble",
-	"e_so_ntl_idle_look",
-	"e_so_ntl_idle_look2",
-	"e_so_ntl_idle_clock",
-	"e_so_ntl_idle_brush",
-	"e_so_ntl_idle_stickygum",
-	"e_so_ntl_idle_tired",
-	"e_so_ntl_brush_jacket",
-	"e_so_ntl_brush_shoe",
-	"e_so_ntl_clear_throat",
-	"e_so_ntl_idle_breath",
-	"e_so_ntl_idle_stand",
-	"e_so_ntl_idle_thinking",
-	"e_so_ntl_jawn",
-	"e_so_ntl_look_around",
-	"e_so_ntl_look_behind",
-	"e_so_ntl_look_up",
-	"e_so_ntl_restless",
-	"e_so_ntl_scratches_chin",
-	"e_so_ntl_stretch_shoulders",
-	"e_so_ntl_watch_look_calm"
-}
+ElementSpecialObjective._stealth_idles_no_loop = table.list_copy(ElementSpecialObjective._stealth_idles)
 
--- Lines 857-876
+table.delete(ElementSpecialObjective._stealth_idles_no_loop, "e_so_ntl_idle_look3")
+
+-- Lines 839-858
 function ElementSpecialObjective:_check_new_stealth_idle()
 	if self._values.so_action then
 		if not self:_has_action_duration() then

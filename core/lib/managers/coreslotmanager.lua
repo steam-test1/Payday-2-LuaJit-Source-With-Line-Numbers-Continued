@@ -34,7 +34,7 @@ function SlotManager:init()
 	self._masks.brushes = World:make_slot_mask(29)
 end
 
--- Lines 52-75
+-- Lines 126-149
 function SlotManager:get_mask(...)
 	local mask
 	local arg_list = {
@@ -51,29 +51,41 @@ function SlotManager:get_mask(...)
 				mask = mask + next_mask
 			end
 		else
-			Application:error("Invalid slotmask \"" .. tostring(name) .. "\".")
+			Application:error("[SlotManager] get_mask() - invalid slotmask \"" .. tostring(name) .. "\".")
 		end
 	end
 
 	if #arg_list == 0 then
-		Application:error("No parameters passed to get_mask function.")
+		Application:error("[SlotManager] get_mask() - no parameters passed to get_mask function.")
 	end
 
 	return mask
 end
 
--- Lines 77-79
+-- Lines 151-153
 function SlotManager:get_mask_name(slotmask)
 	return table.get_key(self._masks, slotmask)
 end
 
--- Lines 81-83
+-- Lines 155-157
 function SlotManager:get_mask_map()
 	return self._masks
 end
 
--- Lines 89-143
-function SlotManager:make_slot_mask_table(v)
+-- Lines 164-173
+function SlotManager:make_slot_mask(v)
+	local v_type = type(v)
+	local func = self["make_slot_mask_" .. v_type]
+
+	if func then
+		return func(self, v)
+	else
+		print("[SlotManager] make_slot_mask_number() - invalid variable, type ", v_type)
+	end
+end
+
+-- Lines 175-229
+function SlotManager:make_slot_mask_table(t)
 	local type = type
 	local next = next
 	local unpack = unpack
@@ -81,29 +93,28 @@ function SlotManager:make_slot_mask_table(v)
 	local num_slotmasks = {}
 	local neg_num_slotmasks = {}
 
-	for i = 1, #v do
-		local var = v[i]
-		local v_type = type(var)
+	for i, v in ipairs(t) do
+		local v_type = type(v)
 
 		if v_type == "string" then
-			str_slotmasks[#str_slotmasks + 1] = var
+			table.insert(str_slotmasks, v)
 		elseif v_type == "number" then
-			if var == 0 then
-				print("[SlotManager:make_slot_mask_table] Slotmask 0 detected, skipping. Avoid using with other values, as its used for deleting units")
-			elseif var < 0 then
-				neg_num_slotmasks[#neg_num_slotmasks + 1] = -var
+			if v == 0 then
+				Application:error("[SlotManager] make_slot_mask_table() - slotmask 0 detected, skipping as it's used for deleting units.")
+			elseif v < 0 then
+				table.insert(neg_num_slotmasks, math.abs(v))
 			else
-				num_slotmasks[#num_slotmasks + 1] = var
+				table.insert(num_slotmasks, v)
 			end
 		else
-			print("[SlotManager:make_slot_mask_table] Invalid variable inside table sent, type ", v_type)
+			Application:error("[SlotManager] make_slot_mask_table() - invalid value inside table sent, type:", v_type)
 		end
 	end
 
 	local slotmask
 
 	if next(str_slotmasks) then
-		slotmask = managers.slot:get_mask(unpack(str_slotmasks))
+		slotmask = self:get_mask(unpack(str_slotmasks))
 	end
 
 	if next(num_slotmasks) then
@@ -122,22 +133,22 @@ function SlotManager:make_slot_mask_table(v)
 		if slotmask then
 			slotmask = slotmask - neg_num_slotmask
 		else
-			print("[SlotManager:make_slot_mask_table] Negative slotmask values can't be used on their own, numbers above 0 or strings should be used as well. " .. tostring(neg_num_slotmasks))
+			Application:error("[SlotManager] make_slot_mask_table() - negative values can't be used on their own.")
 		end
 	end
 
 	return slotmask
 end
 
--- Lines 145-159
+-- Lines 231-245
 function SlotManager:make_slot_mask_number(v)
 	local slotmask
 
 	if v < 0 then
-		print("[SlotManager:make_slot_mask_number] Can't make a slotmask using a negative value, numbers above 0 or equal should be used")
+		Application:error("[SlotManager] make_slot_mask_number() - can't make a slotmask using a negative value, numbers above 0 or equal should be used.")
 	else
 		if v == 0 then
-			print("[SlotManager:make_slot_mask_number] Slotmask 0 detected. Ensure this is intended, as its used for deleting units")
+			print("[SlotManager] make_slot_mask_number() - slotmask 0 detected. Ensure this is intended, as it's used for deleting units.")
 		end
 
 		slotmask = World:make_slot_mask(v)
@@ -146,19 +157,7 @@ function SlotManager:make_slot_mask_number(v)
 	return slotmask
 end
 
--- Lines 161-163
+-- Lines 247-249
 function SlotManager:make_slot_mask_string(v)
 	return self:get_mask(v)
-end
-
--- Lines 165-174
-function SlotManager:make_slot_mask(v)
-	local v_type = type(v)
-	local func = self["make_slot_mask_" .. v_type]
-
-	if func then
-		return func(self, v)
-	else
-		print("[SlotManager:make_slot_mask] Invalid variable sent, type ", v_type)
-	end
 end

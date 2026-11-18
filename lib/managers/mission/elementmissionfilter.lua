@@ -1,18 +1,19 @@
 core:import("CoreMissionScriptElement")
 
 ElementMissionFilter = ElementMissionFilter or class(CoreMissionScriptElement.MissionScriptElement)
+ElementMissionFilter.MAX_FLAGS = 5
 
--- Lines 5-7
+-- Lines 7-9
 function ElementMissionFilter:init(...)
 	ElementMissionFilter.super.init(self, ...)
 end
 
--- Lines 9-11
+-- Lines 11-13
 function ElementMissionFilter:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines 13-24
+-- Lines 15-25
 function ElementMissionFilter:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -25,26 +26,12 @@ function ElementMissionFilter:on_executed(instigator)
 	ElementMissionFilter.super.on_executed(self, instigator)
 end
 
--- Lines 26-48
+-- Lines 27-39
 function ElementMissionFilter:_check_mission_filters()
-	if self._values[1] and managers.mission:check_mission_filter(1) then
-		return true
-	end
-
-	if self._values[2] and managers.mission:check_mission_filter(2) then
-		return true
-	end
-
-	if self._values[3] and managers.mission:check_mission_filter(3) then
-		return true
-	end
-
-	if self._values[4] and managers.mission:check_mission_filter(4) then
-		return true
-	end
-
-	if self._values[5] and managers.mission:check_mission_filter(5) then
-		return true
+	for idx = 1, ElementMissionFilter.MAX_FLAGS do
+		if self._values[idx] and managers.mission:check_mission_filter(idx) then
+			return true
+		end
 	end
 
 	return false

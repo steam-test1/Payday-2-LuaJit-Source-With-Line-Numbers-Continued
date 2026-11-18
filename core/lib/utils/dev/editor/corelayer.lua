@@ -1800,7 +1800,7 @@ function Layer:on_clone_edited_values()
 	end
 end
 
--- Lines 1663-1740
+-- Lines 1663-1771
 function Layer:clone_edited_values(unit, source)
 	if unit:name() ~= source:name() then
 		return
@@ -1845,7 +1845,13 @@ function Layer:clone_edited_values(unit, source)
 	unit:unit_data().material = source:unit_data().material
 
 	if unit:unit_data().material and unit:unit_data().material ~= "default" then
-		unit:set_material_config(unit:unit_data().material, true)
+		local material_ids = unit:unit_data().material
+
+		if type(material_ids) == "string" then
+			material_ids = Idstring(unit:unit_data().material)
+		end
+
+		unit:set_material_config(material_ids, true)
 	end
 
 	unit:unit_data().disable_shadows = source:unit_data().disable_shadows
@@ -1869,30 +1875,42 @@ function Layer:clone_edited_values(unit, source)
 	unit:unit_data().hide_on_projection_light = source:unit_data().hide_on_projection_light
 	unit:unit_data().disable_on_ai_graph = source:unit_data().disable_on_ai_graph
 
-	if unit:editable_gui() then
-		unit:editable_gui():set_text(source:editable_gui():text())
-		unit:editable_gui():set_font_size(source:editable_gui():font_size())
-		unit:editable_gui():set_font_color(source:editable_gui():font_color())
-		unit:editable_gui():set_font(source:editable_gui():font())
-		unit:editable_gui():set_align(source:editable_gui():align())
-		unit:editable_gui():set_vertical(source:editable_gui():vertical())
-		unit:editable_gui():set_blend_mode(source:editable_gui():blend_mode())
-		unit:editable_gui():set_render_template(source:editable_gui():render_template())
-		unit:editable_gui():set_wrap(source:editable_gui():wrap())
-		unit:editable_gui():set_word_wrap(source:editable_gui():word_wrap())
-		unit:editable_gui():set_alpha(source:editable_gui():alpha())
-		unit:editable_gui():set_shape(source:editable_gui():shape())
+	local editable_gui = unit:editable_gui()
+
+	if editable_gui then
+		local from_editable_gui = source:editable_gui()
+
+		if from_editable_gui then
+			editable_gui:set_text(from_editable_gui:text())
+			editable_gui:set_font_size(from_editable_gui:font_size())
+			editable_gui:set_font_color(from_editable_gui:font_color())
+			editable_gui:set_font(from_editable_gui:font())
+			editable_gui:set_align(from_editable_gui:align())
+			editable_gui:set_vertical(from_editable_gui:vertical())
+			editable_gui:set_blend_mode(from_editable_gui:blend_mode())
+			editable_gui:set_render_template(from_editable_gui:render_template())
+			editable_gui:set_wrap(from_editable_gui:wrap())
+			editable_gui:set_word_wrap(from_editable_gui:word_wrap())
+			editable_gui:set_alpha(from_editable_gui:alpha())
+			editable_gui:set_shape(from_editable_gui:shape())
+		end
 	end
 
-	if unit:ladder() then
-		unit:ladder():set_width(source:ladder():width())
-		unit:ladder():set_height(source:ladder():height())
-		unit:ladder():set_pc_disabled(source:ladder():pc_disabled())
-		unit:ladder():set_vr_disabled(source:ladder():vr_disabled())
+	local ladder = unit:ladder()
+
+	if ladder then
+		local from_ladder = source:ladder()
+
+		if from_ladder then
+			ladder:set_width(from_ladder:width())
+			ladder:set_height(from_ladder:height())
+			ladder:set_pc_disabled(from_ladder:pc_disabled())
+			ladder:set_vr_disabled(from_ladder:vr_disabled())
+		end
 	end
 end
 
--- Lines 1743-1749
+-- Lines 1774-1780
 function Layer:_continent_locked(unit)
 	local continent = unit:unit_data().continent
 
@@ -1903,7 +1921,7 @@ function Layer:_continent_locked(unit)
 	return unit:unit_data().continent:value("locked")
 end
 
--- Lines 1752-1760
+-- Lines 1783-1791
 function Layer:set_enabled(enabled)
 	self._layer_enabled = enabled
 
@@ -1916,22 +1934,22 @@ function Layer:set_enabled(enabled)
 	return true
 end
 
--- Lines 1763-1765
+-- Lines 1794-1796
 function Layer:hide_all()
 	self:_hide_units(self._created_units, true)
 end
 
--- Lines 1768-1770
+-- Lines 1799-1801
 function Layer:unhide_all()
 	self:_hide_units(self._created_units, false)
 end
 
--- Lines 1773-1775
+-- Lines 1804-1806
 function Layer:on_hide_selected()
 	self:_hide_units(_G.clone(self:selected_units()), true)
 end
 
--- Lines 1778-1782
+-- Lines 1809-1813
 function Layer:_hide_units(units, hide)
 	local hide_command = CoreEditorCommand.HideUnitsCommand:new(self)
 
@@ -1939,7 +1957,7 @@ function Layer:_hide_units(units, hide)
 	managers.editor:register_undo_command(hide_command)
 end
 
--- Lines 1784-1810
+-- Lines 1815-1841
 function Layer:clear()
 	while #self._created_units > 0 do
 		local unit = self._created_units[1]
@@ -1968,7 +1986,7 @@ function Layer:clear()
 	end
 end
 
--- Lines 1813-1825
+-- Lines 1844-1856
 function Layer:set_unit_name(units)
 	local i = units:selected_item()
 
@@ -1988,7 +2006,7 @@ function Layer:set_unit_name(units)
 	end
 end
 
--- Lines 1828-1835
+-- Lines 1859-1866
 function Layer:get_real_name(name)
 	local fs = " %*"
 
@@ -2001,59 +2019,78 @@ function Layer:get_real_name(name)
 	return name
 end
 
--- Lines 1836-1838
+-- Lines 1867-1869
 function Layer:condition()
 	return managers.editor:conditions() or self._using_widget
 end
 
--- Lines 1839-1841
+-- Lines 1870-1872
 function Layer:grab()
 	return self._grab
 end
 
--- Lines 1842-1843
+-- Lines 1873-1874
 function Layer:create_marker()
 	return
 end
 
--- Lines 1844-1845
+-- Lines 1875-1876
 function Layer:use_marker()
 	return
 end
 
--- Lines 1848-1849
+-- Lines 1879-1880
 function Layer:on_continent_changed()
 	return
 end
 
--- Lines 1852-1853
+-- Lines 1883-1884
 function Layer:set_unit_rotations(rot, finalize)
 	return
 end
 
--- Lines 1856-1857
+-- Lines 1887-1888
 function Layer:set_unit_positions(pos, finalize)
 	return
 end
 
--- Lines 1861-1862
+-- Lines 1892-1893
 function Layer:_add_project_save_data(data)
 	return
 end
 
--- Lines 1866-1867
+-- Lines 1897-1898
 function Layer:_add_project_unit_save_data(unit, data)
 	return
 end
 
--- Lines 1869-1871
+-- Lines 1907-1926
 function Layer:selected_amount_string()
-	return "Selected " .. self._save_name .. ": " .. #self._selected_units
+	local str = "Selected " .. self._save_name .. ": " .. #self._selected_units
+	local i = 0
+
+	while true do
+		i = i + 1
+
+		if self._selected_units[i] then
+			str = str .. "\n    " .. tostring(self._selected_units[i]:unit_data().name_id)
+		else
+			break
+		end
+
+		if i == 16 then
+			str = str .. "\n    +MORE..."
+
+			break
+		end
+	end
+
+	return str
 end
 
 local idstring_wpn = Idstring("wpn")
 
--- Lines 1874-1894
+-- Lines 1929-1949
 function Layer:save()
 	for _, unit in ipairs(self._created_units) do
 		local unit_data = unit:unit_data()
@@ -2081,7 +2118,7 @@ function Layer:save()
 	end
 end
 
--- Lines 1896-1946
+-- Lines 1951-2001
 function Layer:test_spawn(type)
 	local pos = Vector3()
 	local rot = Rotation()
@@ -2139,17 +2176,17 @@ function Layer:test_spawn(type)
 	print("DONE")
 end
 
--- Lines 1948-1950
+-- Lines 2003-2005
 function Layer:shift()
 	return CoreInput.shift()
 end
 
--- Lines 1951-1953
+-- Lines 2006-2008
 function Layer:ctrl()
 	return CoreInput.ctrl()
 end
 
--- Lines 1954-1956
+-- Lines 2009-2011
 function Layer:alt()
 	return CoreInput.alt()
 end

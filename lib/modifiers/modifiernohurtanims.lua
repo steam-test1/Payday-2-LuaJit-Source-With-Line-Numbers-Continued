@@ -11,10 +11,11 @@ ModifierNoHurtAnims.PreventedHurtTypes = table.list_to_set({
 })
 ModifierNoHurtAnims.IgnoredVariants = table.list_to_set({
 	"melee",
-	"stun"
+	"stun",
+	"counter_spooc"
 })
 
--- Lines 24-29
+-- Lines 25-30
 function ModifierNoHurtAnims:modify_value(id, value, variant)
 	if id == "CopMovement:HurtType" and not ModifierNoHurtAnims.IgnoredVariants[variant] and ModifierNoHurtAnims.PreventedHurtTypes[value] then
 		return nil, true

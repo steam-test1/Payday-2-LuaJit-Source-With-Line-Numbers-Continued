@@ -1837,16 +1837,16 @@ function CopActionHurt:on_inventory_event(event)
 	end
 end
 
--- Lines 1715-1721
+-- Lines 1717-1723
 function CopActionHurt:save(save_data)
 	for i, k in pairs(self._action_desc) do
-		if type_name(k) ~= "Unit" or alive(k) then
+		if type_name(k) ~= "Unit" then
 			save_data[i] = k
 		end
 	end
 end
 
--- Lines 1725-1729
+-- Lines 1727-1731
 function CopActionHurt:_prepare_ragdoll()
 	if self._unit:damage() and self._unit:damage():has_sequence("prepare_ragdoll") then
 		self._unit:damage():run_sequence_simple("prepare_ragdoll")
@@ -1855,7 +1855,7 @@ end
 
 local ZeroVec = Vector3()
 
--- Lines 1733-1819
+-- Lines 1735-1821
 function CopActionHurt:_start_ragdoll(reset_momentum)
 	if self._ragdolled then
 		return true
@@ -1960,7 +1960,7 @@ function CopActionHurt:_start_ragdoll(reset_momentum)
 	end
 end
 
--- Lines 1823-1828
+-- Lines 1825-1830
 function CopActionHurt:force_ragdoll(reset_momentum)
 	if self:_start_ragdoll(reset_momentum) then
 		self.update = self._upd_ragdolled
@@ -1969,7 +1969,7 @@ function CopActionHurt:force_ragdoll(reset_momentum)
 	end
 end
 
--- Lines 1832-1845
+-- Lines 1834-1847
 function CopActionHurt:clbk_body_active_state(tag, unit, body, activated)
 	if self._root_act_tags[tag:key()] then
 		if activated then
@@ -1989,7 +1989,7 @@ end
 
 CopActionHurt._apply_freefall = CopActionWalk._apply_freefall
 
--- Lines 1853-1858
+-- Lines 1855-1860
 function CopActionHurt:_freeze_ragdoll()
 	self._root_act_tags = {}
 
@@ -1998,7 +1998,7 @@ function CopActionHurt:_freeze_ragdoll()
 	end
 end
 
--- Lines 1862-1879
+-- Lines 1864-1881
 function CopActionHurt:clbk_chk_freeze_ragdoll()
 	if not alive(self._unit) then
 		self._ragdoll_freeze_clbk_id = nil
@@ -2022,7 +2022,7 @@ function CopActionHurt:clbk_chk_freeze_ragdoll()
 	end
 end
 
--- Lines 1883-1894
+-- Lines 1885-1896
 function CopActionHurt:clbk_shooting_hurt()
 	self._delayed_shooting_hurt_clbk_id = nil
 
@@ -2033,11 +2033,11 @@ function CopActionHurt:clbk_shooting_hurt()
 	local fire_obj = self._weapon_unit:base().fire_object and self._weapon_unit:base():fire_object()
 
 	if fire_obj then
-		self._weapon_unit:base():singleshot(fire_obj:position(), fire_obj:rotation(), 1, false, nil, nil, nil, nil)
+		self._weapon_unit:base():singleshot(fire_obj:position(), fire_obj:rotation():y(), 1, false, nil, nil, nil, nil)
 	end
 end
 
--- Lines 1898-1917
+-- Lines 1900-1919
 function CopActionHurt:on_destroy()
 	if self._burn_death_effects_clbk_id then
 		managers.enemy:remove_delayed_clbk(self._burn_death_effects_clbk_id)

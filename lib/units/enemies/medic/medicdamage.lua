@@ -184,7 +184,7 @@ function MedicDamage:die(...)
 end
 
 -- Lines 223-227
-function MedicDamage:destroy(...)
-	MedicDamage.super.destroy(self, ...)
+function MedicDamage:pre_destroy(...)
+	MedicDamage.super.pre_destroy(self, ...)
 	self:_unregister_healing()
 end

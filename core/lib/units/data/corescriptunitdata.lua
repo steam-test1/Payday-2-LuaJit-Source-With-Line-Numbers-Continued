@@ -1,3 +1,5 @@
+local IDS_UNIT_DATA = Idstring("unit_data")
+
 CoreScriptUnitData = CoreScriptUnitData or class()
 CoreScriptUnitData.world_pos = Vector3(0, 0, 0)
 CoreScriptUnitData.local_pos = Vector3(0, 0, 0)
@@ -28,15 +30,15 @@ CoreScriptUnitData.hide_on_projection_light = nil
 CoreScriptUnitData.disable_on_ai_graph = nil
 
 if Application:editor() then
-	-- Lines 26-30
+	-- Lines 29-33
 	function CoreScriptUnitData:init(unit)
 		self.unit_groups = {}
 
-		unit:set_extension_update_enabled(Idstring("unit_data"), false)
+		unit:set_extension_update_enabled(IDS_UNIT_DATA, false)
 	end
 else
-	-- Lines 32-34
+	-- Lines 35-37
 	function CoreScriptUnitData:init(unit)
-		unit:set_extension_update_enabled(Idstring("unit_data"), false)
+		unit:set_extension_update_enabled(IDS_UNIT_DATA, false)
 	end
 end

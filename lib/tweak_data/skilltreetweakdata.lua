@@ -1,7 +1,7 @@
 SkillTreeTweakData = SkillTreeTweakData or class()
 
--- Lines 3-2455
-function SkillTreeTweakData:init()
+-- Lines 3-3438
+function SkillTreeTweakData:init(tweak_data)
 	-- Lines 10-10
 	local function digest(value)
 		return Application:digest_value(value, true)
@@ -5360,7 +5360,7 @@ function SkillTreeTweakData:init()
 			}
 		}
 		local deck9_multi_choice = {}
-		local deck9_options = UpgradesTweakData.mrwi_deck9_options()
+		local deck9_options = tweak_data.upgrades:mrwi_deck9_options()
 
 		for _, options in pairs(deck9_options) do
 			local data
@@ -5525,7 +5525,7 @@ function SkillTreeTweakData:init()
 	}
 end
 
--- Lines 2457-2473
+-- Lines 3440-3458
 function SkillTreeTweakData:get_tier_position_from_skill_name(skill_name)
 	for tree_idx in pairs(self.trees) do
 		local count = 0
@@ -5547,11 +5547,11 @@ function SkillTreeTweakData:get_tier_position_from_skill_name(skill_name)
 	return -1
 end
 
--- Lines 2475-2484
+-- Lines 3460-3470
 function SkillTreeTweakData:get_tree(tree_name)
 	local list = {}
 
-	for i, tree in ipairs(self.trees) do
+	for _, tree in ipairs(self.trees) do
 		if tree.skill == tree_name then
 			table.insert(list, tree)
 		end
@@ -5560,16 +5560,16 @@ function SkillTreeTweakData:get_tree(tree_name)
 	return list
 end
 
--- Lines 2486-2489
+-- Lines 3472-3475
 function SkillTreeTweakData:get_tiers(tree_idx)
 	local tiers = deep_clone(self.trees[tree_idx].tiers)
 
 	return tiers
 end
 
--- Lines 2491-2499
+-- Lines 3477-3485
 function SkillTreeTweakData:get_tier_unlocks()
-	-- Lines 2492-2492
+	-- Lines 3478-3478
 	local function digest(value)
 		return Application:digest_value(value, false)
 	end
@@ -5584,7 +5584,7 @@ function SkillTreeTweakData:get_tier_unlocks()
 	return unlock_values
 end
 
--- Lines 2501-2524
+-- Lines 3487-3510
 function SkillTreeTweakData:get_specialization_icon_data(spec, no_fallback)
 	spec = spec or managers.skilltree:get_specialization_value("current_specialization")
 

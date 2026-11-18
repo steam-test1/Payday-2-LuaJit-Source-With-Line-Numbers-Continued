@@ -204,13 +204,13 @@ function ElementStopwatchOperator:client_on_executed(...)
 	return
 end
 
--- Lines 184-238
+-- Lines 184-234
 function ElementStopwatchOperator:on_executed(instigator)
 	if not self._values.enabled then
 		return
 	end
 
-	local time = self:get_random_table_value_float(self:value("time"))
+	local time = self:get_random_table_value(self:value("time"))
 
 	for _, id in ipairs(self._values.elements) do
 		local element = self:get_mission_element(id)
@@ -258,7 +258,7 @@ function ElementStopwatchOperator:on_executed(instigator)
 	ElementStopwatchOperator.super.on_executed(self, instigator)
 end
 
--- Lines 240-258
+-- Lines 236-254
 function ElementStopwatchOperator:_save_value_ok(new_time, saved_time)
 	local condition = self:value("condition")
 
@@ -281,17 +281,17 @@ end
 
 ElementStopwatchTrigger = ElementStopwatchTrigger or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines 264-266
+-- Lines 260-262
 function ElementStopwatchTrigger:init(...)
 	ElementStopwatchTrigger.super.init(self, ...)
 end
 
--- Lines 268-270
+-- Lines 264-266
 function ElementStopwatchTrigger:on_script_activated()
 	self:activate_trigger()
 end
 
--- Lines 272-277
+-- Lines 268-273
 function ElementStopwatchTrigger:on_executed(instigator)
 	if not self._values.enabled then
 		return
@@ -300,12 +300,12 @@ function ElementStopwatchTrigger:on_executed(instigator)
 	ElementStopwatchTrigger.super.on_executed(self, instigator)
 end
 
--- Lines 279-281
+-- Lines 275-277
 function ElementStopwatchTrigger:client_on_executed(...)
 	return
 end
 
--- Lines 283-293
+-- Lines 279-289
 function ElementStopwatchTrigger:activate_trigger()
 	for _, id in ipairs(self._values.elements) do
 		local element = self:get_mission_element(id)
@@ -316,12 +316,12 @@ function ElementStopwatchTrigger:activate_trigger()
 	end
 end
 
--- Lines 295-296
+-- Lines 291-292
 function ElementStopwatchTrigger:operation_add()
 	return
 end
 
--- Lines 298-309
+-- Lines 294-305
 function ElementStopwatchTrigger:set_enabled(enabled)
 	for _, id in ipairs(self._values.elements) do
 		local element = self:get_mission_element(id)
@@ -336,29 +336,29 @@ end
 
 ElementStopwatchFilter = ElementStopwatchFilter or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines 315-317
+-- Lines 311-313
 function ElementStopwatchFilter:init(...)
 	ElementStopwatchFilter.super.init(self, ...)
 end
 
--- Lines 319-321
+-- Lines 315-317
 function ElementStopwatchFilter:on_script_activated()
 	return
 end
 
--- Lines 323-325
+-- Lines 319-321
 function ElementStopwatchFilter:client_on_executed(...)
 	return
 end
 
--- Lines 327-331
+-- Lines 323-327
 function ElementStopwatchFilter:on_executed(instigator)
 	if self._values.enabled and self:_values_ok() then
 		ElementStopwatchFilter.super.on_executed(self, instigator)
 	end
 end
 
--- Lines 333-340
+-- Lines 329-336
 function ElementStopwatchFilter:_values_ok()
 	if self._values.needed_to_execute == "all" then
 		return self:_all_elements_ok()
@@ -369,7 +369,7 @@ function ElementStopwatchFilter:_values_ok()
 	end
 end
 
--- Lines 342-349
+-- Lines 338-345
 function ElementStopwatchFilter:_all_elements_ok()
 	for _, id in ipairs(self._values.elements) do
 		if not self:_check_time(self:get_mission_element(id), self:_get_time()) then
@@ -380,7 +380,7 @@ function ElementStopwatchFilter:_all_elements_ok()
 	return true
 end
 
--- Lines 351-358
+-- Lines 347-354
 function ElementStopwatchFilter:_any_elements_ok()
 	for _, id in ipairs(self._values.elements) do
 		if self:_check_time(self:get_mission_element(id), self:_get_time()) then
@@ -391,7 +391,7 @@ function ElementStopwatchFilter:_any_elements_ok()
 	return false
 end
 
--- Lines 360-371
+-- Lines 356-367
 function ElementStopwatchFilter:_get_time()
 	local time = self._values.value
 
@@ -406,7 +406,7 @@ function ElementStopwatchFilter:_get_time()
 	return time
 end
 
--- Lines 373-386
+-- Lines 369-382
 function ElementStopwatchFilter:_check_time(element, value)
 	if not self._values.check_type or self._values.check_type == "equal" then
 		return element:get_time() == value

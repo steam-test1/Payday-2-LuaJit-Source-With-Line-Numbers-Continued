@@ -39,15 +39,16 @@ function ElementLoadDelayed:_create_units()
 	managers.worlddefinition:create_delayed_unit(self._values.unit_ids)
 end
 
--- Lines 39-47
+-- Lines 39-43
 function ElementLoadDelayed:save(data)
-	data.enabled = self._values.enabled
+	ElementLoadDelayed.super.save(self, data)
+
 	data.created_units = self._created_units
 end
 
--- Lines 49-61
+-- Lines 45-53
 function ElementLoadDelayed:load(data)
-	self:set_enabled(data.enabled)
+	ElementLoadDelayed.super.load(self, data)
 
 	if data.created_units then
 		self:_create_units()

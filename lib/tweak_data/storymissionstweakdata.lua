@@ -161,7 +161,7 @@ function StoryMissionsTweakData._sm_13_check()
 	level_check("story_half_lvl")
 end
 
--- Lines 140-829
+-- Lines 140-831
 function StoryMissionsTweakData:_init_missions(tweak_data)
 	self.sm_2_skillpoints = 8
 	self.missions = {

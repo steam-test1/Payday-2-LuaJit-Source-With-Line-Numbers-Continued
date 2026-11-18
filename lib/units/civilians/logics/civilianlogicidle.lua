@@ -167,7 +167,7 @@ function CivilianLogicIdle._enable_outline(data)
 	my_data.outline_detection_task_key = nil
 end
 
--- Lines 165-226
+-- Lines 165-231
 function CivilianLogicIdle.on_alert(data, alert_data)
 	if data.is_tied and data.unit:anim_data().stand then
 		if TimerManager:game():time() - data.internal_data.state_enter_t > 3 then
@@ -177,14 +177,15 @@ function CivilianLogicIdle.on_alert(data, alert_data)
 		return
 	end
 
-	local my_data = data.internal_data
-	local my_dis, alert_delay
 	local my_listen_pos = data.unit:movement():m_head_pos()
-	local alert_epicenter = alert_data[2]
+	local groupai_state = managers.groupai:state()
 
-	if CopLogicBase._chk_alert_obstructed(data.unit:movement():m_head_pos(), alert_data) then
+	if CopLogicBase._chk_alert_obstructed(my_listen_pos, alert_data) then
 		return
 	end
+
+	local my_data = data.internal_data
+	local alert_epicenter = alert_data[2]
 
 	if CopLogicBase.is_alert_aggressive(alert_data[1]) and not data.unit:base().unintimidateable then
 		if not data.unit:movement():cool() then
@@ -211,7 +212,7 @@ function CivilianLogicIdle.on_alert(data, alert_data)
 			end
 		end
 
-		data.unit:movement():set_cool(false, managers.groupai:state().analyse_giveaway(data.unit:base()._tweak_table, alert_data[5], alert_data))
+		data.unit:movement():set_cool(false, groupai_state.analyse_giveaway(data.unit:base()._tweak_table, alert_data[5], alert_data))
 		data.unit:movement():set_stance(data.is_tied and "cbt" or "hos")
 	end
 
@@ -220,8 +221,8 @@ function CivilianLogicIdle.on_alert(data, alert_data)
 	end
 
 	if my_data == data.internal_data and not data.char_tweak.ignores_aggression then
-		my_dis = my_dis or alert_epicenter and mvector3.distance(my_listen_pos, alert_epicenter) or 3000
-		alert_delay = math.lerp(1, 4, math.min(1, my_dis / 2000)) * math.random()
+		local my_dis = alert_epicenter and mvector3.distance(my_listen_pos, alert_epicenter) or 3000
+		local alert_delay = math.lerp(1, 4, math.min(1, my_dis / 2000)) * math.random()
 
 		if not my_data.delayed_alert_id then
 			my_data.delayed_alert_id = "alert" .. tostring(data.key)
@@ -234,7 +235,7 @@ function CivilianLogicIdle.on_alert(data, alert_data)
 	end
 end
 
--- Lines 230-251
+-- Lines 235-256
 function CivilianLogicIdle._delayed_alert_clbk(ignore_this, params)
 	local data = params.data
 	local alert_data = params.alert_data
@@ -269,7 +270,7 @@ function CivilianLogicIdle._delayed_alert_clbk(ignore_this, params)
 	})
 end
 
--- Lines 255-268
+-- Lines 260-273
 function CivilianLogicIdle.on_intimidated(data, amount, aggressor_unit)
 	data.unit:movement():set_cool(false, managers.groupai:state().analyse_giveaway(data.unit:base()._tweak_table, aggressor_unit))
 	data.unit:movement():set_stance(data.is_tied and "cbt" or "hos")
@@ -291,7 +292,7 @@ function CivilianLogicIdle.on_intimidated(data, amount, aggressor_unit)
 	})
 end
 
--- Lines 272-285
+-- Lines 277-290
 function CivilianLogicIdle.damage_clbk(data, damage_info)
 	data.unit:movement():set_cool(false, managers.groupai:state().analyse_giveaway(data.unit:base()._tweak_table, damage_info.attacker_unit))
 	data.unit:movement():set_stance(data.is_tied and "cbt" or "hos")
@@ -307,7 +308,7 @@ function CivilianLogicIdle.damage_clbk(data, damage_info)
 	})
 end
 
--- Lines 289-345
+-- Lines 294-350
 function CivilianLogicIdle.on_new_objective(data, old_objective, params)
 	local new_objective = data.objective
 
@@ -353,7 +354,7 @@ function CivilianLogicIdle.on_new_objective(data, old_objective, params)
 	end
 end
 
--- Lines 349-365
+-- Lines 354-370
 function CivilianLogicIdle.action_complete_clbk(data, action)
 	local my_data = data.internal_data
 
@@ -372,7 +373,7 @@ function CivilianLogicIdle.action_complete_clbk(data, action)
 	end
 end
 
--- Lines 369-409
+-- Lines 374-414
 function CivilianLogicIdle._upd_detection(data)
 	managers.groupai:state():on_unit_detection_updated(data.unit)
 
@@ -429,7 +430,7 @@ function CivilianLogicIdle._upd_detection(data)
 	CopLogicBase.queue_task(my_data, my_data.detection_task_key, CivilianLogicIdle._upd_detection, data, data.t + delay)
 end
 
--- Lines 413-420
+-- Lines 418-425
 function CivilianLogicIdle.is_available_for_assignment(data, objective)
 	if objective and objective.forced then
 		return true
@@ -440,7 +441,7 @@ function CivilianLogicIdle.is_available_for_assignment(data, objective)
 	return (not my_data.acting or not not data.unit:anim_data().act_idle) and not my_data.exiting and not my_data.delayed_alert_id
 end
 
--- Lines 424-431
+-- Lines 429-436
 function CivilianLogicIdle.anim_clbk(data, info_type)
 	if info_type == "reset_attention" and data.internal_data.idle_attention then
 		data.internal_data.idle_attention = nil
@@ -449,7 +450,7 @@ function CivilianLogicIdle.anim_clbk(data, info_type)
 	end
 end
 
--- Lines 435-453
+-- Lines 440-458
 function CivilianLogicIdle.clbk_action_timeout(ignore_this, data)
 	local my_data = data.internal_data
 
@@ -474,7 +475,7 @@ function CivilianLogicIdle.clbk_action_timeout(ignore_this, data)
 	end
 end
 
--- Lines 473-497
+-- Lines 478-502
 function CivilianLogicIdle.is_obstructed(data, aggressor_unit)
 	if data.unit:movement():chk_action_forbidden("walk") and not data.unit:anim_data().act_idle then
 		return
@@ -503,7 +504,7 @@ function CivilianLogicIdle.is_obstructed(data, aggressor_unit)
 	end
 end
 
--- Lines 501-556
+-- Lines 506-561
 function CivilianLogicIdle._get_priority_attention(data, attention_objects)
 	local best_target, best_target_priority, best_target_reaction
 
@@ -550,7 +551,7 @@ function CivilianLogicIdle._get_priority_attention(data, attention_objects)
 	return best_target, best_target_reaction
 end
 
--- Lines 560-599
+-- Lines 565-604
 function CivilianLogicIdle._set_attention_obj(data, new_att_obj, new_reaction)
 	local old_att_obj = data.attention_obj
 

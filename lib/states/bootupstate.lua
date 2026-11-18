@@ -169,7 +169,7 @@ function BootupState:setup()
 	end
 end
 
--- Lines 110-143
+-- Lines 110-146
 function BootupState:setup_intro_videos()
 	local res = RenderSettings.resolution
 	local safe_rect_pixels = managers.gui_data:scaled_size()
@@ -202,7 +202,7 @@ function BootupState:setup_intro_videos()
 	})
 end
 
--- Lines 145-179
+-- Lines 148-182
 function BootupState:at_enter()
 	managers.menu:input_enabled(false)
 
@@ -237,14 +237,14 @@ function BootupState:at_enter()
 	end
 end
 
--- Lines 181-185
+-- Lines 184-188
 function BootupState:clbk_game_has_music_control(status)
 	if self._play_data and self._play_data.video then
 		self._gui_obj:set_volume_gain(status and self._bootup_volume or 0)
 	end
 end
 
--- Lines 187-206
+-- Lines 190-209
 function BootupState:update(t, dt)
 	if self._wait_for_textures then
 		if TextureCache:check_textures_loaded() then
@@ -267,7 +267,7 @@ function BootupState:update(t, dt)
 	end
 end
 
--- Lines 208-220
+-- Lines 211-223
 function BootupState:check_confirm_pressed()
 	for index, controller in ipairs(self._controller_list) do
 		if controller:get_input_pressed("confirm") then
@@ -283,7 +283,7 @@ function BootupState:check_confirm_pressed()
 	end
 end
 
--- Lines 222-262
+-- Lines 225-265
 function BootupState:update_fades()
 	local time, duration
 	local old_fade = self._fade
@@ -326,7 +326,7 @@ function BootupState:update_fades()
 	end
 end
 
--- Lines 264-276
+-- Lines 267-279
 function BootupState:apply_fade()
 	if self._play_data and self._play_data.gui then
 		local script = self._gui_obj.script and self._gui_obj:script()
@@ -341,7 +341,7 @@ function BootupState:apply_fade()
 	end
 end
 
--- Lines 278-286
+-- Lines 281-289
 function BootupState:is_skipped()
 	for _, controller in ipairs(self._controller_list) do
 		if controller:get_any_input_pressed() then
@@ -352,7 +352,7 @@ function BootupState:is_skipped()
 	return false
 end
 
--- Lines 288-298
+-- Lines 291-301
 function BootupState:is_playing()
 	if alive(self._gui_obj) then
 		if self._gui_obj.loop_count then
@@ -365,7 +365,7 @@ function BootupState:is_playing()
 	return false
 end
 
--- Lines 300-404
+-- Lines 303-407
 function BootupState:play_next(is_skipped)
 	self._play_time = TimerManager:game():time()
 	self._play_index = (self._play_index or 0) + 1
@@ -480,7 +480,7 @@ function BootupState:play_next(is_skipped)
 	end
 end
 
--- Lines 406-451
+-- Lines 409-454
 function BootupState:at_exit()
 	managers.platform:remove_event_callback("media_player_control", self._clbk_game_has_music_control_callback)
 

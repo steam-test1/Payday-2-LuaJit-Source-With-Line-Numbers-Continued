@@ -644,7 +644,7 @@ function MusicManager:jukebox_ghost_track(name)
 	end
 end
 
--- Lines 612-903
+-- Lines 612-913
 function MusicManager:jukebox_default_tracks()
 	local default_options = {
 		credits = "criminals_ambition",
@@ -819,7 +819,7 @@ function MusicManager:jukebox_default_tracks()
 	return default_options
 end
 
--- Lines 905-965
+-- Lines 915-975
 function MusicManager:get_lock_data()
 	if not managers.dlc or not managers.experience then
 		return {}
@@ -860,11 +860,11 @@ function MusicManager:get_lock_data()
 	return self._lock_data
 end
 
--- Lines 967-982
+-- Lines 977-992
 function MusicManager:get_tracks_locked()
 	local tracks_locked = {}
 
-	-- Lines 970-973
+	-- Lines 980-983
 	local function add_locked(track_list)
 		local _, locked = self:_jukebox_get_tracks(track_list)
 
@@ -878,7 +878,7 @@ function MusicManager:get_tracks_locked()
 	return tracks_locked
 end
 
--- Lines 984-1005
+-- Lines 994-1015
 function MusicManager:_jukebox_get_tracks(track_list)
 	local lock_data = self:get_lock_data()
 	local tracks = {}
@@ -901,7 +901,7 @@ function MusicManager:_jukebox_get_tracks(track_list)
 	return tracks, tracks_locked
 end
 
--- Lines 1007-1019
+-- Lines 1017-1029
 function MusicManager:jukebox_music_tracks()
 	local lock_data = self:get_lock_data()
 
@@ -915,17 +915,17 @@ function MusicManager:jukebox_music_tracks()
 	return self:_jukebox_get_tracks(tweak_data.music.track_list)
 end
 
--- Lines 1021-1023
+-- Lines 1031-1033
 function MusicManager:jukebox_menu_tracks()
 	return self:_jukebox_get_tracks(tweak_data.music.track_menu_list)
 end
 
--- Lines 1026-1028
+-- Lines 1036-1038
 function MusicManager:jukebox_ghost_tracks()
 	return self:_jukebox_get_tracks(tweak_data.music.track_ghost_list)
 end
 
--- Lines 1031-1033
+-- Lines 1041-1043
 function MusicManager:music_tracks()
 	return tweak_data.music.soundbank_list
 end

@@ -166,16 +166,18 @@ function MenuItemMultiChoice:_highest_option_index()
 	return index
 end
 
--- Lines 145-151
+-- Lines 145-152
 function MenuItemMultiChoice:_lowest_option_index()
 	for i, option in ipairs(self._options) do
 		if not option:parameters().exclude then
 			return i
 		end
 	end
+
+	return 1
 end
 
--- Lines 154-172
+-- Lines 155-173
 function MenuItemMultiChoice:next()
 	if not self._enabled then
 		return
@@ -196,7 +198,7 @@ function MenuItemMultiChoice:next()
 	return true
 end
 
--- Lines 174-192
+-- Lines 175-193
 function MenuItemMultiChoice:previous()
 	if not self._enabled then
 		return
@@ -217,22 +219,22 @@ function MenuItemMultiChoice:previous()
 	return true
 end
 
--- Lines 194-196
+-- Lines 195-197
 function MenuItemMultiChoice:left_arrow_visible()
-	return self._current_index > self:_lowest_option_index() and self._enabled
+	return self._current_index and self._current_index > self:_lowest_option_index() and self._enabled
 end
 
--- Lines 198-200
+-- Lines 199-201
 function MenuItemMultiChoice:right_arrow_visible()
-	return self._current_index < self:_highest_option_index() and self._enabled
+	return self._current_index and self._current_index < self:_highest_option_index() and self._enabled
 end
 
--- Lines 202-204
+-- Lines 203-205
 function MenuItemMultiChoice:arrow_visible()
 	return #self._options > 1
 end
 
--- Lines 208-251
+-- Lines 209-252
 function MenuItemMultiChoice:setup_gui(node, row_item)
 	local right_align = node._right_align(node)
 
@@ -309,7 +311,7 @@ function MenuItemMultiChoice:setup_gui(node, row_item)
 	return true
 end
 
--- Lines 253-272
+-- Lines 254-273
 local function scroll_text(text, clone)
 	while true do
 		local t = 0
@@ -335,16 +337,22 @@ local function scroll_text(text, clone)
 	end
 end
 
--- Lines 274-356
+-- Lines 275-360
 function MenuItemMultiChoice:reload(row_item, node)
 	if not row_item then
 		return
 	end
 
-	if node.localize_strings and self:selected_option():parameters().localize ~= false then
-		row_item.option_text = managers.localization:text(self:selected_option():parameters().text_id)
+	local selected_option = self:selected_option()
+	local selected_params = selected_option and selected_option:parameters() or {
+		localize = false,
+		text_id = ""
+	}
+
+	if node.localize_strings and selected_params.localize ~= false then
+		row_item.option_text = managers.localization:text(selected_params.text_id)
 	else
-		row_item.option_text = self:selected_option():parameters().text_id
+		row_item.option_text = selected_params.text_id
 	end
 
 	row_item.choice_text:set_text(utf8.to_upper(row_item.option_text))
@@ -381,12 +389,12 @@ function MenuItemMultiChoice:reload(row_item, node)
 		row_item.choice_text:animate(scroll_text, row_item.choice_text_clone)
 	end
 
-	if self:selected_option():parameters().stencil_image then
-		managers.menu:active_menu().renderer:set_stencil_image(self:selected_option():parameters().stencil_image)
+	if selected_params.stencil_image then
+		managers.menu:active_menu().renderer:set_stencil_image(selected_params.stencil_image)
 	end
 
-	if self:selected_option():parameters().stencil_align then
-		managers.menu:active_menu().renderer:set_stencil_align(self:selected_option():parameters().stencil_align, self:selected_option():parameters().stencil_align_percent)
+	if selected_params.stencil_align then
+		managers.menu:active_menu().renderer:set_stencil_align(selected_params.stencil_align, selected_params.stencil_align_percent)
 	end
 
 	local arrow_alpha = row_item.highlighted and 1 or 0.5
@@ -398,7 +406,7 @@ function MenuItemMultiChoice:reload(row_item, node)
 	row_item.arrow_left:set_alpha(arrow_alpha)
 	row_item.arrow_right:set_alpha(arrow_alpha)
 	row_item.gui_text:set_color(row_item.color)
-	row_item.choice_text:set_color(not self._enabled and row_item.disabled_color or self:selected_option():parameters().color or node.row_item_hightlight_color)
+	row_item.choice_text:set_color(not self._enabled and row_item.disabled_color or selected_params.color or node.row_item_hightlight_color)
 	row_item.choice_text:set_alpha(self._enabled and 1 or 0.75)
 
 	if self:info_panel() == "lobby_campaign" then
@@ -407,26 +415,34 @@ function MenuItemMultiChoice:reload(row_item, node)
 		node._reload_lobby_difficulty(node, row_item)
 	end
 
-	local color = self:selected_option():parameters().color1
+	local color = selected_params.color1
 
 	if color then
 		local count = 1
 
 		while color do
-			row_item.choice_text:set_range_color(self:selected_option():parameters()["color_start" .. count], self:selected_option():parameters()["color_stop" .. count], color)
+			row_item.choice_text:set_range_color(selected_params["color_start" .. count], selected_params["color_stop" .. count], color)
 
 			count = count + 1
-			color = self:selected_option():parameters()["color" .. count]
+			color = selected_params["color" .. count]
 		end
 	end
 
 	return true
 end
 
--- Lines 358-383
+-- Lines 362-393
 function MenuItemMultiChoice:highlight_row_item(node, row_item, mouse_over)
 	row_item.gui_text:set_color(row_item.color)
-	row_item.choice_text:set_color(not self._enabled and row_item.disabled_color or self:selected_option():parameters().color or node.row_item_hightlight_color)
+
+	if not self._enabled then
+		row_item.choice_text:set_color(row_item.disabled_color)
+	else
+		local selected_option = self:selected_option()
+
+		row_item.choice_text:set_color(selected_option and selected_option:parameters().color or node.row_item_hightlight_color)
+	end
+
 	row_item.choice_text:set_alpha(self._enabled and 1 or 0.75)
 	row_item.arrow_left:set_image("guis/textures/menu_arrows", 24, 0, 24, 24)
 	row_item.arrow_right:set_image("guis/textures/menu_arrows", 48, 0, -24, 24)
@@ -446,10 +462,18 @@ function MenuItemMultiChoice:highlight_row_item(node, row_item, mouse_over)
 	return true
 end
 
--- Lines 385-411
+-- Lines 395-426
 function MenuItemMultiChoice:fade_row_item(node, row_item, mouse_over)
 	row_item.gui_text:set_color(row_item.color)
-	row_item.choice_text:set_color(not self._enabled and row_item.disabled_color or self:selected_option():parameters().color or node.row_item_hightlight_color)
+
+	if not self._enabled then
+		row_item.choice_text:set_color(row_item.disabled_color)
+	else
+		local selected_option = self:selected_option()
+
+		row_item.choice_text:set_color(selected_option and selected_option:parameters().color or node.row_item_hightlight_color)
+	end
+
 	row_item.choice_text:set_alpha(self._enabled and 1 or 0.75)
 	row_item.arrow_left:set_image("guis/textures/menu_arrows", 0, 0, 24, 24)
 	row_item.arrow_right:set_image("guis/textures/menu_arrows", 24, 0, -24, 24)
@@ -471,7 +495,7 @@ end
 
 local xl_pad = 64
 
--- Lines 414-505
+-- Lines 429-520
 function MenuItemMultiChoice:_layout(node, row_item)
 	local safe_rect = managers.gui_data:scaled_size()
 	local right_align = node._right_align(node)
@@ -552,14 +576,14 @@ end
 
 MenuItemMultiChoiceWithIcon = MenuItemMultiChoiceWithIcon or class(MenuItemMultiChoice)
 
--- Lines 511-515
+-- Lines 526-530
 function MenuItemMultiChoiceWithIcon:init(data_node, parameters, ...)
 	MenuItemMultiChoiceWithIcon.super.init(self, data_node, parameters, ...)
 
 	self._icon_texture = parameters and parameters.icon
 end
 
--- Lines 517-528
+-- Lines 532-553
 function MenuItemMultiChoiceWithIcon:setup_gui(node, row_item, ...)
 	MenuItemMultiChoiceWithIcon.super.setup_gui(self, node, row_item, ...)
 
@@ -575,18 +599,29 @@ function MenuItemMultiChoiceWithIcon:setup_gui(node, row_item, ...)
 
 	self._icon:set_right(row_item.arrow_right:x())
 	self._icon:set_visible(false)
-	self._icon:set_color(not self._enabled and row_item.disabled_color or self:selected_option():parameters().color or node.row_item_hightlight_color)
+
+	if not self._enabled then
+		self._icon:set_color(row_item.disabled_color)
+	else
+		local selected_option = self:selected_option()
+		local selected_color = selected_option and selected_option:parameters().color or node.row_item_hightlight_color
+
+		if type(selected_color) == "userdata" then
+			self._icon:set_color(selected_color)
+		end
+	end
+
 	self._icon:set_alpha(self._enabled and 1 or 0.75)
 
 	return true
 end
 
--- Lines 530-532
+-- Lines 555-557
 function MenuItemMultiChoiceWithIcon:set_icon_visible(state)
 	self._icon:set_visible(state)
 end
 
--- Lines 536-584
+-- Lines 561-609
 function MenuItemMultiChoice:popup_choice(row_item)
 	local dialog_data = {}
 

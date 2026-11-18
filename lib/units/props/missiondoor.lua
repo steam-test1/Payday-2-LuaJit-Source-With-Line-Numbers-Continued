@@ -1,6 +1,61 @@
-MissionDoor = MissionDoor or class(UnitBase)
+local IDS_BASE = Idstring("base")
+local IDS_MISSION_DOOR_DEVICE = Idstring("mission_door_device")
 
--- Lines 3-9
+MissionDoor = MissionDoor or class(UnitBase)
+MissionDoor.C4_EXPLODE_TIME = 5
+MissionDoor.PLACED_COUNTER_MAP = {
+	c4 = function(self)
+		self:_initiate_c4_sequence()
+	end,
+	key = function(self, device_type)
+		for _, unit_data in ipairs(self._devices[device_type].units) do
+			self:device_completed(device_type)
+		end
+	end
+}
+MissionDoor.PLACED_COUNTER_MAP.ecm = MissionDoor.PLACED_COUNTER_MAP.key
+MissionDoor.COMPLETED_COUNTER_MAP = {
+	default = {
+		sequence_name = "open_door"
+	},
+	drill = {
+		sequence_name = "open_door"
+	},
+	c4 = {
+		sequence_name = "explode_door",
+		pre_sequence_fn = function(self)
+			if not Network:is_server() then
+				return
+			end
+
+			local base_ext = self._unit:base()
+
+			if base_ext then
+				base_ext.c4 = true
+			end
+
+			local groupai_state = managers.groupai:state()
+			local alert_filter = groupai_state:get_unit_type_filter("combatant")
+			local alert_event = {
+				"explosion",
+				self._unit:position(),
+				tweak_data.weapon.trip_mines.alert_radius,
+				alert_filter,
+				self._unit
+			}
+
+			groupai_state:propagate_alert(alert_event)
+		end
+	},
+	key = {
+		sequence_name = "open_door_keycard"
+	},
+	ecm = {
+		sequence_name = "open_door_ecm"
+	}
+}
+
+-- Lines 57-64
 function MissionDoor:init(unit)
 	MissionDoor.super.init(self, unit, false)
 
@@ -9,40 +64,39 @@ function MissionDoor:init(unit)
 	self._powered = true
 end
 
--- Lines 13-19
+-- Lines 68-72
 function MissionDoor:update(unit, t, dt)
 	if self._explode_t and t > self._explode_t then
 		self:_c4_sequence_done()
 	end
 end
 
--- Lines 23-71
+-- Lines 76-149
 function MissionDoor:activate()
-	if Network:is_client() then
+	if not Network:is_server() then
 		return
 	end
 
 	if self._active then
-		Application:error("[MissionDoor:activate()] allready active", self._unit)
+		Application:error("[MissionDoor] activate() - already active", self._unit)
 
 		return
 	end
 
 	self._active = true
 
-	CoreDebug.cat_debug("gaspode", "MissionDoor:activate", self.tweak_data)
-
 	local devices_data = tweak_data.mission_door[self.tweak_data].devices
 
-	for type, device_data in pairs(devices_data) do
+	for device_type, device_data in pairs(devices_data) do
 		local amount = #device_data
+		local device_units = {}
 
-		self._devices[type] = {
+		self._devices[device_type] = {
 			completed = false,
 			completed_counter = 0,
 			placed = false,
 			placed_counter = 0,
-			units = {},
+			units = device_units,
 			amount = amount
 		}
 
@@ -52,23 +106,21 @@ function MissionDoor:activate()
 			local rotation = a_obj:rotation()
 			local unit = safe_spawn_unit(unit_data.unit, position, rotation)
 
-			unit:mission_door_device():set_parent_data(self._unit, type)
+			unit:mission_door_device():set_parent_data(self._unit, device_type)
+
+			local timer_gui_ext = unit:timer_gui()
 
 			if unit_data.can_jam ~= nil then
-				unit:timer_gui():set_can_jam(unit_data.can_jam)
+				timer_gui_ext:set_can_jam(unit_data.can_jam)
 			end
 
 			if unit_data.timer then
-				unit:timer_gui():set_override_timer(unit_data.timer)
+				timer_gui_ext:set_override_timer(unit_data.timer)
 			end
 
 			MissionDoor.run_mission_door_device_sequence(unit, "activate")
-
-			if managers.network:session() then
-				managers.network:session():send_to_peers_synched("run_mission_door_device_sequence", unit, "activate")
-			end
-
-			table.insert(self._devices[type].units, {
+			managers.network:send_to_peers_synched("run_mission_door_device_sequence", unit, "activate")
+			table.insert(device_units, {
 				completed = false,
 				placed = false,
 				unit = unit
@@ -77,313 +129,343 @@ function MissionDoor:activate()
 	end
 end
 
--- Lines 75-79
+-- Lines 153-167
 function MissionDoor.run_mission_door_device_sequence(unit, sequence_name)
-	if unit:damage():has_sequence(sequence_name) then
-		unit:damage():run_sequence_simple(sequence_name)
+	local dmg_ext = unit:damage()
+
+	if dmg_ext:has_sequence(sequence_name) then
+		dmg_ext:run_sequence_simple(sequence_name)
 	end
 end
 
--- Lines 81-85
+-- Lines 169-175
 function MissionDoor:deactivate()
-	CoreDebug.cat_debug("gaspode", "MissionDoor:deactivate")
-
 	self._active = nil
 
 	self:_destroy_devices()
 end
 
--- Lines 89-91
+-- Lines 179-187
 function MissionDoor.set_mission_door_device_powered(unit, powered, enabled_interaction)
+	local dmg_ext = unit:damage()
+
 	unit:timer_gui():set_powered(powered, enabled_interaction)
 end
 
--- Lines 93-108
+-- Lines 189-206
 function MissionDoor:set_jammed(jammed)
 	self._jammed = jammed
 
 	local drills = self._devices.drill
 
-	if drills then
-		for _, unit_data in ipairs(drills.units) do
-			if unit_data.placed and alive(unit_data.unit) then
-				unit_data.unit:timer_gui():set_jammed(jammed)
+	if not drills then
+		return
+	end
 
-				if managers.network:session() then
-					managers.network:session():send_to_peers_synched("set_mission_door_device_powered", unit_data.unit, jammed, false)
-				end
+	local is_server = Network:is_server()
+
+	for _, unit_data in ipairs(drills.units) do
+		if unit_data.placed and alive(unit_data.unit) then
+			unit_data.unit:timer_gui():set_jammed(jammed)
+
+			if is_server then
+				managers.network:send_to_peers_synched("set_mission_door_device_powered", unit_data.unit, jammed, false)
 			end
 		end
 	end
 end
 
--- Lines 111-126
+-- Lines 209-226
 function MissionDoor:set_powered(powered)
 	self._powered = powered
 
 	local drills = self._devices.drill
 
-	if drills then
-		for _, unit_data in ipairs(drills.units) do
-			if unit_data.placed and alive(unit_data.unit) then
-				unit_data.unit:timer_gui():set_powered(powered)
+	if not drills then
+		return
+	end
 
-				if managers.network:session() then
-					managers.network:session():send_to_peers_synched("set_mission_door_device_powered", unit_data.unit, powered, false)
-				end
+	local is_server = Network:is_server()
+
+	for _, unit_data in ipairs(drills.units) do
+		if unit_data.placed and alive(unit_data.unit) then
+			unit_data.unit:timer_gui():set_powered(powered)
+
+			if is_server then
+				managers.network:send_to_peers_synched("set_mission_door_device_powered", unit_data.unit, powered, false)
 			end
 		end
 	end
 end
 
--- Lines 130-144
+-- Lines 230-245
 function MissionDoor:set_on(state)
 	local drills = self._devices.drill
 
-	if drills then
-		for _, unit_data in ipairs(drills.units) do
-			if unit_data.placed and alive(unit_data.unit) then
-				unit_data.unit:timer_gui():set_powered(state, true)
+	if not drills then
+		return
+	end
 
-				if managers.network:session() then
-					managers.network:session():send_to_peers_synched("set_mission_door_device_powered", unit_data.unit, state, true)
-				end
+	local is_server = Network:is_server()
+
+	for _, unit_data in ipairs(drills.units) do
+		if unit_data.placed and alive(unit_data.unit) then
+			unit_data.unit:timer_gui():set_powered(state, true)
+
+			if is_server then
+				managers.network:send_to_peers_synched("set_mission_door_device_powered", unit_data.unit, state, true)
 			end
 		end
 	end
 end
 
--- Lines 148-159
-function MissionDoor:_get_device_unit_data(unit, type)
-	if not self._devices or not self._devices[type] then
-		debug_pause("[MissionDoor:_get_device_unit_data] Mission Door do not have any devices of this type!", "type", type, "Mission Door", unit, "Devices", inspect(self._devices))
-
+-- Lines 249-264
+function MissionDoor:_get_device_unit_data(unit, device_type)
+	if not self._devices[device_type] then
 		return nil
 	end
 
-	for _, unit_data in ipairs(self._devices[type].units) do
+	for _, unit_data in ipairs(self._devices[device_type].units) do
 		if unit_data.unit == unit then
 			return unit_data
 		end
 	end
+
+	return nil
 end
 
--- Lines 161-173
-function MissionDoor:device_placed(unit, type)
-	local device_unit_data = self:_get_device_unit_data(unit, type)
+-- Lines 266-283
+function MissionDoor:device_placed(unit, device_type)
+	local device_unit_data = self:_get_device_unit_data(unit, device_type)
 
 	if not device_unit_data or device_unit_data.placed then
-		CoreDebug.cat_debug("gaspode", "MissionDoor:device_placed", "Allready placed")
-
 		return
 	end
 
-	self._devices[type].placed_counter = self._devices[type].placed_counter + 1
+	self._devices[device_type].placed_counter = self._devices[device_type].placed_counter + 1
 	device_unit_data.placed = true
 
-	self:trigger_sequence(type .. "_placed")
-	self:_check_placed_counter(type)
+	self:trigger_sequence(device_type .. "_placed")
+	self:_check_placed_counter(device_type)
 end
 
--- Lines 175-181
-function MissionDoor:device_completed(type)
-	self._devices[type].completed = true
-	self._devices[type].completed_counter = self._devices[type].completed_counter + 1
+-- Lines 285-298
+function MissionDoor:device_completed(device_type)
+	local device_data = self._devices[device_type]
 
-	self:trigger_sequence(type .. "_completed")
-	self:_check_completed_counter(type)
-end
-
--- Lines 183-185
-function MissionDoor:device_jammed(type)
-	self:trigger_sequence(type .. "_jammed")
-end
-
--- Lines 187-189
-function MissionDoor:device_resumed(type)
-	self:trigger_sequence(type .. "_resumed")
-end
-
--- Lines 193-217
-function MissionDoor:_check_placed_counter(type)
-	if self._devices[type].placed_counter ~= self._devices[type].amount then
-		CoreDebug.cat_debug("gaspode", "MissionDoor:_check_placed_counter", "All", type, "are not placed yet")
-
+	if not device_data then
 		return
 	end
 
-	CoreDebug.cat_debug("gaspode", "MissionDoor:_check_placed_counter", "All of type", type, "has been placed")
-	self:trigger_sequence("all_" .. type .. "_placed")
+	device_data.completed = true
+	device_data.completed_counter = device_data.completed_counter + 1
 
-	if type == "c4" and self._devices[type].placed_counter == self._devices[type].amount then
-		self:_initiate_c4_sequence()
+	self:trigger_sequence(device_type .. "_completed")
+	self:_check_completed_counter(device_type)
+end
 
+-- Lines 300-302
+function MissionDoor:device_jammed(device_type)
+	self:trigger_sequence(device_type .. "_jammed")
+end
+
+-- Lines 304-306
+function MissionDoor:device_resumed(device_type)
+	self:trigger_sequence(device_type .. "_resumed")
+end
+
+-- Lines 310-321
+function MissionDoor:_check_placed_amount_match(device_type)
+	local device_data = self._devices[device_type]
+
+	if not device_data then
+		return false
+	end
+
+	return device_data.placed_counter == device_data.amount
+end
+
+-- Lines 323-334
+function MissionDoor:_check_placed_all(device_type)
+	local device_data = self._devices[device_type]
+
+	if not device_data then
+		return false
+	end
+
+	return device_data.completed_counter == device_data.amount
+end
+
+-- Lines 336-358
+function MissionDoor:_check_placed_counter(device_type)
+	if not self:_check_placed_amount_match(device_type) then
 		return
 	end
 
-	if (type == "key" or type == "ecm") and self._devices[type].placed_counter == self._devices[type].amount then
-		for _, unit_data in ipairs(self._devices[type].units) do
-			self:device_completed(type)
-		end
+	self:trigger_sequence("all_" .. device_type .. "_placed")
 
+	if not self:_check_placed_amount_match(device_type) then
 		return
 	end
-end
 
--- Lines 219-245
-function MissionDoor:_check_completed_counter(type)
-	if self._devices[type].completed_counter == self._devices[type].amount then
-		self:_destroy_devices()
-		self:trigger_sequence("door_opened")
+	local fn = MissionDoor.PLACED_COUNTER_MAP[device_type]
 
-		local sequence_name = "open_door"
-
-		if type == "drill" then
-			-- Nothing
-		elseif type == "c4" then
-			sequence_name = "explode_door"
-
-			if Network:is_server() then
-				if self._unit:base() then
-					self._unit:base().c4 = true
-				end
-
-				local alert_event = {
-					"aggression",
-					self._unit:position(),
-					tweak_data.weapon.trip_mines.alert_radius,
-					managers.groupai:state():get_unit_type_filter("civilians_enemies"),
-					self._unit
-				}
-
-				managers.groupai:state():propagate_alert(alert_event)
-			end
-		elseif type == "key" then
-			sequence_name = "open_door_keycard"
-		elseif type == "ecm" then
-			sequence_name = "open_door_ecm"
-		end
-
-		if managers.network:session() then
-			managers.network:session():send_to_peers_synched("run_mission_door_sequence", self._unit, sequence_name)
-		end
-
-		self:run_sequence_simple(sequence_name)
+	if fn then
+		fn(self, device_type)
 	end
 end
 
--- Lines 247-271
+-- Lines 360-383
+function MissionDoor:_check_completed_counter(device_type)
+	if not self:_check_placed_all(device_type) then
+		return
+	end
+
+	self:_destroy_devices()
+	self:trigger_sequence("door_opened")
+
+	local data = MissionDoor.COMPLETED_COUNTER_MAP[device_type] or MissionDoor.COMPLETED_COUNTER_MAP.default
+
+	if data.pre_sequence_fn then
+		data.pre_sequence_fn(self, device_type)
+	end
+
+	if data.sequence_name then
+		if Network:is_server() then
+			managers.network:send_to_peers_synched("run_mission_door_sequence", self._unit, data.sequence_name)
+		end
+
+		self:run_sequence_simple(data.sequence_name)
+	end
+end
+
+-- Lines 385-399
 function MissionDoor:_initiate_c4_sequence()
-	for type, device in pairs(self._devices) do
-		if type ~= "c4" then
-			for _, unit_data in ipairs(device.units) do
-				if alive(unit_data.unit) then
-					unit_data.unit:set_slot(0)
-				end
-			end
-		end
-	end
+	local destroy_except_types = table.set("c4")
+
+	self:_destroy_devices(destroy_except_types)
+
+	local is_server = Network:is_server()
 
 	for _, unit_data in ipairs(self._devices.c4.units) do
 		MissionDoor.run_mission_door_device_sequence(unit_data.unit, "activate_explode_sequence")
 
-		if managers.network:session() then
-			managers.network:session():send_to_peers_synched("run_mission_door_device_sequence", unit_data.unit, "activate_explode_sequence")
+		if is_server then
+			managers.network:send_to_peers_synched("run_mission_door_device_sequence", unit_data.unit, "activate_explode_sequence")
 		end
 	end
 
-	self._explode_t = Application:time() + 5
+	self._explode_t = TimerManager:game():time() + MissionDoor.C4_EXPLODE_TIME
 
-	self._unit:set_extension_update_enabled(Idstring("base"), true)
+	self._unit:set_extension_update_enabled(IDS_BASE, true)
 end
 
--- Lines 273-282
+-- Lines 401-414
 function MissionDoor:_c4_sequence_done()
 	self._explode_t = nil
 
-	self._unit:set_extension_update_enabled(Idstring("base"), false)
+	self._unit:set_extension_update_enabled(IDS_BASE, false)
 
-	if not self._devices.c4 then
+	local device_data = self._devices.c4
+
+	if not device_data then
 		return
 	end
 
-	for _, unit_data in ipairs(self._devices.c4.units) do
+	for _, unit_data in ipairs(device_data.units) do
 		self:device_completed("c4")
 	end
 end
 
--- Lines 286-288
+-- Lines 418-420
 function MissionDoor:run_sequence_simple(sequence_name)
 	self:_run_sequence_simple(sequence_name)
 end
 
--- Lines 290-293
+-- Lines 422-427
 function MissionDoor:trigger_sequence(trigger_sequence_name)
-	CoreDebug.cat_debug("gaspode", "MissionDoor:trigger_sequence", trigger_sequence_name)
 	self:_run_sequence_simple(trigger_sequence_name)
 end
 
--- Lines 295-297
+-- Lines 429-436
 function MissionDoor:_run_sequence_simple(sequence_name)
 	self._unit:damage():run_sequence_simple(sequence_name)
 end
 
--- Lines 307-325
-function MissionDoor:_destroy_devices()
-	for _, device in pairs(self._devices) do
-		for _, unit_data in ipairs(device.units) do
-			if alive(unit_data.unit) then
-				if unit_data.unit:timer_gui() and unit_data.unit:timer_gui():is_playing_done_event() then
+-- Lines 446-450
+function MissionDoor._on_device_done_event_end_clbk(unit)
+	if alive(unit) then
+		unit:set_slot(0)
+	end
+end
+
+-- Lines 452-497
+function MissionDoor:_destroy_devices(except_types)
+	local is_server = Network:is_server()
+	local destroyed_types = {}
+
+	for device_type, device in pairs(self._devices) do
+		if not except_types or not except_types[device_type] then
+			if except_types then
+				table.insert(destroyed_types, device_type)
+			end
+
+			for _, unit_data in ipairs(device.units) do
+				if alive(unit_data.unit) then
 					unit_data.unit:set_visible(false)
-					unit_data.unit:timer_gui():hide()
-					unit_data.unit:timer_gui():add_listener_to_done_event(function(unit)
-						if alive(unit) then
-							unit:set_slot(0)
+					unit_data.unit:set_enabled(false)
+
+					local timer_gui_ext = unit_data.unit:timer_gui()
+
+					if timer_gui_ext then
+						timer_gui_ext:hide()
+					end
+
+					if is_server or unit_data.unit:id() == -1 then
+						if timer_gui_ext and timer_gui_ext:is_playing_done_event() then
+							timer_gui_ext:add_listener_to_done_event(MissionDoor._on_device_done_event_end_clbk)
+						else
+							unit_data.unit:set_slot(0)
 						end
-					end)
-				else
-					unit_data.unit:set_slot(0)
+					end
 				end
 			end
 		end
 	end
 
-	self._devices = {}
+	if except_types then
+		for _, device_type in ipairs(destroyed_types) do
+			self._devices[device_type] = nil
+		end
+	else
+		self._devices = {}
+	end
 end
 
--- Lines 327-340
+-- Lines 499-503
 function MissionDoor:destroy(...)
 	MissionDoor.super.destroy(self, ...)
-
-	for _, device in pairs(self._devices) do
-		for _, unit_data in ipairs(device.units) do
-			if alive(unit_data.unit) then
-				unit_data.unit:set_slot(0)
-			end
-		end
-	end
+	self:_destroy_devices()
 end
 
 MissionDoorDevice = MissionDoorDevice or class()
 
--- Lines 347-352
+-- Lines 510-514
 function MissionDoorDevice:init(unit)
 	self._unit = unit
 
-	unit:set_extension_update_enabled(Idstring("mission_door_device"), false)
+	unit:set_extension_update_enabled(IDS_MISSION_DOOR_DEVICE, false)
 end
 
--- Lines 354-357
+-- Lines 516-519
 function MissionDoorDevice:set_parent_data(door_unit, device_type)
 	self._parent_door = door_unit
 	self._device_type = device_type
 end
 
--- Lines 359-366
+-- Lines 521-531
 function MissionDoorDevice:placed()
 	if not alive(self._parent_door) then
-		CoreDebug.cat_debug("gaspode", "MissionDoor:placed", "Had no parent door unit")
-
 		return
 	end
 
@@ -392,16 +474,14 @@ function MissionDoorDevice:placed()
 	self._parent_door:base():device_placed(self._unit, self._device_type)
 end
 
--- Lines 368-370
+-- Lines 533-535
 function MissionDoorDevice:can_place()
 	return not self._placed
 end
 
--- Lines 372-383
+-- Lines 537-550
 function MissionDoorDevice:report_jammed_state(jammed)
 	if not alive(self._parent_door) then
-		CoreDebug.cat_debug("gaspode", "MissionDoor:report_jammed_state", "Had no parent door unit")
-
 		return
 	end
 
@@ -412,35 +492,27 @@ function MissionDoorDevice:report_jammed_state(jammed)
 	end
 end
 
--- Lines 385-392
+-- Lines 552-561
 function MissionDoorDevice:report_resumed()
 	if not alive(self._parent_door) then
-		CoreDebug.cat_debug("gaspode", "MissionDoor:report_jammed_state", "Had no parent door unit")
-
 		return
 	end
 
 	self._parent_door:base():device_resumed(self._device_type)
 end
 
--- Lines 394-400
+-- Lines 563-572
 function MissionDoorDevice:report_completed()
 	if not alive(self._parent_door) then
-		CoreDebug.cat_debug("gaspode", "MissionDoor:report_completed", "Had no parent door unit")
-
 		return
 	end
 
 	self._parent_door:base():device_completed(self._device_type)
 end
 
--- Lines 402-409
+-- Lines 574-586
 function MissionDoorDevice:report_trigger_sequence(trigger_sequence_name)
-	CoreDebug.cat_debug("gaspode", "MissionDoor:report_trigger_sequence", trigger_sequence_name)
-
 	if not alive(self._parent_door) then
-		CoreDebug.cat_debug("gaspode", "MissionDoor:report_trigger_sequence", "Had no parent door unit")
-
 		return
 	end
 

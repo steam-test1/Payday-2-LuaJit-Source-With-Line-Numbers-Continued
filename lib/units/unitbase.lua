@@ -1,18 +1,20 @@
+local IDS_BASE = Idstring("base")
+
 UnitBase = UnitBase or class()
 
--- Lines 3-20
+-- Lines 5-14
 function UnitBase:init(unit, update_enabled)
 	self._unit = unit
 
 	if not update_enabled then
-		unit:set_extension_update_enabled(Idstring("base"), false)
+		unit:set_extension_update_enabled(IDS_BASE, false)
 	end
 end
 
--- Lines 24-33
+-- Lines 18-26
 function UnitBase:add_destroy_listener(key, clbk)
 	if self._destroying then
-		Application:error("[UnitBase:add_destroy_listener] Attempted to add a destroy listener when unit is being destroyed!", self._unit, key)
+		Application:error("[UnitBase] add_destroy_listener() - attempted to add a destroy listener when unit is being destroyed!", self._unit, key, clbk)
 
 		return
 	end
@@ -22,7 +24,7 @@ function UnitBase:add_destroy_listener(key, clbk)
 	self._destroy_listener_holder:add(key, clbk)
 end
 
--- Lines 37-50
+-- Lines 30-39
 function UnitBase:remove_destroy_listener(key)
 	if not self._destroy_listener_holder then
 		return
@@ -35,17 +37,17 @@ function UnitBase:remove_destroy_listener(key)
 	end
 end
 
--- Lines 54-56
+-- Lines 43-45
 function UnitBase:save(data)
 	return
 end
 
--- Lines 58-68
+-- Lines 47-57
 function UnitBase:load(data)
 	managers.worlddefinition:use_me(self._unit)
 end
 
--- Lines 72-84
+-- Lines 61-67
 function UnitBase:pre_destroy(unit)
 	self._destroying = true
 
@@ -54,7 +56,7 @@ function UnitBase:pre_destroy(unit)
 	end
 end
 
--- Lines 88-102
+-- Lines 71-79
 function UnitBase:destroy(unit)
 	if self._destroying then
 		return
@@ -65,7 +67,7 @@ function UnitBase:destroy(unit)
 	end
 end
 
--- Lines 106-108
+-- Lines 83-85
 function UnitBase:set_slot(unit, slot)
 	unit:set_slot(slot)
 end

@@ -440,7 +440,7 @@ function CopLogicIntimidated.on_criminal_neutralized(data, criminal_key)
 	CopLogicIdle.on_criminal_neutralized(data, criminal_key)
 end
 
--- Lines 420-444
+-- Lines 475-499
 function CopLogicIntimidated.on_alert(data, alert_data)
 	local alert_unit = alert_data[5]
 
@@ -467,7 +467,7 @@ function CopLogicIntimidated.on_alert(data, alert_data)
 	end
 end
 
--- Lines 448-453
+-- Lines 504-509
 function CopLogicIntimidated.is_available_for_assignment(data, objective)
 	if objective and objective.forced then
 		return true
@@ -476,7 +476,7 @@ function CopLogicIntimidated.is_available_for_assignment(data, objective)
 	return false
 end
 
--- Lines 457-480
+-- Lines 513-536
 function CopLogicIntimidated._add_delayed_rescue_SO(data, my_data)
 	if data.char_tweak.flee_type == "hide" or data.unit:unit_data() and data.unit:unit_data().not_rescued then
 		-- Nothing
@@ -502,7 +502,7 @@ function CopLogicIntimidated._add_delayed_rescue_SO(data, my_data)
 	end
 end
 
--- Lines 484-549
+-- Lines 540-605
 function CopLogicIntimidated.register_rescue_SO(ignore_this, data)
 	local my_data = data.internal_data
 
@@ -571,7 +571,7 @@ function CopLogicIntimidated.register_rescue_SO(ignore_this, data)
 	managers.groupai:state():register_rescueable_hostage(data.unit, nil)
 end
 
--- Lines 553-569
+-- Lines 609-625
 function CopLogicIntimidated._unregister_rescue_SO(data, my_data)
 	if my_data.rescuer then
 		local rescuer = my_data.rescuer
@@ -590,7 +590,7 @@ function CopLogicIntimidated._unregister_rescue_SO(data, my_data)
 	end
 end
 
--- Lines 573-580
+-- Lines 629-636
 function CopLogicIntimidated.on_rescue_SO_administered(ignore_this, data, receiver_unit)
 	local my_data = data.internal_data
 
@@ -600,12 +600,12 @@ function CopLogicIntimidated.on_rescue_SO_administered(ignore_this, data, receiv
 	managers.groupai:state():unregister_rescueable_hostage(data.key)
 end
 
--- Lines 584-587
+-- Lines 640-643
 function CopLogicIntimidated.rescue_SO_verification(ignore_this, data, unit)
 	return unit:base():char_tweak().rescue_hostages and not unit:movement():cool() and not data.team.foes[unit:movement():team().id]
 end
 
--- Lines 591-599
+-- Lines 647-655
 function CopLogicIntimidated.on_rescue_SO_failed(ignore_this, data)
 	local my_data = data.internal_data
 
@@ -617,7 +617,7 @@ function CopLogicIntimidated.on_rescue_SO_failed(ignore_this, data)
 	end
 end
 
--- Lines 603-631
+-- Lines 659-687
 function CopLogicIntimidated.on_rescue_SO_completed(ignore_this, data, good_pig)
 	if not data.unit:inventory():equipped_unit() then
 		if data.unit:inventory():num_selections() <= 0 then
@@ -648,7 +648,7 @@ function CopLogicIntimidated.on_rescue_SO_completed(ignore_this, data, good_pig)
 	CopLogicBase._exit(data.unit, "idle")
 end
 
--- Lines 635-643
+-- Lines 691-699
 function CopLogicIntimidated.on_rescue_allowed_state(data, state)
 	if state then
 		if not data.unit:anim_data().move then
@@ -659,7 +659,7 @@ function CopLogicIntimidated.on_rescue_allowed_state(data, state)
 	end
 end
 
--- Lines 647-656
+-- Lines 703-712
 function CopLogicIntimidated.anim_clbk(data, event_type)
 	local my_data = data.internal_data
 
@@ -670,7 +670,7 @@ function CopLogicIntimidated.anim_clbk(data, event_type)
 	end
 end
 
--- Lines 660-669
+-- Lines 716-725
 function CopLogicIntimidated._start_action_hands_up(data)
 	local my_data = data.internal_data
 	local anim_name = managers.groupai:state():whisper_mode() and "tied_all_in_one" or "hands_up"
@@ -694,7 +694,7 @@ function CopLogicIntimidated._start_action_hands_up(data)
 	end
 end
 
--- Lines 673-677
+-- Lines 729-733
 function CopLogicIntimidated._chk_begin_alarm_pager(data)
 	if managers.groupai:state():whisper_mode() and data.unit:unit_data().has_alarm_pager then
 		data.brain:begin_alarm_pager()

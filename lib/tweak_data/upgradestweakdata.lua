@@ -1,6 +1,6 @@
 UpgradesTweakData = UpgradesTweakData or class()
 
--- Lines 3-1882
+-- Lines 3-2764
 function UpgradesTweakData:_init_pd2_values()
 	self:_init_value_tables()
 
@@ -3895,973 +3895,952 @@ function UpgradesTweakData:_init_pd2_values()
 		end
 	end
 
-	local editable_specialization_lootdrop_drop_multiplier = "10%"
+	-- Lines 1397-1399
+	local function pr(value, format)
+		return string.format(format or "%g%%", value)
+	end
+
+	local t2_headshot_multiplier = (self.values.weapon.passive_headshot_damage_multiplier[1] - 1) * 100
+	local t4_concealment_modifier = self.values.player.passive_concealment_modifier[1]
+	local t4_armor_movement_multiplier = (1 - self.values.player.passive_armor_movement_penalty_multiplier[1]) * 100
+	local t4_xp_multiplier = (self.values.player.passive_xp_multiplier[1] - 1) * 100
+	local t6_ammo_pickup = self.values.player.pick_up_ammo_multiplier[1] * 100
+	local t8_damage_multiplier = (self.values.weapon.passive_damage_multiplier[1] - 1) * 100
+	local t8_doctor_bag_multiplier = (1 - self.values.doctor_bag.interaction_speed_multiplier[1]) * 100
+	local t9_lootdrop_multiplier = (self.values.player.passive_loot_drop_multiplier[1] - 1) * 100
 	local editable_specialization_template = {
 		{},
 		{
-			"25%"
+			pr(t2_headshot_multiplier)
 		},
 		{},
 		{
-			"+1",
-			"15%",
-			"45%"
+			pr(t4_concealment_modifier, "+%g"),
+			pr(t4_armor_movement_multiplier),
+			pr(t4_xp_multiplier)
 		},
 		{},
 		{
-			"135%"
+			pr(t6_ammo_pickup)
 		},
 		{},
 		{
-			"5%",
-			"20%"
+			pr(t8_damage_multiplier),
+			pr(t8_doctor_bag_multiplier)
 		},
 		{
-			editable_specialization_lootdrop_drop_multiplier
+			pr(t9_lootdrop_multiplier)
 		}
 	}
 	local editable_multi_choice_specialization_descs = {}
-	local editable_specialization_descs = {
-		{
-			{
-				"10%",
-				"8%",
-				"50%"
-			},
-			{
-				"25%"
-			},
-			{
-				"50%",
-				"25%",
-				"6%"
-			},
-			{
-				"+1",
-				"15%",
-				"45%"
-			},
-			{
-				"10%",
-				"20%"
-			},
-			{
-				"135%"
-			},
-			{
-				"10%",
-				"5%"
-			},
-			{
-				"5%",
-				"20%"
-			},
-			{
-				"6%",
-				"12%",
-				"4",
-				"8%",
-				"10%"
-			}
-		},
-		{
-			{
-				"10%"
-			},
-			{
-				"25%"
-			},
-			{
-				"15%",
-				"10%"
-			},
-			{
-				"+1",
-				"15%",
-				"45%"
-			},
-			{
-				"20%"
-			},
-			{
-				"135%"
-			},
-			{},
-			{
-				"5%",
-				"20%"
-			},
-			{
-				"60%",
-				"3%",
-				"5",
-				"10%"
-			}
-		},
-		{
-			{
-				"10%"
-			},
-			{
-				"25%"
-			},
-			{
-				"10%"
-			},
-			{
-				"+1",
-				"15%",
-				"45%"
-			},
-			{
-				"10%"
-			},
-			{
-				"135%"
-			},
-			{
-				"10%",
-				"2",
-				"15"
-			},
-			{
-				"5%",
-				"20%"
-			},
-			{
-				"5%",
-				"10%",
-				"10%"
-			}
-		},
-		{
-			{
-				"15%"
-			},
-			{
-				"25%"
-			},
-			{
-				"15%",
-				"45%"
-			},
-			{
-				"+1",
-				"15%",
-				"45%"
-			},
-			{
-				"15%",
-				"135%"
-			},
-			{
-				"135%"
-			},
-			{
-				"15%"
-			},
-			{
-				"5%",
-				"20%"
-			},
-			{
-				"25%",
-				"80%",
-				"10%"
-			}
-		},
-		{
-			{
-				"5%"
-			},
-			{
-				"25%"
-			},
-			{
-				"10%",
-				"5%",
-				"-24",
-				"50%",
-				"-16"
-			},
-			{
-				"+1",
-				"15%",
-				"45%"
-			},
-			{
-				"10%",
-				"5%"
-			},
-			{
-				"135%"
-			},
-			{
-				"10%",
-				"5%"
-			},
-			{
-				"5%",
-				"20%"
-			},
-			{
-				"10%",
-				"5%",
-				"-16",
-				"125%",
-				"10%",
-				"1.5"
-			}
-		},
-		{
-			{
-				"15%"
-			},
-			{
-				"25%"
-			},
-			{
-				"5%",
-				"20%"
-			},
-			{
-				"+1",
-				"15%",
-				"45%"
-			},
-			{
-				"10%",
-				"20%"
-			},
-			{
-				"135%"
-			},
-			{
-				"10%",
-				"25%"
-			},
-			{
-				"5%",
-				"20%"
-			},
-			{
-				"10%",
-				"10%"
-			}
-		},
-		{
-			{
-				"20%"
-			},
-			{
-				"25%"
-			},
-			{
-				"10%",
-				"20%"
-			},
-			{
-				"+1",
-				"15%",
-				"45%"
-			},
-			{
-				"5%",
-				"5%",
-				"20%"
-			},
-			{
-				"135%"
-			},
-			{
-				"5%",
-				"5%",
-				"10%"
-			},
-			{
-				"5%",
-				"20%"
-			},
-			{
-				"20%",
-				"10%"
-			}
-		},
-		{
-			{
-				"12%",
-				"1",
-				"10"
-			},
-			{
-				"25%"
-			},
-			{
-				"8%"
-			},
-			{
-				"+1",
-				"15%",
-				"45%"
-			},
-			{
-				"8%",
-				"10%",
-				"7",
-				"4"
-			},
-			{
-				"135%"
-			},
-			{
-				"8%"
-			},
-			{
-				"5%",
-				"20%"
-			},
-			{
-				"20%",
-				"10",
-				"10%"
-			}
-		},
-		{
-			{
-				"12%",
-				"1",
-				"10"
-			},
-			{
-				"25%"
-			},
-			{
-				"30",
-				"1",
-				"10%"
-			},
-			{
-				"+1",
-				"15%",
-				"45%"
-			},
-			{
-				"10%",
-				"1",
-				"8%"
-			},
-			{
-				"135%"
-			},
-			{
-				"30",
-				"1",
-				"10%"
-			},
-			{
-				"5%",
-				"20%"
-			},
-			{
-				"75%",
-				"1",
-				"10%"
-			}
-		},
-		{
-			{
-				"16",
-				"24",
-				"3",
-				"20%"
-			},
-			{
-				"25%"
-			},
-			{
-				"50%",
-				"5",
-				"20%"
-			},
-			{
-				"+1",
-				"15%",
-				"45%"
-			},
-			{
-				"50%",
-				"20%"
-			},
-			{
-				"135%"
-			},
-			{
-				"8"
-			},
-			{
-				"5%",
-				"20%"
-			},
-			{
-				"8",
-				"10%"
-			}
-		},
-		{
-			{
-				"1",
-				"0.3",
-				"3",
-				"1.5"
-			},
-			{
-				"25%"
-			},
-			{
-				"2",
-				"0.3",
-				"3",
-				"20%"
-			},
-			{
-				"+1",
-				"15%",
-				"45%"
-			},
-			{
-				"3",
-				"0.3",
-				"3",
-				"10%"
-			},
-			{
-				"135%"
-			},
-			{
-				"4",
-				"0.3",
-				"3",
-				"20%"
-			},
-			{
-				"5%",
-				"20%"
-			},
-			{
-				"4",
-				"0.3",
-				"4.2",
-				"20%",
-				"10%"
-			}
-		},
-		{
-			{
-				"25%",
-				"20%"
-			},
-			{
-				"25%"
-			},
-			{
-				"25%",
-				"20%"
-			},
-			{
-				"+1",
-				"15%",
-				"45%"
-			},
-			{
-				"25%",
-				"20%"
-			},
-			{
-				"135%"
-			},
-			{
-				"25%",
-				"20%"
-			},
-			{
-				"5%",
-				"20%"
-			},
-			{
-				"50%",
-				"25%",
-				"10%"
-			}
-		},
-		{
-			{
-				"4",
-				"1"
-			},
-			{
-				"25%"
-			},
-			{
-				"4",
-				"10%",
-				"10%"
-			},
-			{
-				"+1",
-				"15%",
-				"45%"
-			},
-			{
-				"50%",
-				"10%",
-				"10%"
-			},
-			{
-				"135%"
-			},
-			{
-				"4",
-				"20%",
-				"10%"
-			},
-			{
-				"5%",
-				"20%"
-			},
-			{
-				"20%",
-				"10%"
-			}
-		},
-		{
-			{
-				"100%",
-				"240",
-				"4",
-				"600",
-				"1",
-				"30",
-				"60% + 80",
-				"8"
-			},
-			{
-				"25%"
-			},
-			{},
-			{
-				"+1",
-				"15%",
-				"45%"
-			},
-			{
-				"60% + 40",
-				"8"
-			},
-			{
-				"135%"
-			},
-			{
-				"1",
-				"25"
-			},
-			{
-				"5%",
-				"20%"
-			},
-			{
-				"100%",
-				"10%"
-			}
-		},
-		{
-			{
-				"2",
-				"15"
-			},
-			{
-				"25%"
-			},
-			{
-				"50%",
-				"100%"
-			},
-			{
-				"+1",
-				"15%",
-				"45%"
-			},
-			{
-				"50%",
-				"110%"
-			},
-			{
-				"135%"
-			},
-			{
-				"50%",
-				"120%"
-			},
-			{
-				"5%",
-				"20%"
-			},
-			{
-				"10",
-				"1.5",
-				"10%"
-			}
-		},
-		{
-			{
-				"5",
-				"5",
-				"4",
-				"4"
-			},
-			{
-				"25%"
-			},
-			{
-				"10%",
-				"1"
-			},
-			{
-				"+1",
-				"15%",
-				"45%"
-			},
-			{
-				"10%",
-				"4",
-				"0.1"
-			},
-			{
-				"135%"
-			},
-			{
-				"10%",
-				"1"
-			},
-			{
-				"5%",
-				"20%"
-			},
-			{
-				"10%",
-				"4",
-				"0.1",
-				"10%"
-			}
-		},
-		{
-			{
-				"75%",
-				"6",
-				"30"
-			},
-			{
-				"25%"
-			},
-			{
-				"10%"
-			},
-			{
-				"+1",
-				"15%",
-				"45%"
-			},
-			{
-				"10%"
-			},
-			{
-				"135%"
-			},
-			{
-				"20%",
-				"50%",
-				"25%"
-			},
-			{
-				"5%",
-				"20%"
-			},
-			{
-				"40%",
-				"100%",
-				"5",
-				"1",
-				"10%"
-			}
-		},
-		{
-			{
-				"10",
-				"50%",
-				"60",
-				"50%",
-				"1"
-			},
-			{
-				"25%"
-			},
-			{
-				"20%",
-				"4"
-			},
-			{
-				"+1",
-				"15%",
-				"45%"
-			},
-			{
-				"15%"
-			},
-			{
-				"135%"
-			},
-			{},
-			{
-				"5%",
-				"20%"
-			},
-			{
-				"100%",
-				"10%",
-				"10%"
-			}
-		}
-	}
+	local editable_specialization_descs = {}
 
 	do
-		local delayed_percentage = self.values.player.damage_control_passive[1][1]
-		local tick_percentage = self.values.player.damage_control_passive[1][2] * 0.01 * delayed_percentage
-		local damage_duration = math.ceil(delayed_percentage / tick_percentage)
-		local auto_shrug_time = self.values.player.damage_control_auto_shrug[1]
-		local health_threshold = self.values.player.damage_control_cooldown_drain[2][1]
-		local cooldown_drain_1 = self.values.player.damage_control_cooldown_drain[1][2]
-		local cooldown_drain_2 = self.values.player.damage_control_cooldown_drain[2][2]
-		local heal_percentage = self.values.player.damage_control_healing[1]
+		local specialization = deep_clone(editable_specialization_template)
+		local t1_team_damage_reduction = (1 - self.values.team.damage_dampener.team_damage_reduction[1]) * 100
+		local t1_damage_reduction = self.values.player.passive_damage_reduction[1] * 100
+		local t3_stamina_multiplier = (self.values.team.stamina.passive_multiplier[1] - 1) * 100
+		local t3_intimidate_multiplier = (self.values.player.passive_intimidate_range_mul[1] - 1) * 100
+		local t3_damage_reduction = (1 - self.values.temporary.dmg_dampener_close_contact[1][1]) * 100
+		local t5_team_health_multiplier = (self.values.team.health.passive_multiplier[1] - 1) * 100
+		local t5_health_multiplier = (self.values.player.passive_health_multiplier[1] - 1) * 100
+		local t7_team_armor_multiplier = (self.values.team.armor.multiplier[1] - 1) * 100
+		local t7_armor_multiplier = (self.values.player.tier_armor_multiplier[1] - 1) * 100
+		local t9_health_multiplier = (self.values.team.health.hostage_multiplier[1] - 1) * 100
+		local t9_stamina_multiplier = (self.values.team.stamina.hostage_multiplier[1] - 1) * 100
+		local t9_max_hostages = self.hostage_max_num.health
+		local t9_damage_reduction = (1 - self.values.team.damage_dampener.hostage_multiplier[1]) * 100
 
-		table.insert(editable_specialization_descs, {
-			{
-				tostring(delayed_percentage) .. "%",
-				damage_duration,
-				"10"
-			},
-			{
-				"25%"
-			},
-			{},
-			{
-				"+1",
-				"15%",
-				"45%"
-			},
-			{
-				auto_shrug_time
-			},
-			{
-				"135%"
-			},
-			{
-				tostring(health_threshold) .. "%",
-				cooldown_drain_2,
-				cooldown_drain_1
-			},
-			{
-				"5%",
-				"20%"
-			},
-			{
-				tostring(heal_percentage) .. "%",
-				"10%"
-			}
-		})
+		specialization[1] = {
+			"10%",
+			pr(t1_team_damage_reduction),
+			pr(t1_damage_reduction)
+		}
+		specialization[3] = {
+			pr(t3_stamina_multiplier),
+			pr(t3_intimidate_multiplier),
+			pr(t3_damage_reduction)
+		}
+		specialization[5] = {
+			pr(t5_team_health_multiplier),
+			pr(t5_team_health_multiplier + t5_health_multiplier)
+		}
+		specialization[7] = {
+			pr(t7_team_armor_multiplier + t7_armor_multiplier),
+			pr(t7_team_armor_multiplier)
+		}
+		specialization[9] = {
+			pr(t9_health_multiplier),
+			pr(t9_stamina_multiplier),
+			t9_max_hostages,
+			pr(t9_damage_reduction),
+			pr(t9_lootdrop_multiplier)
+		}
+
+		table.insert(editable_specialization_descs, specialization)
 	end
 
 	do
-		local distance = self.values.player.tag_team_base[1].distance
-		local heal_amount = self.values.player.tag_team_base[1].kill_health_gain * 10
-		local heal_amount_tagged = heal_amount * self.values.player.tag_team_base[1].tagged_health_gain_ratio
-		local kill_extension = self.values.player.tag_team_base[1].kill_extension
-		local duration = self.values.player.tag_team_base[1].duration
-		local cooldown = 60
-		local cooldown_drain_owner = self.values.player.tag_team_cooldown_drain[1].owner
-		local cooldown_drain_tagged = self.values.player.tag_team_cooldown_drain[2].tagged
-		local health_bonus_1 = (self.values.player.passive_health_multiplier[2] - 1) * 100
-		local health_bonus_2 = (self.values.player.passive_health_multiplier[3] - 1) * 100 - health_bonus_1
-		local kill_absorption = self.values.player.tag_team_damage_absorption[1].kill_gain * 10
-		local kill_absorption_max = self.values.player.tag_team_damage_absorption[1].max * 10
+		local specialization = deep_clone(editable_specialization_template)
+		local t1_health_multiplier = (self.values.player.passive_health_multiplier[1] - 1) * 100
+		local t3_uncover_multiplier = (self.values.player.uncover_multiplier[1] - 1) * 100
+		local t3_health_multiplier = (self.values.player.passive_health_multiplier[2] - 1) * 100
+		local t5_health_multiplier = (self.values.player.passive_health_multiplier[3] - 1) * 100
+		local t9_health_multiplier = (self.values.player.passive_health_multiplier[5] - 1) * 100
+		local t9_health_regen = self.values.player.passive_health_regen[1] * 100
 
-		table.insert(editable_specialization_descs, {
-			{
-				distance,
-				heal_amount,
-				heal_amount_tagged,
-				kill_extension,
-				duration,
-				cooldown
-			},
-			{
-				"25%"
-			},
-			{
-				health_bonus_1 .. "%"
-			},
-			{
-				"+1",
-				"15%",
-				"45%"
-			},
-			{
-				kill_absorption,
-				kill_absorption_max
-			},
-			{
-				"135%"
-			},
-			{
-				health_bonus_2 .. "%"
-			},
-			{
-				"5%",
-				"20%"
-			},
-			{
-				cooldown_drain_tagged,
-				"10%"
-			}
-		})
+		specialization[1] = {
+			pr(t1_health_multiplier)
+		}
+		specialization[3] = {
+			pr(t3_uncover_multiplier),
+			pr(t3_health_multiplier - t1_health_multiplier)
+		}
+		specialization[5] = {
+			pr(t5_health_multiplier - t3_health_multiplier)
+		}
+		specialization[7] = {}
+		specialization[9] = {
+			pr(t9_health_multiplier - t5_health_multiplier),
+			pr(t9_health_regen),
+			"5",
+			pr(t9_lootdrop_multiplier)
+		}
+
+		table.insert(editable_specialization_descs, specialization)
 	end
 
 	do
-		local duration = self.values.player.pocket_ecm_jammer_base[1].duration
-		local charges = 2
-		local cooldown = 100
-		local cooldown_drain = self.values.player.pocket_ecm_jammer_base[1].cooldown_drain
-		local health_bonus = (self.values.player.passive_health_multiplier[2] - 1) * 100
-		local kill_health_gain = self.values.player.pocket_ecm_heal_on_kill[1] * 10
-		local kill_health_gain_team = self.values.team.pocket_ecm_heal_on_kill[1] * 10
-		local kill_dodge_bonus_count = 1
-		local kill_dodge_bonus = 20
-		local kill_dodge_bonus_duration = 30
+		local specialization = deep_clone(editable_specialization_template)
+		local t1_armor_multiplier = (self.values.player.tier_armor_multiplier[2] - 1) * 100
+		local t3_armor_multiplier = (self.values.player.tier_armor_multiplier[3] - 1) * 100
+		local t5_armor_multiplier = (self.values.player.tier_armor_multiplier[4] - 1) * 100
+		local t7_armor_recovery_reduction = (1 - self.values.player.armor_regen_timer_multiplier_passive[1]) * 100
+		local t7_armor_gate_timer = self.values.temporary.armor_break_invulnerable[1][1]
+		local t7_armor_gate_cooldown = self.values.temporary.armor_break_invulnerable[1][2]
+		local t9_armor_multiplier = (self.values.player.tier_armor_multiplier[6] - 1) * 100
+		local t9_armor_recovery_reduction = (1 - self.values.team.armor.passive_regen_time_multiplier[1]) * 100
 
-		table.insert(editable_specialization_descs, {
-			{
-				duration,
-				charges,
-				cooldown,
-				cooldown_drain
-			},
-			{
-				"25%"
-			},
-			{
-				health_bonus .. "%"
-			},
-			{
-				"+1",
-				"15%",
-				"45%"
-			},
-			{
-				kill_health_gain,
-				"15%"
-			},
-			{
-				"135%"
-			},
-			{
-				kill_dodge_bonus_count,
-				kill_dodge_bonus,
-				kill_dodge_bonus_duration
-			},
-			{
-				"5%",
-				"20%"
-			},
-			{
-				kill_health_gain_team,
-				"15%",
-				"10%"
-			}
-		})
+		specialization[1] = {
+			pr(t1_armor_multiplier)
+		}
+		specialization[3] = {
+			pr(t3_armor_multiplier - t1_armor_multiplier)
+		}
+		specialization[5] = {
+			pr(t5_armor_multiplier - t3_armor_multiplier)
+		}
+		specialization[7] = {
+			pr(t7_armor_recovery_reduction),
+			t7_armor_gate_timer,
+			t7_armor_gate_cooldown
+		}
+		specialization[9] = {
+			pr(t9_armor_multiplier - t5_armor_multiplier),
+			pr(t9_armor_recovery_reduction),
+			pr(t9_lootdrop_multiplier)
+		}
+
+		table.insert(editable_specialization_descs, specialization)
 	end
 
 	do
-		local activation_health_restore = self.values.player.copr_activate_bonus_health_ratio[1] * 100
-		local ability_cooldown = self.copr_ability_cooldown
-		local duration_1 = self.values.temporary.copr_ability[1][2]
-		local duration_2 = self.values.temporary.copr_ability[2][2]
-		local out_of_health_movement_slow = (1 - self.values.player.copr_out_of_health_move_slow[1]) * 100
-		local speed_up_on_kill = self.values.player.copr_speed_up_on_kill[1]
-		local teammate_heal_1 = self.values.player.copr_teammate_heal[1] * 100
-		local teammate_heal_2 = self.values.player.copr_teammate_heal[2] * 100
-		local static_damage_1 = self.values.player.copr_static_damage_ratio[1] * 100
-		local static_damage_2 = self.values.player.copr_static_damage_ratio[2] * 100
-		local health_bonus_1 = (self.values.player.passive_health_multiplier[2] - 1) * 100
-		local health_bonus_2 = (self.values.player.passive_health_multiplier[3] - 1) * 100 - health_bonus_1
-		local health_bonus_3 = (self.values.player.passive_health_multiplier[4] - 1) * 100 - health_bonus_2
-		local kill_life_leech_1 = self.values.player.copr_kill_life_leech[1]
-		local copr_specialization = deep_clone(editable_specialization_template)
+		local specialization = deep_clone(editable_specialization_template)
+		local t1_dodge_addition = self.values.player.passive_dodge_chance[1] * 100
+		local t3_targeting_reduction = (1 - self.values.player.camouflage_multiplier[1]) * 100
+		local t5_dodge_addition = self.values.player.passive_dodge_chance[2] * 100
+		local t7_dodge_addition = self.values.player.passive_dodge_chance[3] * 100
+		local t9_armor_piercing_chance = self.values.weapon.armor_piercing_chance[1] * 100
+		local t9_swap_speed_multiplier = (self.values.weapon.passive_swap_speed_multiplier[1] - 1) * 100
 
-		copr_specialization[1] = {
-			tostring(activation_health_restore) .. "%",
-			tostring(static_damage_1) .. "%",
-			tostring(kill_life_leech_1),
-			tostring(teammate_heal_1) .. "%",
-			tostring(duration_1),
-			tostring(ability_cooldown)
+		specialization[1] = {
+			pr(t1_dodge_addition)
 		}
-		copr_specialization[3] = {
-			tostring(health_bonus_1) .. "%",
-			tostring(out_of_health_movement_slow) .. "%"
+		specialization[3] = {
+			pr(t3_targeting_reduction)
 		}
-		copr_specialization[5] = {
-			tostring(duration_2),
-			tostring(speed_up_on_kill),
-			tostring(teammate_heal_2) .. "%"
+		specialization[5] = {
+			pr(t5_dodge_addition - t1_dodge_addition)
 		}
-		copr_specialization[7] = {
-			tostring(health_bonus_2) .. "%"
+		specialization[7] = {
+			pr(t7_dodge_addition - t5_dodge_addition)
 		}
-		copr_specialization[9] = {
-			tostring(static_damage_2) .. "%",
-			tostring(health_bonus_3) .. "%"
+		specialization[9] = {
+			pr(t9_armor_piercing_chance),
+			pr(t9_swap_speed_multiplier),
+			pr(t9_lootdrop_multiplier)
 		}
 
-		table.insert(copr_specialization[9], editable_specialization_lootdrop_drop_multiplier)
-		table.insert(editable_specialization_descs, copr_specialization)
+		table.insert(editable_specialization_descs, specialization)
 	end
 
 	do
+		local specialization = deep_clone(editable_specialization_template)
+		local t1_armor_regen_multiplier = (1 - self.values.player.perk_armor_regen_timer_multiplier[1]) * 100
+		local t3_recoil_reduction = -16
+		local t3_armor_regen_multiplier = (1 - self.values.player.perk_armor_regen_timer_multiplier[2]) * 100
+		local t3_ammo_multiplier = (self.values.akimbo.extra_ammo_multiplier[1] - 1) * 100
+		local t5_armor_regen_multiplier = (1 - self.values.player.perk_armor_regen_timer_multiplier[3]) * 100
+		local t7_armor_regen_multiplier = (1 - self.values.player.perk_armor_regen_timer_multiplier[4]) * 100
+		local t9_armor_regen_multiplier = (1 - self.values.player.perk_armor_regen_timer_multiplier[5]) * 100
+		local t9_armor_regen_timer = self.values.player.passive_always_regen_armor[1]
+
+		specialization[1] = {
+			pr(t1_armor_regen_multiplier)
+		}
+		specialization[3] = {
+			pr(t3_armor_regen_multiplier - t1_armor_regen_multiplier),
+			"50",
+			"-24",
+			pr(t3_ammo_multiplier),
+			t3_recoil_reduction
+		}
+		specialization[5] = {
+			pr(t5_armor_regen_multiplier - t3_armor_regen_multiplier)
+		}
+		specialization[7] = {
+			pr(t7_armor_regen_multiplier - t5_armor_regen_multiplier)
+		}
+		specialization[9] = {
+			pr(t9_armor_regen_multiplier - t7_armor_regen_multiplier),
+			"5%",
+			"-16",
+			"125%",
+			pr(t9_lootdrop_multiplier),
+			t9_armor_regen_timer
+		}
+
+		table.insert(editable_specialization_descs, specialization)
+	end
+
+	do
+		local specialization = deep_clone(editable_specialization_template)
+		local t1_dodge_addition = self.values.player.passive_dodge_chance[1] * 100
+		local t3_dodge_addition = self.values.player.level_2_dodge_addend[1] * 100
+		local t3_armor_multiplier = (self.values.player.level_2_armor_multiplier[1] - 1) * 100
+		local t5_dodge_addition = self.values.player.level_2_dodge_addend[2] * 100
+		local t5_armor_multiplier = (self.values.player.level_2_armor_multiplier[2] - 1) * 100
+		local t7_dodge_addition = self.values.player.level_2_dodge_addend[3] * 100
+		local t7_armor_multiplier = (self.values.player.level_2_armor_multiplier[3] - 1) * 100
+		local t9_armor_regen_timer = (1 - self.values.player.armor_regen_timer_multiplier_tier[1]) * 100
+
+		specialization[1] = {
+			pr(t1_dodge_addition)
+		}
+		specialization[3] = {
+			pr(t3_dodge_addition),
+			pr(t3_armor_multiplier)
+		}
+		specialization[5] = {
+			pr(t5_dodge_addition - t3_dodge_addition),
+			pr(t5_armor_multiplier - t3_armor_multiplier)
+		}
+		specialization[7] = {
+			pr(t7_dodge_addition - t5_dodge_addition),
+			pr(t7_armor_multiplier - t5_armor_multiplier)
+		}
+		specialization[9] = {
+			pr(t9_armor_regen_timer),
+			pr(t9_lootdrop_multiplier)
+		}
+
+		table.insert(editable_specialization_descs, specialization)
+	end
+
+	do
+		local specialization = deep_clone(editable_specialization_template)
+		local t1_dodge_chance = self.values.player.tier_dodge_chance[1] * 100
+		local t3_targeting_reduction = (1 - self.values.player.stand_still_crouch_camouflage_bonus[1]) * 100
+		local t3_corpse_speed_multiplier = (1 - self.values.player.corpse_dispose_speed_multiplier[1]) * 100
+		local t5_dodge_chance = self.values.player.tier_dodge_chance[2] * 100
+		local t5_targeting_reduction = (1 - self.values.player.stand_still_crouch_camouflage_bonus[2]) * 100
+		local t5_lockpick_speed_multiplier = (1 - self.values.player.pick_lock_speed_multiplier[1]) * 100
+		local t7_dodge_chance = self.values.player.tier_dodge_chance[3] * 100
+		local t7_targeting_reduction = (1 - self.values.player.stand_still_crouch_camouflage_bonus[3]) * 100
+		local t5_pager_speed_multiplier = (1 - self.values.player.alarm_pager_speed_multiplier[1]) * 100
+		local t9_armor_regen_multiplier = (1 - self.values.player.armor_regen_timer_stand_still_multiplier[1]) * 100
+		local t9_crouch_speed_multiplier_1 = (self.values.player.crouch_speed_multiplier[1] - 1) * 100
+		local t9_crouch_speed_multiplier_2 = (self.values.player.crouch_speed_multiplier[2] - 1) * 100
+
+		specialization[1] = {
+			pr(t1_dodge_chance)
+		}
+		specialization[3] = {
+			pr(t3_targeting_reduction),
+			pr(t3_corpse_speed_multiplier)
+		}
+		specialization[5] = {
+			pr(t5_dodge_chance - t1_dodge_chance),
+			pr(t5_targeting_reduction - t3_targeting_reduction),
+			pr(t5_lockpick_speed_multiplier)
+		}
+		specialization[7] = {
+			pr(t7_dodge_chance - t5_dodge_chance),
+			pr(t7_targeting_reduction - t5_targeting_reduction),
+			pr(t5_pager_speed_multiplier)
+		}
+		specialization[9] = {
+			pr(t9_armor_regen_multiplier),
+			pr(t9_crouch_speed_multiplier_2 - t9_crouch_speed_multiplier_1),
+			pr(t9_lootdrop_multiplier)
+		}
+
+		table.insert(editable_specialization_descs, specialization)
+	end
+
+	do
+		local specialization = deep_clone(editable_specialization_template)
+		local t1_damage_reduction = (1 - self.values.temporary.dmg_dampener_outnumbered_strong[1][1]) * 100
+		local t1_melee_damage_cooldown = 1
+		local t1_melee_damage_multiplier = self.values.melee.stacking_hit_damage_multiplier[1]
+		local t3_damage_reduction = (1 - self.values.temporary.dmg_dampener_close_contact[1][1]) * 100
+		local t5_damage_reduction = (1 - self.values.temporary.dmg_dampener_close_contact[2][1]) * 100
+		local t5_melee_damage_cooldown = self.values.melee.stacking_hit_expire_t[1]
+		local t7_damage_reduction = (1 - self.values.temporary.dmg_dampener_close_contact[3][1]) * 100
+		local t9_health_regeneration = self.values.temporary.melee_life_leech[1][1] * 100
+		local t9_health_cooldown = self.values.temporary.melee_life_leech[1][2]
+
+		specialization[1] = {
+			pr(t1_damage_reduction),
+			t1_melee_damage_cooldown,
+			t1_melee_damage_multiplier
+		}
+		specialization[3] = {
+			pr(t3_damage_reduction)
+		}
+		specialization[5] = {
+			pr(t5_damage_reduction - t3_damage_reduction),
+			"10%",
+			t5_melee_damage_cooldown
+		}
+		specialization[7] = {
+			pr(t7_damage_reduction - t5_damage_reduction)
+		}
+		specialization[9] = {
+			pr(t9_health_regeneration),
+			t9_health_cooldown,
+			pr(t9_lootdrop_multiplier)
+		}
+
+		table.insert(editable_specialization_descs, specialization)
+	end
+
+	do
+		local specialization = deep_clone(editable_specialization_template)
+		local armor_regen_cooldown = self.on_killshot_cooldown
+		local t1_damage_reduction = (1 - self.values.temporary.dmg_dampener_outnumbered_strong[1][1]) * 100
+		local t1_melee_damage_timer = 1
+		local t1_melee_damage_multiplier = self.values.melee.stacking_hit_damage_multiplier[1]
+		local t3_armor_regen = self.values.player.killshot_regen_armor_bonus[1] * 10
+		local t3_armor_multiplier = (self.values.player.tier_armor_multiplier[2] - 1) * 100
+		local t5_health_regen = self.values.player.melee_kill_life_leech[1] * 100
+		local t5_damage_reduction = (1 - self.values.temporary.dmg_dampener_close_contact[1][1]) * 100
+		local t7_armor_regen = self.values.player.killshot_close_regen_armor_bonus[1] * 10
+		local t7_armor_multiplier = (self.values.player.tier_armor_multiplier[3] - 1) * 100
+		local t9_panic_chance = self.values.player.killshot_close_panic_chance[1] * 100
+
+		specialization[1] = {
+			pr(t1_damage_reduction),
+			t1_melee_damage_timer,
+			t1_melee_damage_multiplier
+		}
+		specialization[3] = {
+			t3_armor_regen,
+			armor_regen_cooldown,
+			pr(t3_armor_multiplier)
+		}
+		specialization[5] = {
+			pr(t5_health_regen),
+			armor_regen_cooldown,
+			pr(t5_damage_reduction)
+		}
+		specialization[7] = {
+			t7_armor_regen,
+			armor_regen_cooldown,
+			pr(t7_armor_multiplier - t3_armor_multiplier)
+		}
+		specialization[9] = {
+			pr(t9_panic_chance),
+			armor_regen_cooldown,
+			pr(t9_lootdrop_multiplier)
+		}
+
+		table.insert(editable_specialization_descs, specialization)
+	end
+
+	do
+		local specialization = deep_clone(editable_specialization_template)
+		local health_gain_multiplier = self.loose_ammo_restore_health_values.multiplier
+		local t1_health_gain_min = self.values.temporary.loose_ammo_restore_health[1][1][1] * health_gain_multiplier * 10
+		local t1_health_gain_max = self.values.temporary.loose_ammo_restore_health[1][1][2] * health_gain_multiplier * 10
+		local t1_cooldown = self.loose_ammo_restore_health_values.cd
+		local t1_player_health_multiplier = self.values.player.gain_life_per_players[1] * 100
+		local t3_team_ammo = self.loose_ammo_give_team_ratio * 100
+		local t3_cooldown = self.values.temporary.loose_ammo_give_team[1][2]
+		local t3_health_multiplier = (self.values.player.passive_health_multiplier[2] - 1) * 100
+		local t5_team_health = self.loose_ammo_give_team_health_ratio * 100
+		local t5_health_multiplier = (self.values.player.passive_health_multiplier[3] - 1) * 100
+		local t7_health_gain = self.values.temporary.loose_ammo_restore_health[2][1][1] * health_gain_multiplier * 10
+		local t9_health_gain = self.values.temporary.loose_ammo_restore_health[3][1][1] * health_gain_multiplier * 10
+
+		specialization[1] = {
+			t1_health_gain_min,
+			t1_health_gain_max,
+			t1_cooldown,
+			pr(t1_player_health_multiplier)
+		}
+		specialization[3] = {
+			pr(t3_team_ammo),
+			t3_cooldown,
+			pr(t3_health_multiplier)
+		}
+		specialization[5] = {
+			pr(t5_team_health),
+			pr(t5_health_multiplier - t3_health_multiplier)
+		}
+		specialization[7] = {
+			t7_health_gain - t1_health_gain_min
+		}
+		specialization[9] = {
+			t9_health_gain - t7_health_gain,
+			pr(t9_lootdrop_multiplier)
+		}
+
+		table.insert(editable_specialization_descs, specialization)
+	end
+
+	do
+		local specialization = deep_clone(editable_specialization_template)
+		local hot_data = self.damage_to_hot_data
+		local t1_healing = self.values.player.damage_to_hot[1] * 10
+		local t3_healing = self.values.player.damage_to_hot[2] * 10
+		local t3_health_multiplier = (self.values.player.passive_health_multiplier[2] - 1) * 100
+		local t5_healing = self.values.player.damage_to_hot[3] * 10
+		local t3_piercing_chance = self.values.player.armor_piercing_chance[1] * 100
+		local t7_healing = self.values.player.damage_to_hot[4] * 10
+		local t7_health_multiplier = (self.values.player.passive_health_multiplier[3] - 1) * 100
+		local t9_extra_ticks = self.values.player.damage_to_hot_extra_ticks[1]
+		local t9_piercing_chance = self.values.player.armor_piercing_chance[2] * 100
+
+		specialization[1] = {
+			t1_healing,
+			hot_data.tick_time,
+			hot_data.total_ticks * hot_data.tick_time,
+			hot_data.stacking_cooldown
+		}
+		specialization[3] = {
+			t3_healing,
+			hot_data.tick_time,
+			hot_data.total_ticks * hot_data.tick_time,
+			pr(t3_health_multiplier)
+		}
+		specialization[5] = {
+			t5_healing,
+			hot_data.tick_time,
+			hot_data.total_ticks * hot_data.tick_time,
+			pr(t3_piercing_chance)
+		}
+		specialization[7] = {
+			t7_healing,
+			hot_data.tick_time,
+			hot_data.total_ticks * hot_data.tick_time,
+			pr(t7_health_multiplier - t3_health_multiplier)
+		}
+		specialization[9] = {
+			t7_healing,
+			hot_data.tick_time,
+			(hot_data.total_ticks + t9_extra_ticks) * hot_data.tick_time,
+			pr(t9_piercing_chance - t3_piercing_chance),
+			pr(t9_lootdrop_multiplier)
+		}
+
+		table.insert(editable_specialization_descs, specialization)
+	end
+
+	do
+		local specialization = deep_clone(editable_specialization_template)
+		local ratio_threshold = self.player_damage_health_ratio_threshold * 100
+		local t1_armor_recovery_reduction = self.values.player.armor_regen_damage_health_ratio_multiplier[1] * 100
+		local t3_speed_multiplier = self.values.player.movement_speed_damage_health_ratio_multiplier[1] * 100
+		local t5_armor_recovery_reduction = self.values.player.armor_regen_damage_health_ratio_multiplier[2] * 100
+		local t7_armor_recovery_reduction = self.values.player.armor_regen_damage_health_ratio_multiplier[3] * 100
+		local t9_threshold_multiplier = self.values.player.armor_regen_damage_health_ratio_threshold_multiplier[1]
+
+		specialization[1] = {
+			pr(ratio_threshold),
+			pr(t1_armor_recovery_reduction)
+		}
+		specialization[3] = {
+			pr(ratio_threshold),
+			pr(t3_speed_multiplier)
+		}
+		specialization[5] = {
+			pr(ratio_threshold),
+			pr(t5_armor_recovery_reduction - t1_armor_recovery_reduction)
+		}
+		specialization[7] = {
+			pr(ratio_threshold),
+			pr(t7_armor_recovery_reduction - t5_armor_recovery_reduction)
+		}
+		specialization[9] = {
+			pr(ratio_threshold * t9_threshold_multiplier),
+			pr(ratio_threshold),
+			pr(t9_lootdrop_multiplier)
+		}
+
+		table.insert(editable_specialization_descs, specialization)
+	end
+
+	do
+		local specialization = deep_clone(editable_specialization_template)
+		local t1_health_storage = self.values.player.armor_health_store_amount[1] * 10
+		local t1_enemy_threshold = 1
+		local t3_health_storage = self.values.player.armor_health_store_amount[2] * 10
+		local t3_health_multiplier = (self.values.player.passive_health_multiplier[1] - 1) * 100
+		local t5_storage_multiplier = (self.values.player.armor_max_health_store_multiplier[1] - 1) * 100
+		local t5_health_multiplier = (self.values.player.passive_health_multiplier[2] - 1) * 100
+		local t5_dodge_addition = self.values.player.passive_dodge_chance[1] * 100
+		local t7_health_storage = self.values.player.armor_health_store_amount[3] * 10
+		local t7_health_multiplier = (self.values.player.passive_health_multiplier[3] - 1) * 100
+
+		specialization[1] = {
+			t1_health_storage,
+			t1_enemy_threshold
+		}
+		specialization[3] = {
+			t3_health_storage - t1_health_storage,
+			pr(t3_health_multiplier)
+		}
+		specialization[5] = {
+			pr(t5_storage_multiplier),
+			pr(t5_health_multiplier - t3_health_multiplier),
+			pr(t5_dodge_addition)
+		}
+		specialization[7] = {
+			t7_health_storage - t3_health_storage,
+			pr(t7_health_multiplier - t5_health_multiplier)
+		}
+		specialization[9] = {
+			"20%",
+			pr(t9_lootdrop_multiplier)
+		}
+
+		table.insert(editable_specialization_descs, specialization)
+	end
+
+	do
+		local specialization = deep_clone(editable_specialization_template)
+		local t1_damage_percent = 100
+		local t1_max_tick_stacks = self.max_cocaine_stacks_per_tick
+		local t1_stack_tick_time = self.cocaine_stacks_tick_t
+		local t1_max_stacks = self.max_total_cocaine_stacks
+		local t1_absorb_amount = self.cocaine_stacks_dmg_absorption_value * 10
+		local t1_absorb_per_stack = self.cocaine_stacks_convert_levels[1]
+		local t1_stack_decay_percentage = self.cocaine_stacks_decay_percentage_per_tick * 100
+		local t1_stack_decay_amount = self.cocaine_stacks_decay_amount_per_tick
+		local t1_stack_decay_time = self.cocaine_stacks_decay_t
+		local t5_stack_decay_amount = t1_stack_decay_amount * self.values.player.cocaine_stacks_decay_multiplier[1]
+		local t7_absorb_per_stack = self.cocaine_stacks_convert_levels[2]
+		local t9_absorb_multiplier = (self.values.player.cocaine_stack_absorption_multiplier[1] - 1) * 100
+
+		specialization[1] = {
+			pr(t1_damage_percent),
+			t1_max_tick_stacks,
+			t1_stack_tick_time,
+			t1_max_stacks,
+			t1_absorb_amount,
+			t1_absorb_per_stack,
+			pr(t1_stack_decay_percentage) .. " + " .. t1_stack_decay_amount,
+			t1_stack_decay_time
+		}
+		specialization[3] = {}
+		specialization[5] = {
+			pr(t1_stack_decay_percentage) .. " + " .. t5_stack_decay_amount,
+			t1_stack_decay_time
+		}
+		specialization[7] = {
+			t1_absorb_amount,
+			t7_absorb_per_stack
+		}
+		specialization[9] = {
+			pr(t9_absorb_multiplier),
+			pr(t9_lootdrop_multiplier)
+		}
+
+		table.insert(editable_specialization_descs, specialization)
+	end
+
+	do
+		local specialization = deep_clone(editable_specialization_template)
+		local t1_armor_gate_timer = self.values.temporary.armor_break_invulnerable[1][1]
+		local t1_armor_gate_cooldown = self.values.temporary.armor_break_invulnerable[1][2]
+		local t3_health_reduction = self.values.player.health_decrease[1] * 100
+		local t3_armor_multiplier = self.values.player.armor_increase[1] * 100
+		local t5_armor_multiplier = self.values.player.armor_increase[2] * 100
+		local t7_armor_multiplier = self.values.player.armor_increase[3] * 100
+		local t9_armor_gain = self.values.player.damage_to_armor[1][1][1] * 10
+		local t9_armor_gain_cooldown = self.values.player.damage_to_armor[1][1][2]
+
+		specialization[1] = {
+			t1_armor_gate_timer,
+			t1_armor_gate_cooldown
+		}
+		specialization[3] = {
+			pr(t3_health_reduction),
+			pr(t3_armor_multiplier)
+		}
+		specialization[5] = {
+			pr(t3_health_reduction),
+			pr(t5_armor_multiplier)
+		}
+		specialization[7] = {
+			pr(t3_health_reduction),
+			pr(t7_armor_multiplier)
+		}
+		specialization[9] = {
+			t9_armor_gain,
+			t9_armor_gain_cooldown,
+			pr(t9_lootdrop_multiplier)
+		}
+
+		table.insert(editable_specialization_descs, specialization)
+	end
+
+	do
+		local specialization = deep_clone(editable_specialization_template)
+		local t1_health_amount = self.values.player.wild_health_amount[1] * 10
+		local t1_armor_amount = self.values.player.wild_armor_amount[1] * 10
+		local t1_trigger_times = self.wild_trigger_time
+		local t1_trigger_interval = self.wild_max_triggers_per_time
+		local t3_health_threshold = self.values.player.less_health_wild_armor[1][1] * 100
+		local t3_amount_increase = self.values.player.less_health_wild_armor[1][2] * 10
+		local t5_health_threshold = self.values.player.less_health_wild_cooldown[1][1] * 100
+		local t5_cooldown_reduction = self.values.player.less_health_wild_cooldown[1][2]
+		local t7_armor_threshold = self.values.player.less_armor_wild_health[1][1] * 100
+		local t7_amount_increase = self.values.player.less_armor_wild_health[1][2] * 10
+		local t9_armor_threshold = self.values.player.less_health_wild_cooldown[1][1] * 100
+		local t9_cooldown_reduction = self.values.player.less_health_wild_cooldown[1][2]
+
+		specialization[1] = {
+			t1_health_amount,
+			t1_armor_amount,
+			t1_trigger_times,
+			t1_trigger_interval
+		}
+		specialization[3] = {
+			pr(t3_health_threshold),
+			t3_amount_increase
+		}
+		specialization[5] = {
+			pr(t5_health_threshold),
+			t1_trigger_interval,
+			t5_cooldown_reduction
+		}
+		specialization[7] = {
+			pr(t7_armor_threshold),
+			t7_amount_increase
+		}
+		specialization[9] = {
+			pr(t9_armor_threshold),
+			t1_trigger_interval,
+			t9_cooldown_reduction,
+			pr(t9_lootdrop_multiplier)
+		}
+
+		table.insert(editable_specialization_descs, specialization)
+	end
+
+	do
+		local specialization = deep_clone(editable_specialization_template)
+		local t1_healing_amount = self.values.temporary.chico_injector[1][1] * 100
+		local t1_duration = self.values.temporary.chico_injector[1][2]
+		local t1_cooldown = 30
+		local t1_cooldown_kill_reduction = 1
+		local t3_health_multiplier = (self.values.player.passive_health_multiplier[1] - 1) * 100
+		local t5_health_multiplier = (self.values.player.passive_health_multiplier[2] - 1) * 100
+		local t7_health_multiplier = (self.values.player.passive_health_multiplier[3] - 1) * 100
+		local t7_healing_multiplier = self.values.player.chico_injector_low_health_multiplier[1][2] * 100
+		local t7_healing_threshold = self.values.player.chico_injector_low_health_multiplier[1][1] * 100
+		local t9_health_multiplier = (self.values.player.passive_health_multiplier[4] - 1) * 100
+		local t9_cooldown_threshold = self.values.player.chico_injector_health_to_speed[1][1] * 10
+		local t9_cooldown_reduction = self.values.player.chico_injector_health_to_speed[1][2]
+
+		specialization[1] = {
+			pr(t1_healing_amount),
+			t1_duration,
+			t1_cooldown,
+			t1_cooldown_kill_reduction
+		}
+		specialization[3] = {
+			pr(t3_health_multiplier)
+		}
+		specialization[5] = {
+			pr(t5_health_multiplier - t3_health_multiplier)
+		}
+		specialization[7] = {
+			pr(t7_health_multiplier - t5_health_multiplier),
+			pr(t7_healing_threshold),
+			pr(t7_healing_multiplier)
+		}
+		specialization[9] = {
+			pr(t9_health_multiplier - t7_health_multiplier),
+			"",
+			t9_cooldown_threshold,
+			t9_cooldown_reduction,
+			pr(t9_lootdrop_multiplier)
+		}
+
+		table.insert(editable_specialization_descs, specialization)
+	end
+
+	do
+		local specialization = deep_clone(editable_specialization_template)
+		local t1_duration = 10
+		local t1_dodge_chance = 50
+		local t1_accuracy_debuff = 50
+		local t1_cooldown = 60
+		local t1_cooldown_kill_reduction = 1
+		local t3_dodge_chance = self.values.player.dodge_shot_gain[1][1] * 100
+		local t3_dodge_chance_cooldown = self.values.player.dodge_shot_gain[1][2]
+		local t5_dodge_chance = self.values.player.passive_dodge_chance[1] * 100
+		local t9_multiplier = (self.values.player.sicario_multiplier[1] - 1) * 100
+		local t9_team_dodge_chance = self.values.player.smoke_screen_ally_dodge_bonus[1] * 100
+
+		specialization[1] = {
+			t1_duration,
+			pr(t1_dodge_chance),
+			t1_cooldown,
+			pr(t1_accuracy_debuff),
+			t1_cooldown_kill_reduction
+		}
+		specialization[3] = {
+			pr(t3_dodge_chance),
+			t3_dodge_chance_cooldown
+		}
+		specialization[5] = {
+			pr(t5_dodge_chance)
+		}
+		specialization[7] = {}
+		specialization[9] = {
+			pr(t9_multiplier),
+			pr(t9_team_dodge_chance),
+			pr(t9_lootdrop_multiplier)
+		}
+
+		table.insert(editable_specialization_descs, specialization)
+	end
+
+	do
+		local specialization = deep_clone(editable_specialization_template)
+		local t1_delayed_percentage = self.values.player.damage_control_passive[1][1]
+		local tick_percentage = self.values.player.damage_control_passive[1][2] * 0.01 * t1_delayed_percentage
+		local t1_damage_duration = math.ceil(t1_delayed_percentage / tick_percentage)
+		local t1_cooldown = 10
+		local t5_auto_shrug_time = self.values.player.damage_control_auto_shrug[1]
+		local t7_health_threshold = self.values.player.damage_control_cooldown_drain[2][1]
+		local t7_cooldown_drain_1 = self.values.player.damage_control_cooldown_drain[1][2]
+		local t7_cooldown_drain_2 = self.values.player.damage_control_cooldown_drain[2][2]
+		local t9_heal_percentage = self.values.player.damage_control_healing[1]
+
+		specialization[1] = {
+			pr(t1_delayed_percentage),
+			t1_damage_duration,
+			t1_cooldown
+		}
+		specialization[5] = {
+			t5_auto_shrug_time
+		}
+		specialization[7] = {
+			pr(t7_health_threshold),
+			t7_cooldown_drain_2,
+			t7_cooldown_drain_1
+		}
+		specialization[9] = {
+			pr(t9_heal_percentage),
+			pr(t9_lootdrop_multiplier)
+		}
+
+		table.insert(editable_specialization_descs, specialization)
+	end
+
+	do
+		local specialization = deep_clone(editable_specialization_template)
+		local tag_team_base = self.values.player.tag_team_base[1]
+		local t1_distance = tag_team_base.distance
+		local t1_heal_amount = tag_team_base.kill_health_gain * 10
+		local t1_heal_amount_tagged = t1_heal_amount * tag_team_base.tagged_health_gain_ratio
+		local t1_kill_extension = tag_team_base.kill_extension
+		local t1_duration = tag_team_base.duration
+		local t1_cooldown = 60
+		local t3_health_bonus = (self.values.player.passive_health_multiplier[2] - 1) * 100
+		local t5_kill_absorption = self.values.player.tag_team_damage_absorption[1].kill_gain * 10
+		local t5_kill_absorption_max = self.values.player.tag_team_damage_absorption[1].max * 10
+		local t7_health_bonus = (self.values.player.passive_health_multiplier[3] - 1) * 100
+		local t9_cooldown_drain_tagged = self.values.player.tag_team_cooldown_drain[2].tagged
+
+		specialization[1] = {
+			t1_distance,
+			t1_heal_amount,
+			t1_heal_amount_tagged,
+			t1_kill_extension,
+			t1_duration,
+			t1_cooldown
+		}
+		specialization[3] = {
+			pr(t3_health_bonus)
+		}
+		specialization[5] = {
+			t5_kill_absorption,
+			t5_kill_absorption_max
+		}
+		specialization[7] = {
+			pr(t7_health_bonus - t3_health_bonus)
+		}
+		specialization[9] = {
+			t9_cooldown_drain_tagged,
+			pr(t9_lootdrop_multiplier)
+		}
+
+		table.insert(editable_specialization_descs, specialization)
+	end
+
+	do
+		local specialization = deep_clone(editable_specialization_template)
+		local t1_duration = self.values.player.pocket_ecm_jammer_base[1].duration
+		local t1_charges = 2
+		local t1_cooldown = 100
+		local t1_cooldown_drain = self.values.player.pocket_ecm_jammer_base[1].cooldown_drain
+		local t3_health_bonus = (self.values.player.passive_health_multiplier[2] - 1) * 100
+		local t5_kill_health_gain = self.values.player.pocket_ecm_heal_on_kill[1] * 10
+		local t5_dodge_chance = self.values.player.passive_dodge_chance[1] * 100
+		local t1_kill_dodge_bonus_count = self.values.temporary.pocket_ecm_kill_dodge[1][3]
+		local t1_kill_dodge_bonus = self.values.temporary.pocket_ecm_kill_dodge[1][1] * 100
+		local t1_kill_dodge_bonus_duration = self.values.temporary.pocket_ecm_kill_dodge[1][2]
+		local t9_kill_health_gain_team = self.values.team.pocket_ecm_heal_on_kill[1] * 10
+		local t9_dodge_chance = self.values.player.passive_dodge_chance[2] * 100
+
+		specialization[1] = {
+			t1_duration,
+			t1_charges,
+			t1_cooldown,
+			t1_cooldown_drain
+		}
+		specialization[3] = {
+			pr(t3_health_bonus)
+		}
+		specialization[5] = {
+			t5_kill_health_gain,
+			pr(t5_dodge_chance)
+		}
+		specialization[7] = {
+			t1_kill_dodge_bonus_count,
+			t1_kill_dodge_bonus,
+			t1_kill_dodge_bonus_duration
+		}
+		specialization[9] = {
+			t9_kill_health_gain_team,
+			pr(t9_dodge_chance - t5_dodge_chance),
+			pr(t9_lootdrop_multiplier)
+		}
+
+		table.insert(editable_specialization_descs, specialization)
+	end
+
+	do
+		local specialization = deep_clone(editable_specialization_template)
+		local t1_activation_health_restore = self.values.player.copr_activate_bonus_health_ratio[1] * 100
+		local t1_static_damage = self.values.player.copr_static_damage_ratio[1] * 100
+		local t1_kill_life_leech = self.values.player.copr_kill_life_leech[1]
+		local t1_teammate_heal = self.values.player.copr_teammate_heal[1] * 100
+		local t1_duration = self.values.temporary.copr_ability[1][2]
+		local t1_cooldown = self.copr_ability_cooldown
+		local t3_health_bonus = (self.values.player.passive_health_multiplier[2] - 1) * 100
+		local t3_out_of_health_movement_slow = (1 - self.values.player.copr_out_of_health_move_slow[1]) * 100
+		local t5_duration = self.values.temporary.copr_ability[2][2]
+		local t5_speed_up_on_kill = self.values.player.copr_speed_up_on_kill[1]
+		local t5_teammate_heal = self.values.player.copr_teammate_heal[2] * 100
+		local t7_health_bonus = (self.values.player.passive_health_multiplier[3] - 1) * 100
+		local t9_static_damage = self.values.player.copr_static_damage_ratio[2] * 100
+		local t9_health_bonus = (self.values.player.passive_health_multiplier[4] - 1) * 100
+
+		specialization[1] = {
+			pr(t1_activation_health_restore),
+			pr(t1_static_damage),
+			t1_kill_life_leech,
+			pr(t1_teammate_heal),
+			t1_duration,
+			t1_cooldown
+		}
+		specialization[3] = {
+			pr(t3_health_bonus),
+			pr(t3_out_of_health_movement_slow)
+		}
+		specialization[5] = {
+			t5_duration,
+			t5_speed_up_on_kill,
+			pr(t5_teammate_heal)
+		}
+		specialization[7] = {
+			pr(t7_health_bonus - t3_health_bonus)
+		}
+		specialization[9] = {
+			pr(t9_static_damage),
+			pr(t9_health_bonus - t7_health_bonus),
+			pr(t9_lootdrop_multiplier)
+		}
+
+		table.insert(editable_specialization_descs, specialization)
+	end
+
+	do
+		local specialization = deep_clone(editable_specialization_template)
+		local t1_primary_reload_secondary_kills = self.values.player.primary_reload_secondary[1]
+		local t1_weapon_swap_speed = (self.values.weapon.mrwi_swap_speed_multiplier[1] - 1) * 200
+		local t1_weapon_swap_speed_duration = self.values.weapon.primary_reload_swap_secondary[1]
+		local t3_headshot_regen_health_bonus = self.values.player.headshot_regen_health_bonus[1] * 10
+		local t3_on_headshot_dealt_cooldown = self.on_headshot_dealt_cooldown
+		local mrwi_health_invulnerable = self.values.temporary.mrwi_health_invulnerable[1]
+		local t7_invulnerable_threshold = mrwi_health_invulnerable[1] * 100
+		local t7_invulnerable_duration = mrwi_health_invulnerable[2]
+		local t7_invulnerable_cooldown = mrwi_health_invulnerable[3]
+
+		specialization[1] = {
+			t1_primary_reload_secondary_kills,
+			t1_weapon_swap_speed_duration
+		}
+		specialization[3] = {
+			t3_headshot_regen_health_bonus,
+			t3_on_headshot_dealt_cooldown
+		}
+		specialization[7] = {
+			pr(t7_invulnerable_threshold),
+			t7_invulnerable_duration,
+			t7_invulnerable_cooldown
+		}
+		specialization[9] = {
+			pr(t9_lootdrop_multiplier)
+		}
+
+		table.insert(editable_specialization_descs, specialization)
+
 		local health_boost = (self.values.player.mrwi_health_multiplier[1] - 1) * 100
 		local armor_boost = (self.values.player.mrwi_armor_multiplier[1] - 1) * 100
 		local dodge_boost = self.values.player.mrwi_dodge_chance[1] * 100
 		local crouch_and_carry_boost = (self.values.player.mrwi_crouch_speed_multiplier[1] - 1) * 100
 		local mrwi_boost = {
 			{
-				tostring(health_boost) .. "%"
+				pr(health_boost)
 			},
 			{
-				tostring(armor_boost) .. "%"
+				pr(armor_boost)
 			},
 			{
-				tostring(dodge_boost) .. "%"
+				pr(dodge_boost)
 			},
 			{
-				tostring(crouch_and_carry_boost) .. "%"
+				pr(crouch_and_carry_boost)
 			}
 		}
-		local primary_reload_secondary_kills = self.values.player.primary_reload_secondary[1]
-		local headshot_regen_health_bonus = self.values.player.headshot_regen_health_bonus[1] * 10
-		local on_headshot_dealt_cooldown = self.on_headshot_dealt_cooldown
-		local weapon_swap_speed = (self.values.weapon.mrwi_swap_speed_multiplier[1] - 1) * 200
-		local weapon_swap_speed_duration = self.values.weapon.primary_reload_swap_secondary[1]
-		local mrwi_health_invulnerable = self.values.temporary.mrwi_health_invulnerable[1]
-		local invulnerable_threshold = mrwi_health_invulnerable[1] * 100
-		local invulnerable_duration = mrwi_health_invulnerable[2]
-		local invulnerable_cooldown = mrwi_health_invulnerable[3]
 		local multi_choice_specialization_desc = {}
 
 		multi_choice_specialization_desc[1] = mrwi_boost
@@ -4870,7 +4849,7 @@ function UpgradesTweakData:_init_pd2_values()
 		multi_choice_specialization_desc[7] = mrwi_boost
 		multi_choice_specialization_desc[9] = {}
 
-		local deck9_options = UpgradesTweakData.mrwi_deck9_options()
+		local deck9_options = self:mrwi_deck9_options()
 
 		for _, options in pairs(deck9_options) do
 			local data
@@ -4887,26 +4866,6 @@ function UpgradesTweakData:_init_pd2_values()
 
 			table.insert(multi_choice_specialization_desc[9], data)
 		end
-
-		local specialization_descs = deep_clone(editable_specialization_template)
-
-		specialization_descs[1] = {
-			tostring(primary_reload_secondary_kills),
-			tostring(weapon_swap_speed_duration)
-		}
-		specialization_descs[3] = {
-			tostring(headshot_regen_health_bonus),
-			tostring(on_headshot_dealt_cooldown)
-		}
-		specialization_descs[5] = {}
-		specialization_descs[7] = {
-			tostring(invulnerable_threshold) .. "%",
-			tostring(invulnerable_duration),
-			tostring(invulnerable_cooldown)
-		}
-
-		table.insert(specialization_descs[9], editable_specialization_lootdrop_drop_multiplier)
-		table.insert(editable_specialization_descs, specialization_descs)
 
 		editable_multi_choice_specialization_descs[#editable_specialization_descs] = multi_choice_specialization_desc
 	end
@@ -4944,7 +4903,7 @@ function UpgradesTweakData:_init_pd2_values()
 	end
 end
 
--- Lines 1884-3102
+-- Lines 2766-3996
 function UpgradesTweakData:init(tweak_data)
 	self.level_tree = {}
 	self.level_tree[0] = {
@@ -5343,11 +5302,11 @@ function UpgradesTweakData:init(tweak_data)
 	self.level_tree[35] = {
 		name_id = "weapons",
 		upgrades = {
-			"r93",
-			"judge",
 			"mining_pick",
 			"wing",
-			"x_judge"
+			"judge",
+			"x_judge",
+			"r93"
 		}
 	}
 	self.level_tree[36] = {
@@ -6005,7 +5964,7 @@ function UpgradesTweakData:init(tweak_data)
 	end
 end
 
--- Lines 3105-3160
+-- Lines 3999-4054
 function UpgradesTweakData:_init_value_tables()
 	self.values = {}
 	self.values.player = {}
@@ -6045,7 +6004,7 @@ function UpgradesTweakData:_init_value_tables()
 	self.values.team.damage_dampener = {}
 end
 
--- Lines 3163-3213
+-- Lines 4057-4107
 function UpgradesTweakData:_init_values()
 	self.values.weapon = self.values.weapon or {}
 	self.values.weapon.reload_speed_multiplier = {
@@ -6125,7 +6084,7 @@ function UpgradesTweakData:_init_values()
 	}
 end
 
--- Lines 3216-7218
+-- Lines 4110-8112
 function UpgradesTweakData:_player_definitions()
 	self.definitions.body_armor1 = {
 		armor_id = "level_2",
@@ -10171,7 +10130,7 @@ function UpgradesTweakData:_player_definitions()
 	end
 end
 
--- Lines 7221-7356
+-- Lines 8115-8250
 function UpgradesTweakData:_trip_mine_definitions()
 	self.definitions.trip_mine = {
 		category = "equipment",
@@ -10311,7 +10270,7 @@ function UpgradesTweakData:_trip_mine_definitions()
 	}
 end
 
--- Lines 7359-7473
+-- Lines 8253-8367
 function UpgradesTweakData:_ecm_jammer_definitions()
 	self.definitions.ecm_jammer = {
 		category = "equipment",
@@ -10434,7 +10393,7 @@ function UpgradesTweakData:_ecm_jammer_definitions()
 	}
 end
 
--- Lines 7476-7529
+-- Lines 8370-8423
 function UpgradesTweakData:_ammo_bag_definitions()
 	self.definitions.ammo_bag = {
 		category = "equipment",
@@ -10491,7 +10450,7 @@ function UpgradesTweakData:_ammo_bag_definitions()
 	}
 end
 
--- Lines 7532-7593
+-- Lines 8426-8487
 function UpgradesTweakData:_doctor_bag_definitions()
 	self.definitions.doctor_bag = {
 		category = "equipment",
@@ -10557,7 +10516,7 @@ function UpgradesTweakData:_doctor_bag_definitions()
 	}
 end
 
--- Lines 7596-7697
+-- Lines 8490-8591
 function UpgradesTweakData:_cable_tie_definitions()
 	self.definitions.cable_tie = {
 		category = "equipment",
@@ -10664,7 +10623,7 @@ function UpgradesTweakData:_cable_tie_definitions()
 	}
 end
 
--- Lines 7702-7709
+-- Lines 8596-8603
 function UpgradesTweakData:_armor_kit_definitions()
 	self.definitions.armor_kit = {
 		category = "equipment",
@@ -10674,7 +10633,7 @@ function UpgradesTweakData:_armor_kit_definitions()
 	}
 end
 
--- Lines 7712-7922
+-- Lines 8606-8816
 function UpgradesTweakData:_sentry_gun_definitions()
 	self.definitions.sentry_gun = {
 		category = "equipment",
@@ -10895,7 +10854,7 @@ function UpgradesTweakData:_sentry_gun_definitions()
 	}
 end
 
--- Lines 7924-7935
+-- Lines 8818-8829
 function UpgradesTweakData:_rep_definitions()
 	local rep_upgrades = self.values.rep_upgrades
 
@@ -10909,7 +10868,7 @@ function UpgradesTweakData:_rep_definitions()
 	end
 end
 
--- Lines 7938-8032
+-- Lines 8832-8926
 function UpgradesTweakData:_c45_definitions()
 	self.definitions.c45 = {
 		category = "weapon",
@@ -11009,7 +10968,7 @@ function UpgradesTweakData:_c45_definitions()
 	end
 end
 
--- Lines 8035-8128
+-- Lines 8929-9022
 function UpgradesTweakData:_beretta92_definitions()
 	self.definitions.beretta92 = {
 		category = "weapon",
@@ -11108,7 +11067,7 @@ function UpgradesTweakData:_beretta92_definitions()
 	end
 end
 
--- Lines 8131-8226
+-- Lines 9025-9120
 function UpgradesTweakData:_raging_bull_definitions()
 	self.definitions.raging_bull = {
 		category = "weapon",
@@ -11209,7 +11168,7 @@ function UpgradesTweakData:_raging_bull_definitions()
 	end
 end
 
--- Lines 8228-8243
+-- Lines 9122-9137
 function UpgradesTweakData:_olympic_definitions()
 	self.definitions.olympic = {
 		category = "weapon",
@@ -11223,7 +11182,7 @@ function UpgradesTweakData:_olympic_definitions()
 	}
 end
 
--- Lines 8245-8252
+-- Lines 9139-9146
 function UpgradesTweakData:_amcar_definitions()
 	self.definitions.amcar = {
 		category = "weapon",
@@ -11233,7 +11192,7 @@ function UpgradesTweakData:_amcar_definitions()
 	}
 end
 
--- Lines 8254-8264
+-- Lines 9148-9158
 function UpgradesTweakData:_m16_definitions()
 	self.definitions.m16 = {
 		category = "weapon",
@@ -11242,7 +11201,7 @@ function UpgradesTweakData:_m16_definitions()
 	}
 end
 
--- Lines 8266-8283
+-- Lines 9160-9177
 function UpgradesTweakData:_new_m4_definitions()
 	self.definitions.new_m4 = {
 		category = "weapon",
@@ -11256,7 +11215,7 @@ function UpgradesTweakData:_new_m4_definitions()
 	}
 end
 
--- Lines 8286-8295
+-- Lines 9180-9189
 function UpgradesTweakData:_sko12_weapon_definitions()
 	self.definitions.sko12 = {
 		category = "weapon",
@@ -11266,7 +11225,7 @@ function UpgradesTweakData:_sko12_weapon_definitions()
 	}
 end
 
--- Lines 8298-8314
+-- Lines 9192-9208
 function UpgradesTweakData:_glock_18c_definitions()
 	self.definitions.glock_18c = {
 		category = "weapon",
@@ -11280,7 +11239,7 @@ function UpgradesTweakData:_glock_18c_definitions()
 	}
 end
 
--- Lines 8316-8326
+-- Lines 9210-9220
 function UpgradesTweakData:_saiga_definitions()
 	self.definitions.saiga = {
 		category = "weapon",
@@ -11289,7 +11248,7 @@ function UpgradesTweakData:_saiga_definitions()
 	}
 end
 
--- Lines 8328-8343
+-- Lines 9222-9237
 function UpgradesTweakData:_akmsu_definitions()
 	self.definitions.akmsu = {
 		category = "weapon",
@@ -11303,7 +11262,7 @@ function UpgradesTweakData:_akmsu_definitions()
 	}
 end
 
--- Lines 8345-8361
+-- Lines 9239-9255
 function UpgradesTweakData:_ak74_definitions()
 	self.definitions.ak74 = {
 		category = "weapon",
@@ -11317,7 +11276,7 @@ function UpgradesTweakData:_ak74_definitions()
 	}
 end
 
--- Lines 8363-8373
+-- Lines 9257-9267
 function UpgradesTweakData:_akm_definitions()
 	self.definitions.akm = {
 		category = "weapon",
@@ -11326,7 +11285,7 @@ function UpgradesTweakData:_akm_definitions()
 	}
 end
 
--- Lines 8375-8386
+-- Lines 9269-9280
 function UpgradesTweakData:_akm_gold_definitions()
 	self.definitions.akm_gold = {
 		category = "weapon",
@@ -11336,7 +11295,7 @@ function UpgradesTweakData:_akm_gold_definitions()
 	}
 end
 
--- Lines 8388-8398
+-- Lines 9282-9292
 function UpgradesTweakData:_ak5_definitions()
 	self.definitions.ak5 = {
 		category = "weapon",
@@ -11345,7 +11304,7 @@ function UpgradesTweakData:_ak5_definitions()
 	}
 end
 
--- Lines 8400-8415
+-- Lines 9294-9309
 function UpgradesTweakData:_aug_definitions()
 	self.definitions.aug = {
 		category = "weapon",
@@ -11359,7 +11318,7 @@ function UpgradesTweakData:_aug_definitions()
 	}
 end
 
--- Lines 8417-8427
+-- Lines 9311-9321
 function UpgradesTweakData:_g36_definitions()
 	self.definitions.g36 = {
 		category = "weapon",
@@ -11368,7 +11327,7 @@ function UpgradesTweakData:_g36_definitions()
 	}
 end
 
--- Lines 8430-8440
+-- Lines 9324-9334
 function UpgradesTweakData:_p90_definitions()
 	self.definitions.p90 = {
 		category = "weapon",
@@ -11377,7 +11336,7 @@ function UpgradesTweakData:_p90_definitions()
 	}
 end
 
--- Lines 8443-8453
+-- Lines 9337-9347
 function UpgradesTweakData:_new_m14_definitions()
 	self.definitions.new_m14 = {
 		category = "weapon",
@@ -11386,7 +11345,7 @@ function UpgradesTweakData:_new_m14_definitions()
 	}
 end
 
--- Lines 8455-8465
+-- Lines 9349-9359
 function UpgradesTweakData:_mp9_definitions()
 	self.definitions.mp9 = {
 		category = "weapon",
@@ -11395,7 +11354,7 @@ function UpgradesTweakData:_mp9_definitions()
 	}
 end
 
--- Lines 8467-8482
+-- Lines 9361-9376
 function UpgradesTweakData:_deagle_definitions()
 	self.definitions.deagle = {
 		category = "weapon",
@@ -11409,7 +11368,7 @@ function UpgradesTweakData:_deagle_definitions()
 	}
 end
 
--- Lines 8484-8494
+-- Lines 9378-9388
 function UpgradesTweakData:_new_mp5_definitions()
 	self.definitions.new_mp5 = {
 		category = "weapon",
@@ -11418,7 +11377,7 @@ function UpgradesTweakData:_new_mp5_definitions()
 	}
 end
 
--- Lines 8496-8511
+-- Lines 9390-9405
 function UpgradesTweakData:_colt_1911_definitions()
 	self.definitions.colt_1911 = {
 		category = "weapon",
@@ -11432,7 +11391,7 @@ function UpgradesTweakData:_colt_1911_definitions()
 	}
 end
 
--- Lines 8513-8523
+-- Lines 9407-9417
 function UpgradesTweakData:_mac10_definitions()
 	self.definitions.mac10 = {
 		category = "weapon",
@@ -11441,7 +11400,7 @@ function UpgradesTweakData:_mac10_definitions()
 	}
 end
 
--- Lines 8525-8532
+-- Lines 9419-9426
 function UpgradesTweakData:_glock_17_definitions()
 	self.definitions.glock_17 = {
 		category = "weapon",
@@ -11451,7 +11410,7 @@ function UpgradesTweakData:_glock_17_definitions()
 	}
 end
 
--- Lines 8534-8550
+-- Lines 9428-9444
 function UpgradesTweakData:_b92fs_definitions()
 	self.definitions.b92fs = {
 		category = "weapon",
@@ -11465,7 +11424,7 @@ function UpgradesTweakData:_b92fs_definitions()
 	}
 end
 
--- Lines 8552-8562
+-- Lines 9446-9456
 function UpgradesTweakData:_huntsman_definitions()
 	self.definitions.huntsman = {
 		category = "weapon",
@@ -11474,7 +11433,7 @@ function UpgradesTweakData:_huntsman_definitions()
 	}
 end
 
--- Lines 8564-8574
+-- Lines 9458-9468
 function UpgradesTweakData:_r870_definitions()
 	self.definitions.r870 = {
 		category = "weapon",
@@ -11483,7 +11442,7 @@ function UpgradesTweakData:_r870_definitions()
 	}
 end
 
--- Lines 8576-8582
+-- Lines 9470-9476
 function UpgradesTweakData:_serbu_definitions()
 	self.definitions.serbu = {
 		category = "weapon",
@@ -11492,7 +11451,7 @@ function UpgradesTweakData:_serbu_definitions()
 	}
 end
 
--- Lines 8584-8600
+-- Lines 9478-9494
 function UpgradesTweakData:_new_raging_bull_definitions()
 	self.definitions.new_raging_bull = {
 		category = "weapon",
@@ -11506,7 +11465,7 @@ function UpgradesTweakData:_new_raging_bull_definitions()
 	}
 end
 
--- Lines 8602-8741
+-- Lines 9496-9635
 function UpgradesTweakData:_saw_definitions()
 	self.definitions.saw = {
 		category = "weapon",
@@ -11655,7 +11614,7 @@ function UpgradesTweakData:_saw_definitions()
 	}
 end
 
--- Lines 8743-8750
+-- Lines 9637-9644
 function UpgradesTweakData:_usp_definitions()
 	self.definitions.usp = {
 		category = "weapon",
@@ -11665,7 +11624,7 @@ function UpgradesTweakData:_usp_definitions()
 	}
 end
 
--- Lines 8752-8759
+-- Lines 9646-9653
 function UpgradesTweakData:_g22c_definitions()
 	self.definitions.g22c = {
 		category = "weapon",
@@ -11675,7 +11634,7 @@ function UpgradesTweakData:_g22c_definitions()
 	}
 end
 
--- Lines 8761-8768
+-- Lines 9655-9662
 function UpgradesTweakData:_judge_definitions()
 	self.definitions.judge = {
 		category = "weapon",
@@ -11685,7 +11644,7 @@ function UpgradesTweakData:_judge_definitions()
 	}
 end
 
--- Lines 8772-8779
+-- Lines 9666-9673
 function UpgradesTweakData:_m45_definitions()
 	self.definitions.m45 = {
 		category = "weapon",
@@ -11695,7 +11654,7 @@ function UpgradesTweakData:_m45_definitions()
 	}
 end
 
--- Lines 8780-8793
+-- Lines 9674-9687
 function UpgradesTweakData:_s552_definitions()
 	self.definitions.s552 = {
 		category = "weapon",
@@ -11711,7 +11670,7 @@ function UpgradesTweakData:_s552_definitions()
 	}
 end
 
--- Lines 8794-8801
+-- Lines 9688-9695
 function UpgradesTweakData:_ppk_definitions()
 	self.definitions.ppk = {
 		category = "weapon",
@@ -11721,7 +11680,7 @@ function UpgradesTweakData:_ppk_definitions()
 	}
 end
 
--- Lines 8805-8812
+-- Lines 9699-9706
 function UpgradesTweakData:_mp7_definitions()
 	self.definitions.mp7 = {
 		category = "weapon",
@@ -11731,7 +11690,7 @@ function UpgradesTweakData:_mp7_definitions()
 	}
 end
 
--- Lines 8813-8820
+-- Lines 9707-9714
 function UpgradesTweakData:_scar_definitions()
 	self.definitions.scar = {
 		category = "weapon",
@@ -11741,7 +11700,7 @@ function UpgradesTweakData:_scar_definitions()
 	}
 end
 
--- Lines 8821-8828
+-- Lines 9715-9722
 function UpgradesTweakData:_p226_definitions()
 	self.definitions.p226 = {
 		category = "weapon",
@@ -11751,7 +11710,7 @@ function UpgradesTweakData:_p226_definitions()
 	}
 end
 
--- Lines 8831-8838
+-- Lines 9725-9732
 function UpgradesTweakData:_hk21_definitions()
 	self.definitions.hk21 = {
 		category = "weapon",
@@ -11761,7 +11720,7 @@ function UpgradesTweakData:_hk21_definitions()
 	}
 end
 
--- Lines 8840-8847
+-- Lines 9734-9741
 function UpgradesTweakData:_hk51b_definitions()
 	self.definitions.hk51b = {
 		category = "weapon",
@@ -11771,7 +11730,7 @@ function UpgradesTweakData:_hk51b_definitions()
 	}
 end
 
--- Lines 8850-8857
+-- Lines 9744-9751
 function UpgradesTweakData:_tkb_definitions()
 	self.definitions.tkb = {
 		category = "weapon",
@@ -11781,7 +11740,7 @@ function UpgradesTweakData:_tkb_definitions()
 	}
 end
 
--- Lines 8859-8866
+-- Lines 9753-9760
 function UpgradesTweakData:_contender_definitions()
 	self.definitions.contender = {
 		category = "weapon",
@@ -11791,7 +11750,7 @@ function UpgradesTweakData:_contender_definitions()
 	}
 end
 
--- Lines 8868-8875
+-- Lines 9762-9769
 function UpgradesTweakData:_hcar_definitions()
 	self.definitions.hcar = {
 		category = "weapon",
@@ -11801,7 +11760,7 @@ function UpgradesTweakData:_hcar_definitions()
 	}
 end
 
--- Lines 8877-8884
+-- Lines 9771-9778
 function UpgradesTweakData:_m249_definitions()
 	self.definitions.m249 = {
 		category = "weapon",
@@ -11811,7 +11770,7 @@ function UpgradesTweakData:_m249_definitions()
 	}
 end
 
--- Lines 8885-8892
+-- Lines 9779-9786
 function UpgradesTweakData:_rpk_definitions()
 	self.definitions.rpk = {
 		category = "weapon",
@@ -11821,7 +11780,7 @@ function UpgradesTweakData:_rpk_definitions()
 	}
 end
 
--- Lines 8895-8902
+-- Lines 9789-9796
 function UpgradesTweakData:_m95_definitions()
 	self.definitions.m95 = {
 		category = "weapon",
@@ -11831,7 +11790,7 @@ function UpgradesTweakData:_m95_definitions()
 	}
 end
 
--- Lines 8904-8911
+-- Lines 9798-9805
 function UpgradesTweakData:_msr_definitions()
 	self.definitions.msr = {
 		category = "weapon",
@@ -11841,7 +11800,7 @@ function UpgradesTweakData:_msr_definitions()
 	}
 end
 
--- Lines 8914-8921
+-- Lines 9808-9815
 function UpgradesTweakData:_awp_definitions()
 	self.definitions.awp = {
 		category = "weapon",
@@ -11851,7 +11810,7 @@ function UpgradesTweakData:_awp_definitions()
 	}
 end
 
--- Lines 8923-8930
+-- Lines 9817-9824
 function UpgradesTweakData:_supernova_definitions()
 	self.definitions.supernova = {
 		category = "weapon",
@@ -11861,7 +11820,7 @@ function UpgradesTweakData:_supernova_definitions()
 	}
 end
 
--- Lines 8932-8945
+-- Lines 9826-9839
 function UpgradesTweakData:_kacchainsaw_weapon_definitions()
 	self.definitions.kacchainsaw = {
 		category = "weapon",
@@ -11877,7 +11836,7 @@ function UpgradesTweakData:_kacchainsaw_weapon_definitions()
 	}
 end
 
--- Lines 8948-8955
+-- Lines 9842-9849
 function UpgradesTweakData:_r93_definitions()
 	self.definitions.r93 = {
 		category = "weapon",
@@ -11887,7 +11846,7 @@ function UpgradesTweakData:_r93_definitions()
 	}
 end
 
--- Lines 8958-8965
+-- Lines 9852-9859
 function UpgradesTweakData:_fal_definitions()
 	self.definitions.fal = {
 		category = "weapon",
@@ -11897,7 +11856,7 @@ function UpgradesTweakData:_fal_definitions()
 	}
 end
 
--- Lines 8968-8975
+-- Lines 9862-9869
 function UpgradesTweakData:_benelli_definitions()
 	self.definitions.benelli = {
 		category = "weapon",
@@ -11907,7 +11866,7 @@ function UpgradesTweakData:_benelli_definitions()
 	}
 end
 
--- Lines 8976-8992
+-- Lines 9870-9886
 function UpgradesTweakData:_striker_definitions()
 	self.definitions.striker = {
 		category = "weapon",
@@ -11926,7 +11885,7 @@ function UpgradesTweakData:_striker_definitions()
 	}
 end
 
--- Lines 8993-9000
+-- Lines 9887-9894
 function UpgradesTweakData:_ksg_definitions()
 	self.definitions.ksg = {
 		category = "weapon",
@@ -11936,7 +11895,7 @@ function UpgradesTweakData:_ksg_definitions()
 	}
 end
 
--- Lines 9004-9011
+-- Lines 9898-9905
 function UpgradesTweakData:_scorpion_definitions()
 	self.definitions.scorpion = {
 		category = "weapon",
@@ -11946,7 +11905,7 @@ function UpgradesTweakData:_scorpion_definitions()
 	}
 end
 
--- Lines 9012-9019
+-- Lines 9906-9913
 function UpgradesTweakData:_tec9_definitions()
 	self.definitions.tec9 = {
 		category = "weapon",
@@ -11956,7 +11915,7 @@ function UpgradesTweakData:_tec9_definitions()
 	}
 end
 
--- Lines 9020-9027
+-- Lines 9914-9921
 function UpgradesTweakData:_uzi_definitions()
 	self.definitions.uzi = {
 		category = "weapon",
@@ -11966,7 +11925,7 @@ function UpgradesTweakData:_uzi_definitions()
 	}
 end
 
--- Lines 9030-9037
+-- Lines 9924-9931
 function UpgradesTweakData:_gre_m79_definitions()
 	self.definitions.gre_m79 = {
 		category = "weapon",
@@ -11976,7 +11935,7 @@ function UpgradesTweakData:_gre_m79_definitions()
 	}
 end
 
--- Lines 9038-9045
+-- Lines 9932-9939
 function UpgradesTweakData:_g3_definitions()
 	self.definitions.g3 = {
 		category = "weapon",
@@ -11986,7 +11945,7 @@ function UpgradesTweakData:_g3_definitions()
 	}
 end
 
--- Lines 9046-9053
+-- Lines 9940-9947
 function UpgradesTweakData:_galil_definitions()
 	self.definitions.galil = {
 		category = "weapon",
@@ -11996,7 +11955,7 @@ function UpgradesTweakData:_galil_definitions()
 	}
 end
 
--- Lines 9054-9061
+-- Lines 9948-9955
 function UpgradesTweakData:_famas_definitions()
 	self.definitions.famas = {
 		category = "weapon",
@@ -12006,7 +11965,7 @@ function UpgradesTweakData:_famas_definitions()
 	}
 end
 
--- Lines 9064-9071
+-- Lines 9958-9965
 function UpgradesTweakData:_spas12_definitions()
 	self.definitions.spas12 = {
 		category = "weapon",
@@ -12016,7 +11975,7 @@ function UpgradesTweakData:_spas12_definitions()
 	}
 end
 
--- Lines 9074-9081
+-- Lines 9968-9975
 function UpgradesTweakData:_mg42_definitions()
 	self.definitions.mg42 = {
 		category = "weapon",
@@ -12026,7 +11985,7 @@ function UpgradesTweakData:_mg42_definitions()
 	}
 end
 
--- Lines 9082-9089
+-- Lines 9976-9983
 function UpgradesTweakData:_c96_definitions()
 	self.definitions.c96 = {
 		category = "weapon",
@@ -12036,7 +11995,7 @@ function UpgradesTweakData:_c96_definitions()
 	}
 end
 
--- Lines 9090-9097
+-- Lines 9984-9991
 function UpgradesTweakData:_sterling_definitions()
 	self.definitions.sterling = {
 		category = "weapon",
@@ -12046,7 +12005,7 @@ function UpgradesTweakData:_sterling_definitions()
 	}
 end
 
--- Lines 9098-9105
+-- Lines 9992-9999
 function UpgradesTweakData:_mosin_definitions()
 	self.definitions.mosin = {
 		category = "weapon",
@@ -12056,7 +12015,7 @@ function UpgradesTweakData:_mosin_definitions()
 	}
 end
 
--- Lines 9108-9115
+-- Lines 10002-10009
 function UpgradesTweakData:_bessy_definitions()
 	self.definitions.bessy = {
 		category = "weapon",
@@ -12066,7 +12025,7 @@ function UpgradesTweakData:_bessy_definitions()
 	}
 end
 
--- Lines 9118-9125
+-- Lines 10012-10019
 function UpgradesTweakData:_m1928_definitions()
 	self.definitions.m1928 = {
 		category = "weapon",
@@ -12076,7 +12035,7 @@ function UpgradesTweakData:_m1928_definitions()
 	}
 end
 
--- Lines 9126-9133
+-- Lines 10020-10027
 function UpgradesTweakData:_l85a2_definitions()
 	self.definitions.l85a2 = {
 		category = "weapon",
@@ -12086,7 +12045,7 @@ function UpgradesTweakData:_l85a2_definitions()
 	}
 end
 
--- Lines 9135-9142
+-- Lines 10029-10036
 function UpgradesTweakData:_vhs_definitions()
 	self.definitions.vhs = {
 		category = "weapon",
@@ -12096,7 +12055,7 @@ function UpgradesTweakData:_vhs_definitions()
 	}
 end
 
--- Lines 9143-9150
+-- Lines 10037-10044
 function UpgradesTweakData:_hs2000_definitions()
 	self.definitions.hs2000 = {
 		category = "weapon",
@@ -12106,7 +12065,7 @@ function UpgradesTweakData:_hs2000_definitions()
 	}
 end
 
--- Lines 9153-9161
+-- Lines 10047-10055
 function UpgradesTweakData:_m134_weapon_definitions()
 	self.definitions.m134 = {
 		category = "weapon",
@@ -12116,7 +12075,7 @@ function UpgradesTweakData:_m134_weapon_definitions()
 	}
 end
 
--- Lines 9163-9171
+-- Lines 10057-10065
 function UpgradesTweakData:_rpg7_weapon_definitions()
 	self.definitions.rpg7 = {
 		category = "weapon",
@@ -12126,7 +12085,7 @@ function UpgradesTweakData:_rpg7_weapon_definitions()
 	}
 end
 
--- Lines 9174-9181
+-- Lines 10068-10075
 function UpgradesTweakData:_cobray_definitions()
 	self.definitions.cobray = {
 		category = "weapon",
@@ -12136,7 +12095,7 @@ function UpgradesTweakData:_cobray_definitions()
 	}
 end
 
--- Lines 9184-9191
+-- Lines 10078-10085
 function UpgradesTweakData:_b682_weapon_definitions()
 	self.definitions.b682 = {
 		category = "weapon",
@@ -12146,7 +12105,7 @@ function UpgradesTweakData:_b682_weapon_definitions()
 	}
 end
 
--- Lines 9194-9651
+-- Lines 10088-10545
 function UpgradesTweakData:_melee_weapon_definitions()
 	self.definitions.weapon = {
 		category = "melee_weapon"
@@ -12513,7 +12472,7 @@ function UpgradesTweakData:_melee_weapon_definitions()
 	}
 end
 
--- Lines 9654-9794
+-- Lines 10548-10692
 function UpgradesTweakData:_grenades_definitions()
 	self.definitions.molotov = {
 		category = "grenade",
@@ -12607,7 +12566,7 @@ function UpgradesTweakData:_grenades_definitions()
 	}
 end
 
--- Lines 9798-10192
+-- Lines 10696-11090
 function UpgradesTweakData:_weapon_definitions()
 	self.definitions.weapon_steelsight_highlight_specials = {
 		category = "feature",
@@ -13029,7 +12988,7 @@ function UpgradesTweakData:_weapon_definitions()
 	}
 end
 
--- Lines 10194-10346
+-- Lines 11092-11244
 function UpgradesTweakData:_pistol_definitions()
 	self.definitions.pistol_reload_speed_multiplier = {
 		category = "feature",
@@ -13186,7 +13145,7 @@ function UpgradesTweakData:_pistol_definitions()
 	}
 end
 
--- Lines 10348-10417
+-- Lines 11246-11315
 function UpgradesTweakData:_assault_rifle_definitions()
 	self.definitions.assault_rifle_recoil_multiplier = {
 		category = "feature",
@@ -13253,7 +13212,7 @@ function UpgradesTweakData:_assault_rifle_definitions()
 	}
 end
 
--- Lines 10419-10487
+-- Lines 11317-11385
 function UpgradesTweakData:_lmg_definitions()
 	self.definitions.lmg_recoil_multiplier = {
 		category = "feature",
@@ -13320,7 +13279,7 @@ function UpgradesTweakData:_lmg_definitions()
 	}
 end
 
--- Lines 10489-10558
+-- Lines 11387-11456
 function UpgradesTweakData:_snp_definitions()
 	self.definitions.snp_recoil_multiplier = {
 		category = "feature",
@@ -13387,7 +13346,7 @@ function UpgradesTweakData:_snp_definitions()
 	}
 end
 
--- Lines 10562-10622
+-- Lines 11460-11520
 function UpgradesTweakData:_smg_definitions()
 	self.definitions.smg_reload_speed_multiplier = {
 		category = "feature",
@@ -13445,7 +13404,7 @@ function UpgradesTweakData:_smg_definitions()
 	}
 end
 
--- Lines 10624-10714
+-- Lines 11522-11612
 function UpgradesTweakData:_shotgun_definitions()
 	self.definitions.shotgun_recoil_multiplier = {
 		category = "feature",
@@ -13548,7 +13507,7 @@ function UpgradesTweakData:_shotgun_definitions()
 	}
 end
 
--- Lines 10716-10785
+-- Lines 11614-11683
 function UpgradesTweakData:_carry_definitions()
 	self.definitions.carry_movement_penalty_nullifier = {
 		category = "feature",
@@ -13624,7 +13583,7 @@ function UpgradesTweakData:_carry_definitions()
 	}
 end
 
--- Lines 10787-11030
+-- Lines 11685-11928
 function UpgradesTweakData:_team_definitions()
 	self.definitions.team_pistol_recoil_index_addend = {
 		category = "team",
@@ -13882,7 +13841,7 @@ function UpgradesTweakData:_team_definitions()
 	self:_crew_definitions()
 end
 
--- Lines 11032-11195
+-- Lines 11930-12093
 function UpgradesTweakData:_crew_definitions()
 	self.crew_skill_definitions = self.crew_skill_definitions or {}
 	self.crew_ability_definitions = self.crew_ability_definitions or {}
@@ -14018,7 +13977,7 @@ function UpgradesTweakData:_crew_definitions()
 	}
 end
 
--- Lines 11197-11345
+-- Lines 12095-12243
 function UpgradesTweakData:_temporary_definitions()
 	self.definitions.temporary_armor_break_invulnerable_1 = {
 		category = "temporary",
@@ -14177,7 +14136,7 @@ function UpgradesTweakData:_temporary_definitions()
 	}
 end
 
--- Lines 11348-11506
+-- Lines 12246-12404
 function UpgradesTweakData:_mrwi_definitions()
 	for i = 1, 4 do
 		self.definitions["mrwi_health_multiplier_" .. tostring(i)] = {
@@ -14324,8 +14283,36 @@ function UpgradesTweakData:_mrwi_definitions()
 	}
 end
 
--- Lines 11509-11690
-function UpgradesTweakData.mrwi_deck9_options()
+-- Lines 12407-12640
+function UpgradesTweakData:mrwi_deck9_options()
+	-- Lines 12408-12410
+	local function pr(value, format)
+		return string.format(format or "%g%%", value)
+	end
+
+	local d3_armor_multiplier = (self.values.player.tier_armor_multiplier[3] - 1) * 100
+	local d3_armor_regen_multuiplier = (1 - self.values.player.armor_regen_timer_multiplier_passive[1]) * 100
+	local d5_armor_regen_multiplier = (1 - self.values.player.perk_armor_regen_timer_multiplier[2]) * 100
+	local d7_dodge_chance = self.values.player.tier_dodge_chance[1] * 100
+	local d7_targeting_reduction = (1 - self.values.player.stand_still_crouch_camouflage_bonus[3]) * 100
+	local d7_pager_speed_multiplier = (1 - self.values.player.alarm_pager_speed_multiplier[1]) * 100
+	local d8_damage_reduction = (1 - self.values.temporary.dmg_dampener_close_contact[2][1]) * 100
+	local d11_hot_data = self.damage_to_hot_data
+	local d11_healing = self.values.player.damage_to_hot[2] * 10
+	local d11_health_multiplier = (self.values.player.passive_health_multiplier[2] - 1) * 100
+	local d13_health_storage = self.values.player.armor_health_store_amount[2] * 10
+	local d13_enemy_threshold = 1
+	local d13_health_multiplier = (self.values.player.passive_health_multiplier[1] - 1) * 100
+	local d14_damage_percent = 100
+	local d14_max_tick_stacks = self.max_cocaine_stacks_per_tick
+	local d14_stack_tick_time = self.cocaine_stacks_tick_t
+	local d14_max_stacks = self.max_total_cocaine_stacks
+	local d14_absorb_amount = self.cocaine_stacks_dmg_absorption_value * 10
+	local d14_absorb_per_stack = self.cocaine_stacks_convert_levels[1]
+	local d14_stack_decay_percentage = self.cocaine_stacks_decay_percentage_per_tick * 100
+	local d14_stack_decay_amount = self.cocaine_stacks_decay_amount_per_tick
+	local d14_stack_decay_time = self.cocaine_stacks_decay_t
+	local d15_armor_gate_cooldown = self.values.temporary.armor_break_invulnerable[2][2]
 	local deck9_options = {
 		{
 			tier = 1,
@@ -14345,8 +14332,8 @@ function UpgradesTweakData.mrwi_deck9_options()
 				"player_armor_regen_timer_multiplier_passive"
 			},
 			custom_editable_descs = {
-				[1] = "20%",
-				[2] = "10%"
+				pr(d3_armor_multiplier),
+				(pr(d3_armor_regen_multuiplier))
 			}
 		},
 		{
@@ -14360,7 +14347,7 @@ function UpgradesTweakData.mrwi_deck9_options()
 				"player_perk_armor_regen_timer_multiplier_1"
 			},
 			custom_editable_descs = {
-				[1] = "15%"
+				(pr(d5_armor_regen_multiplier))
 			}
 		},
 		{
@@ -14372,9 +14359,9 @@ function UpgradesTweakData.mrwi_deck9_options()
 			name_id = "menu_deck7_7",
 			short_id = "menu_deck23_9_7_short",
 			custom_editable_descs = {
-				"20%",
-				"20%",
-				"10%"
+				pr(d7_dodge_chance),
+				pr(d7_targeting_reduction),
+				pr(d7_pager_speed_multiplier)
 			},
 			icon_xy = {
 				1,
@@ -14397,7 +14384,7 @@ function UpgradesTweakData.mrwi_deck9_options()
 				"player_damage_dampener_close_contact_2"
 			},
 			custom_editable_descs = {
-				[1] = "24%"
+				(pr(d8_damage_reduction))
 			}
 		},
 		{
@@ -14417,11 +14404,11 @@ function UpgradesTweakData.mrwi_deck9_options()
 				"player_damage_to_hot_1"
 			},
 			custom_editable_descs = {
-				"2",
-				"0.3",
-				"3",
-				"1.5",
-				"20%"
+				d11_healing,
+				d11_hot_data.tick_time,
+				d11_hot_data.total_ticks * d11_hot_data.tick_time,
+				d11_hot_data.stacking_cooldown,
+				d11_health_multiplier
 			}
 		},
 		{
@@ -14437,9 +14424,9 @@ function UpgradesTweakData.mrwi_deck9_options()
 				"player_armor_health_store_amount_1"
 			},
 			custom_editable_descs = {
-				"8",
-				"1",
-				"10%"
+				d13_health_storage,
+				d13_enemy_threshold,
+				d13_health_multiplier
 			}
 		},
 		{
@@ -14451,14 +14438,14 @@ function UpgradesTweakData.mrwi_deck9_options()
 				"player_cocaine_stacking_1"
 			},
 			custom_editable_descs = {
-				"100%",
-				"240",
-				"4",
-				"600",
-				"1",
-				"30",
-				"60% + 80",
-				"8"
+				pr(d14_damage_percent),
+				d14_max_tick_stacks,
+				d14_stack_tick_time,
+				d14_max_stacks,
+				d14_absorb_amount,
+				d14_absorb_per_stack,
+				pr(d14_stack_decay_percentage) .. " + " .. d14_stack_decay_amount,
+				d14_stack_decay_time
 			}
 		},
 		{
@@ -14468,7 +14455,7 @@ function UpgradesTweakData.mrwi_deck9_options()
 				"temporary_armor_break_invulnerable_2"
 			},
 			custom_editable_descs = {
-				[2] = "45"
+				[2] = d15_armor_gate_cooldown
 			}
 		},
 		{
@@ -14505,7 +14492,7 @@ function UpgradesTweakData.mrwi_deck9_options()
 	return deck9_options
 end
 
--- Lines 11693-11704
+-- Lines 12643-12654
 function UpgradesTweakData:_cooldown_definitions()
 	self.definitions.cooldown_long_dis_revive = {
 		category = "cooldown",
@@ -14518,7 +14505,7 @@ function UpgradesTweakData:_cooldown_definitions()
 	}
 end
 
--- Lines 11723-11729
+-- Lines 12673-12679
 function UpgradesTweakData:_shape_charge_definitions()
 	self.definitions.shape_charge = {
 		category = "equipment",
@@ -14527,7 +14514,7 @@ function UpgradesTweakData:_shape_charge_definitions()
 	}
 end
 
--- Lines 11732-11830
+-- Lines 12682-12780
 function UpgradesTweakData:_m4_definitions()
 	self.definitions.m4 = {
 		category = "weapon",
@@ -14625,7 +14612,7 @@ function UpgradesTweakData:_m4_definitions()
 	end
 end
 
--- Lines 11833-11954
+-- Lines 12783-12904
 function UpgradesTweakData:_m14_definitions()
 	self.definitions.m14 = {
 		category = "weapon",
@@ -14753,7 +14740,7 @@ function UpgradesTweakData:_m14_definitions()
 	end
 end
 
--- Lines 11957-12078
+-- Lines 12907-13028
 function UpgradesTweakData:_mp5_definitions()
 	self.definitions.mp5 = {
 		category = "weapon",
@@ -14881,7 +14868,7 @@ function UpgradesTweakData:_mp5_definitions()
 	end
 end
 
--- Lines 12081-12176
+-- Lines 13031-13126
 function UpgradesTweakData:_mac11_definitions()
 	self.definitions.mac11 = {
 		category = "weapon",
@@ -14982,7 +14969,7 @@ function UpgradesTweakData:_mac11_definitions()
 	end
 end
 
--- Lines 12179-12272
+-- Lines 13129-13222
 function UpgradesTweakData:_remington_definitions()
 	self.definitions.r870_shotgun = {
 		category = "weapon",
@@ -15083,7 +15070,7 @@ function UpgradesTweakData:_remington_definitions()
 	end
 end
 
--- Lines 12275-12423
+-- Lines 13225-13373
 function UpgradesTweakData:_mossberg_definitions()
 	self.definitions.mossberg = {
 		category = "weapon",
@@ -15211,7 +15198,7 @@ function UpgradesTweakData:_mossberg_definitions()
 	end
 end
 
--- Lines 12429-12555
+-- Lines 13379-13505
 function UpgradesTweakData:_ak47_definitions()
 	self.definitions.ak47 = {
 		category = "weapon",
@@ -15339,7 +15326,7 @@ function UpgradesTweakData:_ak47_definitions()
 	end
 end
 
--- Lines 12559-12690
+-- Lines 13509-13640
 function UpgradesTweakData:_glock_definitions()
 	self.definitions.glock = {
 		category = "weapon",
@@ -15467,7 +15454,7 @@ function UpgradesTweakData:_glock_definitions()
 	end
 end
 
--- Lines 12694-12792
+-- Lines 13644-13742
 function UpgradesTweakData:_m79_definitions()
 	self.definitions.m79 = {
 		category = "weapon",
@@ -15568,7 +15555,7 @@ function UpgradesTweakData:_m79_definitions()
 	end
 end
 
--- Lines 12795-12896
+-- Lines 13745-13846
 function UpgradesTweakData:_akimbo_definitions()
 	self.definitions.akimbo_damage_multiplier_1 = {
 		category = "feature",
@@ -15675,7 +15662,7 @@ function UpgradesTweakData:_akimbo_definitions()
 	}
 end
 
--- Lines 12898-12961
+-- Lines 13848-13911
 function UpgradesTweakData:_first_aid_kit_definitions()
 	self.definitions.first_aid_kit = {
 		category = "equipment",
@@ -15744,7 +15731,7 @@ function UpgradesTweakData:_first_aid_kit_definitions()
 	}
 end
 
--- Lines 12963-12979
+-- Lines 13913-13929
 function UpgradesTweakData:_bodybags_bag_definitions()
 	self.definitions.bodybags_bag = {
 		category = "equipment",
@@ -15763,7 +15750,7 @@ function UpgradesTweakData:_bodybags_bag_definitions()
 	}
 end
 
--- Lines 12982-12990
+-- Lines 13932-13940
 function UpgradesTweakData:_grenade_crate_definitions()
 	self.definitions.grenade_crate = {
 		category = "equipment",
@@ -15774,7 +15761,7 @@ function UpgradesTweakData:_grenade_crate_definitions()
 	}
 end
 
--- Lines 12994-13002
+-- Lines 13944-13952
 function UpgradesTweakData:_spy_camera_definitions()
 	self.definitions.spy_camera = {
 		category = "equipment",
@@ -15785,7 +15772,7 @@ function UpgradesTweakData:_spy_camera_definitions()
 	}
 end
 
--- Lines 13006-13012
+-- Lines 13956-13962
 function UpgradesTweakData:_jowi_definitions()
 	self.definitions.jowi = {
 		category = "weapon",
@@ -15794,7 +15781,7 @@ function UpgradesTweakData:_jowi_definitions()
 	}
 end
 
--- Lines 13014-13020
+-- Lines 13964-13970
 function UpgradesTweakData:_x_1911_definitions()
 	self.definitions.x_1911 = {
 		category = "weapon",
@@ -15803,7 +15790,7 @@ function UpgradesTweakData:_x_1911_definitions()
 	}
 end
 
--- Lines 13022-13028
+-- Lines 13972-13978
 function UpgradesTweakData:_x_b92fs_definitions()
 	self.definitions.x_b92fs = {
 		category = "weapon",
@@ -15812,7 +15799,7 @@ function UpgradesTweakData:_x_b92fs_definitions()
 	}
 end
 
--- Lines 13030-13036
+-- Lines 13980-13986
 function UpgradesTweakData:_x_deagle_definitions()
 	self.definitions.x_deagle = {
 		category = "weapon",
@@ -15821,7 +15808,7 @@ function UpgradesTweakData:_x_deagle_definitions()
 	}
 end
 
--- Lines 13039-13046
+-- Lines 13989-13996
 function UpgradesTweakData:_g26_definitions()
 	self.definitions.g26 = {
 		category = "weapon",
@@ -15831,7 +15818,7 @@ function UpgradesTweakData:_g26_definitions()
 	}
 end
 
--- Lines 13048-13053
+-- Lines 13998-14003
 function UpgradesTweakData:_kabartanto_definitions()
 	self.definitions.kabartanto = {
 		category = "melee_weapon",
@@ -15839,7 +15826,7 @@ function UpgradesTweakData:_kabartanto_definitions()
 	}
 end
 
--- Lines 13055-13060
+-- Lines 14005-14010
 function UpgradesTweakData:_toothbrush_definitions()
 	self.definitions.toothbrush = {
 		category = "melee_weapon",
@@ -15847,7 +15834,7 @@ function UpgradesTweakData:_toothbrush_definitions()
 	}
 end
 
--- Lines 13062-13067
+-- Lines 14012-14017
 function UpgradesTweakData:_chef_definitions()
 	self.definitions.chef = {
 		category = "melee_weapon",
@@ -15855,7 +15842,7 @@ function UpgradesTweakData:_chef_definitions()
 	}
 end
 
--- Lines 13069-13075
+-- Lines 14019-14025
 function UpgradesTweakData:_x_g22c_definitions()
 	self.definitions.x_g22c = {
 		category = "weapon",
@@ -15864,7 +15851,7 @@ function UpgradesTweakData:_x_g22c_definitions()
 	}
 end
 
--- Lines 13076-13082
+-- Lines 14026-14032
 function UpgradesTweakData:_x_g17_definitions()
 	self.definitions.x_g17 = {
 		category = "weapon",
@@ -15873,7 +15860,7 @@ function UpgradesTweakData:_x_g17_definitions()
 	}
 end
 
--- Lines 13083-13089
+-- Lines 14033-14039
 function UpgradesTweakData:_x_usp_definitions()
 	self.definitions.x_usp = {
 		category = "weapon",
@@ -15882,7 +15869,7 @@ function UpgradesTweakData:_x_usp_definitions()
 	}
 end
 
--- Lines 13092-13099
+-- Lines 14042-14049
 function UpgradesTweakData:_flamethrower_mk2_definitions()
 	self.definitions.flamethrower_mk2 = {
 		category = "weapon",
@@ -15892,7 +15879,7 @@ function UpgradesTweakData:_flamethrower_mk2_definitions()
 	}
 end
 
--- Lines 13101-13108
+-- Lines 14051-14058
 function UpgradesTweakData:_m32_definitions()
 	self.definitions.m32 = {
 		category = "weapon",
@@ -15902,7 +15889,7 @@ function UpgradesTweakData:_m32_definitions()
 	}
 end
 
--- Lines 13110-13117
+-- Lines 14060-14067
 function UpgradesTweakData:_aa12_definitions()
 	self.definitions.aa12 = {
 		category = "weapon",
@@ -15912,7 +15899,7 @@ function UpgradesTweakData:_aa12_definitions()
 	}
 end
 
--- Lines 13119-13148
+-- Lines 14069-14098
 function UpgradesTweakData:_bbq_weapon_definitions()
 	self.definitions.fork = {
 		category = "melee_weapon",
@@ -15935,7 +15922,7 @@ function UpgradesTweakData:_bbq_weapon_definitions()
 	self.flame_bullet.show_blood_hits = false
 end
 
--- Lines 13151-13158
+-- Lines 14101-14108
 function UpgradesTweakData:_peacemaker_definitions()
 	self.definitions.peacemaker = {
 		category = "weapon",
@@ -15945,7 +15932,7 @@ function UpgradesTweakData:_peacemaker_definitions()
 	}
 end
 
--- Lines 13160-13167
+-- Lines 14110-14117
 function UpgradesTweakData:_winchester1874_definitions()
 	self.definitions.winchester1874 = {
 		category = "weapon",
@@ -15955,7 +15942,7 @@ function UpgradesTweakData:_winchester1874_definitions()
 	}
 end
 
--- Lines 13169-13176
+-- Lines 14119-14126
 function UpgradesTweakData:_plainsrider_definitions()
 	self.definitions.plainsrider = {
 		category = "weapon",
@@ -15965,7 +15952,7 @@ function UpgradesTweakData:_plainsrider_definitions()
 	}
 end
 
--- Lines 13179-13186
+-- Lines 14129-14136
 function UpgradesTweakData:_mateba_definitions()
 	self.definitions.mateba = {
 		category = "weapon",
@@ -15975,7 +15962,7 @@ function UpgradesTweakData:_mateba_definitions()
 	}
 end
 
--- Lines 13189-13196
+-- Lines 14139-14146
 function UpgradesTweakData:_asval_definitions()
 	self.definitions.asval = {
 		category = "weapon",
@@ -15985,7 +15972,7 @@ function UpgradesTweakData:_asval_definitions()
 	}
 end
 
--- Lines 13199-13206
+-- Lines 14149-14156
 function UpgradesTweakData:_sub2000_definitions()
 	self.definitions.sub2000 = {
 		category = "weapon",
@@ -15995,7 +15982,7 @@ function UpgradesTweakData:_sub2000_definitions()
 	}
 end
 
--- Lines 13209-13216
+-- Lines 14159-14166
 function UpgradesTweakData:_wa2000_definitions()
 	self.definitions.wa2000 = {
 		category = "weapon",
@@ -16005,7 +15992,7 @@ function UpgradesTweakData:_wa2000_definitions()
 	}
 end
 
--- Lines 13217-13224
+-- Lines 14167-14174
 function UpgradesTweakData:_polymer_definitions()
 	self.definitions.polymer = {
 		category = "weapon",
@@ -16015,7 +16002,7 @@ function UpgradesTweakData:_polymer_definitions()
 	}
 end
 
--- Lines 13225-13232
+-- Lines 14175-14182
 function UpgradesTweakData:_hunter_definitions()
 	self.definitions.hunter = {
 		category = "weapon",
@@ -16025,7 +16012,7 @@ function UpgradesTweakData:_hunter_definitions()
 	}
 end
 
--- Lines 13235-13242
+-- Lines 14185-14192
 function UpgradesTweakData:_baka_definitions()
 	self.definitions.baka = {
 		category = "weapon",
@@ -16035,7 +16022,7 @@ function UpgradesTweakData:_baka_definitions()
 	}
 end
 
--- Lines 13245-13252
+-- Lines 14195-14202
 function UpgradesTweakData:_arblast_weapon_definitions()
 	self.definitions.arblast = {
 		category = "weapon",
@@ -16045,7 +16032,7 @@ function UpgradesTweakData:_arblast_weapon_definitions()
 	}
 end
 
--- Lines 13253-13260
+-- Lines 14203-14210
 function UpgradesTweakData:_frankish_weapon_definitions()
 	self.definitions.frankish = {
 		category = "weapon",
@@ -16055,7 +16042,7 @@ function UpgradesTweakData:_frankish_weapon_definitions()
 	}
 end
 
--- Lines 13261-13268
+-- Lines 14211-14218
 function UpgradesTweakData:_long_weapon_definitions()
 	self.definitions.long = {
 		category = "weapon",
@@ -16065,7 +16052,7 @@ function UpgradesTweakData:_long_weapon_definitions()
 	}
 end
 
--- Lines 13271-13277
+-- Lines 14221-14227
 function UpgradesTweakData:_par_weapon_definitions()
 	self.definitions.par = {
 		category = "weapon",
@@ -16074,7 +16061,7 @@ function UpgradesTweakData:_par_weapon_definitions()
 	}
 end
 
--- Lines 13278-13285
+-- Lines 14228-14235
 function UpgradesTweakData:_sparrow_weapon_definitions()
 	self.definitions.sparrow = {
 		category = "weapon",
@@ -16084,7 +16071,7 @@ function UpgradesTweakData:_sparrow_weapon_definitions()
 	}
 end
 
--- Lines 13286-13293
+-- Lines 14236-14243
 function UpgradesTweakData:_model70_weapon_definitions()
 	self.definitions.model70 = {
 		category = "weapon",
@@ -16094,7 +16081,7 @@ function UpgradesTweakData:_model70_weapon_definitions()
 	}
 end
 
--- Lines 13296-13303
+-- Lines 14246-14253
 function UpgradesTweakData:_scout_weapon_definitions()
 	self.definitions.scout = {
 		category = "weapon",
@@ -16104,7 +16091,7 @@ function UpgradesTweakData:_scout_weapon_definitions()
 	}
 end
 
--- Lines 13317-13324
+-- Lines 14267-14274
 function UpgradesTweakData:_m37_weapon_definitions()
 	self.definitions.m37 = {
 		category = "weapon",
@@ -16114,7 +16101,7 @@ function UpgradesTweakData:_m37_weapon_definitions()
 	}
 end
 
--- Lines 13327-13334
+-- Lines 14277-14284
 function UpgradesTweakData:_china_weapon_definitions()
 	self.definitions.china = {
 		category = "weapon",
@@ -16124,7 +16111,7 @@ function UpgradesTweakData:_china_weapon_definitions()
 	}
 end
 
--- Lines 13337-13344
+-- Lines 14287-14294
 function UpgradesTweakData:_sr2_weapon_definitions()
 	self.definitions.sr2 = {
 		category = "weapon",
@@ -16134,7 +16121,7 @@ function UpgradesTweakData:_sr2_weapon_definitions()
 	}
 end
 
--- Lines 13345-13352
+-- Lines 14295-14302
 function UpgradesTweakData:_x_sr2_weapon_definitions()
 	self.definitions.x_sr2 = {
 		category = "weapon",
@@ -16144,7 +16131,7 @@ function UpgradesTweakData:_x_sr2_weapon_definitions()
 	}
 end
 
--- Lines 13355-13362
+-- Lines 14305-14312
 function UpgradesTweakData:_pl14_weapon_definitions()
 	self.definitions.pl14 = {
 		category = "weapon",
@@ -16154,7 +16141,7 @@ function UpgradesTweakData:_pl14_weapon_definitions()
 	}
 end
 
--- Lines 13365-13371
+-- Lines 14315-14321
 function UpgradesTweakData:_x_mp5_weapon_definitions()
 	self.definitions.x_mp5 = {
 		category = "weapon",
@@ -16163,7 +16150,7 @@ function UpgradesTweakData:_x_mp5_weapon_definitions()
 	}
 end
 
--- Lines 13372-13378
+-- Lines 14322-14328
 function UpgradesTweakData:_x_akmsu_weapon_definitions()
 	self.definitions.x_akmsu = {
 		category = "weapon",
@@ -16172,7 +16159,7 @@ function UpgradesTweakData:_x_akmsu_weapon_definitions()
 	}
 end
 
--- Lines 13381-13388
+-- Lines 14331-14338
 function UpgradesTweakData:_tecci_weapon_definitions()
 	self.definitions.tecci = {
 		category = "weapon",
@@ -16182,7 +16169,7 @@ function UpgradesTweakData:_tecci_weapon_definitions()
 	}
 end
 
--- Lines 13391-13398
+-- Lines 14341-14348
 function UpgradesTweakData:_hajk_weapon_definitions()
 	self.definitions.hajk = {
 		category = "weapon",
@@ -16192,7 +16179,7 @@ function UpgradesTweakData:_hajk_weapon_definitions()
 	}
 end
 
--- Lines 13401-13408
+-- Lines 14351-14358
 function UpgradesTweakData:_boot_weapon_definitions()
 	self.definitions.boot = {
 		category = "weapon",
@@ -16202,7 +16189,7 @@ function UpgradesTweakData:_boot_weapon_definitions()
 	}
 end
 
--- Lines 13411-13418
+-- Lines 14361-14368
 function UpgradesTweakData:_packrat_weapon_definitions()
 	self.definitions.packrat = {
 		category = "weapon",
@@ -16212,7 +16199,7 @@ function UpgradesTweakData:_packrat_weapon_definitions()
 	}
 end
 
--- Lines 13419-13426
+-- Lines 14369-14376
 function UpgradesTweakData:_schakal_weapon_definitions()
 	self.definitions.schakal = {
 		category = "weapon",
@@ -16222,7 +16209,7 @@ function UpgradesTweakData:_schakal_weapon_definitions()
 	}
 end
 
--- Lines 13427-13434
+-- Lines 14377-14384
 function UpgradesTweakData:_desertfox_weapon_definitions()
 	self.definitions.desertfox = {
 		category = "weapon",
@@ -16232,7 +16219,7 @@ function UpgradesTweakData:_desertfox_weapon_definitions()
 	}
 end
 
--- Lines 13435-13442
+-- Lines 14385-14392
 function UpgradesTweakData:_x_packrat_weapon_definitions()
 	self.definitions.x_packrat = {
 		category = "weapon",
@@ -16242,7 +16229,7 @@ function UpgradesTweakData:_x_packrat_weapon_definitions()
 	}
 end
 
--- Lines 13445-13452
+-- Lines 14395-14402
 function UpgradesTweakData:_rota_weapon_definitions()
 	self.definitions.rota = {
 		category = "weapon",
@@ -16252,7 +16239,7 @@ function UpgradesTweakData:_rota_weapon_definitions()
 	}
 end
 
--- Lines 13455-13462
+-- Lines 14405-14412
 function UpgradesTweakData:_arbiter_weapon_definitions()
 	self.definitions.arbiter = {
 		category = "weapon",
@@ -16262,7 +16249,7 @@ function UpgradesTweakData:_arbiter_weapon_definitions()
 	}
 end
 
--- Lines 13465-13472
+-- Lines 14415-14422
 function UpgradesTweakData:_ms3gl_weapon_definitions()
 	self.definitions.ms3gl = {
 		category = "weapon",
@@ -16272,7 +16259,7 @@ function UpgradesTweakData:_ms3gl_weapon_definitions()
 	}
 end
 
--- Lines 13475-13488
+-- Lines 14425-14438
 function UpgradesTweakData:_contraband_weapon_definitions()
 	self.definitions.contraband = {
 		category = "weapon",
@@ -16288,7 +16275,7 @@ function UpgradesTweakData:_contraband_weapon_definitions()
 	}
 end
 
--- Lines 13491-13498
+-- Lines 14441-14448
 function UpgradesTweakData:_ray_weapon_definitions()
 	self.definitions.ray = {
 		category = "weapon",
@@ -16298,7 +16285,7 @@ function UpgradesTweakData:_ray_weapon_definitions()
 	}
 end
 
--- Lines 13501-13508
+-- Lines 14451-14458
 function UpgradesTweakData:_tti_weapon_definitions()
 	self.definitions.tti = {
 		category = "weapon",
@@ -16308,7 +16295,7 @@ function UpgradesTweakData:_tti_weapon_definitions()
 	}
 end
 
--- Lines 13511-13518
+-- Lines 14461-14468
 function UpgradesTweakData:_victor_weapon_definitions()
 	self.definitions.victor = {
 		category = "weapon",
@@ -16318,7 +16305,7 @@ function UpgradesTweakData:_victor_weapon_definitions()
 	}
 end
 
--- Lines 13522-13529
+-- Lines 14472-14479
 function UpgradesTweakData:_siltstone_weapon_definitions()
 	self.definitions.siltstone = {
 		category = "weapon",
@@ -16328,7 +16315,7 @@ function UpgradesTweakData:_siltstone_weapon_definitions()
 	}
 end
 
--- Lines 13531-13538
+-- Lines 14481-14488
 function UpgradesTweakData:_flint_weapon_definitions()
 	self.definitions.flint = {
 		category = "weapon",
@@ -16338,7 +16325,7 @@ function UpgradesTweakData:_flint_weapon_definitions()
 	}
 end
 
--- Lines 13540-13547
+-- Lines 14490-14497
 function UpgradesTweakData:_coal_weapon_definitions()
 	self.definitions.coal = {
 		category = "weapon",
@@ -16348,7 +16335,7 @@ function UpgradesTweakData:_coal_weapon_definitions()
 	}
 end
 
--- Lines 13550-13557
+-- Lines 14500-14507
 function UpgradesTweakData:_lemming_weapon_definitions()
 	self.definitions.lemming = {
 		category = "weapon",
@@ -16358,7 +16345,7 @@ function UpgradesTweakData:_lemming_weapon_definitions()
 	}
 end
 
--- Lines 13560-13567
+-- Lines 14510-14517
 function UpgradesTweakData:_rsh12_weapon_definitions()
 	self.definitions.rsh12 = {
 		category = "weapon",
@@ -16368,7 +16355,7 @@ function UpgradesTweakData:_rsh12_weapon_definitions()
 	}
 end
 
--- Lines 13568-13581
+-- Lines 14518-14531
 function UpgradesTweakData:_type54_weapon_definitions()
 	self.definitions.type54 = {
 		category = "weapon",
@@ -16384,7 +16371,7 @@ function UpgradesTweakData:_type54_weapon_definitions()
 	}
 end
 
--- Lines 13582-13596
+-- Lines 14532-14546
 function UpgradesTweakData:_x_type54_weapon_definitions()
 	self.definitions.x_type54 = {
 		category = "weapon",
@@ -16400,7 +16387,7 @@ function UpgradesTweakData:_x_type54_weapon_definitions()
 	}
 end
 
--- Lines 13599-13610
+-- Lines 14549-14560
 function UpgradesTweakData:_chinchilla_weapon_definitions()
 	self.definitions.chinchilla = {
 		category = "weapon",
@@ -16410,7 +16397,7 @@ function UpgradesTweakData:_chinchilla_weapon_definitions()
 	}
 end
 
--- Lines 13611-13622
+-- Lines 14561-14572
 function UpgradesTweakData:_x_chinchilla_weapon_definitions()
 	self.definitions.x_chinchilla = {
 		category = "weapon",
@@ -16420,7 +16407,7 @@ function UpgradesTweakData:_x_chinchilla_weapon_definitions()
 	}
 end
 
--- Lines 13625-13632
+-- Lines 14575-14582
 function UpgradesTweakData:_m590_weapon_definitions()
 	self.definitions.m590 = {
 		category = "weapon",
@@ -16430,7 +16417,7 @@ function UpgradesTweakData:_m590_weapon_definitions()
 	}
 end
 
--- Lines 13633-13640
+-- Lines 14583-14590
 function UpgradesTweakData:_vityaz_weapon_definitions()
 	self.definitions.vityaz = {
 		category = "weapon",
@@ -16440,7 +16427,7 @@ function UpgradesTweakData:_vityaz_weapon_definitions()
 	}
 end
 
--- Lines 13641-13648
+-- Lines 14591-14598
 function UpgradesTweakData:_x_vityaz_weapon_definitions()
 	self.definitions.x_vityaz = {
 		category = "weapon",
@@ -16450,7 +16437,7 @@ function UpgradesTweakData:_x_vityaz_weapon_definitions()
 	}
 end
 
--- Lines 13649-13656
+-- Lines 14599-14606
 function UpgradesTweakData:_m1911_weapon_definitions()
 	self.definitions.m1911 = {
 		category = "weapon",
@@ -16460,7 +16447,7 @@ function UpgradesTweakData:_m1911_weapon_definitions()
 	}
 end
 
--- Lines 13657-13664
+-- Lines 14607-14614
 function UpgradesTweakData:_x_m1911_weapon_definitions()
 	self.definitions.x_m1911 = {
 		category = "weapon",
@@ -16470,7 +16457,7 @@ function UpgradesTweakData:_x_m1911_weapon_definitions()
 	}
 end
 
--- Lines 13667-13674
+-- Lines 14617-14624
 function UpgradesTweakData:_ultima_weapon_definitions()
 	self.definitions.ultima = {
 		category = "weapon",
@@ -16480,7 +16467,7 @@ function UpgradesTweakData:_ultima_weapon_definitions()
 	}
 end
 
--- Lines 13675-13682
+-- Lines 14625-14632
 function UpgradesTweakData:_fmg9_weapon_definitions()
 	self.definitions.fmg9 = {
 		category = "weapon",
@@ -16490,7 +16477,7 @@ function UpgradesTweakData:_fmg9_weapon_definitions()
 	}
 end
 
--- Lines 13683-13690
+-- Lines 14633-14640
 function UpgradesTweakData:_maxim9_weapon_definitions()
 	self.definitions.maxim9 = {
 		category = "weapon",
@@ -16500,7 +16487,7 @@ function UpgradesTweakData:_maxim9_weapon_definitions()
 	}
 end
 
--- Lines 13691-13698
+-- Lines 14641-14648
 function UpgradesTweakData:_x_maxim9_weapon_definitions()
 	self.definitions.x_maxim9 = {
 		category = "weapon",
@@ -16510,7 +16497,7 @@ function UpgradesTweakData:_x_maxim9_weapon_definitions()
 	}
 end
 
--- Lines 13701-13715
+-- Lines 14651-14665
 function UpgradesTweakData:_groza_weapon_definitions()
 	self.definitions.groza = {
 		category = "weapon",
@@ -16526,7 +16513,7 @@ function UpgradesTweakData:_groza_weapon_definitions()
 	}
 end
 
--- Lines 13716-13723
+-- Lines 14666-14673
 function UpgradesTweakData:_pm9_weapon_definitions()
 	self.definitions.pm9 = {
 		category = "weapon",
@@ -16536,7 +16523,7 @@ function UpgradesTweakData:_pm9_weapon_definitions()
 	}
 end
 
--- Lines 13724-13731
+-- Lines 14674-14681
 function UpgradesTweakData:_x_pm9_weapon_definitions()
 	self.definitions.x_pm9 = {
 		category = "weapon",
@@ -16546,7 +16533,7 @@ function UpgradesTweakData:_x_pm9_weapon_definitions()
 	}
 end
 
--- Lines 13732-13739
+-- Lines 14682-14689
 function UpgradesTweakData:_qbu88_weapon_definitions()
 	self.definitions.qbu88 = {
 		category = "weapon",
@@ -16556,7 +16543,7 @@ function UpgradesTweakData:_qbu88_weapon_definitions()
 	}
 end
 
--- Lines 13743-13750
+-- Lines 14693-14700
 function UpgradesTweakData:_shak12_weapon_definitions()
 	self.definitions.shak12 = {
 		category = "weapon",
@@ -16566,7 +16553,7 @@ function UpgradesTweakData:_shak12_weapon_definitions()
 	}
 end
 
--- Lines 13754-13761
+-- Lines 14704-14711
 function UpgradesTweakData:_hailstorm_weapon_definitions()
 	self.definitions.hailstorm = {
 		category = "weapon",
@@ -16576,7 +16563,7 @@ function UpgradesTweakData:_hailstorm_weapon_definitions()
 	}
 end
 
--- Lines 13762-13769
+-- Lines 14712-14719
 function UpgradesTweakData:_korth_weapon_definitions()
 	self.definitions.korth = {
 		category = "weapon",
@@ -16586,7 +16573,7 @@ function UpgradesTweakData:_korth_weapon_definitions()
 	}
 end
 
--- Lines 13770-13777
+-- Lines 14720-14727
 function UpgradesTweakData:_x_korth_weapon_definitions()
 	self.definitions.x_korth = {
 		category = "weapon",
@@ -16596,7 +16583,7 @@ function UpgradesTweakData:_x_korth_weapon_definitions()
 	}
 end
 
--- Lines 13778-13785
+-- Lines 14728-14735
 function UpgradesTweakData:_x_sko12_weapon_definitions()
 	self.definitions.x_sko12 = {
 		category = "weapon",
@@ -16606,7 +16593,7 @@ function UpgradesTweakData:_x_sko12_weapon_definitions()
 	}
 end
 
--- Lines 13789-13796
+-- Lines 14739-14746
 function UpgradesTweakData:_sbl_weapon_definitions()
 	self.definitions.sbl = {
 		category = "weapon",
@@ -16616,7 +16603,7 @@ function UpgradesTweakData:_sbl_weapon_definitions()
 	}
 end
 
--- Lines 13797-13804
+-- Lines 14747-14754
 function UpgradesTweakData:_m1897_weapon_definitions()
 	self.definitions.m1897 = {
 		category = "weapon",
@@ -16626,7 +16613,7 @@ function UpgradesTweakData:_m1897_weapon_definitions()
 	}
 end
 
--- Lines 13805-13812
+-- Lines 14755-14762
 function UpgradesTweakData:_model3_weapon_definitions()
 	self.definitions.model3 = {
 		category = "weapon",
@@ -16636,7 +16623,7 @@ function UpgradesTweakData:_model3_weapon_definitions()
 	}
 end
 
--- Lines 13813-13820
+-- Lines 14763-14770
 function UpgradesTweakData:_x_model3_weapon_definitions()
 	self.definitions.x_model3 = {
 		category = "weapon",
@@ -16646,7 +16633,7 @@ function UpgradesTweakData:_x_model3_weapon_definitions()
 	}
 end
 
--- Lines 13824-13830
+-- Lines 14774-14780
 function UpgradesTweakData:_shepheard_weapon_definitions()
 	self.definitions.shepheard = {
 		category = "weapon",
@@ -16655,7 +16642,7 @@ function UpgradesTweakData:_shepheard_weapon_definitions()
 	}
 end
 
--- Lines 13831-13837
+-- Lines 14781-14787
 function UpgradesTweakData:_x_shepheard_weapon_definitions()
 	self.definitions.x_shepheard = {
 		category = "weapon",
@@ -16664,7 +16651,7 @@ function UpgradesTweakData:_x_shepheard_weapon_definitions()
 	}
 end
 
--- Lines 13841-13847
+-- Lines 14791-14797
 function UpgradesTweakData:_breech_weapon_definitions()
 	self.definitions.breech = {
 		category = "weapon",
@@ -16673,7 +16660,7 @@ function UpgradesTweakData:_breech_weapon_definitions()
 	}
 end
 
--- Lines 13849-13855
+-- Lines 14799-14805
 function UpgradesTweakData:_ching_weapon_definitions()
 	self.definitions.ching = {
 		category = "weapon",
@@ -16682,7 +16669,7 @@ function UpgradesTweakData:_ching_weapon_definitions()
 	}
 end
 
--- Lines 13857-13863
+-- Lines 14807-14813
 function UpgradesTweakData:_erma_weapon_definitions()
 	self.definitions.erma = {
 		category = "weapon",
@@ -16691,7 +16678,7 @@ function UpgradesTweakData:_erma_weapon_definitions()
 	}
 end
 
--- Lines 13867-13874
+-- Lines 14817-14824
 function UpgradesTweakData:_ecp_weapon_definitions()
 	self.definitions.ecp = {
 		category = "weapon",
@@ -16701,7 +16688,7 @@ function UpgradesTweakData:_ecp_weapon_definitions()
 	}
 end
 
--- Lines 13878-13884
+-- Lines 14828-14834
 function UpgradesTweakData:_shrew_weapon_definitions()
 	self.definitions.shrew = {
 		category = "weapon",
@@ -16710,7 +16697,7 @@ function UpgradesTweakData:_shrew_weapon_definitions()
 	}
 end
 
--- Lines 13886-13892
+-- Lines 14836-14842
 function UpgradesTweakData:_x_shrew_weapon_definitions()
 	self.definitions.x_shrew = {
 		category = "weapon",
@@ -16719,7 +16706,7 @@ function UpgradesTweakData:_x_shrew_weapon_definitions()
 	}
 end
 
--- Lines 13896-13902
+-- Lines 14846-14852
 function UpgradesTweakData:_basset_weapon_definitions()
 	self.definitions.basset = {
 		category = "weapon",
@@ -16728,7 +16715,7 @@ function UpgradesTweakData:_basset_weapon_definitions()
 	}
 end
 
--- Lines 13903-13909
+-- Lines 14853-14859
 function UpgradesTweakData:_x_basset_weapon_definitions()
 	self.definitions.x_basset = {
 		category = "weapon",
@@ -16737,7 +16724,7 @@ function UpgradesTweakData:_x_basset_weapon_definitions()
 	}
 end
 
--- Lines 13912-13919
+-- Lines 14862-14869
 function UpgradesTweakData:_corgi_weapon_definitions()
 	self.definitions.corgi = {
 		category = "weapon",
@@ -16747,7 +16734,7 @@ function UpgradesTweakData:_corgi_weapon_definitions()
 	}
 end
 
--- Lines 13922-13928
+-- Lines 14872-14878
 function UpgradesTweakData:_slap_weapon_definitions()
 	self.definitions.slap = {
 		category = "weapon",
@@ -16756,7 +16743,7 @@ function UpgradesTweakData:_slap_weapon_definitions()
 	}
 end
 
--- Lines 13936-13942
+-- Lines 14886-14892
 function UpgradesTweakData:_x_coal_weapon_definitions()
 	self.definitions.x_coal = {
 		category = "weapon",
@@ -16765,7 +16752,7 @@ function UpgradesTweakData:_x_coal_weapon_definitions()
 	}
 end
 
--- Lines 13943-13949
+-- Lines 14893-14899
 function UpgradesTweakData:_x_baka_weapon_definitions()
 	self.definitions.x_baka = {
 		category = "weapon",
@@ -16774,7 +16761,7 @@ function UpgradesTweakData:_x_baka_weapon_definitions()
 	}
 end
 
--- Lines 13950-13956
+-- Lines 14900-14906
 function UpgradesTweakData:_x_cobray_weapon_definitions()
 	self.definitions.x_cobray = {
 		category = "weapon",
@@ -16783,7 +16770,7 @@ function UpgradesTweakData:_x_cobray_weapon_definitions()
 	}
 end
 
--- Lines 13958-13964
+-- Lines 14908-14914
 function UpgradesTweakData:_x_erma_weapon_definitions()
 	self.definitions.x_erma = {
 		category = "weapon",
@@ -16792,7 +16779,7 @@ function UpgradesTweakData:_x_erma_weapon_definitions()
 	}
 end
 
--- Lines 13966-13972
+-- Lines 14916-14922
 function UpgradesTweakData:_x_hajk_weapon_definitions()
 	self.definitions.x_hajk = {
 		category = "weapon",
@@ -16801,7 +16788,7 @@ function UpgradesTweakData:_x_hajk_weapon_definitions()
 	}
 end
 
--- Lines 13973-13979
+-- Lines 14923-14929
 function UpgradesTweakData:_x_m45_weapon_definitions()
 	self.definitions.x_m45 = {
 		category = "weapon",
@@ -16810,7 +16797,7 @@ function UpgradesTweakData:_x_m45_weapon_definitions()
 	}
 end
 
--- Lines 13980-13986
+-- Lines 14930-14936
 function UpgradesTweakData:_x_m1928_weapon_definitions()
 	self.definitions.x_m1928 = {
 		category = "weapon",
@@ -16819,7 +16806,7 @@ function UpgradesTweakData:_x_m1928_weapon_definitions()
 	}
 end
 
--- Lines 13987-13993
+-- Lines 14937-14943
 function UpgradesTweakData:_x_mac10_weapon_definitions()
 	self.definitions.x_mac10 = {
 		category = "weapon",
@@ -16828,7 +16815,7 @@ function UpgradesTweakData:_x_mac10_weapon_definitions()
 	}
 end
 
--- Lines 13994-14000
+-- Lines 14944-14950
 function UpgradesTweakData:_x_mp7_weapon_definitions()
 	self.definitions.x_mp7 = {
 		category = "weapon",
@@ -16837,7 +16824,7 @@ function UpgradesTweakData:_x_mp7_weapon_definitions()
 	}
 end
 
--- Lines 14001-14007
+-- Lines 14951-14957
 function UpgradesTweakData:_x_mp9_weapon_definitions()
 	self.definitions.x_mp9 = {
 		category = "weapon",
@@ -16846,7 +16833,7 @@ function UpgradesTweakData:_x_mp9_weapon_definitions()
 	}
 end
 
--- Lines 14008-14014
+-- Lines 14958-14964
 function UpgradesTweakData:_x_olympic_weapon_definitions()
 	self.definitions.x_olympic = {
 		category = "weapon",
@@ -16855,7 +16842,7 @@ function UpgradesTweakData:_x_olympic_weapon_definitions()
 	}
 end
 
--- Lines 14015-14021
+-- Lines 14965-14971
 function UpgradesTweakData:_x_p90_weapon_definitions()
 	self.definitions.x_p90 = {
 		category = "weapon",
@@ -16864,7 +16851,7 @@ function UpgradesTweakData:_x_p90_weapon_definitions()
 	}
 end
 
--- Lines 14022-14028
+-- Lines 14972-14978
 function UpgradesTweakData:_x_polymer_weapon_definitions()
 	self.definitions.x_polymer = {
 		category = "weapon",
@@ -16873,7 +16860,7 @@ function UpgradesTweakData:_x_polymer_weapon_definitions()
 	}
 end
 
--- Lines 14029-14035
+-- Lines 14979-14985
 function UpgradesTweakData:_x_schakal_weapon_definitions()
 	self.definitions.x_schakal = {
 		category = "weapon",
@@ -16882,7 +16869,7 @@ function UpgradesTweakData:_x_schakal_weapon_definitions()
 	}
 end
 
--- Lines 14036-14042
+-- Lines 14986-14992
 function UpgradesTweakData:_x_scorpion_weapon_definitions()
 	self.definitions.x_scorpion = {
 		category = "weapon",
@@ -16891,7 +16878,7 @@ function UpgradesTweakData:_x_scorpion_weapon_definitions()
 	}
 end
 
--- Lines 14043-14049
+-- Lines 14993-14999
 function UpgradesTweakData:_x_sterling_weapon_definitions()
 	self.definitions.x_sterling = {
 		category = "weapon",
@@ -16900,7 +16887,7 @@ function UpgradesTweakData:_x_sterling_weapon_definitions()
 	}
 end
 
--- Lines 14050-14056
+-- Lines 15000-15006
 function UpgradesTweakData:_x_tec9_weapon_definitions()
 	self.definitions.x_tec9 = {
 		category = "weapon",
@@ -16909,7 +16896,7 @@ function UpgradesTweakData:_x_tec9_weapon_definitions()
 	}
 end
 
--- Lines 14057-14063
+-- Lines 15007-15013
 function UpgradesTweakData:_x_uzi_weapon_definitions()
 	self.definitions.x_uzi = {
 		category = "weapon",
@@ -16918,7 +16905,7 @@ function UpgradesTweakData:_x_uzi_weapon_definitions()
 	}
 end
 
--- Lines 14068-14074
+-- Lines 15018-15024
 function UpgradesTweakData:_x_2006m_weapon_definitions()
 	self.definitions.x_2006m = {
 		category = "weapon",
@@ -16927,7 +16914,7 @@ function UpgradesTweakData:_x_2006m_weapon_definitions()
 	}
 end
 
--- Lines 14076-14082
+-- Lines 15026-15032
 function UpgradesTweakData:_x_breech_weapon_definitions()
 	self.definitions.x_breech = {
 		category = "weapon",
@@ -16936,7 +16923,7 @@ function UpgradesTweakData:_x_breech_weapon_definitions()
 	}
 end
 
--- Lines 14084-14090
+-- Lines 15034-15040
 function UpgradesTweakData:_x_c96_weapon_definitions()
 	self.definitions.x_c96 = {
 		category = "weapon",
@@ -16945,7 +16932,7 @@ function UpgradesTweakData:_x_c96_weapon_definitions()
 	}
 end
 
--- Lines 14091-14097
+-- Lines 15041-15047
 function UpgradesTweakData:_x_g18c_weapon_definitions()
 	self.definitions.x_g18c = {
 		category = "weapon",
@@ -16954,7 +16941,7 @@ function UpgradesTweakData:_x_g18c_weapon_definitions()
 	}
 end
 
--- Lines 14098-14104
+-- Lines 15048-15054
 function UpgradesTweakData:_x_hs2000_weapon_definitions()
 	self.definitions.x_hs2000 = {
 		category = "weapon",
@@ -16963,7 +16950,7 @@ function UpgradesTweakData:_x_hs2000_weapon_definitions()
 	}
 end
 
--- Lines 14105-14111
+-- Lines 15055-15061
 function UpgradesTweakData:_x_lemming_weapon_definitions()
 	self.definitions.x_lemming = {
 		category = "weapon",
@@ -16972,7 +16959,7 @@ function UpgradesTweakData:_x_lemming_weapon_definitions()
 	}
 end
 
--- Lines 14112-14118
+-- Lines 15062-15068
 function UpgradesTweakData:_x_p226_weapon_definitions()
 	self.definitions.x_p226 = {
 		category = "weapon",
@@ -16981,7 +16968,7 @@ function UpgradesTweakData:_x_p226_weapon_definitions()
 	}
 end
 
--- Lines 14119-14125
+-- Lines 15069-15075
 function UpgradesTweakData:_x_peacemaker_weapon_definitions()
 	self.definitions.x_peacemaker = {
 		category = "weapon",
@@ -16990,7 +16977,7 @@ function UpgradesTweakData:_x_peacemaker_weapon_definitions()
 	}
 end
 
--- Lines 14126-14132
+-- Lines 15076-15082
 function UpgradesTweakData:_x_pl14_weapon_definitions()
 	self.definitions.x_pl14 = {
 		category = "weapon",
@@ -16999,7 +16986,7 @@ function UpgradesTweakData:_x_pl14_weapon_definitions()
 	}
 end
 
--- Lines 14133-14139
+-- Lines 15083-15089
 function UpgradesTweakData:_x_ppk_weapon_definitions()
 	self.definitions.x_ppk = {
 		category = "weapon",
@@ -17008,7 +16995,7 @@ function UpgradesTweakData:_x_ppk_weapon_definitions()
 	}
 end
 
--- Lines 14140-14146
+-- Lines 15090-15096
 function UpgradesTweakData:_x_rage_weapon_definitions()
 	self.definitions.x_rage = {
 		category = "weapon",
@@ -17017,7 +17004,7 @@ function UpgradesTweakData:_x_rage_weapon_definitions()
 	}
 end
 
--- Lines 14147-14153
+-- Lines 15097-15103
 function UpgradesTweakData:_x_sparrow_weapon_definitions()
 	self.definitions.x_sparrow = {
 		category = "weapon",
@@ -17026,7 +17013,7 @@ function UpgradesTweakData:_x_sparrow_weapon_definitions()
 	}
 end
 
--- Lines 14155-14161
+-- Lines 15105-15111
 function UpgradesTweakData:_x_judge_weapon_definitions()
 	self.definitions.x_judge = {
 		category = "weapon",
@@ -17035,7 +17022,7 @@ function UpgradesTweakData:_x_judge_weapon_definitions()
 	}
 end
 
--- Lines 14162-14168
+-- Lines 15112-15118
 function UpgradesTweakData:_x_rota_weapon_definitions()
 	self.definitions.x_rota = {
 		category = "weapon",
@@ -17044,7 +17031,7 @@ function UpgradesTweakData:_x_rota_weapon_definitions()
 	}
 end
 
--- Lines 14172-14179
+-- Lines 15122-15129
 function UpgradesTweakData:_shuno_weapon_definitions()
 	self.definitions.shuno = {
 		category = "weapon",
@@ -17054,7 +17041,7 @@ function UpgradesTweakData:_shuno_weapon_definitions()
 	}
 end
 
--- Lines 14183-14190
+-- Lines 15133-15140
 function UpgradesTweakData:_system_weapon_definitions()
 	self.definitions.system = {
 		category = "weapon",
@@ -17063,7 +17050,7 @@ function UpgradesTweakData:_system_weapon_definitions()
 	}
 end
 
--- Lines 14194-14201
+-- Lines 15144-15151
 function UpgradesTweakData:_money_weapon_definitions()
 	self.definitions.money = {
 		category = "weapon",
@@ -17073,7 +17060,7 @@ function UpgradesTweakData:_money_weapon_definitions()
 	}
 end
 
--- Lines 14205-14211
+-- Lines 15155-15161
 function UpgradesTweakData:_komodo_weapon_definitions()
 	self.definitions.komodo = {
 		category = "weapon",
@@ -17082,7 +17069,7 @@ function UpgradesTweakData:_komodo_weapon_definitions()
 	}
 end
 
--- Lines 14215-14221
+-- Lines 15165-15171
 function UpgradesTweakData:_elastic_weapon_definitions()
 	self.definitions.elastic = {
 		category = "weapon",
@@ -17091,7 +17078,7 @@ function UpgradesTweakData:_elastic_weapon_definitions()
 	}
 end
 
--- Lines 14224-14230
+-- Lines 15174-15180
 function UpgradesTweakData:_legacy_weapon_definitions()
 	self.definitions.legacy = {
 		category = "weapon",
@@ -17100,7 +17087,7 @@ function UpgradesTweakData:_legacy_weapon_definitions()
 	}
 end
 
--- Lines 14231-14237
+-- Lines 15181-15187
 function UpgradesTweakData:_x_legacy_weapon_definitions()
 	self.definitions.x_legacy = {
 		category = "weapon",
@@ -17109,7 +17096,7 @@ function UpgradesTweakData:_x_legacy_weapon_definitions()
 	}
 end
 
--- Lines 14241-14247
+-- Lines 15191-15197
 function UpgradesTweakData:_coach_weapon_definitions()
 	self.definitions.coach = {
 		category = "weapon",
@@ -17118,7 +17105,7 @@ function UpgradesTweakData:_coach_weapon_definitions()
 	}
 end
 
--- Lines 14250-14257
+-- Lines 15200-15207
 function UpgradesTweakData:_beer_weapon_definitions()
 	self.definitions.beer = {
 		category = "weapon",
@@ -17128,7 +17115,7 @@ function UpgradesTweakData:_beer_weapon_definitions()
 	}
 end
 
--- Lines 14258-14265
+-- Lines 15208-15215
 function UpgradesTweakData:_x_beer_weapon_definitions()
 	self.definitions.x_beer = {
 		category = "weapon",
@@ -17138,7 +17125,7 @@ function UpgradesTweakData:_x_beer_weapon_definitions()
 	}
 end
 
--- Lines 14266-14273
+-- Lines 15216-15223
 function UpgradesTweakData:_czech_weapon_definitions()
 	self.definitions.czech = {
 		category = "weapon",
@@ -17148,7 +17135,7 @@ function UpgradesTweakData:_czech_weapon_definitions()
 	}
 end
 
--- Lines 14274-14281
+-- Lines 15224-15231
 function UpgradesTweakData:_x_czech_weapon_definitions()
 	self.definitions.x_czech = {
 		category = "weapon",
@@ -17158,7 +17145,7 @@ function UpgradesTweakData:_x_czech_weapon_definitions()
 	}
 end
 
--- Lines 14282-14289
+-- Lines 15232-15239
 function UpgradesTweakData:_stech_weapon_definitions()
 	self.definitions.stech = {
 		category = "weapon",
@@ -17168,7 +17155,7 @@ function UpgradesTweakData:_stech_weapon_definitions()
 	}
 end
 
--- Lines 14290-14297
+-- Lines 15240-15247
 function UpgradesTweakData:_x_stech_weapon_definitions()
 	self.definitions.x_stech = {
 		category = "weapon",
@@ -17178,7 +17165,7 @@ function UpgradesTweakData:_x_stech_weapon_definitions()
 	}
 end
 
--- Lines 14301-14308
+-- Lines 15251-15258
 function UpgradesTweakData:_holt_weapon_definitions()
 	self.definitions.holt = {
 		category = "weapon",
@@ -17188,7 +17175,7 @@ function UpgradesTweakData:_holt_weapon_definitions()
 	}
 end
 
--- Lines 14309-14316
+-- Lines 15259-15266
 function UpgradesTweakData:_x_holt_weapon_definitions()
 	self.definitions.x_holt = {
 		category = "weapon",
@@ -17198,7 +17185,7 @@ function UpgradesTweakData:_x_holt_weapon_definitions()
 	}
 end
 
--- Lines 14317-14324
+-- Lines 15267-15274
 function UpgradesTweakData:_m60_weapon_definitions()
 	self.definitions.m60 = {
 		category = "weapon",
@@ -17208,7 +17195,7 @@ function UpgradesTweakData:_m60_weapon_definitions()
 	}
 end
 
--- Lines 14325-14332
+-- Lines 15275-15282
 function UpgradesTweakData:_r700_weapon_definitions()
 	self.definitions.r700 = {
 		category = "weapon",
@@ -17218,7 +17205,7 @@ function UpgradesTweakData:_r700_weapon_definitions()
 	}
 end
 
--- Lines 14336-14342
+-- Lines 15286-15292
 function UpgradesTweakData:_welrod_weapon_definitions()
 	self.definitions.welrod = {
 		category = "weapon",
@@ -17227,7 +17214,7 @@ function UpgradesTweakData:_welrod_weapon_definitions()
 	}
 end
 
--- Lines 14346-14359
+-- Lines 15296-15309
 function UpgradesTweakData:_pmm_weapon_definitions()
 	self.definitions.pmm = {
 		category = "weapon",
@@ -17243,7 +17230,7 @@ function UpgradesTweakData:_pmm_weapon_definitions()
 	}
 end
 
--- Lines 14361-14368
+-- Lines 15311-15318
 function UpgradesTweakData:_speen_weapon_definitions()
 	self.definitions.speen = {
 		category = "weapon",
@@ -17253,7 +17240,7 @@ function UpgradesTweakData:_speen_weapon_definitions()
 	}
 end
 
--- Lines 14370-14377
+-- Lines 15320-15327
 function UpgradesTweakData:_dart_weapon_definitions()
 	self.definitions.dart = {
 		category = "weapon",
@@ -17263,7 +17250,7 @@ function UpgradesTweakData:_dart_weapon_definitions()
 	}
 end
 
--- Lines 14381-14388
+-- Lines 15331-15338
 function UpgradesTweakData:_flun_weapon_definitions()
 	self.definitions.flun = {
 		category = "weapon",
@@ -17272,7 +17259,7 @@ function UpgradesTweakData:_flun_weapon_definitions()
 	}
 end
 
--- Lines 14392-14399
+-- Lines 15342-15349
 function UpgradesTweakData:_bleckert_weapon_definitions()
 	self.definitions.bleckert = {
 		category = "weapon",

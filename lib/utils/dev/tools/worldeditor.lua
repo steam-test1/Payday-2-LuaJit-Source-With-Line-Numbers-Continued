@@ -236,7 +236,7 @@ function WorldEditor:project_prestart_up(with_mission)
 	managers.hud:on_simulation_started()
 end
 
--- Lines 224-265
+-- Lines 224-264
 function WorldEditor:project_run_simulation(simulation_mode)
 	local with_mission = simulation_mode == self.SIMULATION_MODE.MISSION or simulation_mode == self.SIMULATION_MODE.BRIEFING
 
@@ -253,6 +253,7 @@ function WorldEditor:project_run_simulation(simulation_mode)
 	managers.motion_path:on_simulation_started()
 	managers.music:check_music_switch()
 	managers.music:post_event(tweak_data.levels:get_music_event("intro"))
+	managers.mission:set_mission_filter(self:layer("Level Settings"):get_mission_filter())
 	managers.mission:on_simulation_started()
 
 	if not with_mission then
@@ -272,20 +273,18 @@ function WorldEditor:project_run_simulation(simulation_mode)
 		managers.network:session():spawn_players()
 	end
 
-	managers.mission:set_mission_filter(self:layer("Level Settings"):get_mission_filter())
-
 	local level_id = self:layer("Level Settings"):get_setting("simulation_level_id")
 
 	managers.game_play_central:setup_effects(level_id)
 	managers.game_play_central:start_heist_timer()
 end
 
--- Lines 267-269
+-- Lines 266-268
 function WorldEditor:_project_check_unit(unit)
 	return
 end
 
--- Lines 273-306
+-- Lines 272-304
 function WorldEditor:project_stop_simulation()
 	managers.hud:on_simulation_ended()
 	managers.hud:clear_waypoints()
@@ -316,7 +315,7 @@ function WorldEditor:project_stop_simulation()
 	managers.dot:on_simulation_ended()
 end
 
--- Lines 310-322
+-- Lines 308-320
 function WorldEditor:project_clear_units()
 	managers.groupai:state():set_AI_enabled(false)
 
@@ -333,22 +332,22 @@ function WorldEditor:project_clear_units()
 	end
 end
 
--- Lines 327-328
+-- Lines 325-326
 function WorldEditor:project_clear_layers()
 	return
 end
 
--- Lines 333-334
+-- Lines 331-332
 function WorldEditor:project_recreate_layers()
 	return
 end
 
--- Lines 337-342
+-- Lines 335-340
 function WorldEditor:_project_add_menubar()
 	return
 end
 
--- Lines 352-358
+-- Lines 350-356
 function WorldEditor:_project_add_left_upper_toolbar_tool()
 	self._left_upper_toolbar:add_tool("TB_INVENTORY_ICON_CREATOR", "Icon Creator", CoreEWS.image_path("world_editor/icon_creator_16x16.png"), "Material Editor")
 	self._left_upper_toolbar:connect("TB_INVENTORY_ICON_CREATOR", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_open_inventory_icon_creator"), nil)
@@ -356,34 +355,34 @@ function WorldEditor:_project_add_left_upper_toolbar_tool()
 	self._left_upper_toolbar:connect("TB_PREPLANNING_HELPER", "EVT_COMMAND_MENU_SELECTED", callback(self, self, "_open_preplanning_helper"), nil)
 end
 
--- Lines 360-363
+-- Lines 358-361
 function WorldEditor:_open_inventory_icon_creator()
 	self._inventory_icon_creator = self._inventory_icon_creator or InventoryIconCreator:new()
 
 	self._inventory_icon_creator:show_ews()
 end
 
--- Lines 365-368
+-- Lines 363-366
 function WorldEditor:_open_preplanning_helper()
 	self._preplanning_helper = self._preplanning_helper or PreplanningHelper:new()
 
 	self._preplanning_helper:show_ews()
 end
 
--- Lines 370-373
+-- Lines 368-371
 function WorldEditor:open()
 	WorldEditor.super.open(self)
 	managers.menu_component:set_rev_visible(self._enable_revision_number)
 end
 
--- Lines 375-379
+-- Lines 373-377
 function WorldEditor:on_enable_revision_number(changed, value)
 	if changed then
 		managers.menu_component:set_rev_visible(value)
 	end
 end
 
--- Lines 381-386
+-- Lines 379-384
 function WorldEditor:deleted_unit(unit)
 	WorldEditor.super.deleted_unit(self, unit)
 
@@ -392,7 +391,7 @@ function WorldEditor:deleted_unit(unit)
 	end
 end
 
--- Lines 388-393
+-- Lines 386-391
 function WorldEditor:select_unit(unit)
 	WorldEditor.super.select_unit(self, unit)
 
@@ -401,7 +400,7 @@ function WorldEditor:select_unit(unit)
 	end
 end
 
--- Lines 395-402
+-- Lines 393-400
 function WorldEditor:select_units(units)
 	WorldEditor.super.select_units(self, units)
 
@@ -412,7 +411,7 @@ function WorldEditor:select_units(units)
 	end
 end
 
--- Lines 404-409
+-- Lines 402-407
 function WorldEditor:on_selected_unit(unit)
 	WorldEditor.super.on_selected_unit(self, unit)
 

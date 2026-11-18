@@ -145,13 +145,17 @@ function ElementInstancePoint:_create()
 	end
 end
 
--- Lines 160-166
+-- Lines 160-164
 function ElementInstancePoint:save(data)
+	ElementInstancePoint.super.save(self, data)
+
 	data.has_created = self._has_created
 end
 
--- Lines 169-177
+-- Lines 167-173
 function ElementInstancePoint:load(data)
+	ElementInstancePoint.super.load(self, data)
+
 	if data.has_created then
 		self:_create()
 	end
@@ -160,7 +164,7 @@ end
 ElementInstanceParams = ElementInstanceParams or class(CoreMissionScriptElement.MissionScriptElement)
 ElementInstanceSetParams = ElementInstanceSetParams or class(CoreMissionScriptElement.MissionScriptElement)
 
--- Lines 186-192
+-- Lines 182-188
 function ElementInstanceSetParams:init(...)
 	ElementInstanceOutputEvent.super.init(self, ...)
 
@@ -169,12 +173,12 @@ function ElementInstanceSetParams:init(...)
 	end
 end
 
--- Lines 195-197
+-- Lines 191-193
 function ElementInstanceSetParams:client_on_executed(...)
 	self:on_executed(...)
 end
 
--- Lines 200-206
+-- Lines 196-202
 function ElementInstanceSetParams:_apply_instance_params()
 	if self._values.instance then
 		managers.world_instance:set_instance_params(self._values.instance, self._values.params)
@@ -183,7 +187,7 @@ function ElementInstanceSetParams:_apply_instance_params()
 	end
 end
 
--- Lines 209-220
+-- Lines 205-216
 function ElementInstanceSetParams:on_executed(instigator)
 	if not self._values.enabled then
 		return

@@ -7,7 +7,7 @@ function ExplodingProp:init(unit)
 	ExplodingProp.super.init(self, unit, false)
 end
 
--- Lines 13-60
+-- Lines 13-64
 function ExplodingProp:detonate(pos, range, damage, player_damage)
 	if not pos or not range or not damage or not player_damage then
 		Application:error("Invalid parameters sent to ExplodingProp-extension. Pos: " .. tostring(pos) .. ", Range: " .. tostring(range) .. ", Damage: " .. tostring(damage) .. ", Player damage: " .. tostring(player_damage) .. ", Unit: " .. tostring(self._unit:name():t()))
@@ -72,21 +72,21 @@ function ExplodingProp:detonate(pos, range, damage, player_damage)
 	end
 end
 
--- Lines 62-66
+-- Lines 66-70
 function ExplodingProp:sync_net_event(event_id)
 	if event_id == ExplodingProp.DETONATE_EVENT_ID then
 		self:_detonate_on_client()
 	end
 end
 
--- Lines 68-71
+-- Lines 72-75
 function ExplodingProp:_detonate_on_client()
 	self._recieved_detonate_on_client = true
 
 	self:_check_detonation_ready()
 end
 
--- Lines 73-95
+-- Lines 77-102
 function ExplodingProp:_check_detonation_ready()
 	if not self._recieved_detonate_on_client then
 		return
@@ -95,12 +95,6 @@ function ExplodingProp:_check_detonation_ready()
 	if self._data_list == nil then
 		return
 	end
-
-	if self._detonated then
-		return
-	end
-
-	self._detonated = true
 
 	local data = table.remove(self._data_list, 1)
 

@@ -2037,7 +2037,7 @@ function PrePlanningTweakData:init(tweak_data)
 	self.types.deep_uninterruptable_gen_loud.prio = 3
 end
 
--- Lines 2402-4009
+-- Lines 2402-4013
 function PrePlanningTweakData:_create_locations(tweak_data)
 	self.upgrade_locks = {
 		"none",
@@ -4074,7 +4074,7 @@ function PrePlanningTweakData:_create_locations(tweak_data)
 	}
 end
 
--- Lines 4011-4013
+-- Lines 4015-4017
 function PrePlanningTweakData:get_level_data(level_id)
 	return self.locations[level_id] or {}
 end

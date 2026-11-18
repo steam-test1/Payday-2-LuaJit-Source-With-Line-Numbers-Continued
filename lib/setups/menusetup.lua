@@ -22,6 +22,7 @@ require("lib/units/menu/MenuArmourBase")
 require("lib/units/ArmorSkinExt")
 require("lib/managers/EnvironmentEffectsManager")
 require("lib/units/characters/PlayerBodyBoneMergeBase")
+require("lib/managers/ModWorkshopManager")
 require("lib/units/MenuDummyExtensions")
 require("lib/wip")
 core:import("SequenceManager")
@@ -33,7 +34,7 @@ local is_steam = IS_STEAM
 local is_epic = IS_EPIC
 local is_mm_eos = IS_EPIC_MM
 
--- Lines 68-112
+-- Lines 72-116
 function MenuSetup:load_packages()
 	Setup.load_packages(self)
 
@@ -72,12 +73,12 @@ function MenuSetup:load_packages()
 	end
 
 	if not PackageManager:loaded("packages/game_base_init") then
-		-- Lines 104-106
+		-- Lines 108-110
 		local function _load_wip_func()
 			Global._game_base_package_loaded = true
 		end
 
-		-- Lines 107-109
+		-- Lines 111-113
 		local function load_base_func()
 			PackageManager:load("packages/game_base", _load_wip_func)
 		end
@@ -86,7 +87,7 @@ function MenuSetup:load_packages()
 	end
 end
 
--- Lines 114-136
+-- Lines 118-140
 function MenuSetup:gather_packages_to_unload()
 	Setup.unload_packages(self)
 
@@ -108,7 +109,7 @@ function MenuSetup:gather_packages_to_unload()
 	end
 end
 
--- Lines 138-150
+-- Lines 142-154
 function MenuSetup:unload_packages()
 	Setup.unload_packages(self)
 
@@ -121,7 +122,7 @@ function MenuSetup:unload_packages()
 	end
 end
 
--- Lines 152-282
+-- Lines 156-286
 function MenuSetup:init_game()
 	local gsm = Setup.init_game(self)
 
@@ -188,7 +189,7 @@ function MenuSetup:init_game()
 	return gsm
 end
 
--- Lines 284-296
+-- Lines 288-304
 function MenuSetup:init_managers(managers)
 	Setup.init_managers(self, managers)
 	managers.sequence:preload()
@@ -198,9 +199,10 @@ function MenuSetup:init_managers(managers)
 	managers.money = MoneyManager:new()
 	managers.statistics = StatisticsManager:new()
 	managers.network = NetworkManager:new()
+	managers.modworkshop = ModWorkshopManager:new()
 end
 
--- Lines 298-319
+-- Lines 306-327
 function MenuSetup:init_finalize()
 	Setup.init_finalize(self)
 
@@ -224,7 +226,7 @@ function MenuSetup:init_finalize()
 	TestAPIHelper.on_event("exit_to_menu")
 end
 
--- Lines 321-340
+-- Lines 329-348
 function MenuSetup:update_wait_for_savegame_info(t, dt)
 	managers.savefile:update(t, dt)
 	print("Checking fetch_savegame_hdd_space_required")
@@ -242,35 +244,36 @@ function MenuSetup:update_wait_for_savegame_info(t, dt)
 	end
 end
 
--- Lines 342-347
+-- Lines 350-355
 function MenuSetup:update(t, dt)
 	Setup.update(self, t, dt)
 	managers.crimenet:update(t, dt)
 	managers.network:update(t, dt)
 end
 
--- Lines 349-353
+-- Lines 357-361
 function MenuSetup:paused_update(t, dt)
 	Setup.paused_update(self, t, dt)
 	managers.network:update(t, dt)
 end
 
--- Lines 355-383
+-- Lines 363-391
 function MenuSetup:end_update(t, dt)
 	Setup.end_update(self, t, dt)
 	managers.network:end_update()
 end
 
--- Lines 385-389
+-- Lines 393-397
 function MenuSetup:paused_end_update(t, dt)
 	Setup.paused_end_update(self, t, dt)
 	managers.network:end_update()
 end
 
--- Lines 391-394
+-- Lines 399-405
 function MenuSetup:destroy()
 	MenuSetup.super.destroy(self)
 	managers.menu_scene:destroy()
+	managers.modworkshop:destroy()
 end
 
 return MenuSetup

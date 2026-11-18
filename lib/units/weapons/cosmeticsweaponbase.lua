@@ -168,7 +168,7 @@ function NewRaycastWeaponBase:_material_config_name(part_id, part_data, use_cc_m
 	return Idstring(unit_name .. "_cc")
 end
 
--- Lines 292-372
+-- Lines 292-375
 function NewRaycastWeaponBase:_update_materials()
 	if not self._parts then
 		return
@@ -193,7 +193,12 @@ function NewRaycastWeaponBase:_update_materials()
 							part.unit:set_material_config(new_material_config_ids, true)
 						end
 					elseif use_cc_material_config then
-						part.unit:set_material_config(Idstring(part_data.unit), true)
+						local ids_material_config = Idstring(part_data.unit)
+
+						if DB:has(IDS_MATERIAL_CONFIG, ids_material_config) then
+							part.unit:set_material_config(ids_material_config, true)
+						end
+
 						part.unit:set_material_config(new_material_config_ids, true)
 					end
 				end
@@ -232,7 +237,7 @@ function NewRaycastWeaponBase:_update_materials()
 	end
 end
 
--- Lines 374-382
+-- Lines 377-385
 function NewRaycastWeaponBase:get_cosmetic_value(...)
 	local cosmetic_value = self:get_cosmetics_data()
 
@@ -245,7 +250,7 @@ function NewRaycastWeaponBase:get_cosmetic_value(...)
 	return cosmetic_value
 end
 
--- Lines 384-584
+-- Lines 387-587
 function NewRaycastWeaponBase:_apply_cosmetics(async_clbk)
 	material_variables.wear_and_tear = (managers.blackmarket and managers.blackmarket:skin_editor() and managers.blackmarket:skin_editor():active() or Application:production_build()) and "wear_tear_value" or nil
 
@@ -343,7 +348,7 @@ function NewRaycastWeaponBase:_apply_cosmetics(async_clbk)
 	self:_chk_load_complete(async_clbk)
 end
 
--- Lines 586-600
+-- Lines 589-603
 function NewRaycastWeaponBase:clbk_texture_loaded(async_clbk, tex_name)
 	if not alive(self._unit) then
 		return
@@ -358,7 +363,7 @@ function NewRaycastWeaponBase:clbk_texture_loaded(async_clbk, tex_name)
 	self:_chk_load_complete(async_clbk)
 end
 
--- Lines 602-618
+-- Lines 605-621
 function NewRaycastWeaponBase:_chk_load_complete(async_clbk)
 	if self._requesting then
 		return
@@ -377,7 +382,7 @@ function NewRaycastWeaponBase:_chk_load_complete(async_clbk)
 	end
 end
 
--- Lines 620-697
+-- Lines 623-700
 function NewRaycastWeaponBase:_set_material_textures()
 	local cosmetics_data = self:get_cosmetics_data()
 
@@ -418,7 +423,7 @@ function NewRaycastWeaponBase:_set_material_textures()
 	end
 end
 
--- Lines 701-818
+-- Lines 704-821
 function NewRaycastWeaponBase:spawn_magazine_unit(pos, rot, hide_bullets, part_type)
 	part_type = part_type or "magazine"
 
@@ -555,7 +560,7 @@ local mvec3_add = mvector3.add
 local mvec3_sub = mvector3.subtract
 local mvec3_mul = mvector3.multiply
 
--- Lines 839-893
+-- Lines 842-896
 function NewRaycastWeaponBase:drop_magazine_object()
 	if not managers.weapon_factory:use_thq_weapon_parts() then
 		return
@@ -603,7 +608,7 @@ function NewRaycastWeaponBase:drop_magazine_object()
 	end
 end
 
--- Lines 895-905
+-- Lines 898-908
 function NewRaycastWeaponBase:is_part_type_dropped(type)
 	if not managers.weapon_factory:use_thq_weapon_parts() then
 		return false
@@ -616,7 +621,7 @@ function NewRaycastWeaponBase:is_part_type_dropped(type)
 	end
 end
 
--- Lines 907-913
+-- Lines 910-916
 function NewRaycastWeaponBase:get_part_type_dropped()
 	if self._reload_part_types then
 		return self._reload_part_types[1]

@@ -638,11 +638,11 @@ function GroupAITweakData:_init_unit_categories(difficulty_index)
 			},
 			murkywater = {
 				Idstring("units/payday2/characters/ene_fbi_1/ene_fbi_1"),
-				Idstring("units/payday2/characters/ene_fbi_1/ene_fbi_2")
+				Idstring("units/payday2/characters/ene_fbi_2/ene_fbi_2")
 			},
 			federales = {
 				Idstring("units/payday2/characters/ene_fbi_1/ene_fbi_1"),
-				Idstring("units/payday2/characters/ene_fbi_1/ene_fbi_2")
+				Idstring("units/payday2/characters/ene_fbi_2/ene_fbi_2")
 			}
 		}
 	}
@@ -663,11 +663,11 @@ function GroupAITweakData:_init_unit_categories(difficulty_index)
 			},
 			murkywater = {
 				Idstring("units/payday2/characters/ene_fbi_2/ene_fbi_2"),
-				Idstring("units/payday2/characters/ene_fbi_2/ene_fbi_3")
+				Idstring("units/payday2/characters/ene_fbi_3/ene_fbi_3")
 			},
 			federales = {
-				Idstring("units/payday2/characters/ene_fbi_1/ene_fbi_2"),
-				Idstring("units/payday2/characters/ene_fbi_1/ene_fbi_3")
+				Idstring("units/payday2/characters/ene_fbi_2/ene_fbi_2"),
+				Idstring("units/payday2/characters/ene_fbi_3/ene_fbi_3")
 			}
 		}
 	}
@@ -1442,7 +1442,7 @@ function GroupAITweakData:_init_enemy_tactics(difficulty_index)
 	}
 end
 
--- Lines 1831-2763
+-- Lines 1831-2767
 function GroupAITweakData:_init_enemy_spawn_groups(difficulty_index)
 	self.enemy_spawn_groups = {}
 
@@ -2425,7 +2425,7 @@ function GroupAITweakData:_init_enemy_spawn_groups(difficulty_index)
 	}
 end
 
--- Lines 2767-2852
+-- Lines 2771-2856
 function GroupAITweakData:_init_enemy_spawn_groups_level(tweak_data, difficulty_index)
 	local lvl_tweak_data = tweak_data.levels[Global.game_settings and Global.game_settings.level_id or Global.level_data and Global.level_data.level_id]
 
@@ -2506,7 +2506,7 @@ function GroupAITweakData:_init_enemy_spawn_groups_level(tweak_data, difficulty_
 	end
 end
 
--- Lines 2856-2883
+-- Lines 2860-2887
 function GroupAITweakData:_init_enemy_spawn_cooldowns(difficulty_index)
 	self.ai_spawn_distance_limit = 5000
 	self.ai_spawn_group_cooldowns = {
@@ -2557,7 +2557,7 @@ function GroupAITweakData:_init_enemy_spawn_cooldowns(difficulty_index)
 	self.ai_spawn_camp_z_distance = 300
 end
 
--- Lines 2887-3443
+-- Lines 2891-3464
 function GroupAITweakData:_init_task_data(difficulty_index, difficulty)
 	local is_console = IS_CONSOLE
 
@@ -3596,6 +3596,10 @@ function GroupAITweakData:_init_task_data(difficulty_index, difficulty)
 	}
 	self.phalanx.check_spawn_intervall = 120
 	self.phalanx.chance_increase_intervall = 120
+	self.phalanx.allowed_assault_phases = table.list_to_set({
+		"build",
+		"sustain"
+	})
 
 	if difficulty_index == DIFF_ID_4_VERYHARD then
 		self.phalanx.spawn_chance = {
@@ -3650,7 +3654,7 @@ function GroupAITweakData:_init_task_data(difficulty_index, difficulty)
 	self.safehouse = deep_clone(self.besiege)
 end
 
--- Lines 3464-3470
+-- Lines 3485-3491
 function GroupAITweakData:_read_mission_preset(tweak_data)
 	if not Global.game_settings then
 		return
@@ -3661,7 +3665,7 @@ function GroupAITweakData:_read_mission_preset(tweak_data)
 	self._mission_preset = lvl_tweak_data.group_ai_preset
 end
 
--- Lines 3474-3520
+-- Lines 3495-3541
 function GroupAITweakData:_create_table_structure()
 	self.enemy_spawn_groups = {}
 	self.besiege = {

@@ -845,7 +845,7 @@ function SkirmishTweakData:_init_ransom_amounts()
 	end
 end
 
--- Lines 412-424
+-- Lines 413-428
 function SkirmishTweakData:_init_job_list(tweak_data)
 	self.job_list = {}
 
@@ -861,7 +861,7 @@ function SkirmishTweakData:_init_job_list(tweak_data)
 	end
 end
 
--- Lines 426-429
+-- Lines 430-433
 function SkirmishTweakData:_init_briefing()
 	self.random_skirmish = {}
 	self.random_skirmish.crimenet_videos = {
@@ -869,7 +869,7 @@ function SkirmishTweakData:_init_briefing()
 	}
 end
 
--- Lines 432-476
+-- Lines 436-480
 function SkirmishTweakData:_init_additional_rewards()
 	local tier1 = deep_clone(self.weekly_rewards[1])
 	local tier2 = deep_clone(self.weekly_rewards[2])

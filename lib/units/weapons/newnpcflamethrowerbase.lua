@@ -63,10 +63,11 @@ end
 
 local mvec_to = Vector3()
 
--- Lines 68-164
+-- Lines 68-161
 function NewNPCFlamethrowerBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, target_unit)
 	local result = {}
 	local ignore_units = self._setup.ignore_units
+	local ignore_units_map = self._setup.ignore_units_map
 	local damage_range = self._flame_max_range or self._range or 1000
 
 	mvec3_set(mvec_to, direction)
@@ -91,19 +92,15 @@ function NewNPCFlamethrowerBase:_fire_raycast(user_unit, from_pos, direction, dm
 	local hit_bodies = World:find_bodies("intersect", "capsule", from_pos, mvec_to, self._flame_radius, self._bullet_slotmask)
 	local hit_body, hit_unit, hit_u_key
 	local units_hit, valid_hit_bodies = {}, {}
-	local t_contains = table.contains
 
 	for i = 1, #hit_bodies do
 		hit_body = hit_bodies[i]
 		hit_unit = hit_body:unit()
+		hit_u_key = hit_unit:key()
 
-		if not t_contains(ignore_units, hit_unit) then
-			hit_u_key = hit_unit:key()
-
-			if not units_hit[hit_u_key] then
-				units_hit[hit_u_key] = true
-				valid_hit_bodies[#valid_hit_bodies + 1] = hit_body
-			end
+		if not ignore_units_map[hit_u_key] and not units_hit[hit_u_key] then
+			units_hit[hit_u_key] = true
+			valid_hit_bodies[#valid_hit_bodies + 1] = hit_body
 		end
 	end
 
@@ -155,7 +152,7 @@ local mvec_from = Vector3()
 local mrot_fire = Rotation()
 local mvec_fire_local_override = Vector3()
 
--- Lines 169-234
+-- Lines 166-231
 function NewNPCFlamethrowerBase:fire_blank(direction, impact, sub_id, override_direction)
 	local chk_shoot_expired = self._check_shooting_expired
 
@@ -222,12 +219,12 @@ function NewNPCFlamethrowerBase:fire_blank(direction, impact, sub_id, override_d
 	self:_spawn_flame_effect(mvec_to, direction)
 end
 
--- Lines 236-238
+-- Lines 233-235
 function NewNPCFlamethrowerBase:auto_fire_blank(...)
 	self:fire_blank(...)
 end
 
--- Lines 241-248
+-- Lines 238-245
 function NewNPCFlamethrowerBase:_sound_autofire_start(nr_shots)
 	local tweak_sound = tweak_data.weapon[self._name_id].sounds or {}
 
@@ -238,7 +235,7 @@ function NewNPCFlamethrowerBase:_sound_autofire_start(nr_shots)
 	sound = sound or self._sound_fire:post_event(tweak_sound.fire)
 end
 
--- Lines 250-256
+-- Lines 247-253
 function NewNPCFlamethrowerBase:_sound_autofire_end()
 	local tweak_sound = tweak_data.weapon[self._name_id].sounds or {}
 	local sound = self._sound_fire:post_event(tweak_sound.stop_fire)
@@ -246,7 +243,7 @@ function NewNPCFlamethrowerBase:_sound_autofire_end()
 	sound = sound or self._sound_fire:post_event(tweak_sound.stop_fire)
 end
 
--- Lines 259-261
+-- Lines 256-258
 function NewNPCFlamethrowerBase:third_person_important()
 	return NewFlamethrowerBase.third_person_important(self)
 end
@@ -265,7 +262,7 @@ NPCFlamethrowerBase._sound_autofire_start = NewNPCFlamethrowerBase._sound_autofi
 NPCFlamethrowerBase._sound_autofire_end = NewNPCFlamethrowerBase._sound_autofire_end
 NPCFlamethrowerBase._on_auto_fire_stop = NewNPCFlamethrowerBase._on_auto_fire_stop
 
--- Lines 278-290
+-- Lines 275-287
 function NPCFlamethrowerBase:init(...)
 	self.flamethrower = true
 
@@ -278,20 +275,20 @@ function NPCFlamethrowerBase:init(...)
 	self:setup_default()
 end
 
--- Lines 292-296
+-- Lines 289-293
 function NPCFlamethrowerBase:pre_destroy(...)
 	self:kill_effects()
 	NPCFlamethrowerBase.super.pre_destroy(self, ...)
 end
 
--- Lines 298-300
+-- Lines 295-297
 function NPCFlamethrowerBase:third_person_important()
 	return false
 end
 
 NPCBossFlamethrowerBase = NPCBossFlamethrowerBase or class(NPCFlamethrowerBase)
 
--- Lines 305-309
+-- Lines 302-306
 function NPCBossFlamethrowerBase:setup_default(...)
 	NPCBossFlamethrowerBase.super.setup_default(self, ...)
 
@@ -303,17 +300,18 @@ local mvec_dir = Vector3()
 local mvec_offset = Vector3()
 local mvec_offset2 = Vector3()
 
--- Lines 315-446
+-- Lines 312-440
 function NPCBossFlamethrowerBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, target_unit)
 	local result = {}
 	local ignore_units = self._setup.ignore_units
+	local ignore_units_map = self._setup.ignore_units_map
 	local slotmask = self._bullet_slotmask
 	local flame_radius = self._flame_radius
 	local damage = self._damage * (dmg_mul or 1)
 	local capsule_offset = self._extra_capsule_offset
 	local orig_damage_range = self._flame_max_range or self._range or 1000
 
-	-- Lines 325-349
+	-- Lines 323-347
 	local function find_bodies_and_adjust_vecs()
 		local damage_range = orig_damage_range
 
@@ -366,7 +364,6 @@ function NPCBossFlamethrowerBase:_fire_raycast(user_unit, from_pos, direction, d
 
 	local hit_body, hit_unit, hit_u_key
 	local units_hit, valid_hit_bodies = {}, {}
-	local t_contains = table.contains
 
 	for _, hit_bodies in ipairs({
 		hit_bodies1,
@@ -376,14 +373,11 @@ function NPCBossFlamethrowerBase:_fire_raycast(user_unit, from_pos, direction, d
 		for i = 1, #hit_bodies do
 			hit_body = hit_bodies[i]
 			hit_unit = hit_body:unit()
+			hit_u_key = hit_unit:key()
 
-			if not t_contains(ignore_units, hit_unit) then
-				hit_u_key = hit_unit:key()
-
-				if not units_hit[hit_u_key] then
-					units_hit[hit_u_key] = true
-					valid_hit_bodies[#valid_hit_bodies + 1] = hit_body
-				end
+			if not ignore_units_map[hit_u_key] and not units_hit[hit_u_key] then
+				units_hit[hit_u_key] = true
+				valid_hit_bodies[#valid_hit_bodies + 1] = hit_body
 			end
 		end
 	end

@@ -402,7 +402,7 @@ function TweakData:index_to_menu_sync_state(index)
 	return self.menu_sync_states[index]
 end
 
--- Lines 414-2937
+-- Lines 414-2953
 function TweakData:init()
 	self.max_players = 4
 	self.difficulties = {
@@ -778,7 +778,7 @@ function TweakData:init()
 
 	self._init_wip_upgrades(self.upgrades)
 
-	self.skilltree = SkillTreeTweakData:new()
+	self.skilltree = SkillTreeTweakData:new(self)
 
 	self._init_wip_skilltree(self.skilltree)
 
@@ -3091,7 +3091,7 @@ function TweakData:init()
 	self:digest_tweak_data()
 end
 
--- Lines 2941-2967
+-- Lines 2957-2983
 function TweakData:load_movie_list()
 	self.movies = {
 		{
@@ -3120,7 +3120,7 @@ function TweakData:load_movie_list()
 	end
 end
 
--- Lines 2972-3078
+-- Lines 2988-3094
 function TweakData:init_screen_colors()
 	self.screen_colors = {}
 	self.screen_colors.text = Color(255, 255, 255, 255) / 255
@@ -3205,7 +3205,7 @@ function TweakData:init_screen_colors()
 	end
 end
 
--- Lines 3081-3112
+-- Lines 3097-3128
 function TweakData:init_accessibility_colors()
 	self.accessibility_colors = {}
 	self.accessibility_colors.dot = {}
@@ -3235,14 +3235,14 @@ function TweakData:init_accessibility_colors()
 	self.accessibility_colors.screenflash.blurzone.gray_dark = Color(0.19607843137254902, 0.19607843137254902, 0.19607843137254902)
 end
 
--- Lines 3117-3195
+-- Lines 3133-3211
 function TweakData:free_dlc_list()
 	local free_dlcs = {}
 
 	return free_dlcs
 end
 
--- Lines 3205-3213
+-- Lines 3221-3229
 function TweakData:_execute_reload_clbks()
 	if self._reload_clbks then
 		for key, clbk_data in pairs(self._reload_clbks) do
@@ -3253,7 +3253,7 @@ function TweakData:_execute_reload_clbks()
 	end
 end
 
--- Lines 3217-3220
+-- Lines 3233-3236
 function TweakData:add_reload_callback(object, func)
 	self._reload_clbks = self._reload_clbks or {}
 
@@ -3263,7 +3263,7 @@ function TweakData:add_reload_callback(object, func)
 	})
 end
 
--- Lines 3224-3233
+-- Lines 3240-3249
 function TweakData:remove_reload_callback(object)
 	if self._reload_clbks then
 		for i, k in ipairs(self._reload_clbks) do
@@ -3276,7 +3276,7 @@ function TweakData:remove_reload_callback(object)
 	end
 end
 
--- Lines 3237-3413
+-- Lines 3253-3429
 function TweakData:set_scale()
 	local lang_key = SystemInfo:language():key()
 	local lang_mods = {
@@ -3466,7 +3466,7 @@ function TweakData:set_scale()
 	self.scale.victory_title_multiplier = victory_title_multiplier or 1
 end
 
--- Lines 3415-3594
+-- Lines 3431-3610
 function TweakData:set_menu_scale()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -3580,7 +3580,7 @@ function TweakData:set_menu_scale()
 	self.load_level.stonecold_small_logo = "guis/textures/game_small_logo"
 end
 
--- Lines 3596-3676
+-- Lines 3612-3692
 function TweakData:set_hud_values()
 	local lang_mods_def = {
 		[Idstring("german"):key()] = {
@@ -3659,7 +3659,7 @@ function TweakData:set_hud_values()
 	self.hud.revive_colors[4] = Color(255, 91, 87, 87) / 255
 end
 
--- Lines 3680-3728
+-- Lines 3696-3744
 function TweakData:_setup_access_cameras()
 	self.camera_channels = {
 		alpha = true,
@@ -3704,7 +3704,7 @@ function TweakData:_setup_access_cameras()
 	end
 end
 
--- Lines 3733-3737
+-- Lines 3749-3753
 function TweakData:resolution_changed()
 	self:set_scale()
 	self:set_menu_scale()
@@ -3723,7 +3723,7 @@ if (not tweak_data or tweak_data.RELOAD) and managers.dlc then
 	end
 end
 
--- Lines 3754-3923
+-- Lines 3770-3939
 function TweakData:get_controller_help_coords()
 	if managers.controller:get_default_wrapper_type() == "pc" or managers.controller:get_default_wrapper_type() == "steam" then
 		return false

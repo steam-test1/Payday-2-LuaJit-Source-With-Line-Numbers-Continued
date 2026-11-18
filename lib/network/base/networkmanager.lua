@@ -533,36 +533,60 @@ function NetworkManager:on_peer_added(peer, peer_id)
 end
 
 -- Lines 551-553
-function NetworkManager:get_peer_safe(peer_id)
-	return self._session and self._session:peer(peer_id) or nil
+function NetworkManager:get_peer_safe(...)
+	return self._session and self._session:peer(...) or nil
 end
 
 -- Lines 555-557
-function NetworkManager:get_local_peer_safe()
-	return self._session and self._session:local_peer() or nil
+function NetworkManager:get_local_peer_safe(...)
+	return self._session and self._session:local_peer(...) or nil
 end
 
 -- Lines 559-561
-function NetworkManager:get_server_peer_safe()
-	return self._session and self._session:server_peer() or nil
+function NetworkManager:get_server_peer_safe(...)
+	return self._session and self._session:server_peer(...) or nil
 end
 
 -- Lines 563-565
-function NetworkManager:get_peer_by_unit_safe(unit)
-	return self._session and self._session:peer_by_unit(unit) or nil
+function NetworkManager:get_peer_by_unit_safe(...)
+	return self._session and self._session:peer_by_unit(...) or nil
 end
 
 -- Lines 567-569
-function NetworkManager:get_dropin_peer_safe()
-	return self._session and self._session:dropin_peer() or nil
+function NetworkManager:get_peer_by_unit_key_safe(...)
+	return self._session and self._session:peer_by_unit_key(...) or nil
 end
 
--- Lines 575-577
+-- Lines 571-573
+function NetworkManager:get_dropin_peer_safe(...)
+	return self._session and self._session:dropin_peer(...) or nil
+end
+
+-- Lines 578-581
+function NetworkManager:get_local_peer_id_safe(...)
+	local peer = self:get_local_peer_safe(...)
+
+	return peer and peer:id() or nil
+end
+
+-- Lines 583-590
+function NetworkManager:get_peer_unit_safe(...)
+	local peer = self:get_peer_safe(...)
+	local unit = peer and peer:unit() or nil
+
+	if unit and not alive(unit) then
+		unit = nil
+	end
+
+	return unit
+end
+
+-- Lines 596-598
 local function PrintError(fn_name, ...)
 	Application:stack_dump_error("[NetworkManager] Tried to call " .. tostring(fn_name) .. ", but the network session has been destroyed.", inspect(...))
 end
 
--- Lines 579-587
+-- Lines 600-608
 function NetworkManager:send_to_peers(...)
 	if not self._session then
 		PrintError("send_to_peers", ...)
@@ -573,7 +597,7 @@ function NetworkManager:send_to_peers(...)
 	self._session:send_to_peers(...)
 end
 
--- Lines 589-597
+-- Lines 610-618
 function NetworkManager:send_to_peers_ip_verified(...)
 	if not self._session then
 		PrintError("send_to_peers_ip_verified", ...)
@@ -584,7 +608,7 @@ function NetworkManager:send_to_peers_ip_verified(...)
 	self._session:send_to_peers_ip_verified(...)
 end
 
--- Lines 599-607
+-- Lines 620-628
 function NetworkManager:send_to_peers_except(...)
 	if not self._session then
 		PrintError("send_to_peers_except", ...)
@@ -595,7 +619,7 @@ function NetworkManager:send_to_peers_except(...)
 	self._session:send_to_peers_except(...)
 end
 
--- Lines 609-617
+-- Lines 630-638
 function NetworkManager:send_to_peers_synched(...)
 	if not self._session then
 		PrintError("send_to_peers_synched", ...)
@@ -606,7 +630,7 @@ function NetworkManager:send_to_peers_synched(...)
 	self._session:send_to_peers_synched(...)
 end
 
--- Lines 619-627
+-- Lines 640-648
 function NetworkManager:send_to_peers_synched_except(...)
 	if not self._session then
 		PrintError("send_to_peers_synched_except", ...)
@@ -617,7 +641,7 @@ function NetworkManager:send_to_peers_synched_except(...)
 	self._session:send_to_peers_synched_except(...)
 end
 
--- Lines 629-637
+-- Lines 650-658
 function NetworkManager:send_to_peers_loaded(...)
 	if not self._session then
 		PrintError("send_to_peers_loaded", ...)
@@ -628,7 +652,7 @@ function NetworkManager:send_to_peers_loaded(...)
 	self._session:send_to_peers_loaded(...)
 end
 
--- Lines 639-647
+-- Lines 660-668
 function NetworkManager:send_to_peers_loaded_except(...)
 	if not self._session then
 		PrintError("send_to_peers_loaded_except", ...)
@@ -639,7 +663,7 @@ function NetworkManager:send_to_peers_loaded_except(...)
 	self._session:send_to_peers_loaded_except(...)
 end
 
--- Lines 649-657
+-- Lines 670-678
 function NetworkManager:send_to_peer(...)
 	if not self._session then
 		PrintError("send_to_peer", ...)
@@ -650,7 +674,7 @@ function NetworkManager:send_to_peer(...)
 	self._session:send_to_peer(...)
 end
 
--- Lines 659-667
+-- Lines 680-688
 function NetworkManager:send_to_peer_synched(...)
 	if not self._session then
 		PrintError("send_to_peer_synched", ...)
@@ -661,7 +685,7 @@ function NetworkManager:send_to_peer_synched(...)
 	self._session:send_to_peer_synched(...)
 end
 
--- Lines 669-677
+-- Lines 690-698
 function NetworkManager:send_to_host(...)
 	if not self._session then
 		PrintError("send_to_host", ...)

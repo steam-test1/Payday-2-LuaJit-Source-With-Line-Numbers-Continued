@@ -609,7 +609,7 @@ function PortalLayer:clone_edited_values(unit, source)
 	end
 end
 
--- Lines 550-563
+-- Lines 550-568
 function PortalLayer:click_select_unit()
 	if self._ctrl:down(IDS_ADD_TO_PORTAL_UNIT_GROUP) and self._current_group then
 		local ray = managers.editor:unit_by_raycast({
@@ -618,7 +618,7 @@ function PortalLayer:click_select_unit()
 			sample = true
 		})
 
-		if ray and ray.unit then
+		if ray and ray.unit and ray.unit:unit_data() and not ray.unit:unit_data().instance then
 			self._current_group:add_unit_id(ray.unit)
 		end
 
@@ -628,7 +628,7 @@ function PortalLayer:click_select_unit()
 	PortalLayer.super.click_select_unit(self)
 end
 
--- Lines 565-580
+-- Lines 570-596
 function PortalLayer:hover_highlight()
 	if self._ctrl:down(IDS_ADD_TO_PORTAL_UNIT_GROUP) and self._current_group then
 		local ray = managers.editor:unit_by_raycast({
@@ -642,6 +642,11 @@ function PortalLayer:hover_highlight()
 			local alpha = portal_brush_alpha * 4
 			local rgb = is_in and Color(1, 0.3, 0.3) or Color(0.7, 0.6, 1)
 
+			if ray.unit:unit_data() and ray.unit:unit_data().instance then
+				rgb = Color(1, 0, 0)
+				alpha = alpha / 10
+			end
+
 			self._portal_brush:set_color(rgb:with_alpha(alpha))
 			self._portal_brush:unit(ray.unit)
 		end
@@ -650,7 +655,7 @@ function PortalLayer:hover_highlight()
 	end
 end
 
--- Lines 582-600
+-- Lines 598-616
 function PortalLayer:set_select_unit(unit)
 	for name, data in pairs(self._portal_shapes) do
 		if table.contains(data.portal, unit) then
@@ -672,7 +677,7 @@ function PortalLayer:set_select_unit(unit)
 	PortalLayer.super.set_select_unit(self, unit)
 end
 
--- Lines 602-626
+-- Lines 618-642
 function PortalLayer:do_spawn_unit(name, pos, rot)
 	if name == self._portal_point_unit and not self._current_portal then
 		managers.editor:output("Create or select a portal first!")
@@ -707,7 +712,7 @@ function PortalLayer:do_spawn_unit(name, pos, rot)
 	return unit
 end
 
--- Lines 628-640
+-- Lines 644-656
 function PortalLayer:set_portal_shape_gui()
 	if self._current_shape_panel and self._current_shape_panel:extension().alive then
 		self._current_shape_panel:set_visible(false)
@@ -726,12 +731,12 @@ function PortalLayer:set_portal_shape_gui()
 	self._ews_panel:layout()
 end
 
--- Lines 642-652
+-- Lines 658-668
 function PortalLayer:create_portal_point(unit, pos)
 	table.insert(self._current_portal, unit)
 end
 
--- Lines 654-669
+-- Lines 670-685
 function PortalLayer:new_portal(portals)
 	local name = "portal1"
 	local i = 1
@@ -761,7 +766,7 @@ function PortalLayer:new_portal(portals)
 	self:clear_selected_units()
 end
 
--- Lines 671-693
+-- Lines 687-709
 function PortalLayer:delete_portal(portals)
 	local i = portals:selected_index()
 
@@ -787,7 +792,7 @@ function PortalLayer:delete_portal(portals)
 	self:update_unit_settings()
 end
 
--- Lines 695-700
+-- Lines 711-716
 function PortalLayer:update_shapes_listbox(portals)
 	portals:clear()
 
@@ -796,7 +801,7 @@ function PortalLayer:update_shapes_listbox(portals)
 	end
 end
 
--- Lines 702-708
+-- Lines 718-724
 function PortalLayer:set_selection_shapes_listbox(portals, name)
 	for i = 0, portals:nr_items() - 1 do
 		if name == portals:get_string(i) then
@@ -805,7 +810,7 @@ function PortalLayer:set_selection_shapes_listbox(portals, name)
 	end
 end
 
--- Lines 710-730
+-- Lines 726-746
 function PortalLayer:select_portal()
 	local i = self._ctrlrs.portals:selected_index()
 
@@ -831,7 +836,7 @@ function PortalLayer:select_portal()
 	self:set_unit_visible_state()
 end
 
--- Lines 732-743
+-- Lines 748-759
 function PortalLayer:select_group()
 	local i = self._ctrlrs.groups:selected_index()
 
@@ -847,7 +852,7 @@ function PortalLayer:select_group()
 	end
 end
 
--- Lines 745-758
+-- Lines 761-774
 function PortalLayer:new_group()
 	local name = managers.portal:group_name()
 
@@ -866,7 +871,7 @@ function PortalLayer:new_group()
 	end
 end
 
--- Lines 760-781
+-- Lines 776-797
 function PortalLayer:rename_group()
 	local groups = self._ctrlrs.groups
 	local i = groups:selected_index()
@@ -893,7 +898,7 @@ function PortalLayer:rename_group()
 	end
 end
 
--- Lines 783-810
+-- Lines 799-826
 function PortalLayer:delete_group()
 	local groups = self._ctrlrs.groups
 	local i = groups:selected_index()
@@ -926,7 +931,7 @@ function PortalLayer:delete_group()
 	self:update_unit_settings()
 end
 
--- Lines 812-829
+-- Lines 828-845
 function PortalLayer:add_unit_list_btn()
 	local groups = self._ctrlrs.groups
 	local i = groups:selected_index()
@@ -938,7 +943,7 @@ function PortalLayer:add_unit_list_btn()
 	local name = groups:get_string(i)
 	local group = managers.portal:unit_group(name)
 
-	-- Lines 822-822
+	-- Lines 838-838
 	local function f(unit)
 		return unit:slot() == 1
 	end
@@ -950,7 +955,7 @@ function PortalLayer:add_unit_list_btn()
 	end
 end
 
--- Lines 831-848
+-- Lines 847-864
 function PortalLayer:remove_unit_list_btn()
 	local groups = self._ctrlrs.groups
 	local i = groups:selected_index()
@@ -962,7 +967,7 @@ function PortalLayer:remove_unit_list_btn()
 	local name = groups:get_string(i)
 	local group = managers.portal:unit_group(name)
 
-	-- Lines 841-841
+	-- Lines 857-857
 	local function f(unit)
 		return group:ids()[unit:unit_data().unit_id]
 	end
@@ -974,7 +979,7 @@ function PortalLayer:remove_unit_list_btn()
 	end
 end
 
--- Lines 851-856
+-- Lines 867-872
 function PortalLayer:update_groups_listbox()
 	self._ctrlrs.groups:clear()
 
@@ -983,7 +988,7 @@ function PortalLayer:update_groups_listbox()
 	end
 end
 
--- Lines 858-865
+-- Lines 874-881
 function PortalLayer:set_selection_groups_listbox(name)
 	local groups = self._ctrlrs.groups
 
@@ -994,7 +999,7 @@ function PortalLayer:set_selection_groups_listbox(name)
 	end
 end
 
--- Lines 867-880
+-- Lines 883-896
 function PortalLayer:delete_unit(unit)
 	if unit:name() == Idstring(self._portal_point_unit) then
 		for name, shape in pairs(self._portal_shapes) do
@@ -1011,7 +1016,7 @@ function PortalLayer:delete_unit(unit)
 	PortalLayer.super.delete_unit(self, unit)
 end
 
--- Lines 883-897
+-- Lines 899-913
 function PortalLayer:calc_mid_point()
 	if not self._current_portal then
 		return
@@ -1031,7 +1036,7 @@ function PortalLayer:calc_mid_point()
 	end
 end
 
--- Lines 900-910
+-- Lines 916-926
 function PortalLayer:insert()
 	if not alive(self._selected_unit) or self._selected_unit:name() ~= Idstring(self._portal_point_unit) then
 		return
@@ -1045,18 +1050,18 @@ function PortalLayer:insert()
 	table.insert(self._current_portal, i + 1, self._selected_unit)
 end
 
--- Lines 912-914
+-- Lines 928-930
 function PortalLayer:replace_unit()
 	managers.editor:output_error("Can't replace or reload portal units.")
 end
 
--- Lines 916-919
+-- Lines 932-935
 function PortalLayer:update_unit_settings()
 	PortalLayer.super.update_unit_settings(self)
 	self:set_portal_shape_gui()
 end
 
--- Lines 921-932
+-- Lines 937-948
 function PortalLayer:clear()
 	self._portal_shapes = {}
 
@@ -1070,7 +1075,7 @@ function PortalLayer:clear()
 	self:update_groups_listbox()
 end
 
--- Lines 934-938
+-- Lines 950-954
 function PortalLayer:add_triggers()
 	PortalLayer.super.add_triggers(self)
 

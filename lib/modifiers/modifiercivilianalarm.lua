@@ -5,9 +5,22 @@ ModifierCivilianAlarm.desc_id = "menu_cs_modifier_civs"
 ModifierCivilianAlarm.default_value = "count"
 ModifierCivilianAlarm.stealth = true
 
--- Lines 9-21
+-- Lines 9-13
+function ModifierCivilianAlarm:init(...)
+	ModifierCivilianAlarm.super.init(self, ...)
+
+	self._is_server = Network:is_server()
+end
+
+-- Lines 15-33
 function ModifierCivilianAlarm:OnCivilianKilled()
-	if Network:is_client() or self._alarmed or managers.groupai:state():is_police_called() then
+	if not self._is_server or self._alarmed then
+		return
+	end
+
+	if managers.groupai:state():is_police_called() then
+		self._alarmed = true
+
 		return
 	end
 

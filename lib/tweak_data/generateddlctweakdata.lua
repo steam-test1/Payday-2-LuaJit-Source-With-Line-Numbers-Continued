@@ -1,4 +1,4 @@
--- Lines 3-1518
+-- Lines 3-1526
 function DLCTweakData:init_generated()
 	self.a10th_bundle = {}
 	self.a10th_bundle.free = true

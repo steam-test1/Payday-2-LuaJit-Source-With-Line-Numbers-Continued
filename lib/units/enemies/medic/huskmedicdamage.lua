@@ -25,7 +25,7 @@ function HuskMedicDamage:die(...)
 end
 
 -- Lines 35-39
-function HuskMedicDamage:destroy(...)
-	HuskMedicDamage.super.destroy(self, ...)
+function HuskMedicDamage:pre_destroy(...)
+	HuskMedicDamage.super.pre_destroy(self, ...)
 	self:_unregister_healing()
 end

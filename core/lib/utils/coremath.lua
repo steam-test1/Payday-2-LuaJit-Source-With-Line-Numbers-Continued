@@ -3,11 +3,31 @@ if core then
 	core:import("CoreClass")
 end
 
+local mvec3_set = mvector3.set
+local mvec3_add = mvector3.add
+local mvec3_sub = mvector3.subtract
+local mvec3_mul = mvector3.multiply
+local mvec3_neg = mvector3.negate
+local mvec3_norm = mvector3.normalize
+local mvec3_cross = mvector3.cross
+local mvec3_rot = mvector3.rotate_with
+local mvec3_set_stat = mvector3.set_static
+local mrot_x = mrotation.x
+local mrot_y = mrotation.y
+local mrot_z = mrotation.z
+local mrot_invert = mrotation.invert
+local mrot_set_xyz = mrotation.set_xyz
+local mrot_set_look_at = mrotation.set_look_at
+local tmp_vec1 = Vector3()
+local tmp_vec2 = Vector3()
+local tmp_vec3 = Vector3()
+local tmp_vec4 = Vector3()
+local tmp_vec5 = Vector3()
+local tmp_rot1 = Rotation()
+
 nice = math.nice
 
-local temp_vec = Vector3()
-
--- Lines 21-43
+-- Lines 44-66
 function rgb_to_hsv(r, g, b)
 	local max = math.max(r, g, b)
 	local min = math.min(r, g, b)
@@ -33,7 +53,7 @@ function rgb_to_hsv(r, g, b)
 	return hue, saturation, value
 end
 
--- Lines 45-62
+-- Lines 68-85
 function hsv_to_rgb(h, s, v)
 	local c = math.floor(h / 60)
 	local f = h / 60 - c
@@ -76,7 +96,7 @@ function hsv_to_rgb(h, s, v)
 	return unpack(cases[math.fmod(c, 6)])
 end
 
--- Lines 64-79
+-- Lines 87-102
 function string_to_value(type, value)
 	if type == "number" then
 		return tonumber(value)
@@ -95,7 +115,7 @@ function string_to_value(type, value)
 	return value
 end
 
--- Lines 81-89
+-- Lines 104-112
 function vector_to_string(v, f)
 	if f then
 		local x = string.format(f, v.x)
@@ -108,7 +128,7 @@ function vector_to_string(v, f)
 	return v.x .. " " .. v.y .. " " .. v.z
 end
 
--- Lines 91-99
+-- Lines 114-122
 function rotation_to_string(r, f)
 	if f then
 		local x = string.format(f, r:yaw())
@@ -121,29 +141,54 @@ function rotation_to_string(r, f)
 	return r:yaw() .. " " .. r:pitch() .. " " .. r:roll()
 end
 
--- Lines 101-103
+-- Lines 124-126
 function width_mul(aspect_ratio)
 	return 0.75 * aspect_ratio
 end
 
--- Lines 105-116
+local IDS_CO_CABLE = Idstring("co_cable")
+
+-- Lines 129-178
 function wire_set_midpoint(unit, source, target, middle)
-	local s_pos = unit:get_object(source):position()
-	local e_pos = unit:get_object(target):position()
-	local n = (e_pos - s_pos):normalized():cross(Vector3(0, 0, 1))
-	local dir = (e_pos - s_pos):normalized():cross(n)
-	local m_point = s_pos + (e_pos - s_pos) * 0.5
+	local s_pos = tmp_vec1
+	local e_pos = tmp_vec2
 
-	unit:get_object(middle):set_position(m_point + dir * unit:wire_data().slack)
+	unit:get_object(source):m_position(s_pos)
+	unit:get_object(target):m_position(e_pos)
 
-	local co = unit:get_object(Idstring("co_cable"))
+	local from_to = e_pos
+
+	mvec3_sub(from_to, s_pos)
+
+	local norm = tmp_vec3
+
+	mvec3_set(norm, from_to)
+	mvec3_norm(norm)
+
+	local up = math.UP
+	local dir_offset = tmp_vec4
+
+	mvec3_cross(dir_offset, norm, up)
+	mvec3_cross(dir_offset, norm, dir_offset)
+	mvec3_mul(dir_offset, unit:wire_data().slack)
+
+	local m_point = tmp_vec5
+
+	mvec3_set(m_point, from_to)
+	mvec3_mul(m_point, 0.5)
+	mvec3_add(m_point, s_pos)
+	mvec3_add(m_point, dir_offset)
+	unit:get_object(middle):set_position(m_point)
+
+	local co = unit:get_object(IDS_CO_CABLE)
 
 	if co then
-		co:set_rotation(Rotation:look_at((e_pos - s_pos):normalized(), math.UP))
+		mrot_set_look_at(tmp_rot1, norm, up)
+		co:set_rotation(tmp_rot1)
 	end
 end
 
--- Lines 121-140
+-- Lines 183-202
 function probability(chance_table, result_table)
 	local random = math.random(100)
 	local total_chance = 0
@@ -166,7 +211,7 @@ function probability(chance_table, result_table)
 	return choice
 end
 
--- Lines 142-151
+-- Lines 204-213
 function get_fit_size(width, height, bounding_width, bounding_height)
 	local bounding_aspect = bounding_width / bounding_height
 	local aspect = width / height
@@ -178,7 +223,7 @@ function get_fit_size(width, height, bounding_width, bounding_height)
 	end
 end
 
--- Lines 154-178
+-- Lines 216-240
 function os.get_oldest_date(date1, date2)
 	if date1.year > date2.year then
 		return date1
@@ -211,7 +256,7 @@ math.Z = math.UP
 math.X = Vector3(1, 0, 0)
 math.Y = Vector3(0, 1, 0)
 
--- Lines 191-197
+-- Lines 253-259
 function math.rand(a, b)
 	if b then
 		return math.random() * (b - a) + a
@@ -220,12 +265,12 @@ function math.rand(a, b)
 	end
 end
 
--- Lines 200-202
+-- Lines 262-264
 function math.rand_bool()
 	return math.random(2) == 1
 end
 
--- Lines 205-209
+-- Lines 267-271
 function math.rand_color(a, b)
 	a = a or 0
 	b = b or 1
@@ -233,14 +278,14 @@ function math.rand_color(a, b)
 	return Color(math.rand(a, b), math.rand(a, b), math.rand(a, b))
 end
 
--- Lines 211-214
+-- Lines 273-276
 function math.round(n, precision)
 	precision = precision or 1
 
 	return math.floor((n + precision / 2) / precision) * precision
 end
 
--- Lines 216-220
+-- Lines 278-282
 function math.truncate(n, precision)
 	precision = precision or 0
 
@@ -249,7 +294,7 @@ function math.truncate(n, precision)
 	return math.floor(n * prec_mul) / prec_mul
 end
 
--- Lines 222-228
+-- Lines 284-290
 function math.min_max(a, b)
 	if a < b then
 		return a, b
@@ -258,7 +303,7 @@ function math.min_max(a, b)
 	end
 end
 
--- Lines 230-237
+-- Lines 292-299
 function math.vector_min_max(a, b)
 	local min_x, max_x = math.min_max(a.x, b.x)
 	local min_y, max_y = math.min_max(a.y, b.y)
@@ -269,7 +314,7 @@ function math.vector_min_max(a, b)
 	return min_vector, max_vector
 end
 
--- Lines 239-248
+-- Lines 301-310
 function math.vector_clamp(vector, min, max)
 	if CoreClass.type_name(min) ~= "Vector3" then
 		min = Vector3(min, min, min)
@@ -282,39 +327,39 @@ function math.vector_clamp(vector, min, max)
 	return Vector3(math.clamp(vector.x, min.x, max.x), math.clamp(vector.y, min.y, max.y), math.clamp(vector.z, min.z, max.z))
 end
 
--- Lines 250-252
+-- Lines 312-314
 function math.lerp(a, b, t)
 	return a * (1 - t) + b * t
 end
 
--- Lines 254-256
+-- Lines 316-318
 function math.inverse_lerp(a, b, v)
 	return (v - a) / (b - a)
 end
 
--- Lines 258-260
+-- Lines 320-322
 function math.map_range(v, a, b, c, d)
 	return math.lerp(c, d, math.inverse_lerp(a, b, v))
 end
 
--- Lines 262-264
+-- Lines 324-326
 function math.map_range_clamped(v, a, b, c, d)
 	return math.lerp(c, d, math.clamp(math.inverse_lerp(a, b, v), 0, 1))
 end
 
--- Lines 266-269
+-- Lines 328-331
 function math.string_to_rotation(v)
 	local r = math.string_to_vector(v)
 
 	return Rotation(r.x, r.y, r.z)
 end
 
--- Lines 271-274
+-- Lines 333-336
 function math.vector_to_string(v)
 	return tostring(v.x) .. " " .. tostring(v.y) .. " " .. tostring(v.z)
 end
 
--- Lines 276-285
+-- Lines 338-347
 function math.spline(points, t)
 	local mu = t * t
 	local a0 = points[4] - points[3] - points[1] + points[2]
@@ -325,29 +370,57 @@ function math.spline(points, t)
 	return a0 * t * mu + a1 * mu + a2 * t + a3
 end
 
--- Lines 287-296
+-- Lines 350-378
+function math.spline_vec3(points, t)
+	local mu = t * t
+
+	mvec3_set(tmp_vec1, points[4])
+	mvec3_sub(tmp_vec1, points[3])
+	mvec3_sub(tmp_vec1, points[1])
+	mvec3_add(tmp_vec1, points[2])
+	mvec3_set(tmp_vec2, points[1])
+	mvec3_sub(tmp_vec2, points[2])
+	mvec3_add(tmp_vec2, tmp_vec1)
+	mvec3_set(tmp_vec3, points[3])
+	mvec3_sub(tmp_vec3, points[1])
+
+	local tmp_vec4 = points[2]
+
+	mvec3_mul(tmp_vec1, t * mu)
+	mvec3_mul(tmp_vec2, mu)
+	mvec3_mul(tmp_vec3, t)
+	mvec3_add(tmp_vec1, tmp_vec2)
+	mvec3_add(tmp_vec1, tmp_vec3)
+
+	return tmp_vec1 + tmp_vec4
+end
+
+-- Lines 380-391
 function math.spline_len(points, n)
 	local len = 0
 	local old_p = points[1]
 
 	for i = 1, n do
-		local p = math.spline(points, i / n)
+		local p = math.spline_vec3(points, i / n)
 
-		len = len + (p - old_p):length()
+		mvec3_set(tmp_vec1, p)
+		mvec3_sub(tmp_vec1, old_p)
+
+		len = len + tmp_vec1:length()
 		old_p = p
 	end
 
 	return len
 end
 
--- Lines 298-314
+-- Lines 393-408
 function math.bezier(points, t)
+	local t_squared = t * t
+	local t_cubed = t_squared * t
 	local p1 = points[1]
 	local p2 = points[2]
 	local p3 = points[3]
 	local p4 = points[4]
-	local t_squared = t * t
-	local t_cubed = t_squared * t
 	local a1 = p1 * ((1 - t) * (1 - t) * (1 - t))
 	local a2 = 3 * p2 * t * (1 - t) * (1 - t)
 	local a3 = 3 * p3 * t_squared * (1 - t)
@@ -356,7 +429,26 @@ function math.bezier(points, t)
 	return a1 + a2 + a3 + a4
 end
 
--- Lines 316-321
+-- Lines 411-430
+function math.bezier_vec3(points, t)
+	local t_squared = t * t
+	local t_cubed = t_squared * t
+
+	mvec3_set(tmp_vec1, points[1])
+	mvec3_set(tmp_vec2, points[2])
+	mvec3_set(tmp_vec3, points[3])
+	mvec3_set(tmp_vec4, points[4])
+	mvec3_mul(tmp_vec1, (1 - t) * (1 - t) * (1 - t))
+	mvec3_mul(tmp_vec2, 3 * (t * (1 - t) * (1 - t)))
+	mvec3_mul(tmp_vec3, 3 * t_squared * (1 - t))
+	mvec3_mul(tmp_vec4, t_cubed)
+	mvec3_add(tmp_vec1, tmp_vec2)
+	mvec3_add(tmp_vec1, tmp_vec3)
+
+	return tmp_vec1 + tmp_vec4
+end
+
+-- Lines 432-437
 function math.linear_bezier(points, t)
 	local p1 = points[1]
 	local p2 = points[2]
@@ -364,7 +456,7 @@ function math.linear_bezier(points, t)
 	return p1 * (1 - t) + p2 * t
 end
 
--- Lines 323-329
+-- Lines 439-445
 function math.quadratic_bezier(points, t)
 	local p1 = points[1]
 	local p2 = points[2]
@@ -373,46 +465,57 @@ function math.quadratic_bezier(points, t)
 	return p1 * ((1 - t) * (1 - t)) + p2 * (2 * t * (1 - t)) + p3 * (t * t)
 end
 
--- Lines 332-341
+-- Lines 447-458
 function math.bezier_len(points, n)
 	local len = 0
 	local old_p = points[1]
 
 	for i = 1, n do
-		local p = math.bezier(points, i / n)
+		local p = math.bezier_vec3(points, i / n)
 
-		len = len + (p - old_p):length()
+		mvec3_set(tmp_vec1, p)
+		mvec3_sub(tmp_vec1, old_p)
+
+		len = len + tmp_vec1:length()
 		old_p = p
 	end
 
 	return len
 end
 
--- Lines 345-359
-function math.point_on_line(l1, l2, p, ret_vector)
+-- Lines 462-479
+function math.point_on_line(l1, l2, p, m_vector)
+	mvec3_set(tmp_vec1, l2)
+	mvec3_sub(tmp_vec1, l1)
+
 	local u = (p.x - l1.x) * (l2.x - l1.x) + (p.y - l1.y) * (l2.y - l1.y) + (p.z - l1.z) * (l2.z - l1.z)
-	local u = math.clamp(u / math.pow((l2 - l1):length(), 2), 0, 1)
+
+	u = math.clamp(u / math.pow(tmp_vec1:length(), 2), 0, 1)
+
 	local x = l1.x + u * (l2.x - l1.x)
 	local y = l1.y + u * (l2.y - l1.y)
 	local z = l1.z + u * (l2.z - l1.z)
 
-	if ret_vector then
-		mvector3.set_static(ret_vector, x, y, z)
+	if m_vector then
+		mvec3_set_stat(m_vector, x, y, z)
 
-		return
+		return m_vector
 	end
 
 	return Vector3(x, y, z)
 end
 
--- Lines 363-366
+-- Lines 483-491
 function math.distance_to_line(l1, l2, p)
 	local closest_point = math.point_on_line(l1, l2, p)
 
-	return (closest_point - p):length(), closest_point
+	mvec3_set(tmp_vec1, closest_point)
+	mvec3_sub(tmp_vec1, p)
+
+	return tmp_vec2:length(), closest_point
 end
 
--- Lines 369-376
+-- Lines 494-501
 function math.limitangle(angle)
 	local newangle = math.fmod(angle, 360)
 
@@ -423,29 +526,60 @@ function math.limitangle(angle)
 	return newangle
 end
 
--- Lines 378-386
+-- Lines 503-521
 function math.world_to_obj(obj, point)
 	if obj == nil then
 		return point
 	end
 
-	local vec = point - obj:position()
+	obj:m_position(tmp_vec1)
+	obj:m_rotation(tmp_rot1)
+	mrot_invert(tmp_rot1)
+	mvec3_set(tmp_vec2, point)
+	mvec3_sub(tmp_vec2, tmp_vec1)
 
-	return vec:rotate_with(obj:rotation():inverse())
+	return tmp_vec2:rotate_with(tmp_rot1)
 end
 
--- Lines 388-397
+-- Lines 523-539
 function math.obj_to_world(obj, point)
 	if obj == nil then
 		return point
 	end
 
-	local vec = point:rotate_with(obj:rotation())
+	obj:m_position(tmp_vec1)
+	obj:m_rotation(tmp_rot1)
+	mvec3_set(tmp_vec2, point)
+	mvec3_rot(tmp_vec2, tmp_rot1)
 
-	return vec + obj:position()
+	return tmp_vec1 + tmp_vec2
 end
 
--- Lines 399-401
+-- Lines 543-562
+function math.obj_to_light_rotation(obj, m_rot)
+	local obj_rot = m_rot or Rotation()
+
+	obj:m_rotation(obj_rot)
+
+	local light_rot_x = tmp_vec1
+
+	mrot_x(obj_rot, light_rot_x)
+	mvec3_neg(light_rot_x)
+
+	local light_rot_y = tmp_vec2
+
+	mrot_y(obj_rot, light_rot_y)
+	mvec3_neg(light_rot_y)
+
+	local light_rot_z = tmp_vec3
+
+	mrot_z(obj_rot, light_rot_z)
+	mrot_set_xyz(obj_rot, light_rot_z, light_rot_x, light_rot_y)
+
+	return obj_rot
+end
+
+-- Lines 564-566
 function math.within(x, min, max)
 	return min <= x and x <= max
 end

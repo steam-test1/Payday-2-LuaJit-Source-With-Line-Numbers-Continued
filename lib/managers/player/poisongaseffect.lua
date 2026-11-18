@@ -1,6 +1,6 @@
 PoisonGasEffect = PoisonGasEffect or class()
 
--- Lines 4-36
+-- Lines 5-37
 function PoisonGasEffect:init(position, normal, projectile_tweak, grenade_unit)
 	self._position = position
 	self._normal = normal
@@ -19,10 +19,6 @@ function PoisonGasEffect:init(position, normal, projectile_tweak, grenade_unit)
 	self._damage_tick_timer = projectile_tweak.poison_gas_tick_time or 0.1
 	self._fade_time = projectile_tweak.poison_gas_fade_time or 2
 	self._dot_data = projectile_tweak.poison_gas_dot_data_name and tweak_data.dot:get_dot_data(projectile_tweak.poison_gas_dot_data_name) or tweak_data.dot:get_dot_data("weapon_dotbulletbase")
-	self._sound_source = SoundDevice:create_source("ExplosionManager")
-
-	self._sound_source:set_position(position)
-
 	self._unit_list = {}
 	self._effect = World:effect_manager():spawn({
 		effect = self._tweak_data.poison_gas_effect and Idstring(self._tweak_data.poison_gas_effect) or Idstring("effects/particles/explosions/poison_gas"),
@@ -31,26 +27,24 @@ function PoisonGasEffect:init(position, normal, projectile_tweak, grenade_unit)
 	})
 end
 
--- Lines 38-40
+-- Lines 39-41
 function PoisonGasEffect:position()
 	return self._position
 end
 
--- Lines 42-44
+-- Lines 43-45
 function PoisonGasEffect:alive()
 	return not not self._timer
 end
 
--- Lines 46-51
+-- Lines 47-52
 function PoisonGasEffect:remove_grenade_unit()
-	print("remove_grenade_unit")
-
 	if alive(self._grenade_unit) then
 		self._grenade_unit:set_slot(0)
 	end
 end
 
--- Lines 54-99
+-- Lines 55-100
 function PoisonGasEffect:update(t, dt)
 	if self._timer then
 		self._timer = self._timer - dt
@@ -98,7 +92,7 @@ function PoisonGasEffect:update(t, dt)
 	end
 end
 
--- Lines 101-106
+-- Lines 102-107
 function PoisonGasEffect:destroy()
 	if self._effect and not self._started_fading then
 		World:effect_manager():kill(self._effect)

@@ -1,5 +1,32 @@
+local mvec3_set = mvector3.set
+local mvec3_set_stat = mvector3.set_static
+local mvec3_add = mvector3.add
+local mvec3_mul = mvector3.multiply
+local mvec3_dir = mvector3.direction
+local mvec3_dot = mvector3.dot
+local mvec3_step = mvector3.step
+local mvec3_rot = mvector3.rotate_with
+local mvec3_neg = mvector3.negate
+local mvec3_lerp = mvector3.lerp
+local mrot_x = mrotation.x
+local mrot_y = mrotation.y
+local mrot_set_look_at = mrotation.set_look_at
+local mvec1 = Vector3()
+local mvec2 = Vector3()
+local mvec3 = Vector3()
+local mvec4 = Vector3()
+local mvec_l_dir = Vector3()
+local mrot1 = Rotation()
+local math_obj_to_light_rotation = math.obj_to_light_rotation
+local IDS_BASE = Idstring("base")
+local IDS_A_LASER = Idstring("a_laser")
+local IDS_G_LASER = Idstring("g_laser")
+local IDS_G_INDICATOR = Idstring("g_indicator")
+
 WeaponLaser = WeaponLaser or class(WeaponGadgetBase)
 WeaponLaser.GADGET_TYPE = "laser"
+WeaponLaser._max_distance = 3000
+WeaponLaser._scale_distance = 1000
 WeaponLaser._themes = {
 	default = {
 		light = Vector3(0, 10, 0),
@@ -27,50 +54,64 @@ WeaponLaser._themes = {
 		brush = Color(0.15, 0, 1, 0)
 	}
 }
-WeaponLaser._max_distance = 3000
-WeaponLaser._scale_distance = 1000
+WeaponLaser.LIGHT_SETTINGS = {
+	light = {
+		far_range = 75,
+		near_range = 40,
+		spot_angle_end = 3
+	},
+	light_glow = {
+		far_range = 75,
+		near_range = 40,
+		spot_angle_end = 20
+	}
+}
 
--- Lines 14-83
+-- Lines 87-156
 function WeaponLaser:init(unit)
 	WeaponLaser.super.init(self, unit)
 
 	self._on_event = "gadget_laser_aim_on"
 	self._off_event = "gadget_laser_aim_off"
+	self._theme_type = "default"
 
-	local obj = self._unit:get_object(Idstring("a_laser"))
+	local obj = self._unit:get_object(IDS_A_LASER)
 
 	self._laser_obj = obj
-	self._g_laser = self._unit:get_object(Idstring("g_laser"))
-	self._g_indicator = self._unit:get_object(Idstring("g_indicator"))
-	self._spot_angle_end = 0
+	self._g_laser = self._unit:get_object(IDS_G_LASER)
+	self._g_indicator = self._unit:get_object(IDS_G_INDICATOR)
+
+	local light_obj_rot = mrot1
+
+	math_obj_to_light_rotation(obj, light_obj_rot)
+
 	self._light = World:create_light("spot|specular")
 
-	self._light:set_spot_angle_end(3)
-	self._light:set_far_range(75)
-	self._light:set_near_range(40)
+	self._light:set_spot_angle_end(self.LIGHT_SETTINGS.light.spot_angle_end)
+	self._light:set_far_range(self.LIGHT_SETTINGS.light.far_range)
+	self._light:set_near_range(self.LIGHT_SETTINGS.light.near_range)
 	self._light:link(obj)
-	self._light:set_rotation(Rotation(obj:rotation():z(), -obj:rotation():x(), -obj:rotation():y()))
+	self._light:set_rotation(light_obj_rot)
 
-	self._theme_type = "default"
 	self._light_color = Vector3()
 
-	mvector3.set(self._light_color, self._themes[self._theme_type].light)
+	mvec3_set(self._light_color, self._themes[self._theme_type].light)
 	self._light:set_color(self._light_color)
 	self._light:set_enable(false)
 
 	self._light_glow = World:create_light("spot|specular")
 
-	self._light_glow:set_spot_angle_end(20)
-	self._light_glow:set_far_range(75)
-	self._light_glow:set_near_range(40)
+	self._light_glow:set_spot_angle_end(self.LIGHT_SETTINGS.light_glow.spot_angle_end)
+	self._light_glow:set_far_range(self.LIGHT_SETTINGS.light_glow.far_range)
+	self._light_glow:set_near_range(self.LIGHT_SETTINGS.light_glow.near_range)
 
 	self._light_glow_color = Vector3()
 
-	mvector3.set(self._light_glow_color, self._themes[self._theme_type].glow)
+	mvec3_set(self._light_glow_color, self._themes[self._theme_type].glow)
 	self._light_glow:set_color(self._light_glow_color)
-	self._light_glow:set_enable(false)
 	self._light_glow:link(obj)
-	self._light_glow:set_rotation(Rotation(obj:rotation():z(), -obj:rotation():x(), -obj:rotation():y()))
+	self._light_glow:set_rotation(light_obj_rot)
+	self._light_glow:set_enable(false)
 
 	self._slotmask = managers.slot:get_mask("bullet_impact_targets")
 	self._brush = Draw:brush(self._themes[self._theme_type].brush, "VertexColor")
@@ -78,96 +119,102 @@ function WeaponLaser:init(unit)
 	self._brush:set_blend_mode("opacity_add")
 end
 
--- Lines 90-92
+-- Lines 163-165
 function WeaponLaser:set_position(pos)
 	self._custom_position = pos
 end
 
--- Lines 94-96
+-- Lines 167-169
 function WeaponLaser:set_rotation(rot)
 	self._custom_rotation = rot
 end
 
-local mvec1 = Vector3()
-local mvec2 = Vector3()
-local mvec_l_dir = Vector3()
-
--- Lines 103-166
+-- Lines 304-310
 function WeaponLaser:update(unit, t, dt)
-	local rotation = self._custom_rotation or self._laser_obj:rotation()
-
-	mrotation.y(rotation, mvec_l_dir)
-
-	local from = mvec1
-
-	if self._custom_position then
-		mvector3.set(from, self._laser_obj:local_position())
-		mvector3.rotate_with(from, rotation)
-		mvector3.add(from, self._custom_position)
-	else
-		mvector3.set(from, self._laser_obj:position())
-	end
-
-	local to = mvec2
-
-	mvector3.set(to, mvec_l_dir)
-	mvector3.multiply(to, self._max_distance)
-	mvector3.add(to, from)
-
-	local ray = self._unit:raycast("ray", from, to, "slot_mask", self._slotmask, self._ray_ignore_units and "ignore_unit" or nil, self._ray_ignore_units)
-
-	if ray then
-		if not self._is_npc then
-			self._light:set_spot_angle_end(self._spot_angle_end)
-
-			self._spot_angle_end = math.lerp(1, 18, ray.distance / self._max_distance)
-
-			self._light_glow:set_spot_angle_end(math.lerp(8, 80, ray.distance / self._max_distance))
-
-			local scale = (math.clamp(ray.distance, self._max_distance - self._scale_distance, self._max_distance) - (self._max_distance - self._scale_distance)) / self._scale_distance
-
-			scale = 1 - scale
-
-			self._light:set_multiplier(scale)
-			self._light_glow:set_multiplier(scale * 0.1)
-		end
-
-		self._brush:cylinder(ray.position, from, self._is_npc and 0.5 or 0.25)
-
-		local pos = mvec1
-
-		mvector3.set(pos, mvec_l_dir)
-		mvector3.multiply(pos, 50)
-		mvector3.negate(pos)
-		mvector3.add(pos, ray.position)
-		self._light:set_final_position(pos)
-		self._light_glow:set_final_position(pos)
-	else
-		self._light:set_final_position(to)
-		self._light_glow:set_final_position(to)
-		self._brush:cylinder(from, to, self._is_npc and 0.5 or 0.25)
-	end
+	self:_update_laser(unit, t, dt, self._laser_obj, self._light, self._light_glow)
 
 	self._custom_position = nil
 	self._custom_rotation = nil
 end
 
--- Lines 170-177
+-- Lines 313-377
+function WeaponLaser:_update_laser(unit, t, dt, laser_obj, light_obj, light_glow_obj)
+	local rotation = self._custom_rotation
+
+	if not rotation then
+		rotation = mrot1
+
+		laser_obj:m_rotation(rotation)
+	end
+
+	mrot_y(rotation, mvec_l_dir)
+
+	local from = mvec1
+
+	if self._custom_position then
+		mvec3_set(from, laser_obj:local_position())
+		mvec3_rot(from, rotation)
+		mvec3_add(from, self._custom_position)
+	else
+		laser_obj:m_position(from)
+	end
+
+	local to = mvec2
+
+	mvec3_set(to, mvec_l_dir)
+	mvec3_mul(to, self._max_distance)
+	mvec3_add(to, from)
+
+	local ray = unit:raycast("ray", from, to, "slot_mask", self._slotmask, self._ray_ignore_units and "ignore_unit" or nil, self._ray_ignore_units)
+
+	if ray then
+		if not self._is_npc then
+			local spot_distance = ray.distance / self._max_distance
+
+			light_obj:set_spot_angle_end(math.lerp(1, 18, spot_distance))
+			light_glow_obj:set_spot_angle_end(math.lerp(8, 80, spot_distance))
+
+			local scale = (math.clamp(ray.distance, self._max_distance - self._scale_distance, self._max_distance) - (self._max_distance - self._scale_distance)) / self._scale_distance
+
+			scale = 1 - scale
+
+			light_obj:set_multiplier(scale)
+			light_glow_obj:set_multiplier(scale * 0.1)
+		end
+
+		self._brush:cylinder(from, ray.position, self._is_npc and 0.5 or 0.25)
+
+		local pos = mvec1
+
+		mvec3_set(pos, mvec_l_dir)
+		mvec3_mul(pos, 50)
+		mvec3_neg(pos)
+		mvec3_add(pos, ray.position)
+		light_obj:set_final_position(pos)
+		light_glow_obj:set_final_position(pos)
+	else
+		light_obj:set_position(to)
+		light_glow_obj:set_position(to)
+		self._brush:cylinder(from, to, self._is_npc and 0.5 or 0.25)
+	end
+end
+
+-- Lines 381-395
 function WeaponLaser:_check_state(current_state)
 	WeaponLaser.super._check_state(self, current_state)
 	self._light:set_enable(self._on)
 	self._light_glow:set_enable(self._on)
 	self._g_laser:set_visibility(self._on)
 	self._g_indicator:set_visibility(self._on)
-	self._unit:set_extension_update_enabled(Idstring("base"), self._on)
+	self._unit:set_extension_update_enabled(IDS_BASE, self._on)
 end
 
--- Lines 179-181
+-- Lines 397-399
 function WeaponLaser:set_npc()
 	self._is_npc = true
 end
 
--- Lines 185-195
+-- Lines 403-415
 function WeaponLaser:destroy(unit)
 	WeaponLaser.super.destroy(self, unit)
 
@@ -178,27 +225,30 @@ function WeaponLaser:destroy(unit)
 	if alive(self._light_glow) then
 		World:delete_light(self._light_glow)
 	end
+
+	self._light = nil
+	self._light_glow = nil
 end
 
--- Lines 199-211
+-- Lines 419-431
 function WeaponLaser:set_color_by_theme(type)
 	self._theme_type = type
 
 	local theme = self._themes[type] or self._themes.default
 
-	mvector3.set(self._light_color, theme.light)
+	mvec3_set(self._light_color, theme.light)
 	self._light:set_color(self._light_color)
-	mvector3.set(self._light_glow_color, theme.glow)
+	mvec3_set(self._light_glow_color, theme.glow)
 	self._light_glow:set_color(self._light_glow_color)
 	self._brush:set_color(theme.brush)
 end
 
--- Lines 215-217
+-- Lines 435-437
 function WeaponLaser:theme_type()
 	return self._theme_type
 end
 
--- Lines 221-242
+-- Lines 441-462
 function WeaponLaser:set_color(color)
 	if not color then
 		return
@@ -215,17 +265,17 @@ function WeaponLaser:set_color(color)
 	self._brush:set_color(color)
 end
 
--- Lines 245-247
+-- Lines 465-467
 function WeaponLaser:color()
 	return self._color or tweak_data.custom_colors.defaults.laser
 end
 
--- Lines 252-254
+-- Lines 472-474
 function WeaponLaser:set_max_distace(dis)
 	self._max_distance = dis
 end
 
--- Lines 258-261
+-- Lines 480-483
 function WeaponLaser:add_ray_ignore_unit(unit)
 	self._ray_ignore_units = self._ray_ignore_units or {}
 
@@ -235,7 +285,7 @@ end
 WeaponMultiLaser = WeaponMultiLaser or class(WeaponLaser)
 WeaponMultiLaser.GADGET_TYPE = "laser"
 
--- Lines 270-339
+-- Lines 492-578
 function WeaponMultiLaser:init(unit)
 	WeaponLaser.super.init(self, unit)
 
@@ -244,31 +294,35 @@ function WeaponMultiLaser:init(unit)
 	self._theme_type = "default"
 	self._light_color = Vector3()
 
-	mvector3.set(self._light_color, self._themes[self._theme_type].light)
+	mvec3_set(self._light_color, self._themes[self._theme_type].light)
 
 	self._light_glow_color = Vector3()
 
-	mvector3.set(self._light_glow_color, self._themes[self._theme_type].glow)
+	mvec3_set(self._light_glow_color, self._themes[self._theme_type].glow)
 
 	local obj
 
 	self._g_lasers = {}
 
-	for index, obj_name in ipairs(self.g_lasers or {}) do
+	for _, obj_name in ipairs(self.g_lasers or {}) do
 		obj = self._unit:get_object(Idstring(obj_name))
 
 		if obj then
-			self._g_lasers[index] = obj
+			table.insert(self._g_lasers, obj)
+		else
+			Application:error("[WeaponMultiLaser:init] No g_laser object found with name.", obj_name, self._unit)
 		end
 	end
 
 	self._g_indicators = {}
 
-	for index, obj_name in ipairs(self.g_indicators or {}) do
+	for _, obj_name in ipairs(self.g_indicators or {}) do
 		obj = self._unit:get_object(Idstring(obj_name))
 
 		if obj then
-			self._g_indicators[index] = obj
+			table.insert(self._g_indicators, obj)
+		else
+			Application:error("[WeaponMultiLaser:init] No g_indicator object found with name.", obj_name, self._unit)
 		end
 	end
 
@@ -276,30 +330,39 @@ function WeaponMultiLaser:init(unit)
 	self._light_glows = {}
 	self._laser_objs = {}
 
-	for index, obj_name in ipairs(self.laser_objects or {}) do
+	for _, obj_name in ipairs(self.laser_objects or {}) do
 		obj = self._unit:get_object(Idstring(obj_name))
 
 		if obj then
-			self._laser_objs[index] = obj
-			self._lights[index] = World:create_light("spot|specular")
+			table.insert(self._laser_objs, obj)
 
-			self._lights[index]:set_spot_angle_end(3)
-			self._lights[index]:set_far_range(75)
-			self._lights[index]:set_near_range(40)
-			self._lights[index]:link(obj)
-			self._lights[index]:set_rotation(Rotation(obj:rotation():z(), -obj:rotation():x(), -obj:rotation():y()))
-			self._lights[index]:set_color(self._light_color)
-			self._lights[index]:set_enable(false)
+			local light_obj_rot = mrot1
 
-			self._light_glows[index] = World:create_light("spot|specular")
+			math_obj_to_light_rotation(obj, light_obj_rot)
 
-			self._light_glows[index]:set_spot_angle_end(20)
-			self._light_glows[index]:set_far_range(75)
-			self._light_glows[index]:set_near_range(40)
-			self._light_glows[index]:set_color(self._light_glow_color)
-			self._light_glows[index]:set_enable(false)
-			self._light_glows[index]:link(obj)
-			self._light_glows[index]:set_rotation(Rotation(obj:rotation():z(), -obj:rotation():x(), -obj:rotation():y()))
+			local light = World:create_light("spot|specular")
+
+			table.insert(self._lights, light)
+			light:set_spot_angle_end(self.LIGHT_SETTINGS.light.spot_angle_end)
+			light:set_far_range(self.LIGHT_SETTINGS.light.far_range)
+			light:set_near_range(self.LIGHT_SETTINGS.light.near_range)
+			light:link(obj)
+			light:set_rotation(light_obj_rot)
+			light:set_color(self._light_color)
+			light:set_enable(false)
+
+			local light_glow = World:create_light("spot|specular")
+
+			table.insert(self._light_glows, light_glow)
+			light_glow:set_spot_angle_end(self.LIGHT_SETTINGS.light_glow.spot_angle_end)
+			light_glow:set_far_range(self.LIGHT_SETTINGS.light_glow.far_range)
+			light_glow:set_near_range(self.LIGHT_SETTINGS.light_glow.near_range)
+			light_glow:set_color(self._light_glow_color)
+			light_glow:link(obj)
+			light_glow:set_rotation(light_obj_rot)
+			light_glow:set_enable(false)
+		else
+			Application:error("[WeaponMultiLaser:init] No laser object found with name.", obj_name, self._unit)
 		end
 	end
 
@@ -309,68 +372,17 @@ function WeaponMultiLaser:init(unit)
 	self._brush:set_blend_mode("opacity_add")
 end
 
--- Lines 343-397
+-- Lines 593-602
 function WeaponMultiLaser:update(unit, t, dt)
-	for index, laser_obj in ipairs(self._laser_objs) do
-		local light = self._lights[index] or self._lights[1]
-		local light_glow = self._light_glows[index] or self._light_glows[1]
-		local rotation = self._custom_rotation or laser_obj:rotation()
-
-		mrotation.y(rotation, mvec_l_dir)
-
-		local from = mvec1
-
-		if self._custom_position then
-			mvector3.set(from, laser_obj:local_position())
-			mvector3.rotate_with(from, rotation)
-			mvector3.add(from, self._custom_position)
-		else
-			mvector3.set(from, laser_obj:position())
-		end
-
-		local to = mvec2
-
-		mvector3.set(to, mvec_l_dir)
-		mvector3.multiply(to, self._max_distance)
-		mvector3.add(to, from)
-
-		local ray = self._unit:raycast("ray", from, to, "slot_mask", self._slotmask, self._ray_ignore_units and "ignore_unit" or nil, self._ray_ignore_units)
-
-		if ray then
-			if not self._is_npc then
-				light:set_spot_angle_end(math.lerp(1, 18, ray.distance / self._max_distance))
-				light_glow:set_spot_angle_end(math.lerp(8, 80, ray.distance / self._max_distance))
-
-				local scale = (math.clamp(ray.distance, self._max_distance - self._scale_distance, self._max_distance) - (self._max_distance - self._scale_distance)) / self._scale_distance
-
-				scale = 1 - scale
-
-				light:set_multiplier(scale)
-				light_glow:set_multiplier(scale * 0.1)
-			end
-
-			self._brush:cylinder(ray.position, from, self._is_npc and 0.5 or 0.25)
-
-			local pos = mvec1
-
-			mvector3.set(pos, mvec_l_dir)
-			mvector3.multiply(pos, 50)
-			mvector3.negate(pos)
-			mvector3.add(pos, ray.position)
-			light:set_final_position(pos)
-			light_glow:set_final_position(pos)
-		else
-			light:set_final_position(to)
-			light_glow:set_final_position(to)
-			self._brush:cylinder(from, to, self._is_npc and 0.5 or 0.25)
-		end
+	for index, laser_obj in pairs(self._laser_objs) do
+		self:_update_laser(unit, t, dt, laser_obj, self._lights[index], self._light_glows[index])
 	end
 
 	self._custom_position = nil
 	self._custom_rotation = nil
 end
 
--- Lines 401-421
+-- Lines 606-632
 function WeaponMultiLaser:_check_state(current_state)
 	WeaponLaser.super._check_state(self, current_state)
 
@@ -390,22 +402,22 @@ function WeaponMultiLaser:_check_state(current_state)
 		g_indicator:set_visibility(self._on)
 	end
 
-	self._unit:set_extension_update_enabled(Idstring("base"), self._on)
+	self._unit:set_extension_update_enabled(IDS_BASE, self._on)
 end
 
--- Lines 425-441
+-- Lines 636-652
 function WeaponMultiLaser:set_color_by_theme(type)
 	self._theme_type = type
 
 	local theme = self._themes[type] or self._themes.default
 
-	mvector3.set(self._light_color, theme.light)
+	mvec3_set(self._light_color, theme.light)
 
 	for _, light in ipairs(self._lights) do
 		light:set_color(self._light_color)
 	end
 
-	mvector3.set(self._light_glow_color, theme.glow)
+	mvec3_set(self._light_glow_color, theme.glow)
 
 	for _, light_glow in ipairs(self._light_glows) do
 		light_glow:set_color(self._light_glow_color)
@@ -414,7 +426,7 @@ function WeaponMultiLaser:set_color_by_theme(type)
 	self._brush:set_color(theme.brush)
 end
 
--- Lines 445-468
+-- Lines 656-681
 function WeaponMultiLaser:set_color(color)
 	if not color then
 		return
@@ -422,13 +434,13 @@ function WeaponMultiLaser:set_color(color)
 
 	self._color = color
 
-	mvector3.set_static(self._light_color, color.r * 10, color.g * 10, color.b * 10)
+	mvec3_set_stat(self._light_color, color.r * 10, color.g * 10, color.b * 10)
 
 	for _, light in ipairs(self._lights) do
 		light:set_color(self._light_color)
 	end
 
-	mvector3.set_static(self._light_glow_color, color.r * 0.2, color.g * 0.2, color.b * 0.2)
+	mvec3_set_stat(self._light_glow_color, color.r * 0.2, color.g * 0.2, color.b * 0.2)
 
 	for _, light_glow in ipairs(self._light_glows) do
 		light_glow:set_color(self._light_glow_color)
@@ -437,25 +449,30 @@ function WeaponMultiLaser:set_color(color)
 	self._brush:set_color(color)
 end
 
--- Lines 472-482
+-- Lines 685-701
 function WeaponMultiLaser:destroy(unit)
 	WeaponLaser.super.destroy(self, unit)
 
 	for _, light in ipairs(self._lights) do
-		World:delete_light(light)
+		if alive(light) then
+			World:delete_light(light)
+		end
 	end
 
 	for _, light_glow in ipairs(self._light_glows) do
-		World:delete_light(light_glow)
+		if alive(light_glow) then
+			World:delete_light(light_glow)
+		end
 	end
+
+	self._lights = {}
+	self._light_glows = {}
 end
 
 WatchLaser = WatchLaser or class(UnitBase)
 WatchLaser.MAX_DISTANCE = 68
 
-local mrot1 = Rotation()
-
--- Lines 491-508
+-- Lines 709-726
 function WatchLaser:init(unit)
 	WatchLaser.super.init(self, unit, false)
 
@@ -475,11 +492,11 @@ function WatchLaser:init(unit)
 	self._slotmask = managers.slot:get_mask("bullet_impact_targets")
 end
 
--- Lines 510-531
+-- Lines 728-749
 function WatchLaser:set_enabled(enabled)
 	local has_laser = not not self._impact_effect
 
-	self._unit:set_extension_update_enabled(Idstring("base"), enabled and has_laser)
+	self._unit:set_extension_update_enabled(IDS_BASE, enabled and has_laser)
 
 	local event = self._projectile_data.sounds and self._projectile_data.sounds[enabled and "activate" or "deactivate"]
 
@@ -500,30 +517,29 @@ function WatchLaser:set_enabled(enabled)
 	end
 end
 
--- Lines 533-575
+-- Lines 751-795
 function WatchLaser:update(unit, t, dt)
-	local rotation = self._laser_obj:rotation()
-
-	mrotation.x(rotation, mvec_l_dir)
+	self._laser_obj:m_rotation(mrot1)
+	mrot_x(mrot1, mvec_l_dir)
 
 	local from = mvec1
 
-	mvector3.set(from, self._laser_obj:position())
+	self._laser_obj:m_position(from)
 
 	local to = mvec2
 
-	mvector3.set(to, -mvec_l_dir)
-	mvector3.multiply(to, self.MAX_DISTANCE)
-	mvector3.add(to, from)
+	mvec3_set(to, mvec_l_dir)
+	mvec3_neg(to)
+	mvec3_mul(to, self.MAX_DISTANCE)
+	mvec3_add(to, from)
 
 	local ray = self._unit:raycast("ray", from, to, "slot_mask", self._slotmask)
 
 	if ray then
-		local normal = ray.normal
-		local position = ray.position + ray.normal
-
-		mrotation.set_look_at(mrot1, normal, math.UP)
-		self._impact_obj:set_position(position)
+		mvec3_set(to, ray.position)
+		mvec3_add(to, ray.normal)
+		mrot_set_look_at(mrot1, ray.normal, math.UP)
+		self._impact_obj:set_position(to)
 		self._impact_obj:set_rotation(mrot1)
 
 		if not self._active then

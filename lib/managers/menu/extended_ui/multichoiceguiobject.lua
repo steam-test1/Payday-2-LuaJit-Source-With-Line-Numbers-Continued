@@ -6,7 +6,7 @@ local medium_font_size = tweak_data.menu.pd2_medium_font_size
 local normal_color = tweak_data.screen_colors.button_stage_3
 local hover_color = tweak_data.screen_colors.button_stage_2
 
--- Lines 13-147
+-- Lines 13-129
 function MultichoiceGuiObject:init(parent, params, panel_config)
 	panel_config = panel_config or {}
 
@@ -22,51 +22,35 @@ function MultichoiceGuiObject:init(parent, params, panel_config)
 	self:set_size(0, 0)
 
 	local placer = ResizingPlacer:new(self, {
-		padding = 10
+		padding = 8
 	})
 
-	self._items = {}
+	self._options = params.options
 	self._on_change = params.on_change
+	self._text = self:fine_text({
+		align = "center",
+		text = "AAAAAAAAAAAAAAAAAAAAA",
+		w = 200,
+		font = small_font,
+		font_size = small_font_size,
+		color = hover_color
+	})
+	self._index = 1
 
-	local current_index = 1
-	local max_w = 200
-
-	for i, option in pairs(params.options) do
-		local t = self:fine_text({
-			align = "center",
-			text = params.localize ~= false and managers.localization:to_upper_text(option.text_id) or option.text_id,
-			font = small_font,
-			font_size = small_font_size,
-			color = hover_color
-		})
-
-		table.insert(self._items, {
-			item = t,
-			value = option.value,
-			index = i
-		})
-
-		max_w = math.max(max_w, t:w())
-
-		if option.value == params.value then
-			current_index = #self._items
-		end
+	if params.value then
+		self:set_value(params.value, true)
+	else
+		self:set_index(1, true)
 	end
-
-	for _, t in pairs(self._items) do
-		t.item:set_w(max_w)
-		t.item:set_visible(false)
-	end
-
-	self:set_current(self._items[current_index], true)
-
-	local current = self._current.item
 
 	if not managers.menu:is_pc_controller() then
+		local left_btn = params.use_change_profile_controls and "menu_change_profile_left" or "previous_page"
+		local right_btn = params.use_change_profile_controls and "menu_change_profile_right" or "next_page"
+
 		placer:add_right(IconButton:new(self, {
-			binding = "previous_page",
 			size = 32,
 			texture = "guis/textures/menu_arrows",
+			binding = left_btn,
 			normal_color = normal_color,
 			hover_color = hover_color,
 			texture_rect = {
@@ -77,23 +61,23 @@ function MultichoiceGuiObject:init(parent, params, panel_config)
 			}
 		}, callback(self, self, "_prev")), 20)
 		placer:add_right(self:fine_text({
-			text = managers.localization:btn_macro("previous_page", true),
+			text = managers.localization:btn_macro(left_btn, true),
 			font = small_font,
 			font_size = small_font_size,
 			color = Color.white
 		}), 0)
-		placer:add_right_center(current)
+		placer:add_right_center(self._text)
 		placer:add_right(self:fine_text({
-			text = managers.localization:btn_macro("next_page", true),
+			text = managers.localization:btn_macro(right_btn, true),
 			font = small_font,
 			font_size = medium_font_size,
 			color = Color.white
 		}))
 		placer:add_right(IconButton:new(self, {
-			binding = "next_page",
 			rotation = 180,
 			size = 32,
 			texture = "guis/textures/menu_arrows",
+			binding = right_btn,
 			normal_color = normal_color,
 			hover_color = hover_color,
 			texture_rect = {
@@ -117,7 +101,7 @@ function MultichoiceGuiObject:init(parent, params, panel_config)
 				24
 			}
 		}, callback(self, self, "_prev")))
-		placer:add_right_center(current)
+		placer:add_right_center(self._text)
 		placer:add_right(IconButton:new(self, {
 			rotation = 180,
 			size = 32,
@@ -131,10 +115,6 @@ function MultichoiceGuiObject:init(parent, params, panel_config)
 				24
 			}
 		}, callback(self, self, "_next")))
-	end
-
-	for _, t in pairs(self._items) do
-		t.item:set_position(current:position())
 	end
 
 	self._bg = self:rect({
@@ -152,7 +132,16 @@ function MultichoiceGuiObject:init(parent, params, panel_config)
 	})
 end
 
--- Lines 149-155
+-- Lines 131-136
+function MultichoiceGuiObject:set_options(options)
+	self._options = options
+
+	if not self:set_value(self._value, true) then
+		self:set_index(1, true)
+	end
+end
+
+-- Lines 138-144
 function MultichoiceGuiObject:mouse_moved(...)
 	local hit, icon = MultichoiceGuiObject.super.mouse_moved(self, ...)
 
@@ -161,57 +150,46 @@ function MultichoiceGuiObject:mouse_moved(...)
 	return hit, icon
 end
 
--- Lines 157-159
-function MultichoiceGuiObject:get_current()
-	return self._current
+-- Lines 146-148
+function MultichoiceGuiObject:get_index()
+	return self._index
 end
 
--- Lines 161-175
-function MultichoiceGuiObject:set_current(item, no_callback)
-	if self._current then
-		self._current.item:set_visible(false)
-	end
+-- Lines 150-158
+function MultichoiceGuiObject:set_value(value, no_callback)
+	for _, option in pairs(self._options) do
+		if option.value == value then
+			self:set_index(option, no_callback)
 
-	self._current = item
-
-	if self._current then
-		self._current.item:set_visible(true)
-
-		if not no_callback then
-			self._on_change(item)
+			return true
 		end
 	end
+
+	return false
 end
 
--- Lines 177-185
+-- Lines 159-169
+function MultichoiceGuiObject:set_index(index, no_callback)
+	index = math.clamp(index, 1, #self._options)
+
+	local option = self._options[index]
+
+	self._text:set_text(option.text_id and managers.localization:to_upper_text(option.text_id) or option.text)
+
+	self._index = index
+	self._value = option.value
+
+	if not no_callback then
+		self._on_change(index, option)
+	end
+end
+
+-- Lines 171-173
 function MultichoiceGuiObject:_next()
-	local i = (self._current and self._current.index or 1) + 1
-
-	if i > #self._items then
-		i = 1
-	end
-
-	self:set_current(self._items[i])
+	self:set_index(self._index + 1)
 end
 
--- Lines 187-195
+-- Lines 175-177
 function MultichoiceGuiObject:_prev()
-	local i = (self._current and self._current.index or 1) - 1
-
-	if i <= 0 then
-		i = #self._items
-	end
-
-	self:set_current(self._items[i])
-end
-
--- Lines 197-205
-function MultichoiceGuiObject:refresh()
-	local current_id = Global.achievements_filters.sort_order
-
-	for _, t in pairs(self._items) do
-		if t.value == current_id then
-			self:set_current(t)
-		end
-	end
+	self:set_index(self._index - 1)
 end

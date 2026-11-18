@@ -1,50 +1,37 @@
 BaseNetworkHandler = BaseNetworkHandler or class()
 BaseNetworkHandler._gamestate_filter = deep_clone(GameStateFilters)
 
--- Lines 7-14
+-- Lines 7-17
 function BaseNetworkHandler._verify_in_session()
 	local session = managers.network:session()
 
-	if not session then
-		print("[BaseNetworkHandler._verify_in_session] Discarding message")
-		Application:stack_dump()
-	end
+	session = session and true or false
 
 	return session
 end
 
--- Lines 18-26
+-- Lines 21-31
 function BaseNetworkHandler._verify_in_server_session()
 	local session = managers.network:session()
 
 	session = session and session:is_host()
 
-	if not session then
-		print("[BaseNetworkHandler._verify_in_server_session] Discarding message")
-		Application:stack_dump()
-	end
-
 	return session
 end
 
--- Lines 30-38
+-- Lines 35-45
 function BaseNetworkHandler._verify_in_client_session()
 	local session = managers.network:session()
 
 	session = session and session:is_client()
 
-	if not session then
-		print("[BaseNetworkHandler._verify_in_client_session] Discarding message")
-		Application:stack_dump()
-	end
-
 	return session
 end
 
--- Lines 42-58
+-- Lines 49-67
 function BaseNetworkHandler._verify_sender(rpc)
-	local session = managers.network:session()
 	local peer
+	local session = managers.network:session()
 
 	if session then
 		if rpc:protocol_at_index(0) == "STEAM" then
@@ -58,37 +45,68 @@ function BaseNetworkHandler._verify_sender(rpc)
 		end
 	end
 
-	print("[BaseNetworkHandler._verify_sender] Discarding message", session, peer and peer:id())
-	Application:stack_dump()
+	return nil
 end
 
--- Lines 62-64
+-- Lines 72-83
 function BaseNetworkHandler._verify_character_and_sender(unit, rpc)
-	return BaseNetworkHandler._verify_sender(rpc) and BaseNetworkHandler._verify_character(unit)
+	local peer = BaseNetworkHandler._verify_sender(rpc)
+	local valid_character = BaseNetworkHandler._verify_character(unit)
+	local result = peer and valid_character and true or false
+
+	return result
 end
 
--- Lines 68-70
+-- Lines 88-116
 function BaseNetworkHandler._verify_character(unit)
-	return alive(unit) and unit:character_damage() and (not unit:character_damage().dead or not unit:character_damage():dead())
+	if not alive(unit) then
+		return false
+	end
+
+	local char_dmg_ext = unit:character_damage()
+
+	if not char_dmg_ext then
+		return false
+	end
+
+	local is_character_alive = not char_dmg_ext.dead or not char_dmg_ext:dead()
+
+	return is_character_alive
 end
 
--- Lines 74-81
+-- Lines 120-129
 function BaseNetworkHandler._verify_gamestate(acceptable_gamestates)
 	if game_state_machine:verify_game_state(acceptable_gamestates) then
 		return true
 	end
 
-	print("[BaseNetworkHandler._verify_gamestate] Discarding message. current state:", game_state_machine:last_queued_state_name(), "acceptable:", inspect(acceptable_gamestates))
-	Application:stack_dump()
+	return false
 end
 
--- Lines 85-123
-function BaseNetworkHandler:_chk_flush_unit_too_early_packets(unit)
-	if self._flushing_unit_too_early_packets then
-		return
+-- Lines 135-164
+function BaseNetworkHandler._get_unit_extension_safe(unit, ext_name, peer)
+	if not table.contains(unit:extensions(), ext_name) then
+		if unit[ext_name] then
+			Application:error("[BaseNetworkHandler] _get_unit_extension_safe() - potentially malicious rpc received. \"" .. ext_name .. "\" is a unit function, not an extension. Peer:", peer)
+		else
+			Application:error("[BaseNetworkHandler] _get_unit_extension_safe() - no \"" .. ext_name .. "\" extension on unit. Unit:", unit)
+		end
+
+		return nil
 	end
 
-	if not alive(unit) then
+	local extension = unit[ext_name](unit)
+
+	if not extension then
+		return nil
+	end
+
+	return extension
+end
+
+-- Lines 168-205
+function BaseNetworkHandler:_chk_flush_unit_too_early_packets(unit)
+	if self._flushing_unit_too_early_packets or not alive(unit) then
 		return
 	end
 
@@ -98,23 +116,15 @@ function BaseNetworkHandler:_chk_flush_unit_too_early_packets(unit)
 		return
 	end
 
-	if not self._unit_too_early_queue then
-		return
-	end
-
-	local unit_rpcs = self._unit_too_early_queue[unit_id]
+	local unit_rpcs = self._unit_too_early_queue and self._unit_too_early_queue[unit_id] or nil
 
 	if not unit_rpcs then
 		return
 	end
 
-	print("[BaseNetworkHandler:_chk_flush_unit_too_early_packets]", unit_id)
-
 	self._flushing_unit_too_early_packets = true
 
 	for _, rpc_info in ipairs(unit_rpcs) do
-		print(" calling", rpc_info.fun_name)
-
 		rpc_info.params[rpc_info.unit_param_index] = unit
 
 		self[rpc_info.fun_name](self, unpack(rpc_info.params))
@@ -129,14 +139,10 @@ function BaseNetworkHandler:_chk_flush_unit_too_early_packets(unit)
 	self._flushing_unit_too_early_packets = nil
 end
 
--- Lines 127-152
+-- Lines 209-232
 function BaseNetworkHandler:_chk_unit_too_early(unit, unit_id_str, fun_name, unit_param_index, ...)
-	if self._flushing_unit_too_early_packets then
-		return
-	end
-
-	if alive(unit) then
-		return
+	if self._flushing_unit_too_early_packets or alive(unit) then
+		return false
 	end
 
 	if not self._unit_too_early_queue then
@@ -155,7 +161,6 @@ function BaseNetworkHandler:_chk_unit_too_early(unit, unit_id_str, fun_name, uni
 	self._unit_too_early_queue[unit_id] = self._unit_too_early_queue[unit_id] or {}
 
 	table.insert(self._unit_too_early_queue[unit_id], data)
-	print("[BaseNetworkHandler:_chk_unit_too_early]", unit_id_str, fun_name)
 
 	return true
 end

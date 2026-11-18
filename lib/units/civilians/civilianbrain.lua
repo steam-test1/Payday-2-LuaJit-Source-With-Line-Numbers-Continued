@@ -9,7 +9,7 @@ require("lib/units/civilians/logics/CivilianLogicTrade")
 
 CivilianBrain = CivilianBrain or class(CopBrain)
 CivilianBrain.set_attention_settings = PlayerMovement.set_attention_settings
-CivilianBrain._logics = {
+CivilianBrain._logic_variants.civilian = {
 	inactive = CivilianLogicInactive,
 	idle = CivilianLogicIdle,
 	surrender = CivilianLogicSurrender,
@@ -18,41 +18,10 @@ CivilianBrain._logics = {
 	travel = CivilianLogicTravel,
 	trade = CivilianLogicTrade
 }
+CivilianBrain._default_logic_variant = "civilian"
+CivilianBrain._tweak_data_clbk_id = "CivilianBrainTweakDataChange"
 
--- Lines 24-43
-function CivilianBrain:init(unit)
-	self._unit = unit
-	self._timer = TimerManager:game()
-
-	self:set_update_enabled_state(false)
-
-	self._current_logic = nil
-	self._current_logic_name = nil
-	self._active = true
-	self._SO_access = managers.navigation:convert_access_flag(tweak_data.character[unit:base()._tweak_table].access)
-	self._slotmask_enemies = managers.slot:get_mask("criminals")
-	CopBrain._reload_clbks[unit:key()] = callback(self, self, "on_reload")
-
-	if unit:base().add_tweak_data_changed_listener then
-		unit:base():add_tweak_data_changed_listener("CivilianBrainTweakDataChange" .. tostring(unit:key()), callback(self, self, "_clbk_tweak_data_changed"))
-	end
-end
-
--- Lines 47-58
-function CivilianBrain:update(unit, t, dt)
-	local logic = self._current_logic
-
-	if logic.update then
-		local l_data = self._logic_data
-
-		l_data.t = t
-		l_data.dt = dt
-
-		logic.update(l_data)
-	end
-end
-
--- Lines 62-67
+-- Lines 41-46
 function CivilianBrain:_reset_logic_data()
 	CopBrain._reset_logic_data(self)
 
@@ -61,12 +30,12 @@ function CivilianBrain:_reset_logic_data()
 	self._logic_data.objective_failed_clbk = callback(managers.groupai:state(), managers.groupai:state(), "on_civilian_objective_failed")
 end
 
--- Lines 71-73
+-- Lines 50-52
 function CivilianBrain:is_available_for_assignment(objective)
 	return self._current_logic.is_available_for_assignment(self._logic_data, objective)
 end
 
--- Lines 77-83
+-- Lines 56-62
 function CivilianBrain:cancel_trade()
 	if not self._active then
 		return
@@ -75,14 +44,14 @@ function CivilianBrain:cancel_trade()
 	self:set_logic("surrender")
 end
 
--- Lines 87-91
+-- Lines 66-70
 function CivilianBrain:on_rescue_allowed_state(state)
 	if self._current_logic.on_rescue_allowed_state then
 		self._current_logic.on_rescue_allowed_state(self._logic_data, state)
 	end
 end
 
--- Lines 95-103
+-- Lines 74-82
 function CivilianBrain:wants_rescue()
 	if self._dont_rescue then
 		return false
@@ -93,7 +62,7 @@ function CivilianBrain:wants_rescue()
 	end
 end
 
--- Lines 107-129
+-- Lines 87-109
 function CivilianBrain:on_cool_state_changed(state)
 	if self._logic_data then
 		self._logic_data.cool = state
@@ -128,7 +97,7 @@ function CivilianBrain:on_cool_state_changed(state)
 	managers.groupai:state():add_alert_listener(self._alert_listen_key, callback(self, self, "on_alert"), alert_listen_filter, alert_types, self._unit:movement():m_head_pos())
 end
 
--- Lines 137-268
+-- Lines 118-249
 function CivilianBrain:on_hostage_move_interaction(instigator_unit, command)
 	if not self._logic_data.is_tied then
 		return
@@ -242,7 +211,7 @@ function CivilianBrain:on_hostage_move_interaction(instigator_unit, command)
 	return true
 end
 
--- Lines 272-278
+-- Lines 253-259
 function CivilianBrain:_clear_follow_hostage_contour()
 	if self._following_hostage_contour_id then
 		self._unit:contour():remove_by_id(self._following_hostage_contour_id, true)
@@ -251,7 +220,7 @@ function CivilianBrain:_clear_follow_hostage_contour()
 	end
 end
 
--- Lines 282-293
+-- Lines 263-274
 function CivilianBrain:on_hostage_follow_objective_failed(unit)
 	if not unit:character_damage():dead() then
 		if not self._logic_data.objective or self._logic_data.objective.is_default or self._logic_data.objective.type == "surrender" then
@@ -262,12 +231,12 @@ function CivilianBrain:on_hostage_follow_objective_failed(unit)
 	end
 end
 
--- Lines 297-299
+-- Lines 278-280
 function CivilianBrain:is_tied()
 	return self._logic_data.is_tied
 end
 
--- Lines 303-315
+-- Lines 284-296
 function CivilianBrain:save(save_data)
 	CivilianBrain.super.save(self, save_data)
 

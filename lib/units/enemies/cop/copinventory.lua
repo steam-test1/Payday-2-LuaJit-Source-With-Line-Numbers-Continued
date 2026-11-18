@@ -22,9 +22,10 @@ function CopInventory:init(unit)
 	self._listener_id = "CopInventory" .. tostring(unit:key())
 end
 
--- Lines 23-52
+-- Lines 23-56
 function CopInventory:add_unit_by_name(new_unit_name, equip)
 	local new_unit = World:spawn_unit(new_unit_name, Vector3(), Rotation())
+	local base_ext = new_unit:base()
 
 	managers.mutators:modify_value("CopInventory:add_unit_by_name", self)
 	self:_chk_spawn_shield(new_unit)
@@ -47,20 +48,21 @@ function CopInventory:add_unit_by_name(new_unit_name, equip)
 	setup_data.expend_ammo = false
 	setup_data.hit_slotmask = managers.slot:get_mask("bullet_impact_targets")
 	setup_data.hit_player = true
-	setup_data.user_sound_variant = tweak_data.character[self._unit:base()._tweak_table].weapon_voice
+	setup_data.user_sound_variant = self._unit:base():char_tweak().weapon_voice
 	setup_data.alert_AI = true
 	setup_data.alert_filter = self._unit:brain():SO_access()
 
-	new_unit:base():setup(setup_data)
+	self:_chk_setup_data(setup_data)
+	base_ext:setup(setup_data)
 
-	if new_unit:base().AKIMBO then
-		new_unit:base():create_second_gun(new_unit_name)
+	if base_ext.AKIMBO then
+		base_ext:create_second_gun(new_unit_name)
 	end
 
 	self:add_unit(new_unit, equip)
 end
 
--- Lines 56-86
+-- Lines 60-90
 function CopInventory:_chk_spawn_shield(weapon_unit)
 	if self._shield_unit_name and not alive(self._shield_unit) then
 		self._shield_was_synced = nil
@@ -86,19 +88,19 @@ function CopInventory:_chk_spawn_shield(weapon_unit)
 	end
 end
 
--- Lines 90-94
+-- Lines 120-124
 function CopInventory:add_unit(new_unit, equip)
 	CopInventory.super.add_unit(self, new_unit, equip)
 	new_unit:set_enabled(true)
 	new_unit:set_visible(true)
 end
 
--- Lines 98-100
+-- Lines 128-130
 function CopInventory:get_sync_data(sync_data)
 	MPPlayerInventory.get_sync_data(self, sync_data)
 end
 
--- Lines 104-108
+-- Lines 134-138
 function CopInventory:get_weapon()
 	local selection = self._available_selections[self._equipped_selection]
 	local unit = selection and selection.unit
@@ -106,7 +108,7 @@ function CopInventory:get_weapon()
 	return unit
 end
 
--- Lines 112-132
+-- Lines 142-162
 function CopInventory:drop_weapon()
 	local selection = self._available_selections[self._equipped_selection]
 	local unit = selection and selection.unit
@@ -130,7 +132,7 @@ function CopInventory:drop_weapon()
 	end
 end
 
--- Lines 136-205
+-- Lines 166-235
 function CopInventory:on_shield_break(attacker_unit)
 	if not alive(self._shield_unit) then
 		return
@@ -195,7 +197,7 @@ function CopInventory:on_shield_break(attacker_unit)
 	end
 end
 
--- Lines 209-224
+-- Lines 239-254
 function CopInventory:anim_clbk_weapon_attached(unit, state)
 	print("[CopInventory:anim_clbk_weapon_attached]", state)
 
@@ -213,7 +215,7 @@ function CopInventory:anim_clbk_weapon_attached(unit, state)
 	end
 end
 
--- Lines 228-231
+-- Lines 258-261
 function CopInventory:destroy_all_items()
 	CopInventory.super.destroy_all_items(self)
 	self:_call_listeners("unequip")

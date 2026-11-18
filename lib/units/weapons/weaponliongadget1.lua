@@ -3,7 +3,7 @@ WeaponLionGadget1.GADGET_TYPE = "bipod"
 WeaponLionGadget1._previous_state = nil
 WeaponLionGadget1.bipod_length = nil
 
--- Lines 6-26
+-- Lines 6-27
 function WeaponLionGadget1:init(unit)
 	WeaponLionGadget1.super.init(self, unit, false)
 
@@ -14,32 +14,40 @@ function WeaponLionGadget1:init(unit)
 		self:get_offsets()
 	end
 
-	managers.player:register_message(Message.OnCashInspectWeapon, self, on_cash_inspect_weapon)
+	self._cash_inspect_message_key = "WeaponLionGadget1" .. tostring(self._unit:key())
+
+	managers.player:register_message(Message.OnCashInspectWeapon, self._cash_inspect_message_key, on_cash_inspect_weapon)
 
 	self._deployed = false
 end
 
--- Lines 30-33
+-- Lines 31-39
 function WeaponLionGadget1:set_npc()
 	self._is_npc = true
+
+	if self._cash_inspect_message_key then
+		managers.player:unregister_message(Message.OnCashInspectWeapon, self._cash_inspect_message_key)
+
+		self._cash_inspect_message_key = nil
+	end
 end
 
--- Lines 38-40
+-- Lines 44-46
 function WeaponLionGadget1:is_bipod()
 	return true
 end
 
--- Lines 45-47
+-- Lines 51-53
 function WeaponLionGadget1:bipod_state()
 	return self._on
 end
 
--- Lines 52-54
+-- Lines 58-60
 function WeaponLionGadget1:is_deployed()
 	return self._deployed
 end
 
--- Lines 58-68
+-- Lines 64-74
 function WeaponLionGadget1:toggle()
 	Application:trace("WeaponLionGadget1:toggle() is_deployed: ", self:is_deployed())
 
@@ -50,7 +58,7 @@ function WeaponLionGadget1:toggle()
 	end
 end
 
--- Lines 73-83
+-- Lines 79-89
 function WeaponLionGadget1:is_usable()
 	if not self._center_ray_from or not self._center_ray_to then
 		return nil
@@ -63,7 +71,7 @@ function WeaponLionGadget1:is_usable()
 	return ray_bipod_center and (ray_bipod_left or ray_bipod_right)
 end
 
--- Lines 87-91
+-- Lines 93-97
 function WeaponLionGadget1:_unmount()
 	managers.player:set_player_state(self._previous_state or "standard")
 
@@ -71,7 +79,7 @@ function WeaponLionGadget1:_unmount()
 	self._deployed = false
 end
 
--- Lines 95-109
+-- Lines 101-115
 function WeaponLionGadget1:_get_bipod_obj()
 	if not self._bipod_obj and alive(self._unit) and self._unit:parent() then
 		print("No Bipod object. Trying to recover.")
@@ -90,7 +98,7 @@ function WeaponLionGadget1:_get_bipod_obj()
 	return self._bipod_obj
 end
 
--- Lines 111-118
+-- Lines 117-124
 function WeaponLionGadget1:_get_bipod_alignment_obj()
 	if not self._bipod_align_obj and self._unit:parent() and self._unit:parent():parent() then
 		self._bipod_align_obj = self._unit:parent():parent()
@@ -99,7 +107,7 @@ function WeaponLionGadget1:_get_bipod_alignment_obj()
 	return self._bipod_align_obj
 end
 
--- Lines 122-134
+-- Lines 128-140
 function WeaponLionGadget1:_is_in_blocked_deployable_state()
 	local is_reloading = false
 
@@ -110,7 +118,7 @@ function WeaponLionGadget1:_is_in_blocked_deployable_state()
 	return not managers.player:player_unit():mover():standing() or managers.player:current_state() ~= "standard" and managers.player:current_state() ~= "carry" and managers.player:current_state() ~= "bipod" or managers.player:player_unit():inventory():equipped_unit():base():selection_index() ~= 2 or is_reloading
 end
 
--- Lines 138-177
+-- Lines 144-183
 function WeaponLionGadget1:_is_deployable()
 	if self._is_npc or not self:_get_bipod_obj() then
 		return false
@@ -147,7 +155,7 @@ function WeaponLionGadget1:_is_deployable()
 	return false
 end
 
--- Lines 181-194
+-- Lines 187-200
 function WeaponLionGadget1:get_offsets()
 	if not self:_get_bipod_obj() or not self:_get_bipod_alignment_obj() then
 		return false
@@ -164,7 +172,7 @@ function WeaponLionGadget1:get_offsets()
 	self._bipod_offsets.direction = dir
 end
 
--- Lines 198-309
+-- Lines 204-315
 function WeaponLionGadget1:_shoot_bipod_rays(debug_draw)
 	local mvec1 = Vector3()
 	local mvec2 = Vector3()
@@ -320,7 +328,7 @@ function WeaponLionGadget1:_shoot_bipod_rays(debug_draw)
 	}
 end
 
--- Lines 313-338
+-- Lines 319-344
 function WeaponLionGadget1:check_state()
 	if self._is_npc then
 		return false
@@ -350,8 +358,13 @@ function WeaponLionGadget1:check_state()
 	end
 end
 
--- Lines 342-345
+-- Lines 348-355
 function WeaponLionGadget1:pre_destroy(unit)
 	WeaponLionGadget1.super.pre_destroy(self, unit)
-	managers.player:unregister_message(Message.OnCashInspectWeapon, self)
+
+	if self._cash_inspect_message_key then
+		managers.player:unregister_message(Message.OnCashInspectWeapon, self._cash_inspect_message_key)
+
+		self._cash_inspect_message_key = nil
+	end
 end

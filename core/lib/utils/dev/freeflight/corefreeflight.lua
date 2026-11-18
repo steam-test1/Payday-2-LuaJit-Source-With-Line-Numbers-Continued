@@ -697,27 +697,24 @@ function FreeFlight:_update_camera(t, dt)
 	end
 end
 
--- Lines 580-590
+-- Lines 580-592
 function FreeFlight:_ray_inspect()
 	local cam = self._camera_object
 	local ray = World:raycast("ray", cam:position(), cam:position() + cam:rotation():y() * 10000)
 
 	if ray then
-		print("ray hit", ray.unit:name():s(), ray.body:name())
 		World:select_unit(ray.unit)
 	else
 		World:select_unit(nil)
 	end
 end
 
--- Lines 592-605
+-- Lines 594-610
 function FreeFlight:_attach_unit()
 	local cam = self._camera_object
 	local ray = World:raycast("ray", cam:position(), cam:position() + cam:rotation():y() * 10000)
 
 	if ray then
-		print("ray hit", ray.unit:name():s(), ray.body:name())
-
 		if alive(self._attached_to_unit) and self._attached_to_unit == ray.unit then
 			print("[FreeFlight] Detach")
 			self:attach_to_unit(nil)
@@ -728,7 +725,7 @@ function FreeFlight:_attach_unit()
 	end
 end
 
--- Lines 607-619
+-- Lines 612-624
 function FreeFlight:attach_to_unit(unit)
 	if not alive(unit) or alive(self._attached_to_unit) and unit ~= self._attached_to_unit then
 		local pos = self._camera_pos + self._attached_to_unit:position()
@@ -747,7 +744,7 @@ function FreeFlight:attach_to_unit(unit)
 	self._attached_to_unit = unit
 end
 
--- Lines 621-652
+-- Lines 626-657
 function FreeFlight:_update_frustum_debug_box(t, dt)
 	if self._frozen_camera then
 		local near = self._frozen_camera:near_range()
@@ -777,7 +774,7 @@ function FreeFlight:_update_frustum_debug_box(t, dt)
 	end
 end
 
--- Lines 658-671
+-- Lines 663-676
 function FreeFlight:destroy()
 	if alive(self._con_toggle) then
 		Input:destroy_virtual_controller(self._con_toggle)

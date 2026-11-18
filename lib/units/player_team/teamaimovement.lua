@@ -1,11 +1,11 @@
-TeamAIMovement = TeamAIMovement or class(CopMovement)
-
-local mvec3_set = mvector3.set
-local mvec3_sub = mvector3.subtract
 local mvec3_norm = mvector3.normalize
 local mvec3_len = mvector3.length
 
--- Lines 8-25
+TeamAIMovement = TeamAIMovement or class(CopMovement)
+TeamAIMovement._action_variant = "team_ai"
+TeamAIMovement._default_action_variant = TeamAIMovement._action_variant
+
+-- Lines 19-39
 function TeamAIMovement:_post_init()
 	if managers.groupai:state():whisper_mode() then
 		if not self._heat_listener_clbk and Network:is_server() then
@@ -24,11 +24,9 @@ function TeamAIMovement:_post_init()
 	self._standing_nav_seg_id = self._nav_tracker:nav_segment()
 
 	self:play_redirect("idle")
-
-	self._last_position = Vector3()
 end
 
--- Lines 29-45
+-- Lines 43-59
 function TeamAIMovement:set_character_anim_variables()
 	local char_name = managers.criminals:character_name_by_unit(self._unit)
 
@@ -47,12 +45,12 @@ function TeamAIMovement:set_character_anim_variables()
 	self._unit:inventory():preload_mask()
 end
 
--- Lines 47-48
+-- Lines 61-62
 function TeamAIMovement:check_visual_equipment()
 	return
 end
 
--- Lines 52-73
+-- Lines 66-87
 function TeamAIMovement:add_weapons()
 	if Network:is_server() then
 		local char_name = self._ext_base._tweak_table
@@ -81,49 +79,51 @@ function TeamAIMovement:add_weapons()
 	end
 end
 
--- Lines 78-80
+-- Lines 92-94
 function TeamAIMovement:m_detect_pos()
 	return self._m_head_pos
 end
 
--- Lines 84-87
+-- Lines 98-101
 function TeamAIMovement:set_position(pos)
 	CopMovement.set_position(self, pos)
 	self:_upd_location()
 end
 
--- Lines 91-94
+-- Lines 105-108
 function TeamAIMovement:set_m_pos(pos)
 	CopMovement.set_m_pos(self, pos)
 	self:_upd_location()
 end
 
--- Lines 98-104
+-- Lines 112-122
 function TeamAIMovement:_upd_location()
 	local nav_seg_id = self._nav_tracker:nav_segment()
 
 	if self._standing_nav_seg_id ~= nav_seg_id then
 		self._standing_nav_seg_id = nav_seg_id
 
-		managers.groupai:state():on_criminal_nav_seg_change(self._unit, nav_seg_id)
+		if self._m_host_stop_pos == nil then
+			managers.groupai:state():on_criminal_nav_seg_change(self._unit, nav_seg_id)
+		end
 	end
 end
 
--- Lines 108-111
+-- Lines 126-129
 function TeamAIMovement:get_location_id()
 	local metadata = managers.navigation:get_nav_seg_metadata(self._standing_nav_seg_id)
 
 	return metadata and metadata.location_id
 end
 
--- Lines 115-119
+-- Lines 133-137
 function TeamAIMovement:on_cuffed()
 	self._unit:brain():set_logic("surrender")
 	self._unit:network():send("arrested")
 	self._unit:character_damage():on_arrested()
 end
 
--- Lines 123-153
+-- Lines 141-171
 function TeamAIMovement:on_SPOOCed(enemy_unit)
 	local cooldown_id = "crew_ai_counter_strike"
 
@@ -153,7 +153,7 @@ function TeamAIMovement:on_SPOOCed(enemy_unit)
 	return true
 end
 
--- Lines 157-162
+-- Lines 175-180
 function TeamAIMovement:is_SPOOC_attack_allowed()
 	if alive(self.vehicle_unit) then
 		return false
@@ -162,34 +162,34 @@ function TeamAIMovement:is_SPOOC_attack_allowed()
 	return true
 end
 
--- Lines 166-170
+-- Lines 184-188
 function TeamAIMovement:on_discovered()
 	if self._cool then
 		self:_switch_to_not_cool()
 	end
 end
 
--- Lines 174-176
+-- Lines 192-194
 function TeamAIMovement:on_tase_ended()
 	self._unit:character_damage():on_tase_ended()
 end
 
--- Lines 180-182
+-- Lines 198-200
 function TeamAIMovement:tased()
 	return self._unit:anim_data().tased
 end
 
--- Lines 186-188
+-- Lines 204-206
 function TeamAIMovement:cool()
 	return self._cool
 end
 
--- Lines 192-194
+-- Lines 210-212
 function TeamAIMovement:downed()
 	return self._unit:interaction()._active
 end
 
--- Lines 198-236
+-- Lines 216-254
 function TeamAIMovement:set_cool(state)
 	state = state and true or false
 
@@ -229,14 +229,14 @@ function TeamAIMovement:set_cool(state)
 	end
 end
 
--- Lines 240-244
+-- Lines 258-262
 function TeamAIMovement:heat_clbk(state)
 	if self._cool and not state then
 		self:_switch_to_not_cool()
 	end
 end
 
--- Lines 248-274
+-- Lines 266-292
 function TeamAIMovement:_switch_to_not_cool(instant)
 	if not Network:is_server() then
 		if instant then
@@ -271,7 +271,7 @@ function TeamAIMovement:_switch_to_not_cool(instant)
 	end
 end
 
--- Lines 278-297
+-- Lines 296-315
 function TeamAIMovement:_switch_to_not_cool_clbk_func()
 	if self._switch_to_not_cool_clbk_id and self._cool then
 		if self._unit:inventory():is_mask_unit_loaded() then
@@ -299,17 +299,17 @@ function TeamAIMovement:_switch_to_not_cool_clbk_func()
 	end
 end
 
--- Lines 301-303
+-- Lines 319-321
 function TeamAIMovement:zipline_unit()
 	return nil
 end
 
--- Lines 305-307
+-- Lines 323-325
 function TeamAIMovement:current_state_name()
 	return nil
 end
 
--- Lines 311-325
+-- Lines 329-343
 function TeamAIMovement:pre_destroy(...)
 	TeamAIMovement.super.pre_destroy(self, ...)
 
@@ -326,7 +326,7 @@ function TeamAIMovement:pre_destroy(...)
 	end
 end
 
--- Lines 329-336
+-- Lines 347-354
 function TeamAIMovement:save(save_data)
 	TeamAIMovement.super.save(self, save_data)
 
@@ -334,7 +334,7 @@ function TeamAIMovement:save(save_data)
 	save_data.movement.should_stay = self._should_stay
 end
 
--- Lines 338-346
+-- Lines 356-364
 function TeamAIMovement:load(load_data)
 	TeamAIMovement.super.load(self, load_data)
 
@@ -343,7 +343,7 @@ function TeamAIMovement:load(load_data)
 	end
 end
 
--- Lines 349-362
+-- Lines 367-380
 function TeamAIMovement:set_should_stay(should_stay)
 	if self._should_stay ~= should_stay then
 		local panel = managers.criminals:character_data_by_unit(self._unit)
@@ -362,7 +362,7 @@ function TeamAIMovement:set_should_stay(should_stay)
 	end
 end
 
--- Lines 366-378
+-- Lines 384-396
 function TeamAIMovement:chk_action_forbidden(action_type)
 	if action_type == "walk" and self._should_stay then
 		if Network:is_server() and self._unit:brain():objective() and (self._unit:brain():objective().type == "revive" or self._unit:brain():objective().forced) then
@@ -375,11 +375,7 @@ function TeamAIMovement:chk_action_forbidden(action_type)
 	return TeamAIMovement.super.chk_action_forbidden(self, action_type)
 end
 
--- Lines 383-414
-function TeamAIMovement:update(...)
-	TeamAIMovement.super.update(self, ...)
-
-	if self._pre_destroyed then
-		return
-	end
+-- Lines 404-406
+function TeamAIMovement:in_smoke()
+	return false, nil, nil
 end

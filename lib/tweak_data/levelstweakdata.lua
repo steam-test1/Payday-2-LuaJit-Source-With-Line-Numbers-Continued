@@ -6,7 +6,7 @@ LevelsTweakData.LevelType.Zombie = "zombie"
 LevelsTweakData.LevelType.Murkywater = "murkywater"
 LevelsTweakData.LevelType.Federales = "federales"
 
--- Lines 10-3177
+-- Lines 10-3244
 function LevelsTweakData:init()
 	local america = LevelsTweakData.LevelType.America
 	local russia = LevelsTweakData.LevelType.Russia
@@ -2334,12 +2334,12 @@ function LevelsTweakData:init()
 	}
 end
 
--- Lines 3181-3183
+-- Lines 3248-3250
 function LevelsTweakData:get_level_index()
 	return self._level_index
 end
 
--- Lines 3185-3190
+-- Lines 3252-3257
 function LevelsTweakData:get_world_name_from_index(index)
 	if not self._level_index[index] then
 		return
@@ -2348,12 +2348,12 @@ function LevelsTweakData:get_world_name_from_index(index)
 	return self[self._level_index[index]].world_name
 end
 
--- Lines 3194-3196
+-- Lines 3261-3263
 function LevelsTweakData:get_level_name_from_index(index)
 	return self._level_index[index]
 end
 
--- Lines 3200-3206
+-- Lines 3267-3273
 function LevelsTweakData:get_index_from_world_name(world_name)
 	for index, entry_name in ipairs(self._level_index) do
 		if world_name == self[entry_name].world_name then
@@ -2362,7 +2362,7 @@ function LevelsTweakData:get_index_from_world_name(world_name)
 	end
 end
 
--- Lines 3210-3216
+-- Lines 3277-3283
 function LevelsTweakData:get_index_from_level_id(level_id)
 	for index, entry_name in ipairs(self._level_index) do
 		if entry_name == level_id then
@@ -2371,17 +2371,17 @@ function LevelsTweakData:get_index_from_level_id(level_id)
 	end
 end
 
--- Lines 3218-3220
+-- Lines 3285-3287
 function LevelsTweakData:requires_dlc(level_id)
 	return self[level_id].dlc
 end
 
--- Lines 3222-3224
+-- Lines 3289-3291
 function LevelsTweakData:requires_dlc_by_index(index)
 	return self[self._level_index[index]].dlc
 end
 
--- Lines 3228-3234
+-- Lines 3295-3301
 function LevelsTweakData:get_level_name_from_world_name(world_name)
 	for _, entry_name in ipairs(self._level_index) do
 		if world_name == self[entry_name].world_name then
@@ -2390,7 +2390,7 @@ function LevelsTweakData:get_level_name_from_world_name(world_name)
 	end
 end
 
--- Lines 3236-3242
+-- Lines 3303-3309
 function LevelsTweakData:get_localized_level_name_from_world_name(world_name)
 	for _, entry_name in ipairs(self._level_index) do
 		if world_name == self[entry_name].world_name then
@@ -2399,7 +2399,7 @@ function LevelsTweakData:get_localized_level_name_from_world_name(world_name)
 	end
 end
 
--- Lines 3244-3250
+-- Lines 3311-3317
 function LevelsTweakData:get_localized_level_name_from_level_id(level_id)
 	for _, entry_name in ipairs(self._level_index) do
 		if level_id == entry_name then
@@ -2408,12 +2408,12 @@ function LevelsTweakData:get_localized_level_name_from_level_id(level_id)
 	end
 end
 
--- Lines 3252-3254
+-- Lines 3319-3321
 function LevelsTweakData:get_music_style(level_id)
 	return self:get_music_style_from_level_data(tweak_data.levels[level_id])
 end
 
--- Lines 3256-3270
+-- Lines 3323-3337
 function LevelsTweakData:get_music_style_from_level_data(level_data)
 	local music_id = level_data and level_data.music or "default"
 
@@ -2428,7 +2428,7 @@ function LevelsTweakData:get_music_style_from_level_data(level_data)
 	return "heist"
 end
 
--- Lines 3272-3323
+-- Lines 3339-3390
 function LevelsTweakData:get_music_switches()
 	if not Global.level_data then
 		return nil
@@ -2487,7 +2487,7 @@ function LevelsTweakData:get_music_switches()
 	return switches
 end
 
--- Lines 3325-3333
+-- Lines 3392-3400
 function LevelsTweakData:get_music_event(stage)
 	local level_data = Global.level_data.level_id and tweak_data.levels[Global.level_data.level_id]
 
@@ -2500,7 +2500,7 @@ function LevelsTweakData:get_music_event(stage)
 	return tweak_data.music[music_id][stage]
 end
 
--- Lines 3335-3342
+-- Lines 3402-3409
 function LevelsTweakData:get_music_event_ext()
 	local level_data = Global.level_data.level_id and tweak_data.levels[Global.level_data.level_id]
 	local music = level_data and level_data.music_ext
@@ -2509,7 +2509,7 @@ function LevelsTweakData:get_music_event_ext()
 	return music, music_start
 end
 
--- Lines 3345-3399
+-- Lines 3412-3466
 function LevelsTweakData:get_music_event_ext_ghost()
 	if not Global.level_data then
 		return nil, nil
@@ -2569,30 +2569,34 @@ function LevelsTweakData:get_music_event_ext_ghost()
 	return table.random(ghost_music_exts), level_data.music_ext_start
 end
 
--- Lines 3403-3421
-function LevelsTweakData:get_default_team_ID(type)
-	local lvl_tweak = self[Global.level_data.level_id]
+LevelsTweakData.DEFAULT_ID_MAP = {
+	combatant = "law1",
+	converted_enemy = "converted_enemy",
+	escort = "escort",
+	gangster = "mobster1",
+	hacked_turret = "hacked_turret",
+	mobster_boss = "mobster_boss",
+	non_combatant = "neutral1",
+	player = "criminal1"
+}
 
-	if lvl_tweak and lvl_tweak.default_teams and lvl_tweak.default_teams[type] then
-		if lvl_tweak.teams[lvl_tweak.default_teams[type]] then
-			return lvl_tweak.default_teams[type]
+-- Lines 3480-3491
+function LevelsTweakData:get_default_team_ID(team_type)
+	local lvl_tweak = self[Global.level_data.level_id]
+	local lvl_default_teams = lvl_tweak and lvl_tweak.default_teams and lvl_tweak.default_teams[team_type]
+
+	if lvl_default_teams then
+		if lvl_tweak.teams and lvl_tweak.teams[lvl_default_teams] then
+			return lvl_tweak.default_teams[team_type]
 		else
-			debug_pause("[LevelsTweakData:get_default_player_team_ID] Team not defined ", lvl_tweak.default_teams[type], "in", Global.level_data.level_id)
+			debug_pause("[LevelsTweakData:get_default_player_team_ID] Team not defined ", lvl_tweak.default_teams[team_type], "in", Global.level_data.level_id)
 		end
 	end
 
-	if type == "player" then
-		return "criminal1"
-	elseif type == "combatant" then
-		return "law1"
-	elseif type == "non_combatant" then
-		return "neutral1"
-	else
-		return "mobster1"
-	end
+	return self.DEFAULT_ID_MAP[team_type] or "mobster1"
 end
 
--- Lines 3423-3469
+-- Lines 3493-3539
 function LevelsTweakData:get_team_setup()
 	local lvl_tweak
 
@@ -2665,7 +2669,7 @@ function LevelsTweakData:get_team_setup()
 	return teams
 end
 
--- Lines 3471-3489
+-- Lines 3541-3554
 function LevelsTweakData:get_default_team_IDs()
 	local lvl_tweak
 
@@ -2677,17 +2681,12 @@ function LevelsTweakData:get_default_team_IDs()
 
 	local default_team_IDs = lvl_tweak and lvl_tweak.default_teams
 
-	default_team_IDs = default_team_IDs or {
-		player = self:get_default_team_ID("player"),
-		combatant = self:get_default_team_ID("combatant"),
-		non_combatant = self:get_default_team_ID("non_combatant"),
-		gangster = self:get_default_team_ID("gangster")
-	}
+	default_team_IDs = default_team_IDs or table.map_copy(self.DEFAULT_ID_MAP)
 
 	return default_team_IDs
 end
 
--- Lines 3491-3505
+-- Lines 3556-3570
 function LevelsTweakData:get_team_names_indexed()
 	local teams_index = self._teams_index
 
@@ -2708,7 +2707,7 @@ function LevelsTweakData:get_team_names_indexed()
 	return teams_index
 end
 
--- Lines 3507-3514
+-- Lines 3572-3579
 function LevelsTweakData:get_team_index(team_id)
 	local teams_index = self:get_team_names_indexed()
 
@@ -2719,7 +2718,7 @@ function LevelsTweakData:get_team_index(team_id)
 	end
 end
 
--- Lines 3516-3527
+-- Lines 3581-3609
 function LevelsTweakData:get_ai_group_type()
 	local level_data = Global.level_data and Global.level_data.level_id and self[Global.level_data.level_id]
 
@@ -2734,7 +2733,7 @@ function LevelsTweakData:get_ai_group_type()
 	return self.ai_groups.default
 end
 
--- Lines 3530-3543
+-- Lines 3612-3625
 function LevelsTweakData:get_narrator_prefix(narrator)
 	if not narrator then
 		local level_data = Global.level_data and Global.level_data.level_id and self[Global.level_data.level_id]
@@ -2752,7 +2751,7 @@ function LevelsTweakData:get_narrator_prefix(narrator)
 	return narrator_codes[narrator] or "ban"
 end
 
--- Lines 3546-3554
+-- Lines 3628-3636
 function LevelsTweakData:get_can_call_the_police()
 	local level_data = Global.level_data and Global.level_data.level_id and self[Global.level_data.level_id]
 
@@ -2763,7 +2762,7 @@ function LevelsTweakData:get_can_call_the_police()
 	return true
 end
 
--- Lines 3556-3564
+-- Lines 3638-3646
 function LevelsTweakData:get_prevent_carry_disposal(carry_id)
 	local level_data = Global.level_data and Global.level_data.level_id and self[Global.level_data.level_id]
 

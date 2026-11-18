@@ -10,7 +10,7 @@ HuskPlayerBase.chk_freeze_anims = CopBase.chk_freeze_anims
 HuskPlayerBase._set_animated_bones_state = CopBase._set_animated_bones_state
 HuskPlayerBase.prevent_main_bones_disabling = CopBase.prevent_main_bones_disabling
 
--- Lines 14-23
+-- Lines 20-29
 function HuskPlayerBase:init(unit)
 	UnitBase.init(self, unit, false)
 
@@ -23,7 +23,7 @@ function HuskPlayerBase:init(unit)
 	self:_setup_suspicion_and_detection_data()
 end
 
--- Lines 27-45
+-- Lines 33-54
 function HuskPlayerBase:post_init()
 	self._ext_anim = self._unit:anim_data()
 	self._ext_movement = self._unit:movement()
@@ -37,10 +37,9 @@ function HuskPlayerBase:post_init()
 	local spawn_state = self._spawn_state or "std/stand/still/idle/look"
 
 	self._unit:movement():play_state(spawn_state)
-	self:prevent_main_bones_disabling(true)
 end
 
--- Lines 49-69
+-- Lines 58-78
 function HuskPlayerBase:load(data)
 	self._concealment_modifier = data.concealment_modifier
 
@@ -63,7 +62,7 @@ function HuskPlayerBase:load(data)
 	self._concealment_modifier = nil
 end
 
--- Lines 73-93
+-- Lines 82-102
 function HuskPlayerBase:save(data)
 	data.upgrades = {}
 	data.temporary_upgrades = {}
@@ -91,7 +90,7 @@ function HuskPlayerBase:save(data)
 	data.concealment_modifier = managers.blackmarket:get_concealment_of_peer(managers.network:session():peer_by_unit(self._unit))
 end
 
--- Lines 105-123
+-- Lines 106-124
 function HuskPlayerBase:set_upgrade_value(category, upgrade, level)
 	self._upgrades[category] = self._upgrades[category] or {}
 	self._upgrade_levels[category] = self._upgrade_levels[category] or {}
@@ -116,7 +115,7 @@ function HuskPlayerBase:set_upgrade_value(category, upgrade, level)
 	end
 end
 
--- Lines 125-130
+-- Lines 126-131
 function HuskPlayerBase:update_concealment()
 	local con_mul, index = managers.blackmarket:get_concealment_of_peer(managers.network:session():peer_by_unit(self._unit))
 
@@ -125,7 +124,7 @@ function HuskPlayerBase:update_concealment()
 	self:setup_hud_offset()
 end
 
--- Lines 132-143
+-- Lines 133-144
 function HuskPlayerBase:setup_hud_offset()
 	if not self._suspicion_settings then
 		return
@@ -140,7 +139,7 @@ function HuskPlayerBase:setup_hud_offset()
 	self._suspicion_settings.hud_offset = managers.blackmarket:get_suspicion_offset_of_peer(peer, tweak_data.player.SUSPICION_OFFSET_LERP or 0.75)
 end
 
--- Lines 145-155
+-- Lines 146-156
 function HuskPlayerBase:set_temporary_upgrade_owned(category, upgrade, level, index)
 	local upgrade_values = managers.player:upgrade_value_by_level(category, upgrade, level)
 
@@ -157,12 +156,12 @@ function HuskPlayerBase:set_temporary_upgrade_owned(category, upgrade, level, in
 	}
 end
 
--- Lines 157-178
+-- Lines 158-179
 function HuskPlayerBase:activate_temporary_upgrade(index)
 	self._temporary_upgrades[index].activation_time = TimerManager:game():time()
 end
 
--- Lines 180-185
+-- Lines 181-186
 function HuskPlayerBase:has_activate_temporary_upgrade(category, upgrade)
 	local index = self._temporary_upgrades_map[category] and self._temporary_upgrades_map[category][upgrade]
 
@@ -171,7 +170,7 @@ function HuskPlayerBase:has_activate_temporary_upgrade(category, upgrade)
 	end
 end
 
--- Lines 189-199
+-- Lines 190-200
 function HuskPlayerBase:upgrade_value(category, upgrade)
 	local val = self._upgrades[category] and self._upgrades[category][upgrade]
 
@@ -190,12 +189,12 @@ function HuskPlayerBase:upgrade_value(category, upgrade)
 	return val
 end
 
--- Lines 201-203
+-- Lines 202-204
 function HuskPlayerBase:upgrade_level(category, upgrade)
 	return self._upgrade_levels[category] and self._upgrade_levels[category][upgrade]
 end
 
--- Lines 207-221
+-- Lines 208-222
 function HuskPlayerBase:pre_destroy(unit)
 	UnitBase.pre_destroy(self, unit)
 	self._unit:movement():attention_handler():set_attention(nil)
@@ -210,14 +209,14 @@ function HuskPlayerBase:pre_destroy(unit)
 	end
 end
 
--- Lines 225-228
+-- Lines 226-229
 function HuskPlayerBase:nick_name()
 	local peer = managers.network:session():peer_by_unit(self._unit)
 
 	return peer and peer:name() or ""
 end
 
--- Lines 232-234
+-- Lines 233-235
 function HuskPlayerBase:on_death_exit()
 	return
 end

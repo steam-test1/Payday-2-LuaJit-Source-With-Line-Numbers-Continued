@@ -11,7 +11,7 @@ function AlertTriggerElement:init(unit)
 	table.insert(self._save_values, "alert_types")
 end
 
--- Lines 16-92
+-- Lines 16-94
 function AlertTriggerElement:_build_panel(panel, panel_sizer)
 	self:_create_panel()
 
@@ -103,7 +103,7 @@ function AlertTriggerElement:_build_panel(panel, panel_sizer)
 	opt_sizer:add(filter_sizer, 1, 0, "EXPAND")
 end
 
--- Lines 96-110
+-- Lines 98-112
 function AlertTriggerElement:apply_preset(params)
 	local value = params.ctrlr:get_value()
 	local confirm = EWS:message_box(Global.frame_panel, "Apply preset " .. value .. "?", "Alert Trigger", "YES_NO,ICON_QUESTION", Vector3(-1, -1, 0))
@@ -121,7 +121,7 @@ function AlertTriggerElement:apply_preset(params)
 	end
 end
 
--- Lines 114-120
+-- Lines 116-122
 function AlertTriggerElement:_set_filter_all()
 	for name, ctrlr in pairs(self._filter_check_boxes) do
 		ctrlr:set_value(true)
@@ -130,7 +130,7 @@ function AlertTriggerElement:_set_filter_all()
 	self._hed.filter = managers.navigation:convert_access_filter_to_string(managers.navigation.ACCESS_FLAGS)
 end
 
--- Lines 124-130
+-- Lines 126-132
 function AlertTriggerElement:_set_filter_none()
 	for name, ctrlr in pairs(self._filter_check_boxes) do
 		ctrlr:set_value(false)
@@ -139,7 +139,7 @@ function AlertTriggerElement:_set_filter_none()
 	self._hed.filter = "0"
 end
 
--- Lines 134-149
+-- Lines 136-151
 function AlertTriggerElement:on_filter_checkbox_changed(params)
 	local filter_table = managers.navigation:convert_access_filter_to_table(self._hed.filter)
 	local value = params.ctrlr:get_value()
@@ -159,7 +159,7 @@ function AlertTriggerElement:on_filter_checkbox_changed(params)
 	local filter = managers.navigation:convert_access_filter_to_number(self._hed.filter)
 end
 
--- Lines 153-163
+-- Lines 155-165
 function AlertTriggerElement:on_alert_type_checkbox_changed(params)
 	local value = params.ctrlr:get_value()
 

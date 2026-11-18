@@ -1,6 +1,6 @@
 TangoTweakData = TangoTweakData or class()
 
--- Lines 5-136
+-- Lines 5-185
 function TangoTweakData:init(tweak_data)
 	self.arbiter_data = {
 		factory_id = "wpn_fps_gre_arbiter",

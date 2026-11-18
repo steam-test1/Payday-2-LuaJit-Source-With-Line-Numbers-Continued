@@ -549,7 +549,7 @@ function ContractBrokerHeistItem:mouse_clicked(o, button, x, y)
 	end
 end
 
--- Lines 526-562
+-- Lines 526-588
 function ContractBrokerHeistItem:trigger()
 	if self._job_data and not self._job_data.enabled then
 		local store_page_opened = self:trigger_open_store_page()
@@ -587,7 +587,7 @@ function ContractBrokerHeistItem:trigger()
 	})
 end
 
--- Lines 564-573
+-- Lines 590-599
 function ContractBrokerHeistItem:trigger_open_store_page()
 	local job_tweak = self._job_data and tweak_data.narrative.jobs[self._job_data.job_id]
 	local dlc = job_tweak and job_tweak.dlc
@@ -599,7 +599,7 @@ function ContractBrokerHeistItem:trigger_open_store_page()
 	return false
 end
 
--- Lines 575-580
+-- Lines 601-606
 function ContractBrokerHeistItem:toggle_favourite()
 	local is_fav = managers.crimenet:is_job_favourite(self._job_data.job_id)
 

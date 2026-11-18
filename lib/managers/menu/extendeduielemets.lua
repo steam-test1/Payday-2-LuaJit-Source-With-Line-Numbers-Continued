@@ -511,7 +511,7 @@ function ScrollItemList:input_focus()
 	return self:allow_input() and self._input_focus or self._scroll:grabbed_scroll_bar()
 end
 
--- Lines 438-459
+-- Lines 438-460
 function ScrollItemList:mouse_moved(button, x, y)
 	if self._scroll:grabbed_scroll_bar() then
 		return self._scroll:mouse_moved(button, x, y)
@@ -526,6 +526,8 @@ function ScrollItemList:mouse_moved(button, x, y)
 			elseif self._selected_item ~= v and not self._click_selection then
 				self:select_item(v)
 			end
+
+			return
 		end
 	end
 
@@ -536,7 +538,7 @@ function ScrollItemList:mouse_moved(button, x, y)
 	return ScrollItemList.super.mouse_moved(self, button, x, y)
 end
 
--- Lines 461-475
+-- Lines 462-476
 function ScrollItemList:mouse_pressed(button, x, y)
 	for k, v in pairs(self._current_items) do
 		if v:inside(x, y) then
@@ -555,7 +557,7 @@ function ScrollItemList:mouse_pressed(button, x, y)
 	return ScrollItemList.super.mouse_pressed(self, button, x, y)
 end
 
--- Lines 477-486
+-- Lines 478-487
 function ScrollItemList:special_btn_pressed(button)
 	if button == Idstring("continue") then
 		if self._click_selection and self._selected_item ~= self._hovered_item then
@@ -568,31 +570,31 @@ function ScrollItemList:special_btn_pressed(button)
 	return ScrollItemList.super.special_btn_pressed(self, button)
 end
 
--- Lines 489-493
+-- Lines 490-494
 function ScrollItemList:_on_selected_changed(selected)
 	if self._on_selected_callback then
 		self._on_selected_callback(selected)
 	end
 end
 
--- Lines 495-499
+-- Lines 496-500
 function ScrollItemList:_on_hovered_changed(hovered)
 	if self._on_hovered_callback then
 		self._on_hovered_callback(hovered)
 	end
 end
 
--- Lines 501-503
+-- Lines 502-504
 function ScrollItemList:set_selected_callback(func)
 	self._on_selected_callback = func
 end
 
--- Lines 505-507
+-- Lines 506-508
 function ScrollItemList:set_hovered_callback(func)
 	self._on_hovered_callback = func
 end
 
--- Lines 509-515
+-- Lines 510-516
 function ScrollItemList:selected_index()
 	for index, item in ipairs(self._current_items) do
 		if item == self._selected_item then
@@ -601,17 +603,17 @@ function ScrollItemList:selected_index()
 	end
 end
 
--- Lines 517-519
+-- Lines 518-520
 function ScrollItemList:selected_item()
 	return self._selected_item
 end
 
--- Lines 521-523
+-- Lines 522-524
 function ScrollItemList:select_index(index)
 	self:select_item(self._current_items[index])
 end
 
--- Lines 525-546
+-- Lines 526-547
 function ScrollItemList:move_selection(move)
 	if not self._selected_item then
 		self:select_index(1)
@@ -635,7 +637,7 @@ function ScrollItemList:move_selection(move)
 	end
 end
 
--- Lines 548-573
+-- Lines 549-574
 function ScrollItemList:select_item(item, scroll_to)
 	if item == self._selected_item then
 		return
@@ -668,7 +670,7 @@ function ScrollItemList:select_item(item, scroll_to)
 	self:_on_selected_changed(item)
 end
 
--- Lines 575-599
+-- Lines 576-600
 function ScrollItemList:hover_item(item, scroll_to)
 	if item == self._hovered_item then
 		return
@@ -697,7 +699,7 @@ function ScrollItemList:hover_item(item, scroll_to)
 	self:_on_hovered_changed(item)
 end
 
--- Lines 602-632
+-- Lines 603-633
 function ScrollItemList:add_item(item, force_visible, at_index)
 	if force_visible ~= nil then
 		item:set_visible(force_visible)
@@ -730,14 +732,14 @@ function ScrollItemList:add_item(item, force_visible, at_index)
 	return item
 end
 
--- Lines 634-639
+-- Lines 635-640
 function ScrollItemList:remove_item(index, reverse_sort_order)
 	table.remove(self._current_items, index)
 	table.remove(self._all_items, index)
 	self:place_items_in_order(nil, nil, reverse_sort_order)
 end
 
--- Lines 641-645
+-- Lines 642-646
 function ScrollItemList:move_up()
 	if not self:input_focus() then
 		return
@@ -748,7 +750,7 @@ function ScrollItemList:move_up()
 	return true
 end
 
--- Lines 647-651
+-- Lines 648-652
 function ScrollItemList:move_down()
 	if not self:input_focus() then
 		return
@@ -759,14 +761,14 @@ function ScrollItemList:move_down()
 	return true
 end
 
--- Lines 654-660
+-- Lines 655-661
 function ScrollItemList:sort_items(sort_function, mod_placer, keep_selection)
 	table.sort(self._current_items, sort_function)
 	table.sort(self._all_items, sort_function)
 	self:place_items_in_order(mod_placer, keep_selection)
 end
 
--- Lines 662-684
+-- Lines 663-685
 function ScrollItemList:place_items_in_order(mod_placer, keep_selection, reverse_order)
 	local placer = self._canvas:placer()
 
@@ -795,7 +797,7 @@ function ScrollItemList:place_items_in_order(mod_placer, keep_selection, reverse
 	end
 end
 
--- Lines 687-718
+-- Lines 688-719
 function ScrollItemList:filter_items(filter_function, mod_start, keep_selection)
 	local placer = self._canvas:placer()
 
@@ -832,19 +834,19 @@ function ScrollItemList:filter_items(filter_function, mod_start, keep_selection)
 	end
 end
 
--- Lines 720-722
+-- Lines 721-723
 function ScrollItemList:child_size_changed()
 	self:place_items_in_order(nil, true)
 end
 
 HorizontalScrollItemList = HorizontalScrollItemList or class(ScrollItemList)
 
--- Lines 727-730
+-- Lines 728-731
 function HorizontalScrollItemList:init(parent, scroll_config, canvas_config)
 	HorizontalScrollItemList.super.init(self, parent, scroll_config, canvas_config)
 end
 
--- Lines 732-744
+-- Lines 733-745
 function HorizontalScrollItemList:add_item(item, force_visible)
 	if force_visible ~= nil then
 		item:set_visible(force_visible)
@@ -860,7 +862,7 @@ function HorizontalScrollItemList:add_item(item, force_visible)
 	return item
 end
 
--- Lines 746-761
+-- Lines 747-762
 function HorizontalScrollItemList:add_lines_and_static_down_indicator()
 	local box = BoxGuiObject:new(self:scroll_item():scroll_panel(), {
 		layer = 5,
@@ -874,7 +876,7 @@ function HorizontalScrollItemList:add_lines_and_static_down_indicator()
 	})
 end
 
--- Lines 763-781
+-- Lines 764-782
 function HorizontalScrollItemList:scroll_to_show(left_or_item, right)
 	local left
 
@@ -897,12 +899,12 @@ function HorizontalScrollItemList:scroll_to_show(left_or_item, right)
 	end
 end
 
--- Lines 783-785
+-- Lines 784-786
 function HorizontalScrollItemList:scroll_to_show_item_at_world(item, world_x)
 	self._scroll:perform_scroll(world_x - item:world_x(), 1)
 end
 
--- Lines 788-808
+-- Lines 789-809
 function HorizontalScrollItemList:sort_items(sort_function, mod_placer, keep_selection)
 	table.sort(self._current_items, sort_function)
 	table.sort(self._all_items, sort_function)
@@ -928,9 +930,121 @@ function HorizontalScrollItemList:sort_items(sort_function, mod_placer, keep_sel
 	end
 end
 
+GridScrollItemList = GridScrollItemList or class(ScrollItemList)
+
+-- Lines 815-819
+function GridScrollItemList:init(parent, scroll_config, canvas_config)
+	self._current_col_i = 0
+	self._cols = canvas_config.cols
+
+	GridScrollItemList.super.init(self, parent, scroll_config, canvas_config)
+end
+
+-- Lines 821-840
+function GridScrollItemList:add_item(item, force_visible)
+	if force_visible ~= nil then
+		item:set_visible(force_visible)
+	end
+
+	if item:visible() then
+		if self._current_col_i < self._cols then
+			self._canvas:placer():add_right(item)
+
+			self._current_col_i = self._current_col_i + 1
+		else
+			self._canvas:placer():add_row(item)
+
+			self._current_col_i = 1
+		end
+
+		table.insert(self._current_items, item)
+	end
+
+	table.insert(self._all_items, item)
+
+	return item
+end
+
+-- Lines 842-845
+function GridScrollItemList:clear()
+	self._current_col_i = 0
+
+	GridScrollItemList.super.clear(self)
+end
+
+-- Lines 847-868
+function GridScrollItemList:move_selection(move_x, move_y)
+	if not self._selected_item then
+		self:select_index(1)
+	else
+		local index = table.index_of(self._current_items, self._selected_item)
+		local new_index = index + move_x + move_y * self._cols
+
+		new_index = math.clamp(new_index, 1, #self._current_items)
+
+		if self._current_items[new_index].skip_selection and self._current_items[new_index]:skip_selection() then
+			if new_index == #self._current_items or new_index == 1 then
+				return
+			else
+				self:move_selection(move_x + math.sign(move_x))
+			end
+		else
+			self:select_index(new_index)
+		end
+	end
+
+	if self._selected_item then
+		self:scroll_to_show(self._selected_item)
+	end
+end
+
+-- Lines 870-874
+function GridScrollItemList:move_up()
+	if not self:input_focus() then
+		return
+	end
+
+	self:move_selection(0, -1)
+
+	return true
+end
+
+-- Lines 876-880
+function GridScrollItemList:move_down()
+	if not self:input_focus() then
+		return
+	end
+
+	self:move_selection(0, 1)
+
+	return true
+end
+
+-- Lines 882-886
+function GridScrollItemList:move_left()
+	if not self:input_focus() then
+		return
+	end
+
+	self:move_selection(-1, 0)
+
+	return true
+end
+
+-- Lines 888-892
+function GridScrollItemList:move_right()
+	if not self:input_focus() then
+		return
+	end
+
+	self:move_selection(1, 0)
+
+	return true
+end
+
 ListItem = ListItem or class(ExtendedPanel)
 
--- Lines 898-903
+-- Lines 899-904
 function ListItem:init(panel, config)
 	ListItem.super.init(self, panel, config)
 
@@ -938,17 +1052,17 @@ function ListItem:init(panel, config)
 	self._on_hover_changed_callback = config.on_hover_changed_callback
 end
 
--- Lines 905-907
+-- Lines 906-908
 function ListItem:set_selected_changed_callback(func)
 	self._on_selected_changed_callback = func
 end
 
--- Lines 909-911
+-- Lines 910-912
 function ListItem:set_hover_changed_callback(func)
 	self._on_hover_changed_callback = func
 end
 
--- Lines 913-920
+-- Lines 914-921
 function ListItem:_selected_changed(state)
 	if self._select_panel then
 		self._select_panel:set_visible(state)
@@ -959,7 +1073,7 @@ function ListItem:_selected_changed(state)
 	end
 end
 
--- Lines 922-930
+-- Lines 923-931
 function ListItem:set_selected(state)
 	if self._selected == state then
 		return
@@ -972,7 +1086,7 @@ function ListItem:set_selected(state)
 	local _ = state and managers.menu_component:post_event("highlight")
 end
 
--- Lines 932-939
+-- Lines 933-940
 function ListItem:_hover_changed(state)
 	if self._hover_panel then
 		self._hover_panel:set_visible(state)
@@ -983,7 +1097,7 @@ function ListItem:_hover_changed(state)
 	end
 end
 
--- Lines 941-949
+-- Lines 942-950
 function ListItem:set_hover(state)
 	if self._hover == state then
 		return
@@ -998,7 +1112,7 @@ end
 
 BaseButton = BaseButton or class(ExtendedPanel)
 
--- Lines 960-967
+-- Lines 961-968
 function BaseButton:init(parent, config)
 	config = table.set_defaults(config, {
 		input = true
@@ -1011,12 +1125,12 @@ function BaseButton:init(parent, config)
 	self._hover = false
 end
 
--- Lines 969-971
+-- Lines 970-972
 function BaseButton:set_hover_changed_callback(func)
 	self._on_hover_changed_callback = func
 end
 
--- Lines 973-980
+-- Lines 974-981
 function BaseButton:set_enabled(state)
 	if self._enabled == state then
 		return
@@ -1027,35 +1141,37 @@ function BaseButton:set_enabled(state)
 	self:_enabled_changed(state)
 end
 
--- Lines 982-983
+-- Lines 983-984
 function BaseButton:_enabled_changed(state)
 	return
 end
 
--- Lines 985-986
+-- Lines 986-987
 function BaseButton:_hover_changed(state)
 	return
 end
 
--- Lines 988-989
+-- Lines 989-990
 function BaseButton:_trigger()
 	return
 end
 
--- Lines 991-993
+-- Lines 992-994
 function BaseButton:allow_input()
 	return self._enabled and BaseButton.super.allow_input(self)
 end
 
--- Lines 995-1004
+-- Lines 996-1004
 function BaseButton:set_hover(hover)
-	if hover ~= self._hover and self._on_hover_changed_callback then
-		self:_on_hover_changed_callback(hover)
+	if hover ~= self._hover then
+		if self._on_hover_changed_callback then
+			self:_on_hover_changed_callback(hover)
+		end
+
+		self._hover = hover
+
+		self:_hover_changed(hover)
 	end
-
-	self._hover = hover
-
-	self:_hover_changed(hover)
 end
 
 -- Lines 1006-1016
@@ -1337,6 +1453,180 @@ function CompositeButton:register_child(item)
 	table.insert(self._child_list, item)
 
 	return item
+end
+
+TextCompositeButton = TextCompositeButton or class(CompositeButton)
+
+-- Lines 1261-1280
+function TextCompositeButton:init(parent, composite_button_config, panel_config, func)
+	TextCompositeButton.super.init(self, parent, composite_button_config, panel_config, func)
+
+	local text_config = table.set_defaults(composite_button_config.text_config, {
+		text = composite_button_config.text or not composite_button_config.text_id and "ERROR" or nil,
+		text_id = composite_button_config.text_id
+	})
+
+	self._text = TextButton:new(self, text_config)
+
+	if composite_button_config.text_align == "right" then
+		self._text:set_right(self:right())
+	elseif composite_button_config.text_align == "center" then
+		self._text:set_center_x(self:w() / 2)
+	end
+
+	if not panel_config.h then
+		self:set_h(self._text:h())
+	end
+
+	self:register_child(self._text)
+end
+
+-- Lines 1282-1284
+function TextCompositeButton:set_text(text)
+	self._text:set_text(text)
+end
+
+local MOUSEOVER_COLOR = tweak_data.screen_colors.button_stage_2
+local BUTTON_COLOR = tweak_data.screen_colors.button_stage_3
+
+CollapsibleListItem = CollapsibleListItem or class(ListItem)
+
+-- Lines 1291-1344
+function CollapsibleListItem:init(parent, config)
+	CollapsibleListItem.super.init(self, parent, config or {})
+
+	self._content_panel = ExtendedPanel:new(self, {
+		h = small_font_size
+	})
+	self._bg = self._content_panel:rect({
+		alpha = 0.1,
+		layer = 100,
+		color = BUTTON_COLOR
+	})
+	self._press_callback = config.press_callback
+	self._text = self._content_panel:text({
+		layer = 100,
+		name = "text",
+		x = 10,
+		font = large_font,
+		font_size = small_font_size,
+		color = BUTTON_COLOR,
+		text = config.text
+	})
+
+	self._text:set_center_y(self._content_panel:center_y())
+
+	self._icon = self._content_panel:bitmap({
+		h = 20,
+		layer = 100,
+		texture = "guis/textures/scrollarrow",
+		w = 20,
+		color = BUTTON_COLOR
+	})
+
+	self._icon:set_center_y(self._content_panel:center_y())
+	self._icon:set_right(self._content_panel:right() - 5)
+
+	local padding_x = config.padding_x or 16
+
+	self._canvas = ExtendedPanel:new(self, {
+		input = true,
+		name = "canvas",
+		visible = false,
+		x = padding_x,
+		w = config.canvas_w or self:w() - padding_x * 2,
+		h = config.canvas_h,
+		y = self._content_panel:bottom()
+	})
+	self._open = config.open or false
+
+	self:set_open(self._open)
+end
+
+-- Lines 1346-1348
+function CollapsibleListItem:set_text(text)
+	self._text:set_text(text)
+end
+
+-- Lines 1350-1352
+function CollapsibleListItem:canvas()
+	return self._canvas
+end
+
+-- Lines 1354-1363
+function CollapsibleListItem:update_size()
+	self._panel:set_h(self._content_panel:h())
+
+	if self._open then
+		self._panel:set_h(self._panel:h() + self._canvas:h())
+	end
+
+	if self._parent and self._parent.child_size_changed then
+		self._parent:child_size_changed()
+	end
+end
+
+-- Lines 1365-1371
+function CollapsibleListItem:_selected_changed(state)
+	CollapsibleListItem.super._selected_changed(self, state)
+	self._text:set_color(state and MOUSEOVER_COLOR or BUTTON_COLOR)
+	self._icon:set_color(state and MOUSEOVER_COLOR or BUTTON_COLOR)
+	self._bg:set_alpha(state and 0.4 or 0)
+end
+
+-- Lines 1373-1375
+function CollapsibleListItem:inside(x, y)
+	return self._bg:inside(x, y)
+end
+
+-- Lines 1377-1385
+function CollapsibleListItem:mouse_pressed(button, x, y)
+	if self._content_panel:inside(x, y) then
+		self:confirm_pressed()
+
+		self._ignore_mouse_clicked_once = true
+
+		return
+	end
+
+	return CollapsibleListItem.super.mouse_pressed(self, button, x, y)
+end
+
+-- Lines 1387-1394
+function CollapsibleListItem:mouse_clicked(o, button, x, y)
+	if self._ignore_mouse_clicked_once then
+		self._ignore_mouse_clicked_once = false
+
+		return
+	end
+
+	return CollapsibleListItem.super.mouse_clicked(self, o, button, x, y)
+end
+
+-- Lines 1396-1410
+function CollapsibleListItem:confirm_pressed()
+	if not self._selected and not self._hover then
+		return
+	end
+
+	local open = not self._open
+
+	if self._press_callback then
+		self._press_callback(open)
+	end
+
+	self:set_open(open)
+
+	return CollapsibleListItem.super.confirm_pressed(self)
+end
+
+-- Lines 1412-1417
+function CollapsibleListItem:set_open(state)
+	self._open = state
+
+	self._icon:set_rotation(self._open and 180 or 0)
+	self._canvas:set_visible(self._open)
+	self:update_size()
 end
 
 ProgressBar = ProgressBar or class(ExtendedPanel)

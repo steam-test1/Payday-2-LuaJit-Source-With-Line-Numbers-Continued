@@ -13,7 +13,7 @@ CopActionDodge._SIDES = {
 	"r"
 }
 
--- Lines 9-66
+-- Lines 13-78
 function CopActionDodge:init(action_desc, common_data)
 	self._common_data = common_data
 	self._ext_base = common_data.ext_base
@@ -68,7 +68,7 @@ function CopActionDodge:init(action_desc, common_data)
 	end
 end
 
--- Lines 70-82
+-- Lines 82-94
 function CopActionDodge:on_exit()
 	if self._root_blend_disabled then
 		self._root_blend_disabled = nil
@@ -83,7 +83,7 @@ function CopActionDodge:on_exit()
 	end
 end
 
--- Lines 86-117
+-- Lines 98-129
 function CopActionDodge:update(t)
 	if self._ext_anim.dodge then
 		local dt = TimerManager:game():delta_time()
@@ -117,22 +117,22 @@ function CopActionDodge:update(t)
 	end
 end
 
--- Lines 121-123
+-- Lines 133-135
 function CopActionDodge:type()
 	return "dodge"
 end
 
--- Lines 127-129
+-- Lines 139-141
 function CopActionDodge:expired()
 	return self._expired
 end
 
--- Lines 133-135
+-- Lines 145-147
 function CopActionDodge:need_upd()
 	return true
 end
 
--- Lines 139-144
+-- Lines 151-156
 function CopActionDodge:chk_block(action_type, t)
 	if action_type == "death" then
 		return false
@@ -141,12 +141,12 @@ function CopActionDodge:chk_block(action_type, t)
 	return CopActionAct.chk_block(self, action_type, t)
 end
 
--- Lines 148-150
+-- Lines 160-162
 function CopActionDodge:timeout()
 	return self._timeout
 end
 
--- Lines 154-160
+-- Lines 166-172
 function CopActionDodge._get_variation_index(var_name)
 	for index, test_var_name in ipairs(CopActionDodge._VARIATIONS) do
 		if var_name == test_var_name then
@@ -155,12 +155,12 @@ function CopActionDodge._get_variation_index(var_name)
 	end
 end
 
--- Lines 164-166
+-- Lines 176-178
 function CopActionDodge.get_variation_name(var_index)
 	return CopActionDodge._VARIATIONS[var_index]
 end
 
--- Lines 170-176
+-- Lines 182-188
 function CopActionDodge._get_side_index(side_name)
 	for index, test_side_name in ipairs(CopActionDodge._SIDES) do
 		if side_name == test_side_name then
@@ -169,12 +169,12 @@ function CopActionDodge._get_side_index(side_name)
 	end
 end
 
--- Lines 180-182
+-- Lines 192-194
 function CopActionDodge.get_side_name(side_index)
 	return CopActionDodge._SIDES[side_index]
 end
 
--- Lines 186-207
+-- Lines 198-219
 function CopActionDodge:_determine_rotation_transition()
 	local wanted_side = self._side
 	local end_rot = Rotation(self._direction, math.UP)
@@ -194,7 +194,7 @@ function CopActionDodge:_determine_rotation_transition()
 	}
 end
 
--- Lines 211-213
+-- Lines 223-225
 function CopActionDodge:accuracy_multiplier()
 	return self._shoot_accuracy or 1
 end

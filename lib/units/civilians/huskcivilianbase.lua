@@ -1,10 +1,7 @@
-local ids_lod = Idstring("lod")
-local ids_lod1 = Idstring("lod1")
-local ids_ik_aim = Idstring("ik_aim")
-
 HuskCivilianBase = HuskCivilianBase or class(HuskCopBase)
+HuskCivilianBase._is_civilian = true
 
--- Lines 7-36
+-- Lines 5-34
 function HuskCivilianBase:post_init()
 	self._ext_movement = self._unit:movement()
 	self._ext_anim = self._unit:anim_data()
@@ -35,12 +32,12 @@ function HuskCivilianBase:post_init()
 	self:enable_leg_arm_hitbox()
 end
 
--- Lines 40-40
+-- Lines 38-38
 function HuskCivilianBase:default_weapon_name()
 	return
 end
 
--- Lines 44-54
+-- Lines 42-52
 function HuskCivilianBase:sync_net_event(event_id)
 	if event_id == 1 then
 		managers.groupai:state():on_hostage_follow(managers.player:player_unit(), self._unit, true)
@@ -56,7 +53,7 @@ end
 HuskCivilianBaseResetSpawnPos = HuskCivilianBaseResetSpawnPos or class(HuskCivilianBase)
 HuskCivilianBaseResetSpawnPos._SPAWN_POS_RESET_TIME = 1
 
--- Lines 67-80
+-- Lines 65-78
 function HuskCivilianBaseResetSpawnPos:init(unit)
 	local spawn_position = unit:position()
 
@@ -72,7 +69,7 @@ function HuskCivilianBaseResetSpawnPos:init(unit)
 	HuskCivilianBaseResetSpawnPos.super.init(self, unit)
 end
 
--- Lines 82-91
+-- Lines 80-89
 function HuskCivilianBaseResetSpawnPos:load(...)
 	HuskCivilianBaseResetSpawnPos.super.load(self, ...)
 
@@ -83,7 +80,7 @@ function HuskCivilianBaseResetSpawnPos:load(...)
 	end
 end
 
--- Lines 93-101
+-- Lines 91-99
 function HuskCivilianBaseResetSpawnPos:pre_destroy(...)
 	HuskCivilianBaseResetSpawnPos.super.pre_destroy(self, ...)
 

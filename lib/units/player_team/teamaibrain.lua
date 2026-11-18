@@ -8,7 +8,7 @@ require("lib/units/player_team/logics/TeamAILogicSurrender")
 
 TeamAIBrain = TeamAIBrain or class(CopBrain)
 TeamAIBrain._create_attention_setting_from_descriptor = PlayerMovement._create_attention_setting_from_descriptor
-TeamAIBrain._logics = {
+TeamAIBrain._logic_variants.team_ai = {
 	inactive = TeamAILogicInactive,
 	idle = TeamAILogicIdle,
 	surrender = TeamAILogicSurrender,
@@ -16,36 +16,26 @@ TeamAIBrain._logics = {
 	assault = TeamAILogicAssault,
 	disabled = TeamAILogicDisabled
 }
+TeamAIBrain._default_logic_variant = "team_ai"
+TeamAIBrain._tweak_data_clbk_id = nil
 
-local reload
-
-if TeamAIBrain._reload_clbks then
-	reload = true
-else
-	TeamAIBrain._reload_clbks = {}
-end
-
--- Lines 32-45
+-- Lines 53-57
 function TeamAIBrain:init(unit)
-	self._unit = unit
-	self._timer = TimerManager:game()
+	TeamAIBrain.super.init(self, unit)
 
-	self:set_update_enabled_state(false)
-
-	self._current_logic = nil
-	self._current_logic_name = nil
-	self._active = true
-	self._SO_access = managers.navigation:convert_access_flag(tweak_data.character[unit:base()._tweak_table].access)
-	self._reload_clbks[unit:key()] = callback(self, self, "on_reload")
+	self._slotmask_enemies = managers.slot:get_mask("enemies")
 end
 
--- Lines 49-66
+-- Lines 61-97
 function TeamAIBrain:post_init()
+	self._logics = self._logic_variants[self._unit:base()._tweak_table] or self._logic_variants[self._default_logic_variant]
+
 	self:_reset_logic_data()
 
 	local my_key = tostring(self._unit:key())
+	local char_dmg_ext = self._unit:character_damage()
 
-	self._unit:character_damage():add_listener("TeamAIBrain_hurt" .. my_key, {
+	char_dmg_ext:add_listener("TeamAIBrain_hurt" .. my_key, {
 		"bleedout",
 		"hurt",
 		"light_hurt",
@@ -53,12 +43,17 @@ function TeamAIBrain:post_init()
 		"fatal",
 		"none"
 	}, callback(self, self, "clbk_damage"))
-	self._unit:character_damage():add_listener("TeamAIBrain_death" .. my_key, {
+	char_dmg_ext:add_listener("TeamAIBrain_death" .. my_key, {
 		"death"
 	}, callback(self, self, "clbk_death"))
-	managers.groupai:state():add_listener("TeamAIBrain" .. my_key, {
-		"enemy_weapons_hot"
-	}, callback(self, self, "clbk_heat"))
+
+	local groupai_state = managers.groupai:state()
+
+	if not groupai_state:enemy_weapons_hot() then
+		self._enemy_weapons_hot_listen_id = "TeamAIBrain" .. my_key
+
+		groupai_state:add_listener(self._enemy_weapons_hot_listen_id, self._weapons_hot_clbk_event_list, callback(self, self, "clbk_heat"))
+	end
 
 	if not self._current_logic then
 		self:set_init_logic("idle")
@@ -76,16 +71,17 @@ function TeamAIBrain:post_init()
 	}, self._unit:movement():m_head_pos())
 end
 
--- Lines 70-76
+-- Lines 101-107
 function TeamAIBrain:_reset_logic_data()
 	TeamAIBrain.super._reset_logic_data(self)
 
-	self._logic_data.enemy_slotmask = managers.slot:get_mask("enemies")
-	self._logic_data.objective_complete_clbk = callback(managers.groupai:state(), managers.groupai:state(), "on_criminal_objective_complete")
-	self._logic_data.objective_failed_clbk = callback(managers.groupai:state(), managers.groupai:state(), "on_criminal_objective_failed")
+	local groupai_state = managers.groupai:state()
+
+	self._logic_data.objective_complete_clbk = callback(groupai_state, groupai_state, "on_criminal_objective_complete")
+	self._logic_data.objective_failed_clbk = callback(groupai_state, groupai_state, "on_criminal_objective_failed")
 end
 
--- Lines 80-85
+-- Lines 111-116
 function TeamAIBrain:set_spawn_ai(spawn_ai)
 	TeamAIBrain.super.set_spawn_ai(self, spawn_ai)
 
@@ -94,46 +90,46 @@ function TeamAIBrain:set_spawn_ai(spawn_ai)
 	end
 end
 
--- Lines 89-91
+-- Lines 120-122
 function TeamAIBrain:clbk_damage(my_unit, damage_info)
 	self._current_logic.damage_clbk(self._logic_data, damage_info)
 end
 
--- Lines 95-98
+-- Lines 126-129
 function TeamAIBrain:clbk_death(my_unit, damage_info)
 	TeamAIBrain.super.clbk_death(self, my_unit, damage_info)
 	self:set_objective()
 end
 
--- Lines 102-104
+-- Lines 133-135
 function TeamAIBrain:on_cop_neutralized(cop_key)
 	return self._current_logic.on_cop_neutralized(self._logic_data, cop_key)
 end
 
--- Lines 108-111
+-- Lines 139-142
 function TeamAIBrain:on_long_dis_interacted(amount, other_unit, secondary)
 	self._unit:movement():set_cool(false)
 
 	return self._current_logic.on_long_dis_interacted(self._logic_data, other_unit, secondary)
 end
 
--- Lines 115-117
+-- Lines 146-148
 function TeamAIBrain:on_recovered(reviving_unit)
 	self._current_logic.on_recovered(self._logic_data, reviving_unit)
 end
 
--- Lines 121-123
+-- Lines 152-158
 function TeamAIBrain:clbk_heat()
+	if self._enemy_weapons_hot_listen_id then
+		managers.groupai:state():remove_listener(self._enemy_weapons_hot_listen_id)
+
+		self._enemy_weapons_hot_listen_id = nil
+	end
+
 	self._current_logic.clbk_heat(self._logic_data)
 end
 
--- Lines 127-130
-function TeamAIBrain:pre_destroy(unit)
-	TeamAIBrain.super.pre_destroy(self, unit)
-	managers.groupai:state():remove_listener("TeamAIBrain" .. tostring(self._unit:key()))
-end
-
--- Lines 134-140
+-- Lines 162-168
 function TeamAIBrain:set_active(state)
 	TeamAIBrain.super.set_active(self, state)
 
@@ -144,23 +140,23 @@ function TeamAIBrain:set_active(state)
 	self._unit:character_damage():disable()
 end
 
--- Lines 145-147
+-- Lines 173-175
 function TeamAIBrain:set_player_ignore(state)
 	self._ignore_player = state or nil
 end
 
--- Lines 149-151
+-- Lines 177-179
 function TeamAIBrain:player_ignore()
 	return self._ignore_player
 end
 
--- Lines 156-160
+-- Lines 184-196
 function TeamAIBrain:_setup_attention_handler()
 	TeamAIBrain.super._setup_attention_handler(self)
 	self:on_cool_state_changed(self._unit:movement():cool())
 end
 
--- Lines 164-181
+-- Lines 200-219
 function TeamAIBrain:on_cool_state_changed(state)
 	if self._logic_data then
 		self._logic_data.cool = state
@@ -185,12 +181,12 @@ function TeamAIBrain:on_cool_state_changed(state)
 	PlayerMovement.set_attention_settings(self, att_settings, "team_AI")
 end
 
--- Lines 185-186
+-- Lines 223-224
 function TeamAIBrain:clbk_attention_notice_sneak(observer_unit, status)
 	return
 end
 
--- Lines 190-192
+-- Lines 228-230
 function TeamAIBrain:_chk_enable_bodybag_interaction()
 	self._unit:interaction():set_tweak_data("dead")
 end
