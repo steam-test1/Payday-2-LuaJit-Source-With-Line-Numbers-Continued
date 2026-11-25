@@ -1457,7 +1457,7 @@ end
 
 TextCompositeButton = TextCompositeButton or class(CompositeButton)
 
--- Lines 1261-1280
+-- Lines 1261-1285
 function TextCompositeButton:init(parent, composite_button_config, panel_config, func)
 	TextCompositeButton.super.init(self, parent, composite_button_config, panel_config, func)
 
@@ -1465,6 +1465,10 @@ function TextCompositeButton:init(parent, composite_button_config, panel_config,
 		text = composite_button_config.text or not composite_button_config.text_id and "ERROR" or nil,
 		text_id = composite_button_config.text_id
 	})
+
+	if not managers.menu:is_pc_controller() then
+		text_config.normal_color = tweak_data.screen_colors.text
+	end
 
 	self._text = TextButton:new(self, text_config)
 
@@ -1476,12 +1480,13 @@ function TextCompositeButton:init(parent, composite_button_config, panel_config,
 
 	if not panel_config.h then
 		self:set_h(self._text:h())
+		self._rect:set_h(self._text:h())
 	end
 
 	self:register_child(self._text)
 end
 
--- Lines 1282-1284
+-- Lines 1287-1289
 function TextCompositeButton:set_text(text)
 	self._text:set_text(text)
 end
@@ -1491,7 +1496,7 @@ local BUTTON_COLOR = tweak_data.screen_colors.button_stage_3
 
 CollapsibleListItem = CollapsibleListItem or class(ListItem)
 
--- Lines 1291-1344
+-- Lines 1296-1349
 function CollapsibleListItem:init(parent, config)
 	CollapsibleListItem.super.init(self, parent, config or {})
 
@@ -1543,17 +1548,17 @@ function CollapsibleListItem:init(parent, config)
 	self:set_open(self._open)
 end
 
--- Lines 1346-1348
+-- Lines 1351-1353
 function CollapsibleListItem:set_text(text)
 	self._text:set_text(text)
 end
 
--- Lines 1350-1352
+-- Lines 1355-1357
 function CollapsibleListItem:canvas()
 	return self._canvas
 end
 
--- Lines 1354-1363
+-- Lines 1359-1368
 function CollapsibleListItem:update_size()
 	self._panel:set_h(self._content_panel:h())
 
@@ -1566,7 +1571,7 @@ function CollapsibleListItem:update_size()
 	end
 end
 
--- Lines 1365-1371
+-- Lines 1370-1376
 function CollapsibleListItem:_selected_changed(state)
 	CollapsibleListItem.super._selected_changed(self, state)
 	self._text:set_color(state and MOUSEOVER_COLOR or BUTTON_COLOR)
@@ -1574,12 +1579,12 @@ function CollapsibleListItem:_selected_changed(state)
 	self._bg:set_alpha(state and 0.4 or 0)
 end
 
--- Lines 1373-1375
+-- Lines 1378-1380
 function CollapsibleListItem:inside(x, y)
 	return self._bg:inside(x, y)
 end
 
--- Lines 1377-1385
+-- Lines 1382-1390
 function CollapsibleListItem:mouse_pressed(button, x, y)
 	if self._content_panel:inside(x, y) then
 		self:confirm_pressed()
@@ -1592,7 +1597,7 @@ function CollapsibleListItem:mouse_pressed(button, x, y)
 	return CollapsibleListItem.super.mouse_pressed(self, button, x, y)
 end
 
--- Lines 1387-1394
+-- Lines 1392-1399
 function CollapsibleListItem:mouse_clicked(o, button, x, y)
 	if self._ignore_mouse_clicked_once then
 		self._ignore_mouse_clicked_once = false
@@ -1603,7 +1608,7 @@ function CollapsibleListItem:mouse_clicked(o, button, x, y)
 	return CollapsibleListItem.super.mouse_clicked(self, o, button, x, y)
 end
 
--- Lines 1396-1410
+-- Lines 1401-1415
 function CollapsibleListItem:confirm_pressed()
 	if not self._selected and not self._hover then
 		return
@@ -1620,7 +1625,7 @@ function CollapsibleListItem:confirm_pressed()
 	return CollapsibleListItem.super.confirm_pressed(self)
 end
 
--- Lines 1412-1417
+-- Lines 1417-1422
 function CollapsibleListItem:set_open(state)
 	self._open = state
 
@@ -1631,7 +1636,7 @@ end
 
 ProgressBar = ProgressBar or class(ExtendedPanel)
 
--- Lines 1428-1477
+-- Lines 1433-1482
 function ProgressBar:init(parent, config, progress)
 	ProgressBar.super.init(self, parent, config)
 
@@ -1688,12 +1693,12 @@ function ProgressBar:init(parent, config, progress)
 	end
 end
 
--- Lines 1479-1481
+-- Lines 1484-1486
 function ProgressBar:max()
 	return self._max
 end
 
--- Lines 1484-1494
+-- Lines 1489-1499
 function ProgressBar:set_progress(v)
 	self._at = math.clamp(v, 0, self._max)
 
@@ -1707,7 +1712,7 @@ function ProgressBar:set_progress(v)
 	return self._at
 end
 
--- Lines 1497-1502
+-- Lines 1502-1507
 function ProgressBar:set_max(v, dont_scale_current)
 	local current = dont_scale_current and self._at or self._at / self._max * v
 
@@ -1718,7 +1723,7 @@ end
 
 TextProgressBar = TextProgressBar or class(ProgressBar)
 
--- Lines 1517-1541
+-- Lines 1522-1546
 function TextProgressBar:init(parent, config, text_config, progress)
 	TextProgressBar.super.init(self, parent, config)
 
@@ -1745,19 +1750,19 @@ function TextProgressBar:init(parent, config, text_config, progress)
 	end
 end
 
--- Lines 1543-1546
+-- Lines 1548-1551
 function TextProgressBar:_percentage_format()
 	local num = self._at / self._max * 100
 
 	return string.format(" %d%% ", num)
 end
 
--- Lines 1548-1550
+-- Lines 1553-1555
 function TextProgressBar:_normal_format()
 	return string.format(" %d / %d ", self._at, self._max)
 end
 
--- Lines 1552-1571
+-- Lines 1557-1576
 function TextProgressBar:set_progress(v)
 	TextProgressBar.super.set_progress(self, v)
 
@@ -1783,7 +1788,7 @@ end
 
 SpecialButtonBinding = SpecialButtonBinding or class()
 
--- Lines 1577-1586
+-- Lines 1582-1591
 function SpecialButtonBinding:init(binding, func, add_to_panel)
 	self._binding = Idstring(binding)
 	self._on_trigger = func or function()
@@ -1796,12 +1801,12 @@ function SpecialButtonBinding:init(binding, func, add_to_panel)
 	end
 end
 
--- Lines 1588-1590
+-- Lines 1593-1595
 function SpecialButtonBinding:allow_input()
 	return self._enabled
 end
 
--- Lines 1592-1597
+-- Lines 1597-1602
 function SpecialButtonBinding:special_btn_pressed(button)
 	if button == self._binding then
 		self._on_trigger()
@@ -1810,7 +1815,7 @@ function SpecialButtonBinding:special_btn_pressed(button)
 	end
 end
 
--- Lines 1599-1601
+-- Lines 1604-1606
 function SpecialButtonBinding:set_enabled(state)
 	self._enabled = state
 end
@@ -1818,7 +1823,7 @@ end
 ButtonLegendsBar = ButtonLegendsBar or class(GrowPanel)
 ButtonLegendsBar.PADDING = 10
 
--- Lines 1635-1647
+-- Lines 1640-1652
 function ButtonLegendsBar:init(panel, config, panel_config)
 	panel_config = table.set_defaults(panel_config, {
 		border = 0,
@@ -1843,7 +1848,7 @@ function ButtonLegendsBar:init(panel, config, panel_config)
 	self._lookup = {}
 end
 
--- Lines 1649-1671
+-- Lines 1654-1676
 function ButtonLegendsBar:add_item(data, id, dont_update)
 	if type(data) == "string" then
 		local text = managers.localization:exists(data) and managers.localization:to_upper_text(data) or data
@@ -1874,7 +1879,7 @@ function ButtonLegendsBar:add_item(data, id, dont_update)
 	self:_update_items()
 end
 
--- Lines 1673-1683
+-- Lines 1678-1688
 function ButtonLegendsBar:_create_btn(data, text)
 	local config = clone(self._text_config)
 
@@ -1895,7 +1900,7 @@ function ButtonLegendsBar:_create_btn(data, text)
 	return item
 end
 
--- Lines 1685-1699
+-- Lines 1690-1704
 function ButtonLegendsBar:_create_legend(data, text)
 	data = data or {}
 
@@ -1921,7 +1926,7 @@ function ButtonLegendsBar:_create_legend(data, text)
 	return item
 end
 
--- Lines 1701-1707
+-- Lines 1706-1712
 function ButtonLegendsBar:add_items(list)
 	for k, v in pairs(list) do
 		self:add_item(v, nil, true)
@@ -1930,7 +1935,7 @@ function ButtonLegendsBar:add_items(list)
 	self:_update_items()
 end
 
--- Lines 1709-1716
+-- Lines 1714-1721
 function ButtonLegendsBar:set_item_enabled(id_or_pos, state)
 	local id = type(id_or_pos) == "number" and id_or_pos or self._lookup[id_or_pos]
 	local data = self._items[id]
@@ -1942,7 +1947,7 @@ function ButtonLegendsBar:set_item_enabled(id_or_pos, state)
 	end
 end
 
--- Lines 1718-1741
+-- Lines 1723-1746
 function ButtonLegendsBar:_update_items()
 	local placer = self:placer()
 
@@ -1975,7 +1980,7 @@ end
 TextLegendsBar = TextLegendsBar or class(ButtonLegendsBar)
 TextLegendsBar.SEPERATOR = "  |  "
 
--- Lines 1748-1754
+-- Lines 1753-1759
 function TextLegendsBar:init(panel, config, panel_config)
 	TextLegendsBar.super.init(self, panel, config, panel_config)
 
@@ -1988,12 +1993,12 @@ function TextLegendsBar:init(panel, config, panel_config)
 	self._lines = {}
 end
 
--- Lines 1756-1758
+-- Lines 1761-1763
 function TextLegendsBar:_create_btn(data, text)
 	return self:_create_legend(data, text)
 end
 
--- Lines 1760-1769
+-- Lines 1765-1774
 function TextLegendsBar:_create_legend(data, text)
 	data = data or {}
 
@@ -2010,7 +2015,7 @@ function TextLegendsBar:_create_legend(data, text)
 	return item
 end
 
--- Lines 1771-1822
+-- Lines 1776-1827
 function TextLegendsBar:_update_items()
 	for _, v in pairs(self._lines) do
 		self:remove(v)
@@ -2024,7 +2029,7 @@ function TextLegendsBar:_update_items()
 	placer:set_start(self:w(), 0)
 	self:set_size(self:w(), 0)
 
-	-- Lines 1782-1789
+	-- Lines 1787-1794
 	local function complete_line(text_item)
 		self.make_fine_text(text_item, true)
 		placer:add_left(text_item)
@@ -2075,7 +2080,7 @@ end
 
 TabItem = TabItem or class()
 
--- Lines 1829-1844
+-- Lines 1834-1849
 function TabItem:init(parent, panel_data, tab_data)
 	self._on_pressed_callback = tab_data.callback
 	self._active_state = tab_data.initial_state or false
@@ -2108,7 +2113,7 @@ function TabItem:init(parent, panel_data, tab_data)
 	self:selected_changed(false)
 end
 
--- Lines 1846-1850
+-- Lines 1851-1855
 function TabItem:selected_changed(state)
 	self._active_state = state
 
@@ -2116,12 +2121,12 @@ function TabItem:selected_changed(state)
 	self._tab_text:set_color(state and Color.black or tweak_data.screen_colors.button_stage_3)
 end
 
--- Lines 1852-1854
+-- Lines 1857-1859
 function TabItem:inside(x, y)
 	return self._tab_panel:inside(x, y)
 end
 
--- Lines 1856-1869
+-- Lines 1861-1874
 function TabItem:hovered(state)
 	if self._active_state then
 		return
@@ -2138,19 +2143,19 @@ function TabItem:hovered(state)
 	end
 end
 
--- Lines 1871-1873
+-- Lines 1876-1878
 function TabItem:get_active_state()
 	return self._active_state
 end
 
--- Lines 1875-1879
+-- Lines 1880-1884
 function TabItem:pressed()
 	if not self._active_state and self._on_pressed_callback then
 		self._on_pressed_callback()
 	end
 end
 
--- Lines 1881-1883
+-- Lines 1886-1888
 function TabItem:bounds()
 	return {
 		left = self._tab_panel:left(),
@@ -2160,7 +2165,7 @@ function TabItem:bounds()
 	}
 end
 
--- Lines 1885-1887
+-- Lines 1890-1892
 function TabItem:alive()
 	return alive(self._tab_panel)
 end

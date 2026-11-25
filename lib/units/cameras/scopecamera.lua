@@ -45,7 +45,7 @@ function ScopeCamera:_add_setting_callback(setting_name, method)
 	end
 end
 
--- Lines 63-150
+-- Lines 63-153
 function ScopeCamera:_setup_camera()
 	local rt_resolution = Vector3(512, 512, 0)
 	local rt = Application:create_texture("render_target", rt_resolution.x, rt_resolution.y)
@@ -90,7 +90,7 @@ function ScopeCamera:_setup_camera()
 	self._clear_vp = clear_vp
 end
 
--- Lines 153-183
+-- Lines 156-186
 function ScopeCamera:link_scope(camera_object, screen_object, material, texture_channel, zoom)
 	material:set_variable(Idstring("scope_zoom"), 1)
 	material:set_variable(Idstring("scope_fadeout"), 1)
@@ -111,7 +111,7 @@ function ScopeCamera:link_scope(camera_object, screen_object, material, texture_
 	self._scope_active = true
 end
 
--- Lines 207-211
+-- Lines 210-214
 function ScopeCamera:unlink_scope()
 	self._vp:set_active(false)
 	self._clear_vp:set_active(false)
@@ -119,7 +119,7 @@ function ScopeCamera:unlink_scope()
 	self._scope_active = false
 end
 
--- Lines 213-336
+-- Lines 216-340
 function ScopeCamera:update(t, dt)
 	if not self._scope_active then
 		return

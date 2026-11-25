@@ -158,7 +158,7 @@ function StoryMissionsManager:claim_rewards(mission)
 	managers.savefile:save_progress()
 end
 
--- Lines 134-158
+-- Lines 134-163
 function StoryMissionsManager:_reward(reward)
 	if reward.type_items == "xp" then
 		local value_id = tweak_data.blackmarket[reward.type_items][reward.item_entry].value_id
@@ -183,7 +183,7 @@ function StoryMissionsManager:_reward(reward)
 	end
 end
 
--- Lines 162-185
+-- Lines 167-190
 function StoryMissionsManager:_check_complete(mission)
 	mission = self:_get_or_current(mission)
 
@@ -216,7 +216,7 @@ function StoryMissionsManager:_check_complete(mission)
 	end
 end
 
--- Lines 187-204
+-- Lines 192-209
 function StoryMissionsManager:_find_next_mission(dont_set)
 	local last
 
@@ -241,7 +241,7 @@ function StoryMissionsManager:_find_next_mission(dont_set)
 	return last
 end
 
--- Lines 206-213
+-- Lines 211-218
 function StoryMissionsManager:_change_current_mission(mission)
 	self._global.current_mission = mission
 
@@ -251,7 +251,7 @@ function StoryMissionsManager:_change_current_mission(mission)
 	end
 end
 
--- Lines 217-222
+-- Lines 222-227
 function StoryMissionsManager:_get_offset_mission(mission, offset)
 	local m = self:_get_or_current(mission)
 
@@ -262,7 +262,7 @@ function StoryMissionsManager:_get_offset_mission(mission, offset)
 	return self._global.mission_order[m.order + offset]
 end
 
--- Lines 226-234
+-- Lines 231-239
 function StoryMissionsManager:_get_or_current(mission)
 	if mission then
 		if type(mission) == "string" then
@@ -275,7 +275,7 @@ function StoryMissionsManager:_get_or_current(mission)
 	return self:current_mission()
 end
 
--- Lines 238-272
+-- Lines 243-277
 function StoryMissionsManager:save(cache)
 	local completed_missions = {}
 
@@ -314,7 +314,7 @@ function StoryMissionsManager:save(cache)
 	cache.story_missions_manager = state
 end
 
--- Lines 274-285
+-- Lines 279-290
 function StoryMissionsManager:_save_objectives(mission)
 	local res = {}
 
@@ -330,7 +330,7 @@ function StoryMissionsManager:_save_objectives(mission)
 	return res
 end
 
--- Lines 287-308
+-- Lines 292-313
 function StoryMissionsManager:_migrate_save_data(version_from, version_to, state)
 	if version_to - version_from > 1 then
 		version_from = self:_migrate_save_data(version_from, version_to - 1, state)
@@ -357,7 +357,7 @@ function StoryMissionsManager:_migrate_save_data(version_from, version_to, state
 	end
 end
 
--- Lines 310-358
+-- Lines 315-363
 function StoryMissionsManager:load(cache, version)
 	local state = cache.story_missions_manager
 
@@ -413,12 +413,12 @@ function StoryMissionsManager:load(cache, version)
 	end
 end
 
--- Lines 360-362
+-- Lines 365-367
 function StoryMissionsManager:start_current(objective_id)
 	return self:start_mission(self:current_mission(), objective_id)
 end
 
--- Lines 364-417
+-- Lines 369-422
 function StoryMissionsManager:start_mission(mission, objective_id)
 	local m = self:_get_or_current(mission) or {
 		objectives_flat = {}
@@ -489,7 +489,7 @@ function StoryMissionsManager:start_mission(mission, objective_id)
 	})
 end
 
--- Lines 420-433
+-- Lines 425-438
 function StoryMissionsManager:skip_mission(mission)
 	local m = self:get_mission(mission) or mission
 
@@ -510,22 +510,22 @@ function StoryMissionsManager:skip_mission(mission)
 	self._global.last_failed_heist_id = ""
 end
 
--- Lines 435-437
+-- Lines 440-442
 function StoryMissionsManager:get_last_skipped_mission(mission)
 	return self._global.skipped_mission
 end
 
--- Lines 441-443
+-- Lines 446-448
 function StoryMissionsManager:set_last_failed_heist(last_failed_heist)
 	self._global.last_failed_heist_id = last_failed_heist
 end
 
--- Lines 445-447
+-- Lines 450-452
 function StoryMissionsManager:get_last_failed_heist()
 	return self._global.last_failed_heist_id or ""
 end
 
--- Lines 449-465
+-- Lines 454-477
 function StoryMissionsManager:is_heist_story_started(heist_id)
 	local mission = self:current_mission()
 
@@ -546,9 +546,9 @@ function StoryMissionsManager:is_heist_story_started(heist_id)
 	return false
 end
 
--- Lines 470-488
+-- Lines 482-500
 function StoryMissionsManager:reset_all()
-	-- Lines 471-479
+	-- Lines 483-491
 	local function reset(m)
 		if not m then
 			return

@@ -1,6 +1,6 @@
 require("lib/tweak_data/blackmarket/WeaponColorTemplates")
 
--- Lines 350-39863
+-- Lines 350-39704
 function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self.weapon_skins = {}
 	self.weapon_skins.serbu_woodland = {}
@@ -1018,9 +1018,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 		"wpn_fps_pis_deagle_body_standard",
 		"wpn_fps_pis_deagle_m_standard",
 		"wpn_fps_pis_deagle_b_legend",
-		"wpn_fps_pis_deagle_g_ergo",
-		"wpn_fps_pis_deagle_o_standard_front",
-		"wpn_fps_pis_deagle_o_standard_rear"
+		"wpn_fps_pis_deagle_g_ergo"
 	}
 	self.weapon_skins.deagle_bling.special_blueprint = {
 		deagle = {
@@ -3376,6 +3374,13 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 				uv_offset_rot = Vector3(0.05682, 0.909473, 0.28921),
 				sticker = Idstring("units/payday2_cash/safes/dallas/sticker/sticker_texaslonghorn_df"),
 				uv_scale = Vector3(3.02781, 4.02898, 1)
+			}
+		},
+		wpn_fps_ass_m14_body_ruger = {
+			[Idstring("mtr_ruger"):key()] = {
+				sticker = Idstring("units/payday2_cash/safes/dallas/sticker/sticker_texaslonghorn_df"),
+				uv_offset_rot = Vector3(-0.229212, 1.0011, 0.244255),
+				uv_scale = Vector3(2.74937, 2.99971, 1)
 			}
 		},
 		wpn_fps_ass_m14_body_upper = {
@@ -37776,7 +37781,7 @@ function BlackMarketTweakData:_init_weapon_skins(tweak_data)
 	self:_setup_weapon_color_skins(tweak_data)
 end
 
--- Lines 39866-39998
+-- Lines 39707-39839
 function BlackMarketTweakData:populate_weapon_color_skin(weapon_color_data, variation_data, weapon_id)
 	local weapon_color_skin_template = self.weapon_color_templates.color_skin
 
@@ -37887,7 +37892,7 @@ function BlackMarketTweakData:populate_weapon_color_skin(weapon_color_data, vari
 	end
 end
 
--- Lines 40001-40025
+-- Lines 39842-39866
 function BlackMarketTweakData:create_new_color_skin(name, data, color_skin_data)
 	data.name_id = "bm_wskn_" .. name
 	data.rarity = "common"
@@ -37910,12 +37915,12 @@ function BlackMarketTweakData:create_new_color_skin(name, data, color_skin_data)
 	table.insert(self.weapon_colors, name)
 end
 
--- Lines 40027-40029
+-- Lines 39868-39870
 function BlackMarketTweakData:get_weapon_color_index_string(color_index)
 	return "menu_weapon_color_index_" .. tostring(color_index)
 end
 
--- Lines 40031-43312
+-- Lines 39872-43153
 function BlackMarketTweakData:_setup_weapon_color_skins(tweak_data)
 	self.weapon_color_templates = WeaponColorTemplates.setup_weapon_color_templates(tweak_data)
 	self.weapon_color_pattern_scales = {

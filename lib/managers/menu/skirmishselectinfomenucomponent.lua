@@ -6,7 +6,7 @@ SkirmishSelectInfoMenuComponent = SkirmishSelectInfoMenuComponent or class()
 
 local padding = 10
 
--- Lines 8-235
+-- Lines 11-222
 function SkirmishSelectInfoMenuComponent:init(ws, fullscreen_ws, node)
 	self._ws = ws
 	self._fullscreen_ws = fullscreen_ws
@@ -224,7 +224,7 @@ function SkirmishSelectInfoMenuComponent:init(ws, fullscreen_ws, node)
 	})
 end
 
--- Lines 237-240
+-- Lines 224-227
 function SkirmishSelectInfoMenuComponent:close()
 	self._ws:panel():remove(self._panel)
 	self._fullscreen_ws:panel():remove(self._fullscreen_panel)

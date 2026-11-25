@@ -303,7 +303,7 @@ function InGameHeisterInteractionGui:_setup_default()
 	make_fine_text(header_text_desc)
 end
 
--- Lines 229-329
+-- Lines 229-388
 function InGameHeisterInteractionGui:_setup_layout()
 	self._reward_buttons = {}
 
@@ -330,6 +330,18 @@ function InGameHeisterInteractionGui:_setup_layout()
 
 	self._scroll_panel:move(self.PADDING, self.PADDING + small_font_size)
 
+	local desc_macros = {}
+
+	if daily_challenge.contractor then
+		for _, safehouse_contractor in ipairs(tweak_data.safehouse.contractors) do
+			if safehouse_contractor.character == daily_challenge.contractor and safehouse_contractor.name_id then
+				desc_macros.name_id = managers.localization:text(safehouse_contractor.name_id)
+
+				break
+			end
+		end
+	end
+
 	local desc_panel = self._scroll_panel:panel({
 		layer = 1,
 		h = header_text_desc_height,
@@ -339,7 +351,7 @@ function InGameHeisterInteractionGui:_setup_layout()
 		layer = 1,
 		name = "desc_text",
 		wrap = true,
-		text = managers.localization:text(daily_info.desc_id),
+		text = managers.localization:text(daily_info.desc_id, desc_macros),
 		font = tweak_data.menu.pd2_small_font,
 		font_size = tweak_data.menu.pd2_small_font_size,
 		color = tweak_data.screen_colors.text
@@ -381,6 +393,16 @@ function InGameHeisterInteractionGui:_setup_layout()
 		end
 
 		macros.max_progress = tostring(max)
+	end
+
+	if daily_challenge.contractor then
+		for _, safehouse_contractor in ipairs(tweak_data.safehouse.contractors) do
+			if safehouse_contractor.character == daily_challenge.character and safehouse_contractor.name_id then
+				macros.character = managers.localization:text(contractor.name_id)
+
+				break
+			end
+		end
 	end
 
 	local obj_desc_text = obj_desc_panel:text({
@@ -447,7 +469,7 @@ function InGameHeisterInteractionGui:_setup_layout()
 	local first = true
 
 	for idx, reward in ipairs(daily_challenge.rewards) do
-		local reward_item = CustomSafehouseGuiRewardItem:new(self, reward_panel, idx, reward, daily_info.id, true)
+		local reward_item = CustomSafehouseGuiRewardItem:new(self, reward_panel, idx, daily_challenge, reward, daily_info.id, true)
 
 		reward_item._panel:move(self._scroll_panel:w() - self.PADDING * 2 - 128 * idx, 0)
 		table.insert(self._reward_buttons, reward_item)
@@ -460,6 +482,7 @@ function InGameHeisterInteractionGui:_setup_layout()
 	end
 
 	if daily_challenge.reward_id then
+		local reward_text_str = daily_challenge.reward_s or managers.localization:text(daily_challenge.reward_id)
 		local reward_text = reward_panel:text({
 			blend_mode = "add",
 			layer = 1,
@@ -467,7 +490,7 @@ function InGameHeisterInteractionGui:_setup_layout()
 			wrap = true,
 			font_size = small_font_size,
 			font = small_font,
-			text = managers.localization:text(daily_challenge.reward_id)
+			text = reward_text_str
 		})
 
 		reward_text:move(0, 20)
@@ -484,7 +507,7 @@ function InGameHeisterInteractionGui:_setup_layout()
 	self:set_animation_state("_update_daily")
 end
 
--- Lines 331-423
+-- Lines 390-482
 function InGameHeisterInteractionGui:_setup_daily_complete()
 	self._reward_buttons = {}
 
@@ -580,17 +603,17 @@ function InGameHeisterInteractionGui:_setup_daily_complete()
 	self:_setup_menu()
 end
 
--- Lines 425-427
+-- Lines 484-486
 function InGameHeisterInteractionGui:update(t, dt)
 	self:_update_animation(t, dt)
 end
 
--- Lines 429-431
+-- Lines 488-490
 function InGameHeisterInteractionGui:set_animation_state(state)
 	self._anim_state = state
 end
 
--- Lines 433-447
+-- Lines 492-506
 function InGameHeisterInteractionGui:_update_daily(t, dt)
 	if alive(self._expire_time_text) then
 		local expire_string = ""
@@ -607,7 +630,7 @@ function InGameHeisterInteractionGui:_update_daily(t, dt)
 	end
 end
 
--- Lines 449-469
+-- Lines 508-528
 function InGameHeisterInteractionGui:_update_hide_daily(t, dt)
 	self._complete_t = (self._complete_t or 0) + dt
 
@@ -641,7 +664,7 @@ function InGameHeisterInteractionGui:_update_hide_daily(t, dt)
 	end
 end
 
--- Lines 471-494
+-- Lines 530-553
 function InGameHeisterInteractionGui:_update_show_complete(t, dt)
 	self._complete_t = (self._complete_t or 0) + dt
 
@@ -665,7 +688,7 @@ function InGameHeisterInteractionGui:_update_show_complete(t, dt)
 	end
 end
 
--- Lines 496-509
+-- Lines 555-568
 function InGameHeisterInteractionGui:_update_renew_daily(t, dt)
 	if alive(self._renew_timer) then
 		local challenge = managers.custom_safehouse:get_daily_challenge()
@@ -678,19 +701,19 @@ function InGameHeisterInteractionGui:_update_renew_daily(t, dt)
 	end
 end
 
--- Lines 511-515
+-- Lines 570-574
 function InGameHeisterInteractionGui:_update_animation(t, dt)
 	if self._anim_state and self[self._anim_state] then
 		self[self._anim_state](self, t, dt)
 	end
 end
 
--- Lines 517-519
+-- Lines 576-578
 function InGameHeisterInteractionGui:close()
 	MenuNodeCrimenetContactChillGui.super.close(self)
 end
 
--- Lines 521-553
+-- Lines 580-612
 function InGameHeisterInteractionGui:move_reward_button(dir)
 	if not self._reward_buttons or #self._reward_buttons == 0 then
 		return
@@ -728,7 +751,7 @@ function InGameHeisterInteractionGui:move_reward_button(dir)
 	self._reward_buttons[next_button]:set_selected(true)
 end
 
--- Lines 555-562
+-- Lines 614-621
 function InGameHeisterInteractionGui:special_btn_pressed(button)
 	if button == Idstring("menu_modify_item") then
 		for _, btn in pairs(self._reward_buttons) do
@@ -737,17 +760,17 @@ function InGameHeisterInteractionGui:special_btn_pressed(button)
 	end
 end
 
--- Lines 564-566
+-- Lines 623-625
 function InGameHeisterInteractionGui:move_left()
 	self:move_reward_button(-1)
 end
 
--- Lines 568-570
+-- Lines 627-629
 function InGameHeisterInteractionGui:move_right()
 	self:move_reward_button(1)
 end
 
--- Lines 572-574
+-- Lines 631-633
 function InGameHeisterInteractionGui:_update_buttons()
 	return
 end

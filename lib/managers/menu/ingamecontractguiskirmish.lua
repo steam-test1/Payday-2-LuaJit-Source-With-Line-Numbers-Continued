@@ -1,6 +1,6 @@
 IngameContractGuiSkirmish = IngameContractGuiSkirmish or class()
 
--- Lines 3-116
+-- Lines 5-124
 function IngameContractGuiSkirmish:init(ws, node)
 	local padding = IS_PC and 10 or 5
 
@@ -130,7 +130,7 @@ function IngameContractGuiSkirmish:init(ws, node)
 	})
 end
 
--- Lines 118-126
+-- Lines 126-134
 function IngameContractGuiSkirmish:_rec_round_object(object)
 	if object.children then
 		for i, d in ipairs(object:children()) do
@@ -143,12 +143,12 @@ function IngameContractGuiSkirmish:_rec_round_object(object)
 	object:set_position(math.round(x), math.round(y))
 end
 
--- Lines 128-130
+-- Lines 136-138
 function IngameContractGuiSkirmish:set_layer(layer)
 	self._panel:set_layer(layer)
 end
 
--- Lines 132-137
+-- Lines 140-145
 function IngameContractGuiSkirmish:close()
 	if self._panel and alive(self._panel) then
 		self._panel:parent():remove(self._panel)
@@ -157,7 +157,7 @@ function IngameContractGuiSkirmish:close()
 	end
 end
 
--- Lines 139-144
+-- Lines 147-152
 function IngameContractGuiSkirmish:mouse_wheel_up(x, y)
 	if not self._modifier_list then
 		return
@@ -166,7 +166,7 @@ function IngameContractGuiSkirmish:mouse_wheel_up(x, y)
 	self._modifier_list:scroll(x, y, 1)
 end
 
--- Lines 146-151
+-- Lines 154-159
 function IngameContractGuiSkirmish:mouse_wheel_down(x, y)
 	if not self._modifier_list then
 		return

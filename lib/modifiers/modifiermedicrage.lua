@@ -11,7 +11,7 @@ function ModifierMedicRage:init(...)
 end
 
 -- Lines 13-32
-function ModifierMedicRage:OnEnemyDied(target)
+function ModifierMedicRage:OnEnemyDied(unit)
 	if not self._is_server then
 		return
 	end

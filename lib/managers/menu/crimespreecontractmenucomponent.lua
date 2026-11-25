@@ -369,7 +369,7 @@ function CrimeSpreeContractMenuComponent:_setup_continue_crime_spree(text_w, tex
 	end
 end
 
--- Lines 364-425
+-- Lines 364-422
 function CrimeSpreeContractMenuComponent:_setup_continue_host(text_w, text_h)
 	local padding = tweak_data.gui.crime_net.contract_gui.padding
 	local modifiers = managers.crime_spree:active_modifiers()
@@ -428,7 +428,7 @@ function CrimeSpreeContractMenuComponent:_setup_continue_host(text_w, text_h)
 	self._scroll:update_canvas_size()
 end
 
--- Lines 427-497
+-- Lines 424-496
 function CrimeSpreeContractMenuComponent:_setup_continue_client(text_w, text_h)
 	local padding = tweak_data.gui.crime_net.contract_gui.padding
 
@@ -504,7 +504,7 @@ function CrimeSpreeContractMenuComponent:_setup_continue_client(text_w, text_h)
 	end
 end
 
--- Lines 501-508
+-- Lines 500-507
 function CrimeSpreeContractMenuComponent:_get_button_index(button)
 	for idx, btn in ipairs(self._buttons) do
 		if button == btn then
@@ -531,7 +531,7 @@ function CrimeSpreeContractMenuComponent:set_active_starting_level(btn)
 	end
 end
 
--- Lines 525-538
+-- Lines 525-537
 function CrimeSpreeContractMenuComponent:mouse_moved(o, x, y)
 	local used, pointer
 
@@ -546,7 +546,7 @@ function CrimeSpreeContractMenuComponent:mouse_moved(o, x, y)
 	return used, pointer
 end
 
--- Lines 540-549
+-- Lines 539-549
 function CrimeSpreeContractMenuComponent:mouse_pressed(o, button, x, y)
 	for idx, btn in ipairs(self._buttons) do
 		if btn:is_selected() and btn:callback() then
@@ -571,7 +571,7 @@ function CrimeSpreeContractMenuComponent:mouse_wheel_down(x, y)
 	end
 end
 
--- Lines 563-586
+-- Lines 563-588
 function CrimeSpreeContractMenuComponent:special_btn_pressed(button)
 	local change = 0
 
@@ -600,7 +600,7 @@ function CrimeSpreeContractMenuComponent:special_btn_pressed(button)
 	end
 end
 
--- Lines 588-597
+-- Lines 590-597
 function CrimeSpreeContractMenuComponent:_setup_controller_input()
 	self._gui = {}
 	self._gui._left_axis_vector = Vector3()

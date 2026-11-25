@@ -359,6 +359,8 @@ function CoreEditor:_init_layer_values()
 	self._coordinate_system = "Local"
 	self._grid_sizes = {
 		1,
+		5,
+		10,
 		25,
 		50,
 		100,

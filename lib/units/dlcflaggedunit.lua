@@ -1,6 +1,6 @@
 DLCFlaggedUnit = DLCFlaggedUnit or class()
 
--- Lines 4-36
+-- Lines 5-40
 function DLCFlaggedUnit:init(unit, update_enabled)
 	self._unit = unit
 
@@ -9,14 +9,14 @@ end
 
 IPContentExt = IPContentExt or class()
 
--- Lines 39-57
+-- Lines 46-67
 function IPContentExt:init(unit, update_enabled)
 	self._unit = unit
 
 	unit:set_extension_update_enabled(Idstring("ipcontent"), false)
 
 	if not managers.dlc:is_dlc_unlocked(self.dlc) and managers.dlc:should_hide_unavailable(self.dlc) then
-		print("[IPContentExt] Disabling unit:", self._unit)
+		print("[IPContentExt] Disabling unit:", self._unit, self.dlc)
 		self._unit:set_visible(false)
 		self._unit:set_enabled(false)
 

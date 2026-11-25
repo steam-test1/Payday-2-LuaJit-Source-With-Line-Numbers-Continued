@@ -1,6 +1,6 @@
 GageAssignmentTweakData = GageAssignmentTweakData or class()
 
--- Lines 3-157
+-- Lines 3-235
 function GageAssignmentTweakData:init(tweak_data)
 	self.MAX_ACTIVE_ASSIGNMENTS = true
 	self.NUM_ASSIGNMENT_UNITS = {
@@ -235,22 +235,22 @@ function GageAssignmentTweakData:init(tweak_data)
 	end
 end
 
--- Lines 160-162
+-- Lines 237-239
 function GageAssignmentTweakData:get_experience_multiplier(ratio)
 	return 1 + self.EXPERIENCE_MULTIPLIER * math.clamp(ratio or 0, 0, 1)
 end
 
--- Lines 164-166
+-- Lines 241-243
 function GageAssignmentTweakData:exists(assignment)
 	return self.assignments[assignment] and true or false
 end
 
--- Lines 168-170
+-- Lines 245-247
 function GageAssignmentTweakData:get_value(assignment, value)
 	return self.assignments[assignment] and self.assignments[assignment][value] or false
 end
 
--- Lines 172-178
+-- Lines 249-257
 function GageAssignmentTweakData:get_max_aquire()
 	local max_aquire = 0
 
@@ -261,7 +261,7 @@ function GageAssignmentTweakData:get_max_aquire()
 	return max_aquire
 end
 
--- Lines 180-202
+-- Lines 259-286
 function GageAssignmentTweakData:fetch_new_assignments(level_id)
 	local max_assignments = self.MAX_ACTIVE_ASSIGNMENTS
 	local assignments = {}
@@ -288,12 +288,12 @@ function GageAssignmentTweakData:fetch_new_assignments(level_id)
 	return assignments
 end
 
--- Lines 204-206
+-- Lines 288-290
 function GageAssignmentTweakData:get_assignments()
 	return self.assignments
 end
 
--- Lines 208-233
+-- Lines 292-324
 function GageAssignmentTweakData:get_num_assignment_units()
 	if not self.NUM_ASSIGNMENT_UNITS then
 		return 1
@@ -302,10 +302,10 @@ function GageAssignmentTweakData:get_num_assignment_units()
 	local num_assignment_units = self.NUM_ASSIGNMENT_UNITS
 	local difficulty = managers.job:current_difficulty_stars() + 1
 
-	if difficulty < 1 or difficulty > #self.NUM_ASSIGNMENT_UNITS then
+	if difficulty < 1 or difficulty > #num_assignment_units then
 		debug_pause("GageAssignmentTweakData:get_num_assignment_units() difficulty out of bound", difficulty, inspect(self.NUM_ASSIGNMENT_UNITS))
 
-		difficulty = math.clamp(difficulty, 1, #self.NUM_ASSIGNMENT_UNITS)
+		difficulty = math.clamp(difficulty, 1, #num_assignment_units)
 	end
 
 	local level_id = managers.job:current_level_id()

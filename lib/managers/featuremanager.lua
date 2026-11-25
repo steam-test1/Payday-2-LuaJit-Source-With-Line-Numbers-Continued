@@ -5,7 +5,7 @@ function FeatureManager:init()
 	self:_setup()
 end
 
--- Lines 7-108
+-- Lines 7-111
 function FeatureManager:_setup()
 	self._default = {}
 	self._default.announcements = {}
@@ -69,7 +69,7 @@ function FeatureManager:_setup()
 	self._global = Global.feature_manager
 end
 
--- Lines 110-118
+-- Lines 113-121
 function FeatureManager:save(data)
 	Application:debug("[FeatureManager:save]")
 
@@ -80,7 +80,7 @@ function FeatureManager:save(data)
 	data.feature_manager = save_data
 end
 
--- Lines 120-140
+-- Lines 123-145
 function FeatureManager:load(data, version)
 	Application:debug("[FeatureManager:load]")
 
@@ -103,7 +103,7 @@ function FeatureManager:load(data, version)
 	end
 end
 
--- Lines 142-192
+-- Lines 147-200
 function FeatureManager:reset()
 	Global.feature_manager = {}
 	Global.feature_manager.announcements = {}
@@ -130,7 +130,7 @@ function FeatureManager:reset()
 	self._global = Global.feature_manager
 end
 
--- Lines 194-211
+-- Lines 202-232
 function FeatureManager:can_announce(feature_id)
 	local announcement = self._global.announcements[feature_id]
 
@@ -140,6 +140,10 @@ function FeatureManager:can_announce(feature_id)
 
 	if self._global.announced[feature_id] then
 		return false
+	end
+
+	if type(announcement) == "boolean" and announcement == true then
+		return true
 	end
 
 	if type(announcement) ~= "number" then
@@ -155,7 +159,7 @@ function FeatureManager:can_announce(feature_id)
 	return true
 end
 
--- Lines 213-270
+-- Lines 234-304
 function FeatureManager:announce_feature(feature_id)
 	if Global.skip_menu_dialogs then
 		return
@@ -171,14 +175,20 @@ function FeatureManager:announce_feature(feature_id)
 		return
 	end
 
-	if type(announcement) ~= "number" then
-		self._global.announcements[feature_id] = 0
+	local counts_down = true
 
-		return
-	end
+	if type(announcement) == "boolean" and announcement == true then
+		counts_down = false
+	else
+		if type(announcement) ~= "number" then
+			self._global.announcements[feature_id] = 0
 
-	if announcement <= 0 then
-		return
+			return
+		end
+
+		if announcement <= 0 then
+			return
+		end
 	end
 
 	local func = self[feature_id]
@@ -187,12 +197,15 @@ function FeatureManager:announce_feature(feature_id)
 		Application:error("[FeatureManager:announce_feature] Failed announcing feature!", feature_id)
 	end
 
-	announcement = announcement - 1
-	self._global.announcements[feature_id] = announcement
+	if counts_down then
+		announcement = announcement - 1
+		self._global.announcements[feature_id] = announcement
+	end
+
 	self._global.announced[feature_id] = true
 end
 
--- Lines 272-278
+-- Lines 306-313
 function FeatureManager:set_feature_announce_times(feature_id, num)
 	local announcement = self._global.announcements[feature_id]
 
@@ -203,7 +216,7 @@ function FeatureManager:set_feature_announce_times(feature_id, num)
 	self._global.announcements[feature_id] = num
 end
 
--- Lines 284-288
+-- Lines 319-323
 function FeatureManager:crimenet_heat()
 	print("FeatureManager:crimenet_heat()")
 	managers.menu:show_announce_crimenet_heat()
@@ -211,7 +224,7 @@ function FeatureManager:crimenet_heat()
 	return true
 end
 
--- Lines 290-294
+-- Lines 325-329
 function FeatureManager:election_changes()
 	print("FeatureManager:election_changes()")
 	managers.menu:show_new_message_dialog({
@@ -222,7 +235,7 @@ function FeatureManager:election_changes()
 	return true
 end
 
--- Lines 296-300
+-- Lines 331-335
 function FeatureManager:crimenet_welcome()
 	print("FeatureManager:crimenet_welcome()")
 	managers.menu:show_new_message_dialog({
@@ -233,7 +246,7 @@ function FeatureManager:crimenet_welcome()
 	return true
 end
 
--- Lines 302-306
+-- Lines 337-341
 function FeatureManager:dlc_gage_pack_jobs()
 	print("FeatureManager:dlc_gage_pack_jobs()")
 	managers.menu:show_new_message_dialog({
@@ -244,7 +257,7 @@ function FeatureManager:dlc_gage_pack_jobs()
 	return true
 end
 
--- Lines 308-312
+-- Lines 343-347
 function FeatureManager:blackmarket_rename()
 	print("FeatureManager:blackmarket_rename()")
 	managers.menu:show_new_message_dialog({
@@ -255,7 +268,7 @@ function FeatureManager:blackmarket_rename()
 	return true
 end
 
--- Lines 314-352
+-- Lines 349-387
 function FeatureManager:join_pd2_clan()
 	print("FeatureManager:join_pd2_clan()")
 
@@ -280,7 +293,7 @@ function FeatureManager:join_pd2_clan()
 
 		joining_pd2_clan_button.text = managers.localization:text("dialog_join_pd2_clan")
 
-		-- Lines 335-335
+		-- Lines 370-370
 		function joining_pd2_clan_button.callback_func()
 			managers.network.account:overlay_activate("game", "OfficialGameGroup")
 		end
@@ -293,7 +306,7 @@ function FeatureManager:join_pd2_clan()
 
 		joining_nebula_button.text = managers.localization:text("menu_no_sbz_account")
 
-		-- Lines 342-342
+		-- Lines 377-377
 		function joining_nebula_button.callback_func()
 			managers.network.account:overlay_activate("url", tweak_data.gui.sbz_account_webpage)
 		end
@@ -311,7 +324,7 @@ function FeatureManager:join_pd2_clan()
 	return true
 end
 
--- Lines 354-358
+-- Lines 389-393
 function FeatureManager:perk_deck()
 	print("FeatureManager:perk_deck()")
 	managers.menu:show_new_message_dialog({
@@ -322,7 +335,7 @@ function FeatureManager:perk_deck()
 	return true
 end
 
--- Lines 360-364
+-- Lines 395-399
 function FeatureManager:freed_old_hoxton()
 	print("FeatureManager:freed_old_hoxton()")
 	managers.menu:show_new_message_dialog({
@@ -333,7 +346,7 @@ function FeatureManager:freed_old_hoxton()
 	return true
 end
 
--- Lines 366-370
+-- Lines 401-405
 function FeatureManager:infamy_2_0()
 	print("FeatureManager:infamy_2_0()")
 	managers.menu:show_new_message_dialog({
@@ -344,7 +357,7 @@ function FeatureManager:infamy_2_0()
 	return true
 end
 
--- Lines 374-398
+-- Lines 423-447
 function FeatureManager:thq_feature()
 	print("FeatureManager:thq_feature()")
 
@@ -352,7 +365,7 @@ function FeatureManager:thq_feature()
 		return
 	end
 
-	-- Lines 380-383
+	-- Lines 429-432
 	local function yes_function()
 		managers.user:set_setting("use_thq_weapon_parts", true)
 		managers.savefile:save_setting(true)
@@ -381,7 +394,7 @@ function FeatureManager:thq_feature()
 	return true
 end
 
--- Lines 440-444
+-- Lines 489-493
 function FeatureManager:crimenet_hacked()
 	print("FeatureManager:crimenet_hacked()")
 	managers.crimenet:set_getting_hacked(42.16)
@@ -389,11 +402,11 @@ function FeatureManager:crimenet_hacked()
 	return true
 end
 
--- Lines 456-476
+-- Lines 505-525
 function FeatureManager:short_heist()
 	print("FeatureManager:short_heist()")
 
-	-- Lines 459-466
+	-- Lines 508-515
 	local function yes_func()
 		if IS_STEAM then
 			managers.statistics:publish_custom_stat_to_steam("info_playing_tutorial_yes")
@@ -403,7 +416,7 @@ function FeatureManager:short_heist()
 		MenuCallbackHandler:play_short_heist()
 	end
 
-	-- Lines 468-472
+	-- Lines 517-521
 	local function no_func()
 		if IS_STEAM then
 			managers.statistics:publish_custom_stat_to_steam("info_playing_tutorial_no")
@@ -418,7 +431,7 @@ function FeatureManager:short_heist()
 	return true
 end
 
--- Lines 478-482
+-- Lines 527-531
 function FeatureManager:short_heists_available()
 	print("FeatureManager:short_heists_available()")
 	managers.menu:show_new_message_dialog({
@@ -429,13 +442,13 @@ function FeatureManager:short_heists_available()
 	return true
 end
 
--- Lines 486-489
+-- Lines 535-538
 function FeatureManager:new_career()
 	print("FeatureManager:new_career()")
 	managers.menu:show_new_player_popup()
 end
 
--- Lines 493-497
+-- Lines 542-546
 function FeatureManager:safehouse_dailies()
 	print("FeatureManager:safehouse_dailies()")
 	managers.menu:show_new_message_dialog({
@@ -446,7 +459,7 @@ function FeatureManager:safehouse_dailies()
 	return true
 end
 
--- Lines 501-505
+-- Lines 550-554
 function FeatureManager:tango_weapon_unlocked()
 	print("FeatureManager:tango_weapon_unlocked()")
 	managers.tango:announce_tango_weapon()
@@ -454,63 +467,63 @@ function FeatureManager:tango_weapon_unlocked()
 	return true
 end
 
--- Lines 509-512
+-- Lines 558-561
 function FeatureManager:movie_theater_unlocked()
 	managers.menu:show_movie_theater_unlocked_dialog()
 
 	return true
 end
 
--- Lines 523-526
+-- Lines 572-575
 function FeatureManager:pda9_event_explanation()
 	managers.menu:show_pda9_event_dialog()
 
 	return true
 end
 
--- Lines 530-533
+-- Lines 579-582
 function FeatureManager:cg22_event_explanation()
 	managers.menu:show_cg22_event_dialog()
 
 	return true
 end
 
--- Lines 537-540
+-- Lines 586-589
 function FeatureManager:pda10_event_explanation()
 	managers.menu:show_pda10_event_dialog()
 
 	return true
 end
 
--- Lines 544-547
+-- Lines 593-596
 function FeatureManager:lron_event_explanation()
 	managers.menu:show_lron_dialog()
 
 	return true
 end
 
--- Lines 550-553
+-- Lines 599-602
 function FeatureManager:lrtw_event_explanation()
 	managers.menu:show_lrtw_dialog()
 
 	return true
 end
 
--- Lines 556-559
+-- Lines 605-608
 function FeatureManager:lrth_event_explanation()
 	managers.menu:show_lrth_dialog()
 
 	return true
 end
 
--- Lines 562-565
+-- Lines 611-614
 function FeatureManager:lrfo_event_explanation()
 	managers.menu:show_lrfo_dialog()
 
 	return true
 end
 
--- Lines 571-588
+-- Lines 620-637
 function FeatureManager:check_external_dlcs()
 	local announce_drops = {}
 	local show_dialog = false

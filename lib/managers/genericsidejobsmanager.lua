@@ -1,11 +1,11 @@
 GenericSideJobsManager = GenericSideJobsManager or class()
 
--- Lines 7-11
+-- Lines 7-9
 function GenericSideJobsManager:init()
 	self._side_jobs = {}
 end
 
--- Lines 13-19
+-- Lines 11-19
 function GenericSideJobsManager:register(manager)
 	if table.find_value(self._side_jobs, function(v)
 		return v.manager == manager
@@ -34,7 +34,7 @@ function GenericSideJobsManager:get_challenge(id)
 	end
 end
 
--- Lines 34-42
+-- Lines 34-44
 function GenericSideJobsManager:has_completed_and_claimed_rewards(id)
 	for _, side_job_dlc in ipairs(self._side_jobs) do
 		local challenge = side_job_dlc.manager:get_challenge(id)
@@ -47,28 +47,28 @@ function GenericSideJobsManager:has_completed_and_claimed_rewards(id)
 	return false
 end
 
--- Lines 44-48
+-- Lines 46-50
 function GenericSideJobsManager:award(id)
 	for _, side_job_dlc in ipairs(self._side_jobs) do
 		side_job_dlc.manager:award(id)
 	end
 end
 
--- Lines 50-54
+-- Lines 52-56
 function GenericSideJobsManager:save(cache)
 	for _, side_job_dlc in ipairs(self._side_jobs) do
 		side_job_dlc.manager:save(cache)
 	end
 end
 
--- Lines 56-60
+-- Lines 58-62
 function GenericSideJobsManager:load(cache, version)
 	for _, side_job_dlc in ipairs(self._side_jobs) do
 		side_job_dlc.manager:load(cache, version)
 	end
 end
 
--- Lines 62-67
+-- Lines 64-69
 function GenericSideJobsManager:reset()
 	local list = table.list_copy(self._side_jobs)
 

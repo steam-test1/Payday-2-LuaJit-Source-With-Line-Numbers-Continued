@@ -35,7 +35,7 @@ function PerpetualEventManager:_setup()
 	self._global = Global.perpetual_manager
 end
 
--- Lines 59-108
+-- Lines 59-119
 function PerpetualEventManager:_setup_events()
 	local events = {}
 
@@ -43,6 +43,7 @@ function PerpetualEventManager:_setup_events()
 	events.anniversary = {}
 	events.anniversary.has_gamemode_event = true
 	events.anniversary.mutator_name = "MutatorPiggyRevenge"
+	events.anniversary.event_levels = table.map_keys(tweak_data.mutators.piggyrevenge.level_coordinates)
 	events.anniversary.xp_bonuses = {
 		bonus_piggyrevenge = {
 			color = tweak_data.screen_colors.event_color,
@@ -123,6 +124,7 @@ function PerpetualEventManager:_setup_events()
 	events.xmas_gifts.menu_scene = {
 		money_effect = false,
 		presents = true,
+		presents_bonus = true,
 		xmas_tree = true
 	}
 	events.xmas_gifts.packages = {
@@ -171,17 +173,22 @@ function PerpetualEventManager:_setup_events()
 	end
 end
 
--- Lines 110-112
+-- Lines 121-123
 function PerpetualEventManager:is_event_ready()
 	return self._global.event_fetched and self._global.packages_ready
 end
 
--- Lines 114-116
+-- Lines 125-127
 function PerpetualEventManager:get_active_event()
 	return self._global.events[self._global.active_event] or false
 end
 
--- Lines 118-128
+-- Lines 129-131
+function PerpetualEventManager:get_active_event_id()
+	return self._global.active_event or nil
+end
+
+-- Lines 133-143
 function PerpetualEventManager:_is_date_in_range(target_month, target_day, start_month, start_day, stop_month, stop_day)
 	if start_month < stop_month or start_month == stop_month and start_day <= stop_day then
 		return (start_month < target_month or target_month == start_month and start_day <= target_day) and (target_month < stop_month or target_month == stop_month and target_day <= stop_day)
@@ -190,9 +197,11 @@ function PerpetualEventManager:_is_date_in_range(target_month, target_day, start
 	end
 end
 
--- Lines 130-140
+-- Lines 145-157
 function PerpetualEventManager:fetch_event()
 	if self._global.event_fetched then
+		Application:warn("[PerpetualEventManager:fetch_event] Events not yet fetched!")
+
 		return
 	end
 
@@ -204,7 +213,7 @@ function PerpetualEventManager:fetch_event()
 	self:_set_active_event_by_date(tonumber(login_date[1]), tonumber(login_date[2]))
 end
 
--- Lines 142-171
+-- Lines 159-194
 function PerpetualEventManager:_set_active_event_by_date(target_month, target_day)
 	local active_event = false
 	local target_time = target_month * 100 + target_day
@@ -233,7 +242,7 @@ function PerpetualEventManager:_set_active_event_by_date(target_month, target_da
 	self:_set_active_event(active_event)
 end
 
--- Lines 173-229
+-- Lines 203-267
 function PerpetualEventManager:_set_active_event(active_event)
 	if self._global.active_event then
 		local active_event = self:get_active_event()
@@ -293,7 +302,7 @@ function PerpetualEventManager:_set_active_event(active_event)
 	end
 end
 
--- Lines 231-263
+-- Lines 269-302
 function PerpetualEventManager:apply_event()
 	if managers.menu_scene then
 		managers.menu_scene:setup_event_units()
@@ -312,63 +321,63 @@ function PerpetualEventManager:apply_event()
 	self._event_applied = true
 end
 
--- Lines 265-268
+-- Lines 304-307
 function PerpetualEventManager:get_event_levels()
 	local active_event = self:get_active_event()
 
 	return active_event and active_event.event_levels
 end
 
--- Lines 270-273
+-- Lines 309-312
 function PerpetualEventManager:get_menu_scene()
 	local active_event = self:get_active_event()
 
 	return active_event and active_event.menu_scene
 end
 
--- Lines 275-278
+-- Lines 314-317
 function PerpetualEventManager:get_holiday_tactics()
 	local active_event = self:get_active_event()
 
 	return active_event and active_event.holiday_tactics
 end
 
--- Lines 280-283
+-- Lines 319-322
 function PerpetualEventManager:has_event_gamemode()
 	local active_event = self:get_active_event()
 
 	return active_event and active_event.has_gamemode_event or false
 end
 
--- Lines 285-288
+-- Lines 324-327
 function PerpetualEventManager:has_event_santa_hats()
 	local active_event = self:get_active_event()
 
 	return active_event and active_event.santa_hats or false
 end
 
--- Lines 290-293
+-- Lines 329-332
 function PerpetualEventManager:has_event_upgrade(upgrade)
 	local active_event = self:get_active_event()
 
 	return active_event and active_event.upgrades and table.contains(active_event.upgrades, upgrade) or false
 end
 
--- Lines 295-298
+-- Lines 334-337
 function PerpetualEventManager:play_single_player()
 	managers.crimenet:set_sidebar_exclude_filter({
 		"menu_event_a10th_info"
 	})
 end
 
--- Lines 300-303
+-- Lines 339-342
 function PerpetualEventManager:play_online_game()
 	managers.crimenet:set_sidebar_exclude_filter({
 		"menu_event_a10th_info"
 	})
 end
 
--- Lines 305-311
+-- Lines 344-350
 function PerpetualEventManager:play_event_game()
 	local active_event = self:get_active_event()
 	local active_mutator = active_event and active_event.mutator_name and CoreSerialize.string_to_classtable(active_event.mutator_name)
@@ -378,7 +387,7 @@ function PerpetualEventManager:play_event_game()
 	end
 end
 
--- Lines 313-318
+-- Lines 352-357
 function PerpetualEventManager:on_enter_lobby()
 	local track_override = managers.mutators:get_track_override("lobby")
 
@@ -387,7 +396,7 @@ function PerpetualEventManager:on_enter_lobby()
 	end
 end
 
--- Lines 320-329
+-- Lines 359-368
 function PerpetualEventManager:add_event_xp_bonuses(bonuses_list, bonuses_params)
 	local active_event = self:get_active_event()
 	local xp_bonuses = active_event and active_event.xp_bonuses or {}
@@ -400,7 +409,7 @@ function PerpetualEventManager:add_event_xp_bonuses(bonuses_list, bonuses_params
 	end
 end
 
--- Lines 331-336
+-- Lines 370-375
 function PerpetualEventManager:setup_contract_broker_tabs(tabs, index)
 	local holiday_tactics = self:get_holiday_tactics()
 
@@ -412,7 +421,7 @@ function PerpetualEventManager:setup_contract_broker_tabs(tabs, index)
 	end
 end
 
--- Lines 338-343
+-- Lines 377-382
 function PerpetualEventManager:setup_contract_broker_filter_tactic(tactics, index)
 	local holiday_tactics = self:get_holiday_tactics()
 
@@ -426,7 +435,7 @@ function PerpetualEventManager:setup_contract_broker_filter_tactic(tactics, inde
 	end
 end
 
--- Lines 345-352
+-- Lines 384-391
 function PerpetualEventManager:perform_contract_filter_tactic(level_data)
 	local holiday_tactics = self:get_holiday_tactics()
 
@@ -437,7 +446,7 @@ function PerpetualEventManager:perform_contract_filter_tactic(level_data)
 	return false
 end
 
--- Lines 354-372
+-- Lines 393-411
 function PerpetualEventManager:get_team_setup(teams)
 	if managers.mutators:is_mutator_active(MutatorCG22) then
 		local team_ids = {}
@@ -460,12 +469,12 @@ function PerpetualEventManager:get_team_setup(teams)
 	end
 end
 
--- Lines 374-376
+-- Lines 413-415
 function PerpetualEventManager.get_tweak_func()
 	return Global.perpetual_manager and Global.perpetual_manager.tweak_data_func_name and PerpetualEventManager[Global.perpetual_manager.tweak_data_func_name] or false
 end
 
--- Lines 378-432
+-- Lines 417-471
 function PerpetualEventManager.tweak_christmas_heists(tweak_data)
 	tweak_data.levels.roberts.is_christmas_heist = true
 	tweak_data.levels.hox_1.world_name = "narratives/dentist/hox/stage_1_xmn"
@@ -492,7 +501,7 @@ function PerpetualEventManager.tweak_christmas_heists(tweak_data)
 	tweak_data.levels.fex.is_christmas_heist = true
 end
 
--- Lines 434-437
+-- Lines 473-476
 function PerpetualEventManager.tweak_xmas(tweak_data)
 	PerpetualEventManager.tweak_christmas_heists(tweak_data)
 

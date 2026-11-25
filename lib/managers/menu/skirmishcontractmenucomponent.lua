@@ -3,7 +3,7 @@ require("lib/managers/menu/SkirmishBriefingProgress")
 
 SkirmishContractMenuComponent = SkirmishContractMenuComponent or class()
 
--- Lines 5-193
+-- Lines 8-186
 function SkirmishContractMenuComponent:init(ws, fullscreen_ws, node)
 	self._ws = ws
 	self._fullscreen_ws = fullscreen_ws
@@ -67,8 +67,9 @@ function SkirmishContractMenuComponent:init(ws, fullscreen_ws, node)
 		local job_data = node:parameters().menu_component_data
 		local job_id = job_data.job_id
 		local job_chain = tweak_data.narrative:job_chain(job_id)
-		local job_stars = math.ceil(tweak_data.narrative:job_data(job_id).jc / 10)
-		local difficulty_stars = job_data.difficulty_id - 2
+		local job_narr_data = tweak_data.narrative:job_data(job_id)
+		local job_stars = math.ceil((job_narr_data and job_narr_data.jc or 40) / 10)
+		local difficulty_stars = (job_data.difficulty_id or 3) - 2
 		local job_heat_value = managers.job:get_job_heat(job_id) or 0
 		local ignore_heat = job_heat_value > 0 and job_data.customize_contract
 		local contract_visuals = job_data.contract_visuals or {}
@@ -189,7 +190,7 @@ function SkirmishContractMenuComponent:init(ws, fullscreen_ws, node)
 	managers.menu:active_menu().input:deactivate_controller_mouse()
 end
 
--- Lines 195-199
+-- Lines 188-192
 function SkirmishContractMenuComponent:close()
 	self._ws:panel():remove(self._panel)
 	self._fullscreen_ws:panel():remove(self._fullscreen_panel)

@@ -11,8 +11,9 @@ function LoadingIconGuiObject:init(panel, visible)
 	self._icon:set_center(panel:w() / 2, panel:h() / 2)
 end
 
--- Lines 6-16
+-- Lines 6-17
 function LoadingIconGuiObject:show()
+	self._icon:stop()
 	self._icon:animate(function(o)
 		local dt
 
@@ -25,7 +26,7 @@ function LoadingIconGuiObject:show()
 	self._icon:show()
 end
 
--- Lines 17-20
+-- Lines 18-21
 function LoadingIconGuiObject:hide()
 	self._icon:stop()
 	self._icon:hide()

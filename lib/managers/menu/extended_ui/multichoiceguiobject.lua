@@ -6,7 +6,7 @@ local medium_font_size = tweak_data.menu.pd2_medium_font_size
 local normal_color = tweak_data.screen_colors.button_stage_3
 local hover_color = tweak_data.screen_colors.button_stage_2
 
--- Lines 13-129
+-- Lines 13-139
 function MultichoiceGuiObject:init(parent, params, panel_config)
 	panel_config = panel_config or {}
 
@@ -48,6 +48,7 @@ function MultichoiceGuiObject:init(parent, params, panel_config)
 		local right_btn = params.use_change_profile_controls and "menu_change_profile_right" or "next_page"
 
 		placer:add_right(IconButton:new(self, {
+			rotation = 360,
 			size = 32,
 			texture = "guis/textures/menu_arrows",
 			binding = left_btn,
@@ -59,13 +60,13 @@ function MultichoiceGuiObject:init(parent, params, panel_config)
 				24,
 				24
 			}
-		}, callback(self, self, "_prev")), 20)
+		}, callback(self, self, "_prev")), 4)
 		placer:add_right(self:fine_text({
 			text = managers.localization:btn_macro(left_btn, true),
 			font = small_font,
-			font_size = small_font_size,
+			font_size = medium_font_size,
 			color = Color.white
-		}), 0)
+		}))
 		placer:add_right_center(self._text)
 		placer:add_right(self:fine_text({
 			text = managers.localization:btn_macro(right_btn, true),
@@ -86,7 +87,7 @@ function MultichoiceGuiObject:init(parent, params, panel_config)
 				24,
 				24
 			}
-		}, callback(self, self, "_next")), 0)
+		}, callback(self, self, "_next")), 4)
 	else
 		placer:add_right(IconButton:new(self, {
 			rotation = 360,
@@ -132,7 +133,7 @@ function MultichoiceGuiObject:init(parent, params, panel_config)
 	})
 end
 
--- Lines 131-136
+-- Lines 141-146
 function MultichoiceGuiObject:set_options(options)
 	self._options = options
 
@@ -141,7 +142,7 @@ function MultichoiceGuiObject:set_options(options)
 	end
 end
 
--- Lines 138-144
+-- Lines 148-154
 function MultichoiceGuiObject:mouse_moved(...)
 	local hit, icon = MultichoiceGuiObject.super.mouse_moved(self, ...)
 
@@ -150,12 +151,12 @@ function MultichoiceGuiObject:mouse_moved(...)
 	return hit, icon
 end
 
--- Lines 146-148
+-- Lines 156-158
 function MultichoiceGuiObject:get_index()
 	return self._index
 end
 
--- Lines 150-158
+-- Lines 160-168
 function MultichoiceGuiObject:set_value(value, no_callback)
 	for _, option in pairs(self._options) do
 		if option.value == value then
@@ -168,7 +169,7 @@ function MultichoiceGuiObject:set_value(value, no_callback)
 	return false
 end
 
--- Lines 159-169
+-- Lines 169-179
 function MultichoiceGuiObject:set_index(index, no_callback)
 	index = math.clamp(index, 1, #self._options)
 
@@ -184,12 +185,12 @@ function MultichoiceGuiObject:set_index(index, no_callback)
 	end
 end
 
--- Lines 171-173
+-- Lines 181-183
 function MultichoiceGuiObject:_next()
 	self:set_index(self._index + 1)
 end
 
--- Lines 175-177
+-- Lines 185-187
 function MultichoiceGuiObject:_prev()
 	self:set_index(self._index - 1)
 end

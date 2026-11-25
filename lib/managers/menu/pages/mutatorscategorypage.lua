@@ -613,7 +613,7 @@ end
 
 MutatorItem = class(MenuGuiItem)
 
--- Lines 533-670
+-- Lines 533-675
 function MutatorItem:init(parent_panel, mutator, index)
 	MutatorItem.super.init(self)
 
@@ -768,32 +768,32 @@ function MutatorItem:init(parent_panel, mutator, index)
 	end
 end
 
--- Lines 672-674
+-- Lines 677-679
 function MutatorItem:mutator()
 	return self._mutator
 end
 
--- Lines 676-678
+-- Lines 681-683
 function MutatorItem:icon_alpha()
 	return self:mutator():is_enabled() and 1 or 0.35
 end
 
--- Lines 680-682
+-- Lines 685-687
 function MutatorItem:text_alpha()
 	return self:mutator():is_enabled() and 1 or 0.8
 end
 
--- Lines 684-686
+-- Lines 689-691
 function MutatorItem:selection_alpha()
 	return self:mutator():is_enabled() and 0.4 or 0.65
 end
 
--- Lines 688-690
+-- Lines 693-695
 function MutatorItem:inside(x, y)
 	return self._panel:inside(x, y)
 end
 
--- Lines 692-709
+-- Lines 697-714
 function MutatorItem:trigger(x, y)
 	if managers.menu:active_menu().logic:selected_node():parameters().name == "mutators_options" then
 		return false
@@ -811,7 +811,7 @@ function MutatorItem:trigger(x, y)
 	end
 end
 
--- Lines 711-716
+-- Lines 716-721
 function MutatorItem:trigger_options()
 	if managers.menu:active_menu().logic:selected_node():parameters().name == "mutators_options" then
 		return false
@@ -822,17 +822,17 @@ function MutatorItem:trigger_options()
 	})
 end
 
--- Lines 718-720
+-- Lines 723-725
 function MutatorItem:top()
 	return self._panel:top() - PANEL_PADDING
 end
 
--- Lines 722-724
+-- Lines 727-729
 function MutatorItem:bottom()
 	return self._panel:bottom() + PANEL_PADDING
 end
 
--- Lines 726-760
+-- Lines 731-765
 function MutatorItem:refresh()
 	local compatible = managers.mutators:can_enable_mutator(self:mutator())
 	local compatible_color = compatible and tweak_data.screen_colors.button_stage_3 or tweak_data.screen_colors.important_1
@@ -865,7 +865,7 @@ function MutatorItem:refresh()
 	end
 end
 
--- Lines 762-770
+-- Lines 767-775
 function MutatorItem:set_options_selected(selected, play_sound)
 	if self._selected_options ~= selected then
 		self._selected_options = selected
@@ -878,7 +878,7 @@ function MutatorItem:set_options_selected(selected, play_sound)
 	end
 end
 
--- Lines 772-789
+-- Lines 777-794
 function MutatorItem:mouse_moved(button, x, y, allow_selection)
 	if allow_selection then
 		if self:mutator().has_options and self._option_panel:inside(x, y) then
@@ -898,13 +898,13 @@ function MutatorItem:mouse_moved(button, x, y, allow_selection)
 	self:set_selected(false)
 end
 
--- Lines 791-794
+-- Lines 796-799
 function MutatorItem:link(position, item)
 	self._links = self._links or {}
 	self._links[position] = item
 end
 
--- Lines 796-799
+-- Lines 801-804
 function MutatorItem:get_link(position)
 	self._links = self._links or {}
 

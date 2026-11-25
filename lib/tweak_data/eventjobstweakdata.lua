@@ -1,6 +1,6 @@
 EventJobsTweakData = EventJobsTweakData or class()
 
--- Lines 4-105
+-- Lines 4-80
 function EventJobsTweakData:init(tweak_data)
 	self.challenges = {}
 
@@ -72,7 +72,7 @@ function EventJobsTweakData:init(tweak_data)
 	self.pda_base = 0
 end
 
--- Lines 107-200
+-- Lines 82-172
 function EventJobsTweakData:_init_pda8_challenges(tweak_data)
 	table.insert(self.challenges, {
 		desc_id = "menu_pda8_2_desc",
@@ -195,7 +195,7 @@ function EventJobsTweakData:_init_pda8_challenges(tweak_data)
 	})
 end
 
--- Lines 203-533
+-- Lines 174-442
 function EventJobsTweakData:_init_pda9_challenges(tweak_data)
 	table.insert(self.challenges, {
 		desc_id = "menu_pda9_1_desc",
@@ -511,7 +511,7 @@ function EventJobsTweakData:_init_pda9_challenges(tweak_data)
 	})
 end
 
--- Lines 537-845
+-- Lines 444-764
 function EventJobsTweakData:_init_cg22_challenges(tweak_data)
 	table.insert(self.challenges, {
 		desc_id = "menu_cg22_1_desc",
@@ -663,6 +663,11 @@ function EventJobsTweakData:_init_cg22_challenges(tweak_data)
 				item_entry = "wpn_fps_upg_charm_teddymoo",
 				type_items = "weapon_mods"
 			}
+		},
+		job_art = {
+			padding = -48,
+			path = "guis/dlcs/sj2/job_art/job_art_crim_carol",
+			width = 256
 		}
 	})
 	table.insert(self.challenges, {
@@ -883,7 +888,7 @@ function EventJobsTweakData:_init_cg22_challenges(tweak_data)
 	})
 end
 
--- Lines 849-1062
+-- Lines 766-969
 function EventJobsTweakData:_init_pda10_challenges(tweak_data)
 	table.insert(self.challenges, {
 		desc_id = "menu_pda10_3_desc",
@@ -1162,7 +1167,7 @@ function EventJobsTweakData:_init_pda10_challenges(tweak_data)
 	})
 end
 
--- Lines 1065-1094
+-- Lines 971-1000
 function EventJobsTweakData:_init_community_challenges(tweak_data)
 	self.community_challenges = {}
 	self.community_challenges.pda9 = {
@@ -1200,7 +1205,7 @@ function EventJobsTweakData:_init_community_challenges(tweak_data)
 	}
 end
 
--- Lines 1096-1120
+-- Lines 1002-1027
 function EventJobsTweakData:_collective(collective_id, max_progress, data)
 	data.collective_id = collective_id
 
@@ -1234,7 +1239,7 @@ function EventJobsTweakData:_collective(collective_id, max_progress, data)
 	return obj
 end
 
--- Lines 1123-1158
+-- Lines 1029-1066
 function EventJobsTweakData:_choice(challenge_choices, max_progress, data)
 	local save_values = {
 		"choice_id",
@@ -1281,7 +1286,7 @@ function EventJobsTweakData:_choice(challenge_choices, max_progress, data)
 	return obj
 end
 
--- Lines 1188-1213
+-- Lines 1068-1102
 function EventJobsTweakData:_stage(stage_id, max_progress, data)
 	data.stage_id = stage_id
 

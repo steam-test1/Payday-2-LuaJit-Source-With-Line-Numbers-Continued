@@ -1083,9 +1083,8 @@ function JobManager:is_level_christmas(level_id)
 	return self:_is_level_christmas(tweak_data.levels[level_id])
 end
 
--- Lines 995-1007
+-- Lines 995-1003
 function JobManager:get_job_christmas_bonus(job_id)
-	local add_bonus = false
 	local add_bonus = managers.perpetual_event:get_holiday_tactics()
 
 	if add_bonus and self:is_christmas_job(job_id) then
@@ -1095,7 +1094,7 @@ function JobManager:get_job_christmas_bonus(job_id)
 	return 0
 end
 
--- Lines 1011-1016
+-- Lines 1007-1012
 function JobManager:save(data)
 	local save_data = {}
 
@@ -1104,7 +1103,7 @@ function JobManager:save(data)
 	data.job_manager = save_data
 end
 
--- Lines 1018-1087
+-- Lines 1014-1083
 function JobManager:load(data)
 	if data.job_manager then
 		self._global.heat = data.job_manager.heat or self._global.heat
@@ -1170,7 +1169,7 @@ function JobManager:load(data)
 	end
 end
 
--- Lines 1091-1096
+-- Lines 1087-1092
 function JobManager:on_retry_job_stage()
 	self:_on_retry_job_stage()
 
@@ -1179,12 +1178,12 @@ function JobManager:on_retry_job_stage()
 	end
 end
 
--- Lines 1098-1100
+-- Lines 1094-1096
 function JobManager:synced_on_retry_job_stage()
 	self:_on_retry_job_stage()
 end
 
--- Lines 1102-1109
+-- Lines 1098-1105
 function JobManager:_on_retry_job_stage()
 	managers.game_play_central:stop_the_game()
 	managers.experience:mission_xp_process(false)
@@ -1194,40 +1193,40 @@ function JobManager:_on_retry_job_stage()
 	self._global.next_interupt_stage = nil
 end
 
--- Lines 1111-1113
+-- Lines 1107-1109
 function JobManager:synced_alternative_stage(alternative)
 	self._global.alternative_stage = alternative
 end
 
--- Lines 1115-1117
+-- Lines 1111-1113
 function JobManager:set_next_alternative_stage(alternative)
 	self._global.next_alternative_stage = alternative
 end
 
--- Lines 1119-1121
+-- Lines 1115-1117
 function JobManager:alternative_stage()
 	return self._global.alternative_stage
 end
 
--- Lines 1123-1127
+-- Lines 1119-1123
 function JobManager:synced_interupt_stage(interupt, is_synced_from_server)
 	self._is_synced_from_server = is_synced_from_server
 	self._global.next_interupt_stage = nil
 	self._global.interupt_stage = interupt
 end
 
--- Lines 1129-1147
+-- Lines 1125-1129
 function JobManager:set_next_interupt_stage(interupt)
 	interupt = managers.mutators:get_interupt_stage_override(interupt)
 	self._global.next_interupt_stage = interupt
 end
 
--- Lines 1153-1155
+-- Lines 1131-1133
 function JobManager:interupt_stage()
 	return self._global.interupt_stage
 end
 
--- Lines 1157-1164
+-- Lines 1135-1142
 function JobManager:set_memory(key, value, is_shortterm)
 	if self._global.memory and not is_shortterm then
 		self._global.memory[key] = value
@@ -1238,7 +1237,7 @@ function JobManager:set_memory(key, value, is_shortterm)
 	return false
 end
 
--- Lines 1166-1172
+-- Lines 1144-1150
 function JobManager:get_memory(key, is_shortterm)
 	if is_shortterm then
 		return self._global.shortterm_memory and self._global.shortterm_memory[key]
@@ -1247,12 +1246,12 @@ function JobManager:get_memory(key, is_shortterm)
 	end
 end
 
--- Lines 1174-1176
+-- Lines 1152-1154
 function JobManager:has_active_job()
 	return self._global.current_job and true or false
 end
 
--- Lines 1178-1241
+-- Lines 1156-1230
 function JobManager:activate_job(job_id, current_stage)
 	local job = tweak_data.narrative.jobs[job_id]
 
@@ -1321,7 +1320,7 @@ function JobManager:activate_job(job_id, current_stage)
 	return true
 end
 
--- Lines 1244-1273
+-- Lines 1233-1260
 function JobManager:activate_temporary_job(job_id, level_id)
 	self._global.current_job = {
 		current_stage = 1,
@@ -1347,7 +1346,7 @@ function JobManager:activate_temporary_job(job_id, level_id)
 	return true
 end
 
--- Lines 1276-1292
+-- Lines 1262-1278
 function JobManager:deactivate_current_job()
 	self._global.current_job = nil
 	self._global.alternative_stage = nil
@@ -1367,19 +1366,19 @@ function JobManager:deactivate_current_job()
 	self._global.accumulated_ghost_bonus = nil
 end
 
--- Lines 1294-1297
+-- Lines 1280-1283
 function JobManager:stop_sounds()
 	local cleanup = SoundDevice:create_source("cleanup")
 
 	cleanup:post_event("bain_static_disable")
 end
 
--- Lines 1299-1301
+-- Lines 1285-1287
 function JobManager:complete_stage()
 	self._global.current_job.current_stage = current_stage + 1
 end
 
--- Lines 1303-1311
+-- Lines 1289-1297
 function JobManager:on_first_stage()
 	if not self._global.current_job then
 		return false
@@ -1392,7 +1391,7 @@ function JobManager:on_first_stage()
 	return self._global.current_job.current_stage == 1
 end
 
--- Lines 1313-1321
+-- Lines 1299-1307
 function JobManager:on_last_stage()
 	if not self._global.current_job then
 		return false
@@ -1405,7 +1404,7 @@ function JobManager:on_last_stage()
 	return self._global.current_job.current_stage == self._global.current_job.stages
 end
 
--- Lines 1323-1329
+-- Lines 1309-1315
 function JobManager:_on_last_stage()
 	if not self._global.current_job then
 		return false
@@ -1414,7 +1413,7 @@ function JobManager:_on_last_stage()
 	return self._global.current_job.current_stage == self._global.current_job.stages
 end
 
--- Lines 1331-1339
+-- Lines 1317-1325
 function JobManager:is_job_finished()
 	if not self._global.current_job then
 		return false
@@ -1427,12 +1426,12 @@ function JobManager:is_job_finished()
 	return self._global.current_job.last_completed_stage == self._global.current_job.stages
 end
 
--- Lines 1342-1344
+-- Lines 1328-1330
 function JobManager:skip_money()
 	return self._global.next_interupt_stage and true or false
 end
 
--- Lines 1349-1403
+-- Lines 1335-1389
 function JobManager:next_stage()
 	print("[JobManager:next_stage]")
 
@@ -1482,14 +1481,14 @@ function JobManager:next_stage()
 	end
 end
 
--- Lines 1405-1410
+-- Lines 1391-1396
 function JobManager:set_current_stage(stage_num)
 	self._global.current_job.last_completed_stage = self._global.current_job.current_stage
 	self._global.current_job.current_stage = stage_num
 	self._global.shortterm_memory = {}
 end
 
--- Lines 1412-1418
+-- Lines 1398-1404
 function JobManager:current_job_data()
 	if not self._global.current_job then
 		return
@@ -1498,7 +1497,7 @@ function JobManager:current_job_data()
 	return tweak_data.narrative:job_data(self._global.current_job.job_id)
 end
 
--- Lines 1420-1426
+-- Lines 1406-1412
 function JobManager:current_job_chain_data()
 	if not self._global.current_job then
 		return
@@ -1507,12 +1506,12 @@ function JobManager:current_job_chain_data()
 	return tweak_data.narrative:job_chain(self._global.current_job.job_id)
 end
 
--- Lines 1428-1430
+-- Lines 1414-1416
 function JobManager:current_real_job_id()
 	return self:current_job_wrapper_id() or self:current_job_id()
 end
 
--- Lines 1432-1438
+-- Lines 1418-1424
 function JobManager:current_job_wrapper_id()
 	if not self._global.current_job then
 		return
@@ -1521,7 +1520,7 @@ function JobManager:current_job_wrapper_id()
 	return self._global.current_job.job_wrapper_id
 end
 
--- Lines 1440-1446
+-- Lines 1426-1432
 function JobManager:current_job_id()
 	if not self._global.current_job then
 		return
@@ -1530,7 +1529,7 @@ function JobManager:current_job_id()
 	return self._global.current_job.job_id
 end
 
--- Lines 1448-1454
+-- Lines 1434-1440
 function JobManager:is_current_job_professional()
 	if not self._global.current_job then
 		return
@@ -1539,7 +1538,7 @@ function JobManager:is_current_job_professional()
 	return tweak_data.narrative:job_data(self._global.current_job.job_id).professional
 end
 
--- Lines 1456-1462
+-- Lines 1442-1448
 function JobManager:is_job_professional_by_job_id(job_id)
 	if not job_id or not tweak_data.narrative.jobs[job_id] then
 		Application:error("[JobManager:is_job_professional_by_job_id] no job id or no job", job_id)
@@ -1550,7 +1549,7 @@ function JobManager:is_job_professional_by_job_id(job_id)
 	return tweak_data.narrative:job_data(job_id).professional and true or false
 end
 
--- Lines 1464-1469
+-- Lines 1450-1455
 function JobManager:current_stage()
 	if not self._global.current_job then
 		return
@@ -1559,7 +1558,7 @@ function JobManager:current_stage()
 	return self._global.current_job.current_stage
 end
 
--- Lines 1471-1485
+-- Lines 1457-1471
 function JobManager:current_stage_data()
 	if not self._global.current_job then
 		return
@@ -1579,7 +1578,7 @@ function JobManager:current_stage_data()
 	return stage
 end
 
--- Lines 1487-1497
+-- Lines 1473-1483
 function JobManager:current_level_id()
 	if not self._global.current_job then
 		return
@@ -1592,19 +1591,19 @@ function JobManager:current_level_id()
 	return self:current_stage_data().level_id
 end
 
--- Lines 1499-1501
+-- Lines 1485-1487
 function JobManager:current_level_data()
 	return tweak_data.levels[self:current_level_id()]
 end
 
--- Lines 1504-1507
+-- Lines 1489-1492
 function JobManager:current_level_wave_count()
 	local level_tweak = self:current_level_data()
 
 	return level_tweak and level_tweak.wave_count or math.huge
 end
 
--- Lines 1510-1527
+-- Lines 1494-1510
 function JobManager:current_spawn_limit(special_type)
 	if not special_type then
 		return math.huge
@@ -1624,7 +1623,7 @@ function JobManager:current_spawn_limit(special_type)
 	return tweak_data.group_ai.special_unit_spawn_limits[special_type] or math.huge
 end
 
--- Lines 1529-1539
+-- Lines 1512-1522
 function JobManager:current_mission()
 	if not self._global.current_job then
 		return
@@ -1637,7 +1636,7 @@ function JobManager:current_mission()
 	return self:current_stage_data().mission or "none"
 end
 
--- Lines 1541-1551
+-- Lines 1524-1534
 function JobManager:current_world_setting()
 	if not self._global.current_job then
 		return
@@ -1650,7 +1649,7 @@ function JobManager:current_world_setting()
 	return self:current_stage_data().world_setting or nil
 end
 
--- Lines 1553-1586
+-- Lines 1536-1551
 function JobManager:current_briefing_dialog()
 	if not self._global.current_job then
 		return
@@ -1669,7 +1668,7 @@ function JobManager:current_briefing_dialog()
 	return managers.job:current_stage_data().briefing_dialog or managers.job:current_level_data().briefing_dialog
 end
 
--- Lines 1588-1598
+-- Lines 1553-1563
 function JobManager:current_briefing_id()
 	if not self._global.current_job then
 		return
@@ -1682,7 +1681,7 @@ function JobManager:current_briefing_id()
 	return managers.job:current_stage_data().briefing_id or managers.job:current_level_data().briefing_id
 end
 
--- Lines 1600-1606
+-- Lines 1565-1571
 function JobManager:current_mission_filter()
 	if not self._global.current_job then
 		return
@@ -1691,7 +1690,7 @@ function JobManager:current_mission_filter()
 	return self:current_stage_data().mission_filter
 end
 
--- Lines 1608-1614
+-- Lines 1573-1579
 function JobManager:current_level_data()
 	if not self._global.current_job then
 		return
@@ -1700,7 +1699,7 @@ function JobManager:current_level_data()
 	return tweak_data.levels[self:current_level_id()]
 end
 
--- Lines 1616-1622
+-- Lines 1581-1587
 function JobManager:current_contact_id()
 	if not self._global.current_job then
 		return
@@ -1709,7 +1708,7 @@ function JobManager:current_contact_id()
 	return tweak_data.narrative:job_data(self._global.current_job.job_id).contact
 end
 
--- Lines 1624-1633
+-- Lines 1589-1598
 function JobManager:current_contact_data()
 	if self._global.interupt_stage then
 		if tweak_data.levels[self._global.interupt_stage].bonus_escape then
@@ -1722,12 +1721,12 @@ function JobManager:current_contact_data()
 	return tweak_data.narrative.contacts[self:current_contact_id()]
 end
 
--- Lines 1635-1637
+-- Lines 1600-1602
 function JobManager:current_job_stars()
 	return math.ceil(tweak_data.narrative:job_data(self._global.current_job.job_id).jc / 10)
 end
 
--- Lines 1639-1645
+-- Lines 1604-1610
 function JobManager:current_job_variant()
 	if not self._global.current_job then
 		return
@@ -1736,7 +1735,7 @@ function JobManager:current_job_variant()
 	return tweak_data.narrative:job_data(self._global.current_job.job_id).variant_name
 end
 
--- Lines 1647-1651
+-- Lines 1612-1616
 function JobManager:current_difficulty_stars()
 	local difficulty = Global.game_settings.difficulty or "easy"
 	local difficulty_id = math.max(0, (tweak_data:difficulty_to_index(difficulty) or 0) - 2)
@@ -1744,7 +1743,7 @@ function JobManager:current_difficulty_stars()
 	return difficulty_id
 end
 
--- Lines 1653-1657
+-- Lines 1618-1622
 function JobManager:current_job_and_difficulty_stars()
 	local difficulty = Global.game_settings.difficulty or "easy"
 	local difficulty_id = math.max(0, (tweak_data:difficulty_to_index(difficulty) or 0) - 2)
@@ -1752,7 +1751,7 @@ function JobManager:current_job_and_difficulty_stars()
 	return math.clamp(self:current_job_stars() + difficulty_id, 1, 10)
 end
 
--- Lines 1660-1669
+-- Lines 1625-1634
 function JobManager:calculate_job_class(job_id, difficulty_id)
 	if job_id then
 		local job_jc = tweak_data.narrative:job_data(job_id).jc or 10
@@ -1766,7 +1765,7 @@ function JobManager:calculate_job_class(job_id, difficulty_id)
 	return 10
 end
 
--- Lines 1671-1691
+-- Lines 1636-1656
 function JobManager:get_min_jc_for_player()
 	local jcs = tweak_data.narrative:get_jcs_from_stars(managers.experience:level_to_stars(), managers.experience:current_rank() > 0)
 	local min_jc = 100
@@ -1778,7 +1777,7 @@ function JobManager:get_min_jc_for_player()
 	return min_jc
 end
 
--- Lines 1693-1713
+-- Lines 1658-1678
 function JobManager:get_max_jc_for_player()
 	local jcs = tweak_data.narrative:get_jcs_from_stars(managers.experience:level_to_stars(), managers.experience:current_rank() > 0)
 	local max_jc = 0
@@ -1790,14 +1789,14 @@ function JobManager:get_max_jc_for_player()
 	return max_jc
 end
 
--- Lines 1718-1721
+-- Lines 1683-1687
 function JobManager:is_forced()
 	local level_data = tweak_data.levels[managers.job:current_level_id()]
 
 	return level_data and level_data.force_equipment
 end
 
--- Lines 1726-1732
+-- Lines 1692-1698
 function JobManager:is_current_job_competitive()
 	if not self._global.current_job then
 		return
@@ -1806,7 +1805,7 @@ function JobManager:is_current_job_competitive()
 	return tweak_data.narrative:job_data(self._global.current_job.job_id).competitive
 end
 
--- Lines 1734-1740
+-- Lines 1700-1706
 function JobManager:is_job_competitive_by_job_id(job_id)
 	if not job_id or not tweak_data.narrative.jobs[job_id] then
 		Application:error("[JobManager:is_job_competitive_by_job_id] no job id or no job", job_id)
@@ -1817,19 +1816,19 @@ function JobManager:is_job_competitive_by_job_id(job_id)
 	return tweak_data.narrative:job_data(job_id).competitive and true or false
 end
 
--- Lines 1744-1747
+-- Lines 1710-1713
 function JobManager:set_stage_success(success)
 	print("[JobManager:set_stage_success]", success, "on_last_stage", self:on_last_stage())
 
 	self._stage_success = success
 end
 
--- Lines 1749-1751
+-- Lines 1715-1717
 function JobManager:stage_success()
 	return self._stage_success
 end
 
--- Lines 1755-1765
+-- Lines 1721-1731
 function JobManager:check_ok_with_cooldown(job_id)
 	if not self._global.cooldown then
 		return true
@@ -1842,7 +1841,7 @@ function JobManager:check_ok_with_cooldown(job_id)
 	return TimerManager:wall_running():time() > self._global.cooldown[job_id]
 end
 
--- Lines 1767-1777
+-- Lines 1733-1743
 function JobManager:_check_add_to_cooldown()
 	if Network:is_server() and self._global.start_time then
 		local cooldown_time = self._global.start_time + tweak_data.narrative.CONTRACT_COOLDOWN_TIME - TimerManager:wall_running():time()
@@ -1854,7 +1853,7 @@ function JobManager:_check_add_to_cooldown()
 	end
 end
 
--- Lines 1780-1784
+-- Lines 1746-1750
 function JobManager:sync_save(data)
 	local state = {}
 
@@ -1862,7 +1861,7 @@ function JobManager:sync_save(data)
 	data.JobManager = state
 end
 
--- Lines 1787-1790
+-- Lines 1753-1756
 function JobManager:sync_load(data)
 	local state = data.JobManager
 

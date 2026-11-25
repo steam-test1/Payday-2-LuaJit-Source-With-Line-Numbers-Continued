@@ -4,7 +4,7 @@ GamemodeStandard._NAME = "Heist Gamemode"
 
 Gamemode.register(GamemodeStandard.id, GamemodeStandard)
 
--- Lines 7-444
+-- Lines 13-438
 function GamemodeStandard:setup_gsm(gsm, empty, setup_boot, setup_title)
 	local editor = EditorState:new(gsm)
 	local world_camera = WorldCameraState:new(gsm)

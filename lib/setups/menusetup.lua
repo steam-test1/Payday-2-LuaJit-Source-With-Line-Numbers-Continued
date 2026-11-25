@@ -257,19 +257,19 @@ function MenuSetup:paused_update(t, dt)
 	managers.network:update(t, dt)
 end
 
--- Lines 363-391
+-- Lines 363-405
 function MenuSetup:end_update(t, dt)
 	Setup.end_update(self, t, dt)
 	managers.network:end_update()
 end
 
--- Lines 393-397
+-- Lines 407-411
 function MenuSetup:paused_end_update(t, dt)
 	Setup.paused_end_update(self, t, dt)
 	managers.network:end_update()
 end
 
--- Lines 399-405
+-- Lines 413-419
 function MenuSetup:destroy()
 	MenuSetup.super.destroy(self)
 	managers.menu_scene:destroy()

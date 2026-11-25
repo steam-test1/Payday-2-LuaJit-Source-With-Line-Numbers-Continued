@@ -113,7 +113,7 @@ function LootDropManager:_setup_items()
 	end
 end
 
--- Lines 120-224
+-- Lines 120-230
 function LootDropManager:droppable_items(item_pc, infamous_success, skip_types)
 	local plvl = managers.experience:current_level()
 	local xp_no_next_lv = managers.experience:next_level_data_points() - managers.experience:next_level_data_current_points()
@@ -137,7 +137,8 @@ function LootDropManager:droppable_items(item_pc, infamous_success, skip_types)
 				local pass_infamous = not is_infamous or infamous_success
 				local pass_dlc = true
 				local pass_qlvl = not got_qlvl or got_qlvl <= plvl
-				local pass_xp_card = type ~= "xp" or xp_no_next_lv > (tweak_data:get_value("experience_manager", "loot_drop_value", item_tweak.value_id) or 0)
+				local xp_amount = tweak_data:get_value("experience_manager", "loot_drop_value", item_tweak.value_id) or 0
+				local pass_xp_card = type ~= "xp" or xp_amount < xp_no_next_lv
 				local global_value = fixed_global_value or "normal"
 
 				if is_infamous then
@@ -207,7 +208,7 @@ function LootDropManager:droppable_items(item_pc, infamous_success, skip_types)
 	return droppable_items, maxed_inventory_items
 end
 
--- Lines 227-246
+-- Lines 233-252
 function LootDropManager:infamous_chance(setup_data)
 	local infamous_diff = 1
 
@@ -231,12 +232,12 @@ function LootDropManager:infamous_chance(setup_data)
 	return chance * multiplier, chance, multiplier
 end
 
--- Lines 249-251
+-- Lines 255-257
 function LootDropManager:get_random_item_pc(setup_data)
 	return self:_get_random_item_pc(false, nil, setup_data)
 end
 
--- Lines 254-310
+-- Lines 260-316
 function LootDropManager:_get_random_item_pc(debug, debug_stars, setup_data)
 	local stars = debug_stars or managers.experience:level_to_stars()
 	local pcs = tweak_data.lootdrop.STARS[stars].pcs
@@ -264,14 +265,14 @@ function LootDropManager:_get_random_item_pc(debug, debug_stars, setup_data)
 	return item_pc
 end
 
--- Lines 313-316
+-- Lines 319-322
 function LootDropManager:new_make_drop(return_data, setup_data)
 	return_data = type(return_data) == "table" and return_data or {}
 
 	self:_new_make_drop(false, true, nil, return_data, setup_data)
 end
 
--- Lines 319-413
+-- Lines 325-419
 function LootDropManager:_new_make_drop(debug, add_to_inventory, debug_stars, return_data, setup_data)
 	local plvl = managers.experience:current_level()
 	local pstars = managers.experience:level_to_stars()
@@ -382,7 +383,7 @@ function LootDropManager:_new_make_drop(debug, add_to_inventory, debug_stars, re
 	return global_value, pc_type, entry, pc
 end
 
--- Lines 417-531
+-- Lines 423-537
 function LootDropManager:new_make_mass_drop(amount, item_pc, return_data, setup_data)
 	local plvl = managers.experience:current_level()
 	local pstars = managers.experience:level_to_stars()
@@ -493,7 +494,7 @@ function LootDropManager:new_make_mass_drop(amount, item_pc, return_data, setup_
 	return co
 end
 
--- Lines 535-568
+-- Lines 541-574
 function LootDropManager:debug_drop(amount, add_to_inventory, stars)
 	amount = amount or 10
 	add_to_inventory = add_to_inventory or false
@@ -533,14 +534,14 @@ function LootDropManager:debug_drop(amount, add_to_inventory, stars)
 	Global.debug_drop_result = self._debug_drop_result
 end
 
--- Lines 571-574
+-- Lines 577-580
 function LootDropManager:make_drop(return_data)
 	return_data = type(return_data) == "table" and return_data or {}
 
 	self:_make_drop(false, true, nil, return_data)
 end
 
--- Lines 577-816
+-- Lines 583-822
 function LootDropManager:_make_drop(debug, add_to_inventory, debug_stars, return_data)
 	local plvl = managers.experience:current_level()
 	local stars = debug_stars or managers.job:current_job_stars()
@@ -665,7 +666,7 @@ function LootDropManager:_make_drop(debug, add_to_inventory, debug_stars, return
 	end
 end
 
--- Lines 819-849
+-- Lines 825-855
 function LootDropManager:_get_type_items(normalized_chance, debug)
 	local seed = math.rand(1)
 
@@ -680,7 +681,7 @@ function LootDropManager:_get_type_items(normalized_chance, debug)
 	return next(normalized_chance)
 end
 
--- Lines 852-907
+-- Lines 858-913
 function LootDropManager:can_drop_weapon_mods()
 	local plvl = managers.experience:current_level()
 	local dropable_items = {}
@@ -733,12 +734,12 @@ function LootDropManager:can_drop_weapon_mods()
 	return #dropable_items > 0
 end
 
--- Lines 910-912
+-- Lines 916-918
 function LootDropManager:specific_fake_loot_pc(preferred)
 	return tweak_data.lootdrop.card_to_drop[preferred] or 1
 end
 
--- Lines 915-942
+-- Lines 921-948
 function LootDropManager:new_fake_loot_pc(debug_pc, skip_mods)
 	local sum = 0
 	local to_drop = tweak_data.lootdrop.card_to_drop
@@ -768,7 +769,7 @@ function LootDropManager:new_fake_loot_pc(debug_pc, skip_mods)
 	return 1
 end
 
--- Lines 946-980
+-- Lines 952-986
 function LootDropManager:get_amount_mass_drop(data)
 	if not data then
 		return 0
@@ -795,7 +796,7 @@ function LootDropManager:get_amount_mass_drop(data)
 	return num_rewards
 end
 
--- Lines 983-1015
+-- Lines 989-1021
 function LootDropManager:set_mass_drop(data)
 	if not data or data.coroutine then
 		return false
@@ -830,7 +831,7 @@ function LootDropManager:set_mass_drop(data)
 	return true
 end
 
--- Lines 1018-1047
+-- Lines 1024-1053
 function LootDropManager:fetch_mass_lootdrops(data)
 	if data and data.coroutine then
 		local status = coroutine.status(data.coroutine)

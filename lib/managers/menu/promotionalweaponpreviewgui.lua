@@ -35,7 +35,7 @@ function PromotionalWeaponPreviewGui:close()
 	end
 end
 
--- Lines 34-140
+-- Lines 34-142
 function PromotionalWeaponPreviewGui:setup()
 	local menu_component_data = self._node:parameters().menu_component_data
 	local item_td, unlocked

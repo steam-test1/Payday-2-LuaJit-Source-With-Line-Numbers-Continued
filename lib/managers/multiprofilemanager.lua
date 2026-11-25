@@ -13,21 +13,27 @@ function MultiProfileManager:init()
 	self:_check_amount()
 end
 
--- Lines 13-66
+-- Lines 13-68
 function MultiProfileManager:save_current()
 	print("[MultiProfileManager:save_current] current profile:", self._global._current_profile)
 
 	local profile = self:current_profile() or {}
+	local forced = managers.job:is_forced()
 	local blm = managers.blackmarket
 	local skt = managers.skilltree._global
 
-	profile.primary = blm:equipped_weapon_slot("primaries")
-	profile.secondary = blm:equipped_weapon_slot("secondaries")
-	profile.melee = blm:equipped_melee_weapon()
-	profile.throwable = blm:equipped_grenade()
-	profile.deployable = blm:equipped_deployable()
-	profile.deployable_secondary = blm:equipped_deployable(2)
-	profile.armor = blm:equipped_armor()
+	-- Lines 23-25
+	local function is_forced_id(cat)
+		return forced and forced[cat] and profile[cat] or false
+	end
+
+	profile.primary = is_forced_id("primary") or blm:equipped_weapon_slot("primaries")
+	profile.secondary = is_forced_id("secondary") or blm:equipped_weapon_slot("secondaries")
+	profile.melee = is_forced_id("melee") or blm:equipped_melee_weapon()
+	profile.throwable = is_forced_id("throwable") or blm:equipped_grenade()
+	profile.deployable = is_forced_id("deployable") or blm:equipped_deployable()
+	profile.deployable_secondary = is_forced_id("deployable_secondary") or blm:equipped_deployable(2)
+	profile.armor = is_forced_id("armor") or blm:equipped_armor()
 	profile.armor_skin = blm:equipped_armor_skin()
 	profile.player_style = blm:equipped_player_style()
 	profile.suit_variations = blm:get_suit_variations()
@@ -62,11 +68,12 @@ function MultiProfileManager:save_current()
 	print("[MultiProfileManager:save_current] done")
 end
 
--- Lines 68-145
+-- Lines 70-167
 function MultiProfileManager:load_current()
 	Global.block_update_outfit_information = true
 	Global.block_publish_equipped_to_steam = true
 
+	local forced = managers.job:is_forced()
 	local profile = self:current_profile()
 	local blm = managers.blackmarket
 	local skt = managers.skilltree
@@ -81,19 +88,39 @@ function MultiProfileManager:load_current()
 		end
 	end
 
-	blm:equip_weapon("primaries", profile.primary)
-	blm:equip_weapon("secondaries", profile.secondary)
-	blm:equip_melee_weapon(profile.melee)
-	blm:equip_grenade(profile.throwable)
+	if not forced or not forced.primary then
+		blm:equip_weapon("primaries", profile.primary)
+	end
+
+	if not forced or not forced.secondary then
+		blm:equip_weapon("secondaries", profile.secondary)
+	end
+
+	if not forced or not forced.melee then
+		blm:equip_melee_weapon(profile.melee)
+	end
+
+	local throwable_id = forced and forced.throwable or profile.throwable
+
+	blm:equip_grenade(throwable_id)
+
+	local deployable_id = forced and forced.deployable or profile.deployable
+
 	blm:equip_deployable({
 		target_slot = 1,
-		name = profile.deployable
+		name = deployable_id
 	})
+
+	local deployable_secondary_id = forced and forced.deployable_secondary or profile.deployable_secondary
+
 	blm:equip_deployable({
 		target_slot = 2,
-		name = profile.deployable_secondary
+		name = deployable_secondary_id
 	})
-	blm:equip_armor(profile.armor)
+
+	local armor_id = forced and forced.armor or profile.armor
+
+	blm:equip_armor(armor_id)
 	blm:set_equipped_armor_skin(profile.armor_skin)
 	blm:set_equipped_player_style(profile.player_style or blm:get_default_player_style())
 	blm:set_suit_variations(profile.suit_variations or {})
@@ -139,7 +166,7 @@ function MultiProfileManager:load_current()
 	end
 end
 
--- Lines 147-155
+-- Lines 169-177
 function MultiProfileManager:profile_name(index)
 	local profile = self:profile(index)
 
@@ -152,22 +179,22 @@ function MultiProfileManager:profile_name(index)
 	})
 end
 
--- Lines 157-159
+-- Lines 179-181
 function MultiProfileManager:current_profile_name()
 	return self:profile_name(self._global._current_profile)
 end
 
--- Lines 161-163
+-- Lines 183-185
 function MultiProfileManager:current_profile_index()
 	return self._global._current_profile
 end
 
--- Lines 165-167
+-- Lines 187-189
 function MultiProfileManager:profile_count()
 	return math.max(#self._global._profiles, 1)
 end
 
--- Lines 169-182
+-- Lines 191-204
 function MultiProfileManager:set_current_profile(index)
 	if index < 0 or index > self:profile_count() then
 		return
@@ -185,43 +212,43 @@ function MultiProfileManager:set_current_profile(index)
 	print("[MultiProfileManager:set_current_profile] current profile:", self._global._current_profile)
 end
 
--- Lines 184-186
+-- Lines 206-208
 function MultiProfileManager:current_profile()
 	return self:profile(self._global._current_profile)
 end
 
--- Lines 188-190
+-- Lines 210-212
 function MultiProfileManager:profile(index)
 	return self._global._profiles[index]
 end
 
--- Lines 192-196
+-- Lines 214-218
 function MultiProfileManager:_add_profile(profile, index)
 	index = index or #self._global._profiles + 1
 	self._global._profiles[index] = profile
 end
 
--- Lines 198-200
+-- Lines 220-222
 function MultiProfileManager:next_profile()
 	self:set_current_profile(self._global._current_profile + 1)
 end
 
--- Lines 202-204
+-- Lines 224-226
 function MultiProfileManager:previous_profile()
 	self:set_current_profile(self._global._current_profile - 1)
 end
 
--- Lines 206-208
+-- Lines 228-230
 function MultiProfileManager:has_next()
 	return self._global._current_profile < self:profile_count()
 end
 
--- Lines 210-212
+-- Lines 232-234
 function MultiProfileManager:has_previous()
 	return self._global._current_profile > 1
 end
 
--- Lines 214-239
+-- Lines 236-261
 function MultiProfileManager:move_profile(old_index, new_index)
 	local profile = self:profile(old_index)
 
@@ -249,7 +276,7 @@ function MultiProfileManager:move_profile(old_index, new_index)
 	end
 end
 
--- Lines 241-290
+-- Lines 263-312
 function MultiProfileManager:open_quick_select()
 	local dialog_data = {}
 
@@ -287,7 +314,7 @@ function MultiProfileManager:open_quick_select()
 
 	no_button.text = managers.localization:text("dialog_cancel")
 
-	-- Lines 272-272
+	-- Lines 294-294
 	function no_button.focus_callback_func()
 		return
 	end
@@ -312,7 +339,7 @@ function MultiProfileManager:open_quick_select()
 	managers.system_menu:show_buttons(dialog_data)
 end
 
--- Lines 292-299
+-- Lines 314-321
 function MultiProfileManager:save(data)
 	local save_data = deep_clone(self._global._profiles)
 
@@ -321,7 +348,7 @@ function MultiProfileManager:save(data)
 	data.multi_profile = save_data
 end
 
--- Lines 301-316
+-- Lines 323-338
 function MultiProfileManager:load(data)
 	if data.multi_profile then
 		if not data.multi_profile.SKILL_SWITCH_SWITCHED then
@@ -340,7 +367,7 @@ function MultiProfileManager:load(data)
 	self:_check_amount()
 end
 
--- Lines 318-330
+-- Lines 340-352
 function MultiProfileManager:reset()
 	local name
 	local current_profile = self._global._current_profile
@@ -357,14 +384,14 @@ function MultiProfileManager:reset()
 	self._global._current_profile = current_profile
 end
 
--- Lines 332-336
+-- Lines 354-358
 function MultiProfileManager:infamy_reset()
 	for idx, profile in pairs(self._global._profiles) do
 		profile.skillset = 1
 	end
 end
 
--- Lines 338-358
+-- Lines 360-380
 function MultiProfileManager:_check_amount()
 	local wanted_amount = 30
 

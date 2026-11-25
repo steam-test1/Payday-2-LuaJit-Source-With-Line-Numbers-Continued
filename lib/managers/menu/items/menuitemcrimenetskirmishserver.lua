@@ -10,7 +10,7 @@ function MenuItemCrimeNetSkirmishServer:init(data_node, parameters)
 	self._type = MenuItemCrimeNetSkirmishServer.TYPE
 end
 
--- Lines 13-147
+-- Lines 13-146
 function MenuItemCrimeNetSkirmishServer:setup_gui(node, row_item)
 	local scaled_size = managers.gui_data:scaled_size()
 	local color = tweak_data.screen_colors.skirmish_color
@@ -139,7 +139,7 @@ function MenuItemCrimeNetSkirmishServer:setup_gui(node, row_item)
 	return true
 end
 
--- Lines 150-154
+-- Lines 149-153
 function MenuItemCrimeNetSkirmishServer:reload(row_item, node)
 	MenuItemCrimeNetSkirmishServer.super.reload(self, row_item, node)
 	self:_set_row_item_state(node, row_item)
@@ -147,33 +147,33 @@ function MenuItemCrimeNetSkirmishServer:reload(row_item, node)
 	return true
 end
 
--- Lines 157-160
+-- Lines 156-159
 function MenuItemCrimeNetSkirmishServer:highlight_row_item(node, row_item, mouse_over)
 	self:_set_row_item_state(node, row_item)
 
 	return true
 end
 
--- Lines 163-166
+-- Lines 162-165
 function MenuItemCrimeNetSkirmishServer:fade_row_item(node, row_item, mouse_over)
 	self:_set_row_item_state(node, row_item)
 
 	return true
 end
 
--- Lines 169-173
+-- Lines 168-172
 function MenuItemCrimeNetSkirmishServer:_set_row_item_state(node, row_item)
 	if row_item.highlighted then
 		-- Nothing
 	end
 end
 
--- Lines 175-177
+-- Lines 174-176
 function MenuItemCrimeNetSkirmishServer:menu_unselected_visible()
 	return false
 end
 
--- Lines 180-182
+-- Lines 179-181
 function MenuItemCrimeNetSkirmishServer:on_delete_row_item(row_item, ...)
 	MenuItemCrimeNetSkirmishServer.super.on_delete_row_item(self, row_item, ...)
 end

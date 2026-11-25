@@ -43564,7 +43564,7 @@ function WeaponFactoryTweakData:_init_scout()
 	self.wpn_fps_snp_scout_npc.unit = "units/pd2_dlc_pxp1/weapons/wpn_fps_snp_scout/wpn_fps_snp_scout_npc"
 end
 
--- Lines 25124-25775
+-- Lines 25124-25797
 function WeaponFactoryTweakData:_init_legendary()
 	self.parts.wpn_fps_ass_74_b_legend = {
 		a_obj = "a_b",
@@ -43958,6 +43958,23 @@ function WeaponFactoryTweakData:_init_legendary()
 		},
 		perks = {
 			"gadget"
+		},
+		override = {
+			wpn_fps_upg_ns_shot_thick = {
+				parent = "barrel"
+			},
+			wpn_fps_upg_ns_shot_shark = {
+				parent = "barrel"
+			},
+			wpn_fps_upg_shot_ns_king = {
+				parent = "barrel"
+			},
+			wpn_fps_upg_ns_sho_salvo_large = {
+				parent = "barrel"
+			},
+			wpn_fps_upg_ns_duck = {
+				parent = "barrel"
+			}
 		}
 	}
 	self.parts.wpn_fps_pis_judge_g_legend = {
@@ -44197,7 +44214,7 @@ function WeaponFactoryTweakData:_init_legendary()
 	self.parts.wpn_fps_ass_m14_body_lower_legendary.third_unit = "units/payday2_cash/safes/lones/weapons/wpn_fps_ass_m14_legendary_pts/wpn_third_ass_m14_body_lower_legendary"
 end
 
--- Lines 25777-25854
+-- Lines 25799-25876
 function WeaponFactoryTweakData:_init_cc_material_config()
 	local parts = self.parts
 
@@ -44229,7 +44246,7 @@ function WeaponFactoryTweakData:_init_cc_material_config()
 	parts.wpn_fps_upg_o_mbus_pro_front.thq_material_config = Idstring("units/pd2_dlc_mxm/weapons/wpn_fps_upg_mbus_pro/wpn_fps_upg_o_mbus_pro_front_thq")
 end
 
--- Lines 25856-25909
+-- Lines 25878-25931
 function WeaponFactoryTweakData:_init_bipods()
 	self.parts.wpn_fps_upg_bp_lmg_lionbipod = {
 		a_obj = "a_bp",
@@ -44304,7 +44321,7 @@ function WeaponFactoryTweakData:_init_bipods()
 	})
 end
 
--- Lines 25912-25996
+-- Lines 25934-26018
 function WeaponFactoryTweakData:_init_steelsight_units()
 	local optic_steelsights = {}
 
@@ -44371,7 +44388,7 @@ function WeaponFactoryTweakData:_init_steelsight_units()
 	end
 end
 
--- Lines 26107-26187
+-- Lines 26129-26209
 function WeaponFactoryTweakData:_init_m1897()
 	self.parts.wpn_fps_shot_m1897_b_short = {
 		a_obj = "a_b",
@@ -44559,7 +44576,7 @@ function WeaponFactoryTweakData:_init_m1897()
 	self.wpn_fps_shot_m1897_npc.unit = "units/pd2_dlc_mxw/weapons/wpn_fps_shot_m1897/wpn_fps_shot_m1897_npc"
 end
 
--- Lines 26191-26266
+-- Lines 26213-26288
 function WeaponFactoryTweakData:_init_m37()
 	self.parts.wpn_fps_shot_m37_b_short = {
 		a_obj = "a_b",
@@ -44725,7 +44742,7 @@ function WeaponFactoryTweakData:_init_m37()
 	self.wpn_fps_shot_m37_npc.unit = "units/pd2_dlc_peta/weapons/wpn_fps_shot_m37/wpn_fps_shot_m37_npc"
 end
 
--- Lines 26270-26331
+-- Lines 26292-26353
 function WeaponFactoryTweakData:_init_china()
 	self.parts.wpn_fps_gre_china_b_standard = {
 		a_obj = "a_b",
@@ -44849,7 +44866,7 @@ function WeaponFactoryTweakData:_init_china()
 	self.wpn_fps_gre_china_npc.unit = "units/pd2_dlc_lupus/weapons/wpn_fps_gre_china/wpn_fps_gre_china_npc"
 end
 
--- Lines 26338-26503
+-- Lines 26360-26525
 function WeaponFactoryTweakData:_init_sr2()
 	self.parts.wpn_fps_smg_sr2_body_lower = {
 		a_obj = "a_body",
@@ -45140,7 +45157,7 @@ function WeaponFactoryTweakData:_init_sr2()
 	self.wpn_fps_smg_sr2_npc.unit = "units/pd2_dlc_coco/weapons/wpn_fps_smg_sr2/wpn_fps_smg_sr2_npc"
 end
 
--- Lines 26507-26571
+-- Lines 26529-26593
 function WeaponFactoryTweakData:_init_x_sr2()
 	self.wpn_fps_smg_x_sr2 = {}
 	self.wpn_fps_smg_x_sr2.unit = "units/pd2_dlc_coco/weapons/wpn_fps_smg_x_sr2/wpn_fps_smg_x_sr2"
@@ -45202,7 +45219,7 @@ function WeaponFactoryTweakData:_init_x_sr2()
 	self.wpn_fps_smg_x_sr2_npc.unit = "units/pd2_dlc_coco/weapons/wpn_fps_smg_x_sr2/wpn_fps_smg_x_sr2_npc"
 end
 
--- Lines 26576-26678
+-- Lines 26598-26700
 function WeaponFactoryTweakData:_init_pl14()
 	self.parts.wpn_fps_pis_pl14_b_comp = {
 		a_obj = "a_b",
@@ -45422,7 +45439,7 @@ function WeaponFactoryTweakData:_init_pl14()
 	self.wpn_fps_pis_pl14_npc.unit = "units/pd2_dlc_mad/weapons/wpn_fps_pis_pl14/wpn_fps_pis_pl14_npc"
 end
 
--- Lines 26682-26804
+-- Lines 26704-26826
 function WeaponFactoryTweakData:_init_m1911()
 	self.parts.wpn_fps_pis_m1911_b_hardballer = {
 		a_obj = "a_b",
@@ -45708,7 +45725,7 @@ function WeaponFactoryTweakData:_init_m1911()
 	self.wpn_fps_pis_m1911_npc.unit = "units/pd2_dlc_fawp/weapons/wpn_fps_pis_m1911/wpn_fps_pis_m1911_npc"
 end
 
--- Lines 26806-26878
+-- Lines 26828-26900
 function WeaponFactoryTweakData:_init_x_m1911()
 	self.wpn_fps_pis_x_m1911 = {}
 	self.wpn_fps_pis_x_m1911.unit = "units/pd2_dlc_fawp/weapons/wpn_fps_pis_x_m1911/wpn_fps_pis_x_m1911"
@@ -45834,7 +45851,7 @@ function WeaponFactoryTweakData:_init_x_m1911()
 	self.wpn_fps_pis_x_m1911_npc.unit = "units/pd2_dlc_fawp/weapons/wpn_fps_pis_x_m1911/wpn_fps_pis_x_m1911_npc"
 end
 
--- Lines 26881-27084
+-- Lines 26903-27106
 function WeaponFactoryTweakData:_init_m590()
 	self.parts.wpn_fps_sho_m590_b_suppressor = {
 		a_obj = "a_b",
@@ -46334,7 +46351,7 @@ function WeaponFactoryTweakData:_init_m590()
 	self.wpn_fps_sho_m590_npc.unit = "units/pd2_dlc_fawp/weapons/wpn_fps_sho_m590/wpn_fps_sho_m590_npc"
 end
 
--- Lines 27087-27288
+-- Lines 27109-27310
 function WeaponFactoryTweakData:_init_vityaz()
 	self.parts.wpn_fps_smg_vityaz_b_supressed = {
 		a_obj = "a_b",
@@ -46750,7 +46767,7 @@ function WeaponFactoryTweakData:_init_vityaz()
 	self.wpn_fps_smg_vityaz_npc.unit = "units/pd2_dlc_fawp/weapons/wpn_fps_smg_vityaz/wpn_fps_smg_vityaz_npc"
 end
 
--- Lines 27290-27365
+-- Lines 27312-27387
 function WeaponFactoryTweakData:_init_x_vityaz()
 	self.wpn_fps_smg_x_vityaz = {}
 	self.wpn_fps_smg_x_vityaz.unit = "units/pd2_dlc_fawp/weapons/wpn_fps_smg_x_vityaz/wpn_fps_smg_x_vityaz"
@@ -46829,7 +46846,7 @@ function WeaponFactoryTweakData:_init_x_vityaz()
 	self.wpn_fps_smg_x_vityaz_npc.unit = "units/pd2_dlc_fawp/weapons/wpn_fps_smg_x_vityaz/wpn_fps_smg_x_vityaz_npc"
 end
 
--- Lines 27369-27502
+-- Lines 27391-27524
 function WeaponFactoryTweakData:_init_pm9()
 	self.parts.wpn_fps_smg_pm9_body_standard = {
 		a_obj = "a_body",
@@ -47105,7 +47122,7 @@ function WeaponFactoryTweakData:_init_pm9()
 	self.wpn_fps_smg_pm9_npc.unit = "units/pd2_dlc_sawp/weapons/wpn_fps_smg_pm9/wpn_fps_smg_pm9_npc"
 end
 
--- Lines 27504-27563
+-- Lines 27526-27585
 function WeaponFactoryTweakData:_init_x_pm9()
 	self.wpn_fps_smg_x_pm9 = {}
 	self.wpn_fps_smg_x_pm9.unit = "units/pd2_dlc_sawp/weapons/wpn_fps_smg_x_pm9/wpn_fps_smg_x_pm9"
@@ -47167,7 +47184,7 @@ function WeaponFactoryTweakData:_init_x_pm9()
 	self.wpn_fps_smg_x_pm9_npc.unit = "units/pd2_dlc_sawp/weapons/wpn_fps_smg_x_pm9/wpn_fps_smg_x_pm9_npc"
 end
 
--- Lines 27565-27692
+-- Lines 27587-27714
 function WeaponFactoryTweakData:_init_qbu88()
 	self.parts.wpn_fps_snp_qbu88_b_standard = {
 		a_obj = "a_b",
@@ -47410,7 +47427,7 @@ function WeaponFactoryTweakData:_init_qbu88()
 	self.wpn_fps_snp_qbu88_npc.unit = "units/pd2_dlc_sawp/weapons/wpn_fps_snp_qbu88/wpn_fps_snp_qbu88_npc"
 end
 
--- Lines 27694-27894
+-- Lines 27716-27916
 function WeaponFactoryTweakData:_init_groza()
 	self.parts.wpn_fps_ass_groza_b_standard = {
 		a_obj = "a_b",
@@ -47790,7 +47807,7 @@ function WeaponFactoryTweakData:_init_groza()
 	self.wpn_fps_ass_groza_npc.unit = "units/pd2_dlc_sawp/weapons/wpn_fps_ass_groza/wpn_fps_ass_groza_npc"
 end
 
--- Lines 27899-28149
+-- Lines 27921-28171
 function WeaponFactoryTweakData:_init_shak12()
 	self.parts.wpn_fps_ass_shak12_body_lower = {
 		a_obj = "a_body",
@@ -48417,7 +48434,7 @@ function WeaponFactoryTweakData:_init_shak12()
 	self.wpn_fps_ass_shak12_npc.unit = "units/pd2_dlc_tawp/weapons/wpn_fps_ass_shak12/wpn_fps_ass_shak12_npc"
 end
 
--- Lines 28154-28273
+-- Lines 28176-28295
 function WeaponFactoryTweakData:_init_x_mp5()
 	self.parts.wpn_fps_smg_mp5_s_ring_vanilla = deep_clone(self.parts.wpn_fps_smg_mp5_s_ring)
 	self.parts.wpn_fps_smg_mp5_s_ring_vanilla.stats = nil
@@ -48568,7 +48585,7 @@ function WeaponFactoryTweakData:_init_x_mp5()
 	self.wpn_fps_smg_x_mp5_npc.unit = "units/pd2_dlc_dos/weapons/wpn_fps_smg_x_mp5/wpn_fps_smg_x_mp5_npc"
 end
 
--- Lines 28275-28388
+-- Lines 28297-28410
 function WeaponFactoryTweakData:_init_x_akmsu()
 	self.wpn_fps_smg_x_akmsu = {}
 	self.wpn_fps_smg_x_akmsu.unit = "units/pd2_dlc_dos/weapons/wpn_fps_smg_x_akmsu/wpn_fps_smg_x_akmsu"
@@ -48731,7 +48748,7 @@ function WeaponFactoryTweakData:_init_x_akmsu()
 	self.wpn_fps_smg_x_akmsu_npc.unit = "units/pd2_dlc_dos/weapons/wpn_fps_smg_x_akmsu/wpn_fps_smg_x_akmsu_npc"
 end
 
--- Lines 28392-28576
+-- Lines 28414-28598
 function WeaponFactoryTweakData:_init_tecci()
 	self.parts.wpn_fps_ass_tecci_b_standard = {
 		a_obj = "a_b",
@@ -49018,7 +49035,7 @@ function WeaponFactoryTweakData:_init_tecci()
 	self.wpn_fps_ass_tecci_npc.unit = "units/pd2_dlc_opera/weapons/wpn_fps_ass_tecci/wpn_fps_ass_tecci_npc"
 end
 
--- Lines 28580-28736
+-- Lines 28602-28758
 function WeaponFactoryTweakData:_init_hajk()
 	self.parts.wpn_fps_smg_hajk_b_standard = {
 		a_obj = "a_b",
@@ -49281,7 +49298,7 @@ function WeaponFactoryTweakData:_init_hajk()
 	self.wpn_fps_smg_hajk_npc.unit = "units/pd2_dlc_born/weapons/wpn_fps_smg_hajk/wpn_fps_smg_hajk_npc"
 end
 
--- Lines 28740-28844
+-- Lines 28762-28866
 function WeaponFactoryTweakData:_init_boot()
 	self.parts.wpn_fps_sho_boot_b_standard = {
 		a_obj = "a_b",
@@ -49497,7 +49514,7 @@ function WeaponFactoryTweakData:_init_boot()
 	self.wpn_fps_sho_boot_npc.unit = "units/pd2_dlc_wild/weapons/wpn_fps_sho_boot/wpn_fps_sho_boot_npc"
 end
 
--- Lines 28848-28970
+-- Lines 28870-28992
 function WeaponFactoryTweakData:_init_packrat()
 	self.parts.wpn_fps_pis_packrat_b_standard = {
 		a_obj = "a_b",
@@ -49737,7 +49754,7 @@ function WeaponFactoryTweakData:_init_packrat()
 	self.wpn_fps_pis_packrat_npc.unit = "units/pd2_dlc_pim/weapons/wpn_fps_pis_packrat/wpn_fps_pis_packrat_npc"
 end
 
--- Lines 28973-29169
+-- Lines 28995-29191
 function WeaponFactoryTweakData:_init_schakal()
 	self.parts.wpn_fps_smg_schakal_b_civil = {
 		a_obj = "a_b",
@@ -50125,7 +50142,7 @@ function WeaponFactoryTweakData:_init_schakal()
 	self.wpn_fps_smg_schakal_npc.unit = "units/pd2_dlc_pim/weapons/wpn_fps_smg_schakal/wpn_fps_smg_schakal_npc"
 end
 
--- Lines 29172-29273
+-- Lines 29194-29295
 function WeaponFactoryTweakData:_init_desertfox()
 	self.parts.wpn_fps_snp_desertfox_b_long = {
 		a_obj = "a_b",
@@ -50290,7 +50307,7 @@ function WeaponFactoryTweakData:_init_desertfox()
 	self.wpn_fps_snp_desertfox_npc.unit = "units/pd2_dlc_pim/weapons/wpn_fps_snp_desertfox/wpn_fps_snp_desertfox_npc"
 end
 
--- Lines 29276-29355
+-- Lines 29298-29377
 function WeaponFactoryTweakData:_init_x_packrat()
 	self.wpn_fps_x_packrat = {}
 	self.wpn_fps_x_packrat.optional_types = {
@@ -50420,7 +50437,7 @@ function WeaponFactoryTweakData:_init_x_packrat()
 	self.wpn_fps_x_packrat_npc.unit = "units/pd2_dlc_pim/weapons/wpn_fps_x_packrat/wpn_fps_x_packrat_npc"
 end
 
--- Lines 29363-29496
+-- Lines 29385-29518
 function WeaponFactoryTweakData:_init_rota()
 	self.parts.wpn_fps_sho_rota_b_long = {
 		a_obj = "a_b",
@@ -50642,7 +50659,7 @@ function WeaponFactoryTweakData:_init_rota()
 	self.wpn_fps_sho_rota_npc.unit = "units/pd2_dlc_rota/weapons/wpn_fps_sho_rota/wpn_fps_sho_rota_npc"
 end
 
--- Lines 29499-29995
+-- Lines 29521-30017
 function WeaponFactoryTweakData:_init_tng()
 	self.parts.wpn_fps_sho_saiga_b_short = {
 		a_obj = "a_b",
@@ -51505,7 +51522,7 @@ function WeaponFactoryTweakData:_init_tng()
 	self.parts.wpn_fps_smg_sr2_m_quick.third_unit = "units/pd2_dlc_tng/weapons/wpn_fps_smg_sr2_m_quick/wpn_third_smg_sr2_m_quick"
 end
 
--- Lines 29999-30131
+-- Lines 30021-30153
 function WeaponFactoryTweakData:_init_arbiter()
 	self.parts.wpn_fps_gre_arbiter_b_standard = {
 		a_obj = "a_b",
@@ -51704,7 +51721,7 @@ function WeaponFactoryTweakData:_init_arbiter()
 	self.wpn_fps_gre_arbiter_npc.unit = "units/pd2_dlc_tng/weapons/wpn_fps_gre_arbiter/wpn_fps_gre_arbiter_npc"
 end
 
--- Lines 30135-30280
+-- Lines 30157-30302
 function WeaponFactoryTweakData:_init_ms3gl()
 	self.parts.wpn_fps_gre_ms3gl_b_standard = {
 		a_obj = "a_b",
@@ -51974,7 +51991,7 @@ function WeaponFactoryTweakData:_init_ms3gl()
 	self.wpn_fps_gre_ms3gl_npc.unit = "units/pd2_dlc_pxp1/weapons/wpn_fps_gre_3gl/wpn_fps_gre_3gl_npc"
 end
 
--- Lines 30286-30446
+-- Lines 30308-30468
 function WeaponFactoryTweakData:_init_contraband()
 	self.parts.wpn_fps_ass_contraband_b_standard = {
 		a_obj = "a_b",
@@ -52211,7 +52228,7 @@ function WeaponFactoryTweakData:_init_contraband()
 	self.wpn_fps_ass_contraband_npc.unit = "units/pd2_dlc_chico/weapons/wpn_fps_ass_contraband/wpn_fps_ass_contraband_npc"
 end
 
--- Lines 30452-30552
+-- Lines 30474-30574
 function WeaponFactoryTweakData:_init_ray()
 	self.parts.wpn_fps_gre_ray_body = {
 		a_obj = "a_body",
@@ -52358,7 +52375,7 @@ function WeaponFactoryTweakData:_init_ray()
 	self.wpn_fps_gre_ray_npc.unit = "units/pd2_dlc_friend/weapons/wpn_fps_gre_ray/wpn_fps_gre_ray_npc"
 end
 
--- Lines 30559-30733
+-- Lines 30581-30755
 function WeaponFactoryTweakData:_init_tti()
 	self.parts.wpn_fps_snp_tti_body_standard = {
 		a_obj = "a_body",
@@ -52658,7 +52675,7 @@ function WeaponFactoryTweakData:_init_tti()
 	self.wpn_fps_snp_tti_npc.unit = "units/pd2_dlc_spa/weapons/wpn_fps_snp_tti/wpn_fps_snp_tti_npc"
 end
 
--- Lines 30738-31109
+-- Lines 30760-31131
 function WeaponFactoryTweakData:_init_victor()
 	self.parts.wpn_fps_snp_victor_body_standard = {
 		a_obj = "a_body",
@@ -53265,7 +53282,7 @@ function WeaponFactoryTweakData:_init_victor()
 	self.wpn_fps_snp_victor_npc.unit = "units/pd2_dlc_savi/weapons/wpn_fps_snp_victor/wpn_fps_snp_victor_npc"
 end
 
--- Lines 31118-31326
+-- Lines 31140-31348
 function WeaponFactoryTweakData:_init_siltstone()
 	self.parts.wpn_fps_snp_siltstone_b_standard = {
 		a_obj = "a_b",
@@ -53645,7 +53662,7 @@ function WeaponFactoryTweakData:_init_siltstone()
 	self.wpn_fps_snp_siltstone_npc.unit = "units/pd2_dlc_grv/weapons/wpn_fps_snp_siltstone/wpn_fps_snp_siltstone_npc"
 end
 
--- Lines 31328-31538
+-- Lines 31350-31560
 function WeaponFactoryTweakData:_init_flint()
 	self.parts.wpn_fps_ass_flint_b_standard = {
 		a_obj = "a_b",
@@ -53887,7 +53904,7 @@ function WeaponFactoryTweakData:_init_flint()
 	self.wpn_fps_ass_flint_npc.unit = "units/pd2_dlc_grv/weapons/wpn_fps_ass_flint/wpn_fps_ass_flint_npc"
 end
 
--- Lines 31540-31765
+-- Lines 31562-31787
 function WeaponFactoryTweakData:_init_coal()
 	self.parts.wpn_fps_smg_coal_b_standard = {
 		a_obj = "a_b",
@@ -54169,7 +54186,7 @@ function WeaponFactoryTweakData:_init_coal()
 	self.wpn_fps_smg_coal_npc.unit = "units/pd2_dlc_grv/weapons/wpn_fps_smg_coal/wpn_fps_smg_coal_npc"
 end
 
--- Lines 31771-32007
+-- Lines 31793-32029
 function WeaponFactoryTweakData:_init_varmods()
 	self.parts.wpn_fps_upg_o_xpsg33_magnifier = {
 		a_obj = "a_magnifier",
@@ -54547,7 +54564,7 @@ function WeaponFactoryTweakData:_init_varmods()
 	self.parts.wpn_fps_upg_o_45rds_v2.third_unit = "units/pd2_dlc_flip/weapons/wpn_fps_upg_o_45rds_v2/wpn_third_upg_o_45rds_v2"
 end
 
--- Lines 32015-32122
+-- Lines 32037-32144
 function WeaponFactoryTweakData:_init_lemming()
 	self.parts.wpn_fps_pis_lemming_b_standard = {
 		a_obj = "a_b",
@@ -54760,7 +54777,7 @@ function WeaponFactoryTweakData:_init_lemming()
 	self.wpn_fps_pis_lemming_npc.unit = "units/pd2_dlc_fi7/weapons/wpn_fps_pis_lemming/wpn_fps_pis_lemming_npc"
 end
 
--- Lines 32126-32263
+-- Lines 32148-32285
 function WeaponFactoryTweakData:_init_type54()
 	self.parts.wpn_fps_pis_type54_b_standard = {
 		a_obj = "a_b",
@@ -55040,7 +55057,7 @@ function WeaponFactoryTweakData:_init_type54()
 	self.wpn_fps_pis_type54_npc.unit = "units/pd2_dlc_tawp/weapons/wpn_fps_pis_type54/wpn_fps_pis_type54_npc"
 end
 
--- Lines 32265-32360
+-- Lines 32287-32382
 function WeaponFactoryTweakData:_init_x_type54()
 	self.parts.wpn_fps_pis_x_type54_underbarrel = {
 		a_obj = "a_fl",
@@ -55207,7 +55224,7 @@ function WeaponFactoryTweakData:_init_x_type54()
 	self.wpn_fps_pis_x_type54_npc.unit = "units/pd2_dlc_tawp/weapons/wpn_fps_pis_x_type54/wpn_fps_pis_x_type54_npc"
 end
 
--- Lines 32362-32488
+-- Lines 32384-32510
 function WeaponFactoryTweakData:_init_rsh12()
 	self.parts.wpn_fps_pis_rsh12_body_standard = {
 		a_obj = "a_body",
@@ -55436,7 +55453,7 @@ function WeaponFactoryTweakData:_init_rsh12()
 	self.wpn_fps_pis_rsh12_npc.unit = "units/pd2_dlc_tawp/weapons/wpn_fps_pis_rsh12/wpn_fps_pis_rsh12_npc"
 end
 
--- Lines 32492-32717
+-- Lines 32514-32739
 function WeaponFactoryTweakData:_init_shepheard()
 	self.parts.wpn_fps_smg_shepheard_b_standard = {
 		a_obj = "a_b",
@@ -55717,7 +55734,7 @@ function WeaponFactoryTweakData:_init_shepheard()
 	self.wpn_fps_smg_shepheard_npc.unit = "units/pd2_dlc_joy/weapons/wpn_fps_smg_shepheard/wpn_fps_smg_shepheard_npc"
 end
 
--- Lines 32720-32800
+-- Lines 32742-32822
 function WeaponFactoryTweakData:_init_x_shepheard()
 	self.parts.wpn_fps_smg_shepheard_s_no_vanilla = deep_clone(self.parts.wpn_fps_smg_shepheard_s_no)
 	self.parts.wpn_fps_smg_shepheard_s_no_vanilla.stats = nil
@@ -55793,7 +55810,7 @@ function WeaponFactoryTweakData:_init_x_shepheard()
 	self.wpn_fps_smg_x_shepheard_npc.unit = "units/pd2_dlc_joy/weapons/wpn_fps_smg_x_shepheard/wpn_fps_smg_x_shepheard_npc"
 end
 
--- Lines 32804-32897
+-- Lines 32826-32919
 function WeaponFactoryTweakData:_init_chinchilla()
 	self.parts.wpn_fps_pis_chinchilla_b_standard = {
 		a_obj = "a_b",
@@ -55999,7 +56016,7 @@ function WeaponFactoryTweakData:_init_chinchilla()
 	self.wpn_fps_pis_chinchilla_npc.unit = "units/pd2_dlc_max/weapons/wpn_fps_pis_chinchilla/wpn_fps_pis_chinchilla_npc"
 end
 
--- Lines 32899-32936
+-- Lines 32921-32958
 function WeaponFactoryTweakData:_init_x_chinchilla()
 	self.wpn_fps_pis_x_chinchilla = {}
 	self.wpn_fps_pis_x_chinchilla.optional_types = {
@@ -56045,7 +56062,7 @@ function WeaponFactoryTweakData:_init_x_chinchilla()
 	self.wpn_fps_pis_x_chinchilla_npc.unit = "units/pd2_dlc_max/weapons/wpn_fps_pis_x_chinchilla/wpn_fps_pis_x_chinchilla_npc"
 end
 
--- Lines 32940-33022
+-- Lines 32962-33044
 function WeaponFactoryTweakData:_init_model3()
 	self.parts.wpn_fps_pis_model3_b_standard = {
 		a_obj = "a_b",
@@ -56223,7 +56240,7 @@ function WeaponFactoryTweakData:_init_model3()
 	self.wpn_fps_pis_model3_npc.unit = "units/pd2_dlc_mxw/weapons/wpn_fps_pis_model3/wpn_fps_pis_model3_npc"
 end
 
--- Lines 33024-33057
+-- Lines 33046-33079
 function WeaponFactoryTweakData:_init_x_model3()
 	self.wpn_fps_pis_x_model3 = {}
 	self.wpn_fps_pis_x_model3.optional_types = {
@@ -56265,7 +56282,7 @@ function WeaponFactoryTweakData:_init_x_model3()
 	self.wpn_fps_pis_x_model3_npc.unit = "units/pd2_dlc_mxw/weapons/wpn_fps_pis_x_model3/wpn_fps_pis_x_model3_npc"
 end
 
--- Lines 33062-33157
+-- Lines 33084-33179
 function WeaponFactoryTweakData:_init_breech()
 	self.parts.wpn_fps_pis_breech_b_reinforced = {
 		a_obj = "a_b",
@@ -56479,7 +56496,7 @@ function WeaponFactoryTweakData:_init_breech()
 	self.wpn_fps_pis_breech_npc.unit = "units/pd2_dlc_old/weapons/wpn_fps_pis_breech/wpn_fps_pis_breech_npc"
 end
 
--- Lines 33160-33360
+-- Lines 33182-33382
 function WeaponFactoryTweakData:_init_ching()
 	self.parts.wpn_fps_ass_ching_b_short = {
 		a_obj = "a_b",
@@ -56828,7 +56845,7 @@ function WeaponFactoryTweakData:_init_ching()
 	self.wpn_fps_ass_ching_npc.unit = "units/pd2_dlc_old/weapons/wpn_fps_ass_ching/wpn_fps_ass_ching_npc"
 end
 
--- Lines 33363-33522
+-- Lines 33385-33544
 function WeaponFactoryTweakData:_init_erma()
 	self.parts.wpn_fps_smg_erma_b_standard = {
 		a_obj = "a_b",
@@ -57086,7 +57103,7 @@ function WeaponFactoryTweakData:_init_erma()
 	self.wpn_fps_smg_erma_npc.unit = "units/pd2_dlc_old/weapons/wpn_fps_smg_erma/wpn_fps_smg_erma_npc"
 end
 
--- Lines 33526-33744
+-- Lines 33548-33766
 function WeaponFactoryTweakData:_init_ecp()
 	self.parts.wpn_fps_bow_ecp_s_standard = {
 		a_obj = "a_s",
@@ -57366,7 +57383,7 @@ function WeaponFactoryTweakData:_init_ecp()
 	self.wpn_fps_bow_ecp_npc.unit = "units/pd2_dlc_ecp/weapons/wpn_fps_bow_ecp/wpn_fps_bow_ecp_npc"
 end
 
--- Lines 33751-33883
+-- Lines 33773-33905
 function WeaponFactoryTweakData:_init_shrew()
 	self.parts.wpn_fps_pis_shrew_b_barrel = {
 		a_obj = "a_b",
@@ -57649,7 +57666,7 @@ function WeaponFactoryTweakData:_init_shrew()
 	self.wpn_fps_pis_shrew_npc.unit = "units/pd2_dlc_myh/weapons/wpn_fps_pis_shrew/wpn_fps_pis_shrew_npc"
 end
 
--- Lines 33885-33968
+-- Lines 33907-33990
 function WeaponFactoryTweakData:_init_x_shrew()
 	self.wpn_fps_pis_x_shrew = {}
 	self.wpn_fps_pis_x_shrew.unit = "units/pd2_dlc_myh/weapons/wpn_fps_pis_x_shrew/wpn_fps_pis_x_shrew"
@@ -57787,7 +57804,7 @@ function WeaponFactoryTweakData:_init_x_shrew()
 	self.wpn_fps_pis_x_shrew_npc.unit = "units/pd2_dlc_myh/weapons/wpn_fps_pis_x_shrew/wpn_fps_pis_x_shrew_npc"
 end
 
--- Lines 33974-34112
+-- Lines 33996-34134
 function WeaponFactoryTweakData:_init_basset()
 	self.parts.wpn_fps_sho_basset_b_short = {
 		a_obj = "a_b",
@@ -58004,7 +58021,7 @@ function WeaponFactoryTweakData:_init_basset()
 	self.wpn_fps_sho_basset_npc.unit = "units/pd2_dlc_dsg/weapons/wpn_fps_sho_basset/wpn_fps_sho_basset_npc"
 end
 
--- Lines 34115-34163
+-- Lines 34137-34185
 function WeaponFactoryTweakData:_init_x_basset()
 	self.wpn_fps_sho_x_basset = {}
 	self.wpn_fps_sho_x_basset.unit = "units/pd2_dlc_dsg/weapons/wpn_fps_sho_x_basset/wpn_fps_sho_x_basset"
@@ -58064,7 +58081,7 @@ function WeaponFactoryTweakData:_init_x_basset()
 	self.wpn_fps_sho_x_basset_npc.unit = "units/pd2_dlc_dsg/weapons/wpn_fps_sho_x_basset/wpn_fps_sho_x_basset_npc"
 end
 
--- Lines 34168-34214
+-- Lines 34190-34236
 function WeaponFactoryTweakData:_init_icc()
 	self.parts.wpn_fps_smg_p90_body_boxy = {
 		a_obj = "a_body",
@@ -58176,7 +58193,7 @@ function WeaponFactoryTweakData:_init_icc()
 	self.parts.wpn_fps_pis_judge_body_modern.third_unit = "units/pd2_dlc_icc/weapons/wpn_fps_pis_judge_body_modern/wpn_third_pis_judge_body_modern"
 end
 
--- Lines 34219-34357
+-- Lines 34241-34379
 function WeaponFactoryTweakData:_init_corgi()
 	self.parts.wpn_fps_ass_corgi_body_lower_standard = {
 		a_obj = "a_body",
@@ -58394,7 +58411,7 @@ function WeaponFactoryTweakData:_init_corgi()
 	self.wpn_fps_ass_corgi_npc.unit = "units/pd2_dlc_rvd/weapons/wpn_fps_ass_corgi/wpn_fps_ass_corgi_npc"
 end
 
--- Lines 34362-34487
+-- Lines 34384-34509
 function WeaponFactoryTweakData:_init_slap()
 	self.parts.wpn_fps_gre_slap_b_standard = {
 		a_obj = "a_b",
@@ -58589,7 +58606,7 @@ function WeaponFactoryTweakData:_init_slap()
 	self.wpn_fps_gre_slap_npc.unit = "units/pd2_dlc_fgl/weapons/wpn_fps_gre_slap/wpn_fps_gre_slap_npc"
 end
 
--- Lines 34495-34590
+-- Lines 34517-34612
 function WeaponFactoryTweakData:_init_x_coal()
 	self.wpn_fps_smg_x_coal = {}
 	self.wpn_fps_smg_x_coal.unit = "units/pd2_dlc_osa/weapons/wpn_fps_smg_x_coal/wpn_fps_smg_x_coal"
@@ -58672,7 +58689,7 @@ function WeaponFactoryTweakData:_init_x_coal()
 	self.wpn_fps_smg_x_coal_npc.unit = "units/pd2_dlc_osa/weapons/wpn_fps_smg_x_coal/wpn_fps_smg_x_coal_npc"
 end
 
--- Lines 34592-34667
+-- Lines 34614-34689
 function WeaponFactoryTweakData:_init_x_baka()
 	self.parts.wpn_fps_smg_baka_s_folded_vanilla = deep_clone(self.parts.wpn_fps_smg_baka_s_folded)
 	self.parts.wpn_fps_smg_baka_s_folded_vanilla.stats = nil
@@ -58750,7 +58767,7 @@ function WeaponFactoryTweakData:_init_x_baka()
 	self.wpn_fps_smg_x_baka_npc.unit = "units/pd2_dlc_osa/weapons/wpn_fps_smg_x_baka/wpn_fps_smg_x_baka_npc"
 end
 
--- Lines 34669-34731
+-- Lines 34691-34753
 function WeaponFactoryTweakData:_init_x_cobray()
 	self.wpn_fps_smg_x_cobray = {}
 	self.wpn_fps_smg_x_cobray.unit = "units/pd2_dlc_osa/weapons/wpn_fps_smg_x_cobray/wpn_fps_smg_x_cobray"
@@ -58816,7 +58833,7 @@ function WeaponFactoryTweakData:_init_x_cobray()
 	self.wpn_fps_smg_x_cobray_npc.unit = "units/pd2_dlc_osa/weapons/wpn_fps_smg_x_cobray/wpn_fps_smg_x_cobray_npc"
 end
 
--- Lines 34733-34795
+-- Lines 34755-34817
 function WeaponFactoryTweakData:_init_x_erma()
 	self.parts.wpn_fps_smg_erma_s_folded_vanilla = deep_clone(self.parts.wpn_fps_smg_erma_s_folded)
 	self.parts.wpn_fps_smg_erma_s_folded_vanilla.stats = nil
@@ -58876,7 +58893,7 @@ function WeaponFactoryTweakData:_init_x_erma()
 	self.wpn_fps_smg_x_erma_npc.unit = "units/pd2_dlc_osa/weapons/wpn_fps_smg_x_erma/wpn_fps_smg_x_erma_npc"
 end
 
--- Lines 34797-34875
+-- Lines 34819-34897
 function WeaponFactoryTweakData:_init_x_hajk()
 	self.wpn_fps_smg_x_hajk = {}
 	self.wpn_fps_smg_x_hajk.unit = "units/pd2_dlc_osa/weapons/wpn_fps_smg_x_hajk/wpn_fps_smg_x_hajk"
@@ -59015,7 +59032,7 @@ function WeaponFactoryTweakData:_init_x_hajk()
 	self.wpn_fps_smg_x_hajk_npc.unit = "units/pd2_dlc_osa/weapons/wpn_fps_smg_x_hajk/wpn_fps_smg_x_hajk_npc"
 end
 
--- Lines 34877-34941
+-- Lines 34899-34963
 function WeaponFactoryTweakData:_init_x_m45()
 	self.parts.wpn_fps_smg_m45_s_folded_vanilla = deep_clone(self.parts.wpn_fps_smg_m45_s_folded)
 	self.parts.wpn_fps_smg_m45_s_folded_vanilla.stats = nil
@@ -59112,7 +59129,7 @@ function WeaponFactoryTweakData:_init_x_m45()
 	self.wpn_fps_smg_x_m45_npc.unit = "units/pd2_dlc_osa/weapons/wpn_fps_smg_x_m45/wpn_fps_smg_x_m45_npc"
 end
 
--- Lines 34943-35018
+-- Lines 34965-35040
 function WeaponFactoryTweakData:_init_x_m1928()
 	self.parts.wpn_fps_smg_thompson_stock_nostock_vanilla = deep_clone(self.parts.wpn_fps_smg_thompson_stock_nostock)
 	self.parts.wpn_fps_smg_thompson_stock_nostock_vanilla.stats = nil
@@ -59205,7 +59222,7 @@ function WeaponFactoryTweakData:_init_x_m1928()
 	self.wpn_fps_smg_x_m1928_npc.unit = "units/pd2_dlc_osa/weapons/wpn_fps_smg_x_m1928/wpn_fps_smg_x_m1928_npc"
 end
 
--- Lines 35020-35107
+-- Lines 35042-35129
 function WeaponFactoryTweakData:_init_x_mac10()
 	self.wpn_fps_smg_x_mac10 = {}
 	self.wpn_fps_smg_x_mac10.unit = "units/pd2_dlc_osa/weapons/wpn_fps_smg_x_mac10/wpn_fps_smg_x_mac10"
@@ -59285,7 +59302,7 @@ function WeaponFactoryTweakData:_init_x_mac10()
 	self.wpn_fps_smg_x_mac10_npc.unit = "units/pd2_dlc_osa/weapons/wpn_fps_smg_x_mac10/wpn_fps_smg_x_mac10_npc"
 end
 
--- Lines 35109-35156
+-- Lines 35131-35178
 function WeaponFactoryTweakData:_init_x_mp7()
 	self.wpn_fps_smg_x_mp7 = {}
 	self.wpn_fps_smg_x_mp7.unit = "units/pd2_dlc_osa/weapons/wpn_fps_smg_x_mp7/wpn_fps_smg_x_mp7"
@@ -59348,7 +59365,7 @@ function WeaponFactoryTweakData:_init_x_mp7()
 	self.wpn_fps_smg_x_mp7_npc.unit = "units/pd2_dlc_osa/weapons/wpn_fps_smg_x_mp7/wpn_fps_smg_x_mp7_npc"
 end
 
--- Lines 35158-35212
+-- Lines 35180-35234
 function WeaponFactoryTweakData:_init_x_mp9()
 	self.wpn_fps_smg_x_mp9 = {}
 	self.wpn_fps_smg_x_mp9.unit = "units/pd2_dlc_osa/weapons/wpn_fps_smg_x_mp9/wpn_fps_smg_x_mp9"
@@ -59410,7 +59427,7 @@ function WeaponFactoryTweakData:_init_x_mp9()
 	self.wpn_fps_smg_x_mp9_npc.unit = "units/pd2_dlc_osa/weapons/wpn_fps_smg_x_mp9/wpn_fps_smg_x_mp9_npc"
 end
 
--- Lines 35214-35338
+-- Lines 35236-35360
 function WeaponFactoryTweakData:_init_x_olympic()
 	self.wpn_fps_smg_x_olympic = {}
 	self.wpn_fps_smg_x_olympic.unit = "units/pd2_dlc_osa/weapons/wpn_fps_smg_x_olympic/wpn_fps_smg_x_olympic"
@@ -59548,7 +59565,7 @@ function WeaponFactoryTweakData:_init_x_olympic()
 	self.wpn_fps_smg_x_olympic_npc.unit = "units/pd2_dlc_osa/weapons/wpn_fps_smg_x_olympic/wpn_fps_smg_x_olympic_npc"
 end
 
--- Lines 35340-35395
+-- Lines 35362-35417
 function WeaponFactoryTweakData:_init_x_p90()
 	self.wpn_fps_smg_x_p90 = {}
 	self.wpn_fps_smg_x_p90.unit = "units/pd2_dlc_osa/weapons/wpn_fps_smg_x_p90/wpn_fps_smg_x_p90"
@@ -59613,7 +59630,7 @@ function WeaponFactoryTweakData:_init_x_p90()
 	self.wpn_fps_smg_x_p90_npc.unit = "units/pd2_dlc_osa/weapons/wpn_fps_smg_x_p90/wpn_fps_smg_x_p90_npc"
 end
 
--- Lines 35397-35457
+-- Lines 35419-35479
 function WeaponFactoryTweakData:_init_x_polymer()
 	self.wpn_fps_smg_x_polymer = {}
 	self.wpn_fps_smg_x_polymer.unit = "units/pd2_dlc_osa/weapons/wpn_fps_smg_x_polymer/wpn_fps_smg_x_polymer"
@@ -59677,7 +59694,7 @@ function WeaponFactoryTweakData:_init_x_polymer()
 	self.wpn_fps_smg_x_polymer_npc.unit = "units/pd2_dlc_osa/weapons/wpn_fps_smg_x_polymer/wpn_fps_smg_x_polymer_npc"
 end
 
--- Lines 35459-35532
+-- Lines 35481-35554
 function WeaponFactoryTweakData:_init_x_schakal()
 	self.parts.wpn_fps_smg_schakal_s_folded_vanilla = deep_clone(self.parts.wpn_fps_smg_schakal_s_folded)
 	self.parts.wpn_fps_smg_schakal_s_folded_vanilla.stats = nil
@@ -59766,7 +59783,7 @@ function WeaponFactoryTweakData:_init_x_schakal()
 	self.wpn_fps_smg_x_schakal_npc.unit = "units/pd2_dlc_osa/weapons/wpn_fps_smg_x_schakal/wpn_fps_smg_x_schakal_npc"
 end
 
--- Lines 35534-35601
+-- Lines 35556-35623
 function WeaponFactoryTweakData:_init_x_scorpion()
 	self.wpn_fps_smg_x_scorpion = {}
 	self.wpn_fps_smg_x_scorpion.unit = "units/pd2_dlc_osa/weapons/wpn_fps_smg_x_scorpion/wpn_fps_smg_x_scorpion"
@@ -59858,7 +59875,7 @@ function WeaponFactoryTweakData:_init_x_scorpion()
 	self.wpn_fps_smg_x_scorpion_npc.unit = "units/pd2_dlc_osa/weapons/wpn_fps_smg_x_scorpion/wpn_fps_smg_x_scorpion_npc"
 end
 
--- Lines 35603-35669
+-- Lines 35625-35691
 function WeaponFactoryTweakData:_init_x_sterling()
 	self.parts.wpn_fps_smg_sterling_s_folded_vanilla = deep_clone(self.parts.wpn_fps_smg_sterling_s_folded)
 	self.parts.wpn_fps_smg_sterling_s_folded_vanilla.stats = nil
@@ -59968,7 +59985,7 @@ function WeaponFactoryTweakData:_init_x_sterling()
 	self.wpn_fps_smg_x_sterling_npc.unit = "units/pd2_dlc_osa/weapons/wpn_fps_smg_x_sterling/wpn_fps_smg_x_sterling_npc"
 end
 
--- Lines 35671-35721
+-- Lines 35693-35743
 function WeaponFactoryTweakData:_init_x_tec9()
 	self.wpn_fps_smg_x_tec9 = {}
 	self.wpn_fps_smg_x_tec9.unit = "units/pd2_dlc_osa/weapons/wpn_fps_smg_x_tec9/wpn_fps_smg_x_tec9"
@@ -60029,7 +60046,7 @@ function WeaponFactoryTweakData:_init_x_tec9()
 	self.wpn_fps_smg_x_tec9_npc.unit = "units/pd2_dlc_osa/weapons/wpn_fps_smg_x_tec9/wpn_fps_smg_x_tec9_npc"
 end
 
--- Lines 35723-35789
+-- Lines 35745-35811
 function WeaponFactoryTweakData:_init_x_uzi()
 	self.parts.wpn_fps_smg_uzi_s_standard_vanilla = deep_clone(self.parts.wpn_fps_smg_uzi_s_standard)
 	self.parts.wpn_fps_smg_uzi_s_standard_vanilla.stats = nil
@@ -60110,7 +60127,7 @@ function WeaponFactoryTweakData:_init_x_uzi()
 	self.wpn_fps_smg_x_uzi_npc.unit = "units/pd2_dlc_osa/weapons/wpn_fps_smg_x_uzi/wpn_fps_smg_x_uzi_npc"
 end
 
--- Lines 35798-35848
+-- Lines 35820-35870
 function WeaponFactoryTweakData:_init_x_2006m()
 	self.wpn_fps_pis_x_2006m = {}
 	self.wpn_fps_pis_x_2006m.unit = "units/pd2_dlc_osa/weapons/wpn_fps_pis_x_2006m/wpn_fps_pis_x_2006m"
@@ -60176,7 +60193,7 @@ function WeaponFactoryTweakData:_init_x_2006m()
 	self.wpn_fps_pis_x_2006m_npc.unit = "units/pd2_dlc_osa/weapons/wpn_fps_pis_x_2006m/wpn_fps_pis_x_2006m_npc"
 end
 
--- Lines 35851-35901
+-- Lines 35873-35923
 function WeaponFactoryTweakData:_init_x_breech()
 	self.wpn_fps_pis_x_breech = {}
 	self.wpn_fps_pis_x_breech.unit = "units/pd2_dlc_osa/weapons/wpn_fps_pis_x_breech/wpn_fps_pis_x_breech"
@@ -60276,7 +60293,7 @@ function WeaponFactoryTweakData:_init_x_breech()
 	self.wpn_fps_pis_x_breech_npc.unit = "units/pd2_dlc_osa/weapons/wpn_fps_pis_x_breech/wpn_fps_pis_x_breech_npc"
 end
 
--- Lines 35905-35976
+-- Lines 35927-35998
 function WeaponFactoryTweakData:_init_x_c96()
 	self.wpn_fps_pis_x_c96 = {}
 	self.wpn_fps_pis_x_c96.unit = "units/pd2_dlc_osa/weapons/wpn_fps_pis_x_c96/wpn_fps_pis_x_c96"
@@ -60374,7 +60391,7 @@ function WeaponFactoryTweakData:_init_x_c96()
 	self.wpn_fps_pis_x_c96_npc.unit = "units/pd2_dlc_osa/weapons/wpn_fps_pis_x_c96/wpn_fps_pis_x_c96_npc"
 end
 
--- Lines 35979-36043
+-- Lines 36001-36065
 function WeaponFactoryTweakData:_init_x_g18c()
 	self.wpn_fps_pis_x_g18c = {}
 	self.wpn_fps_pis_x_g18c.unit = "units/pd2_dlc_osa/weapons/wpn_fps_pis_x_g18c/wpn_fps_pis_x_g18c"
@@ -60463,7 +60480,7 @@ function WeaponFactoryTweakData:_init_x_g18c()
 	self.wpn_fps_pis_x_g18c_npc.unit = "units/pd2_dlc_osa/weapons/wpn_fps_pis_x_g18c/wpn_fps_pis_x_g18c_npc"
 end
 
--- Lines 36046-36119
+-- Lines 36068-36141
 function WeaponFactoryTweakData:_init_x_hs2000()
 	self.wpn_fps_pis_x_hs2000 = {}
 	self.wpn_fps_pis_x_hs2000.unit = "units/pd2_dlc_osa/weapons/wpn_fps_pis_x_hs2000/wpn_fps_pis_x_hs2000"
@@ -60587,7 +60604,7 @@ function WeaponFactoryTweakData:_init_x_hs2000()
 	self.wpn_fps_pis_x_hs2000_npc.unit = "units/pd2_dlc_osa/weapons/wpn_fps_pis_x_hs2000/wpn_fps_pis_x_hs2000_npc"
 end
 
--- Lines 36121-36194
+-- Lines 36143-36216
 function WeaponFactoryTweakData:_init_x_p226()
 	self.wpn_fps_pis_x_p226 = {}
 	self.wpn_fps_pis_x_p226.unit = "units/pd2_dlc_osa/weapons/wpn_fps_pis_x_p226/wpn_fps_pis_x_p226"
@@ -60716,7 +60733,7 @@ function WeaponFactoryTweakData:_init_x_p226()
 	self.wpn_fps_pis_x_p226_npc.unit = "units/pd2_dlc_osa/weapons/wpn_fps_pis_x_p226/wpn_fps_pis_x_p226_npc"
 end
 
--- Lines 36196-36264
+-- Lines 36218-36286
 function WeaponFactoryTweakData:_init_x_pl14()
 	self.wpn_fps_pis_x_pl14 = {}
 	self.wpn_fps_pis_x_pl14.unit = "units/pd2_dlc_osa/weapons/wpn_fps_pis_x_pl14/wpn_fps_pis_x_pl14"
@@ -60838,7 +60855,7 @@ function WeaponFactoryTweakData:_init_x_pl14()
 	self.wpn_fps_pis_x_pl14_npc.unit = "units/pd2_dlc_osa/weapons/wpn_fps_pis_x_pl14/wpn_fps_pis_x_pl14_npc"
 end
 
--- Lines 36266-36344
+-- Lines 36288-36366
 function WeaponFactoryTweakData:_init_x_ppk()
 	self.wpn_fps_pis_x_ppk = {}
 	self.wpn_fps_pis_x_ppk.unit = "units/pd2_dlc_osa/weapons/wpn_fps_pis_x_ppk/wpn_fps_pis_x_ppk"
@@ -60977,7 +60994,7 @@ function WeaponFactoryTweakData:_init_x_ppk()
 	self.wpn_fps_pis_x_ppk_npc.unit = "units/pd2_dlc_osa/weapons/wpn_fps_pis_x_ppk/wpn_fps_pis_x_ppk_npc"
 end
 
--- Lines 36346-36376
+-- Lines 36368-36398
 function WeaponFactoryTweakData:_init_x_rage()
 	self.wpn_fps_pis_x_rage = {}
 	self.wpn_fps_pis_x_rage.unit = "units/pd2_dlc_osa/weapons/wpn_fps_pis_x_rage/wpn_fps_pis_x_rage"
@@ -61029,7 +61046,7 @@ function WeaponFactoryTweakData:_init_x_rage()
 	self.wpn_fps_pis_x_rage_npc.unit = "units/pd2_dlc_osa/weapons/wpn_fps_pis_x_rage/wpn_fps_pis_x_rage_npc"
 end
 
--- Lines 36378-36463
+-- Lines 36400-36485
 function WeaponFactoryTweakData:_init_x_sparrow()
 	self.wpn_fps_pis_x_sparrow = {}
 	self.wpn_fps_pis_x_sparrow.unit = "units/pd2_dlc_osa/weapons/wpn_fps_pis_x_sparrow/wpn_fps_pis_x_sparrow"
@@ -61173,7 +61190,7 @@ function WeaponFactoryTweakData:_init_x_sparrow()
 	self.wpn_fps_pis_x_sparrow_npc.unit = "units/pd2_dlc_osa/weapons/wpn_fps_pis_x_sparrow/wpn_fps_pis_x_sparrow_npc"
 end
 
--- Lines 36465-36558
+-- Lines 36487-36580
 function WeaponFactoryTweakData:_init_x_judge()
 	self.wpn_fps_pis_x_judge = {}
 	self.wpn_fps_pis_x_judge.unit = "units/pd2_dlc_osa/weapons/wpn_fps_sho_x_judge/wpn_fps_pis_x_judge"
@@ -61335,7 +61352,7 @@ function WeaponFactoryTweakData:_init_x_judge()
 	self.wpn_fps_pis_x_judge_npc.unit = "units/pd2_dlc_osa/weapons/wpn_fps_sho_x_judge/wpn_fps_pis_x_judge_npc"
 end
 
--- Lines 36560-36607
+-- Lines 36582-36629
 function WeaponFactoryTweakData:_init_x_rota()
 	self.wpn_fps_sho_x_rota = {}
 	self.wpn_fps_sho_x_rota.unit = "units/pd2_dlc_osa/weapons/wpn_fps_sho_x_rota/wpn_fps_sho_x_rota"
@@ -61389,7 +61406,7 @@ function WeaponFactoryTweakData:_init_x_rota()
 	self.wpn_fps_sho_x_rota_npc.unit = "units/pd2_dlc_osa/weapons/wpn_fps_sho_x_rota/wpn_fps_sho_x_rota_npc"
 end
 
--- Lines 36712-36793
+-- Lines 36734-36815
 function WeaponFactoryTweakData:_init_shuno()
 	self.parts.wpn_fps_lmg_shuno_body_standard = {
 		a_obj = "a_body",
@@ -61551,7 +61568,7 @@ function WeaponFactoryTweakData:_init_shuno()
 	self.wpn_fps_lmg_shuno_npc.unit = "units/pd2_dlc_dmg/weapons/wpn_fps_lmg_shuno/wpn_fps_lmg_shuno_npc"
 end
 
--- Lines 36798-36852
+-- Lines 36820-36874
 function WeaponFactoryTweakData:_init_money()
 	self.parts.wpn_fps_fla_money_b_standard = {
 		a_obj = "a_b",
@@ -61633,7 +61650,7 @@ function WeaponFactoryTweakData:_init_money()
 	self.wpn_fps_fla_money_npc.unit = "units/pd2_dlc_pda8/weapons/wpn_fps_fla_money/wpn_fps_fla_money_npc"
 end
 
--- Lines 36859-36928
+-- Lines 36881-36950
 function WeaponFactoryTweakData:_init_system()
 	self.parts.wpn_fps_fla_system_b_standard = {
 		a_obj = "a_b",
@@ -61781,7 +61798,7 @@ function WeaponFactoryTweakData:_init_system()
 	self.wpn_fps_fla_system_npc.unit = "units/pd2_dlc_sft/weapons/wpn_fps_fla_system/wpn_fps_fla_system_npc"
 end
 
--- Lines 36933-37094
+-- Lines 36955-37116
 function WeaponFactoryTweakData:_init_komodo()
 	self.parts.wpn_fps_ass_komodo_b_standard = {
 		a_obj = "a_b",
@@ -62021,7 +62038,7 @@ function WeaponFactoryTweakData:_init_komodo()
 	self.wpn_fps_ass_komodo_npc.unit = "units/pd2_dlc_tar/weapons/wpn_fps_ass_komodo/wpn_fps_ass_komodo_npc"
 end
 
--- Lines 37099-37273
+-- Lines 37121-37295
 function WeaponFactoryTweakData:_init_elastic()
 	self.parts.wpn_fps_bow_elastic_bow = {
 		a_obj = "a_body",
@@ -62347,7 +62364,7 @@ function WeaponFactoryTweakData:_init_elastic()
 	self.wpn_fps_bow_elastic_npc.skip_thq_parts = true
 end
 
--- Lines 37278-37412
+-- Lines 37300-37434
 function WeaponFactoryTweakData:_init_legacy()
 	self.parts.wpn_fps_pis_legacy_b_standard = {
 		a_obj = "a_b",
@@ -62610,7 +62627,7 @@ function WeaponFactoryTweakData:_init_legacy()
 	self.wpn_fps_pis_legacy_npc.unit = "units/pd2_dlc_khp/weapons/wpn_fps_pis_legacy/wpn_fps_pis_legacy_npc"
 end
 
--- Lines 37416-37502
+-- Lines 37438-37524
 function WeaponFactoryTweakData:_init_x_legacy()
 	self.wpn_fps_pis_x_legacy = {}
 	self.wpn_fps_pis_x_legacy.unit = "units/pd2_dlc_khp/weapons/wpn_fps_pis_x_legacy/wpn_fps_pis_x_legacy"
@@ -62754,7 +62771,7 @@ function WeaponFactoryTweakData:_init_x_legacy()
 	self.wpn_fps_pis_x_legacy_npc.unit = "units/pd2_dlc_khp/weapons/wpn_fps_pis_x_legacy/wpn_fps_pis_x_legacy_npc"
 end
 
--- Lines 37505-37583
+-- Lines 37527-37605
 function WeaponFactoryTweakData:_init_coach()
 	self.parts.wpn_fps_sho_coach_barrel_lock = {
 		a_obj = "a_barrel_lock",
@@ -62910,7 +62927,7 @@ function WeaponFactoryTweakData:_init_coach()
 	self.wpn_fps_sho_coach_npc.unit = "units/pd2_dlc_sdb/weapons/wpn_fps_sho_coach/wpn_fps_sho_coach_npc"
 end
 
--- Lines 37589-38070
+-- Lines 37611-38092
 function WeaponFactoryTweakData:_init_mwm()
 	self.parts.wpn_fps_upg_ns_ass_smg_v6 = {
 		a_obj = "a_ns",
@@ -63802,7 +63819,7 @@ function WeaponFactoryTweakData:_init_mwm()
 	self.parts.wpn_fps_upg_ns_pis_typhoon.third_unit = "units/pd2_dlc_mwm/weapons/wpn_fps_upg_ns_pis_typhoon/wpn_third_upg_ns_pis_typhoon"
 end
 
--- Lines 38075-38257
+-- Lines 38097-38279
 function WeaponFactoryTweakData:_init_beer()
 	self.parts.wpn_fps_pis_beer_b_robo = {
 		a_obj = "a_b",
@@ -64172,7 +64189,7 @@ function WeaponFactoryTweakData:_init_beer()
 	self.wpn_fps_pis_beer_npc.unit = "units/pd2_dlc_afp/weapons/wpn_fps_pis_beer/wpn_fps_pis_beer_npc"
 end
 
--- Lines 38259-38339
+-- Lines 38281-38361
 function WeaponFactoryTweakData:_init_x_beer()
 	self.wpn_fps_pis_x_beer = {}
 	self.wpn_fps_pis_x_beer.unit = "units/pd2_dlc_afp/weapons/wpn_fps_pis_x_beer/wpn_fps_pis_x_beer"
@@ -64307,7 +64324,7 @@ function WeaponFactoryTweakData:_init_x_beer()
 	self.wpn_fps_pis_x_beer_npc.unit = "units/pd2_dlc_afp/weapons/wpn_fps_pis_x_beer/wpn_fps_pis_x_beer_npc"
 end
 
--- Lines 38341-38501
+-- Lines 38363-38523
 function WeaponFactoryTweakData:_init_czech()
 	self.parts.wpn_fps_pis_czech_b_standard = {
 		a_obj = "a_b",
@@ -64613,7 +64630,7 @@ function WeaponFactoryTweakData:_init_czech()
 	self.wpn_fps_pis_czech_npc.unit = "units/pd2_dlc_afp/weapons/wpn_fps_pis_czech/wpn_fps_pis_czech_npc"
 end
 
--- Lines 38503-38579
+-- Lines 38525-38601
 function WeaponFactoryTweakData:_init_x_czech()
 	self.wpn_fps_pis_x_czech = {}
 	self.wpn_fps_pis_x_czech.unit = "units/pd2_dlc_afp/weapons/wpn_fps_pis_x_czech/wpn_fps_pis_x_czech"
@@ -64736,7 +64753,7 @@ function WeaponFactoryTweakData:_init_x_czech()
 	self.wpn_fps_pis_x_czech_npc.unit = "units/pd2_dlc_afp/weapons/wpn_fps_pis_x_czech/wpn_fps_pis_x_czech_npc"
 end
 
--- Lines 38581-38726
+-- Lines 38603-38748
 function WeaponFactoryTweakData:_init_stech()
 	self.parts.wpn_fps_pis_stech_b_standard = {
 		a_obj = "a_b",
@@ -65017,7 +65034,7 @@ function WeaponFactoryTweakData:_init_stech()
 	self.wpn_fps_pis_stech_npc.unit = "units/pd2_dlc_afp/weapons/wpn_fps_pis_stech/wpn_fps_pis_stech_npc"
 end
 
--- Lines 38728-38809
+-- Lines 38750-38831
 function WeaponFactoryTweakData:_init_x_stech()
 	self.wpn_fps_pis_x_stech = {}
 	self.wpn_fps_pis_x_stech.unit = "units/pd2_dlc_afp/weapons/wpn_fps_pis_x_stech/wpn_fps_pis_x_stech"
@@ -65148,7 +65165,7 @@ function WeaponFactoryTweakData:_init_x_stech()
 	self.wpn_fps_pis_x_stech_npc.unit = "units/pd2_dlc_afp/weapons/wpn_fps_pis_x_stech/wpn_fps_pis_x_stech_npc"
 end
 
--- Lines 38815-38930
+-- Lines 38837-38952
 function WeaponFactoryTweakData:_init_holt()
 	self.parts.wpn_fps_pis_holt_b_standard = {
 		a_obj = "a_b",
@@ -65386,7 +65403,7 @@ function WeaponFactoryTweakData:_init_holt()
 	self.wpn_fps_pis_holt_npc.unit = "units/pd2_dlc_atw/weapons/wpn_fps_pis_holt/wpn_fps_pis_holt_npc"
 end
 
--- Lines 38934-39008
+-- Lines 38956-39030
 function WeaponFactoryTweakData:_init_x_holt()
 	self.wpn_fps_pis_x_holt = {}
 	self.wpn_fps_pis_x_holt.unit = "units/pd2_dlc_atw/weapons/wpn_fps_pis_x_holt/wpn_fps_pis_x_holt"
@@ -65511,7 +65528,7 @@ function WeaponFactoryTweakData:_init_x_holt()
 	self.wpn_fps_pis_x_holt_npc.unit = "units/pd2_dlc_atw/weapons/wpn_fps_pis_x_holt/wpn_fps_pis_x_holt_npc"
 end
 
--- Lines 39011-39033
+-- Lines 39033-39055
 function WeaponFactoryTweakData:_init_atw_mod()
 	self.parts.wpn_fps_ass_m14_b_ruger = {
 		a_obj = "a_b",
@@ -65575,7 +65592,7 @@ function WeaponFactoryTweakData:_init_atw_mod()
 	self.parts.wpn_fps_ass_m14_body_ruger_rail.third_unit = "units/pd2_dlc_atw/weapons/wpn_fps_ass_m14_body_ruger/wpn_third_ass_m14_body_ruger_rail"
 end
 
--- Lines 39035-39155
+-- Lines 39057-39177
 function WeaponFactoryTweakData:_init_m60()
 	self.parts.wpn_fps_lmg_m60_b_standard = {
 		a_obj = "a_b",
@@ -65810,7 +65827,7 @@ function WeaponFactoryTweakData:_init_m60()
 	self.wpn_fps_lmg_m60_npc.unit = "units/pd2_dlc_atw/weapons/wpn_fps_lmg_m60/wpn_fps_lmg_m60_npc"
 end
 
--- Lines 39157-39340
+-- Lines 39179-39362
 function WeaponFactoryTweakData:_init_r700()
 	self.parts.wpn_fps_snp_r700_b_standard = {
 		a_obj = "a_b",
@@ -66173,7 +66190,7 @@ function WeaponFactoryTweakData:_init_r700()
 	self.wpn_fps_snp_r700_npc.unit = "units/pd2_dlc_atw/weapons/wpn_fps_snp_r700/wpn_fps_snp_r700_npc"
 end
 
--- Lines 39343-39445
+-- Lines 39365-39467
 function WeaponFactoryTweakData:_init_maxim9()
 	self.parts.wpn_fps_pis_maxim9_b_standard = {
 		a_obj = "a_b",
@@ -66377,7 +66394,7 @@ function WeaponFactoryTweakData:_init_maxim9()
 	self.wpn_fps_pis_maxim9_npc.unit = "units/pd2_dlc_lawp/weapons/wpn_fps_pis_maxim9/wpn_fps_pis_maxim9_npc"
 end
 
--- Lines 39449-39516
+-- Lines 39471-39538
 function WeaponFactoryTweakData:_init_x_maxim9()
 	self.wpn_fps_pis_x_maxim9 = {}
 	self.wpn_fps_pis_x_maxim9.unit = "units/pd2_dlc_lawp/weapons/wpn_fps_pis_x_maxim9/wpn_fps_pis_x_maxim9"
@@ -66441,7 +66458,7 @@ function WeaponFactoryTweakData:_init_x_maxim9()
 	self.wpn_fps_pis_x_maxim9_npc.unit = "units/pd2_dlc_lawp/weapons/wpn_fps_pis_x_maxim9/wpn_fps_pis_x_maxim9_npc"
 end
 
--- Lines 39518-39754
+-- Lines 39540-39776
 function WeaponFactoryTweakData:_init_fmg9()
 	self.parts.wpn_fps_smg_fmg9_body = {
 		a_obj = "a_upper",
@@ -66909,7 +66926,7 @@ function WeaponFactoryTweakData:_init_fmg9()
 	self.wpn_fps_smg_fmg9_npc.unit = "units/pd2_dlc_lawp/weapons/wpn_fps_smg_fmg9/wpn_fps_smg_fmg9_npc"
 end
 
--- Lines 39756-39880
+-- Lines 39778-39902
 function WeaponFactoryTweakData:_init_ultima()
 	self.parts.wpn_fps_sho_ultima_ns_comp = {
 		a_obj = "a_ns",
@@ -67193,7 +67210,7 @@ function WeaponFactoryTweakData:_init_ultima()
 	self.wpn_fps_sho_ultima_npc.unit = "units/pd2_dlc_lawp/weapons/wpn_fps_shot_ultima/wpn_fps_sho_ultima_npc"
 end
 
--- Lines 39885-40075
+-- Lines 39907-40097
 function WeaponFactoryTweakData:_init_welrod()
 	local front_sights_to_forbid = {
 		"wpn_upg_o_marksmansight_front",
@@ -67462,7 +67479,7 @@ function WeaponFactoryTweakData:_init_welrod()
 	self.wpn_fps_pis_welrod_npc.unit = "units/pd2_dlc_wel/weapons/wpn_fps_pis_welrod/wpn_fps_pis_welrod_npc"
 end
 
--- Lines 40079-40384
+-- Lines 40101-40406
 function WeaponFactoryTweakData:_init_dart()
 	local path_to_fps = "units/pd2_dlc_esp/weapons/wpn_fps_spe_dart_pts/"
 	local path_to_tps = "units/pd2_dlc_esp/weapons/wpn_third_spe_dart_pts/"
@@ -67756,7 +67773,7 @@ function WeaponFactoryTweakData:_init_dart()
 	self.wpn_fps_spe_dart_npc.unit = self.wpn_fps_spe_dart_npc.unit .. "_npc"
 end
 
--- Lines 40386-40749
+-- Lines 40408-40771
 function WeaponFactoryTweakData:_init_pmm()
 	local path_to_fps = "units/pd2_dlc_esp/weapons/wpn_fps_pis_pmm_pts/"
 	local path_to_tps = "units/pd2_dlc_esp/weapons/wpn_third_pis_pmm_pts/"
@@ -68108,7 +68125,7 @@ function WeaponFactoryTweakData:_init_pmm()
 	self.wpn_fps_pis_x_pmm_npc.unit = "units/pd2_dlc_esp/weapons/wpn_fps_pis_x_pmm/wpn_fps_pis_x_pmm_npc"
 end
 
--- Lines 40751-41084
+-- Lines 40773-41106
 function WeaponFactoryTweakData:_init_speen()
 	local path_to_fps = "units/pd2_dlc_esp/weapons/wpn_fps_smg_speen_pts/"
 	local path_to_tps = "units/pd2_dlc_esp/weapons/wpn_third_smg_speen_pts/"
@@ -68422,7 +68439,7 @@ function WeaponFactoryTweakData:_init_speen()
 	self.wpn_fps_smg_speen_npc.unit = self.wpn_fps_smg_speen_npc.unit .. "_npc"
 end
 
--- Lines 41090-41191
+-- Lines 41112-41213
 function WeaponFactoryTweakData:_init_flun()
 	local path_to_fps = "units/pd2_dlc_unk/weapons/wpn_fps_spe_flun_pts/"
 	local path_to_tps = "units/pd2_dlc_unk/weapons/wpn_third_spe_flun_pts/"
@@ -68516,7 +68533,7 @@ function WeaponFactoryTweakData:_init_flun()
 	self.wpn_fps_spe_flun_npc.unit = self.wpn_fps_spe_flun_npc.unit .. "_npc"
 end
 
--- Lines 41196-41725
+-- Lines 41218-41747
 function WeaponFactoryTweakData:_init_bleckert()
 	local path_to_fps = "units/pd2_dlc_auc/weapons/wpn_fps_sho_bleckert_pts/"
 	local path_to_tps = "units/pd2_dlc_auc/weapons/wpn_third_sho_bleckert_pts/"

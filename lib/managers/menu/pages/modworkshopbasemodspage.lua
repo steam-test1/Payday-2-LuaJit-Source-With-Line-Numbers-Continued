@@ -89,7 +89,7 @@ function ModWorkshopBaseModsPage:_create_right_side_placer()
 	})
 end
 
--- Lines 87-133
+-- Lines 87-149
 function ModWorkshopBaseModsPage:_create_right_side()
 	self._mod_details = self._right_side_placer:add_bottom(ModWorkshopModDetailsGui:new(self._info_panel))
 	self._buttons = self._right_side_placer:add_bottom(ListGrowPanel:new(self._info_panel, {
@@ -100,21 +100,33 @@ function ModWorkshopBaseModsPage:_create_right_side()
 		fixed_w = self._info_panel:w()
 	}))
 
-	-- Lines 98-103
-	local function action_button(name, func)
+	-- Lines 98-115
+	local function action_button(name, button, func)
+		local text = managers.localization:to_upper_text("menu_mws_" .. name)
+
+		if not managers.menu:is_pc_controller() then
+			local prefix = managers.localization:get_default_macro(button) or ""
+
+			text = prefix .. text
+		end
+
 		self["_" .. name .. "_btn"] = self._buttons:add_item(TextCompositeButton:new(self._buttons, {
-			text = managers.localization:to_upper_text("menu_mws_" .. name),
-			trigger_func = func
+			text_align = "right",
+			text = text,
+			trigger_func = func,
+			text_config = {
+				font = tweak_data.menu.pd2_small_font
+			}
 		}, {
 			visible = false,
 			w = self._buttons:row_w()
 		}))
 	end
 
-	action_button("install", callback(self, self, "install_current_mod"))
-	action_button("abort_installation", callback(self, self, "abort_installation_current_mod"))
-	action_button("uninstall", callback(self, self, "uninstall_current_mod"))
-	action_button("visit_mod_page", callback(self, self, "visit_current_mod_page"))
+	action_button("install", "BTN_A", callback(self, self, "install_current_mod"))
+	action_button("abort_installation", "BTN_A", callback(self, self, "abort_installation_current_mod"))
+	action_button("uninstall", "BTN_A", callback(self, self, "uninstall_current_mod"))
+	action_button("visit_mod_page", "BTN_STICK_R", callback(self, self, "visit_current_mod_page"))
 
 	self._pagination_holder = MultichoiceGuiObject:new(self._page_panel:parent(), {
 		use_change_profile_controls = true,
@@ -125,6 +137,10 @@ function ModWorkshopBaseModsPage:_create_right_side()
 			}
 		},
 		on_change = function(index)
+			if self._page == index then
+				return
+			end
+
 			self._page = index
 
 			self:search_mods(true)
@@ -148,58 +164,85 @@ function ModWorkshopBaseModsPage:_create_right_side()
 	self:add_input_component(self._pagination_holder)
 end
 
--- Lines 135-139
+-- Lines 151-155
 function ModWorkshopBaseModsPage:set_active(active, play_sound)
 	ModWorkshopBaseModsPage.super.set_active(self, active, play_sound)
 	self._pagination_holder:set_visible(active)
 	self._searchbox.panel:set_visible(active and managers.menu:is_pc_controller())
 end
 
--- Lines 141-143
+-- Lines 157-159
 function ModWorkshopBaseModsPage:_searchbox_disconnect_callback()
 	self:search_mods()
 end
 
--- Lines 145-146
+-- Lines 161-162
 function ModWorkshopBaseModsPage:search_mods(keep_page)
 	return
 end
 
--- Lines 148-149
+-- Lines 164-165
 function ModWorkshopBaseModsPage:_on_mods_loaded(res, data)
 	return
 end
 
--- Lines 151-152
+-- Lines 167-168
 function ModWorkshopBaseModsPage:_on_mods_error()
 	return
 end
 
--- Lines 154-158
+-- Lines 170-174
 function ModWorkshopBaseModsPage:update()
 	if not self._mods_grid:selected_item() and #self._mods_grid:items() > 0 then
 		self._mods_grid:select_index(1)
 	end
 end
 
--- Lines 160-162
+-- Lines 176-178
 function ModWorkshopBaseModsPage:input_focus()
 	return self:allow_input()
 end
 
--- Lines 165-168
+-- Lines 181-196
 function ModWorkshopBaseModsPage:confirm_pressed()
-	if self._mods_grid:selected_item() and self._mods_grid:selected_item()._item then
-		-- Nothing
+	if self._showing_dialog then
+		return
+	end
+
+	if self._searchbox and self._searchbox:input_focus() and managers.menu:is_pc_controller() then
+		self._searchbox:disconnect_search_input()
+
+		return true
+	end
+
+	if self._mod and self._confirm_mapping then
+		self._confirm_mapping()
+
+		return true
 	end
 end
 
--- Lines 170-172
+-- Lines 198-210
+function ModWorkshopBaseModsPage:special_btn_pressed(button)
+	if self._showing_dialog then
+		return
+	end
+
+	if button == Idstring("menu_preview_item") then
+		self:visit_current_mod_page()
+
+		return true
+	end
+
+	return ModWorkshopBaseModsPage.super.special_btn_pressed(self, button)
+end
+
+-- Lines 212-214
 function ModWorkshopBaseModsPage:allow_input()
 	return not self._showing_dialog
 end
 
--- Lines 175-184
+-- Lines 217-227
 function ModWorkshopBaseModsPage:on_mod_download_progress(mod_id, now, total, can_cancel)
 	local item = self._mod_items[mod_id]
 
@@ -212,7 +255,7 @@ function ModWorkshopBaseModsPage:on_mod_download_progress(mod_id, now, total, ca
 	end
 end
 
--- Lines 186-196
+-- Lines 229-239
 function ModWorkshopBaseModsPage:on_mod_installed(mod_id)
 	local item = self._mod_items[mod_id]
 
@@ -226,7 +269,7 @@ function ModWorkshopBaseModsPage:on_mod_installed(mod_id)
 	end
 end
 
--- Lines 198-207
+-- Lines 241-250
 function ModWorkshopBaseModsPage:on_mod_removed(mod_id)
 	local item = self._mod_items[mod_id]
 
@@ -239,7 +282,7 @@ function ModWorkshopBaseModsPage:on_mod_removed(mod_id)
 	end
 end
 
--- Lines 209-219
+-- Lines 252-262
 function ModWorkshopBaseModsPage:on_mod_download_fail(mod_id)
 	local item = self._mod_items[mod_id]
 
@@ -253,7 +296,7 @@ function ModWorkshopBaseModsPage:on_mod_download_fail(mod_id)
 	end
 end
 
--- Lines 222-232
+-- Lines 265-275
 function ModWorkshopBaseModsPage:on_mod_abort_download(mod_id)
 	local item = self._mod_items[mod_id]
 
@@ -267,14 +310,14 @@ function ModWorkshopBaseModsPage:on_mod_abort_download(mod_id)
 	end
 end
 
--- Lines 234-238
+-- Lines 277-281
 function ModWorkshopBaseModsPage:on_selected_mod(mod)
 	self._mod = mod
 
 	self:update_right_side()
 end
 
--- Lines 240-285
+-- Lines 283-331
 function ModWorkshopBaseModsPage:update_right_side()
 	local mod = self._mod
 	local download_state = mod and managers.modworkshop:get_download_state(mod:id()) or nil
@@ -289,10 +332,16 @@ function ModWorkshopBaseModsPage:update_right_side()
 	if mod then
 		if mod:is_installed() then
 			self._uninstall_btn:show()
+
+			self._confirm_mapping = self._uninstall_btn._trigger_func
 		elseif download_state == ModWorkshopManager.DOWNLOAD_NONE then
 			self._install_btn:show()
+
+			self._confirm_mapping = self._install_btn._trigger_func
 		elseif download_state == ModWorkshopManager.DOWNLOAD_DOWNLOADING or download_state == ModWorkshopManager.DOWNLOAD_QUEUED then
 			self._abort_installation_btn:show()
+
+			self._confirm_mapping = self._abort_installation_btn._trigger_func
 		end
 
 		self._visit_mod_page_btn:show()
@@ -322,23 +371,23 @@ function ModWorkshopBaseModsPage:update_right_side()
 	end
 end
 
--- Lines 287-289
+-- Lines 333-335
 function ModWorkshopBaseModsPage:details_h()
 	return self._info_panel:h() - self._buttons:h() - 8
 end
 
--- Lines 291-294
+-- Lines 337-340
 function ModWorkshopBaseModsPage:install_current_mod()
 	managers.modworkshop:queue_download_mod(self._mod:id())
 	self:update_right_side()
 end
 
--- Lines 296-298
+-- Lines 342-344
 function ModWorkshopBaseModsPage:abort_installation_current_mod()
 	managers.modworkshop:abort_download()
 end
 
--- Lines 300-322
+-- Lines 346-368
 function ModWorkshopBaseModsPage:uninstall_current_mod()
 	local loc = managers.localization
 
@@ -362,7 +411,7 @@ function ModWorkshopBaseModsPage:uninstall_current_mod()
 	})
 end
 
--- Lines 324-340
+-- Lines 370-386
 function ModWorkshopBaseModsPage:do_uninstall_current_mod()
 	local loc = managers.localization
 
@@ -382,12 +431,14 @@ function ModWorkshopBaseModsPage:do_uninstall_current_mod()
 	self:update_right_side()
 end
 
--- Lines 342-344
+-- Lines 388-390
 function ModWorkshopBaseModsPage:check_current_mod_updates()
 	return
 end
 
--- Lines 346-348
+-- Lines 392-396
 function ModWorkshopBaseModsPage:visit_current_mod_page()
-	self._mod:visit_page()
+	if self._mod then
+		self._mod:visit_page()
+	end
 end

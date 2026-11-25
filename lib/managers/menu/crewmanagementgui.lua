@@ -1546,7 +1546,7 @@ function CrewManagementGui:open_mask_category_menu(henchman_index)
 	})
 end
 
--- Lines 1239-1261
+-- Lines 1239-1280
 function CrewManagementGui:previous_mask(henchman_index)
 	local loadout = managers.blackmarket:henchman_loadout(henchman_index)
 	local equipped_slot = loadout.mask_slot or 1
@@ -1577,7 +1577,7 @@ function CrewManagementGui:previous_mask(henchman_index)
 	end
 end
 
--- Lines 1263-1289
+-- Lines 1282-1315
 function CrewManagementGui:next_mask(henchman_index)
 	local loadout = managers.blackmarket:henchman_loadout(henchman_index)
 	local equipped_slot = loadout.mask_slot or 1
@@ -1608,7 +1608,7 @@ function CrewManagementGui:next_mask(henchman_index)
 	end
 end
 
--- Lines 1292-1339
+-- Lines 1318-1365
 function CrewManagementGui:open_suit_menu(henchman_index)
 	local loadout = managers.blackmarket:henchman_loadout(henchman_index)
 	local new_node_data = {
@@ -1651,7 +1651,7 @@ function CrewManagementGui:open_suit_menu(henchman_index)
 	})
 end
 
--- Lines 1341-1356
+-- Lines 1367-1382
 function CrewManagementGui:previous_suit(henchman_index)
 	local loadout = managers.blackmarket:henchman_loadout(henchman_index)
 	local equipped_player_style = loadout.player_style
@@ -1670,7 +1670,7 @@ function CrewManagementGui:previous_suit(henchman_index)
 	end
 end
 
--- Lines 1358-1373
+-- Lines 1384-1399
 function CrewManagementGui:next_suit(henchman_index)
 	local loadout = managers.blackmarket:henchman_loadout(henchman_index)
 	local equipped_player_style = loadout.player_style
@@ -1689,9 +1689,9 @@ function CrewManagementGui:next_suit(henchman_index)
 	end
 end
 
--- Lines 1375-1405
+-- Lines 1401-1431
 function CrewManagementGui:open_suit_customize_menu(henchman_index, data)
-	-- Lines 1376-1399
+	-- Lines 1402-1425
 	local function open_node_clbk()
 		local loadout = managers.blackmarket:henchman_loadout(henchman_index)
 		local new_node_data = {
@@ -1727,7 +1727,7 @@ function CrewManagementGui:open_suit_customize_menu(henchman_index, data)
 	managers.blackmarket:view_player_style(player_style, material_variation, open_node_clbk)
 end
 
--- Lines 1408-1436
+-- Lines 1434-1462
 function CrewManagementGui:populate_primaries(henchman_index, data, gui)
 	gui:populate_weapon_category_new(data)
 
@@ -1760,7 +1760,7 @@ function CrewManagementGui:populate_primaries(henchman_index, data, gui)
 	end
 end
 
--- Lines 1438-1450
+-- Lines 1464-1476
 function CrewManagementGui:populate_buy_weapon(gui, data)
 	gui:populate_buy_weapon(data)
 
@@ -1776,7 +1776,7 @@ function CrewManagementGui:populate_buy_weapon(gui, data)
 	end
 end
 
--- Lines 1452-1468
+-- Lines 1478-1494
 function CrewManagementGui:populate_masks(henchman_index, data, gui)
 	gui:populate_masks_new(data)
 
@@ -1797,19 +1797,19 @@ function CrewManagementGui:populate_masks(henchman_index, data, gui)
 	end
 end
 
--- Lines 1470-1474
+-- Lines 1496-1500
 function CrewManagementGui:populate_skill(params, data, gui)
 	local category, henchman_index = unpack(params)
 
 	self:populate_custom(category, henchman_index, tweak_data.upgrades.crew_skill_definitions, crew_skills, data, gui)
 end
 
--- Lines 1476-1478
+-- Lines 1502-1504
 function CrewManagementGui:populate_ability(henchman_index, data, gui)
 	self:populate_custom("ability", henchman_index, tweak_data.upgrades.crew_ability_definitions, crew_abilities, data, gui)
 end
 
--- Lines 1480-1542
+-- Lines 1506-1568
 function CrewManagementGui:populate_custom(category, henchman_index, tweak, list, data, gui)
 	local loadout = managers.blackmarket:henchman_loadout(henchman_index)
 	local map = self:_create_member_loadout_map(category)
@@ -1873,7 +1873,7 @@ function CrewManagementGui:populate_custom(category, henchman_index, tweak, list
 	end
 end
 
--- Lines 1544-1564
+-- Lines 1570-1590
 function CrewManagementGui:populate_characters(henchman_index, data, gui)
 	gui:populate_characters(data)
 
@@ -1897,7 +1897,7 @@ function CrewManagementGui:populate_characters(henchman_index, data, gui)
 	end
 end
 
--- Lines 1567-1575
+-- Lines 1593-1601
 function CrewManagementGui:populate_suits(henchman_index, data, gui)
 	local loadout = managers.blackmarket:henchman_loadout(henchman_index)
 
@@ -1909,7 +1909,7 @@ function CrewManagementGui:populate_suits(henchman_index, data, gui)
 	data.mannequin_player_style = nil
 end
 
--- Lines 1578-1585
+-- Lines 1604-1611
 function CrewManagementGui:populate_gloves(henchman_index, data, gui)
 	local loadout = managers.blackmarket:henchman_loadout(henchman_index)
 
@@ -1920,7 +1920,7 @@ function CrewManagementGui:populate_gloves(henchman_index, data, gui)
 	data.mannequin_glove_id = nil
 end
 
--- Lines 1588-1593
+-- Lines 1614-1619
 function CrewManagementGui:populate_suit_variations(henchman_index, data, gui)
 	local loadout = managers.blackmarket:henchman_loadout(henchman_index)
 
@@ -1929,7 +1929,7 @@ function CrewManagementGui:populate_suit_variations(henchman_index, data, gui)
 	gui:populate_suit_variations(data)
 end
 
--- Lines 1596-1614
+-- Lines 1622-1640
 function CrewManagementGui:select_weapon(index, data, gui)
 	print("[CrewManagementGui]:select_weapon", index, data, gui)
 
@@ -1950,14 +1950,14 @@ function CrewManagementGui:select_weapon(index, data, gui)
 	gui:reload()
 end
 
--- Lines 1616-1619
+-- Lines 1642-1645
 function CrewManagementGui:buy_new_weapon(data, gui)
 	data.on_create_func = callback(self, self, "populate_buy_weapon", gui)
 
 	gui:open_weapon_buy_menu(data)
 end
 
--- Lines 1621-1629
+-- Lines 1647-1655
 function CrewManagementGui:select_mask(index, data, gui)
 	print("[CrewManagementGui]:select_mask", index, data, gui)
 
@@ -1969,7 +1969,7 @@ function CrewManagementGui:select_mask(index, data, gui)
 	gui:reload()
 end
 
--- Lines 1631-1633
+-- Lines 1657-1659
 function CrewManagementGui:select_ability(index, data, gui)
 	self:select_skill({
 		"ability",
@@ -1977,7 +1977,7 @@ function CrewManagementGui:select_ability(index, data, gui)
 	}, data, gui)
 end
 
--- Lines 1635-1648
+-- Lines 1661-1674
 function CrewManagementGui:select_skill(params, data, gui)
 	local loadout_name, henchman_index = unpack(params)
 	local map = self:_create_member_loadout_map(loadout_name)
@@ -1992,7 +1992,7 @@ function CrewManagementGui:select_skill(params, data, gui)
 	gui:reload()
 end
 
--- Lines 1650-1666
+-- Lines 1676-1692
 function CrewManagementGui:select_characters(data, gui)
 	local preferred = managers.blackmarket:preferred_henchmen()
 
@@ -2009,7 +2009,7 @@ function CrewManagementGui:select_characters(data, gui)
 	gui:reload()
 end
 
--- Lines 1669-1677
+-- Lines 1695-1703
 function CrewManagementGui:select_player_style(index, data, gui)
 	local loadout = managers.blackmarket:henchman_loadout(index)
 
@@ -2020,7 +2020,7 @@ function CrewManagementGui:select_player_style(index, data, gui)
 	gui:reload()
 end
 
--- Lines 1679-1686
+-- Lines 1705-1712
 function CrewManagementGui:select_suit_variation(index, data, gui)
 	local loadout = managers.blackmarket:henchman_loadout(index)
 
@@ -2030,7 +2030,7 @@ function CrewManagementGui:select_suit_variation(index, data, gui)
 	gui:reload()
 end
 
--- Lines 1689-1695
+-- Lines 1715-1721
 function CrewManagementGui:select_glove(index, data, gui)
 	local loadout = managers.blackmarket:henchman_loadout(index)
 
@@ -2040,7 +2040,7 @@ function CrewManagementGui:select_glove(index, data, gui)
 	gui:reload()
 end
 
--- Lines 1700-1713
+-- Lines 1726-1739
 function CrewManagementGui:clear_character_order(data, gui)
 	local preferred = managers.blackmarket:preferred_henchmen()
 

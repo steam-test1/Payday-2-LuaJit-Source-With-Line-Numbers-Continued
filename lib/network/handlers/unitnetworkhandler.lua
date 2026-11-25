@@ -4555,7 +4555,7 @@ function UnitNetworkHandler:sync_vehicle_change_stance(stance, sender_rpc)
 
 	local mov_ext = shooting_unit:movement()
 
-	if move_ext and mov_ext.sync_vehicle_change_stance then
+	if mov_ext and mov_ext.sync_vehicle_change_stance then
 		mov_ext:sync_vehicle_change_stance(stance)
 	end
 end

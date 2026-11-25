@@ -256,7 +256,7 @@ function IngameLobbyMenuState:get_mass_drop_class()
 	return false
 end
 
--- Lines 313-356
+-- Lines 313-349
 function IngameLobbyMenuState:make_lootdrop()
 	self._mass_drop_data = nil
 
@@ -295,14 +295,14 @@ function IngameLobbyMenuState:make_lootdrop()
 	self:_set_lootdrop()
 end
 
--- Lines 358-362
+-- Lines 351-355
 function IngameLobbyMenuState:_set_lootdrop()
 	if not managers.network.account:inventory_reward(callback(self, self, "_clbk_inventory_reward")) then
 		self:set_lootdrop()
 	end
 end
 
--- Lines 364-380
+-- Lines 357-373
 function IngameLobbyMenuState:_clbk_inventory_reward(error, tradable_list)
 	if error then
 		Application:error("[IngameLobbyMenuState:_clbk_inventory_reward] Failed to reward tradable item (" .. tostring(error) .. ")")
@@ -322,7 +322,7 @@ function IngameLobbyMenuState:_clbk_inventory_reward(error, tradable_list)
 	self:set_lootdrop(drop_category, drop_entry)
 end
 
--- Lines 395-452
+-- Lines 388-445
 function IngameLobbyMenuState:set_lootdrop(drop_category, drop_item_id)
 	if self._mass_drop_data then
 		if drop_item_id ~= nil then
@@ -392,7 +392,7 @@ function IngameLobbyMenuState:set_lootdrop(drop_category, drop_item_id)
 	end
 end
 
--- Lines 454-472
+-- Lines 447-465
 function IngameLobbyMenuState:at_exit()
 	print("[IngameLobbyMenuState:at_exit()]")
 
@@ -404,19 +404,19 @@ function IngameLobbyMenuState:at_exit()
 	managers.menu_component:hide_game_chat_gui()
 end
 
--- Lines 474-478
+-- Lines 467-471
 function IngameLobbyMenuState:on_server_left()
 	Application:debug("IngameLobbyMenuState:on_server_left()")
 	managers.menu_component:set_lootdrop_state("on_server_left")
 end
 
--- Lines 480-484
+-- Lines 473-477
 function IngameLobbyMenuState:on_kicked()
 	Application:debug("IngameLobbyMenuState:on_kicked()")
 	managers.menu_component:set_lootdrop_state("on_kicked")
 end
 
--- Lines 486-490
+-- Lines 479-483
 function IngameLobbyMenuState:on_disconnected()
 	Application:debug("IngameLobbyMenuState:on_disconnected()")
 	managers.menu_component:set_lootdrop_state("on_disconnected")

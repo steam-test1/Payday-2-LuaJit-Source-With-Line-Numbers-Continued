@@ -111,7 +111,7 @@ function CrimeSpreeMenuComponent:mouse_pressed(o, button, x, y)
 	end
 end
 
--- Lines 113-121
+-- Lines 113-119
 function CrimeSpreeMenuComponent:confirm_pressed()
 	if not self:can_show_crime_spree() then
 		return
@@ -120,7 +120,7 @@ function CrimeSpreeMenuComponent:confirm_pressed()
 	self:mouse_pressed()
 end
 
--- Lines 123-136
+-- Lines 121-134
 function CrimeSpreeMenuComponent:special_btn_pressed(button)
 	if not self:can_show_crime_spree() then
 		return
@@ -135,7 +135,7 @@ function CrimeSpreeMenuComponent:special_btn_pressed(button)
 	end
 end
 
--- Lines 140-158
+-- Lines 138-155
 function CrimeSpreeMenuComponent:_open_crime_spree_contract()
 	managers.menu_component:post_event("menu_enter")
 
@@ -155,7 +155,7 @@ function CrimeSpreeMenuComponent:_open_crime_spree_contract()
 	managers.menu:open_node(node, data)
 end
 
--- Lines 160-162
+-- Lines 157-159
 function CrimeSpreeMenuComponent:_continue_crime_spree()
 	self:_open_crime_spree_contract()
 end
@@ -163,7 +163,7 @@ end
 CrimeSpreeStartButton = CrimeSpreeStartButton or class(MenuGuiItem)
 CrimeSpreeStartButton._type = "CrimeSpreeStartButton"
 
--- Lines 169-234
+-- Lines 166-230
 function CrimeSpreeStartButton:init(parent)
 	self._panel = parent:panel({
 		layer = 1000,
@@ -228,45 +228,45 @@ function CrimeSpreeStartButton:init(parent)
 	self:refresh()
 end
 
--- Lines 236-239
+-- Lines 232-235
 function CrimeSpreeStartButton:refresh()
 	self._bg:set_visible(not self:is_selected())
 	self._highlight:set_visible(self:is_selected())
 end
 
--- Lines 241-243
+-- Lines 237-239
 function CrimeSpreeStartButton:inside(x, y)
 	return self._panel:inside(x, y)
 end
 
--- Lines 245-247
+-- Lines 241-243
 function CrimeSpreeStartButton:callback()
 	return self._callback
 end
 
--- Lines 249-251
+-- Lines 245-247
 function CrimeSpreeStartButton:set_callback(clbk)
 	self._callback = clbk
 end
 
--- Lines 253-255
+-- Lines 249-251
 function CrimeSpreeStartButton:set_button(btn)
 	self._btn = btn
 end
 
--- Lines 257-260
+-- Lines 253-256
 function CrimeSpreeStartButton:set_text(text)
 	local prefix = text ~= "" and (not managers.menu:is_pc_controller() and self._btn and managers.localization:get_default_macro(self._btn) or "") or ""
 
 	self._text:set_text(prefix .. text)
 end
 
--- Lines 262-264
+-- Lines 258-260
 function CrimeSpreeStartButton:set_level_text(text)
 	self._level_text:set_text(text)
 end
 
--- Lines 266-267
+-- Lines 262-263
 function CrimeSpreeStartButton:update(t, dt)
 	return
 end

@@ -75,26 +75,32 @@ function ModWorkshopManager:categories()
 	return self._categories
 end
 
--- Lines 73-78
+-- Lines 73-85
 function ModWorkshopManager:reload_installed_mods_map()
 	self._installed_mods_map = {}
 
-	for _, mod in pairs(ModWorkshop:installed_mods()) do
+	local installed_mods = ModWorkshop:installed_mods()
+
+	if not installed_mods then
+		return
+	end
+
+	for _, mod in pairs(installed_mods) do
 		self._installed_mods_map[mod.id] = mod
 	end
 end
 
--- Lines 80-82
+-- Lines 87-89
 function ModWorkshopManager:is_mod_installed(mod_id)
 	return self._installed_mods_map[mod_id] ~= nil
 end
 
--- Lines 84-86
+-- Lines 91-93
 function ModWorkshopManager:get_mod_install(mod_id)
 	return self._installed_mods_map[mod_id]
 end
 
--- Lines 88-101
+-- Lines 95-108
 function ModWorkshopManager:remove_mod(mod_id)
 	if ModWorkshop:remove_mod(mod_id) then
 		self:reload_installed_mods_map()
@@ -110,7 +116,7 @@ function ModWorkshopManager:remove_mod(mod_id)
 	return false
 end
 
--- Lines 103-109
+-- Lines 110-116
 function ModWorkshopManager:queue_download_mod(mod_id)
 	if self:get_download_state(mod_id) == self.DOWNLOAD_NONE then
 		table.insert(self._downloads_queue, mod_id)
@@ -118,7 +124,7 @@ function ModWorkshopManager:queue_download_mod(mod_id)
 	end
 end
 
--- Lines 111-161
+-- Lines 118-168
 function ModWorkshopManager:_check_start_download()
 	if self._downloading or #self._downloads_queue == 0 then
 		return
@@ -172,7 +178,7 @@ function ModWorkshopManager:_check_start_download()
 	end
 end
 
--- Lines 163-175
+-- Lines 170-182
 function ModWorkshopManager:get_download_state(mod_id)
 	if self._downloading and self._downloading.mod_id == mod_id then
 		return self._downloading.can_cancel and self.DOWNLOAD_DOWNLOADING or self.DOWNLOAD_INSTALLING
@@ -187,7 +193,7 @@ function ModWorkshopManager:get_download_state(mod_id)
 	return self.DOWNLOAD_NONE
 end
 
--- Lines 177-186
+-- Lines 184-193
 function ModWorkshopManager:abort_download()
 	if self._downloading then
 		local mod_id = self._downloading.mod_id
@@ -201,7 +207,7 @@ function ModWorkshopManager:abort_download()
 	end
 end
 
--- Lines 188-207
+-- Lines 195-214
 function ModWorkshopManager:_on_mod_install_fail(mod_id, res)
 	local loc = managers.localization
 
